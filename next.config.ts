@@ -6,10 +6,7 @@ const nextConfig: NextConfig = {
     // Skip TypeScript errors during production build
     ignoreBuildErrors: true,
   },
-  eslint: {
-    // Skip ESLint during production build
-    ignoreDuringBuilds: true,
-  },
+  output: 'standalone',
   images: {
     remotePatterns: [
       {
