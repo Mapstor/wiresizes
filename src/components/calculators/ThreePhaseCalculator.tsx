@@ -226,11 +226,12 @@ export function ThreePhaseCalculator() {
     const conductorCurrent = Math.max(lineCurrent, neutralCurrent);
     
     // Calculate wire sizes for both materials
-    const baseInput: Omit<WireSizeInput, 'material'> = {
+    const baseInput: WireSizeInput = {
       amps: conductorCurrent,
       distance,
       voltage: voltageSystem.line_voltage === 600 ? 480 : (voltageSystem.line_voltage >= 480 ? 480 : 240),
       phase: 'three',
+      material: 'copper'
     };
 
     const copperWire = calculateWireSize({ ...baseInput, material: 'copper' });

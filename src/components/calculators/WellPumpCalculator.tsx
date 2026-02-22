@@ -153,11 +153,12 @@ export function WellPumpCalculator() {
     const circuitAmps = calculateCircuitAmps(motorCurrent, controlBox.multiplier);
     
     // Calculate wire sizes for both materials
-    const baseInput: Omit<WireSizeInput, 'material'> = {
+    const baseInput: WireSizeInput = {
       amps: circuitAmps,
       distance,
       voltage: pumpType.voltage === 230 ? 240 : 120,
       phase: 'single',
+      material: 'copper'
     };
 
     const copperWire = calculateWireSize({ ...baseInput, material: 'copper' });

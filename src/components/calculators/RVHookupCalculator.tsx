@@ -153,11 +153,12 @@ export function RVHookupCalculator() {
     const totalLoad = calculateTotalLoad();
     
     // Calculate wire sizes for both materials
-    const baseInput: Omit<WireSizeInput, 'material'> = {
+    const baseInput: WireSizeInput = {
       amps: totalLoad,
       distance,
       voltage: hookupType.voltage === 240 ? 240 : 120,
       phase: 'single',
+      material: 'copper'
     };
 
     const copperWire = calculateWireSize({ ...baseInput, material: 'copper' });

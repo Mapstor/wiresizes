@@ -141,11 +141,12 @@ export function DryerCalculator() {
     const adjustedAmps = getAdjustedAmperage();
     
     // Calculate wire sizes for both materials
-    const baseInput: Omit<WireSizeInput, 'material'> = {
+    const baseInput: WireSizeInput = {
       amps: adjustedAmps,
       distance,
       voltage: dryerType.voltage === 240 ? 240 : 120,
       phase: 'single',
+      material: 'copper'
     };
 
     const copperWire = calculateWireSize({ ...baseInput, material: 'copper' });

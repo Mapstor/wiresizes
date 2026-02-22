@@ -31,7 +31,7 @@ interface WireSizeCalculatorProps {
 }
 
 export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculatorProps) {
-  const [inputs, setInputs] = useState<Omit<WireSizeInput, 'material'>>({
+  const [inputs, setInputs] = useState<WireSizeInput>({
     amps: 100,
     distance: 100,
     voltage: 240,

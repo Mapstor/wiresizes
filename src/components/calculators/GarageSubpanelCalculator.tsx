@@ -174,11 +174,12 @@ export function GarageSubpanelCalculator() {
     const feederAmps = Math.max(subpanelSize.amperage, totalLoad);
     
     // Calculate wire sizes for both materials
-    const baseInput: Omit<WireSizeInput, 'material'> = {
+    const baseInput: WireSizeInput = {
       amps: feederAmps,
       distance,
       voltage: 240,
       phase: 'single',
+      material: 'copper'
     };
 
     const copperWire = calculateWireSize({ ...baseInput, material: 'copper' });

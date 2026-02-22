@@ -172,11 +172,12 @@ export function AirConditionerCalculator() {
     const totalAmps = calculateTotalAmps();
     
     // Calculate wire sizes for both materials
-    const baseInput: Omit<WireSizeInput, 'material'> = {
+    const baseInput: WireSizeInput = {
       amps: totalAmps,
       distance,
       voltage: acUnit.voltage === 240 ? 240 : 120,
       phase: 'single',
+      material: 'copper'
     };
 
     const copperWire = calculateWireSize({ ...baseInput, material: 'copper' });

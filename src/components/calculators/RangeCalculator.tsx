@@ -171,11 +171,12 @@ export function RangeCalculator() {
     const demandLoad = getDemandLoad();
     
     // Calculate wire sizes for both materials
-    const baseInput: Omit<WireSizeInput, 'material'> = {
+    const baseInput: WireSizeInput = {
       amps: demandLoad,
       distance,
       voltage: rangeType.voltage === 240 ? 240 : 120,
       phase: 'single',
+      material: 'copper'
     };
 
     const copperWire = calculateWireSize({ ...baseInput, material: 'copper' });

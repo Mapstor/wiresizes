@@ -246,11 +246,12 @@ export function ElectricalLoadCalculator() {
     const totalLoad = getTotalLoad();
     
     // Calculate wire sizes for both materials
-    const baseInput: Omit<WireSizeInput, 'material'> = {
+    const baseInput: WireSizeInput = {
       amps: totalLoad,
       distance,
-      voltage: voltage === 480 ? 480 : (voltage === 240 ? 240 : 120),
-      phase,
+      voltage: voltage as VoltageLevel,
+      phase: phase === 'single' ? 'single' : 'three',
+      material: 'copper'
     };
 
     const copperWire = calculateWireSize({ ...baseInput, material: 'copper' });
