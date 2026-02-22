@@ -1,14 +1,9 @@
 import { Metadata } from 'next';
-import dynamic from 'next/dynamic';
+import { ElectricalLoadCalculator } from '@/components/calculators';
 import { Calculator, TrendingUp, Target, BookOpen, Users, Shield, MapPin, Zap, Wrench, CheckCircle, AlertTriangle, Settings, Home, Building } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
 import { FAQSchema } from '@/components/seo/FAQSchema';
-
-const ElectricalLoadCalculator = dynamic(
-  () => import('@/components/calculators').then(mod => mod.ElectricalLoadCalculator),
-  { ssr: false }
-);
 
 export const metadata: Metadata = {
   title: 'Electrical Load Calculator | Service Load Calculator | NEC Article 220',

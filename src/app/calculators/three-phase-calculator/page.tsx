@@ -1,14 +1,9 @@
 import { Metadata } from 'next';
-import dynamic from 'next/dynamic';
+import { ThreePhaseCalculator } from '@/components/calculators';
 import { Zap, Calculator, Settings, Target, BookOpen, Users, AlertTriangle, Shield, Factory, Cog, TrendingUp, DollarSign, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
 import { FAQSchema } from '@/components/seo/FAQSchema';
-
-const ThreePhaseCalculator = dynamic(
-  () => import('@/components/calculators').then(mod => mod.ThreePhaseCalculator),
-  { ssr: false }
-);
 
 export const metadata: Metadata = {
   title: 'Three Phase Calculator | 3-Phase Power Calculator | Industrial Motor & Load Calculator',
