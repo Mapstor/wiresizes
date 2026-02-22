@@ -1,0 +1,980 @@
+import { Metadata } from 'next';
+import { WireSizeCalculator } from '@/components/calculators/WireSizeCalculator';
+import { 
+  AlertTriangle, 
+  Calculator, 
+  Zap, 
+  TrendingDown,
+  DollarSign,
+  BookOpen,
+  Info,
+  CheckCircle,
+  XCircle,
+  ArrowRight,
+  Gauge,
+  AlertCircle,
+  Shield,
+  Lightbulb,
+  Wrench,
+  Activity,
+  ExternalLink
+} from 'lucide-react';
+import { FAQSchema } from '@/components/seo/FAQSchema';
+
+export const metadata: Metadata = {
+  title: 'Wire Size Calculator | AWG Calculator | Electrical Wire Sizing',
+  description: 'Calculate the correct AWG wire size for any electrical circuit. Free NEC-compliant wire size calculator for copper and aluminum conductors. Includes voltage drop, ampacity, and distance calculations.',
+  keywords: 'wire size calculator, AWG calculator, electrical wire sizing, cable size calculator, conductor sizing, NEC wire size, copper wire calculator, aluminum wire calculator',
+};
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Wire Size Calculator",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Professional wire size calculator for electrical circuits. Calculate proper AWG size based on current, voltage, distance, and material.",
+  "featureList": [
+    "NEC Table 310.16 compliance",
+    "Copper and aluminum sizing",
+    "Voltage drop verification",
+    "Distance calculations",
+    "Temperature derating",
+    "Ground wire sizing",
+    "Real-time results"
+  ]
+};
+
+// Common wire sizing scenarios
+const COMMON_WIRE_SIZES = [
+  { 
+    circuit: "15A Lighting Circuit",
+    breaker: "15A",
+    wireSize: "14 AWG",
+    maxLength120V: "45 ft",
+    maxLength240V: "90 ft",
+    application: "General lighting, outlets",
+    notes: "Standard residential branch circuit"
+  },
+  { 
+    circuit: "20A Kitchen Circuit",
+    breaker: "20A",
+    wireSize: "12 AWG",
+    maxLength120V: "60 ft",
+    maxLength240V: "120 ft",
+    application: "Kitchen countertop outlets",
+    notes: "Required for kitchen receptacles"
+  },
+  { 
+    circuit: "30A Dryer Circuit",
+    breaker: "30A",
+    wireSize: "10 AWG",
+    maxLength120V: "N/A",
+    maxLength240V: "85 ft",
+    application: "Electric dryer",
+    notes: "240V circuit, 4-wire required"
+  },
+  { 
+    circuit: "40A Range Circuit",
+    breaker: "40A",
+    wireSize: "8 AWG",
+    maxLength120V: "N/A",
+    maxLength240V: "70 ft",
+    application: "Electric range/oven",
+    notes: "May use 50A breaker"
+  },
+  { 
+    circuit: "50A EV Charger",
+    breaker: "50A",
+    wireSize: "6 AWG",
+    maxLength120V: "N/A",
+    maxLength240V: "75 ft",
+    application: "Level 2 EV charging",
+    notes: "Continuous load consideration"
+  },
+  { 
+    circuit: "60A Subpanel",
+    breaker: "60A",
+    wireSize: "4 AWG",
+    maxLength120V: "N/A",
+    maxLength240V: "65 ft",
+    application: "Garage/workshop subpanel",
+    notes: "4-wire feeder required"
+  },
+  { 
+    circuit: "100A Subpanel",
+    breaker: "100A",
+    wireSize: "1 AWG",
+    maxLength120V: "N/A",
+    maxLength240V: "50 ft",
+    application: "Building subpanel",
+    notes: "Aluminum 1/0 commonly used"
+  },
+  { 
+    circuit: "200A Service",
+    breaker: "200A",
+    wireSize: "2/0 Copper",
+    maxLength120V: "N/A",
+    maxLength240V: "Limited",
+    application: "Main service entrance",
+    notes: "4/0 aluminum typical"
+  }
+];
+
+// Wire ampacity table at 75°C
+const WIRE_AMPACITY_TABLE = [
+  { awg: "14", copper60C: 15, copper75C: 20, copper90C: 25, aluminum60C: "—", aluminum75C: "—", aluminum90C: "—" },
+  { awg: "12", copper60C: 20, copper75C: 25, copper90C: 30, aluminum60C: 15, aluminum75C: 20, aluminum90C: 25 },
+  { awg: "10", copper60C: 30, copper75C: 35, copper90C: 40, aluminum60C: 25, aluminum75C: 30, aluminum90C: 35 },
+  { awg: "8", copper60C: 40, copper75C: 50, copper90C: 55, aluminum60C: 30, aluminum75C: 40, aluminum90C: 45 },
+  { awg: "6", copper60C: 55, copper75C: 65, copper90C: 75, aluminum60C: 40, aluminum75C: 50, aluminum90C: 55 },
+  { awg: "4", copper60C: 70, copper75C: 85, copper90C: 95, aluminum60C: 55, aluminum75C: 65, aluminum90C: 75 },
+  { awg: "3", copper60C: 85, copper75C: 100, copper90C: 115, aluminum60C: 65, aluminum75C: 75, aluminum90C: 85 },
+  { awg: "2", copper60C: 95, copper75C: 115, copper90C: 130, aluminum60C: 75, aluminum75C: 90, aluminum90C: 100 },
+  { awg: "1", copper60C: 110, copper75C: 130, copper90C: 145, aluminum60C: 85, aluminum75C: 100, aluminum90C: 115 },
+  { awg: "1/0", copper60C: 125, copper75C: 150, copper90C: 170, aluminum60C: 100, aluminum75C: 120, aluminum90C: 135 },
+  { awg: "2/0", copper60C: 145, copper75C: 175, copper90C: 195, aluminum60C: 115, aluminum75C: 135, aluminum90C: 150 },
+  { awg: "3/0", copper60C: 165, copper75C: 200, copper90C: 225, aluminum60C: 130, aluminum75C: 155, aluminum90C: 175 },
+  { awg: "4/0", copper60C: 195, copper75C: 230, copper90C: 260, aluminum60C: 150, aluminum75C: 180, aluminum90C: 205 }
+];
+
+// Temperature correction factors
+const TEMP_CORRECTION = [
+  { tempRange: "70-77°F (21-25°C)", factor60C: "1.00", factor75C: "1.00", factor90C: "1.00" },
+  { tempRange: "78-86°F (26-30°C)", factor60C: "0.91", factor75C: "0.94", factor90C: "0.96" },
+  { tempRange: "87-95°F (31-35°C)", factor60C: "0.82", factor75C: "0.88", factor90C: "0.91" },
+  { tempRange: "96-104°F (36-40°C)", factor60C: "0.71", factor75C: "0.82", factor90C: "0.87" },
+  { tempRange: "105-113°F (41-45°C)", factor60C: "0.58", factor75C: "0.75", factor90C: "0.82" },
+  { tempRange: "114-122°F (46-50°C)", factor60C: "0.41", factor75C: "0.67", factor90C: "0.76" }
+];
+
+// Common mistakes in wire sizing
+const COMMON_MISTAKES = [
+  {
+    mistake: "Ignoring voltage drop for long runs",
+    consequence: "Equipment malfunction, dimming lights, motor failure",
+    solution: "Always calculate voltage drop for runs over 50 feet"
+  },
+  {
+    mistake: "Not accounting for continuous loads",
+    consequence: "Wire overheating, insulation damage, fire hazard",
+    solution: "Apply 125% factor for loads running 3+ hours (NEC 210.19)"
+  },
+  {
+    mistake: "Using wrong temperature rating",
+    consequence: "Inadequate ampacity, code violation",
+    solution: "Match wire temperature rating to termination rating"
+  },
+  {
+    mistake: "Mixing copper and aluminum connections",
+    consequence: "Corrosion, high resistance, connection failure",
+    solution: "Use proper connectors rated for both materials"
+  },
+  {
+    mistake: "Undersizing neutral in multi-wire circuits",
+    consequence: "Neutral overload with non-linear loads",
+    solution: "Size neutral for maximum unbalanced load"
+  },
+  {
+    mistake: "Forgetting derating for bundled conductors",
+    consequence: "Overheating when multiple wires in conduit",
+    solution: "Apply NEC Table 310.15(C)(1) adjustment factors"
+  }
+];
+
+// Cost comparison data
+const WIRE_COST_COMPARISON = [
+  { size: "14 AWG", copperPerFt: "$0.45", aluminumPerFt: "N/A", typicalRun: "50 ft", copperTotal: "$22.50" },
+  { size: "12 AWG", copperPerFt: "$0.65", aluminumPerFt: "$0.35", typicalRun: "50 ft", copperTotal: "$32.50" },
+  { size: "10 AWG", copperPerFt: "$1.15", aluminumPerFt: "$0.60", typicalRun: "75 ft", copperTotal: "$86.25" },
+  { size: "8 AWG", copperPerFt: "$1.95", aluminumPerFt: "$1.05", typicalRun: "60 ft", copperTotal: "$117.00" },
+  { size: "6 AWG", copperPerFt: "$3.25", aluminumPerFt: "$1.75", typicalRun: "60 ft", copperTotal: "$195.00" },
+  { size: "4 AWG", copperPerFt: "$5.20", aluminumPerFt: "$2.80", typicalRun: "80 ft", copperTotal: "$416.00" },
+  { size: "2 AWG", copperPerFt: "$8.15", aluminumPerFt: "$4.40", typicalRun: "100 ft", copperTotal: "$815.00" }
+];
+
+const faqItems = [
+  {
+    question: "What size wire for 20 amp circuit?",
+    answer: "A 20 amp circuit requires 12 AWG copper wire or 10 AWG aluminum wire per NEC Table 310.16. This assumes 75°C rated conductors and terminations, which is standard for residential wiring."
+  },
+  {
+    question: "How do I calculate wire size for distance?",
+    answer: "For distance calculations: 1) Start with ampacity-based size from NEC 310.16, 2) Calculate voltage drop using VD = (2 × L × I × R) ÷ 1000, 3) If drop exceeds 3%, increase wire size until within limits. Distance often requires larger wire than ampacity alone."
+  },
+  {
+    question: "What's the difference between THHN and ROMEX wire?",
+    answer: "THHN is single conductor wire for conduit with 90°C rating (derated to 75°C at terminations). ROMEX (NM-B cable) contains multiple conductors with ground, rated 90°C but limited to 60°C ampacity per NEC 334.80. THHN has higher ampacity in conduit."
+  },
+  {
+    question: "Can I use aluminum wire instead of copper?",
+    answer: "Yes, aluminum wire is safe when properly installed with AL-rated connections and anti-oxidant compound. Aluminum requires one size larger than copper for same ampacity (e.g., 8 AWG aluminum vs 10 AWG copper for 30A). Cost savings can be 40-50%."
+  },
+  {
+    question: "What size wire for 50 amp hot tub?",
+    answer: "A 50 amp hot tub circuit requires 6 AWG copper or 4 AWG aluminum wire. Use 4-wire cable (two hots, neutral, ground) for 240V connection. GFCI protection required per NEC 680.42."
+  },
+  {
+    question: "How many amps can 12 gauge wire handle?",
+    answer: "12 AWG copper wire is rated for 25 amps at 75°C per NEC Table 310.16, but must be protected at 20 amps maximum per NEC 240.4(D). For continuous loads, derate to 80% (16 amps continuous on 20A breaker)."
+  },
+  {
+    question: "What size wire for 100 amp subpanel 150 feet away?",
+    answer: "For 100A subpanel at 150 feet, use 1/0 AWG copper or 3/0 AWG aluminum to maintain under 3% voltage drop. Ampacity alone would allow 1 AWG copper or 1/0 aluminum, but distance requires upsizing."
+  },
+  {
+    question: "Do I need to upsize wire for motor loads?",
+    answer: "Yes, size wire at 125% of motor full-load current per NEC 430.22. For example, a 5 HP 240V motor (28A FLC) needs wire sized for 35A minimum. Also consider voltage drop during starting (6x running current)."
+  },
+  {
+    question: "What's the maximum distance for 12 AWG wire?",
+    answer: "For 12 AWG copper at 20A/120V maintaining 3% voltage drop: maximum 57 feet. At 240V: maximum 114 feet. These distances assume single-phase circuits. Reduce by 13% for three-phase."
+  },
+  {
+    question: "Can I run 10 gauge wire on a 30 amp breaker?",
+    answer: "Yes, 10 AWG copper is rated for 35 amps at 75°C, making it suitable for 30A breakers. However, for receptacle circuits, NEC 240.4(D) limits 10 AWG to 30A overcurrent protection maximum."
+  },
+  {
+    question: "What size ground wire do I need?",
+    answer: "Equipment grounding conductor size is based on overcurrent device per NEC Table 250.122: 15-20A circuits need 14 AWG, 30-60A need 10 AWG, 100A needs 8 AWG, 200A needs 6 AWG copper ground."
+  },
+  {
+    question: "How do I size wire for continuous loads?",
+    answer: "For continuous loads (3+ hours), size conductors at 125% of the load per NEC 210.19(A). A 40A continuous load needs wire sized for 50A minimum. The overcurrent device must also be sized at 125%."
+  },
+  {
+    question: "What wire size for 200 amp service entrance?",
+    answer: "200A residential service typically uses 2/0 copper or 4/0 aluminum service entrance conductors. Many areas allow 2/0 aluminum for dwelling services per NEC 310.12. Verify local requirements."
+  },
+  {
+    question: "Can I use 14 gauge wire on a 20 amp circuit?",
+    answer: "No, 14 AWG wire is limited to 15A circuits per NEC 240.4(D). While Table 310.16 shows 20A ampacity at 75°C, the code restricts 14 AWG to 15A overcurrent protection for safety margins."
+  },
+  {
+    question: "What affects wire ampacity ratings?",
+    answer: "Wire ampacity is affected by: conductor material (copper vs aluminum), insulation temperature rating (60/75/90°C), ambient temperature (derating required above 86°F), number of conductors in raceway (derating for heat), and installation method."
+  },
+  {
+    question: "How much does wire size affect voltage drop?",
+    answer: "Each AWG size increase (smaller number) roughly halves resistance. Upgrading from 12 to 10 AWG reduces voltage drop by 37%, while 10 to 8 AWG reduces it another 37%. Voltage drop is proportional to resistance."
+  },
+  {
+    question: "Should I oversize wire for future expansion?",
+    answer: "Yes, oversizing by one AWG provides headroom for future loads and reduces voltage drop. The added cost (typically 30-40%) is often justified by energy savings and flexibility. Document spare capacity for future reference."
+  },
+  {
+    question: "What's the difference between stranded and solid wire?",
+    answer: "Stranded wire is more flexible and resistant to fatigue, ideal for vibration or frequent movement. Solid wire is cheaper, easier to terminate, and preferred for permanent building wiring. Both have identical ampacity ratings."
+  },
+  {
+    question: "Can I mix wire sizes in the same circuit?",
+    answer: "Yes, tap rules (NEC 240.21) allow smaller wire for short distances. The smaller wire must be protected by the larger wire's overcurrent device limitations. Common for appliance whips and fixture connections."
+  },
+  {
+    question: "What size wire for electric car charger?",
+    answer: "EV charger wire size depends on charger rating: 32A charger needs 8 AWG (40A circuit), 40A charger needs 6 AWG (50A circuit), 48A charger needs 4 AWG (60A circuit). All require 125% sizing for continuous load."
+  }
+];
+
+export default function WireSizeCalculatorPage() {
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      
+      {/* Quick Answer Section */}
+      <section className="bg-blue-50 border-b border-blue-200">
+        <div className="container py-8">
+          <div className="max-w-6xl mx-auto">
+            <h1 className="text-3xl font-bold text-neutral-900 mb-3">
+              Wire Size Calculator - AWG Electrical Wire Sizing
+            </h1>
+            <p className="text-lg text-neutral-700 mb-6">
+              Calculate the correct wire size (AWG) for any electrical circuit based on current, voltage, and distance. 
+              NEC-compliant calculations for both copper and aluminum conductors.
+            </p>
+            
+            {/* Quick Answer Box */}
+            <div className="bg-white rounded-lg p-6 border border-blue-300 shadow-sm">
+              <div className="flex items-start gap-3">
+                <Zap className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
+                <div className="w-full">
+                  <h2 className="text-xl font-semibold text-neutral-900 mb-4">Quick Reference: Common Wire Sizes</h2>
+                  <div className="grid lg:grid-cols-3 gap-6">
+                    <div>
+                      <h3 className="font-semibold text-neutral-800 mb-2">Residential Circuits:</h3>
+                      <ul className="space-y-1 text-sm text-neutral-600">
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-500" />
+                          <span><strong>15A:</strong> 14 AWG copper</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-500" />
+                          <span><strong>20A:</strong> 12 AWG copper</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-500" />
+                          <span><strong>30A:</strong> 10 AWG copper</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-500" />
+                          <span><strong>50A:</strong> 6 AWG copper</span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-neutral-800 mb-2">240V Appliances:</h3>
+                      <ul className="space-y-1 text-sm text-neutral-600">
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-500" />
+                          <span><strong>Dryer:</strong> 10 AWG (30A)</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-500" />
+                          <span><strong>Range:</strong> 8 AWG (40A)</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-500" />
+                          <span><strong>Hot Tub:</strong> 6 AWG (50A)</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-500" />
+                          <span><strong>EV Charger:</strong> 6 AWG (50A)</span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-neutral-800 mb-2">Service/Feeders:</h3>
+                      <ul className="space-y-1 text-sm text-neutral-600">
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-500" />
+                          <span><strong>60A Sub:</strong> 4 AWG copper</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-500" />
+                          <span><strong>100A Sub:</strong> 1 AWG copper</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-500" />
+                          <span><strong>200A Service:</strong> 2/0 copper</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <AlertCircle className="w-4 h-4 text-amber-500" />
+                          <span>Check voltage drop!</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                    <p className="text-sm text-amber-800">
+                      <strong>Important:</strong> These are starting points based on ampacity only. 
+                      Always verify voltage drop for runs over 50 feet and apply derating factors for temperature, conduit fill, and continuous loads.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Calculator Component */}
+      <section className="py-8">
+        <div className="container">
+          <div className="max-w-6xl mx-auto">
+            <WireSizeCalculator />
+          </div>
+        </div>
+      </section>
+
+      {/* Understanding Wire Sizing Section */}
+      <section className="py-8 bg-neutral-50 border-y">
+        <div className="container">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
+              <BookOpen className="w-6 h-6 text-blue-600" />
+              Complete Guide to Wire Sizing
+            </h2>
+            
+            <div className="grid lg:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-xl font-semibold mb-4">How Wire Sizing Works</h3>
+                <p className="text-neutral-700 mb-4">
+                  Wire sizing involves selecting the correct conductor size based on several factors: 
+                  current carrying capacity (ampacity), voltage drop over distance, temperature conditions, 
+                  and installation method. The National Electrical Code (NEC) provides tables and rules 
+                  to ensure safe and efficient electrical installations.
+                </p>
+                
+                <div className="bg-white p-6 rounded-lg border border-neutral-200 mb-6">
+                  <h4 className="text-lg font-semibold mb-3">Key Factors in Wire Sizing</h4>
+                  <ol className="space-y-3">
+                    <li className="flex gap-3">
+                      <span className="font-bold text-blue-600">1.</span>
+                      <div>
+                        <strong>Ampacity:</strong> The maximum current a conductor can carry continuously without exceeding its temperature rating.
+                      </div>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="font-bold text-blue-600">2.</span>
+                      <div>
+                        <strong>Voltage Drop:</strong> Must not exceed 3% for branch circuits or 5% total to maintain efficiency.
+                      </div>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="font-bold text-blue-600">3.</span>
+                      <div>
+                        <strong>Temperature Rating:</strong> Match conductor rating to lowest rated component in the circuit.
+                      </div>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="font-bold text-blue-600">4.</span>
+                      <div>
+                        <strong>Continuous Loads:</strong> Require 125% sizing per NEC 210.19(A).
+                      </div>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-xl font-semibold mb-4">NEC Wire Sizing Rules</h3>
+                
+                <div className="space-y-4">
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <h4 className="font-semibold text-blue-900 mb-2">Table 310.16</h4>
+                    <p className="text-sm text-blue-800">
+                      Primary ampacity table for conductors rated 0-2000V in raceway, cable, or earth.
+                      Most residential and commercial wiring references this table.
+                    </p>
+                  </div>
+                  
+                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <h4 className="font-semibold text-green-900 mb-2">Article 210.19</h4>
+                    <p className="text-sm text-green-800">
+                      Branch circuit conductors must have ampacity not less than the maximum load served.
+                      Continuous loads require 125% conductor sizing.
+                    </p>
+                  </div>
+                  
+                  <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                    <h4 className="font-semibold text-amber-900 mb-2">Article 240.4</h4>
+                    <p className="text-sm text-amber-800">
+                      Small conductor rule: 14 AWG limited to 15A, 12 AWG to 20A, 10 AWG to 30A 
+                      overcurrent protection regardless of calculated ampacity.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Common Wire Sizes Table */}
+      <section className="py-8">
+        <div className="container">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
+              <Calculator className="w-6 h-6 text-blue-600" />
+              Common Circuit Wire Sizing Guide
+            </h2>
+            
+            <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-neutral-50 border-b border-neutral-200">
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Circuit Type</th>
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Breaker</th>
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Wire Size</th>
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Max 120V</th>
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Max 240V</th>
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Application</th>
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-neutral-100">
+                    {COMMON_WIRE_SIZES.map((item, idx) => (
+                      <tr key={idx} className="hover:bg-neutral-50">
+                        <td className="px-4 py-3 font-medium">{item.circuit}</td>
+                        <td className="px-4 py-3 font-mono">{item.breaker}</td>
+                        <td className="px-4 py-3 font-mono font-semibold text-blue-600">{item.wireSize}</td>
+                        <td className="px-4 py-3">{item.maxLength120V}</td>
+                        <td className="px-4 py-3">{item.maxLength240V}</td>
+                        <td className="px-4 py-3 text-sm">{item.application}</td>
+                        <td className="px-4 py-3 text-xs text-neutral-500">{item.notes}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <p className="text-sm text-blue-800">
+                <strong>Note:</strong> Maximum distances shown maintain 3% voltage drop at rated current. 
+                Actual distances may vary based on load characteristics and installation conditions.
+                Always verify with voltage drop calculations for critical applications.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Wire Ampacity Reference */}
+      <section className="py-8 bg-neutral-50 border-y">
+        <div className="container">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold text-neutral-900 mb-6">
+              NEC Table 310.16 - Wire Ampacity Ratings
+            </h2>
+            
+            <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-neutral-50 border-b border-neutral-200">
+                      <th rowSpan={2} className="px-4 py-3 text-left font-medium text-neutral-700">AWG</th>
+                      <th colSpan={3} className="px-4 py-3 text-center font-medium text-neutral-700 border-l">Copper (Amps)</th>
+                      <th colSpan={3} className="px-4 py-3 text-center font-medium text-neutral-700 border-l">Aluminum (Amps)</th>
+                    </tr>
+                    <tr className="bg-neutral-50 border-b border-neutral-200">
+                      <th className="px-3 py-2 text-center text-xs border-l">60°C</th>
+                      <th className="px-3 py-2 text-center text-xs">75°C</th>
+                      <th className="px-3 py-2 text-center text-xs">90°C</th>
+                      <th className="px-3 py-2 text-center text-xs border-l">60°C</th>
+                      <th className="px-3 py-2 text-center text-xs">75°C</th>
+                      <th className="px-3 py-2 text-center text-xs">90°C</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-neutral-100">
+                    {WIRE_AMPACITY_TABLE.map((row) => (
+                      <tr key={row.awg} className="hover:bg-neutral-50">
+                        <td className="px-4 py-2 font-mono font-semibold">{row.awg}</td>
+                        <td className="px-3 py-2 text-center border-l">{row.copper60C}</td>
+                        <td className="px-3 py-2 text-center font-semibold text-blue-600">{row.copper75C}</td>
+                        <td className="px-3 py-2 text-center">{row.copper90C}</td>
+                        <td className="px-3 py-2 text-center border-l">{row.aluminum60C}</td>
+                        <td className="px-3 py-2 text-center font-semibold text-green-600">{row.aluminum75C}</td>
+                        <td className="px-3 py-2 text-center">{row.aluminum90C}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <div className="mt-6 grid md:grid-cols-2 gap-4">
+              <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
+                <h3 className="font-semibold text-amber-900 mb-2">Temperature Derating Required</h3>
+                <p className="text-sm text-amber-800">
+                  Ampacity must be adjusted for ambient temperatures above 86°F (30°C). 
+                  In attics or outdoor conduit exposed to sunlight, significant derating may be required.
+                </p>
+              </div>
+              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 className="font-semibold text-blue-900 mb-2">75°C Column Most Common</h3>
+                <p className="text-sm text-blue-800">
+                  Most circuit breakers and equipment are rated for 75°C maximum. 
+                  Even with 90°C wire, you must use the 75°C ampacity at terminations.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Temperature Correction Factors */}
+      <section className="py-8">
+        <div className="container">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
+              <Gauge className="w-6 h-6 text-orange-600" />
+              Temperature Correction Factors
+            </h2>
+            
+            <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-neutral-50 border-b border-neutral-200">
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Ambient Temperature</th>
+                      <th className="px-4 py-3 text-center font-medium text-neutral-700">60°C Wire</th>
+                      <th className="px-4 py-3 text-center font-medium text-neutral-700">75°C Wire</th>
+                      <th className="px-4 py-3 text-center font-medium text-neutral-700">90°C Wire</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-neutral-100">
+                    {TEMP_CORRECTION.map((temp, idx) => (
+                      <tr key={idx} className="hover:bg-neutral-50">
+                        <td className="px-4 py-3 font-medium">{temp.tempRange}</td>
+                        <td className="px-4 py-3 text-center font-mono">{temp.factor60C}</td>
+                        <td className="px-4 py-3 text-center font-mono font-semibold">{temp.factor75C}</td>
+                        <td className="px-4 py-3 text-center font-mono">{temp.factor90C}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <div className="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
+              <h3 className="font-semibold text-orange-900 mb-2">How to Apply Temperature Correction</h3>
+              <p className="text-sm text-orange-800 mb-2">
+                Multiply the table ampacity by the correction factor. Example: 12 AWG at 75°C = 25A. 
+                In 104°F ambient: 25A × 0.82 = 20.5A adjusted ampacity.
+              </p>
+              <p className="text-sm text-orange-700">
+                <strong>Common hot locations:</strong> Attics (140°F+), rooftops (130°F+), 
+                boiler rooms (110°F+), outdoor conduit in sun (add 20°F to ambient).
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Common Mistakes Section */}
+      <section className="py-8 bg-red-50 border-y">
+        <div className="container">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
+              <AlertTriangle className="w-6 h-6 text-red-600" />
+              Common Wire Sizing Mistakes to Avoid
+            </h2>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              {COMMON_MISTAKES.map((mistake, idx) => (
+                <div key={idx} className="bg-white p-4 rounded-lg border border-red-200">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-red-600 font-bold text-sm">{idx + 1}</span>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-red-900 mb-1">{mistake.mistake}</h3>
+                      <p className="text-sm text-neutral-700 mb-2">
+                        <strong>Consequence:</strong> {mistake.consequence}
+                      </p>
+                      <div className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                        <p className="text-sm text-green-700">
+                          <strong>Solution:</strong> {mistake.solution}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Cost Comparison Section */}
+      <section className="py-8">
+        <div className="container">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
+              <DollarSign className="w-6 h-6 text-green-600" />
+              Wire Cost Comparison - Copper vs Aluminum
+            </h2>
+            
+            <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-green-50 border-b border-green-200">
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Wire Size</th>
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Copper $/ft</th>
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Aluminum $/ft</th>
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Typical Run</th>
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Copper Total</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-neutral-100">
+                    {WIRE_COST_COMPARISON.map((cost, idx) => (
+                      <tr key={idx} className="hover:bg-green-50">
+                        <td className="px-4 py-3 font-mono font-semibold">{cost.size}</td>
+                        <td className="px-4 py-3 text-red-600 font-semibold">{cost.copperPerFt}</td>
+                        <td className="px-4 py-3 text-green-600 font-semibold">{cost.aluminumPerFt}</td>
+                        <td className="px-4 py-3">{cost.typicalRun}</td>
+                        <td className="px-4 py-3 font-semibold">{cost.copperTotal}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <div className="mt-6 grid md:grid-cols-2 gap-4">
+              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                <h3 className="font-semibold text-green-900 mb-2">Aluminum Wire Savings</h3>
+                <p className="text-sm text-green-800">
+                  Aluminum wire typically costs 40-50% less than copper. For large feeders and services, 
+                  the savings can be thousands of dollars. Requires proper AL-rated connections and installation techniques.
+                </p>
+              </div>
+              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 className="font-semibold text-blue-900 mb-2">When to Choose Copper</h3>
+                <p className="text-sm text-blue-800">
+                  Use copper for: branch circuits under 30A, tight spaces (smaller diameter), 
+                  corrosive environments, high vibration areas, and where superior conductivity justifies cost.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Special Considerations */}
+      <section className="py-8 bg-neutral-50 border-y">
+        <div className="container">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
+              <Shield className="w-6 h-6 text-blue-600" />
+              Special Wire Sizing Considerations
+            </h2>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="font-semibold text-neutral-900 mb-4">Continuous Loads (3+ Hours)</h3>
+                <div className="bg-white p-4 rounded-lg border border-neutral-200">
+                  <p className="text-sm text-neutral-700 mb-3">
+                    NEC 210.19(A) requires conductors supplying continuous loads to be sized at 125% of the load.
+                  </p>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>40A continuous load</span>
+                      <span className="font-mono font-semibold">50A wire required</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>80A continuous load</span>
+                      <span className="font-mono font-semibold">100A wire required</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-amber-700 mt-3">
+                    Common continuous loads: EV chargers, hot tubs, commercial lighting, heating equipment
+                  </p>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="font-semibold text-neutral-900 mb-4">Conduit Fill Derating</h3>
+                <div className="bg-white p-4 rounded-lg border border-neutral-200">
+                  <p className="text-sm text-neutral-700 mb-3">
+                    More than 3 current-carrying conductors in a raceway require derating per NEC 310.15(C)(1).
+                  </p>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>4-6 conductors</span>
+                      <span className="font-mono font-semibold">80% ampacity</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>7-9 conductors</span>
+                      <span className="font-mono font-semibold">70% ampacity</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>10-20 conductors</span>
+                      <span className="font-mono font-semibold">50% ampacity</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-blue-700 mt-3">
+                    Neutral and ground conductors typically don't count as current-carrying
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-4 mt-6">
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <h4 className="font-semibold text-blue-900 mb-2">Motor Circuits</h4>
+                <p className="text-sm text-blue-800">
+                  Size at 125% of motor FLC per NEC 430.22. Starting current doesn't affect wire size 
+                  but impacts voltage drop.
+                </p>
+              </div>
+              <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                <h4 className="font-semibold text-green-900 mb-2">Parallel Conductors</h4>
+                <p className="text-sm text-green-800">
+                  Minimum 1/0 AWG for parallel runs per NEC 310.10(G). All parallel conductors must be 
+                  identical in length, material, and termination.
+                </p>
+              </div>
+              <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                <h4 className="font-semibold text-purple-900 mb-2">Voltage Drop Priority</h4>
+                <p className="text-sm text-purple-800">
+                  For sensitive electronics and long runs, size for 2% drop instead of 3%. 
+                  Critical for LED drivers and variable frequency drives.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Installation Tips */}
+      <section className="py-8">
+        <div className="container">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
+              <Wrench className="w-6 h-6 text-blue-600" />
+              Professional Installation Tips
+            </h2>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="bg-white p-4 rounded-lg border border-neutral-200">
+                <h3 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                  <Lightbulb className="w-4 h-4" />
+                  Planning Phase
+                </h3>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <span>Calculate both ampacity and voltage drop</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <span>Consider future expansion needs</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <span>Verify temperature ratings match</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <span>Check local code amendments</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg border border-neutral-200">
+                <h3 className="font-semibold text-green-900 mb-3 flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4" />
+                  Best Practices
+                </h3>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Label wire runs clearly at both ends</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Use proper torque specifications</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Apply antioxidant on aluminum</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Document calculations for inspector</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg border border-neutral-200">
+                <h3 className="font-semibold text-amber-900 mb-3 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4" />
+                  Common Issues
+                </h3>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <span>Undersized neutrals in MWBC</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <span>Missing derating in hot attics</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <span>Wrong insulation type for wet areas</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <span>Mixing wire types in same circuit</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-8 bg-neutral-50 border-y">
+        <div className="container">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
+              <Info className="w-6 h-6 text-blue-600" />
+              Wire Sizing Frequently Asked Questions
+            </h2>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              {faqItems.map((item, idx) => (
+                <div key={idx} className="bg-white p-4 rounded-lg border border-neutral-200">
+                  <h3 className="font-semibold text-neutral-900 mb-2 flex items-start gap-2">
+                    <span className="text-blue-600 flex-shrink-0">Q:</span>
+                    {item.question}
+                  </h3>
+                  <p className="text-sm text-neutral-600 leading-relaxed pl-6">
+                    <span className="text-green-600 font-semibold">A: </span>
+                    {item.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Related Calculators */}
+      <section className="py-8">
+        <div className="container">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold text-neutral-900 mb-6">
+              Related Electrical Calculators
+            </h2>
+            
+            <div className="grid md:grid-cols-3 gap-4">
+              <a href="/calculators/voltage-drop-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
+                <h3 className="font-semibold text-neutral-900 mb-1">Voltage Drop Calculator</h3>
+                <p className="text-sm text-neutral-600">Calculate voltage loss over distance for any wire size</p>
+              </a>
+              <a href="/calculators/ampacity-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
+                <h3 className="font-semibold text-neutral-900 mb-1">Ampacity Calculator</h3>
+                <p className="text-sm text-neutral-600">Find current carrying capacity with derating factors</p>
+              </a>
+              <a href="/calculators/conduit-fill-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
+                <h3 className="font-semibold text-neutral-900 mb-1">Conduit Fill Calculator</h3>
+                <p className="text-sm text-neutral-600">Calculate conduit size for multiple conductors</p>
+              </a>
+              <a href="/calculators/ground-wire-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
+                <h3 className="font-semibold text-neutral-900 mb-1">Ground Wire Calculator</h3>
+                <p className="text-sm text-neutral-600">Size equipment grounding conductors per NEC 250.122</p>
+              </a>
+              <a href="/calculators/circuit-breaker-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
+                <h3 className="font-semibold text-neutral-900 mb-1">Circuit Breaker Calculator</h3>
+                <p className="text-sm text-neutral-600">Size breakers for proper overcurrent protection</p>
+              </a>
+              <a href="/calculators/electrical-load-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
+                <h3 className="font-semibold text-neutral-900 mb-1">Load Calculator</h3>
+                <p className="text-sm text-neutral-600">Calculate total electrical load for service sizing</p>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <FAQSchema items={faqItems} />
+    </>
+  );
+}

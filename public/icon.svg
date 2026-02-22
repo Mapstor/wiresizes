@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" rx="64" fill="#2563eb"/>
+  <g transform="translate(96, 96)">
+    <!-- Lightning bolt representing electrical -->
+    <path d="M200 32L120 192h60l-20 128 100-160h-60l40-128z" fill="#fbbf24" stroke="#f59e0b" stroke-width="8"/>
+    <!-- Wire coils -->
+    <path d="M60 240c0-20 16-36 36-36s36 16 36 36-16 36-36 36-36-16-36-36z" fill="none" stroke="white" stroke-width="12"/>
+    <path d="M188 240c0-20 16-36 36-36s36 16 36 36-16 36-36 36-36-16-36-36z" fill="none" stroke="white" stroke-width="12"/>
+    <path d="M96 240h128" fill="none" stroke="white" stroke-width="12"/>
+  </g>
+</svg>
