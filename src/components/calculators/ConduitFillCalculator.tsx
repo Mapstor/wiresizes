@@ -134,7 +134,7 @@ export function ConduitFillCalculator() {
   }, [conduitType, conduitSize, wireSize, insulation, numConductors]);
 
   const performCalculation = useCallback(() => {
-    calculate();
+    calculateFill();
     setShowResults(true);
     // Scroll to results
     setTimeout(() => {
@@ -143,7 +143,7 @@ export function ConduitFillCalculator() {
         block: 'start' 
       });
     }, 100);
-  }, [calculate]);
+  }, [calculateFill]);
 
   const handleReset = () => {
     setShowResults(false);
