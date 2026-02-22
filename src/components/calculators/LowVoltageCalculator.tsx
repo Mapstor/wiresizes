@@ -213,7 +213,7 @@ export function LowVoltageCalculator() {
   }, [voltageSystem, distance, maxVoltageDrop, getEffectiveCurrent]);
 
   const performCalculation = useCallback(() => {
-    calculate();
+    calculateLowVoltage();
     setShowResults(true);
     // Scroll to results
     setTimeout(() => {
@@ -222,7 +222,7 @@ export function LowVoltageCalculator() {
         block: 'start' 
       });
     }, 100);
-  }, [calculate]);
+  }, [calculateLowVoltage]);
 
   const handleReset = () => {
     setShowResults(false);
@@ -231,8 +231,8 @@ export function LowVoltageCalculator() {
 
   // Auto-calculation disabled - user must click Calculate button
   // useEffect(() => {
-  //   calculate();
-  // }, [calculate]);
+  //   getCalculatedCurrent();
+  // }, [getCalculatedCurrent]);
 
   const effectiveCurrent = getEffectiveCurrent();
   const calculatedCurrent = getCalculatedCurrent();
