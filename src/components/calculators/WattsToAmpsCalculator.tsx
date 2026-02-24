@@ -202,7 +202,6 @@ export function WattsToAmpsCalculator() {
                 </div>
               )}
             </div>
-          )}
 
             {/* Wire Comparison Visualization */}
             {copperResult && aluminumResult && (
@@ -255,6 +254,7 @@ export function WattsToAmpsCalculator() {
             )}
           </div>
         )}
+      </div>
     </CalculatorLayout>
   );
 }

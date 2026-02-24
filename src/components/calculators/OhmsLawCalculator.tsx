@@ -372,6 +372,7 @@ export function OhmsLawCalculator() {
           )}
           </div>
         )}
+      </div>
     </CalculatorLayout>
   );
 }

@@ -352,8 +352,6 @@ export function BTUToWattsCalculator() {
         {showResults && result && (
           <div className="space-y-6" ref={resultsRef}>
             <h2 className="text-lg font-semibold">Calculation Results</h2>
-            {result ? (
-            <>
               {/* Main Power Result */}
               <div className="text-center p-6 bg-primary-50 rounded-xl border-2 border-primary-200">
                 <div className="text-sm text-primary-600 font-medium mb-2">Electrical Power Required</div>
@@ -499,25 +497,29 @@ export function BTUToWattsCalculator() {
                   {efficiency > 100 ? (
                     <div>
                       <strong>Heat Pump Operation:</strong> For every 1 kW of electrical input, 
-                      this equipment provides {(efficiency/100).toFixed(1)} kW of heating/cooling output.
-                      This is {((efficiency-100)/100*result.kilowatts).toFixed(1)} kW more than direct electric resistance.
+                      this equipment provides {(efficiency / 100).toFixed(1)} kW of heating/cooling output.
+                      This is {((efficiency - 100) / 100 * result.kilowatts).toFixed(1)} kW more than direct electric resistance.
                     </div>
                   ) : (
                     <div>
-                      <strong>Combustion Equipment:</strong> {(100-efficiency).toFixed(0)}% of the fuel energy 
+                      <strong>Combustion Equipment:</strong> {(100 - efficiency).toFixed(0)}% of the fuel energy 
                       is lost through exhaust and inefficiencies. Only {efficiency}% becomes useful heat.
                     </div>
                   )}
                 </div>
               </div>
-            </>
-          ) : (
+          </div>
+        )}
+        
+        {/* No Results Placeholder */}
+        {!showResults && (
+          <div className="space-y-6">
             <div className="bg-neutral-50 border-2 border-dashed border-neutral-300 rounded-xl p-8 text-center">
               <Thermometer className="w-12 h-12 text-neutral-400 mx-auto mb-3" />
               <p className="text-neutral-600">Enter BTU rating to calculate power requirements</p>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </CalculatorLayout>
   );

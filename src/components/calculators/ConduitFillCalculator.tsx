@@ -287,8 +287,6 @@ export function ConduitFillCalculator() {
         {showResults && result && (
           <div className="space-y-6" ref={resultsRef}>
             <h2 className="text-lg font-semibold">Calculation Results</h2>
-          {result && (
-            <>
               {/* Main Result */}
               <div className={`rounded-xl p-6 border-2 ${
                 result.isCompliant 

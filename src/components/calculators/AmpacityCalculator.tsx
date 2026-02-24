@@ -281,9 +281,11 @@ export function AmpacityCalculator() {
                   </span>
                 </div>
               )}
+            </div>
+          )}
 
-              {/* Aluminum Results */}
-              {aluminumResult && (
+          {/* Aluminum Results */}
+          {aluminumResult && (
             <div className="bg-aluminum-50 border border-aluminum-200 rounded-lg p-4">
               <h3 className="text-sm font-semibold text-aluminum-700 mb-3 flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-gradient-to-br from-aluminum-300 to-aluminum-500"></div>
@@ -316,14 +318,16 @@ export function AmpacityCalculator() {
                   </span>
                 </div>
               )}
+            </div>
+          )}
 
-              {/* NEC Reference */}
-              <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
-                <p className="text-xs text-neutral-600">
-                  <strong>NEC References:</strong> Table 310.16, 310.15(B)(1) Ambient Temperature Correction,
-                  310.15(B)(2) Adjustment for More Than Three Conductors
-                </p>
-              </div>
+          {/* NEC Reference */}
+          <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
+            <p className="text-xs text-neutral-600">
+              <strong>NEC References:</strong> Table 310.16, 310.15(B)(1) Ambient Temperature Correction,
+              310.15(B)(2) Adjustment for More Than Three Conductors
+            </p>
+          </div>
             </div>
           </div>
         )}

@@ -330,8 +330,6 @@ export default function AmpsToWattsCalculator() {
             </div>
           </div>
         </div>
-
-        </div>
         
         {/* Buttons */}
         <div className="flex gap-4 mt-6">
