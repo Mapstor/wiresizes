@@ -115,9 +115,11 @@ export function WattsToAmpsCalculator() {
       onShare={handleShare}
       onPrint={handlePrint}
     >
-      <div className="grid lg:grid-cols-2 gap-6 p-6">
-        {/* Inputs Column */}
-        <div className="space-y-6">
+      <div className="max-w-4xl mx-auto p-6 space-y-8">
+        {/* Inputs Section */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h2 className="text-lg font-semibold mb-6">Input Parameters</h2>
+          <div className="grid md:grid-cols-2 gap-6">
           <Input
             label="Power (Watts)"
             type="number"
@@ -168,26 +170,29 @@ export function WattsToAmpsCalculator() {
             suffix=" ft"
           />
 
-          {/* Calculate Button */}
-          <Button onClick={performCalculation} className="w-full">
-            <Calculator className="w-4 h-4" />
-            Calculate
-          </Button>
+          </div>
 
-          {/* Reset Button */}
-          <Button variant="secondary" onClick={handleReset} className="w-full">
-            <RefreshCw className="w-4 h-4" />
-            Reset
-          </Button>
+          {/* Buttons */}
+          <div className="flex gap-4 mt-6">
+            <Button onClick={performCalculation} className="flex-1">
+              <Calculator className="w-4 h-4" />
+              Calculate
+            </Button>
+            <Button variant="secondary" onClick={handleReset} className="flex-1">
+              <RefreshCw className="w-4 h-4" />
+              Reset
+            </Button>
+          </div>
         </div>
-        
-        {/* Results Column */}
-        <div className="space-y-6" ref={resultsRef}>
-          {/* Amps Result */}
-          {showResults && (
+
+        {/* Results Section */}
+        {showResults && (
+          <div className="space-y-6" ref={resultsRef}>
+            <h2 className="text-lg font-semibold">Calculation Results</h2>
+            {/* Amps Result */}
             <div className="text-center p-6 bg-primary-50 rounded-xl border-2 border-primary-200">
               <div className="text-sm text-primary-600 font-medium mb-2">Calculated Current</div>
-              <div className="text-4xl font-bold font-mono text-primary-700">
+              <div className="text-2xl sm:text-4xl font-bold font-mono text-primary-700 break-words min-w-0">
                 {amps.toFixed(2)}
               </div>
               <div className="text-xl font-medium text-primary-600 mt-1">Amps</div>
@@ -199,8 +204,8 @@ export function WattsToAmpsCalculator() {
             </div>
           )}
 
-          {/* Wire Comparison Visualization */}
-          {showResults && copperResult && aluminumResult && (
+            {/* Wire Comparison Visualization */}
+            {copperResult && aluminumResult && (
             <WireComparison
               copperAwg={copperResult.awg}
               aluminumAwg={aluminumResult.awg}
@@ -208,8 +213,8 @@ export function WattsToAmpsCalculator() {
             />
           )}
 
-          {/* Wire Size Results */}
-          {showResults && copperResult && aluminumResult && (
+            {/* Wire Size Results */}
+            {copperResult && aluminumResult && (
             <div className="grid gap-4">
               {/* Copper Result */}
               <div>
@@ -247,9 +252,9 @@ export function WattsToAmpsCalculator() {
                 />
               </div>
             </div>
-          )}
-        </div>
-      </div>
+            )}
+          </div>
+        )}
     </CalculatorLayout>
   );
 }

@@ -245,9 +245,11 @@ export function GroundWireCalculator() {
       onShare={handleShare}
       onPrint={handlePrint}
     >
-      <div className="grid lg:grid-cols-2 gap-6 p-6">
-        {/* Inputs Column */}
-        <div className="space-y-6">
+      <div className="max-w-4xl mx-auto p-6 space-y-8">
+        {/* Input Parameters */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-6">Input Parameters</h2>
+          <div className="grid md:grid-cols-2 gap-6">
           <Select
             label="Calculation Method"
             options={[
@@ -347,23 +349,26 @@ export function GroundWireCalculator() {
             </div>
           </div>
 
-          {/* Calculate Button */}
-          <Button onClick={performCalculation} className="w-full">
-            <Calculator className="w-4 h-4" />
-            Calculate Ground Wire Size
-          </Button>
-
-          {/* Reset Button */}
-          <Button variant="secondary" onClick={handleReset} className="w-full">
-            <RefreshCw className="w-4 h-4" />
-            Reset
-          </Button>
+          </div>
+          
+          {/* Calculate and Reset Buttons */}
+          <div className="flex gap-4 mt-6">
+            <Button onClick={performCalculation} className="flex-1">
+              <Calculator className="w-4 h-4" />
+              Calculate Ground Wire Size
+            </Button>
+            <Button variant="secondary" onClick={handleReset} className="flex-1">
+              <RefreshCw className="w-4 h-4" />
+              Reset
+            </Button>
+          </div>
         </div>
-
-        {/* Results Column */}
-        <div className="space-y-6" ref={resultsRef}>
-          {showResults && result && (
-            <>
+        
+        {/* Results Section */}
+        {showResults && result && (
+          <div className="bg-white rounded-lg border border-gray-200 p-6" ref={resultsRef}>
+            <h2 className="text-lg font-semibold text-gray-800 mb-6">Calculation Results</h2>
+            <div className="space-y-6">
               {/* Main Result */}
               <div className="bg-green-50 border-2 border-green-200 rounded-xl p-6">
                 <div className="flex items-center gap-2 mb-4">
@@ -372,7 +377,7 @@ export function GroundWireCalculator() {
                 </div>
 
                 <div className="text-center mb-4">
-                  <div className="text-4xl font-bold font-mono text-green-700">
+                  <div className="text-2xl sm:text-4xl font-bold font-mono text-green-700 break-words min-w-0">
                     #{result.requiredSize}
                   </div>
                   <div className="text-xl font-medium text-green-600 mt-1">AWG</div>
@@ -393,7 +398,7 @@ export function GroundWireCalculator() {
                   NEC Table 250.122 (Partial)
                 </div>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-xs">
+                  <table className="w-full text-xs sm:text-sm">
                     <thead>
                       <tr className="border-b border-neutral-300">
                         <th className="text-left p-2">Overcurrent Device</th>
@@ -457,9 +462,9 @@ export function GroundWireCalculator() {
                 <div className="text-sm font-medium text-neutral-700 mb-2">Code Reference</div>
                 <div className="text-sm text-neutral-600">{result.necReference}</div>
               </div>
-            </>
-          )}
-        </div>
+            </div>
+          </div>
+        )}
       </div>
     </CalculatorLayout>
   );

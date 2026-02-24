@@ -262,9 +262,11 @@ export function WelderCalculator() {
       onShare={handleShare}
       onPrint={handlePrint}
     >
-      <div className="grid lg:grid-cols-2 gap-6 p-6">
-        {/* Inputs Column */}
-        <div className="space-y-6">
+      <div className="max-w-4xl mx-auto p-6 space-y-8">
+        {/* Input Parameters */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-6">Input Parameters</h2>
+          <div className="grid md:grid-cols-2 gap-6">
           {/* Preset Toggle */}
           <div className="flex items-center gap-2">
             <input
@@ -390,23 +392,26 @@ export function WelderCalculator() {
           </div>
         
 
-          {/* Calculate Button */}
-          <Button onClick={performCalculation} className="w-full">
-            <Calculator className="w-4 h-4" />
-            Calculate
-          </Button>
-
-          {/* Reset Button */}
-          <Button variant="secondary" onClick={handleReset} className="w-full">
-            <RefreshCw className="w-4 h-4" />
-            Reset
-          </Button>
+          </div>
+          
+          {/* Calculate and Reset Buttons */}
+          <div className="flex gap-4 mt-6">
+            <Button onClick={performCalculation} className="flex-1">
+              <Calculator className="w-4 h-4" />
+              Calculate
+            </Button>
+            <Button variant="secondary" onClick={handleReset} className="flex-1">
+              <RefreshCw className="w-4 h-4" />
+              Reset
+            </Button>
+          </div>
         </div>
-
-        {/* Results Column */}
-        <div className="space-y-6">
-          {result && (
-            <>
+        
+        {/* Results Section */}
+        {showResults && result && (
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <h2 className="text-lg font-semibold text-gray-800 mb-6">Calculation Results</h2>
+            <div className="space-y-6">
               {/* Current Analysis */}
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-3">
@@ -561,9 +566,9 @@ export function WelderCalculator() {
                   <div>• Consider voltage drop for long runs</div>
                 </div>
               </div>
-            </>
-          )}
-        </div>
+            </div>
+          </div>
+        )}
       </div>
     </CalculatorLayout>
   );

@@ -201,9 +201,11 @@ export function KVAToAmpsCalculator() {
       onShare={handleShare}
       onPrint={handlePrint}
     >
-      <div className="grid lg:grid-cols-2 gap-6 p-6">
-        {/* Inputs Column */}
-        <div className="space-y-6">
+      <div className="max-w-4xl mx-auto p-6 space-y-8">
+        {/* Input Parameters */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-6">Input Parameters</h2>
+          <div className="grid md:grid-cols-2 gap-6">
           {/* Preset Toggle */}
           <div className="flex items-center gap-2">
             <input
@@ -323,29 +325,32 @@ export function KVAToAmpsCalculator() {
           </div>
         
 
-          {/* Calculate Button */}
-          <Button onClick={performCalculation} className="w-full">
-            <Calculator className="w-4 h-4" />
-            Calculate
-          </Button>
-
-          {/* Reset Button */}
-          <Button variant="secondary" onClick={handleReset} className="w-full">
-            <RefreshCw className="w-4 h-4" />
-            Reset
-          </Button>
+          </div>
+          
+          {/* Calculate and Reset Buttons */}
+          <div className="flex gap-4 mt-6">
+            <Button onClick={performCalculation} className="flex-1">
+              <Calculator className="w-4 h-4" />
+              Calculate
+            </Button>
+            <Button variant="secondary" onClick={handleReset} className="flex-1">
+              <RefreshCw className="w-4 h-4" />
+              Reset
+            </Button>
+          </div>
         </div>
-
-        {/* Results Column */}
-        <div className="space-y-6">
-          {showResults && result ? (
-            <>
+        
+        {/* Results Section */}
+        {showResults && result && (
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <h2 className="text-lg font-semibold text-gray-800 mb-6">Calculation Results</h2>
+            <div className="space-y-6">
               {/* Main Current Result */}
               <div className="text-center p-6 bg-primary-50 rounded-xl border-2 border-primary-200">
                 <div className="text-sm text-primary-600 font-medium mb-2">
                   {isTransformer ? 'Secondary' : 'Load'} Current
                 </div>
-                <div className="text-4xl font-bold font-mono text-primary-700">
+                <div className="text-2xl sm:text-4xl font-bold font-mono text-primary-700 break-words min-w-0">
                   {result.current}
                 </div>
                 <div className="text-xl font-medium text-primary-600 mt-1">Amps</div>
@@ -379,14 +384,14 @@ export function KVAToAmpsCalculator() {
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
                     <span className="text-green-600">Circuit Amperage:</span>
-                    <p className="font-mono font-semibold text-lg">{result.circuitAmps}A</p>
+                    <p className="font-mono font-semibold text-sm sm:text-lg break-words">{result.circuitAmps}A</p>
                     {isTransformer && (
                       <p className="text-xs text-green-600">(125% of load)</p>
                     )}
                   </div>
                   <div>
                     <span className="text-green-600">Breaker Size:</span>
-                    <p className="font-mono font-semibold text-lg">{result.breakerSize}A</p>
+                    <p className="font-mono font-semibold text-sm sm:text-lg break-words">{result.breakerSize}A</p>
                     <p className="text-xs text-green-600">(Next standard size)</p>
                   </div>
                 </div>
@@ -446,7 +451,7 @@ export function KVAToAmpsCalculator() {
               <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                 <div className="text-sm font-medium text-purple-800 mb-3">Current at Different Voltages</div>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-xs">
+                  <table className="w-full text-xs sm:text-sm">
                     <thead>
                       <tr className="border-b border-purple-300">
                         <th className="text-left p-1">Voltage</th>
@@ -519,14 +524,9 @@ export function KVAToAmpsCalculator() {
                   )}
                 </div>
               </div>
-            </>
-          ) : (
-            <div className="bg-neutral-50 border-2 border-dashed border-neutral-300 rounded-xl p-8 text-center">
-              <Calculator className="w-12 h-12 text-neutral-400 mx-auto mb-3" />
-              <p className="text-neutral-600">Enter kVA rating to calculate current</p>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </CalculatorLayout>
   );

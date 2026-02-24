@@ -117,80 +117,85 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
       onShare={handleShare}
       onPrint={handlePrint}
     >
-      <div className="grid lg:grid-cols-2 gap-6 p-6">
-        {/* Inputs Column */}
-        <div className="space-y-6">
-          {/* Amperage Slider */}
-          <Slider
-            label="Amperage"
-            value={inputs.amps}
-            onChange={(amps) => setInputs((prev) => ({ ...prev, amps }))}
-            min={15}
-            max={400}
-            step={5}
-            suffix="A"
-          />
+      <div className="max-w-4xl mx-auto p-6 space-y-8">
+        {/* Inputs Section */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h2 className="text-lg font-semibold mb-6">Input Parameters</h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Amperage Slider */}
+            <Slider
+              label="Amperage"
+              value={inputs.amps}
+              onChange={(amps) => setInputs((prev) => ({ ...prev, amps }))}
+              min={15}
+              max={400}
+              step={5}
+              suffix="A"
+            />
 
-          {/* Distance Slider */}
-          <Slider
-            label="Distance (one-way)"
-            value={inputs.distance}
-            onChange={(distance) => setInputs((prev) => ({ ...prev, distance }))}
-            min={0}
-            max={500}
-            step={10}
-            suffix=" ft"
-          />
+            {/* Distance Slider */}
+            <Slider
+              label="Distance (one-way)"
+              value={inputs.distance}
+              onChange={(distance) => setInputs((prev) => ({ ...prev, distance }))}
+              min={0}
+              max={500}
+              step={10}
+              suffix=" ft"
+            />
 
-          {/* Voltage Input */}
-          <VoltageInput
-            label="Voltage"
-            value={inputs.voltage}
-            onChange={(voltage) => setInputs((prev) => ({ ...prev, voltage }))}
-            min={1}
-            max={1000}
-          />
+            {/* Voltage Input */}
+            <VoltageInput
+              label="Voltage"
+              value={inputs.voltage}
+              onChange={(voltage) => setInputs((prev) => ({ ...prev, voltage }))}
+              min={1}
+              max={1000}
+            />
 
-          {/* Phase Select */}
-          <Select
-            label="Phase"
-            options={PHASE_OPTIONS}
-            value={inputs.phase}
-            onChange={(e) =>
-              setInputs((prev) => ({
-                ...prev,
-                phase: e.target.value as 'single' | 'three',
-              }))
-            }
-          />
+            {/* Phase Select */}
+            <Select
+              label="Phase"
+              options={PHASE_OPTIONS}
+              value={inputs.phase}
+              onChange={(e) =>
+                setInputs((prev) => ({
+                  ...prev,
+                  phase: e.target.value as 'single' | 'three',
+                }))
+              }
+            />
+          </div>
 
-          {/* Calculate Button */}
-          <Button onClick={performCalculation} className="w-full mb-4">
-            <Calculator className="w-4 h-4" />
-            Calculate Wire Size
-          </Button>
-
-          {/* Reset Button */}
-          <Button variant="secondary" onClick={handleReset} className="w-full">
-            <RefreshCw className="w-4 h-4" />
-            Reset to Defaults
-          </Button>
+          {/* Buttons */}
+          <div className="flex gap-4 mt-6">
+            <Button onClick={performCalculation} className="flex-1">
+              <Calculator className="w-4 h-4" />
+              Calculate Wire Size
+            </Button>
+            <Button variant="secondary" onClick={handleReset} className="flex-1">
+              <RefreshCw className="w-4 h-4" />
+              Reset to Defaults
+            </Button>
+          </div>
         </div>
 
-        {/* Results Column */}
-        <div className="space-y-6" ref={resultsRef}>
-          {/* Wire Comparison Visualization */}
-          {showResults && copperResult && aluminumResult && (
-            <WireComparison
-              copperAwg={copperResult.awg}
-              aluminumAwg={aluminumResult.awg}
-              amps={inputs.amps}
-            />
-          )}
+        {/* Results Section */}
+        {showResults && (
+          <div className="space-y-6" ref={resultsRef}>
+            <h2 className="text-lg font-semibold">Calculation Results</h2>
+            
+            {/* Wire Comparison Visualization */}
+            {copperResult && aluminumResult && (
+              <WireComparison
+                copperAwg={copperResult.awg}
+                aluminumAwg={aluminumResult.awg}
+                amps={inputs.amps}
+              />
+            )}
 
-          {/* Results Display for Both Materials */}
-          {showResults && (
-            <div className="grid gap-4">
+            {/* Results Display for Both Materials */}
+            <div className="grid md:grid-cols-2 gap-4">
               {/* Copper Result */}
               {copperResult && (
                 <div>
@@ -231,18 +236,16 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
                 </div>
               )}
             </div>
-          )}
 
-          {/* Cost Comparison Note */}
-          {showResults && (
+            {/* Cost Comparison Note */}
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
               <p className="text-sm text-amber-800">
                 <strong>Cost Tip:</strong> Aluminum wire costs 30-50% less than copper but requires larger sizes. 
                 Consider installation complexity and connection requirements when choosing.
               </p>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </CalculatorLayout>
   );

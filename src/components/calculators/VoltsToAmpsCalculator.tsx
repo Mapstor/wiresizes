@@ -150,9 +150,11 @@ export function VoltsToAmpsCalculator() {
       onShare={handleShare}
       onPrint={handlePrint}
     >
-      <div className="grid lg:grid-cols-2 gap-6 p-6">
-        {/* Inputs Column */}
-        <div className="space-y-6">
+      <div className="max-w-4xl mx-auto p-6 space-y-8">
+        {/* Input Parameters */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-6">Input Parameters</h2>
+          <div className="grid md:grid-cols-2 gap-6">
           <Input
             label="Voltage"
             type="number"
@@ -232,27 +234,30 @@ export function VoltsToAmpsCalculator() {
           </div>
         
 
-          {/* Calculate Button */}
-          <Button onClick={performCalculation} className="w-full">
-            <Calculator className="w-4 h-4" />
-            Calculate
-          </Button>
-
-          {/* Reset Button */}
-          <Button variant="secondary" onClick={handleReset} className="w-full">
-            <RefreshCw className="w-4 h-4" />
-            Reset
-          </Button>
+          </div>
+          
+          {/* Calculate and Reset Buttons */}
+          <div className="flex gap-4 mt-6">
+            <Button onClick={performCalculation} className="flex-1">
+              <Calculator className="w-4 h-4" />
+              Calculate
+            </Button>
+            <Button variant="secondary" onClick={handleReset} className="flex-1">
+              <RefreshCw className="w-4 h-4" />
+              Reset
+            </Button>
+          </div>
         </div>
-
-        {/* Results Column */}
-        <div className="space-y-6" ref={resultsRef}>
-          {showResults && result ? (
-            <>
+        
+        {/* Results Section */}
+        {showResults && result && (
+          <div className="bg-white rounded-lg border border-gray-200 p-6" ref={resultsRef}>
+            <h2 className="text-lg font-semibold text-gray-800 mb-6">Calculation Results</h2>
+            <div className="space-y-6">
               {/* Main Current Result */}
               <div className="text-center p-6 bg-primary-50 rounded-xl border-2 border-primary-200">
                 <div className="text-sm text-primary-600 font-medium mb-2">Current Draw</div>
-                <div className="text-4xl font-bold font-mono text-primary-700">
+                <div className="text-2xl sm:text-4xl font-bold font-mono text-primary-700 break-words min-w-0">
                   {result.current}
                 </div>
                 <div className="text-xl font-medium text-primary-600 mt-1">Amps</div>
@@ -267,7 +272,7 @@ export function VoltsToAmpsCalculator() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white rounded-lg p-3">
                     <div className="text-xs text-neutral-500">Real Power (P)</div>
-                    <div className="text-lg font-bold font-mono text-green-600">
+                    <div className="text-sm sm:text-lg font-bold font-mono text-green-600 break-words">
                       {result.power.toLocaleString()}
                     </div>
                     <div className="text-sm text-neutral-600">W</div>
@@ -275,7 +280,7 @@ export function VoltsToAmpsCalculator() {
                   
                   <div className="bg-white rounded-lg p-3">
                     <div className="text-xs text-neutral-500">Apparent Power (S)</div>
-                    <div className="text-lg font-bold font-mono text-blue-600">
+                    <div className="text-sm sm:text-lg font-bold font-mono text-blue-600 break-words">
                       {result.apparentPower.toLocaleString()}
                     </div>
                     <div className="text-sm text-neutral-600">VA</div>
@@ -283,7 +288,7 @@ export function VoltsToAmpsCalculator() {
                   
                   <div className="bg-white rounded-lg p-3">
                     <div className="text-xs text-neutral-500">Reactive Power (Q)</div>
-                    <div className="text-lg font-bold font-mono text-orange-600">
+                    <div className="text-sm sm:text-lg font-bold font-mono text-orange-600 break-words">
                       {result.reactivePower.toLocaleString()}
                     </div>
                     <div className="text-sm text-neutral-600">VAR</div>
@@ -291,7 +296,7 @@ export function VoltsToAmpsCalculator() {
                   
                   <div className="bg-white rounded-lg p-3">
                     <div className="text-xs text-neutral-500">Power Factor</div>
-                    <div className="text-lg font-bold font-mono text-purple-600">
+                    <div className="text-sm sm:text-lg font-bold font-mono text-purple-600 break-words">
                       {result.powerFactor.toFixed(2)}
                     </div>
                     <div className="text-sm text-neutral-600">
@@ -343,7 +348,7 @@ export function VoltsToAmpsCalculator() {
               <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
                 <div className="text-sm font-medium text-neutral-700 mb-3">Common Voltage Comparisons</div>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-xs">
+                  <table className="w-full text-xs sm:text-sm">
                     <thead>
                       <tr className="border-b border-neutral-300">
                         <th className="text-left p-1">Voltage</th>
@@ -371,14 +376,9 @@ export function VoltsToAmpsCalculator() {
                   </table>
                 </div>
               </div>
-            </>
-          ) : (
-            <div className="bg-neutral-50 border-2 border-dashed border-neutral-300 rounded-xl p-8 text-center">
-              <Calculator className="w-12 h-12 text-neutral-400 mx-auto mb-3" />
-              <p className="text-neutral-600">Enter voltage and power to calculate current</p>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </CalculatorLayout>
   );

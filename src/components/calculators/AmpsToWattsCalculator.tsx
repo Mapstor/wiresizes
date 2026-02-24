@@ -129,12 +129,12 @@ export default function AmpsToWattsCalculator() {
   }, []);
 
   return (
-    <div className="space-y-8">
-      {/* Calculator Input Section */}
-      <div className="bg-white rounded-xl shadow-lg p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-6">Power Conversion Parameters</h3>
+    <div className="max-w-4xl mx-auto p-6 space-y-8">
+      {/* Inputs Section */}
+      <div className="bg-gray-50 rounded-lg p-6">
+        <h2 className="text-lg font-semibold mb-6">Input Parameters</h2>
         
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-6">
           {/* Left Column */}
           <div className="space-y-6">
             {/* Current Input */}
@@ -331,14 +331,16 @@ export default function AmpsToWattsCalculator() {
           </div>
         </div>
 
-        {/* Calculate and Reset Buttons */}
-        <div className="grid grid-cols-2 gap-4 mt-8">
-          <Button onClick={performCalculation} className="w-full">
+        </div>
+        
+        {/* Buttons */}
+        <div className="flex gap-4 mt-6">
+          <Button onClick={performCalculation} className="flex-1">
             <Calculator className="w-4 h-4" />
             Calculate Power
           </Button>
           
-          <Button variant="secondary" onClick={handleReset} className="w-full">
+          <Button variant="secondary" onClick={handleReset} className="flex-1">
             <RotateCcw className="w-4 h-4" />
             Reset Calculator
           </Button>
@@ -348,6 +350,7 @@ export default function AmpsToWattsCalculator() {
       {/* Results Section */}
       {showResults && result && (
         <div className="space-y-6" ref={resultsRef}>
+          <h2 className="text-lg font-semibold">Calculation Results</h2>
           {/* Primary Results */}
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center gap-2 mb-6">

@@ -82,86 +82,82 @@ export function VoltageDropCalculator() {
       title="Voltage Drop Calculator"
       description="Calculate voltage drop for both copper and aluminum conductors"
     >
-      <div className="grid lg:grid-cols-2 gap-6 p-6">
-        {/* Inputs Column */}
-        <div className="space-y-6">
-          {/* Wire Size Select */}
-          <Select
-            label="Wire Size"
-            options={WIRE_SIZE_OPTIONS}
-            value={inputs.awg}
-            onChange={(e) => setInputs((p) => ({ ...p, awg: e.target.value }))}
-          />
+      <div className="max-w-4xl mx-auto p-6 space-y-8">
+        {/* Inputs Section */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h2 className="text-lg font-semibold mb-6">Input Parameters</h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Wire Size Select */}
+            <Select
+              label="Wire Size"
+              options={WIRE_SIZE_OPTIONS}
+              value={inputs.awg}
+              onChange={(e) => setInputs((p) => ({ ...p, awg: e.target.value }))}
+            />
 
-          {/* Current Input */}
-          <div className="space-y-1">
-            <label className="block text-sm font-medium text-neutral-700">
-              Current (Amps)
-            </label>
-            <Input
-              type="number"
-              value={inputs.amps}
-              onChange={(e) => setInputs((p) => ({ ...p, amps: Number(e.target.value) || 0 }))}
+            {/* Current Input */}
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-neutral-700">
+                Current (Amps)
+              </label>
+              <Input
+                type="number"
+                value={inputs.amps}
+                onChange={(e) => setInputs((p) => ({ ...p, amps: Number(e.target.value) || 0 }))}
+                min={0}
+                max={1000}
+                suffix="A"
+              />
+            </div>
+
+            {/* Distance Slider */}
+            <Slider
+              label="Distance (one-way)"
+              value={inputs.distance}
+              onChange={(distance) => setInputs((p) => ({ ...p, distance }))}
               min={0}
+              max={500}
+              step={10}
+              suffix=" ft"
+            />
+
+            {/* Voltage Input */}
+            <VoltageInput
+              label="Voltage"
+              value={inputs.voltage}
+              onChange={(voltage) => setInputs((p) => ({ ...p, voltage }))}
+              min={1}
               max={1000}
-              suffix="A"
+            />
+
+            {/* Phase Select */}
+            <Select
+              label="Phase"
+              options={PHASE_OPTIONS}
+              value={inputs.phase}
+              onChange={(e) => setInputs((p) => ({ 
+                ...p, 
+                phase: e.target.value as 'single' | 'three' 
+              }))}
             />
           </div>
 
-          {/* Distance Slider */}
-          <Slider
-            label="Distance (one-way)"
-            value={inputs.distance}
-            onChange={(distance) => setInputs((p) => ({ ...p, distance }))}
-            min={0}
-            max={500}
-            step={10}
-            suffix=" ft"
-          />
-
-          {/* Voltage Input */}
-          <VoltageInput
-            label="Voltage"
-            value={inputs.voltage}
-            onChange={(voltage) => setInputs((p) => ({ ...p, voltage }))}
-            min={1}
-            max={1000}
-          />
-
-          {/* Phase Select */}
-          <Select
-            label="Phase"
-            options={PHASE_OPTIONS}
-            value={inputs.phase}
-            onChange={(e) => setInputs((p) => ({ 
-              ...p, 
-              phase: e.target.value as 'single' | 'three' 
-            }))}
-          />
-
-          {/* Calculate Button */}
-          <Button onClick={performCalculation} className="w-full mb-4">
-            <Calculator className="w-4 h-4" />
-            Calculate Voltage Drop
-          </Button>
-
-          {/* Reset Button */}
-          <Button variant="secondary" onClick={handleReset} className="w-full">
-            <RotateCcw className="w-4 h-4" />
-            Reset to Defaults
-          </Button>
-
-          {/* Divider Line */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-neutral-200"></div>
-            </div>
+          {/* Buttons */}
+          <div className="flex gap-4 mt-6">
+            <Button onClick={performCalculation} className="flex-1">
+              <Calculator className="w-4 h-4" />
+              Calculate Voltage Drop
+            </Button>
+            <Button variant="secondary" onClick={handleReset} className="flex-1">
+              <RotateCcw className="w-4 h-4" />
+              Reset to Defaults
+            </Button>
           </div>
 
           {/* Prominent Result Display with Animation */}
           {showResults && copperResult && (
             <motion.div 
-              className="mt-2 p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border-2 border-green-200 shadow-lg"
+              className="mt-6 p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border-2 border-green-200 shadow-lg"
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ 
@@ -204,22 +200,23 @@ export function VoltageDropCalculator() {
           )}
         </div>
 
-        {/* Results Column */}
-        <div className="space-y-6" ref={resultsRef}>
-          {/* Voltage Drop Visualization - Show copper by default */}
-          {showResults && copperResult && (
-            <VoltageDropVisual
-              sourceVoltage={inputs.voltage}
-              loadVoltage={copperResult.voltageAtLoad}
-              dropPercent={copperResult.voltageDropPercent}
-              distance={inputs.distance}
-              wireSize={inputs.awg}
-            />
-          )}
+        {/* Results Section */}
+        {showResults && (
+          <div className="space-y-6" ref={resultsRef}>
+            <h2 className="text-lg font-semibold">Calculation Results</h2>
+            {/* Voltage Drop Visualization - Show copper by default */}
+            {copperResult && (
+              <VoltageDropVisual
+                sourceVoltage={inputs.voltage}
+                loadVoltage={copperResult.voltageAtLoad}
+                dropPercent={copperResult.voltageDropPercent}
+                distance={inputs.distance}
+                wireSize={inputs.awg}
+              />
+            )}
 
-          {/* Results for Both Materials */}
-          {showResults && (
-            <div className="grid gap-4">
+            {/* Results for Both Materials */}
+            <div className="grid md:grid-cols-2 gap-4">
               {/* Copper Result */}
               {copperResult && (
                 <div className="bg-white border border-neutral-200 rounded-lg p-4">
@@ -324,10 +321,8 @@ export function VoltageDropCalculator() {
                 </div>
               )}
             </div>
-          )}
 
-          {/* Material Comparison Note */}
-          {showResults && (
+            {/* Material Comparison Note */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <p className="text-sm text-blue-800">
                 <strong>Material Comparison:</strong> Aluminum has approximately 61% higher resistance than copper, 
@@ -336,8 +331,8 @@ export function VoltageDropCalculator() {
                 more voltage drop for the same wire size.
               </p>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </CalculatorLayout>
   );

@@ -164,9 +164,11 @@ export function AmpacityCalculator() {
       onShare={handleShare}
       onPrint={handlePrint}
     >
-      <div className="grid lg:grid-cols-2 gap-6 p-6">
-        {/* Inputs Column */}
-        <div className="space-y-6">
+      <div className="max-w-4xl mx-auto p-6 space-y-8">
+        {/* Input Parameters */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-6">Input Parameters</h2>
+          <div className="grid md:grid-cols-2 gap-6">
           {/* Wire Size Select */}
           <Select
             label="Wire Size"
@@ -205,20 +207,22 @@ export function AmpacityCalculator() {
             onChange={(e) => setConduitFill(e.target.value)}
           />
 
-          {/* Calculate Button */}
-          <Button onClick={performCalculation} className="w-full mb-4">
-            <Calculator className="w-4 h-4" />
-            Calculate Ampacity
-          </Button>
-
-          {/* Reset Button */}
-          <Button variant="secondary" onClick={handleReset} className="w-full">
-            <RotateCcw className="w-4 h-4" />
-            Reset to Defaults
-          </Button>
+          </div>
+          
+          {/* Calculate and Reset Buttons */}
+          <div className="flex gap-4 mt-6">
+            <Button onClick={performCalculation} className="flex-1">
+              <Calculator className="w-4 h-4" />
+              Calculate Ampacity
+            </Button>
+            <Button variant="secondary" onClick={handleReset} className="flex-1">
+              <RotateCcw className="w-4 h-4" />
+              Reset to Defaults
+            </Button>
+          </div>
 
           {/* Info Box */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
             <div className="flex gap-2">
               <Info className="w-5 h-5 text-blue-600 flex-shrink-0" />
               <div className="text-sm text-blue-800">
@@ -228,20 +232,23 @@ export function AmpacityCalculator() {
             </div>
           </div>
         </div>
+        
+        {/* Results Section */}
+        {showResults && (copperResult || aluminumResult) && (
+          <div className="bg-white rounded-lg border border-gray-200 p-6" ref={resultsRef}>
+            <h2 className="text-lg font-semibold text-gray-800 mb-6">Calculation Results</h2>
+            <div className="space-y-6">
+              {/* Wire Comparison Visualization */}
+              {copperResult && aluminumResult && (
+                <WireComparison
+                  copperAwg={awg}
+                  aluminumAwg={awg}
+                  amps={Math.max(copperResult.derated, aluminumResult.derated)}
+                />
+              )}
 
-        {/* Results Column */}
-        <div className="space-y-6" ref={resultsRef}>
-          {/* Wire Comparison Visualization */}
-          {showResults && copperResult && aluminumResult && (
-            <WireComparison
-              copperAwg={awg}
-              aluminumAwg={awg}
-              amps={Math.max(copperResult.derated, aluminumResult.derated)}
-            />
-          )}
-
-          {/* Copper Results */}
-          {showResults && copperResult && (
+              {/* Copper Results */}
+              {copperResult && (
             <div className="bg-copper-50 border border-copper-200 rounded-lg p-4">
               <h3 className="text-sm font-semibold text-copper-700 mb-3 flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-gradient-to-br from-copper-400 to-copper-600"></div>
@@ -274,11 +281,9 @@ export function AmpacityCalculator() {
                   </span>
                 </div>
               )}
-            </div>
-          )}
 
-          {/* Aluminum Results */}
-          {showResults && aluminumResult && (
+              {/* Aluminum Results */}
+              {aluminumResult && (
             <div className="bg-aluminum-50 border border-aluminum-200 rounded-lg p-4">
               <h3 className="text-sm font-semibold text-aluminum-700 mb-3 flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-gradient-to-br from-aluminum-300 to-aluminum-500"></div>
@@ -311,17 +316,17 @@ export function AmpacityCalculator() {
                   </span>
                 </div>
               )}
-            </div>
-          )}
 
-          {/* NEC Reference */}
-          <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
-            <p className="text-xs text-neutral-600">
-              <strong>NEC References:</strong> Table 310.16, 310.15(B)(1) Ambient Temperature Correction,
-              310.15(B)(2) Adjustment for More Than Three Conductors
-            </p>
+              {/* NEC Reference */}
+              <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
+                <p className="text-xs text-neutral-600">
+                  <strong>NEC References:</strong> Table 310.16, 310.15(B)(1) Ambient Temperature Correction,
+                  310.15(B)(2) Adjustment for More Than Three Conductors
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </CalculatorLayout>
   );

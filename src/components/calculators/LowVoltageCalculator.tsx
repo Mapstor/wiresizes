@@ -483,7 +483,7 @@ export function LowVoltageCalculator() {
               <div className="bg-neutral-50 rounded-lg p-4">
                 <div className="font-medium text-neutral-900 mb-3">Wire Gauge Reference</div>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-xs">
+                  <table className="w-full text-xs sm:text-sm">
                     <thead>
                       <tr className="border-b border-neutral-300">
                         <th className="px-2 py-1 text-left">AWG</th>

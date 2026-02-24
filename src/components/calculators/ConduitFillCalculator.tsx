@@ -200,9 +200,11 @@ export function ConduitFillCalculator() {
       onShare={handleShare}
       onPrint={handlePrint}
     >
-      <div className="grid lg:grid-cols-2 gap-6 p-6">
-        {/* Inputs Column */}
-        <div className="space-y-6">
+      <div className="max-w-4xl mx-auto p-6 space-y-8">
+        {/* Inputs Section */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h2 className="text-lg font-semibold mb-6">Input Parameters</h2>
+          <div className="grid md:grid-cols-2 gap-6">
           <Select
             label="Conduit Type"
             options={Object.entries(CONDUIT_TYPES).map(([key, label]) => ({
@@ -266,21 +268,25 @@ export function ConduitFillCalculator() {
           </div>
         
 
-          {/* Calculate Button */}
-          <Button onClick={performCalculation} className="w-full">
-            <Calculator className="w-4 h-4" />
-            Calculate
-          </Button>
+          </div>
 
-          {/* Reset Button */}
-          <Button variant="secondary" onClick={handleReset} className="w-full">
-            <RefreshCw className="w-4 h-4" />
-            Reset
-          </Button>
+          {/* Buttons */}
+          <div className="flex gap-4 mt-6">
+            <Button onClick={performCalculation} className="flex-1">
+              <Calculator className="w-4 h-4" />
+              Calculate
+            </Button>
+            <Button variant="secondary" onClick={handleReset} className="flex-1">
+              <RefreshCw className="w-4 h-4" />
+              Reset
+            </Button>
+          </div>
         </div>
 
-        {/* Results Column */}
-        <div className="space-y-6">
+        {/* Results Section */}
+        {showResults && result && (
+          <div className="space-y-6" ref={resultsRef}>
+            <h2 className="text-lg font-semibold">Calculation Results</h2>
           {result && (
             <>
               {/* Main Result */}
@@ -414,9 +420,8 @@ export function ConduitFillCalculator() {
                   </div>
                 </div>
               </div>
-            </>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </CalculatorLayout>
   );

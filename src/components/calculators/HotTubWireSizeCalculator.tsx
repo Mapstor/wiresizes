@@ -669,9 +669,9 @@ export default function HotTubWireSizeCalculator() {
 
       {/* Results */}
       {showResults && results && (
-        <div className="grid lg:grid-cols-3 gap-6" ref={resultsRef}>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6" ref={resultsRef}>
           {/* Electrical Requirements */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-xl shadow-lg p-6 min-w-0">
             <div className="flex items-center gap-2 mb-4">
               <Zap className="w-5 h-5 text-yellow-600" />
               <h3 className="text-lg font-semibold text-gray-900">Electrical Requirements</h3>
@@ -719,7 +719,7 @@ export default function HotTubWireSizeCalculator() {
           </div>
 
           {/* Safety Requirements */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-xl shadow-lg p-6 min-w-0">
             <div className="flex items-center gap-2 mb-4">
               <Shield className="w-5 h-5 text-red-600" />
               <h3 className="text-lg font-semibold text-gray-900">Safety Requirements</h3>
@@ -759,7 +759,7 @@ export default function HotTubWireSizeCalculator() {
           </div>
 
           {/* Cost Analysis */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-xl shadow-lg p-6 min-w-0">
             <div className="flex items-center gap-2 mb-4">
               <DollarSign className="w-5 h-5 text-green-600" />
               <h3 className="text-lg font-semibold text-gray-900">Cost Analysis</h3>

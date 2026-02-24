@@ -202,9 +202,11 @@ export function BTUToWattsCalculator() {
       onShare={handleShare}
       onPrint={handlePrint}
     >
-      <div className="grid lg:grid-cols-2 gap-6 p-6">
-        {/* Inputs Column */}
-        <div className="space-y-6">
+      <div className="max-w-4xl mx-auto p-6 space-y-8">
+        {/* Inputs Section */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h2 className="text-lg font-semibold mb-6">Input Parameters</h2>
+          <div className="grid md:grid-cols-2 gap-6">
           {/* Preset Toggle */}
           <div className="flex items-center gap-2">
             <input
@@ -331,27 +333,31 @@ export function BTUToWattsCalculator() {
           </div>
         
 
-          {/* Calculate Button */}
-          <Button onClick={performCalculation} className="w-full">
-            <Calculator className="w-4 h-4" />
-            Calculate
-          </Button>
+          </div>
 
-          {/* Reset Button */}
-          <Button variant="secondary" onClick={handleReset} className="w-full">
-            <RefreshCw className="w-4 h-4" />
-            Reset
-          </Button>
+          {/* Buttons */}
+          <div className="flex gap-4 mt-6">
+            <Button onClick={performCalculation} className="flex-1">
+              <Calculator className="w-4 h-4" />
+              Calculate
+            </Button>
+            <Button variant="secondary" onClick={handleReset} className="flex-1">
+              <RefreshCw className="w-4 h-4" />
+              Reset
+            </Button>
+          </div>
         </div>
 
-        {/* Results Column */}
-        <div className="space-y-6">
-          {showResults && result ? (
+        {/* Results Section */}
+        {showResults && result && (
+          <div className="space-y-6" ref={resultsRef}>
+            <h2 className="text-lg font-semibold">Calculation Results</h2>
+            {result ? (
             <>
               {/* Main Power Result */}
               <div className="text-center p-6 bg-primary-50 rounded-xl border-2 border-primary-200">
                 <div className="text-sm text-primary-600 font-medium mb-2">Electrical Power Required</div>
-                <div className="text-4xl font-bold font-mono text-primary-700">
+                <div className="text-2xl sm:text-4xl font-bold font-mono text-primary-700 break-words min-w-0">
                   {result.kilowatts}
                 </div>
                 <div className="text-xl font-medium text-primary-600 mt-1">kW</div>
@@ -369,19 +375,19 @@ export function BTUToWattsCalculator() {
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
                     <span className="text-orange-600">BTU/Hour:</span>
-                    <p className="font-mono font-semibold text-lg">{result.btuPerHour.toLocaleString()}</p>
+                    <p className="font-mono font-semibold text-sm sm:text-lg break-words">{result.btuPerHour.toLocaleString()}</p>
                   </div>
                   <div>
                     <span className="text-orange-600">Cooling Tons:</span>
-                    <p className="font-mono font-semibold text-lg">{result.tons}</p>
+                    <p className="font-mono font-semibold text-sm sm:text-lg break-words">{result.tons}</p>
                   </div>
                   <div>
                     <span className="text-orange-600">Efficiency:</span>
-                    <p className="font-mono font-semibold text-lg">{efficiency}%</p>
+                    <p className="font-mono font-semibold text-sm sm:text-lg break-words">{efficiency}%</p>
                   </div>
                   <div>
                     <span className="text-orange-600">Thermal Watts:</span>
-                    <p className="font-mono font-semibold text-lg">
+                    <p className="font-mono font-semibold text-sm sm:text-lg break-words">
                       {Math.round(result.btuPerHour * 0.293071).toLocaleString()}
                     </p>
                   </div>
@@ -447,7 +453,7 @@ export function BTUToWattsCalculator() {
               <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
                 <div className="text-sm font-medium text-neutral-700 mb-3">Common Equipment Comparison</div>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-xs">
+                  <table className="w-full text-xs sm:text-sm">
                     <thead>
                       <tr className="border-b border-neutral-300">
                         <th className="text-left p-1">Equipment</th>

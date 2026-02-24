@@ -577,9 +577,9 @@ export default function EVChargerWireSizeCalculator() {
 
       {/* Results Section */}
       {showResults && results && (
-        <div className="grid lg:grid-cols-3 gap-6" ref={resultsRef}>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6" ref={resultsRef}>
           {/* Technical Requirements */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-xl shadow-lg p-6 min-w-0">
             <div className="flex items-center gap-2 mb-4">
               <Wrench className="w-5 h-5 text-blue-600" />
               <h3 className="text-lg font-semibold text-gray-900">Technical Requirements</h3>
@@ -640,7 +640,7 @@ export default function EVChargerWireSizeCalculator() {
           </div>
 
           {/* Charging Performance */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-xl shadow-lg p-6 min-w-0">
             <div className="flex items-center gap-2 mb-4">
               <Gauge className="w-5 h-5 text-green-600" />
               <h3 className="text-lg font-semibold text-gray-900">Charging Performance</h3>
@@ -686,7 +686,7 @@ export default function EVChargerWireSizeCalculator() {
           </div>
 
           {/* Cost Analysis */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-xl shadow-lg p-6 min-w-0">
             <div className="flex items-center gap-2 mb-4">
               <DollarSign className="w-5 h-5 text-yellow-600" />
               <h3 className="text-lg font-semibold text-gray-900">Cost Analysis</h3>
