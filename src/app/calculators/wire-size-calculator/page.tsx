@@ -291,8 +291,8 @@ export default function WireSizeCalculatorPage() {
       
       {/* Quick Answer Section */}
       <section className="bg-blue-50 border-b border-blue-200">
-        <div className="container py-8">
-          <div className="max-w-6xl mx-auto">
+        <div className="container py-4 sm:py-8">
+          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
             <h1 className="text-3xl font-bold text-neutral-900 mb-3">
               Wire Size Calculator - AWG Electrical Wire Sizing
             </h1>
@@ -389,7 +389,7 @@ export default function WireSizeCalculatorPage() {
       {/* Calculator Component */}
       <section className="py-8">
         <div className="container">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
             <WireSizeCalculator />
           </div>
         </div>
@@ -398,7 +398,7 @@ export default function WireSizeCalculatorPage() {
       {/* Understanding Wire Sizing Section */}
       <section className="py-8 bg-neutral-50 border-y">
         <div className="container">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
             <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
               <BookOpen className="w-6 h-6 text-blue-600" />
               Complete Guide to Wire Sizing
@@ -482,7 +482,7 @@ export default function WireSizeCalculatorPage() {
       {/* Common Wire Sizes Table */}
       <section className="py-8">
         <div className="container">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
             <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
               <Calculator className="w-6 h-6 text-blue-600" />
               Common Circuit Wire Sizing Guide
@@ -533,7 +533,7 @@ export default function WireSizeCalculatorPage() {
       {/* Wire Ampacity Reference */}
       <section className="py-8 bg-neutral-50 border-y">
         <div className="container">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
             <h2 className="text-2xl font-bold text-neutral-900 mb-6">
               NEC Table 310.16 - Wire Ampacity Ratings
             </h2>
@@ -573,7 +573,7 @@ export default function WireSizeCalculatorPage() {
               </div>
             </div>
             
-            <div className="mt-6 grid md:grid-cols-2 gap-4">
+            <div className="mt-6 grid lg:grid-cols-2 gap-4">
               <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
                 <h3 className="font-semibold text-amber-900 mb-2">Temperature Derating Required</h3>
                 <p className="text-sm text-amber-800">
@@ -596,7 +596,7 @@ export default function WireSizeCalculatorPage() {
       {/* Temperature Correction Factors */}
       <section className="py-8">
         <div className="container">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
             <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
               <Gauge className="w-6 h-6 text-orange-600" />
               Temperature Correction Factors
@@ -645,13 +645,13 @@ export default function WireSizeCalculatorPage() {
       {/* Common Mistakes Section */}
       <section className="py-8 bg-red-50 border-y">
         <div className="container">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
             <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
               <AlertTriangle className="w-6 h-6 text-red-600" />
               Common Wire Sizing Mistakes to Avoid
             </h2>
             
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid lg:grid-cols-2 gap-4">
               {COMMON_MISTAKES.map((mistake, idx) => (
                 <div key={idx} className="bg-white p-4 rounded-lg border border-red-200">
                   <div className="flex items-start gap-3">
@@ -681,7 +681,7 @@ export default function WireSizeCalculatorPage() {
       {/* Cost Comparison Section */}
       <section className="py-8">
         <div className="container">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
             <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
               <DollarSign className="w-6 h-6 text-green-600" />
               Wire Cost Comparison - Copper vs Aluminum
@@ -714,7 +714,7 @@ export default function WireSizeCalculatorPage() {
               </div>
             </div>
             
-            <div className="mt-6 grid md:grid-cols-2 gap-4">
+            <div className="mt-6 grid lg:grid-cols-2 gap-4">
               <div className="p-4 bg-green-50 rounded-lg border border-green-200">
                 <h3 className="font-semibold text-green-900 mb-2">Aluminum Wire Savings</h3>
                 <p className="text-sm text-green-800">
@@ -737,13 +737,13 @@ export default function WireSizeCalculatorPage() {
       {/* Special Considerations */}
       <section className="py-8 bg-neutral-50 border-y">
         <div className="container">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
             <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
               <Shield className="w-6 h-6 text-blue-600" />
               Special Wire Sizing Considerations
             </h2>
             
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid lg:grid-cols-2 gap-4 lg:gap-6">
               <div>
                 <h3 className="font-semibold text-neutral-900 mb-4">Continuous Loads (3+ Hours)</h3>
                 <div className="bg-white p-4 rounded-lg border border-neutral-200">
@@ -793,7 +793,7 @@ export default function WireSizeCalculatorPage() {
               </div>
             </div>
             
-            <div className="grid md:grid-cols-3 gap-4 mt-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4 mt-6">
               <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                 <h4 className="font-semibold text-blue-900 mb-2">Motor Circuits</h4>
                 <p className="text-sm text-blue-800">
@@ -823,13 +823,13 @@ export default function WireSizeCalculatorPage() {
       {/* Installation Tips */}
       <section className="py-8">
         <div className="container">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
             <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
               <Wrench className="w-6 h-6 text-blue-600" />
               Professional Installation Tips
             </h2>
             
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
               <div className="bg-white p-4 rounded-lg border border-neutral-200">
                 <h3 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
                   <Lightbulb className="w-4 h-4" />
@@ -912,7 +912,7 @@ export default function WireSizeCalculatorPage() {
       {/* Wire Size Comparison Chart */}
       <section className="py-8 bg-gradient-to-br from-blue-50 to-indigo-50 border-y">
         <div className="container">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
             <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
               <Activity className="w-6 h-6 text-blue-600" />
               Wire Size Capacity Comparison Chart
@@ -1020,13 +1020,13 @@ export default function WireSizeCalculatorPage() {
       {/* Authority Resources Section */}
       <section className="py-8">
         <div className="container">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
             <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
               <BookOpen className="w-6 h-6 text-blue-600" />
               Industry Standards & Authority Resources
             </h2>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
               <div className="bg-white rounded-lg border border-neutral-200 p-4">
                 <h3 className="font-semibold text-neutral-900 mb-3">National Electrical Code (NEC)</h3>
                 <ul className="space-y-2 text-sm">
@@ -1151,13 +1151,13 @@ export default function WireSizeCalculatorPage() {
       {/* FAQ Section */}
       <section className="py-8 bg-neutral-50 border-y">
         <div className="container">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
             <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
               <Info className="w-6 h-6 text-blue-600" />
               Wire Sizing Frequently Asked Questions
             </h2>
             
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid lg:grid-cols-2 gap-4">
               {faqItems.map((item, idx) => (
                 <div key={idx} className="bg-white p-4 rounded-lg border border-neutral-200">
                   <h3 className="font-semibold text-neutral-900 mb-2 flex items-start gap-2">
@@ -1178,12 +1178,12 @@ export default function WireSizeCalculatorPage() {
       {/* Related Calculators */}
       <section className="py-8">
         <div className="container">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
             <h2 className="text-2xl font-bold text-neutral-900 mb-6">
               Related Electrical Calculators
             </h2>
             
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
               <a href="/calculators/voltage-drop-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
                 <h3 className="font-semibold text-neutral-900 mb-1">Voltage Drop Calculator</h3>
                 <p className="text-sm text-neutral-600">Calculate voltage loss over distance for any wire size</p>

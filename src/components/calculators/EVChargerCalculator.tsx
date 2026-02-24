@@ -69,7 +69,7 @@ export function EVChargerCalculator() {
       title="EV Charger Wire Size Calculator"
       description="Calculate wire size for electric vehicle charging stations"
     >
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex gap-3">
           <Zap className="w-5 h-5 text-blue-600 flex-shrink-0" />
           <div className="text-sm text-blue-800">
@@ -78,7 +78,7 @@ export function EVChargerCalculator() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid lg:grid-cols-2 gap-4 lg:gap-6">
           <div className="space-y-6">
             <Select
               label="Charger Type"
@@ -109,7 +109,7 @@ export function EVChargerCalculator() {
                 <Car className="w-4 h-4" />
                 Charging Speed Estimate
               </div>
-              <div className="grid grid-cols-2 gap-2 text-sm">
+              <div className="grid grid-cols-2 gap-2 text-sm min-w-0">
                 <div>
                   <span className="text-neutral-500">Power Output:</span>
                   <p className="font-semibold">

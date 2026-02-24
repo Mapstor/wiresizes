@@ -247,7 +247,7 @@ export default function HomePage() {
       {/* Compact Header */}
       <section className="bg-neutral-900 text-white py-4">
         <div className="container">
-          <h1 className="text-2xl font-bold mb-2">Electrical Calculators & Wire Sizing Tools</h1>
+          <h1 className="text-xl sm:text-2xl font-bold mb-2">Electrical Calculators & Wire Sizing Tools</h1>
           <p className="text-neutral-300 text-sm">
             Professional NEC-compliant calculators for electricians, contractors & engineers. 30+ free tools.
           </p>
@@ -257,20 +257,20 @@ export default function HomePage() {
       {/* Site Introduction */}
       <section className="py-8 bg-gradient-to-br from-blue-50 via-white to-green-50 border-b border-neutral-200">
         <div className="container">
-          <div className="max-w-5xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-8 items-center">
+          <div className="max-w-full px-4 sm:px-6 lg:max-w-5xl lg:mx-auto lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
               <div>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
                     <Calculator className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-neutral-900">Professional Electrical Engineering Tools</h2>
+                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-neutral-900">Professional Electrical Engineering Tools</h2>
                     <div className="text-sm text-blue-600 font-semibold">NEC Code Compliant • Industry Standard</div>
                   </div>
                 </div>
                 <div className="space-y-4 text-neutral-700">
-                  <p className="text-lg leading-relaxed">
+                  <p className="text-base sm:text-lg leading-relaxed">
                     <strong>Calculate with confidence.</strong> Our professional-grade tools eliminate guesswork in electrical design. 
                     From wire sizing to voltage drop analysis, every calculation follows NEC standards and includes detailed explanations.
                   </p>
@@ -281,15 +281,15 @@ export default function HomePage() {
                 </div>
                 <div className="flex items-center gap-6 mt-6">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">30+</div>
+                    <div className="text-xl sm:text-2xl font-bold text-blue-600">30+</div>
                     <div className="text-xs text-neutral-600">Calculators</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">NEC</div>
+                    <div className="text-xl sm:text-2xl font-bold text-green-600">NEC</div>
                     <div className="text-xs text-neutral-600">Compliant</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-purple-600">FREE</div>
+                    <div className="text-xl sm:text-2xl font-bold text-purple-600">FREE</div>
                     <div className="text-xs text-neutral-600">Professional</div>
                   </div>
                 </div>
@@ -338,7 +338,7 @@ export default function HomePage() {
       <section className="py-6 bg-neutral-50">
         <div className="container">
           <div className="text-center mb-6">
-            <h2 className="text-xl font-bold text-neutral-900 mb-2">Professional Calculation Tools</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-2">Professional Calculation Tools</h2>
             <p className="text-neutral-600">Choose from our comprehensive suite of NEC-compliant electrical calculators</p>
           </div>
           <div className="grid gap-6">
@@ -363,7 +363,7 @@ export default function HomePage() {
                       <p className="text-xs text-neutral-600">{category.calculators.length} professional tools</p>
                     </div>
                   </div>
-                  <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 p-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-1 p-3">
                     {category.calculators.map((calc) => (
                       <Link
                         key={calc.slug}
@@ -397,9 +397,9 @@ export default function HomePage() {
       {/* Hero Content - Wire Sizing Tutorial */}
       <section className="py-6 bg-blue-50 border-y border-blue-100">
         <div className="container">
-          <div className="grid lg:grid-cols-2 gap-6">
+          <div className="grid lg:grid-cols-2 gap-4 lg:gap-6">
             <div>
-              <h2 className="text-xl font-bold text-neutral-900 mb-4">Wire Sizing Made Simple</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-4">Wire Sizing Made Simple</h2>
               <div className="prose prose-sm max-w-none">
                 <p className="text-neutral-700 mb-4">
                   Proper wire sizing prevents fires, voltage drop, and code violations. Follow these professional steps:
@@ -434,7 +434,7 @@ export default function HomePage() {
             </div>
             <div className="bg-white p-4 rounded-lg border border-blue-200">
               <h3 className="font-semibold text-neutral-900 mb-3">Quick Wire Size Lookup</h3>
-              <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="grid grid-cols-2 gap-2 sm:gap-3 text-xs">
                 <div className="p-2 bg-neutral-50 rounded">
                   <div className="font-mono font-bold">15A Circuit</div>
                   <div className="text-neutral-600">#14 AWG</div>
@@ -464,8 +464,8 @@ export default function HomePage() {
       {/* Common Electrical Mistakes */}
       <section className="py-6 bg-red-50 border-y border-red-100">
         <div className="container">
-          <h2 className="text-xl font-bold text-neutral-900 mb-4">⚠️ Common Wire Sizing Mistakes to Avoid</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-4">⚠️ Common Wire Sizing Mistakes to Avoid</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
             <div className="bg-white p-4 rounded-lg border border-red-200">
               <div className="text-red-600 font-semibold mb-2">Undersized Wire</div>
               <div className="text-sm text-neutral-700">
@@ -497,9 +497,9 @@ export default function HomePage() {
       {/* Code Compliance Checklist */}
       <section className="py-6 bg-green-50 border-y border-green-100">
         <div className="container">
-          <div className="grid lg:grid-cols-2 gap-6">
+          <div className="grid lg:grid-cols-2 gap-4 lg:gap-6">
             <div>
-              <h2 className="text-xl font-bold text-neutral-900 mb-4">✅ Code Compliance Checklist</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-4">✅ Code Compliance Checklist</h2>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
                   <div className="w-5 h-5 bg-green-600 text-white rounded flex items-center justify-center text-xs mt-0.5">✓</div>
@@ -581,7 +581,7 @@ export default function HomePage() {
       {/* Visual Wire Size Comparison */}
       <section className="py-6 bg-neutral-50 border-y border-neutral-200">
         <div className="container">
-          <h2 className="text-xl font-bold text-neutral-900 mb-4">Wire Size Visual Comparison</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-4">Wire Size Visual Comparison</h2>
           <div className="bg-white p-6 rounded-lg border border-neutral-200">
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {[
@@ -618,7 +618,7 @@ export default function HomePage() {
       {/* Quick Reference Tables - Horizontal Layout */}
       <section className="py-4 bg-neutral-50">
         <div className="container">
-          <div className="grid lg:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
             {/* Common Wire Sizes */}
             <div className="bg-white border border-neutral-200 rounded">
               <div className="px-3 py-2 bg-neutral-50 border-b border-neutral-200">
@@ -711,7 +711,7 @@ export default function HomePage() {
               <h2 className="font-semibold text-neutral-900 text-sm">NEC Code References</h2>
             </div>
             <div className="p-3">
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-3 text-xs">
                 <div>
                   <div className="font-medium text-neutral-900">Article 310</div>
                   <div className="text-neutral-500">Conductors for general wiring</div>
@@ -788,7 +788,7 @@ export default function HomePage() {
       {/* NEC Article Summaries - Authority Content */}
       <section className="py-6 bg-blue-50 border-y border-blue-100">
         <div className="container">
-          <h2 className="text-xl font-bold text-neutral-900 mb-6">NEC Article Summaries - Essential Code Knowledge</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-4 sm:mb-6">NEC Article Summaries - Essential Code Knowledge</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="bg-white p-4 rounded-lg border border-blue-200">
               <h3 className="font-semibold text-blue-900 mb-2">Article 310 - Conductors</h3>
@@ -851,8 +851,8 @@ export default function HomePage() {
       {/* Cost Analysis & Material Comparison */}
       <section className="py-6 bg-amber-50 border-y border-amber-100">
         <div className="container">
-          <h2 className="text-xl font-bold text-neutral-900 mb-6">💰 Wire Cost Analysis & Material Selection</h2>
-          <div className="grid lg:grid-cols-2 gap-6">
+          <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-4 sm:mb-6">💰 Wire Cost Analysis & Material Selection</h2>
+          <div className="grid lg:grid-cols-2 gap-4 lg:gap-6">
             <div>
               <h3 className="font-semibold text-neutral-900 mb-4">Copper vs Aluminum Cost Comparison</h3>
               <div className="bg-white p-4 rounded-lg border border-amber-200">
@@ -925,7 +925,7 @@ export default function HomePage() {
       {/* Troubleshooting & Problem Solving */}
       <section className="py-6 bg-purple-50 border-y border-purple-100">
         <div className="container">
-          <h2 className="text-xl font-bold text-neutral-900 mb-6">🔧 Troubleshooting Common Wire Sizing Problems</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-4 sm:mb-6">🔧 Troubleshooting Common Wire Sizing Problems</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h3 className="font-semibold text-neutral-900 mb-4">Problem: Excessive Voltage Drop</h3>
@@ -996,7 +996,7 @@ export default function HomePage() {
       {/* Safety & Best Practices */}
       <section className="py-6 bg-red-50 border-y border-red-100">
         <div className="container">
-          <h2 className="text-xl font-bold text-neutral-900 mb-6">⚡ Electrical Safety & Best Practices</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-4 sm:mb-6">⚡ Electrical Safety & Best Practices</h2>
           <div className="grid lg:grid-cols-3 gap-6">
             <div className="bg-white p-4 rounded-lg border border-red-200">
               <h3 className="font-semibold text-red-900 mb-3">Arc Flash Protection</h3>
@@ -1258,7 +1258,7 @@ export default function HomePage() {
       {/* Equipment-Specific Installation Guides */}
       <section className="py-6 bg-indigo-50 border-y border-indigo-100">
         <div className="container">
-          <h2 className="text-xl font-bold text-neutral-900 mb-6">📋 Equipment-Specific Installation Guides</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-4 sm:mb-6">📋 Equipment-Specific Installation Guides</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="bg-white p-4 rounded-lg border border-indigo-200">
               <h3 className="font-semibold text-indigo-900 mb-3">100 Amp Subpanel Wire Size</h3>
@@ -1303,8 +1303,8 @@ export default function HomePage() {
       {/* Common Questions & Problem Solving */}
       <section className="py-6 bg-gray-50 border-y border-gray-100">
         <div className="container">
-          <h2 className="text-xl font-bold text-neutral-900 mb-6">❓ Common Wire Sizing Questions & Answers</h2>
-          <div className="grid lg:grid-cols-2 gap-6">
+          <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-4 sm:mb-6">❓ Common Wire Sizing Questions & Answers</h2>
+          <div className="grid lg:grid-cols-2 gap-4 lg:gap-6">
             <div>
               <h3 className="font-semibold text-neutral-900 mb-4">Frequently Asked Questions</h3>
               <div className="space-y-4">
@@ -1368,7 +1368,7 @@ export default function HomePage() {
       {/* Regional Code Differences */}
       <section className="py-6 bg-yellow-50 border-y border-yellow-100">
         <div className="container">
-          <h2 className="text-xl font-bold text-neutral-900 mb-6">🗺️ Regional Code Differences & Local Requirements</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-4 sm:mb-6">🗺️ Regional Code Differences & Local Requirements</h2>
           <div className="bg-white p-4 rounded-lg border border-yellow-200">
             <div className="grid md:grid-cols-3 gap-6">
               <div>
@@ -1410,7 +1410,7 @@ export default function HomePage() {
       {/* Historical Code Changes */}
       <section className="py-6 bg-teal-50 border-y border-teal-100">
         <div className="container">
-          <h2 className="text-xl font-bold text-neutral-900 mb-6">📅 NEC Code Evolution: 2017 → 2020 → 2023</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-neutral-900 mb-4 sm:mb-6">📅 NEC Code Evolution: 2017 → 2020 → 2023</h2>
           <div className="grid md:grid-cols-3 gap-6">
             <div className="bg-white p-4 rounded-lg border border-teal-200">
               <h3 className="font-semibold text-teal-900 mb-3">2017 NEC</h3>

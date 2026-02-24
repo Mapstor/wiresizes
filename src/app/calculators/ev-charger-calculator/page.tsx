@@ -336,11 +336,11 @@ export default function EVChargerCalculatorPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-full px-4 sm:px-6 lg:max-w-7xl lg:mx-auto lg:px-8 py-8 lg:py-12">
         <div className="space-y-12">
           {/* Hero Section */}
           <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-2xl p-8 text-white">
-            <div className="max-w-4xl">
+            <div className="max-w-full lg:max-w-4xl">
               <div className="flex items-center gap-3 mb-4">
                 <Car className="w-10 h-10" />
                 <h1 className="text-4xl font-bold">EV Charger Calculator</h1>

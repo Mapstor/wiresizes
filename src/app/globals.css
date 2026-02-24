@@ -79,7 +79,8 @@
     margin-right: auto;
     padding-left: 1rem;
     padding-right: 1rem;
-    max-width: 80rem;
+    max-width: 100%;
+    width: 100%;
   }
   
   @media (min-width: 640px) {
@@ -93,6 +94,7 @@
     .container {
       padding-left: 2rem;
       padding-right: 2rem;
+      max-width: 80rem;
     }
   }
 

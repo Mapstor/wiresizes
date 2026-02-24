@@ -51,7 +51,7 @@ export function HotTubCalculator() {
       title="Hot Tub Wire Size Calculator"
       description="Calculate wire size for spa and hot tub installations"
     >
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         {/* Safety Warning */}
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex gap-3">
           <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0" />
@@ -61,7 +61,7 @@ export function HotTubCalculator() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid lg:grid-cols-2 gap-4 lg:gap-6">
           <div className="space-y-6">
             <Select
               label="Hot Tub Size"
@@ -92,7 +92,7 @@ export function HotTubCalculator() {
                 <Droplets className="w-4 h-4" />
                 Typical Specifications
               </div>
-              <div className="grid grid-cols-2 gap-2 text-sm">
+              <div className="grid grid-cols-2 gap-2 text-sm min-w-0">
                 <div>
                   <span className="text-neutral-500">Current Draw:</span>
                   <p className="font-semibold">{size.amps}A @ 240V</p>
