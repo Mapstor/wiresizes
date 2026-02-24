@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
-import { ElectricalLoadCalculator } from '@/components/calculators';
+import { Suspense } from 'react';
+import ClientElectricalLoadCalculator from '@/components/calculators/ClientElectricalLoadCalculator';
 import { Calculator, TrendingUp, Target, BookOpen, Users, Shield, MapPin, Zap, Wrench, CheckCircle, AlertTriangle, Settings, Home, Building } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
@@ -368,7 +369,7 @@ export default function ElectricalLoadCalculatorPage() {
           </div>
 
           {/* Calculator Component */}
-          <ElectricalLoadCalculator />
+          <ClientElectricalLoadCalculator />
 
           {/* Load Calculation Examples */}
           <div className="bg-white rounded-xl shadow-lg p-8">

@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { GarageSubpanelCalculator } from '@/components/calculators';
+import ClientGarageSubpanelCalculator from '@/components/calculators/ClientGarageSubpanelCalculator';
 import { Home, Calculator, AlertTriangle, Settings, Target, BookOpen, Users, Shield, Zap, Wrench, Car, MapPin, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
@@ -415,7 +415,7 @@ export default function GarageSubpanelCalculatorPage() {
           </div>
 
           {/* Main Calculator */}
-          <GarageSubpanelCalculator />
+          <ClientGarageSubpanelCalculator />
 
           {/* Comprehensive Installation Examples */}
           <div className="bg-white rounded-xl shadow-lg p-8">
