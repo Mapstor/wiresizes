@@ -58,7 +58,7 @@ export const metadata: Metadata = {
   verification: {
     google: 'google12f8c2f9c03913a3',
     other: {
-      'msvalidate.01': 'your-bing-verification-code-here',
+      'msvalidate.01': '57C407E8336C4915E2D28EEA649C8078',
     },
   },
   alternates: {
@@ -93,6 +93,8 @@ export default function RootLayout({
         
         {/* Favicon */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
+        <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
