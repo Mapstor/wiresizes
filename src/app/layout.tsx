@@ -56,7 +56,10 @@ export const metadata: Metadata = {
     images: ['/images/og-image.png'],
   },
   verification: {
-    google: 'google12f8c2f9c03913a3.html',
+    google: 'google12f8c2f9c03913a3',
+    other: {
+      'msvalidate.01': 'your-bing-verification-code-here',
+    },
   },
   alternates: {
     canonical: 'https://wiresizes.com',
