@@ -1,4 +1,3 @@
-import Script from 'next/script';
 import { generateBreadcrumbSchema } from '@/utils/breadcrumbs';
 
 interface WebApplicationData {
@@ -54,10 +53,8 @@ export function CombinedSchema({ webApp, faqItems }: CombinedSchemaProps) {
   };
 
   return (
-    <Script
-      id={`combined-schema-${webApp.url.replace(/[^a-zA-Z0-9]/g, '-')}`}
+    <script
       type="application/ld+json"
-      strategy="beforeInteractive"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(combinedSchema) }}
     />
   );
