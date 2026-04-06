@@ -13,6 +13,7 @@ import {
   Zap
 } from 'lucide-react';
 import Link from 'next/link';
+import { ArticleSchema } from '@/components/seo/ArticleSchema';
 
 export const metadata: Metadata = {
   title: 'NEC Table 310.16 Complete Reference | Copper & Aluminum Ampacities',
@@ -80,6 +81,13 @@ const COMMON_APPLICATIONS = [
   { circuit: '100A Subpanel', copper: '3 AWG', aluminum: '1 AWG', temp: '75°C', use: 'Garage, workshop' },
   { circuit: '200A Service', copper: '3/0 AWG', aluminum: '4/0 AWG', temp: '75°C', use: 'Main service entrance' },
 ];
+
+// Article data for schema
+const articleData = {
+  headline: "NEC Table 310.16",
+  description: "Complete NEC Table 310.16 reference with copper and aluminum conductor ampacities at 60°C, 75°C, and 90°C. Derating factors, correction calculations, and code compliance guide.",
+  url: "https://wiresizes.com/guides/nec-table-310-16"
+};
 
 export default function NECTable310_16Page() {
   return (
@@ -465,6 +473,8 @@ export default function NECTable310_16Page() {
           </div>
         </div>
       </section>
+
+      <ArticleSchema article={articleData} />
     </div>
   );
 }

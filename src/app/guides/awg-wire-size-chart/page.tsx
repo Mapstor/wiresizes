@@ -14,11 +14,19 @@ import {
   ArrowRight
 } from 'lucide-react';
 import Link from 'next/link';
+import { ArticleSchema } from '@/components/seo/ArticleSchema';
 
 export const metadata: Metadata = {
   title: 'AWG Wire Size Chart | Complete American Wire Gauge Reference Table',
   description: 'Comprehensive AWG wire size chart with diameters, resistance, ampacity ratings for copper and aluminum. Includes metric conversions, NEC ampacity tables, and wire selection guide.',
   keywords: 'AWG chart, wire size chart, American wire gauge, wire diameter table, AWG to mm conversion, wire resistance table, copper wire sizes, aluminum wire sizes, electrical wire chart',
+};
+
+// Article data for schema
+const articleData = {
+  headline: "Complete AWG Wire Size Chart & Reference Guide",
+  description: "Comprehensive AWG wire size chart with diameters, resistance, ampacity ratings for copper and aluminum. Includes metric conversions, NEC ampacity tables, and wire selection guide.",
+  url: "https://wiresizes.com/guides/awg-wire-size-chart"
 };
 
 export default function AWGWireSizeChartPage() {
@@ -679,6 +687,8 @@ export default function AWGWireSizeChartPage() {
           </div>
         </div>
       </section>
+
+      <ArticleSchema article={articleData} />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { BookOpen, Shield, AlertTriangle, Zap, Target, CheckCircle, Clock, Users, Building, Factory, HardHat, Eye, Shirt, Lock, Calculator } from 'lucide-react';
 import Link from 'next/link';
+import { ArticleSchema } from '@/components/seo/ArticleSchema';
 
 const ARC_FLASH_BOUNDARIES = [
   { voltage_kv: '0.208-1', equipment_type: 'Panelboards', incident_energy_cal_cm2: '1.2-8', arc_flash_boundary_ft: '1.2-4', ppe_category: '1-2' },
@@ -183,6 +184,13 @@ const SAFETY_SCENARIOS = [
     lesson: 'High voltage work requires specialized training, equipment, and procedures beyond normal electrical safety practices.'
   }
 ];
+
+// Article data for schema
+const articleData = {
+  headline: "Electrical Safety Fundamentals",
+  description: "Essential safety practices, standards, and procedures for electrical work and installations",
+  url: "https://wiresizes.com/guides/electrical-safety"
+};
 
 export default function ElectricalSafetyPage() {
   const [selectedPPECategory, setSelectedPPECategory] = useState('1');
@@ -721,6 +729,8 @@ export default function ElectricalSafetyPage() {
           </div>
         </div>
       </div>
+
+      <ArticleSchema article={articleData} />
     </div>
   );
 }

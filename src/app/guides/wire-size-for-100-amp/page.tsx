@@ -14,11 +14,19 @@ import {
   Shield
 } from 'lucide-react';
 import Link from 'next/link';
+import { ArticleSchema } from '@/components/seo/ArticleSchema';
 
 export const metadata: Metadata = {
   title: 'Wire Size for 100 Amp Service & Subpanel | Complete Guide 2024',
   description: 'Complete guide for 100 amp wire sizing. Learn correct wire sizes for 100A service entrance, subpanels, copper vs aluminum, distance considerations, and NEC code requirements.',
   keywords: '100 amp wire size, wire for 100 amp service, 100 amp subpanel wire, 100A electrical service, NEC 100 amp requirements',
+};
+
+// Article data for schema
+const articleData = {
+  headline: '100 Amp Wire Size Guide',
+  description: 'Complete guide for 100 amp wire sizing. Learn correct wire sizes for 100A service entrance, subpanels, copper vs aluminum, distance considerations, and NEC code requirements.',
+  url: 'https://wiresizes.com/guides/wire-size-for-100-amp'
 };
 
 // Distance-based wire sizing for 100A
@@ -503,6 +511,8 @@ export default function WireSizeFor100AmpPage() {
           </div>
         </div>
       </section>
+      
+      <ArticleSchema article={articleData} />
     </div>
   );
 }

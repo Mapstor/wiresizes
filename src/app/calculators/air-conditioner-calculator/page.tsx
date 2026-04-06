@@ -3,7 +3,7 @@ import { AirConditionerCalculator } from '@/components/calculators';
 import { Thermometer, Calculator, AlertTriangle, Settings, Target, BookOpen, Users, Shield, MapPin, Zap, Wrench, CheckCircle, Snowflake, Sun, Wind } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Air Conditioner Calculator | AC Unit Wire Size Calculator | HVAC Electrical',
@@ -12,41 +12,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Air Conditioner Electrical Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Size electrical components for AC installations including disconnect requirements.",
-  "keywords": "AC electrical, cooling equipment, HVAC calculator",
-  "url": `https://wiresizes.com/calculators/air-conditioner-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "Air Conditioner Calculator",
+  url: "https://wiresizes.com/calculators/air-conditioner-calculator",
+  description: "Calculate wire size and circuit requirements for air conditioning units and HVAC equipment. Professional HVAC electrical calculator with comprehensive installation guidance."
 };
 
 const AC_UNIT_EXAMPLES = [
@@ -557,13 +527,9 @@ const REGIONAL_CODE_VARIATIONS = [
 export default function AirConditionerCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <FAQSchema 
-        items={calculatorFAQs['electrical-load-calculator']} 
-        
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      <CombinedSchema 
+        webApp={webAppData} 
+        faqItems={calculatorFAQs['air-conditioner-calculator']} 
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">

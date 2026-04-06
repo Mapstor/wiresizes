@@ -3,7 +3,7 @@ import { HotTubCalculator } from '@/components/calculators';
 import { Droplets, Calculator, AlertTriangle, Settings, Target, BookOpen, Users, Shield, Thermometer, Wrench, Zap, CheckCircle, XCircle } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Hot Tub Calculator | Spa Electrical Requirements Calculator | NEC 680',
@@ -12,41 +12,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Hot Tub Electrical Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Size wire, breaker, and disconnect for hot tub installations with NEC compliance.",
-  "keywords": "spa wiring, hot tub electrical, pool equipment",
-  "url": `https://wiresizes.com/calculators/hot-tub-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "Hot Tub Calculator",
+  url: "https://wiresizes.com/calculators/hot-tub-calculator",
+  description: "Calculate wire size and electrical requirements for hot tubs and spas per NEC Article 680. Professional spa installation calculator for 240V hot tub circuits."
 };
 
 const DETAILED_HOT_TUB_EXAMPLES = [
@@ -602,11 +572,7 @@ const PROFESSIONAL_TIPS = [
 export default function HotTubCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <FAQSchema items={calculatorFAQs['hot-tub-calculator']} />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <CombinedSchema webApp={webAppData} faqItems={calculatorFAQs['hot-tub-calculator']} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">
           {/* Hero Section */}

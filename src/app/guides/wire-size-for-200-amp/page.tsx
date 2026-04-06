@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
-import { FAQSchema } from '@/components/seo/FAQSchema'
+import { ArticleFAQSchema } from '@/components/seo/ArticleFAQSchema'
 import { Calculator, AlertTriangle, CheckCircle2, Info, Zap, Shield, Wrench } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -11,6 +11,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://wiresizes.com/guides/wire-size-for-200-amp'
   }
+}
+
+// Article data for schema
+const articleData = {
+  headline: 'Wire Size for 200 Amp Service',
+  description: 'Complete guide to wire sizing for 200 amp electrical service. Learn NEC requirements, copper vs aluminum options, installation tips, and safety considerations.',
+  url: 'https://wiresizes.com/guides/wire-size-for-200-amp'
 }
 
 const faqs = [
@@ -664,7 +671,7 @@ export default function WireSizeFor200AmpPage() {
         </div>
       </div>
 
-      <FAQSchema items={faqs} />
+      <ArticleFAQSchema article={articleData} faqItems={faqs} />
     </div>
   )
 }

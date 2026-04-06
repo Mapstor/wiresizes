@@ -3,7 +3,7 @@ import { RVHookupCalculator } from '@/components/calculators';
 import { Truck, Calculator, AlertTriangle, Settings, Target, BookOpen, Users, Shield, Zap, Home, DollarSign, MapPin, Compass, Car } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'RV Hookup Calculator | RV Electrical Service Calculator | Campground Electrical Design',
@@ -12,41 +12,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "RV Hookup Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Calculate electrical requirements for RV outlet installations (30A/50A).",
-  "keywords": "RV outlet, RV electrical, NEMA 14-50, TT-30",
-  "url": `https://wiresizes.com/calculators/rv-hookup-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "RV Hookup Calculator",
+  url: "https://wiresizes.com/calculators/rv-hookup-calculator",
+  description: "Calculate electrical requirements for RV hookups and service pedestals. Complete RV park electrical calculator with 30A/50A service, GFCI/AFCI requirements, and campground installation guidance."
 };
 
 const RV_EXAMPLES = [
@@ -418,14 +388,7 @@ const COMPREHENSIVE_FAQS = [
 export default function RVHookupCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <FAQSchema 
-        items={calculatorFAQs['rv-hookup-calculator']} 
-        
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <CombinedSchema webApp={webAppData} faqItems={calculatorFAQs['rv-hookup-calculator']} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">
           {/* Hero Section */}

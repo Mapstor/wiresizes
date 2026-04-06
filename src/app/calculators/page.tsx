@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 import { 
   Calculator, 
   Zap, 
@@ -493,6 +494,8 @@ export default function CalculatorsPage() {
         </div>
 
       </div>
+      
+      <BreadcrumbSchema url="https://wiresizes.com/calculators" />
     </div>
   );
 }

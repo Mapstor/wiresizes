@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 import { Calculator, Zap, AlertTriangle, Target, BarChart3, BookOpen, TrendingUp, Users, Award } from 'lucide-react';
 
 const GUIDES = [
@@ -222,6 +223,8 @@ export default function GuidesHomePage() {
           </div>
         </div>
       </div>
+      
+      <BreadcrumbSchema url="https://wiresizes.com/guides" />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { BarChart3, Zap, TrendingUp, AlertTriangle, CheckCircle, Calculator, Activity, Eye, Target, ArrowRight, Lightbulb, Settings, DollarSign, Clock } from 'lucide-react';
+import { ArticleSchema } from '@/components/seo/ArticleSchema';
 
 const EQUIPMENT_POWER_FACTORS = [
   { equipment: 'Incandescent Lights', pf: 1.0, type: 'resistive', color: 'green', efficiency: 'Perfect', cost_impact: 'None' },
@@ -54,6 +55,13 @@ const COST_ANALYSIS_DATA = [
   { pf: 0.9, apparent_power: 111, real_power: 100, reactive_power: 48, line_losses: 123, relative_cost: 1.23 },
   { pf: 1.0, apparent_power: 100, real_power: 100, reactive_power: 0, line_losses: 100, relative_cost: 1.0 },
 ];
+
+// Article data for schema
+const articleData = {
+  headline: "Power Factor Explained",
+  description: "Understanding power factor is crucial for electrical efficiency and cost management. This comprehensive guide explains reactive power, apparent power, and power factor correction with interactive visualizations and real-world examples.",
+  url: "https://wiresizes.com/guides/power-factor-explained"
+};
 
 export default function PowerFactorExplainedGuide() {
   const [selectedPowerFactor, setSelectedPowerFactor] = useState(0.8);
@@ -752,6 +760,8 @@ export default function PowerFactorExplainedGuide() {
           </Link>
         </div>
       </div>
+
+      <ArticleSchema article={articleData} />
     </div>
   );
 }

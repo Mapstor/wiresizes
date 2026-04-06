@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { AlertTriangle, Zap, Calculator, TrendingUp, ThermometerSun, Cable, Building, Home, Factory, BarChart3, Target, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
+import { ArticleSchema } from '@/components/seo/ArticleSchema';
 
 const AWG_TABLE = [
   { awg: '14', diameter_mils: 64.1, area_kcmil: 4.11, ampacity_60c: { cu: 20, al: 15 }, ampacity_75c: { cu: 25, al: 20 }, ampacity_90c: { cu: 30, al: 25 }, ohms_1000ft: 2.53, weight_lb_1000ft: 12.4 },
@@ -91,6 +92,13 @@ const INSTALLATION_SCENARIOS = [
     cost: '$1,800 service upgrade enables $30,000 in home electrification investments'
   }
 ];
+
+// Article data for schema
+const articleData = {
+  headline: "Complete Wire Sizing Guide",
+  description: "Professional wire selection for safe, efficient, and code-compliant electrical installations",
+  url: "https://wiresizes.com/guides/wire-sizing-guide"
+};
 
 export default function WireSizingGuidePage() {
   const [selectedMaterial, setSelectedMaterial] = useState<'copper' | 'aluminum'>('copper');
@@ -746,6 +754,8 @@ export default function WireSizingGuidePage() {
           </div>
         </div>
       </div>
+
+      <ArticleSchema article={articleData} />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Target, AlertTriangle, CheckCircle, BookOpen, Calculator, Zap, FileText, ExternalLink, ArrowRight, Shield, Activity, Eye, TrendingUp, BarChart3 } from 'lucide-react';
+import { ArticleSchema } from '@/components/seo/ArticleSchema';
 
 export const metadata = {
   title: 'NEC Code Compliance Guide | National Electrical Code Requirements 2023',
@@ -85,6 +86,13 @@ const SAFETY_REQUIREMENTS = [
     solution: 'Install separate circuits for major loads'
   },
 ];
+
+// Article data for schema
+const articleData = {
+  headline: "NEC Code Compliance Guide",
+  description: "Comprehensive NEC code compliance guide covering wire sizing, circuit protection, grounding, load calculations, and safety requirements with detailed tables and examples.",
+  url: "https://wiresizes.com/guides/nec-code-compliance"
+};
 
 export default function NECCodeComplianceGuide() {
   return (
@@ -889,6 +897,8 @@ export default function NECCodeComplianceGuide() {
           </Link>
         </div>
       </div>
+
+      <ArticleSchema article={articleData} />
     </div>
   );
 }

@@ -19,7 +19,7 @@ import {
   Activity,
   ExternalLink
 } from 'lucide-react';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Wire Size Calculator | AWG Calculator | Electrical Wire Sizing',
@@ -27,27 +27,11 @@ export const metadata: Metadata = {
   keywords: 'wire size calculator, AWG calculator, electrical wire sizing, cable size calculator, conductor sizing, NEC wire size, copper wire calculator, aluminum wire calculator',
 };
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Wire Size Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Professional wire size calculator for electrical circuits. Calculate proper AWG size based on current, voltage, distance, and material.",
-  "featureList": [
-    "NEC Table 310.16 compliance",
-    "Copper and aluminum sizing",
-    "Voltage drop verification",
-    "Distance calculations",
-    "Temperature derating",
-    "Ground wire sizing",
-    "Real-time results"
-  ]
+// Web application data for schema
+const webAppData = {
+  name: "Wire Size Calculator - AWG Electrical Wire Sizing",
+  url: "https://wiresizes.com/calculators/wire-size-calculator",
+  description: "Calculate the correct AWG wire size for any electrical circuit. Free NEC-compliant wire size calculator for copper and aluminum conductors. Includes voltage drop, ampacity, and distance calculations."
 };
 
 // Common wire sizing scenarios
@@ -284,10 +268,6 @@ const faqItems = [
 export default function WireSizeCalculatorPage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
       
       {/* Quick Answer Section */}
       <section className="bg-blue-50 border-b border-blue-200">
@@ -1213,7 +1193,7 @@ export default function WireSizeCalculatorPage() {
         </div>
       </section>
 
-      <FAQSchema items={faqItems} />
+      <CombinedSchema webApp={webAppData} faqItems={faqItems} />
     </>
   );
 }

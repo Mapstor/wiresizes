@@ -17,7 +17,7 @@ import {
   Lightbulb,
   Activity
 } from 'lucide-react';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Ampacity Calculator | Wire Current Capacity | NEC Table 310.16 Calculator',
@@ -25,27 +25,11 @@ export const metadata: Metadata = {
   keywords: 'ampacity calculator, wire current capacity, NEC table 310.16, conductor ampacity, temperature derating, conduit fill derating, wire amp rating, electrical ampacity',
 };
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Ampacity Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Professional ampacity calculator for electrical conductors. Calculate current carrying capacity with temperature and fill derating per NEC requirements.",
-  "featureList": [
-    "NEC Table 310.16 ampacity values",
-    "Temperature derating calculations",
-    "Conduit fill adjustments",
-    "Copper and aluminum conductors",
-    "60°C, 75°C, and 90°C ratings",
-    "Real-time derating calculations",
-    "Multiple conductor configurations"
-  ]
+// Web application data for schema
+const webAppData = {
+  name: "Wire Ampacity Calculator - Current Carrying Capacity",
+  url: "https://wiresizes.com/calculators/ampacity-calculator",
+  description: "Calculate wire ampacity with temperature and conduit fill derating factors. Free NEC-compliant ampacity calculator for copper and aluminum conductors at different temperature ratings."
 };
 
 // Ampacity derating scenarios
@@ -939,7 +923,7 @@ export default function AmpacityCalculatorPage() {
         </div>
       </section>
 
-      <FAQSchema items={faqItems} />
+      <CombinedSchema webApp={webAppData} faqItems={faqItems} />
     </>
   );
 }

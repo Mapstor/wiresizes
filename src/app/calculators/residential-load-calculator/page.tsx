@@ -3,7 +3,7 @@ import ResidentialLoadCalculator from '@/components/calculators/ResidentialLoadC
 import { Home, Calculator, FileText, Shield, AlertTriangle, CheckCircle, Users, Building, Zap, TrendingUp, Target } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Residential Load Calculator | NEC 220 Service Size Calculator & Panel Upgrade',
@@ -12,41 +12,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Residential Load Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Calculate residential electrical service size per NEC Article 220 requirements.",
-  "keywords": "residential load, home electrical, service sizing",
-  "url": `https://wiresizes.com/calculators/residential-load-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "Residential Load Calculator",
+  url: "https://wiresizes.com/calculators/residential-load-calculator",
+  description: "Calculate residential electrical service size per NEC Article 220. Determine if 100A, 200A, or 400A service needed. Professional load calculations for permits, inspections, and panel upgrades."
 };
 
 const COMPREHENSIVE_FAQS = [
@@ -263,14 +233,7 @@ const LOAD_MANAGEMENT_STRATEGIES = [
 export default function ResidentialLoadCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <FAQSchema 
-        items={calculatorFAQs['residential-load-calculator']} 
-        
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <CombinedSchema webApp={webAppData} faqItems={calculatorFAQs['residential-load-calculator']} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">
           {/* Hero Section */}

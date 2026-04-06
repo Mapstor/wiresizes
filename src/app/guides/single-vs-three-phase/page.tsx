@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Zap, Calculator, BarChart3, TrendingUp, AlertTriangle, CheckCircle, Settings, Activity, ArrowRight, Target, Gauge, Home, Building2, Factory, DollarSign } from 'lucide-react';
+import { ArticleSchema } from '@/components/seo/ArticleSchema';
 
 const VOLTAGE_SYSTEMS = [
   {
@@ -133,6 +134,13 @@ const WIRING_CONFIGURATIONS = [
     voltage: '240V, 480V'
   }
 ];
+
+// Article data for schema
+const articleData = {
+  headline: "Single vs Three Phase Systems",
+  description: "Understanding the fundamental differences between single-phase and three-phase electrical systems is crucial for proper system design. This comprehensive guide covers voltage configurations, power calculations, applications, and economic considerations with interactive comparisons.",
+  url: "https://wiresizes.com/guides/single-vs-three-phase"
+};
 
 export default function SingleVsThreePhaseGuide() {
   const [selectedComparison, setSelectedComparison] = useState<'voltage' | 'cost' | 'motor' | 'wiring'>('voltage');
@@ -1084,6 +1092,8 @@ export default function SingleVsThreePhaseGuide() {
           </Link>
         </div>
       </div>
+
+      <ArticleSchema article={articleData} />
     </div>
   );
 }

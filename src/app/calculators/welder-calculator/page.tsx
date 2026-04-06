@@ -3,7 +3,7 @@ import { WelderCalculator } from '@/components/calculators';
 import { Wrench, Calculator, AlertTriangle, Settings, Target, BookOpen, Users, Shield, Zap, Thermometer, CheckCircle, XCircle, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Welder Calculator | Welding Equipment Circuit Calculator | Arc Welder Sizing',
@@ -12,41 +12,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Welder Wire Size Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Calculate electrical requirements for welding machines and outlets.",
-  "keywords": "welder wiring, welding electrical, welder outlet",
-  "url": `https://wiresizes.com/calculators/welder-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "Professional Welder Calculator",
+  url: "https://wiresizes.com/calculators/welder-calculator",
+  description: "Calculate electrical requirements for welding equipment and arc welders. Professional welder circuit calculator for 240V and 480V welding machines."
 };
 
 const COMPREHENSIVE_WELDER_EXAMPLES = [
@@ -558,14 +528,7 @@ const PROFESSIONAL_TIPS = [
 export default function WelderCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <FAQSchema 
-        items={calculatorFAQs['welder-calculator']} 
-        
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <CombinedSchema webApp={webAppData} faqItems={calculatorFAQs['welder-calculator']} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">
           {/* Enhanced Hero Section */}

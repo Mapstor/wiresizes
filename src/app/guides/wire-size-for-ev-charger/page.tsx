@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
-import { FAQSchema } from '@/components/seo/FAQSchema'
+import { ArticleFAQSchema } from '@/components/seo/ArticleFAQSchema'
 import { Car, Zap, AlertTriangle, CheckCircle2, Info, Shield, Calculator, Clock } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -11,6 +11,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://wiresizes.com/guides/wire-size-for-ev-charger'
   }
+}
+
+// Article data for schema
+const articleData = {
+  headline: 'EV Charger Wire Size Guide',
+  description: 'Complete guide to wire sizing for EV chargers. Learn NEC Article 625 requirements for Level 1, Level 2, and DC fast charging installations with safety tips.',
+  url: 'https://wiresizes.com/guides/wire-size-for-ev-charger'
 }
 
 const faqs = [
@@ -755,7 +762,7 @@ export default function WireSizeForEVChargerPage() {
         </div>
       </div>
 
-      <FAQSchema items={faqs} />
+      <ArticleFAQSchema article={articleData} faqItems={faqs} />
     </div>
   )
 }

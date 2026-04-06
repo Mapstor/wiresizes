@@ -4,7 +4,7 @@ import { BoxFillCalculator } from '@/components/calculators';
 import { Package, Calculator, AlertTriangle, AlertCircle, BookOpen, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Box Fill Calculator | NEC 314.16 Junction Box Capacity | Electrical Box Sizing',
@@ -19,41 +19,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Electrical Box Fill Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Calculate NEC-compliant junction box fill for safe electrical installations.",
-  "keywords": "box fill, junction box sizing, NEC 314.16",
-  "url": `https://wiresizes.com/calculators/box-fill-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "Electrical Box Fill Calculator",
+  url: "https://wiresizes.com/calculators/box-fill-calculator",
+  description: "Professional box fill calculator per NEC Article 314.16. Calculate electrical box capacity for switches, outlets, and junction boxes. Ensure code-compliant installations with proper conductor fill calculations."
 };
 
 const boxFillFAQs = [
@@ -82,14 +52,7 @@ const boxFillFAQs = [
 export default function BoxFillCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <FAQSchema 
-        items={calculatorFAQs['box-fill-calculator']} 
-        
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <CombinedSchema webApp={webAppData} faqItems={calculatorFAQs['box-fill-calculator']} />
       
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-indigo-50 to-purple-100 dark:from-gray-800 dark:to-gray-900 py-12 rounded-2xl mb-12">

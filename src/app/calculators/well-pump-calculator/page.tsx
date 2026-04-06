@@ -3,7 +3,7 @@ import { WellPumpCalculator } from '@/components/calculators';
 import { Droplets, Calculator, AlertTriangle, Settings, Target, BookOpen, Users, Shield, Zap, Wrench, Home, DollarSign, MapPin, Cog, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Well Pump Calculator | Water Pump Electrical Calculator | Submersible Pump Circuit NEC 430',
@@ -12,41 +12,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Well Pump Wire Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Calculate wire size for submersible well pumps based on depth and horsepower.",
-  "keywords": "well pump wiring, submersible pump, water pump electrical",
-  "url": `https://wiresizes.com/calculators/well-pump-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "Well Pump Calculator",
+  url: "https://wiresizes.com/calculators/well-pump-calculator",
+  description: "Calculate electrical requirements for well pumps and water systems. Professional pump electrical sizing with motor calculations, control box wiring, pressure switches, and NEC 430 compliance for submersible and jet pumps."
 };
 
 const WELL_PUMP_EXAMPLES = [
@@ -475,14 +445,7 @@ const COMPREHENSIVE_FAQS = [
 export default function WellPumpCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <FAQSchema 
-        items={calculatorFAQs['pool-pump-calculator']} 
-        
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <CombinedSchema webApp={webAppData} faqItems={calculatorFAQs['well-pump-calculator']} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">
           {/* Hero Section */}

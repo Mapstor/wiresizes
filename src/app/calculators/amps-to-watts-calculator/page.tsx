@@ -3,7 +3,7 @@ import { AmpsToWattsCalculator } from '@/components/calculators';
 import { Zap, Calculator, AlertTriangle, CheckCircle, Settings, Target, DollarSign, BookOpen, Users, Wrench, TrendingUp, Power } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Amps to Watts Calculator | Convert Amperage to Watts | Power Calculator',
@@ -12,41 +12,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Amps to Watts Converter",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Convert electrical current to power. Calculate watts from amps and voltage for any circuit.",
-  "keywords": "amps to watts converter, current to power, electrical calculator",
-  "url": `https://wiresizes.com/calculators/amps-to-watts-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "Amps to Watts Calculator",
+  url: "https://wiresizes.com/calculators/amps-to-watts-calculator",
+  description: "Free amps to watts calculator for single-phase and three-phase circuits. Convert electrical current (amperage) to power (watts) with voltage and power factor calculations."
 };
 
 const AMPS_TO_WATTS_EXAMPLES = [
@@ -348,13 +318,9 @@ const COMPREHENSIVE_FAQS = [
 export default function AmpsToWattsCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <FAQSchema 
-        items={calculatorFAQs['amps-to-watts-calculator']} 
-        
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      <CombinedSchema 
+        webApp={webAppData} 
+        faqItems={calculatorFAQs['amps-to-watts-calculator']} 
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">

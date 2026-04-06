@@ -19,7 +19,7 @@ import {
   AlertCircle,
   Lightbulb
 } from 'lucide-react';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Voltage Drop Calculator | NEC Compliant Wire Sizing | Calculate Electrical Voltage Loss',
@@ -27,29 +27,11 @@ export const metadata: Metadata = {
   keywords: 'voltage drop calculator, electrical voltage drop, NEC voltage drop, wire voltage loss, voltage drop formula, 3 percent rule, copper wire voltage drop, aluminum wire voltage drop, voltage drop calculation, electrical wire calculator',
 };
 
-// Structured data for rich results
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Voltage Drop Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Professional voltage drop calculator for electrical circuits. Calculate voltage loss over distance for copper and aluminum conductors.",
-  "featureList": [
-    "NEC compliant calculations",
-    "Copper and aluminum wire support",
-    "Single and three-phase circuits",
-    "Automatic wire size recommendations",
-    "Distance-based calculations",
-    "Real-time results",
-    "Temperature compensation",
-    "Power factor corrections"
-  ]
+// Web application data for schema
+const webAppData = {
+  name: "Voltage Drop Calculator",
+  url: "https://wiresizes.com/calculators/voltage-drop-calculator",
+  description: "Calculate voltage drop in electrical circuits instantly. Free NEC-compliant calculator for copper and aluminum wire. Includes distance calculations, 3% rule compliance, and wire size recommendations."
 };
 
 // Real voltage drop scenarios data - expanded
@@ -342,11 +324,6 @@ const faqItems = [
 export default function VoltageDropCalculatorPage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
-      
       {/* Quick Answer Section - Full Width */}
       <section className="bg-blue-50 border-b border-blue-200">
         <div className="container py-8">
@@ -1486,7 +1463,7 @@ export default function VoltageDropCalculatorPage() {
         </div>
       </section>
 
-      <FAQSchema items={faqItems} />
+      <CombinedSchema webApp={webAppData} faqItems={faqItems} />
     </>
   );
 }

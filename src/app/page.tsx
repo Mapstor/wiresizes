@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 import { 
   Calculator, 
   Zap, 
@@ -1170,37 +1171,25 @@ export default function HomePage() {
             </div>
             <div className="p-3">
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                <Link href="/guides/100-amp-wire-size" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
+                <Link href="/guides/wire-size-for-100-amp" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
                   <div className="font-medium text-xs text-neutral-900">100 Amp Wire Size</div>
                   <div className="text-xs text-neutral-500 mt-0.5">Complete guide for 100A services</div>
                 </Link>
-                <Link href="/guides/200-amp-wire-size" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
+                <Link href="/guides/wire-size-for-200-amp" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
                   <div className="font-medium text-xs text-neutral-900">200 Amp Wire Size</div>
                   <div className="text-xs text-neutral-500 mt-0.5">200A service wire requirements</div>
                 </Link>
-                <Link href="/guides/voltage-drop" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">Voltage Drop Guide</div>
-                  <div className="text-xs text-neutral-500 mt-0.5">Understanding voltage drop calculations</div>
-                </Link>
-                <Link href="/guides/conduit-fill" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">Conduit Fill Guide</div>
-                  <div className="text-xs text-neutral-500 mt-0.5">NEC conduit fill requirements</div>
-                </Link>
-                <Link href="/guides/grounding" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">Grounding & Bonding</div>
-                  <div className="text-xs text-neutral-500 mt-0.5">NEC Article 250 requirements</div>
-                </Link>
-                <Link href="/guides/motor-circuits" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">Motor Circuits</div>
-                  <div className="text-xs text-neutral-500 mt-0.5">NEC Article 430 motor sizing</div>
-                </Link>
-                <Link href="/guides/load-calculations" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">Load Calculations</div>
-                  <div className="text-xs text-neutral-500 mt-0.5">Residential & commercial loads</div>
-                </Link>
-                <Link href="/guides/ev-charging" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
+                <Link href="/guides/wire-size-for-ev-charger" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
                   <div className="font-medium text-xs text-neutral-900">EV Charging Circuits</div>
                   <div className="text-xs text-neutral-500 mt-0.5">Electric vehicle installation guide</div>
+                </Link>
+                <Link href="/guides/wire-sizing-guide" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
+                  <div className="font-medium text-xs text-neutral-900">Wire Sizing Guide</div>
+                  <div className="text-xs text-neutral-500 mt-0.5">Complete wire sizing methodology</div>
+                </Link>
+                <Link href="/guides/electrical-safety" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
+                  <div className="font-medium text-xs text-neutral-900">Electrical Safety</div>
+                  <div className="text-xs text-neutral-500 mt-0.5">Safety requirements & best practices</div>
                 </Link>
               </div>
             </div>
@@ -1217,37 +1206,29 @@ export default function HomePage() {
             </div>
             <div className="p-3">
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                <Link href="/charts/awg-chart" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
+                <Link href="/guides/awg-wire-size-chart" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
                   <div className="font-medium text-xs text-neutral-900">AWG Wire Chart</div>
                   <div className="text-xs text-neutral-500 mt-0.5">Complete AWG sizing reference</div>
                 </Link>
-                <Link href="/charts/conduit-chart" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">Conduit Fill Chart</div>
-                  <div className="text-xs text-neutral-500 mt-0.5">Wire capacity by conduit size</div>
+                <Link href="/guides/nec-table-310-16" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
+                  <div className="font-medium text-xs text-neutral-900">NEC Table 310.16</div>
+                  <div className="text-xs text-neutral-500 mt-0.5">Conductor ampacity ratings</div>
                 </Link>
-                <Link href="/charts/breaker-chart" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">Circuit Breaker Chart</div>
-                  <div className="text-xs text-neutral-500 mt-0.5">Breaker sizing reference</div>
+                <Link href="/guides/nec-code-compliance" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
+                  <div className="font-medium text-xs text-neutral-900">NEC Code Compliance</div>
+                  <div className="text-xs text-neutral-500 mt-0.5">Code requirements & standards</div>
                 </Link>
-                <Link href="/charts/motor-chart" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">Motor FLA Chart</div>
-                  <div className="text-xs text-neutral-500 mt-0.5">Full load amperage tables</div>
+                <Link href="/guides/electrical-power-calculations" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
+                  <div className="font-medium text-xs text-neutral-900">Power Calculations</div>
+                  <div className="text-xs text-neutral-500 mt-0.5">Electrical power & energy formulas</div>
                 </Link>
-                <Link href="/charts/voltage-systems" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">Voltage Systems</div>
-                  <div className="text-xs text-neutral-500 mt-0.5">Common electrical systems</div>
+                <Link href="/guides/power-factor-explained" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
+                  <div className="font-medium text-xs text-neutral-900">Power Factor</div>
+                  <div className="text-xs text-neutral-500 mt-0.5">Understanding power factor</div>
                 </Link>
-                <Link href="/charts/wire-colors" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">Wire Color Codes</div>
-                  <div className="text-xs text-neutral-500 mt-0.5">NEC wire identification</div>
-                </Link>
-                <Link href="/charts/box-fill" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">Box Fill Calculator</div>
-                  <div className="text-xs text-neutral-500 mt-0.5">Junction box capacity</div>
-                </Link>
-                <Link href="/safety/arc-flash" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">Arc Flash Safety</div>
-                  <div className="text-xs text-neutral-500 mt-0.5">Safety requirements & PPE</div>
+                <Link href="/guides/single-vs-three-phase" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
+                  <div className="font-medium text-xs text-neutral-900">Single vs Three Phase</div>
+                  <div className="text-xs text-neutral-500 mt-0.5">Phase system comparisons</div>
                 </Link>
               </div>
             </div>
@@ -1454,6 +1435,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      
+      <BreadcrumbSchema url="https://wiresizes.com" />
     </>
   );
 }

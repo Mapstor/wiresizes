@@ -4,7 +4,7 @@ import ClientElectricalLoadCalculator from '@/components/calculators/ClientElect
 import { Calculator, TrendingUp, Target, BookOpen, Users, Shield, MapPin, Zap, Wrench, CheckCircle, AlertTriangle, Settings, Home, Building } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Electrical Load Calculator | Service Load Calculator | NEC Article 220',
@@ -13,7 +13,14 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
+// Web application data for schema
+const webAppData = {
+  name: "Electrical Load Calculator",
+  url: "https://wiresizes.com/calculators/electrical-load-calculator",
+  description: "Calculate electrical load for residential and commercial services per NEC Article 220. Professional load calculations for service sizing and demand factors."
+};
+
+const legacyStructuredData = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "Electrical Load Calculator",
@@ -302,14 +309,7 @@ const COMMON_LOAD_MISTAKES = [
 export default function ElectricalLoadCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <FAQSchema 
-        items={calculatorFAQs['electrical-load-calculator']} 
-        
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <CombinedSchema webApp={webAppData} faqItems={calculatorFAQs['electrical-load-calculator']} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">
           {/* Hero Section */}
