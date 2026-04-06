@@ -3,7 +3,7 @@ import EVChargerWireSizeCalculator from '@/components/calculators/EVChargerWireS
 import { Car, Zap, DollarSign, Shield, Clock, TrendingUp, Calculator, Home, AlertTriangle, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'EV Charger Wire Size Calculator | Electric Vehicle Charging Installation',
@@ -12,41 +12,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "EV Charger Wire Size Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Calculate proper wire size for Level 2 electric vehicle charging installations.",
-  "keywords": "EV charger wiring, electric vehicle, Level 2 charger",
-  "url": `https://wiresizes.com/calculators/ev-charger-wire-size-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "EV Charger Wire Size Calculator",
+  url: "https://wiresizes.com/calculators/ev-charger-wire-size-calculator",
+  description: "Calculate exact wire size, breaker requirements, and installation costs for EV chargers. Supports Tesla, Level 2, all electric vehicles. NEC Article 625 compliant with voltage drop analysis."
 };
 
 const COMPREHENSIVE_FAQS = [
@@ -172,14 +142,11 @@ const CHARGER_BRAND_COMPARISON = [
 export default function EVChargerWireSizeCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <FAQSchema 
-        items={calculatorFAQs['ev-charger-calculator']} 
-        
+      <CombinedSchema 
+        webApp={webAppData} 
+        faqItems={calculatorFAQs['ev-charger-calculator']} 
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">
           {/* Hero Section */}

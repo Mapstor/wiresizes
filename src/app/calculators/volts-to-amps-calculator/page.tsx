@@ -4,7 +4,7 @@ import { VoltsToAmpsCalculator } from '@/components/calculators';
 import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Battery } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Volts to Amps Calculator | Convert Voltage to Current | Ohms Law Calculator',
@@ -19,41 +19,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Volts to Amps Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Calculate current from voltage and power or resistance. Essential for circuit design.",
-  "keywords": "volts to amps, voltage to current, ohms law calculator",
-  "url": `https://wiresizes.com/calculators/volts-to-amps-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "Volts to Amps Calculator",
+  url: "https://wiresizes.com/calculators/volts-to-amps-calculator",
+  description: "Professional volts to amps calculator using Ohms Law. Convert voltage to amperage for electrical circuits with power or resistance. Essential tool for electricians and engineers."
 };
 
 const voltsToAmpsFAQs = [
@@ -82,14 +52,11 @@ const voltsToAmpsFAQs = [
 export default function VoltsToAmpsCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <FAQSchema 
-        items={calculatorFAQs['volts-to-amps-calculator']} 
-        
+      <CombinedSchema 
+        webApp={webAppData} 
+        faqItems={calculatorFAQs['volts-to-amps-calculator']} 
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      
       
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-yellow-50 to-orange-100 dark:from-gray-800 dark:to-gray-900 py-12 rounded-2xl mb-12">

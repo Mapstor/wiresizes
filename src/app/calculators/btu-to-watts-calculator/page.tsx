@@ -4,7 +4,7 @@ import { BTUToWattsCalculator } from '@/components/calculators';
 import { Flame, Calculator, TrendingUp, AlertCircle, BookOpen, Snowflake } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'BTU to Watts Calculator | Convert BTU/hr to Electrical Power | HVAC Calculator',
@@ -19,41 +19,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "BTU to Watts Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Convert BTU/hr to watts for HVAC and heating equipment electrical requirements.",
-  "keywords": "BTU to watts, heating conversion, HVAC calculator",
-  "url": `https://wiresizes.com/calculators/btu-to-watts-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "BTU to Watts Calculator",
+  url: "https://wiresizes.com/calculators/btu-to-watts-calculator",
+  description: "Professional BTU to watts converter for HVAC and electrical systems. Convert British Thermal Units to electrical power for heating, cooling, and energy calculations. Essential for electricians and HVAC technicians."
 };
 
 const btuToWattsFAQs = [
@@ -82,14 +52,11 @@ const btuToWattsFAQs = [
 export default function BTUToWattsCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <FAQSchema 
-        items={calculatorFAQs['btu-to-watts-calculator']} 
-        
+      <CombinedSchema 
+        webApp={webAppData} 
+        faqItems={calculatorFAQs['btu-to-watts-calculator']} 
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      
       
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-orange-50 to-red-100 dark:from-gray-800 dark:to-gray-900 py-12 rounded-2xl mb-12">

@@ -4,7 +4,7 @@ import { CircuitBreakerCalculator } from '@/components/calculators';
 import { Shield, Calculator, TrendingUp, AlertCircle, BookOpen, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Circuit Breaker Calculator | Breaker Size Calculator | NEC Breaker Sizing',
@@ -19,41 +19,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Circuit Breaker Size Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Determine proper circuit breaker size for electrical loads and wire protection.",
-  "keywords": "circuit breaker sizing, overcurrent protection, electrical protection",
-  "url": `https://wiresizes.com/calculators/circuit-breaker-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "Circuit Breaker Calculator",
+  url: "https://wiresizes.com/calculators/circuit-breaker-calculator",
+  description: "Professional circuit breaker calculator for electrical contractors and engineers. Calculate proper breaker size per NEC code requirements. Includes motor, continuous load, and OCPD sizing calculations."
 };
 
 const circuitBreakerFAQs = [
@@ -82,14 +52,11 @@ const circuitBreakerFAQs = [
 export default function CircuitBreakerCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <FAQSchema 
-        items={calculatorFAQs['circuit-breaker-calculator']} 
-        
+      <CombinedSchema 
+        webApp={webAppData} 
+        faqItems={calculatorFAQs['circuit-breaker-calculator']} 
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      
       
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-red-50 to-orange-100 dark:from-gray-800 dark:to-gray-900 py-12 rounded-2xl mb-12">

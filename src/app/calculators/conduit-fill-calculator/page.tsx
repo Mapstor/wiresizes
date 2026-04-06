@@ -3,7 +3,7 @@ import { ConduitFillCalculator } from '@/components/calculators';
 import { Settings, Calculator, AlertTriangle, CheckCircle, Wrench, Target, BookOpen, Users, Shield, Package } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Conduit Fill Calculator | NEC Chapter 9 Wire Fill Calculator',
@@ -12,41 +12,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Electrical Conduit Fill Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Determine proper conduit size based on wire count and NEC fill requirements.",
-  "keywords": "conduit calculator, raceway fill, electrical conduit",
-  "url": `https://wiresizes.com/calculators/conduit-fill-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "Conduit Fill Calculator",
+  url: "https://wiresizes.com/calculators/conduit-fill-calculator",
+  description: "Professional conduit fill calculator per NEC Chapter 9. Calculate wire fill percentage for EMT, PVC, rigid, and flexible conduit. Ensure code compliance."
 };
 
 const CONDUIT_FILL_EXAMPLES = [
@@ -231,14 +201,11 @@ const COMPREHENSIVE_FAQS = [
 export default function ConduitFillCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <FAQSchema 
-        items={calculatorFAQs['conduit-fill-calculator']} 
-        
+      <CombinedSchema 
+        webApp={webAppData} 
+        faqItems={calculatorFAQs['conduit-fill-calculator']} 
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">
           {/* Hero Section */}

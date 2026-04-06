@@ -3,7 +3,7 @@ import HotTubWireSizeCalculator from '@/components/calculators/HotTubWireSizeCal
 import { Waves, Shield, DollarSign, Thermometer, AlertTriangle, CheckCircle, Home, Zap, Calculator, Timer, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Hot Tub Wire Size Calculator | Spa Electrical Requirements & GFCI',
@@ -12,41 +12,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Hot Tub Wire Size Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Calculate electrical requirements for hot tub and spa installations per NEC.",
-  "keywords": "hot tub wiring, spa electrical, GFCI protection",
-  "url": `https://wiresizes.com/calculators/hot-tub-wire-size-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "Hot Tub Wire Size Calculator",
+  url: "https://wiresizes.com/calculators/hot-tub-wire-size-calculator",
+  description: "Calculate exact wire size, GFCI breaker requirements, disconnect placement for hot tub installation. Supports all spa brands, 120V/240V systems. NEC 680 compliant with heating cost analysis."
 };
 
 const COMPREHENSIVE_FAQS = [
@@ -211,14 +181,11 @@ const SEASONAL_MAINTENANCE = [
 export default function HotTubWireSizeCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <FAQSchema 
-        items={calculatorFAQs['hot-tub-calculator']} 
-        
+      <CombinedSchema 
+        webApp={webAppData} 
+        faqItems={calculatorFAQs['hot-tub-calculator']} 
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">
           {/* Hero Section */}

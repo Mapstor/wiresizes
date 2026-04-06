@@ -3,7 +3,7 @@ import { DryerCalculator } from '@/components/calculators';
 import { Zap, Calculator, AlertTriangle, Settings, Target, BookOpen, Users, Shield, MapPin, Wrench, CheckCircle, Flame } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Electric Dryer Calculator | 240V Dryer Circuit Calculator | Clothes Dryer Wire Size',
@@ -12,41 +12,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Dryer Circuit Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Size wire and breaker for electric clothes dryers per NEC requirements.",
-  "keywords": "dryer wiring, dryer outlet, NEMA 14-30",
-  "url": `https://wiresizes.com/calculators/dryer-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "Electric Dryer Calculator",
+  url: "https://wiresizes.com/calculators/dryer-calculator",
+  description: "Calculate wire size and circuit requirements for electric clothes dryers. Professional 240V dryer electrical calculator with comprehensive installation guidance."
 };
 
 const DRYER_EXAMPLES = [
@@ -342,14 +312,11 @@ const DRYER_TROUBLESHOOTING = [
 export default function DryerCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <FAQSchema 
-        items={calculatorFAQs['dryer-calculator']} 
-        
+      <CombinedSchema 
+        webApp={webAppData} 
+        faqItems={calculatorFAQs['dryer-calculator']} 
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">
           {/* Hero Section */}

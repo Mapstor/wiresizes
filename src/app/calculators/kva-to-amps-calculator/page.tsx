@@ -4,7 +4,7 @@ import { KVAToAmpsCalculator } from '@/components/calculators';
 import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'kVA to Amps Calculator | Convert Kilovolt-Amperes to Amperage | Transformer Sizing',
@@ -19,41 +19,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "kVA to Amps Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Convert kilovolt-amperes to amperage for transformer and generator sizing.",
-  "keywords": "kVA to amps, apparent power, transformer sizing",
-  "url": `https://wiresizes.com/calculators/kva-to-amps-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "kVA to Amps Calculator",
+  url: "https://wiresizes.com/calculators/kva-to-amps-calculator",
+  description: "Professional kVA to amps calculator for electrical engineers and contractors. Convert kilovolt-amperes to amperage for single-phase and three-phase systems with power factor correction. NEC compliant transformer and generator sizing."
 };
 
 const kvaToAmpsFAQs = [
@@ -82,14 +52,11 @@ const kvaToAmpsFAQs = [
 export default function KVAToAmpsCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <FAQSchema 
-        items={calculatorFAQs['kva-to-amps-calculator']} 
-        
+      <CombinedSchema 
+        webApp={webAppData} 
+        faqItems={calculatorFAQs['kva-to-amps-calculator']} 
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      
       
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900 py-12 rounded-2xl mb-12">

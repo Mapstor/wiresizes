@@ -1,41 +1,11 @@
 import type { Metadata } from 'next'
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Motor Circuit Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Size motor branch circuits per NEC Article 430 including wire, breaker, and overload.",
-  "keywords": "motor circuit, NEC 430, motor protection",
-  "url": `https://wiresizes.com/calculators/motor-circuit`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "Motor Circuit Calculator",
+  url: "https://wiresizes.com/calculators/motor-circuit",
+  description: "Professional motor circuit calculator per NEC Article 430. Calculate wire size, overload protection, short circuit protection, and control circuit requirements."
 };
 import { MotorCircuitCalculator } from '@/components/calculators/MotorCircuitCalculator'
 import { Badge } from '@/components/ui/Badge'
@@ -80,10 +50,7 @@ const faqs = [
 export default function MotorCircuitCalculatorPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}

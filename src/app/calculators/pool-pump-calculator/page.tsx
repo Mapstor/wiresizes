@@ -3,7 +3,7 @@ import { PoolPumpCalculator } from '@/components/calculators';
 import { Droplets, Calculator, AlertTriangle, Settings, Target, BookOpen, Users, Shield, MapPin, Zap, Wrench, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Pool Pump Calculator | Swimming Pool Pump Circuit Calculator | NEC 680',
@@ -12,41 +12,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Pool Pump Electrical Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Size wire and breakers for pool pumps with GFCI protection requirements.",
-  "keywords": "pool motor, pump wiring, swimming pool electrical",
-  "url": `https://wiresizes.com/calculators/pool-pump-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "Pool Pump Calculator",
+  url: "https://wiresizes.com/calculators/pool-pump-calculator",
+  description: "Calculate wire size and circuit requirements for pool pumps per NEC Article 680. Professional pool equipment electrical calculator with comprehensive installation guidance."
 };
 
 const POOL_PUMP_EXAMPLES = [
@@ -442,14 +412,11 @@ const TROUBLESHOOTING_GUIDE = [
 export default function PoolPumpCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <FAQSchema 
-        items={calculatorFAQs['pool-pump-calculator']} 
-        
+      <CombinedSchema 
+        webApp={webAppData} 
+        faqItems={calculatorFAQs['pool-pump-calculator']} 
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">
           {/* Hero Section */}

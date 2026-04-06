@@ -3,7 +3,7 @@ import ClientThreePhaseCalculator from '@/components/calculators/ClientThreePhas
 import { Zap, Calculator, Settings, Target, BookOpen, Users, AlertTriangle, Shield, Factory, Cog, TrendingUp, DollarSign, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
-import { FAQSchema } from '@/components/seo/FAQSchema';
+import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Three Phase Calculator | 3-Phase Power Calculator | Industrial Motor & Load Calculator',
@@ -12,41 +12,11 @@ export const metadata: Metadata = {
 };
 
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Three Phase Power Calculator",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Complete three-phase electrical calculations including current, voltage, and power.",
-  "keywords": "3 phase power, three phase current, industrial power",
-  "url": `https://wiresizes.com/calculators/three-phase-calculator`,
-  "inLanguage": "en-US",
-  "creator": {
-    "@type": "Organization",
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "publisher": {
-    "@type": "Organization", 
-    "name": "WireSizes.com",
-    "url": "https://wiresizes.com"
-  },
-  "featureList": [
-    "NEC code compliant calculations",
-    "Real-time results",
-    "Mobile responsive design", 
-    "Free to use",
-    "No registration required"
-  ],
-  "softwareVersion": "2.0",
-  "datePublished": "2024-01-01",
-  "dateModified": new Date().toISOString().split('T')[0]
+// Web application data for schema
+const webAppData = {
+  name: "Three Phase Calculator",
+  url: "https://wiresizes.com/calculators/three-phase-calculator",
+  description: "Calculate three-phase electrical power, current, voltage, and motor loads for industrial and commercial applications. Professional 3-phase electrical calculations with power factor correction, load balancing, and transformer sizing."
 };
 
 const THREE_PHASE_EXAMPLES = [
@@ -463,14 +433,11 @@ const COMPREHENSIVE_FAQS = [
 export default function ThreePhaseCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <FAQSchema 
-        items={calculatorFAQs['three-phase-calculator']} 
-        
+      <CombinedSchema 
+        webApp={webAppData} 
+        faqItems={calculatorFAQs['three-phase-calculator']} 
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">
           {/* Hero Section */}

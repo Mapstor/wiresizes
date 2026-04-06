@@ -293,11 +293,6 @@ const faqItems = [
 export default function AmpacityCalculatorPage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
-      
       {/* Quick Answer Section */}
       <section className="bg-blue-50 border-b border-blue-200">
         <div className="container py-8">
