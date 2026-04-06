@@ -1,3 +1,4 @@
+import Script from 'next/script';
 import { generateBreadcrumbSchema } from '@/utils/breadcrumbs';
 
 interface ArticleData {
@@ -67,8 +68,10 @@ export function ArticleFAQSchema({ article, faqItems }: ArticleFAQSchemaProps) {
   };
 
   return (
-    <script
+    <Script
+      id={`article-faq-schema-${article.url.replace(/[^a-zA-Z0-9]/g, '-')}`}
       type="application/ld+json"
+      strategy="beforeInteractive"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(combinedSchema) }}
     />
   );

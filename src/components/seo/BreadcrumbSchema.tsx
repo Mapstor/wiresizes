@@ -1,3 +1,4 @@
+import Script from 'next/script';
 import { generateBreadcrumbSchema } from '@/utils/breadcrumbs';
 
 interface BreadcrumbSchemaProps {
@@ -13,8 +14,10 @@ export function BreadcrumbSchema({ url }: BreadcrumbSchemaProps) {
   };
 
   return (
-    <script
+    <Script
+      id={`breadcrumb-schema-${url.replace(/[^a-zA-Z0-9]/g, '-')}`}
       type="application/ld+json"
+      strategy="beforeInteractive"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
     />
   );
