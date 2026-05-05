@@ -20,6 +20,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import { NEC_310_16 } from '@/lib/data/nec-tables';
 
 export const metadata: Metadata = {
   title: 'Wire Size Calculator | AWG Calculator | Electrical Wire Sizing',
@@ -111,22 +112,20 @@ const COMMON_WIRE_SIZES = [
   }
 ];
 
-// Wire ampacity table at 75°C
-const WIRE_AMPACITY_TABLE = [
-  { awg: "14", copper60C: 15, copper75C: 20, copper90C: 25, aluminum60C: "—", aluminum75C: "—", aluminum90C: "—" },
-  { awg: "12", copper60C: 20, copper75C: 25, copper90C: 30, aluminum60C: 15, aluminum75C: 20, aluminum90C: 25 },
-  { awg: "10", copper60C: 30, copper75C: 35, copper90C: 40, aluminum60C: 25, aluminum75C: 30, aluminum90C: 35 },
-  { awg: "8", copper60C: 40, copper75C: 50, copper90C: 55, aluminum60C: 30, aluminum75C: 40, aluminum90C: 45 },
-  { awg: "6", copper60C: 55, copper75C: 65, copper90C: 75, aluminum60C: 40, aluminum75C: 50, aluminum90C: 55 },
-  { awg: "4", copper60C: 70, copper75C: 85, copper90C: 95, aluminum60C: 55, aluminum75C: 65, aluminum90C: 75 },
-  { awg: "3", copper60C: 85, copper75C: 100, copper90C: 115, aluminum60C: 65, aluminum75C: 75, aluminum90C: 85 },
-  { awg: "2", copper60C: 95, copper75C: 115, copper90C: 130, aluminum60C: 75, aluminum75C: 90, aluminum90C: 100 },
-  { awg: "1", copper60C: 110, copper75C: 130, copper90C: 145, aluminum60C: 85, aluminum75C: 100, aluminum90C: 115 },
-  { awg: "1/0", copper60C: 125, copper75C: 150, copper90C: 170, aluminum60C: 100, aluminum75C: 120, aluminum90C: 135 },
-  { awg: "2/0", copper60C: 145, copper75C: 175, copper90C: 195, aluminum60C: 115, aluminum75C: 135, aluminum90C: 150 },
-  { awg: "3/0", copper60C: 165, copper75C: 200, copper90C: 225, aluminum60C: 130, aluminum75C: 155, aluminum90C: 175 },
-  { awg: "4/0", copper60C: 195, copper75C: 230, copper90C: 260, aluminum60C: 150, aluminum75C: 180, aluminum90C: 205 }
-];
+// Wire ampacity table — derived from canonical NEC 310.16. Limited to
+// 14 AWG through 4/0 since this calculator is for branch / feeder
+// circuits typical in residential and small-commercial work.
+const WIRE_AMPACITY_TABLE = NEC_310_16
+  .filter((row) => /^(14|12|10|8|6|4|3|2|1|[1234]\/0)$/.test(row.awg))
+  .map((row) => ({
+    awg: row.awg,
+    copper60C: row.copper_60c,
+    copper75C: row.copper_75c,
+    copper90C: row.copper_90c,
+    aluminum60C: row.aluminum_60c ?? '—',
+    aluminum75C: row.aluminum_75c ?? '—',
+    aluminum90C: row.aluminum_90c ?? '—',
+  }));
 
 // Temperature correction factors
 const TEMP_CORRECTION = [

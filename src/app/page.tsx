@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
+import { NEC_310_16 } from '@/lib/data/nec-tables';
 import { 
   Calculator, 
   Zap, 
@@ -100,21 +101,26 @@ const VOLTAGE_DROP_LIMITS = [
   { circuit: 'Total', limit: '5%', reference: 'Combined' },
 ];
 
-// NEC Table 310.16 - Complete Reference Data
-const NEC_TABLE_310_16 = [
-  { awg: '14', ampacity: 20, breaker: 15, circular_mils: 4110, resistance: 3.07 },
-  { awg: '12', ampacity: 25, breaker: 20, circular_mils: 6530, resistance: 1.93 },
-  { awg: '10', ampacity: 35, breaker: 30, circular_mils: 10380, resistance: 1.21 },
-  { awg: '8', ampacity: 50, breaker: 40, circular_mils: 16510, resistance: 0.764 },
-  { awg: '6', ampacity: 65, breaker: 50, circular_mils: 26240, resistance: 0.491 },
-  { awg: '4', ampacity: 85, breaker: 70, circular_mils: 41740, resistance: 0.308 },
-  { awg: '3', ampacity: 100, breaker: 90, circular_mils: 52620, resistance: 0.245 },
-  { awg: '2', ampacity: 115, breaker: 100, circular_mils: 66360, resistance: 0.194 },
-  { awg: '1/0', ampacity: 150, breaker: 125, circular_mils: 105600, resistance: 0.122 },
-  { awg: '2/0', ampacity: 175, breaker: 150, circular_mils: 133100, resistance: 0.0967 },
-  { awg: '3/0', ampacity: 200, breaker: 175, circular_mils: 167800, resistance: 0.0766 },
-  { awg: '4/0', ampacity: 230, breaker: 200, circular_mils: 211600, resistance: 0.0608 },
-];
+// Editorial breaker pairings displayed on the homepage. The breaker
+// column is a typical engineering choice (NEC 240.4(D) caps 14/12/10;
+// larger wires use the highest standard breaker ≤ ampacity), not a
+// strict ampacity-derived value, so it lives here as an explicit map.
+const HOMEPAGE_BREAKER_PAIRINGS: Record<string, number> = {
+  '14': 15, '12': 20, '10': 30, '8': 40, '6': 50, '4': 70, '3': 90,
+  '2': 100, '1/0': 125, '2/0': 150, '3/0': 175, '4/0': 200,
+};
+
+// NEC Table 310.16 — derived from canonical data. 75°C copper ampacity
+// is the standard residential/commercial reference.
+const NEC_TABLE_310_16 = NEC_310_16
+  .filter((row) => HOMEPAGE_BREAKER_PAIRINGS[row.awg] !== undefined)
+  .map((row) => ({
+    awg: row.awg,
+    ampacity: row.copper_75c ?? 0,
+    breaker: HOMEPAGE_BREAKER_PAIRINGS[row.awg],
+    circular_mils: Math.round(row.area_kcmil * 1000),
+    resistance: row.dc_resistance_ohms_per_1000ft,
+  }));
 
 // Equipment Load Requirements
 const EQUIPMENT_LOADS = [

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { CalculatorLayout } from './CalculatorLayout';
 import { VoltageDropVisual } from '@/components/visualizations/VoltageDropVisual';
 import { calculateVoltageDrop, VoltageDropResult } from '@/lib/calculations/wire-sizing';
-import { getAllWireSizes } from '@/lib/data/nec-310-16';
+import { getAllWireSizes } from '@/lib/data/nec-tables';
 import { Badge } from '@/components/ui/Badge';
 import { AlertCircle, CheckCircle2, Calculator, RotateCcw } from 'lucide-react';
 

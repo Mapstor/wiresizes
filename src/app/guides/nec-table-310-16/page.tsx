@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { DatasetSchema } from '@/components/seo/DatasetSchema';
 import { getArticleDates } from '@/lib/article-dates';
+import { NEC_310_16 } from '@/lib/data/nec-tables';
 
 
 export const metadata: Metadata = {
@@ -26,29 +27,17 @@ export const metadata: Metadata = {
 };
 
 // Complete NEC Table 310.16 Data
-const NEC_310_16_DATA = [
-  { awg: '14', copper60: 15, copper75: 20, copper90: 25, aluminum60: '—', aluminum75: '—', aluminum90: '—' },
-  { awg: '12', copper60: 20, copper75: 25, copper90: 30, aluminum60: 15, aluminum75: 20, aluminum90: 25 },
-  { awg: '10', copper60: 30, copper75: 35, copper90: 40, aluminum60: 25, aluminum75: 30, aluminum90: 35 },
-  { awg: '8', copper60: 40, copper75: 50, copper90: 55, aluminum60: 35, aluminum75: 40, aluminum90: 45 },
-  { awg: '6', copper60: 55, copper75: 65, copper90: 75, aluminum60: 40, aluminum75: 50, aluminum90: 55 },
-  { awg: '4', copper60: 70, copper75: 85, copper90: 95, aluminum60: 55, aluminum75: 65, aluminum90: 75 },
-  { awg: '3', copper60: 85, copper75: 100, copper90: 115, aluminum60: 65, aluminum75: 75, aluminum90: 85 },
-  { awg: '2', copper60: 95, copper75: 115, copper90: 130, aluminum60: 75, aluminum75: 90, aluminum90: 100 },
-  { awg: '1', copper60: 110, copper75: 130, copper90: 145, aluminum60: 85, aluminum75: 100, aluminum90: 115 },
-  { awg: '1/0', copper60: 125, copper75: 150, copper90: 170, aluminum60: 100, aluminum75: 120, aluminum90: 135 },
-  { awg: '2/0', copper60: 145, copper75: 175, copper90: 195, aluminum60: 115, aluminum75: 135, aluminum90: 150 },
-  { awg: '3/0', copper60: 165, copper75: 200, copper90: 225, aluminum60: 130, aluminum75: 155, aluminum90: 175 },
-  { awg: '4/0', copper60: 195, copper75: 230, copper90: 260, aluminum60: 150, aluminum75: 180, aluminum90: 205 },
-  { awg: '250', copper60: 215, copper75: 255, copper90: 290, aluminum60: 170, aluminum75: 205, aluminum90: 230 },
-  { awg: '300', copper60: 240, copper75: 285, copper90: 320, aluminum60: 190, aluminum75: 230, aluminum90: 260 },
-  { awg: '350', copper60: 260, copper75: 310, copper90: 350, aluminum60: 210, aluminum75: 250, aluminum90: 280 },
-  { awg: '400', copper60: 280, copper75: 335, copper90: 380, aluminum60: 225, aluminum75: 270, aluminum90: 305 },
-  { awg: '500', copper60: 320, copper75: 380, copper90: 430, aluminum60: 260, aluminum75: 310, aluminum90: 350 },
-  { awg: '600', copper60: 350, copper75: 420, copper90: 475, aluminum60: 285, aluminum75: 340, aluminum90: 385 },
-  { awg: '750', copper60: 385, copper75: 460, copper90: 520, aluminum60: 315, aluminum75: 375, aluminum90: 425 },
-  { awg: '1000', copper60: 445, copper75: 535, copper90: 615, aluminum60: 370, aluminum75: 445, aluminum90: 500 },
-];
+// NEC Table 310.16 — derived from the canonical data source so this
+// page can never drift from other tables on the site.
+const NEC_310_16_DATA = NEC_310_16.map((row) => ({
+  awg: row.awg,
+  copper60: row.copper_60c,
+  copper75: row.copper_75c,
+  copper90: row.copper_90c,
+  aluminum60: row.aluminum_60c ?? '—',
+  aluminum75: row.aluminum_75c ?? '—',
+  aluminum90: row.aluminum_90c ?? '—',
+}));
 
 // Temperature Derating Factors
 const TEMP_DERATING = [

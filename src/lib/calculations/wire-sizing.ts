@@ -3,7 +3,7 @@
  * Based on NEC 2023 requirements
  */
 
-import { getMinWireSize, getAmpacity, NEC_TABLE_310_16 } from '@/lib/data/nec-310-16';
+import { getMinWireSize, getAmpacity, NEC_TABLE_310_16 } from '@/lib/data/nec-tables';
 import { getWireResistance, WIRE_PROPERTIES } from '@/lib/data/wire-properties';
 
 // Types

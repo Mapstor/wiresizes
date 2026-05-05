@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { CalculatorLayout } from './CalculatorLayout';
 import { CalculatorResult } from './CalculatorResult';
 import { WireComparison } from '@/components/visualizations/WireComparison';
-import { NEC_TABLE_310_16, getAmpacity } from '@/lib/data/nec-310-16';
+import { NEC_TABLE_310_16, getAmpacity } from '@/lib/data/nec-tables';
 import { useShareableUrl } from '@/lib/hooks/useShareableUrl';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { Info } from 'lucide-react';
