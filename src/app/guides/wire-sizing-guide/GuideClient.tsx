@@ -5,20 +5,23 @@ import { AlertTriangle, Zap, Calculator, TrendingUp, ThermometerSun, Cable, Buil
 import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 
+// NEC 310.16 (Cu/Al @ 60/75/90°C). DC resistance @ 75°C from NEC Ch. 9
+// Table 8 (uncoated). 14 AWG aluminum is not commercially available, so
+// '—'. Source of truth: src/data/nec-tables.ts.
 const AWG_TABLE = [
-  { awg: '14', diameter_mils: 64.1, area_kcmil: 4.11, ampacity_60c: { cu: 20, al: 15 }, ampacity_75c: { cu: 25, al: 20 }, ampacity_90c: { cu: 30, al: 25 }, ohms_1000ft: 2.53, weight_lb_1000ft: 12.4 },
-  { awg: '12', diameter_mils: 80.8, area_kcmil: 6.53, ampacity_60c: { cu: 25, al: 20 }, ampacity_75c: { cu: 30, al: 25 }, ampacity_90c: { cu: 35, al: 30 }, ohms_1000ft: 1.59, weight_lb_1000ft: 19.8 },
-  { awg: '10', diameter_mils: 101.9, area_kcmil: 10.38, ampacity_60c: { cu: 35, al: 30 }, ampacity_75c: { cu: 40, al: 35 }, ampacity_90c: { cu: 50, al: 40 }, ohms_1000ft: 0.999, weight_lb_1000ft: 31.4 },
-  { awg: '8', diameter_mils: 128.5, area_kcmil: 16.51, ampacity_60c: { cu: 50, al: 40 }, ampacity_75c: { cu: 55, al: 45 }, ampacity_90c: { cu: 70, al: 55 }, ohms_1000ft: 0.628, weight_lb_1000ft: 49.9 },
-  { awg: '6', diameter_mils: 162.0, area_kcmil: 26.24, ampacity_60c: { cu: 65, al: 50 }, ampacity_75c: { cu: 75, al: 65 }, ampacity_90c: { cu: 95, al: 75 }, ohms_1000ft: 0.395, weight_lb_1000ft: 79.5 },
-  { awg: '4', diameter_mils: 204.3, area_kcmil: 41.74, ampacity_60c: { cu: 85, al: 65 }, ampacity_75c: { cu: 95, al: 75 }, ampacity_90c: { cu: 120, al: 95 }, ohms_1000ft: 0.249, weight_lb_1000ft: 126.4 },
-  { awg: '3', diameter_mils: 229.4, area_kcmil: 52.62, ampacity_60c: { cu: 100, al: 75 }, ampacity_75c: { cu: 115, al: 85 }, ampacity_90c: { cu: 130, al: 100 }, ohms_1000ft: 0.197, weight_lb_1000ft: 159.3 },
-  { awg: '2', diameter_mils: 257.6, area_kcmil: 66.36, ampacity_60c: { cu: 115, al: 90 }, ampacity_75c: { cu: 130, al: 100 }, ampacity_90c: { cu: 145, al: 115 }, ohms_1000ft: 0.156, weight_lb_1000ft: 201.0 },
-  { awg: '1', diameter_mils: 289.3, area_kcmil: 83.69, ampacity_60c: { cu: 130, al: 100 }, ampacity_75c: { cu: 145, al: 115 }, ampacity_90c: { cu: 165, al: 130 }, ohms_1000ft: 0.124, weight_lb_1000ft: 253.3 },
-  { awg: '1/0', diameter_mils: 325.0, area_kcmil: 105.6, ampacity_60c: { cu: 150, al: 120 }, ampacity_75c: { cu: 170, al: 135 }, ampacity_90c: { cu: 195, al: 150 }, ohms_1000ft: 0.0983, weight_lb_1000ft: 319.5 },
-  { awg: '2/0', diameter_mils: 364.8, area_kcmil: 133.1, ampacity_60c: { cu: 175, al: 135 }, ampacity_75c: { cu: 195, al: 150 }, ampacity_90c: { cu: 225, al: 175 }, ohms_1000ft: 0.0779, weight_lb_1000ft: 402.8 },
-  { awg: '3/0', diameter_mils: 409.6, area_kcmil: 167.8, ampacity_60c: { cu: 200, al: 155 }, ampacity_75c: { cu: 225, al: 175 }, ampacity_90c: { cu: 260, al: 200 }, ohms_1000ft: 0.0618, weight_lb_1000ft: 508.0 },
-  { awg: '4/0', diameter_mils: 460.0, area_kcmil: 211.6, ampacity_60c: { cu: 230, al: 180 }, ampacity_75c: { cu: 260, al: 205 }, ampacity_90c: { cu: 300, al: 230 }, ohms_1000ft: 0.0490, weight_lb_1000ft: 640.5 }
+  { awg: '14',  diameter_mils: 64.1,  area_kcmil: 4.11,   ampacity_60c: { cu: 15,  al: '—' }, ampacity_75c: { cu: 20,  al: '—' }, ampacity_90c: { cu: 25,  al: '—' }, ohms_1000ft: 3.07,    weight_lb_1000ft: 12.4 },
+  { awg: '12',  diameter_mils: 80.8,  area_kcmil: 6.53,   ampacity_60c: { cu: 20,  al: 15 },  ampacity_75c: { cu: 25,  al: 20 },  ampacity_90c: { cu: 30,  al: 25 },  ohms_1000ft: 1.93,    weight_lb_1000ft: 19.8 },
+  { awg: '10',  diameter_mils: 101.9, area_kcmil: 10.38,  ampacity_60c: { cu: 30,  al: 25 },  ampacity_75c: { cu: 35,  al: 30 },  ampacity_90c: { cu: 40,  al: 35 },  ohms_1000ft: 1.21,    weight_lb_1000ft: 31.4 },
+  { awg: '8',   diameter_mils: 128.5, area_kcmil: 16.51,  ampacity_60c: { cu: 40,  al: 35 },  ampacity_75c: { cu: 50,  al: 40 },  ampacity_90c: { cu: 55,  al: 45 },  ohms_1000ft: 0.764,   weight_lb_1000ft: 49.9 },
+  { awg: '6',   diameter_mils: 162.0, area_kcmil: 26.24,  ampacity_60c: { cu: 55,  al: 40 },  ampacity_75c: { cu: 65,  al: 50 },  ampacity_90c: { cu: 75,  al: 55 },  ohms_1000ft: 0.491,   weight_lb_1000ft: 79.5 },
+  { awg: '4',   diameter_mils: 204.3, area_kcmil: 41.74,  ampacity_60c: { cu: 70,  al: 55 },  ampacity_75c: { cu: 85,  al: 65 },  ampacity_90c: { cu: 95,  al: 75 },  ohms_1000ft: 0.308,   weight_lb_1000ft: 126.4 },
+  { awg: '3',   diameter_mils: 229.4, area_kcmil: 52.62,  ampacity_60c: { cu: 85,  al: 65 },  ampacity_75c: { cu: 100, al: 75 },  ampacity_90c: { cu: 115, al: 85 },  ohms_1000ft: 0.245,   weight_lb_1000ft: 159.3 },
+  { awg: '2',   diameter_mils: 257.6, area_kcmil: 66.36,  ampacity_60c: { cu: 95,  al: 75 },  ampacity_75c: { cu: 115, al: 90 },  ampacity_90c: { cu: 130, al: 100 }, ohms_1000ft: 0.194,   weight_lb_1000ft: 201.0 },
+  { awg: '1',   diameter_mils: 289.3, area_kcmil: 83.69,  ampacity_60c: { cu: 110, al: 85 },  ampacity_75c: { cu: 130, al: 100 }, ampacity_90c: { cu: 145, al: 115 }, ohms_1000ft: 0.154,   weight_lb_1000ft: 253.3 },
+  { awg: '1/0', diameter_mils: 325.0, area_kcmil: 105.6,  ampacity_60c: { cu: 125, al: 100 }, ampacity_75c: { cu: 150, al: 120 }, ampacity_90c: { cu: 170, al: 135 }, ohms_1000ft: 0.122,   weight_lb_1000ft: 319.5 },
+  { awg: '2/0', diameter_mils: 364.8, area_kcmil: 133.1,  ampacity_60c: { cu: 145, al: 115 }, ampacity_75c: { cu: 175, al: 135 }, ampacity_90c: { cu: 195, al: 150 }, ohms_1000ft: 0.0967,  weight_lb_1000ft: 402.8 },
+  { awg: '3/0', diameter_mils: 409.6, area_kcmil: 167.8,  ampacity_60c: { cu: 165, al: 130 }, ampacity_75c: { cu: 200, al: 155 }, ampacity_90c: { cu: 225, al: 175 }, ohms_1000ft: 0.0766,  weight_lb_1000ft: 508.0 },
+  { awg: '4/0', diameter_mils: 460.0, area_kcmil: 211.6,  ampacity_60c: { cu: 195, al: 150 }, ampacity_75c: { cu: 230, al: 180 }, ampacity_90c: { cu: 260, al: 205 }, ohms_1000ft: 0.0608,  weight_lb_1000ft: 640.5 }
 ];
 
 const TEMPERATURE_CORRECTION_FACTORS = [
