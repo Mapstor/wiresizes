@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://wiresizes.com/calculators/box-fill-calculator',
   },
+  alternates: { canonical: '/calculators/box-fill-calculator' },
 };
 
 
@@ -802,7 +803,7 @@ export default function BoxFillCalculatorPage() {
         </h2>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Link href="/calculators/conduit-fill" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+          <Link href="/calculators/conduit-fill-calculator" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
             <Package className="h-8 w-8 text-blue-600 mb-2" />
             <h3 className="font-semibold mb-1">Conduit Fill</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Calculate conduit capacity</p>

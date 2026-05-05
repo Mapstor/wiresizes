@@ -6,6 +6,7 @@ export const metadata = {
   title: 'NEC Code Compliance Guide | National Electrical Code Requirements 2023',
   description: 'Comprehensive NEC code compliance guide covering wire sizing, circuit protection, grounding, load calculations, and safety requirements with detailed tables and examples.',
   keywords: 'NEC code, National Electrical Code, electrical compliance, wire sizing code, circuit protection, electrical safety',
+  alternates: { canonical: '/guides/nec-code-compliance' },
 };
 
 const AMPACITY_TABLE_310_16 = [

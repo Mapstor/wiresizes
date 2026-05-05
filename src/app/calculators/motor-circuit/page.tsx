@@ -9,14 +9,14 @@ const webAppData = {
 };
 import { MotorCircuitCalculator } from '@/components/calculators/MotorCircuitCalculator'
 import { Badge } from '@/components/ui/Badge'
-import { FAQSchema } from '@/components/seo/FAQSchema'
+import { CombinedSchema } from '@/components/seo/CombinedSchema'
 
 export const metadata: Metadata = {
   title: 'Motor Circuit Calculator | NEC 430 Wire Size, Protection & Control',
   description: 'Professional motor circuit calculator per NEC Article 430. Calculate wire size, overload protection, short circuit protection, and control circuit requirements.',
   keywords: 'motor circuit calculator, NEC 430, motor wire size, motor protection, overload protection, short circuit protection, motor control circuit, FLC motor current',
   alternates: {
-    canonical: 'https://wiresizes.com/calculators/motor-circuit'
+    canonical: '/calculators/motor-circuit'
   }
 }
 
@@ -756,7 +756,7 @@ export default function MotorCircuitCalculatorPage() {
         </div>
       </div>
       
-      <FAQSchema items={faqs} />
+      <CombinedSchema webApp={webAppData} faqItems={faqs} />
     </div>
   )
 }

@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'Residential Load Calculator | NEC 220 Service Size Calculator & Panel Upgrade',
   description: 'Calculate residential electrical service size per NEC Article 220. Determine if 100A, 200A, or 400A service needed. Professional load calculations for permits, inspections, and panel upgrades.',
   keywords: 'residential load calculator, NEC 220, electrical service size, panel upgrade calculator, 200 amp service calculator, electrical load calculation, service entrance calculator, electrical permit calculator, home electrical capacity, electrical panel sizing',
+  alternates: { canonical: '/calculators/residential-load-calculator' },
 };
 
 

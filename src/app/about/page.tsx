@@ -21,33 +21,55 @@ export const metadata: Metadata = {
   description: 'Learn about WireSizes.com - the leading platform for NEC-compliant electrical wire sizing calculators. Trusted by electricians, contractors, and engineers worldwide.',
   keywords: 'about wiresizes, electrical calculators, NEC compliance, wire sizing tools, electrical engineering',
   alternates: {
-    canonical: 'https://wiresizes.com/about'
+    canonical: '/about'
   },
 };
 
 const aboutPageSchema = {
   "@context": "https://schema.org",
-  "@type": "AboutPage",
-  "url": "https://wiresizes.com/about",
-  "name": "About WireSizes.com",
-  "description": "Professional electrical wire sizing calculators and tools platform",
-  "mainEntity": {
-    "@type": "Organization",
-    "@id": "https://wiresizes.com/#organization",
-    "name": "WireSizes.com",
-    "description": "Leading platform for NEC-compliant electrical calculators",
-    "url": "https://wiresizes.com",
-    "logo": "https://wiresizes.com/icon.svg",
-    "foundingDate": "2024",
-    "numberOfEmployees": {
-      "@type": "QuantitativeValue",
-      "value": "10-50"
+  "@graph": [
+    {
+      "@type": "AboutPage",
+      "@id": "https://wiresizes.com/about#webpage",
+      "url": "https://wiresizes.com/about",
+      "name": "About WireSizes.com",
+      "description": "Professional electrical wire sizing calculators and tools platform built for licensed electricians, contractors, and engineers.",
+      "isPartOf": { "@id": "https://wiresizes.com/#website" },
+      "inLanguage": "en-US",
+      "breadcrumb": { "@id": "https://wiresizes.com/about#breadcrumb" },
+      "mainEntity": { "@id": "https://wiresizes.com/#organization" }
     },
-    "areaServed": {
-      "@type": "Place",
-      "name": "Worldwide"
+    {
+      "@type": "Organization",
+      "@id": "https://wiresizes.com/#organization",
+      "name": "WireSizes.com",
+      "description": "Leading platform for NEC-compliant electrical calculators",
+      "url": "https://wiresizes.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://wiresizes.com/icon.svg",
+        "width": 512,
+        "height": 512
+      },
+      "foundingDate": "2024",
+      "numberOfEmployees": {
+        "@type": "QuantitativeValue",
+        "value": "10-50"
+      },
+      "areaServed": {
+        "@type": "Place",
+        "name": "Worldwide"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://wiresizes.com/about#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://wiresizes.com" },
+        { "@type": "ListItem", "position": 2, "name": "About", "item": "https://wiresizes.com/about" }
+      ]
     }
-  }
+  ]
 };
 
 const PLATFORM_STATS = [

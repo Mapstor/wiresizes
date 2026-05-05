@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://wiresizes.com/calculators/ohms-law-calculator',
   },
+  alternates: { canonical: '/calculators/ohms-law-calculator' },
 };
 
 
@@ -683,7 +684,7 @@ export default function OhmsLawCalculatorPage() {
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Link 
-              href="/calculators/watts-to-amps"
+              href="/calculators/watts-to-amps-calculator"
               className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
             >
               <div className="flex items-center gap-3 mb-3">
@@ -735,7 +736,7 @@ export default function OhmsLawCalculatorPage() {
             </Link>
 
             <Link 
-              href="/calculators/three-phase"
+              href="/calculators/three-phase-calculator"
               className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
             >
               <div className="flex items-center gap-3 mb-3">

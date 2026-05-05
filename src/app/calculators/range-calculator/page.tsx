@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'Electric Range Calculator | Range Circuit Calculator | NEC 220.55 Kitchen Appliances',
   description: 'Calculate wire size and circuit requirements for electric ranges, cooktops, and ovens. Professional kitchen appliance electrical calculator with NEC 220.55 demand factors and 3-wire vs 4-wire installations.',
   keywords: 'range calculator, electric range circuit, cooktop wire size, kitchen appliance calculator, NEC 220.55, range demand factor, oven circuit calculator, electric stove wiring',
+  alternates: { canonical: '/calculators/range-calculator' },
 };
 
 

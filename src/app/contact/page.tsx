@@ -38,7 +38,8 @@ export const metadata: Metadata = {
     title: 'Contact WireSizes.com - Professional Support',
     description: 'Get expert support for electrical calculations, wire sizing, and NEC compliance questions',
     type: 'website',
-  }
+  },
+  alternates: { canonical: '/contact' },
 };
 
 const CONTACT_CHANNELS = [
@@ -236,9 +237,81 @@ const INTERNATIONAL_SUPPORT = [
   }
 ];
 
+const contactPageSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'ContactPage',
+      '@id': 'https://wiresizes.com/contact#contactpage',
+      url: 'https://wiresizes.com/contact',
+      name: 'Contact WireSizes.com',
+      description:
+        'Contact channels for WireSizes.com: technical support, professional consulting, legal/compliance, and educational partnerships.',
+      isPartOf: { '@id': 'https://wiresizes.com/#website' },
+      inLanguage: 'en-US',
+      mainEntity: { '@id': 'https://wiresizes.com/#organization' },
+    },
+    {
+      '@type': 'Organization',
+      '@id': 'https://wiresizes.com/#organization',
+      name: 'WireSizes.com',
+      url: 'https://wiresizes.com',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://wiresizes.com/icon.svg',
+        width: 512,
+        height: 512,
+      },
+      contactPoint: [
+        {
+          '@type': 'ContactPoint',
+          contactType: 'Technical Support',
+          email: 'support@wiresizes.com',
+          availableLanguage: ['English'],
+          hoursAvailable: 'Mo-Fr 08:00-18:00 EST',
+          areaServed: 'Worldwide',
+        },
+        {
+          '@type': 'ContactPoint',
+          contactType: 'Professional Consulting',
+          email: 'consulting@wiresizes.com',
+          availableLanguage: ['English'],
+          hoursAvailable: 'Mo-Fr 09:00-17:00 EST',
+          areaServed: 'Worldwide',
+        },
+        {
+          '@type': 'ContactPoint',
+          contactType: 'Legal & Compliance',
+          email: 'legal@wiresizes.com',
+          availableLanguage: ['English'],
+          hoursAvailable: 'Mo-Fr 09:00-17:00 EST',
+        },
+        {
+          '@type': 'ContactPoint',
+          contactType: 'Educational Resources',
+          email: 'education@wiresizes.com',
+          availableLanguage: ['English'],
+        },
+      ],
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://wiresizes.com/contact#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://wiresizes.com' },
+        { '@type': 'ListItem', position: 2, name: 'Contact', item: 'https://wiresizes.com/contact' },
+      ],
+    },
+  ],
+};
+
 export default function ContactPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-neutral-50">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactPageSchema) }}
+      />
       <div className="container py-12">
         {/* Header */}
         <div className="text-center mb-16">

@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://wiresizes.com/calculators/volts-to-amps-calculator',
   },
+  alternates: { canonical: '/calculators/volts-to-amps-calculator' },
 };
 
 
@@ -782,19 +783,19 @@ export default function VoltsToAmpsCalculatorPage() {
         </h2>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Link href="/calculators/amps-to-watts" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+          <Link href="/calculators/amps-to-watts-calculator" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
             <Zap className="h-8 w-8 text-yellow-600 mb-2" />
             <h3 className="font-semibold mb-1">Amps to Watts</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Convert current to power</p>
           </Link>
           
-          <Link href="/calculators/watts-to-amps" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+          <Link href="/calculators/watts-to-amps-calculator" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
             <Calculator className="h-8 w-8 text-blue-600 mb-2" />
             <h3 className="font-semibold mb-1">Watts to Amps</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Power to current converter</p>
           </Link>
           
-          <Link href="/calculators/ohms-law" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+          <Link href="/calculators/ohms-law-calculator" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
             <Battery className="h-8 w-8 text-green-600 mb-2" />
             <h3 className="font-semibold mb-1">Ohm's Law</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Complete V-I-R-P calculator</p>

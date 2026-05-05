@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'Three Phase Calculator | 3-Phase Power Calculator | Industrial Motor & Load Calculator',
   description: 'Calculate three-phase electrical power, current, voltage, and motor loads for industrial and commercial applications. Professional 3-phase electrical calculations with power factor correction, load balancing, and transformer sizing.',
   keywords: 'three phase calculator, 3-phase power calculator, industrial electrical calculator, three phase current, 3-phase voltage calculations, motor calculator, transformer sizing, power factor correction',
+  alternates: { canonical: '/calculators/three-phase-calculator' },
 };
 
 

@@ -6,6 +6,7 @@ export const metadata = {
   title: 'Electrical Power Calculations Guide | Complete Tutorial with Examples',
   description: 'Master electrical power calculations with this comprehensive guide covering watts, amps, volts, power factor, single-phase and three-phase systems with interactive examples.',
   keywords: 'electrical power calculations, watts amps volts, power factor, ohms law, electrical engineering',
+  alternates: { canonical: '/guides/electrical-power-calculations' },
 };
 
 const POWER_TRIANGLE_DATA = [

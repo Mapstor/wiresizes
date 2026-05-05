@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://wiresizes.com/calculators/btu-to-watts-calculator',
   },
+  alternates: { canonical: '/calculators/btu-to-watts-calculator' },
 };
 
 
@@ -850,7 +851,7 @@ export default function BTUToWattsCalculatorPage() {
         </h2>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Link href="/calculators/watts-to-amps" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+          <Link href="/calculators/watts-to-amps-calculator" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
             <Calculator className="h-8 w-8 text-blue-600 mb-2" />
             <h3 className="font-semibold mb-1">Watts to Amps</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Convert power to current</p>
@@ -862,7 +863,7 @@ export default function BTUToWattsCalculatorPage() {
             <p className="text-sm text-gray-600 dark:text-gray-400">Size conductors for HVAC</p>
           </Link>
           
-          <Link href="/calculators/ac-wire-size" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+          <Link href="/calculators/air-conditioner-calculator" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
             <Snowflake className="h-8 w-8 text-cyan-600 mb-2" />
             <h3 className="font-semibold mb-1">AC Wire Size</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Air conditioner circuits</p>

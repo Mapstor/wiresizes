@@ -25,6 +25,7 @@ export const metadata: Metadata = {
   title: 'Wire Size Calculator | AWG Calculator | Electrical Wire Sizing',
   description: 'Calculate the correct AWG wire size for any electrical circuit. Free NEC-compliant wire size calculator for copper and aluminum conductors. Includes voltage drop, ampacity, and distance calculations.',
   keywords: 'wire size calculator, AWG calculator, electrical wire sizing, cable size calculator, conductor sizing, NEC wire size, copper wire calculator, aluminum wire calculator',
+  alternates: { canonical: '/calculators/wire-size-calculator' },
 };
 
 // Web application data for schema

@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://wiresizes.com/calculators/kilowatts-to-amps-calculator',
   },
+  alternates: { canonical: '/calculators/kilowatts-to-amps-calculator' },
 };
 
 
@@ -854,7 +855,7 @@ export default function KilowattsToAmpsCalculatorPage() {
             </Link>
             
             <Link 
-              href="/calculators/watts-to-amps"
+              href="/calculators/watts-to-amps-calculator"
               className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
             >
               <div className="flex items-center gap-3 mb-3">
@@ -867,7 +868,7 @@ export default function KilowattsToAmpsCalculatorPage() {
             </Link>
 
             <Link 
-              href="/calculators/horsepower-to-amps"
+              href="/calculators/horsepower-to-amps-calculator"
               className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
             >
               <div className="flex items-center gap-3 mb-3">
@@ -880,7 +881,7 @@ export default function KilowattsToAmpsCalculatorPage() {
             </Link>
 
             <Link 
-              href="/calculators/three-phase"
+              href="/calculators/three-phase-calculator"
               className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
             >
               <div className="flex items-center gap-3 mb-3">

@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { 
-  Shield, 
-  FileText, 
-  AlertTriangle, 
-  CheckCircle, 
+import {
+  Shield,
+  FileText,
+  AlertTriangle,
+  CheckCircle,
   Scale,
   Gavel,
   Users,
@@ -12,6 +12,7 @@ import {
   Clock,
   Mail
 } from 'lucide-react';
+import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
 
 export const metadata: Metadata = {
   title: 'Terms of Service - WireSizes.com | Professional Electrical Calculator Platform',
@@ -33,7 +34,8 @@ export const metadata: Metadata = {
     title: 'Terms of Service - WireSizes.com',
     description: 'Legal terms and conditions for using WireSizes.com professional electrical calculators and resources',
     type: 'website',
-  }
+  },
+  alternates: { canonical: '/terms' },
 };
 
 const PLATFORM_SERVICES = [
@@ -166,6 +168,11 @@ const LIMITATION_AREAS = [
 export default function TermsOfServicePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-neutral-50">
+      <BasicPageSchema
+        path="/terms"
+        name="Terms of Service"
+        description="Legal terms and conditions for using WireSizes.com professional electrical calculators and educational resources."
+      />
       <div className="container py-12">
         {/* Header */}
         <div className="text-center mb-16">

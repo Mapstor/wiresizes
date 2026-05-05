@@ -1,15 +1,22 @@
 import { Metadata } from 'next';
 import { Shield, Eye, Lock, Database, Globe, Users, Calendar, AlertCircle } from 'lucide-react';
+import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | WireSizes.com',
   description: 'Privacy Policy for WireSizes.com - Learn how we collect, use, and protect your information when using our electrical wire sizing calculators.',
   keywords: 'privacy policy, data protection, wiresizes privacy, electrical calculator privacy',
+  alternates: { canonical: '/privacy' },
 };
 
 export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
+      <BasicPageSchema
+        path="/privacy"
+        name="Privacy Policy"
+        description="How WireSizes.com collects, uses, and protects user information when using our electrical wire sizing calculators."
+      />
       {/* Header */}
       <section className="bg-gradient-to-r from-gray-900 to-slate-800 text-white py-12">
         <div className="container mx-auto px-4">

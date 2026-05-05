@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   title: 'NEC Table 310.16 Complete Reference | Copper & Aluminum Ampacities',
   description: 'Complete NEC Table 310.16 reference with copper and aluminum conductor ampacities at 60°C, 75°C, and 90°C. Derating factors, correction calculations, and code compliance guide.',
   keywords: 'NEC Table 310.16, ampacity table, wire ampacity, conductor ampacity, NEC 2023, electrical code, copper ampacity, aluminum ampacity',
+  alternates: { canonical: '/guides/nec-table-310-16' },
 };
 
 // Complete NEC Table 310.16 Data

@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'Electric Dryer Calculator | 240V Dryer Circuit Calculator | Clothes Dryer Wire Size',
   description: 'Calculate wire size and circuit requirements for electric clothes dryers. Professional 240V dryer electrical calculator with comprehensive installation guidance.',
   keywords: 'dryer calculator, electric dryer circuit, dryer wire size, 240V dryer installation, clothes dryer electrical, laundry room wiring',
+  alternates: { canonical: '/calculators/dryer-calculator' },
 };
 
 

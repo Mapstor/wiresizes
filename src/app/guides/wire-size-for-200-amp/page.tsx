@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: 'Complete guide to wire sizing for 200 amp electrical service. Learn NEC requirements, copper vs aluminum options, installation tips, and safety considerations.',
   keywords: '200 amp wire size, 200 amp service wire, electrical service upgrade, NEC 200 amp requirements, 3/0 copper wire, 4/0 aluminum wire',
   alternates: {
-    canonical: 'https://wiresizes.com/guides/wire-size-for-200-amp'
+    canonical: '/guides/wire-size-for-200-amp'
   }
 }
 

@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'EV Charger Wire Size Calculator | Electric Vehicle Charging Installation',
   description: 'Calculate exact wire size, breaker requirements, and installation costs for EV chargers. Supports Tesla, Level 2, all electric vehicles. NEC Article 625 compliant with voltage drop analysis.',
   keywords: 'EV charger wire size, Tesla charger wire, Level 2 charger wiring, electric vehicle charger installation, EV charging wire gauge, NEMA 14-50 wire size, Tesla Wall Connector wire, EV charger breaker size, 240V charger wire, electric car charger cable size',
+  alternates: { canonical: '/calculators/ev-charger-wire-size-calculator' },
 };
 
 

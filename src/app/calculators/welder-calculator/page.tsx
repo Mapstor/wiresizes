@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'Welder Calculator | Welding Equipment Circuit Calculator | Arc Welder Sizing',
   description: 'Calculate electrical requirements for welding equipment and arc welders. Professional welder circuit calculator for 240V and 480V welding machines.',
   keywords: 'welder calculator, welding equipment circuit, arc welder sizing, welding machine electrical requirements, welder wire size calculator',
+  alternates: { canonical: '/calculators/welder-calculator' },
 };
 
 

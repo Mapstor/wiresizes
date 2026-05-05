@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { BookOpen, Calculator, Zap, AlertTriangle, Target, BarChart3 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Electrical Guides | WireSizes.com',
+  title: 'Electrical Guides',
   description: 'Comprehensive electrical engineering guides covering wire sizing, power calculations, NEC codes, and electrical safety.',
 };
 
@@ -70,10 +70,10 @@ export default function GuidesLayout({
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-3 mb-4">
             <BookOpen className="w-8 h-8 text-primary-600" />
-            <h1 className="text-3xl font-bold text-gray-900">Electrical Engineering Guides</h1>
+            <span className="text-3xl font-bold text-gray-900">Electrical Engineering Guides</span>
           </div>
           <p className="text-gray-600 max-w-2xl">
-            Professional-grade electrical engineering education with interactive calculators, 
+            Professional-grade electrical engineering education with interactive calculators,
             detailed explanations, and real-world examples.
           </p>
         </div>

@@ -36,7 +36,6 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://wiresizes.com',
     siteName: 'WireSizes.com',
     title: 'Wire Size Calculator | Free Electrical Wire Sizing Tools',
     description: 'Free wire size calculator based on NEC code. Calculate AWG wire size, voltage drop, and ampacity for any electrical circuit.',
@@ -60,9 +59,6 @@ export const metadata: Metadata = {
     other: {
       'msvalidate.01': '57C407E8336C4915E2D28EEA649C8078',
     },
-  },
-  alternates: {
-    canonical: 'https://wiresizes.com',
   },
   icons: {
     icon: [

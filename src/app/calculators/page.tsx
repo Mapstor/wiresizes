@@ -1,8 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
-import { 
-  Calculator, 
+import {
+  Calculator,
   Zap, 
   Home, 
   Car, 
@@ -38,7 +37,7 @@ export const metadata: Metadata = {
     'conduit fill calculator'
   ],
   alternates: {
-    canonical: 'https://wiresizes.com/calculators'
+    canonical: '/calculators'
   },
   openGraph: {
     title: 'Professional Electrical Calculators | WireSizes.com',
@@ -97,7 +96,7 @@ const calculatorCategories = [
       },
       { 
         name: 'Ground Wire Size', 
-        href: '/calculators/ground-wire-size', 
+        href: '/calculators/ground-wire-calculator', 
         desc: 'Determines equipment grounding conductor size per NEC Table 250.122',
         example: 'Example: 100A circuit breaker → Requires 8 AWG copper or 6 AWG aluminum ground',
         features: ['NEC Table 250.122', 'Service entrance grounds', 'Equipment grounds', 'Grounding electrode conductors'],
@@ -114,7 +113,7 @@ const calculatorCategories = [
     calculators: [
       { 
         name: 'Watts to Amps', 
-        href: '/calculators/watts-to-amps', 
+        href: '/calculators/watts-to-amps-calculator', 
         desc: 'Convert power in watts to current in amps for any voltage',
         example: 'Example: 1500W heater at 120V → 12.5 amps',
         features: ['Single phase', 'Three phase', 'Power factor', 'DC circuits'],
@@ -122,7 +121,7 @@ const calculatorCategories = [
       },
       { 
         name: 'Amps to Watts', 
-        href: '/calculators/amps-to-watts', 
+        href: '/calculators/amps-to-watts-calculator', 
         desc: 'Convert current in amps to power in watts',
         example: 'Example: 20A at 240V → 4800 watts',
         features: ['AC/DC conversion', 'Power factor adjustment', 'Three phase option', 'Efficiency calculation'],
@@ -130,7 +129,7 @@ const calculatorCategories = [
       },
       { 
         name: 'Ohm\'s Law Calculator', 
-        href: '/calculators/ohms-law', 
+        href: '/calculators/ohms-law-calculator', 
         desc: 'Complete Ohm\'s Law and power calculations - solve for V, I, R, or P',
         example: 'Example: 120V with 10Ω resistance → 12A current, 1440W power',
         features: ['Voltage calculation', 'Current calculation', 'Resistance calculation', 'Power calculation'],
@@ -138,7 +137,7 @@ const calculatorCategories = [
       },
       { 
         name: 'kW to Amps', 
-        href: '/calculators/kw-to-amps', 
+        href: '/calculators/kilowatts-to-amps-calculator', 
         desc: 'Convert kilowatts to amps for sizing circuits and breakers',
         example: 'Example: 10kW at 240V three-phase → 24.1 amps per phase',
         features: ['Single phase', 'Three phase', 'Power factor correction', 'Line vs phase current'],
@@ -146,7 +145,7 @@ const calculatorCategories = [
       },
       { 
         name: 'Kilowatts to Amps', 
-        href: '/calculators/kilowatts-to-amps', 
+        href: '/calculators/kilowatts-to-amps-calculator', 
         desc: 'Extended kilowatt to amp conversion with detailed calculations',
         example: 'Example: 5.5kW motor at 480V three-phase → 6.6 amps',
         features: ['Motor calculations', 'Efficiency factors', 'Starting current', 'Demand factors'],
@@ -154,7 +153,7 @@ const calculatorCategories = [
       },
       { 
         name: 'Horsepower to Amps', 
-        href: '/calculators/horsepower-to-amps', 
+        href: '/calculators/horsepower-to-amps-calculator', 
         desc: 'Convert motor horsepower to full load amps per NEC',
         example: 'Example: 10 HP motor at 240V → 38 amps full load current',
         features: ['NEC Table 430.248', 'Single & three phase', 'Motor efficiency', 'Service factor'],
@@ -187,7 +186,7 @@ const calculatorCategories = [
       },
       { 
         name: 'Garage Subpanel', 
-        href: '/calculators/garage-subpanel-wire-size', 
+        href: '/calculators/garage-subpanel-calculator', 
         desc: 'Size feeder wire for detached garage and workshop subpanels',
         example: 'Example: 60A subpanel at 150 feet → 4 AWG aluminum URD cable',
         features: ['Subpanel sizing', 'Ground rod requirements', 'Feeder protection', 'Load calculations'],
@@ -195,7 +194,7 @@ const calculatorCategories = [
       },
       { 
         name: 'AC Wire Size', 
-        href: '/calculators/ac-wire-size', 
+        href: '/calculators/air-conditioner-calculator', 
         desc: 'Calculate wire size for air conditioner and heat pump circuits',
         example: 'Example: 3-ton AC unit → 30A breaker with 10 AWG wire',
         features: ['BTU to tonnage', 'MCA/MOP values', 'Disconnect requirements', 'Whip specifications'],
@@ -251,7 +250,7 @@ const calculatorCategories = [
       },
       { 
         name: 'Motor Circuit Calculator', 
-        href: '/calculators/motor-circuit-calculator', 
+        href: '/calculators/motor-circuit', 
         desc: 'Complete motor circuit design including wire, breaker, and overload sizing',
         example: 'Example: 25 HP motor → 40A wire, 70A breaker, 38A overloads',
         features: ['NEC Article 430', 'Overload protection', 'Short circuit protection', 'Control circuits'],
@@ -272,7 +271,7 @@ const featuredTools = [
   {
     title: 'Quick Convert',
     icon: Activity,
-    href: '/calculators/watts-to-amps',
+    href: '/calculators/watts-to-amps-calculator',
     description: 'Watts to Amps - Instant power to current conversion',
     color: 'green'
   },
@@ -292,9 +291,93 @@ const featuredTools = [
   }
 ];
 
+// Canonical, complete inventory of all calculators on the site (used by the
+// JSON-LD ItemList below). The visible card grid above shows a curated
+// subset; this list is the full set crawlers see.
+const ALL_CALCULATORS = [
+  { slug: 'wire-size-calculator', name: 'Wire Size Calculator' },
+  { slug: 'voltage-drop-calculator', name: 'Voltage Drop Calculator' },
+  { slug: 'ampacity-calculator', name: 'Ampacity Calculator' },
+  { slug: 'ground-wire-calculator', name: 'Ground Wire Calculator' },
+  { slug: 'wire-resistance-calculator', name: 'Wire Resistance Calculator' },
+  { slug: 'conduit-fill-calculator', name: 'Conduit Fill Calculator' },
+  { slug: 'box-fill-calculator', name: 'Box Fill Calculator' },
+  { slug: 'circuit-breaker-calculator', name: 'Circuit Breaker Calculator' },
+  { slug: 'watts-to-amps-calculator', name: 'Watts to Amps Calculator' },
+  { slug: 'amps-to-watts-calculator', name: 'Amps to Watts Calculator' },
+  { slug: 'volts-to-amps-calculator', name: 'Volts to Amps Calculator' },
+  { slug: 'kilowatts-to-amps-calculator', name: 'Kilowatts to Amps Calculator' },
+  { slug: 'kva-to-amps-calculator', name: 'kVA to Amps Calculator' },
+  { slug: 'horsepower-to-amps-calculator', name: 'Horsepower to Amps Calculator' },
+  { slug: 'btu-to-watts-calculator', name: 'BTU to Watts Calculator' },
+  { slug: 'ohms-law-calculator', name: 'Ohm’s Law Calculator' },
+  { slug: 'ev-charger-calculator', name: 'EV Charger Calculator' },
+  { slug: 'ev-charger-wire-size-calculator', name: 'EV Charger Wire Size Calculator' },
+  { slug: 'hot-tub-calculator', name: 'Hot Tub Calculator' },
+  { slug: 'hot-tub-wire-size-calculator', name: 'Hot Tub Wire Size Calculator' },
+  { slug: 'air-conditioner-calculator', name: 'Air Conditioner Calculator' },
+  { slug: 'dryer-calculator', name: 'Dryer Calculator' },
+  { slug: 'range-calculator', name: 'Range Calculator' },
+  { slug: 'welder-calculator', name: 'Welder Calculator' },
+  { slug: 'pool-pump-calculator', name: 'Pool Pump Calculator' },
+  { slug: 'well-pump-calculator', name: 'Well Pump Calculator' },
+  { slug: 'rv-hookup-calculator', name: 'RV Hookup Calculator' },
+  { slug: 'garage-subpanel-calculator', name: 'Garage Subpanel Calculator' },
+  { slug: 'electrical-load-calculator', name: 'Electrical Load Calculator' },
+  { slug: 'residential-load-calculator', name: 'Residential Load Calculator' },
+  { slug: 'service-entrance-calculator', name: 'Service Entrance Calculator' },
+  { slug: 'three-phase-calculator', name: 'Three Phase Calculator' },
+  { slug: 'low-voltage-calculator', name: 'Low Voltage Calculator' },
+  { slug: 'motor-circuit', name: 'Motor Circuit Calculator' },
+];
+
+const calculatorsCollectionSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      '@id': 'https://wiresizes.com/calculators#webpage',
+      url: 'https://wiresizes.com/calculators',
+      name: 'Professional Electrical Calculators',
+      description:
+        '30+ NEC-compliant electrical calculators for wire sizing, voltage drop, ampacity, conduit fill, and load calculations. Free, professional-grade tools used by licensed electricians.',
+      isPartOf: { '@id': 'https://wiresizes.com/#website' },
+      publisher: { '@id': 'https://wiresizes.com/#organization' },
+      inLanguage: 'en-US',
+      breadcrumb: { '@id': 'https://wiresizes.com/calculators#breadcrumb' },
+      mainEntity: { '@id': 'https://wiresizes.com/calculators#calculator-list' },
+    },
+    {
+      '@type': 'ItemList',
+      '@id': 'https://wiresizes.com/calculators#calculator-list',
+      name: 'WireSizes.com electrical calculators',
+      numberOfItems: ALL_CALCULATORS.length,
+      itemListOrder: 'https://schema.org/ItemListOrderAscending',
+      itemListElement: ALL_CALCULATORS.map((calc, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        url: `https://wiresizes.com/calculators/${calc.slug}`,
+        name: calc.name,
+      })),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://wiresizes.com/calculators#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://wiresizes.com' },
+        { '@type': 'ListItem', position: 2, name: 'Calculators', item: 'https://wiresizes.com/calculators' },
+      ],
+    },
+  ],
+};
+
 export default function CalculatorsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-neutral-50">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorsCollectionSchema) }}
+      />
       <div className="container py-12">
         {/* Header */}
         <div className="text-center mb-16">
@@ -495,7 +578,6 @@ export default function CalculatorsPage() {
 
       </div>
       
-      <BreadcrumbSchema url="https://wiresizes.com/calculators" />
     </div>
   );
 }

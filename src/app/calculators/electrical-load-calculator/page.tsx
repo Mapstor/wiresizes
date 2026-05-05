@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: 'Electrical Load Calculator | Service Load Calculator | NEC Article 220',
   description: 'Calculate electrical load for residential and commercial services per NEC Article 220. Professional load calculations for service sizing and demand factors.',
   keywords: 'electrical load calculator, service load calculator, NEC Article 220, demand load calculation, electrical service sizing, connected load, electrical panel sizing',
+  alternates: { canonical: '/calculators/electrical-load-calculator' },
 };
 
 

@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://wiresizes.com/calculators/wire-resistance-calculator',
   },
+  alternates: { canonical: '/calculators/wire-resistance-calculator' },
 };
 
 
@@ -869,7 +870,7 @@ export default function WireResistanceCalculatorPage() {
             </Link>
             
             <Link 
-              href="/calculators/ohms-law"
+              href="/calculators/ohms-law-calculator"
               className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
             >
               <div className="flex items-center gap-3 mb-3">
@@ -908,7 +909,7 @@ export default function WireResistanceCalculatorPage() {
             </Link>
 
             <Link 
-              href="/calculators/three-phase"
+              href="/calculators/three-phase-calculator"
               className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
             >
               <div className="flex items-center gap-3 mb-3">

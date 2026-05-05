@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://wiresizes.com/calculators/circuit-breaker-calculator',
   },
+  alternates: { canonical: '/calculators/circuit-breaker-calculator' },
 };
 
 
@@ -659,7 +660,7 @@ export default function CircuitBreakerCalculatorPage() {
             </Link>
 
             <Link 
-              href="/calculators/conduit-fill"
+              href="/calculators/conduit-fill-calculator"
               className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
             >
               <div className="flex items-center gap-3 mb-3">
@@ -685,7 +686,7 @@ export default function CircuitBreakerCalculatorPage() {
             </Link>
 
             <Link 
-              href="/calculators/ground-wire-size"
+              href="/calculators/ground-wire-calculator"
               className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
             >
               <div className="flex items-center gap-3 mb-3">

@@ -20,6 +20,7 @@ export const metadata: Metadata = {
   title: 'AWG Wire Size Chart | Complete American Wire Gauge Reference Table',
   description: 'Comprehensive AWG wire size chart with diameters, resistance, ampacity ratings for copper and aluminum. Includes metric conversions, NEC ampacity tables, and wire selection guide.',
   keywords: 'AWG chart, wire size chart, American wire gauge, wire diameter table, AWG to mm conversion, wire resistance table, copper wire sizes, aluminum wire sizes, electrical wire chart',
+  alternates: { canonical: '/guides/awg-wire-size-chart' },
 };
 
 // Article data for schema

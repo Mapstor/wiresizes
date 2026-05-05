@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'Hot Tub Calculator | Spa Electrical Requirements Calculator | NEC 680',
   description: 'Calculate wire size and electrical requirements for hot tubs and spas per NEC Article 680. Professional spa installation calculator for 240V hot tub circuits.',
   keywords: 'hot tub calculator, spa electrical requirements, NEC Article 680, hot tub wire size, spa circuit calculator, GFCI hot tub installation',
+  alternates: { canonical: '/calculators/hot-tub-calculator' },
 };
 
 

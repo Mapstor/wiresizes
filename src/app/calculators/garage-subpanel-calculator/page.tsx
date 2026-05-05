@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'Garage Subpanel Calculator | Detached Garage Feeder Calculator | NEC 225 Compliance',
   description: 'Calculate feeder wire size for garage subpanels and detached garage electrical service. NEC 225 compliant calculations for detached buildings with comprehensive code requirements.',
   keywords: 'garage subpanel calculator, detached garage feeder, garage electrical service, subpanel wire size, NEC 225, detached building electrical, garage feeder calculator, outbuilding electrical',
+  alternates: { canonical: '/calculators/garage-subpanel-calculator' },
 };
 
 

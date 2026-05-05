@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'EV Charger Calculator | Electric Vehicle Charging Circuit Calculator',
   description: 'Calculate wire size and circuit requirements for EV charging stations. NEC Article 625 compliant EV charger calculator for Level 1 and Level 2 charging installations.',
   keywords: 'EV charger calculator, electric vehicle charging, EVSE wire size, EV charging circuit, Level 2 charger installation, NEC Article 625, Tesla charger wire size',
+  alternates: { canonical: '/calculators/ev-charger-calculator' },
 };
 
 

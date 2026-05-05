@@ -23,6 +23,7 @@ export const metadata: Metadata = {
   title: 'Electrical Calculators | Wire Size, Voltage Drop, Ampacity | WireSizes.com',
   description: 'Professional electrical calculators: wire size, voltage drop, ampacity, load calculations. NEC code compliant. 30+ free tools for electricians and contractors.',
   keywords: 'electrical calculator, wire size calculator, voltage drop, ampacity, NEC table 310.16, electrical load calculator',
+  alternates: { canonical: '/' },
 };
 
 // Featured calculators organized by category

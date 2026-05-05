@@ -1,13 +1,17 @@
 # https://www.robotstxt.org/robotstxt.html
+
+# Default: allow everything
 User-agent: *
 Allow: /
-Crawl-delay: 1
 
 # Sitemap
 Sitemap: https://wiresizes.com/sitemap.xml
 
-# Allow major search engine crawlers
+# ─── Search engine crawlers (explicit allow) ───
 User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
 Allow: /
 
 User-agent: Bingbot
@@ -19,21 +23,102 @@ Allow: /
 User-agent: DuckDuckBot
 Allow: /
 
-# Allow AI crawlers
+User-agent: Applebot
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+# ─── AI crawlers: training + retrieval ───
+# Allow these so wiresizes.com gets cited and surfaces in AI answers.
+# If you ever want to opt out of training (while staying in AI search results),
+# disallow the *training* bots below and keep the *search* bots allowed.
+
+# OpenAI
 User-agent: GPTBot
 Allow: /
 
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic
 User-agent: ClaudeBot
 Allow: /
 
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Google AI (Bard / Gemini training)
+User-agent: Google-Extended
+Allow: /
+
+# Perplexity
 User-agent: PerplexityBot
 Allow: /
 
-# Allow social media crawlers
+User-agent: Perplexity-User
+Allow: /
+
+# Common Crawl (foundation dataset for many AI models)
+User-agent: CCBot
+Allow: /
+
+# Apple Intelligence training (separate from Applebot which is search)
+User-agent: Applebot-Extended
+Allow: /
+
+# Amazon (Alexa, Rufus)
+User-agent: Amazonbot
+Allow: /
+
+# Meta AI
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# ByteDance / TikTok / Doubao
+User-agent: Bytespider
+Allow: /
+
+# DuckDuckGo AI Assist
+User-agent: DuckAssistBot
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+User-agent: cohere-training-data-crawler
+Allow: /
+
+# You.com
+User-agent: YouBot
+Allow: /
+
+# Mistral
+User-agent: MistralAI-User
+Allow: /
+
+# Diffbot (used by several enterprise LLMs)
+User-agent: Diffbot
+Allow: /
+
+# ─── Social sharing crawlers ───
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: TwitterBot
+User-agent: Twitterbot
 Allow: /
 
 User-agent: LinkedInBot
@@ -42,10 +127,16 @@ Allow: /
 User-agent: WhatsApp
 Allow: /
 
-User-agent: Applebot
+User-agent: Slackbot
 Allow: /
 
-# Block aggressive bots
+User-agent: Discordbot
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+# ─── Block aggressive SEO scrapers (uncomment to re-enable) ───
 User-agent: AhrefsBot
 Disallow: /
 
@@ -56,4 +147,10 @@ User-agent: DotBot
 Disallow: /
 
 User-agent: MJ12bot
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: BLEXBot
 Disallow: /

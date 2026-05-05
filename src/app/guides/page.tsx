@@ -1,6 +1,13 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 import { Calculator, Zap, AlertTriangle, Target, BarChart3, BookOpen, TrendingUp, Users, Award } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Electrical Engineering Guides | NEC Code, Wire Sizing & Power',
+  description: 'In-depth guides on electrical wire sizing, NEC code compliance, voltage drop, ampacity, and power calculations. Written for electricians, contractors, and engineers.',
+  keywords: 'electrical guides, NEC compliance guide, wire sizing guide, voltage drop guide, electrical code, ampacity guide, electrical engineering',
+  alternates: { canonical: '/guides' },
+};
 
 const GUIDES = [
   {
@@ -71,6 +78,62 @@ const GUIDES = [
   },
 ];
 
+// Canonical, complete list of all guides on the site (used by both the
+// in-page rendering above and the JSON-LD ItemList below).
+const ALL_GUIDES = [
+  { slug: 'wire-sizing-guide', title: 'Complete Wire Sizing Guide' },
+  { slug: 'awg-wire-size-chart', title: 'AWG Wire Size Chart' },
+  { slug: 'nec-table-310-16', title: 'NEC Table 310.16 — Conductor Ampacities' },
+  { slug: 'nec-code-compliance', title: 'NEC Code Compliance Guide' },
+  { slug: 'wire-size-for-100-amp', title: 'Wire Size for 100 Amp Service' },
+  { slug: 'wire-size-for-200-amp', title: 'Wire Size for 200 Amp Service' },
+  { slug: 'wire-size-for-ev-charger', title: 'Wire Size for EV Charger' },
+  { slug: 'electrical-power-calculations', title: 'Electrical Power Calculations' },
+  { slug: 'electrical-safety', title: 'Electrical Safety Fundamentals' },
+  { slug: 'single-vs-three-phase', title: 'Single vs Three Phase Systems' },
+  { slug: 'power-factor-explained', title: 'Power Factor Explained' },
+];
+
+const guidesCollectionSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      '@id': 'https://wiresizes.com/guides#webpage',
+      url: 'https://wiresizes.com/guides',
+      name: 'Electrical Engineering Guides',
+      description:
+        'In-depth guides on electrical wire sizing, NEC code compliance, voltage drop, ampacity, power factor, and electrical safety. Written for licensed electricians, contractors, and engineers.',
+      isPartOf: { '@id': 'https://wiresizes.com/#website' },
+      publisher: { '@id': 'https://wiresizes.com/#organization' },
+      inLanguage: 'en-US',
+      breadcrumb: { '@id': 'https://wiresizes.com/guides#breadcrumb' },
+      mainEntity: { '@id': 'https://wiresizes.com/guides#guide-list' },
+    },
+    {
+      '@type': 'ItemList',
+      '@id': 'https://wiresizes.com/guides#guide-list',
+      name: 'WireSizes.com electrical engineering guides',
+      numberOfItems: ALL_GUIDES.length,
+      itemListOrder: 'https://schema.org/ItemListOrderAscending',
+      itemListElement: ALL_GUIDES.map((g, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        url: `https://wiresizes.com/guides/${g.slug}`,
+        name: g.title,
+      })),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://wiresizes.com/guides#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://wiresizes.com' },
+        { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://wiresizes.com/guides' },
+      ],
+    },
+  ],
+};
+
 const STATS = [
   { icon: Users, value: '50,000+', label: 'Engineers Educated' },
   { icon: Calculator, value: '29', label: 'Professional Calculators' },
@@ -81,6 +144,10 @@ const STATS = [
 export default function GuidesHomePage() {
   return (
     <div className="space-y-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(guidesCollectionSchema) }}
+      />
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 border">
         <div className="max-w-3xl">
@@ -224,7 +291,6 @@ export default function GuidesHomePage() {
         </div>
       </div>
       
-      <BreadcrumbSchema url="https://wiresizes.com/guides" />
     </div>
   );
 }

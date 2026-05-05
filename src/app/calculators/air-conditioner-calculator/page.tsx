@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'Air Conditioner Calculator | AC Unit Wire Size Calculator | HVAC Electrical',
   description: 'Calculate wire size and circuit requirements for air conditioning units and HVAC equipment. Professional HVAC electrical calculator with comprehensive installation guidance.',
   keywords: 'air conditioner calculator, AC unit wire size, HVAC electrical calculator, air conditioning circuit, central air installation, ductless mini split',
+  alternates: { canonical: '/calculators/air-conditioner-calculator' },
 };
 
 

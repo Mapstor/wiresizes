@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'Conduit Fill Calculator | NEC Chapter 9 Wire Fill Calculator',
   description: 'Professional conduit fill calculator per NEC Chapter 9. Calculate wire fill percentage for EMT, PVC, rigid, and flexible conduit. Ensure code compliance.',
   keywords: 'conduit fill calculator, NEC chapter 9, wire fill percentage, EMT conduit fill, PVC conduit capacity, rigid conduit fill, electrical conduit sizing',
+  alternates: { canonical: '/calculators/conduit-fill-calculator' },
 };
 
 

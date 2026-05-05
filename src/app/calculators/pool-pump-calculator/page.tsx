@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'Pool Pump Calculator | Swimming Pool Pump Circuit Calculator | NEC 680',
   description: 'Calculate wire size and circuit requirements for pool pumps per NEC Article 680. Professional pool equipment electrical calculator with comprehensive installation guidance.',
   keywords: 'pool pump calculator, swimming pool pump circuit, NEC Article 680, pool equipment electrical, pool pump wire size, pool pump installation, variable speed pump',
+  alternates: { canonical: '/calculators/pool-pump-calculator' },
 };
 
 

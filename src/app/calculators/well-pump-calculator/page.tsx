@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'Well Pump Calculator | Water Pump Electrical Calculator | Submersible Pump Circuit NEC 430',
   description: 'Calculate electrical requirements for well pumps and water systems. Professional pump electrical sizing with motor calculations, control box wiring, pressure switches, and NEC 430 compliance for submersible and jet pumps.',
   keywords: 'well pump calculator, water pump electrical calculator, submersible pump circuit, pump motor sizing, NEC 430, well pump wiring, control box calculator, pressure switch wiring, jet pump electrical',
+  alternates: { canonical: '/calculators/well-pump-calculator' },
 };
 
 

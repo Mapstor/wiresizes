@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://wiresizes.com/calculators/horsepower-to-amps-calculator',
   },
+  alternates: { canonical: '/calculators/horsepower-to-amps-calculator' },
 };
 
 
@@ -912,7 +913,7 @@ export default function HorsepowerToAmpsCalculatorPage() {
             </Link>
 
             <Link 
-              href="/calculators/three-phase"
+              href="/calculators/three-phase-calculator"
               className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
             >
               <div className="flex items-center gap-3 mb-3">

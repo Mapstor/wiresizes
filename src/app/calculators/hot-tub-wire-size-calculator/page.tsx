@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'Hot Tub Wire Size Calculator | Spa Electrical Requirements & GFCI',
   description: 'Calculate exact wire size, GFCI breaker requirements, disconnect placement for hot tub installation. Supports all spa brands, 120V/240V systems. NEC 680 compliant with heating cost analysis.',
   keywords: 'hot tub wire size, spa electrical requirements, hot tub GFCI breaker, 50 amp hot tub wire, jacuzzi electrical hookup, hot tub disconnect box, spa wire gauge calculator, 240V hot tub wiring, hot tub installation cost, outdoor spa electrical',
+  alternates: { canonical: '/calculators/hot-tub-wire-size-calculator' },
 };
 
 

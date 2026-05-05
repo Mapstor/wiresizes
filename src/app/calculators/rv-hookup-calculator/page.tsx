@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'RV Hookup Calculator | RV Electrical Service Calculator | Campground Electrical Design',
   description: 'Calculate electrical requirements for RV hookups and service pedestals. Complete RV park electrical calculator with 30A/50A service, GFCI/AFCI requirements, and campground installation guidance.',
   keywords: 'RV hookup calculator, RV electrical service, RV park calculator, recreational vehicle hookup, 30 amp RV service, 50 amp RV service, RV pedestal electrical, campground electrical design',
+  alternates: { canonical: '/calculators/rv-hookup-calculator' },
 };
 
 

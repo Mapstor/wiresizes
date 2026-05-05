@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { 
-  AlertTriangle, 
-  Shield, 
+import {
+  AlertTriangle,
+  Shield,
   FileText,
   CheckCircle,
   Scale,
@@ -15,6 +15,7 @@ import {
   AlertCircle,
   ExternalLink
 } from 'lucide-react';
+import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
 
 export const metadata: Metadata = {
   title: 'Disclaimer - WireSizes.com | Professional Electrical Calculator Limitations',
@@ -36,7 +37,8 @@ export const metadata: Metadata = {
     title: 'Disclaimer - WireSizes.com',
     description: 'Important limitations and professional responsibilities for electrical calculation tools',
     type: 'website',
-  }
+  },
+  alternates: { canonical: '/disclaimer' },
 };
 
 const DISCLAIMER_CATEGORIES = [
@@ -215,6 +217,11 @@ const USAGE_GUIDELINES = [
 export default function DisclaimerPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-neutral-50">
+      <BasicPageSchema
+        path="/disclaimer"
+        name="Disclaimer"
+        description="Limitations and professional responsibility notice for WireSizes.com calculations: results are reference only, licensed-professional verification required."
+      />
       <div className="container py-12">
         {/* Header */}
         <div className="text-center mb-16">
