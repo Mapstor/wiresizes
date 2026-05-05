@@ -4,11 +4,17 @@ interface ArticleData {
   headline: string;
   description: string;
   url: string;
+  /** ISO date (YYYY-MM-DD). Use getArticleDates() for git-derived values. */
+  datePublished?: string;
+  /** ISO date (YYYY-MM-DD). Use getArticleDates() for git-derived values. */
+  dateModified?: string;
 }
 
 interface ArticleSchemaProps {
   article: ArticleData;
 }
+
+const FALLBACK_DATE = '2026-01-01';
 
 export function ArticleSchema({ article }: ArticleSchemaProps) {
   const articleSchema = {
@@ -18,13 +24,15 @@ export function ArticleSchema({ article }: ArticleSchemaProps) {
     description: article.description,
     author: {
       '@type': 'Organization',
+      '@id': 'https://wiresizes.com/#organization',
       name: 'WireSizes.com',
-      url: 'https://www.wiresizes.com'
+      url: 'https://wiresizes.com'
     },
     publisher: {
       '@type': 'Organization',
+      '@id': 'https://wiresizes.com/#organization',
       name: 'WireSizes.com',
-      url: 'https://www.wiresizes.com',
+      url: 'https://wiresizes.com',
       logo: {
         '@type': 'ImageObject',
         url: 'https://wiresizes.com/icon.svg',
@@ -32,8 +40,8 @@ export function ArticleSchema({ article }: ArticleSchemaProps) {
         height: 512
       }
     },
-    datePublished: '2026-01-01',
-    dateModified: new Date().toISOString().split('T')[0],
+    datePublished: article.datePublished ?? FALLBACK_DATE,
+    dateModified: article.dateModified ?? article.datePublished ?? FALLBACK_DATE,
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': article.url

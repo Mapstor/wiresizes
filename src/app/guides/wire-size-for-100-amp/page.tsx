@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
+import { getArticleDates } from '@/lib/article-dates';
+
 
 export const metadata: Metadata = {
   title: 'Wire Size for 100 Amp Service & Subpanel | Complete Guide 2024',
@@ -27,7 +29,8 @@ export const metadata: Metadata = {
 const articleData = {
   headline: '100 Amp Wire Size Guide',
   description: 'Complete guide for 100 amp wire sizing. Learn correct wire sizes for 100A service entrance, subpanels, copper vs aluminum, distance considerations, and NEC code requirements.',
-  url: 'https://wiresizes.com/guides/wire-size-for-100-amp'
+  url: 'https://wiresizes.com/guides/wire-size-for-100-amp',
+  ...getArticleDates('src/app/guides/wire-size-for-100-amp/page.tsx'),
 };
 
 // Distance-based wire sizing for 100A

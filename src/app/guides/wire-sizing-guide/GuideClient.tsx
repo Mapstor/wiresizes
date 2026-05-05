@@ -97,13 +97,19 @@ const INSTALLATION_SCENARIOS = [
 ];
 
 // Article data for schema
-const articleData = {
-  headline: "Complete Wire Sizing Guide",
-  description: "Professional wire selection for safe, efficient, and code-compliant electrical installations",
-  url: "https://wiresizes.com/guides/wire-sizing-guide"
-};
+interface GuideProps {
+  datePublished?: string;
+  dateModified?: string;
+}
 
-export default function WireSizingGuidePage() {
+export default function WireSizingGuidePage({ datePublished, dateModified }: GuideProps = {}) {
+  const articleData = {
+    headline: "Complete Wire Sizing Guide",
+    description: "Professional wire selection for safe, efficient, and code-compliant electrical installations",
+    url: "https://wiresizes.com/guides/wire-sizing-guide",
+    datePublished,
+    dateModified,
+  };
   const [selectedMaterial, setSelectedMaterial] = useState<'copper' | 'aluminum'>('copper');
   const [selectedTemp, setSelectedTemp] = useState('75c');
   const [selectedAWG, setSelectedAWG] = useState('12');

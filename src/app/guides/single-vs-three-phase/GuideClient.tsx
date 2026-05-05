@@ -136,13 +136,19 @@ const WIRING_CONFIGURATIONS = [
 ];
 
 // Article data for schema
-const articleData = {
-  headline: "Single vs Three Phase Systems",
-  description: "Understanding the fundamental differences between single-phase and three-phase electrical systems is crucial for proper system design. This comprehensive guide covers voltage configurations, power calculations, applications, and economic considerations with interactive comparisons.",
-  url: "https://wiresizes.com/guides/single-vs-three-phase"
-};
+interface GuideProps {
+  datePublished?: string;
+  dateModified?: string;
+}
 
-export default function SingleVsThreePhaseGuide() {
+export default function SingleVsThreePhaseGuide({ datePublished, dateModified }: GuideProps = {}) {
+  const articleData = {
+    headline: "Single vs Three Phase Systems",
+    description: "Understanding the fundamental differences between single-phase and three-phase electrical systems is crucial for proper system design. This comprehensive guide covers voltage configurations, power calculations, applications, and economic considerations with interactive comparisons.",
+    url: "https://wiresizes.com/guides/single-vs-three-phase",
+    datePublished,
+    dateModified,
+  };
   const [selectedComparison, setSelectedComparison] = useState<'voltage' | 'cost' | 'motor' | 'wiring'>('voltage');
   const [selectedApplication, setSelectedApplication] = useState<'residential' | 'commercial' | 'industrial'>('residential');
 

@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { Calculator, Zap, BarChart3, Target, TrendingUp, AlertTriangle, CheckCircle, ArrowRight, ExternalLink } from 'lucide-react';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
+import { getArticleDates } from '@/lib/article-dates';
+
 
 export const metadata = {
   title: 'Electrical Power Calculations Guide | Complete Tutorial with Examples',
@@ -60,7 +62,8 @@ const CALCULATION_EXAMPLES = [
 const articleData = {
   headline: "Electrical Power Calculations Guide",
   description: "Master electrical power calculations with this comprehensive guide covering watts, amps, volts, power factor, single-phase and three-phase systems with interactive examples.",
-  url: "https://wiresizes.com/guides/electrical-power-calculations"
+  url: "https://wiresizes.com/guides/electrical-power-calculations",
+  ...getArticleDates('src/app/guides/electrical-power-calculations/page.tsx'),
 };
 
 export default function ElectricalPowerCalculationsGuide() {

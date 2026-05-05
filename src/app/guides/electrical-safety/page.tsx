@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import GuideClient from './GuideClient';
+import { getArticleDates } from '@/lib/article-dates';
 
 export const metadata: Metadata = {
   title: 'Electrical Safety Fundamentals | Arc Flash, PPE & OSHA',
@@ -9,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function ElectricalSafetyPage() {
-  return <GuideClient />;
+  return <GuideClient {...getArticleDates('src/app/guides/electrical-safety/GuideClient.tsx')} />;
 }

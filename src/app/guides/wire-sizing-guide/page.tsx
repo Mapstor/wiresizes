@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import GuideClient from './GuideClient';
+import { getArticleDates } from '@/lib/article-dates';
 
 export const metadata: Metadata = {
   title: 'Complete Wire Sizing Guide | NEC AWG Selection Step-by-Step',
@@ -9,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function WireSizingGuidePage() {
-  return <GuideClient />;
+  return <GuideClient {...getArticleDates('src/app/guides/wire-sizing-guide/GuideClient.tsx')} />;
 }

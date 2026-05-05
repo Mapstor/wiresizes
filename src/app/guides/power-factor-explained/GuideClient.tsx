@@ -57,13 +57,19 @@ const COST_ANALYSIS_DATA = [
 ];
 
 // Article data for schema
-const articleData = {
-  headline: "Power Factor Explained",
-  description: "Understanding power factor is crucial for electrical efficiency and cost management. This comprehensive guide explains reactive power, apparent power, and power factor correction with interactive visualizations and real-world examples.",
-  url: "https://wiresizes.com/guides/power-factor-explained"
-};
+interface GuideProps {
+  datePublished?: string;
+  dateModified?: string;
+}
 
-export default function PowerFactorExplainedGuide() {
+export default function PowerFactorExplainedGuide({ datePublished, dateModified }: GuideProps = {}) {
+  const articleData = {
+    headline: "Power Factor Explained",
+    description: "Understanding power factor is crucial for electrical efficiency and cost management. This comprehensive guide explains reactive power, apparent power, and power factor correction with interactive visualizations and real-world examples.",
+    url: "https://wiresizes.com/guides/power-factor-explained",
+    datePublished,
+    dateModified,
+  };
   const [selectedPowerFactor, setSelectedPowerFactor] = useState(0.8);
   const [animationFrame, setAnimationFrame] = useState(0);
 

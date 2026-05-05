@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { Target, AlertTriangle, CheckCircle, BookOpen, Calculator, Zap, FileText, ExternalLink, ArrowRight, Shield, Activity, Eye, TrendingUp, BarChart3 } from 'lucide-react';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
+import { getArticleDates } from '@/lib/article-dates';
+
 
 export const metadata = {
   title: 'NEC Code Compliance Guide | National Electrical Code Requirements 2023',
@@ -92,7 +94,8 @@ const SAFETY_REQUIREMENTS = [
 const articleData = {
   headline: "NEC Code Compliance Guide",
   description: "Comprehensive NEC code compliance guide covering wire sizing, circuit protection, grounding, load calculations, and safety requirements with detailed tables and examples.",
-  url: "https://wiresizes.com/guides/nec-code-compliance"
+  url: "https://wiresizes.com/guides/nec-code-compliance",
+  ...getArticleDates('src/app/guides/nec-code-compliance/page.tsx'),
 };
 
 export default function NECCodeComplianceGuide() {

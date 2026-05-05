@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import GuideClient from './GuideClient';
+import { getArticleDates } from '@/lib/article-dates';
 
 export const metadata: Metadata = {
   title: 'Power Factor Explained: Real, Reactive & Apparent Power',
@@ -9,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function PowerFactorExplainedPage() {
-  return <GuideClient />;
+  return <GuideClient {...getArticleDates('src/app/guides/power-factor-explained/GuideClient.tsx')} />;
 }

@@ -186,13 +186,19 @@ const SAFETY_SCENARIOS = [
 ];
 
 // Article data for schema
-const articleData = {
-  headline: "Electrical Safety Fundamentals",
-  description: "Essential safety practices, standards, and procedures for electrical work and installations",
-  url: "https://wiresizes.com/guides/electrical-safety"
-};
+interface GuideProps {
+  datePublished?: string;
+  dateModified?: string;
+}
 
-export default function ElectricalSafetyPage() {
+export default function ElectricalSafetyPage({ datePublished, dateModified }: GuideProps = {}) {
+  const articleData = {
+    headline: "Electrical Safety Fundamentals",
+    description: "Essential safety practices, standards, and procedures for electrical work and installations",
+    url: "https://wiresizes.com/guides/electrical-safety",
+    datePublished,
+    dateModified,
+  };
   const [selectedPPECategory, setSelectedPPECategory] = useState('1');
   const [selectedScenario, setSelectedScenario] = useState(0);
   const [lockoutProgress, setLockoutProgress] = useState(0);

@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
+import { getArticleDates } from '@/lib/article-dates';
+
 
 export const metadata: Metadata = {
   title: 'NEC Table 310.16 Complete Reference | Copper & Aluminum Ampacities',
@@ -87,7 +89,8 @@ const COMMON_APPLICATIONS = [
 const articleData = {
   headline: "NEC Table 310.16",
   description: "Complete NEC Table 310.16 reference with copper and aluminum conductor ampacities at 60°C, 75°C, and 90°C. Derating factors, correction calculations, and code compliance guide.",
-  url: "https://wiresizes.com/guides/nec-table-310-16"
+  url: "https://wiresizes.com/guides/nec-table-310-16",
+  ...getArticleDates('src/app/guides/nec-table-310-16/page.tsx'),
 };
 
 export default function NECTable310_16Page() {

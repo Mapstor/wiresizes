@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
+import { getArticleDates } from '@/lib/article-dates';
+
 
 export const metadata: Metadata = {
   title: 'AWG Wire Size Chart | Complete American Wire Gauge Reference Table',
@@ -27,7 +29,8 @@ export const metadata: Metadata = {
 const articleData = {
   headline: "Complete AWG Wire Size Chart & Reference Guide",
   description: "Comprehensive AWG wire size chart with diameters, resistance, ampacity ratings for copper and aluminum. Includes metric conversions, NEC ampacity tables, and wire selection guide.",
-  url: "https://wiresizes.com/guides/awg-wire-size-chart"
+  url: "https://wiresizes.com/guides/awg-wire-size-chart",
+  ...getArticleDates('src/app/guides/awg-wire-size-chart/page.tsx'),
 };
 
 export default function AWGWireSizeChartPage() {
