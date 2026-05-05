@@ -2,7 +2,39 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
 import { ArticleFAQSchema } from '@/components/seo/ArticleFAQSchema'
+import { HowToSchema } from '@/components/seo/HowToSchema';
 import { getArticleDates } from '@/lib/article-dates';
+
+const HOWTO_EV_STEPS = [
+  {
+    name: 'Determine the charger amperage rating',
+    text: 'Common Level 2 chargers: 32A (Tesla Mobile Connector, basic wall units), 40A (mid-tier wall connectors like ChargePoint Home Flex, JuiceBox 40), 48A (high-power Tesla Wall Connector, Wallbox Pulsar), 80A (commercial). Use the charger’s rated continuous output, not the marketing peak.',
+  },
+  {
+    name: 'Apply the 125% continuous-load factor (NEC 625.42, 210.19(A))',
+    text: 'EV charging is a continuous load (operates 3+ hours). The branch-circuit conductors and overcurrent device must be sized at 125% of the charger output. A 40A charger needs a 50A circuit; a 48A charger needs a 60A circuit; an 80A charger needs a 100A circuit.',
+  },
+  {
+    name: 'Look up wire size from NEC 310.16 at 75°C copper',
+    text: 'Match the circuit ampacity from step 2 to the smallest conductor that meets it. 50A circuit → 6 AWG copper (8 AWG aluminum); 60A circuit → 6 AWG copper (4 AWG aluminum, since 6 AWG aluminum is only 50A at 75°C); 100A circuit → 1 AWG copper (1/0 aluminum).',
+  },
+  {
+    name: 'Decide between hardwired and NEMA receptacle',
+    text: 'Up to 50A you can use a NEMA 14-50 receptacle for plug-in convenience (Tesla Mobile, JuiceBox, etc.). For 48A+ chargers you must hardwire (NEC 625.40 effectively requires it because no listed receptacle exists above 50A). Hardwiring also avoids the 80% derating that some AHJs apply to receptacles on continuous loads.',
+  },
+  {
+    name: 'Calculate voltage drop on long runs',
+    text: 'Voltage drop = (2 × L × I × R) ÷ 1000 single-phase. Example: 40A continuous (50A circuit) at 50ft on 6 AWG copper (R = 0.491 Ω/1000ft) at 240V = 0.8% — fine. At 100ft = 1.6% — still fine. Beyond 100ft on 50A circuits, upsize to 4 AWG.',
+  },
+  {
+    name: 'Size the breaker at 125% of the charger rating',
+    text: 'Per NEC 240.6, round up to the next standard breaker size: 32A charger → 40A breaker, 40A charger → 50A breaker, 48A charger → 60A breaker, 80A charger → 100A breaker. The breaker rating must equal the wire ampacity in step 3.',
+  },
+  {
+    name: 'Verify GFCI / equipment-protective device requirements',
+    text: 'Most modern Level 2 chargers (EVSE) have integrated GFCI; check the manufacturer specifications. If the charger does not provide GFCI internally, install a GFCI or AFCI/GFCI breaker per NEC 625.41 / 210.8. The equipment grounding conductor is sized per NEC 250.122 — 10 AWG copper for 50A, 10 AWG for 60A, 8 AWG for 100A.',
+  },
+];
 import { Car, Zap, AlertTriangle, CheckCircle2, Info, Shield, Calculator, Clock } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -765,6 +797,13 @@ export default function WireSizeForEVChargerPage() {
       </div>
 
       <ArticleFAQSchema article={articleData} faqItems={faqs} />
+      <HowToSchema
+        path="/guides/wire-size-for-ev-charger"
+        name="How to Size Wire for a Level 2 EV Charger"
+        description="Seven-step procedure for sizing the branch circuit for a Level 2 EV charger: continuous-load factor, NEC 310.16 wire lookup, hardwired vs NEMA receptacle, voltage drop, breaker sizing, and GFCI / EGC requirements."
+        totalTime="PT12M"
+        steps={HOWTO_EV_STEPS}
+      />
     </div>
   )
 }

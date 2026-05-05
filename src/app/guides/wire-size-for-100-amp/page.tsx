@@ -15,7 +15,39 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
+import { HowToSchema } from '@/components/seo/HowToSchema';
 import { getArticleDates } from '@/lib/article-dates';
+
+const HOWTO_100A_STEPS = [
+  {
+    name: 'Determine if this is a service entrance or a subpanel feeder',
+    text: 'Different NEC rules apply. Service-entrance conductors for a 120/240V single-phase residential dwelling can use NEC 310.12 (the 83% rule). Subpanel feeders use straight NEC 310.16 ampacity at the termination temperature rating (typically 75°C).',
+  },
+  {
+    name: 'Choose copper or aluminum',
+    text: 'Copper conductors are smaller for the same ampacity and more forgiving at terminations. Aluminum is 40-50% cheaper for service-size wire and is the practical choice for most 100A residential services. Both require AL-rated lugs and antioxidant compound on aluminum.',
+  },
+  {
+    name: 'Apply NEC 310.12 for residential service-entrance conductors',
+    text: 'For a 120/240V single-phase dwelling service, NEC 310.12 allows 1 AWG copper or 1/0 AWG aluminum (or copper-clad aluminum) for a 100A service entrance. This is the most common residential 100A service-entrance wire size.',
+  },
+  {
+    name: 'Use straight NEC 310.16 ampacity for 100A subpanel feeders',
+    text: 'Subpanels do not get the 310.12 reduction. At 75°C copper terminations, 100A requires 3 AWG copper minimum (110A ampacity) or 1 AWG aluminum (100A ampacity). Most installations upsize to 1 AWG copper or 2/0 aluminum to leave headroom and keep voltage drop low.',
+  },
+  {
+    name: 'Calculate voltage drop for runs over 50 feet',
+    text: 'Voltage drop = (2 × L × I × R) ÷ 1000 for single-phase. Example: 100A at 100ft on 1 AWG copper (R = 0.154 Ω/1000ft) at 240V = 3.1% — borderline. NEC informational notes target ≤3% on branch and ≤5% combined feeder + branch. Upsize one AWG step if exceeded.',
+  },
+  {
+    name: 'Size the equipment grounding conductor (NEC 250.122)',
+    text: 'For a 100A breaker, the EGC must be at least 8 AWG copper or 6 AWG aluminum. The grounded (neutral) conductor is sized by the load, typically the same gauge as the ungrounded for a 100A service.',
+  },
+  {
+    name: 'Pull permits and schedule inspection',
+    text: 'Service-entrance work requires utility coordination (the service drop is the utility’s responsibility) and AHJ inspection. Pull a permit before disconnecting; have the inspector verify the new service before re-energizing.',
+  },
+];
 
 
 export const metadata: Metadata = {
@@ -517,6 +549,13 @@ export default function WireSizeFor100AmpPage() {
       </section>
       
       <ArticleSchema article={articleData} />
+      <HowToSchema
+        path="/guides/wire-size-for-100-amp"
+        name="How to Size Wire for a 100 Amp Service or Subpanel"
+        description="Seven-step procedure for selecting wire size for a 100A residential service entrance or subpanel feeder, including the NEC 310.12 83% allowance, voltage-drop check, and grounding conductor sizing per NEC 250.122."
+        totalTime="PT15M"
+        steps={HOWTO_100A_STEPS}
+      />
     </div>
   );
 }

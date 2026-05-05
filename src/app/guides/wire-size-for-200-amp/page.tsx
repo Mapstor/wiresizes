@@ -2,7 +2,39 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
 import { ArticleFAQSchema } from '@/components/seo/ArticleFAQSchema'
+import { HowToSchema } from '@/components/seo/HowToSchema';
 import { getArticleDates } from '@/lib/article-dates';
+
+const HOWTO_200A_STEPS = [
+  {
+    name: 'Confirm 200 amp is correct for the building load',
+    text: 'Run an NEC 220.82 (Standard Method) or 220.83 (Optional Method) load calculation. 200A is the standard for most homes 2,000–4,000 sq ft with electric heat, central AC, EV charging, or large electric appliances. Smaller homes may only need 100A or 150A.',
+  },
+  {
+    name: 'Choose between copper (2/0) and aluminum (4/0)',
+    text: 'For a 200A service-entrance, copper requires 2/0 AWG and aluminum requires 4/0 AWG at 75°C. Aluminum 4/0 SE cable is the most common residential choice — it costs 40-50% less than equivalent copper and is well-supported by all panel manufacturers. Use AL-rated terminations and antioxidant compound.',
+  },
+  {
+    name: 'Apply NEC 310.12 (the residential 83% rule)',
+    text: 'For a 120/240V single-phase dwelling service, NEC 310.12 allows reduced conductor sizing. The 83% allowance lets you use 4/0 copper OR 250 kcmil aluminum (or copper-clad aluminum) for a 200A service entrance — a meaningful savings versus straight Table 310.16 sizing which would require 3/0 copper.',
+  },
+  {
+    name: 'Verify the service mast and conduit support the cable',
+    text: '4/0 SE-style cable needs a 1.5"–2" service entrance conduit (or properly clamped exposed mast). Check the meter base lug ratings and main breaker terminal sizes; oversize lugs are sometimes required for aluminum 4/0.',
+  },
+  {
+    name: 'Calculate voltage drop on long runs from meter to panel',
+    text: 'For runs of 100ft+ between meter and main panel, voltage drop on 4/0 aluminum (R ≈ 0.0823 Ω/1000ft) at 200A 240V = ~2.7% over 100ft. Acceptable, but upsize to 250 kcmil for runs over 150ft to keep within 3%.',
+  },
+  {
+    name: 'Size the equipment grounding conductor (NEC 250.122)',
+    text: 'For a 200A overcurrent device, the EGC must be 6 AWG copper or 4 AWG aluminum minimum. The grounding electrode conductor (separate from EGC) is sized per NEC 250.66 — typically 4 AWG copper for a 200A service.',
+  },
+  {
+    name: 'Coordinate with the utility and pull a permit',
+    text: 'The service drop from utility transformer to weatherhead is the utility’s responsibility; from weatherhead through meter to panel is yours. Pull a permit, schedule a power-cut with the utility, and arrange AHJ inspection before re-energizing.',
+  },
+];
 import { Calculator, AlertTriangle, CheckCircle2, Info, Zap, Shield, Wrench } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -674,6 +706,13 @@ export default function WireSizeFor200AmpPage() {
       </div>
 
       <ArticleFAQSchema article={articleData} faqItems={faqs} />
+      <HowToSchema
+        path="/guides/wire-size-for-200-amp"
+        name="How to Size Wire for a 200 Amp Residential Service"
+        description="Seven-step procedure for sizing service-entrance conductors for a 200A residential 120/240V single-phase service, including the NEC 310.12 83% rule (allowing 4/0 Cu or 250 kcmil Al), voltage-drop check, and grounding."
+        totalTime="PT15M"
+        steps={HOWTO_200A_STEPS}
+      />
     </div>
   )
 }
