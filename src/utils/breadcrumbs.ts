@@ -1,11 +1,51 @@
+// Stop words that should stay lowercase except when they're the first
+// word in a title — matches AP/Chicago title-case conventions and looks
+// natural in SERP breadcrumb rich results.
+const STOP_WORDS = new Set([
+  'a', 'an', 'and', 'as', 'at', 'but', 'by', 'for', 'in', 'nor',
+  'of', 'on', 'or', 'so', 'the', 'to', 'up', 'vs', 'with', 'yet',
+]);
+
+// Initialisms that must stay uppercase. Includes the common electrical
+// acronyms used in wire-sizing slugs.
+const ACRONYMS = new Set([
+  'awg', 'nec', 'ev', 'ac', 'dc', 'hp', 'rv', 'btu', 'hvac',
+  'pvc', 'thhn', 'thwn', 'mcm', 'kcmil', 'fla', 'flc', 'mca',
+  'mocp', 'gfci', 'afci', 'osha', 'nfpa', 'iaei', 'ul', 'neca',
+]);
+
+// Mixed-case technical terms (the SI / electrical convention).
+const MIXED_CASE: Record<string, string> = {
+  kva: 'kVA',
+  kw: 'kW',
+  mw: 'MW',
+  ohms: "Ohm's", // "ohms-law" → "Ohm's Law"
+};
+
+// Per-slug overrides for cases where naive splitting can't recover
+// the canonical display name (e.g. dotted NEC table numbers).
+const SLUG_OVERRIDES: Record<string, string> = {
+  'nec-table-310-16': 'NEC Table 310.16',
+};
+
 /**
- * Converts a slug string to title case
- * Example: "wire-size-calculator" → "Wire Size Calculator"
+ * Converts a slug string to a human-friendly title.
+ * Example: "wire-size-for-200-amp" → "Wire Size for 200 Amp"
+ *          "nec-code-compliance"   → "NEC Code Compliance"
+ *          "kva-to-amps-calculator" → "kVA to Amps Calculator"
  */
 function slugToTitle(slug: string): string {
+  if (SLUG_OVERRIDES[slug]) return SLUG_OVERRIDES[slug];
+
   return slug
     .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word, idx) => {
+      const lower = word.toLowerCase();
+      if (ACRONYMS.has(lower)) return lower.toUpperCase();
+      if (MIXED_CASE[lower]) return MIXED_CASE[lower];
+      if (idx > 0 && STOP_WORDS.has(lower)) return lower;
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
     .join(' ');
 }
 
