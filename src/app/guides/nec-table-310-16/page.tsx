@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
+import { DatasetSchema } from '@/components/seo/DatasetSchema';
 import { getArticleDates } from '@/lib/article-dates';
 
 
@@ -479,6 +480,18 @@ export default function NECTable310_16Page() {
       </section>
 
       <ArticleSchema article={articleData} />
+      <DatasetSchema
+        path="/guides/nec-table-310-16"
+        name="NEC Table 310.16 — Allowable Ampacities of Insulated Conductors"
+        alternateName={['NEC 310.16 Conductor Ampacity Table', 'NEC 2023 Table 310.16']}
+        description="Complete NEC 2023 Table 310.16 ampacity data for copper and aluminum conductors at 60°C, 75°C, and 90°C insulation temperatures, from 14 AWG through 750 kcmil. Includes ambient-temperature correction factors per NEC 310.15(B)(1) and conductor-bundling adjustment factors per NEC 310.15(C)(1)."
+        variableMeasured={['ampacity (amperes)', 'AWG / kcmil size', 'insulation temperature rating', 'conductor material']}
+        keywords={['NEC 310.16', 'wire ampacity', 'AWG ampacity table', 'electrical conductor capacity', 'copper ampacity', 'aluminum ampacity', 'NEC 2023', 'electrical code']}
+        citation="NFPA 70 (National Electrical Code) 2023 edition, Article 310, Table 310.16"
+        spatialCoverage="United States"
+        datePublished={articleData.datePublished}
+        dateModified={articleData.dateModified}
+      />
     </div>
   );
 }

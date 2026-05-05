@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
+import { DatasetSchema } from '@/components/seo/DatasetSchema';
 import { getArticleDates } from '@/lib/article-dates';
 
 
@@ -693,6 +694,18 @@ export default function AWGWireSizeChartPage() {
       </section>
 
       <ArticleSchema article={articleData} />
+      <DatasetSchema
+        path="/guides/awg-wire-size-chart"
+        name="AWG Wire Size Chart — Diameter, Cross-Section, Resistance, Ampacity"
+        alternateName={['American Wire Gauge Reference', 'AWG to mm² Conversion Chart']}
+        description="Comprehensive AWG (American Wire Gauge) reference table from 14 AWG through 750 kcmil. Per-row data: conductor diameter (mils, mm), cross-sectional area (kcmil, mm²), DC resistance per 1000 ft / km, weight per 1000 ft, and NEC 310.16 ampacity at 60°C / 75°C / 90°C for both copper and aluminum."
+        variableMeasured={['conductor diameter', 'cross-sectional area', 'DC resistance', 'weight per 1000 ft', 'ampacity']}
+        keywords={['AWG chart', 'American Wire Gauge', 'wire size chart', 'AWG to mm2', 'wire diameter', 'wire resistance', 'wire ampacity']}
+        citation="NFPA 70 (NEC) 2023 Article 310 Table 310.16; ASTM B258 — Standard Specification for Standard Nominal Diameters and Cross-Sectional Areas of AWG Sizes; NEC Chapter 9 Tables 8 and 9"
+        spatialCoverage="United States"
+        datePublished={articleData.datePublished}
+        dateModified={articleData.dateModified}
+      />
     </div>
   );
 }
