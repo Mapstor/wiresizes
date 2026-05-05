@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { motion } from 'framer-motion';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { VoltageInput } from '@/components/ui/VoltageInput';
@@ -154,28 +153,13 @@ export function VoltageDropCalculator() {
             </Button>
           </div>
 
-          {/* Prominent Result Display with Animation */}
+          {/* Prominent Result Display */}
           {showResults && copperResult && (
-            <motion.div 
-              className="mt-6 p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border-2 border-green-200 shadow-lg"
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ 
-                type: "spring",
-                stiffness: 260,
-                damping: 20
-              }}
-              key={`${copperResult?.voltageDropPercent}`} // Re-animate on result change
-            >
+            <div className="mt-6 p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border-2 border-green-200 shadow-lg">
               <h3 className="text-sm font-medium text-neutral-700 mb-2">Voltage Drop Result:</h3>
-              <motion.div 
-                className="text-3xl font-bold"
-                initial={{ y: -10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.1 }}
-              >
+              <div className="text-3xl font-bold">
                 <span className={`
-                  ${copperResult.voltageDropPercent <= 3 ? 'text-green-600' : 
+                  ${copperResult.voltageDropPercent <= 3 ? 'text-green-600' :
                     copperResult.voltageDropPercent <= 5 ? 'text-amber-600' : 'text-red-600'}
                 `}>
                   {copperResult.voltageDropPercent.toFixed(2)}%
@@ -183,20 +167,15 @@ export function VoltageDropCalculator() {
                 <span className="text-lg font-medium text-neutral-600 ml-2">
                   ({copperResult.voltageDrop.toFixed(1)}V drop)
                 </span>
-              </motion.div>
-              <motion.p 
-                className="text-xs text-neutral-500 mt-1"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-              >
-                {copperResult.voltageDropPercent <= 3 
-                  ? '✓ Within NEC 3% recommendation' 
+              </div>
+              <p className="text-xs text-neutral-500 mt-1">
+                {copperResult.voltageDropPercent <= 3
+                  ? '✓ Within NEC 3% recommendation'
                   : copperResult.voltageDropPercent <= 5
                   ? '⚠ Exceeds 3% but within 5% limit'
                   : '✕ Exceeds recommended limits'}
-              </motion.p>
-            </motion.div>
+              </p>
+            </div>
           )}
         </div>
 

@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 
 interface VoltageDropVisualProps {
@@ -104,16 +103,13 @@ export function VoltageDropVisual({
         </text>
 
         {/* Wire with gradient - responsive to distance and thickness */}
-        <motion.rect
+        <rect
           x="70"
           y={60 - wireThickness / 2}
+          width={wireLength}
           height={wireThickness}
           rx={wireThickness / 4}
           fill="url(#voltage-gradient)"
-          initial={{ width: 0 }}
-          animate={{ width: wireLength, height: wireThickness }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          key={`${distance}-${wireSize}`} // Re-animate when distance or wire size changes
         />
         
         {/* Wire size label */}
@@ -130,19 +126,21 @@ export function VoltageDropVisual({
         
         {/* Animated electrons showing current flow - adjust to wire thickness */}
         {[0, 1, 2].map((i) => (
-          <motion.circle
+          <circle
             key={i}
+            cy={60}
             r={Math.min(wireThickness / 3, 4)}
             fill="white"
-            initial={{ x: 70, y: 60 }}
-            animate={{ x: loadX }}
-            transition={{
-              duration: 2,
-              delay: i * 0.7,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          />
+          >
+            <animate
+              attributeName="cx"
+              from="70"
+              to={loadX}
+              dur="2s"
+              begin={`${i * 0.7}s`}
+              repeatCount="indefinite"
+            />
+          </circle>
         ))}
 
         {/* Distance label */}
@@ -151,19 +149,16 @@ export function VoltageDropVisual({
         </text>
 
         {/* Voltage drop indicator - moved down and made bigger/bolder */}
-        <motion.text
+        <text
           x={midX}
           y={95 + Math.max(wireThickness / 2, 8)}
           textAnchor="middle"
           fontSize="14"
           fontWeight="800"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
           fill={isAcceptable ? '#15803d' : isMarginal ? '#b45309' : '#b91c1c'}
         >
           -{dropPercent.toFixed(2)}% drop
-        </motion.text>
+        </text>
 
         {/* Load (end) - position based on wire length */}
         <rect x={loadX} y="30" width="60" height="60" rx="4" fill="#64748b" />

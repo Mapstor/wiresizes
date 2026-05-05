@@ -1,7 +1,3 @@
-'use client';
-
-import { motion } from 'framer-motion';
-
 const COMMON_SIZES = ['14', '12', '10', '8', '6', '4', '2', '1/0', '2/0', '4/0'];
 
 interface WireSizeScaleProps {
@@ -26,16 +22,13 @@ export function WireSizeScale({ highlightedAwg, material = 'copper' }: WireSizeS
           
           return (
             <div key={awg} className="flex flex-col items-center">
-              <motion.div
+              <div
                 className={`rounded-full ${
-                  isHighlighted 
+                  isHighlighted
                     ? material === 'copper' ? 'bg-copper-500' : 'bg-aluminum-500'
                     : 'bg-neutral-300'
                 }`}
                 style={{ width, height }}
-                initial={{ height: 0 }}
-                animate={{ height }}
-                transition={{ delay: index * 0.05, duration: 0.3 }}
               />
               <span className={`mt-2 text-xs font-mono ${
                 isHighlighted ? 'text-primary-600 font-bold' : 'text-neutral-500'

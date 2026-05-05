@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 
 // Wire diameters in mm (used to calculate relative sizes)
 const WIRE_DIAMETERS: Record<string, number> = {
@@ -106,35 +105,23 @@ export function WireVisualization({
         />
 
         {/* Main wire cross-section */}
-        <motion.circle
+        <circle
           cx={center}
           cy={center}
+          r={displaySize / 2}
           fill={`url(#wire-gradient-${awg}-${material})`}
           stroke={stroke}
           strokeWidth="2"
           filter="url(#wire-shadow)"
-          initial={{ r: 10 }}
-          animate={{ r: displaySize / 2 }}
-          transition={{
-            type: 'spring',
-            stiffness: 200,
-            damping: 20,
-          }}
         />
 
         {/* Center highlight */}
-        <motion.circle
+        <circle
           cx={center - displaySize * 0.15}
           cy={center - displaySize * 0.15}
+          r={displaySize * 0.15}
           fill="white"
           opacity="0.3"
-          initial={{ r: 2 }}
-          animate={{ r: displaySize * 0.15 }}
-          transition={{
-            type: 'spring',
-            stiffness: 200,
-            damping: 20,
-          }}
         />
       </svg>
 
