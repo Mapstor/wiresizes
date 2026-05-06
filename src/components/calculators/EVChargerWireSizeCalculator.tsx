@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Car, Zap, DollarSign, Clock, AlertTriangle, CheckCircle, Battery, Gauge, Home, Building, TrendingUp, Calculator, Wrench, Shield, Target, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { NEC_310_16 } from '@/lib/data/nec-tables';
+import { WIRE_PROPERTIES } from '@/lib/data/wire-properties';
 
 interface CalculationResult {
   wireSize: string;
@@ -104,21 +106,21 @@ const CHARGER_TYPES = [
   }
 ];
 
-const WIRE_SIZES = [
-  { awg: '14', copperAmpacity: 20, aluminumAmpacity: null, resistance: 2.53 },
-  { awg: '12', copperAmpacity: 25, aluminumAmpacity: 20, resistance: 1.59 },
-  { awg: '10', copperAmpacity: 35, aluminumAmpacity: 30, resistance: 0.999 },
-  { awg: '8', copperAmpacity: 50, aluminumAmpacity: 40, resistance: 0.628 },
-  { awg: '6', copperAmpacity: 65, aluminumAmpacity: 50, resistance: 0.395 },
-  { awg: '4', copperAmpacity: 85, aluminumAmpacity: 65, resistance: 0.249 },
-  { awg: '3', copperAmpacity: 100, aluminumAmpacity: 75, resistance: 0.197 },
-  { awg: '2', copperAmpacity: 115, aluminumAmpacity: 90, resistance: 0.156 },
-  { awg: '1', copperAmpacity: 130, aluminumAmpacity: 100, resistance: 0.124 },
-  { awg: '1/0', copperAmpacity: 150, aluminumAmpacity: 120, resistance: 0.0983 },
-  { awg: '2/0', copperAmpacity: 175, aluminumAmpacity: 135, resistance: 0.0779 },
-  { awg: '3/0', copperAmpacity: 200, aluminumAmpacity: 155, resistance: 0.0618 },
-  { awg: '4/0', copperAmpacity: 230, aluminumAmpacity: 180, resistance: 0.0490 }
-];
+// Derived from canonical NEC 310.16 (75°C copper ampacity column) joined
+// with wire-properties (@20°C copper resistance, the site-wide convention
+// for voltage-drop calculations). Limited to 14 AWG–4/0, the practical
+// range for residential and small-commercial EV charging circuits.
+const WIRE_SIZES = NEC_310_16
+  .filter((row) => /^(14|12|10|8|6|4|3|2|1|[1234]\/0)$/.test(row.awg))
+  .map((row) => {
+    const wp = WIRE_PROPERTIES.find((p) => p.awg === row.awg);
+    return {
+      awg: row.awg,
+      copperAmpacity: row.copper_75c,
+      aluminumAmpacity: row.aluminum_75c,
+      resistance: wp?.resistance_copper_ohm_per_1000ft ?? 0,
+    };
+  });
 
 const REAL_WORLD_SCENARIOS = [
   {
