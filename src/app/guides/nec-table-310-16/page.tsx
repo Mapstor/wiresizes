@@ -473,8 +473,13 @@ export default function NECTable310_16Page() {
         path="/guides/nec-table-310-16"
         name="NEC Table 310.16 — Allowable Ampacities of Insulated Conductors"
         alternateName={['NEC 310.16 Conductor Ampacity Table', 'NEC 2023 Table 310.16']}
-        description="Complete NEC 2023 Table 310.16 ampacity data for copper and aluminum conductors at 60°C, 75°C, and 90°C insulation temperatures, from 14 AWG through 750 kcmil. Includes ambient-temperature correction factors per NEC 310.15(B)(1) and conductor-bundling adjustment factors per NEC 310.15(C)(1)."
-        variableMeasured={['ampacity (amperes)', 'AWG / kcmil size', 'insulation temperature rating', 'conductor material']}
+        description="Complete NEC 2023 Table 310.16 ampacity data for copper and aluminum conductors at 60°C, 75°C, and 90°C insulation temperatures, from 14 AWG through 1000 kcmil. Includes ambient-temperature correction factors per NEC 310.15(B)(1) and conductor-bundling adjustment factors per NEC 310.15(C)(1)."
+        variableMeasured={[
+          { name: 'AWG / kcmil size', description: 'Conductor size designation (AWG for 14–4/0, kcmil thereafter)' },
+          { name: 'Conductor material', description: 'Copper or aluminum / copper-clad aluminum' },
+          { name: 'Insulation temperature rating', description: '60°C, 75°C, or 90°C insulation system', unitText: 'degree Celsius', unitCode: 'CEL' },
+          { name: 'Allowable ampacity', description: 'Maximum continuous current per NEC 310.16 at 30°C ambient, ≤3 current-carrying conductors in raceway / cable / earth', unitText: 'ampere', unitCode: 'AMP' },
+        ]}
         keywords={['NEC 310.16', 'wire ampacity', 'AWG ampacity table', 'electrical conductor capacity', 'copper ampacity', 'aluminum ampacity', 'NEC 2023', 'electrical code']}
         citation="NFPA 70 (National Electrical Code) 2023 edition, Article 310, Table 310.16"
         spatialCoverage="United States"

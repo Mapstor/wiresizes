@@ -17,6 +17,36 @@ import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { DatasetSchema } from '@/components/seo/DatasetSchema';
 import { getArticleDates } from '@/lib/article-dates';
+import { NEC_310_16 } from '@/lib/data/nec-tables';
+import { WIRE_PROPERTIES } from '@/lib/data/wire-properties';
+
+// Fixture-wire AWG sizes below NEC 310.16's smallest entry (14 AWG).
+// Listed for completeness; not assigned a 310.16 ampacity.
+const SUB_NEC_AWG = [
+  { awg: '18', diameter_mm: 1.024, diameter_in: 0.0403, area_mm2: 0.823, resistance_20c: 6.385 },
+  { awg: '16', diameter_mm: 1.291, diameter_in: 0.0508, area_mm2: 1.310, resistance_20c: 4.016 },
+];
+
+// AWG sizes covered by NEC 310.16 ampacity, displayed in this chart.
+// Joined with WIRE_PROPERTIES (@20°C copper resistance, the site-wide
+// voltage-drop convention) for the resistance column.
+const AWG_CHART_ROWS = NEC_310_16
+  .filter((row) => /^(14|12|10|8|6|4|3|2|1|[1234]\/0)$/.test(row.awg))
+  .map((row) => {
+    const wp = WIRE_PROPERTIES.find((p) => p.awg === row.awg);
+    return {
+      awg: row.awg,
+      diameter_mm: row.diameter_mils * 0.0254,
+      diameter_in: row.diameter_mils / 1000,
+      area_mm2: row.area_mm2,
+      resistance_20c: wp?.resistance_copper_ohm_per_1000ft ?? 0,
+      copper_75c: row.copper_75c,
+      aluminum_75c: row.aluminum_75c,
+      // NEC 240.4(D) caps OCPD at 15/20/30 A regardless of ampacity, so
+      // mark these rows with the asterisk and yellow background.
+      smallConductor: row.awg === '14' || row.awg === '12' || row.awg === '10',
+    };
+  });
 
 
 export const metadata: Metadata = {
@@ -140,141 +170,33 @@ export default function AWGWireSizeChartPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-neutral-100">
-                    <tr className="hover:bg-blue-50">
-                      <td className="px-4 py-3 font-mono font-bold">18</td>
-                      <td className="px-4 py-3 text-center">1.024</td>
-                      <td className="px-4 py-3 text-center">0.0403</td>
-                      <td className="px-4 py-3 text-center">0.823</td>
-                      <td className="px-4 py-3 text-center">6.385</td>
-                      <td className="px-4 py-3 text-center">—</td>
-                      <td className="px-4 py-3 text-center">—</td>
-                    </tr>
-                    <tr className="hover:bg-blue-50">
-                      <td className="px-4 py-3 font-mono font-bold">16</td>
-                      <td className="px-4 py-3 text-center">1.291</td>
-                      <td className="px-4 py-3 text-center">0.0508</td>
-                      <td className="px-4 py-3 text-center">1.31</td>
-                      <td className="px-4 py-3 text-center">4.016</td>
-                      <td className="px-4 py-3 text-center">—</td>
-                      <td className="px-4 py-3 text-center">—</td>
-                    </tr>
-                    <tr className="hover:bg-blue-50 bg-yellow-50">
-                      <td className="px-4 py-3 font-mono font-bold">14</td>
-                      <td className="px-4 py-3 text-center">1.628</td>
-                      <td className="px-4 py-3 text-center">0.0641</td>
-                      <td className="px-4 py-3 text-center">2.08</td>
-                      <td className="px-4 py-3 text-center">2.525</td>
-                      <td className="px-4 py-3 text-center font-semibold">20*</td>
-                      <td className="px-4 py-3 text-center">—</td>
-                    </tr>
-                    <tr className="hover:bg-blue-50 bg-yellow-50">
-                      <td className="px-4 py-3 font-mono font-bold">12</td>
-                      <td className="px-4 py-3 text-center">2.053</td>
-                      <td className="px-4 py-3 text-center">0.0808</td>
-                      <td className="px-4 py-3 text-center">3.31</td>
-                      <td className="px-4 py-3 text-center">1.588</td>
-                      <td className="px-4 py-3 text-center font-semibold">25*</td>
-                      <td className="px-4 py-3 text-center">20*</td>
-                    </tr>
-                    <tr className="hover:bg-blue-50 bg-yellow-50">
-                      <td className="px-4 py-3 font-mono font-bold">10</td>
-                      <td className="px-4 py-3 text-center">2.588</td>
-                      <td className="px-4 py-3 text-center">0.1019</td>
-                      <td className="px-4 py-3 text-center">5.26</td>
-                      <td className="px-4 py-3 text-center">0.9989</td>
-                      <td className="px-4 py-3 text-center font-semibold">35*</td>
-                      <td className="px-4 py-3 text-center">30*</td>
-                    </tr>
-                    <tr className="hover:bg-blue-50">
-                      <td className="px-4 py-3 font-mono font-bold">8</td>
-                      <td className="px-4 py-3 text-center">3.264</td>
-                      <td className="px-4 py-3 text-center">0.1285</td>
-                      <td className="px-4 py-3 text-center">8.37</td>
-                      <td className="px-4 py-3 text-center">0.6282</td>
-                      <td className="px-4 py-3 text-center font-semibold">50</td>
-                      <td className="px-4 py-3 text-center">40</td>
-                    </tr>
-                    <tr className="hover:bg-blue-50">
-                      <td className="px-4 py-3 font-mono font-bold">6</td>
-                      <td className="px-4 py-3 text-center">4.116</td>
-                      <td className="px-4 py-3 text-center">0.1620</td>
-                      <td className="px-4 py-3 text-center">13.30</td>
-                      <td className="px-4 py-3 text-center">0.3951</td>
-                      <td className="px-4 py-3 text-center font-semibold">65</td>
-                      <td className="px-4 py-3 text-center">50</td>
-                    </tr>
-                    <tr className="hover:bg-blue-50">
-                      <td className="px-4 py-3 font-mono font-bold">4</td>
-                      <td className="px-4 py-3 text-center">5.189</td>
-                      <td className="px-4 py-3 text-center">0.2043</td>
-                      <td className="px-4 py-3 text-center">21.15</td>
-                      <td className="px-4 py-3 text-center">0.2485</td>
-                      <td className="px-4 py-3 text-center font-semibold">85</td>
-                      <td className="px-4 py-3 text-center">65</td>
-                    </tr>
-                    <tr className="hover:bg-blue-50">
-                      <td className="px-4 py-3 font-mono font-bold">3</td>
-                      <td className="px-4 py-3 text-center">5.827</td>
-                      <td className="px-4 py-3 text-center">0.2294</td>
-                      <td className="px-4 py-3 text-center">26.67</td>
-                      <td className="px-4 py-3 text-center">0.1970</td>
-                      <td className="px-4 py-3 text-center font-semibold">100</td>
-                      <td className="px-4 py-3 text-center">75</td>
-                    </tr>
-                    <tr className="hover:bg-blue-50">
-                      <td className="px-4 py-3 font-mono font-bold">2</td>
-                      <td className="px-4 py-3 text-center">6.544</td>
-                      <td className="px-4 py-3 text-center">0.2576</td>
-                      <td className="px-4 py-3 text-center">33.62</td>
-                      <td className="px-4 py-3 text-center">0.1563</td>
-                      <td className="px-4 py-3 text-center font-semibold">115</td>
-                      <td className="px-4 py-3 text-center">90</td>
-                    </tr>
-                    <tr className="hover:bg-blue-50">
-                      <td className="px-4 py-3 font-mono font-bold">1</td>
-                      <td className="px-4 py-3 text-center">7.348</td>
-                      <td className="px-4 py-3 text-center">0.2893</td>
-                      <td className="px-4 py-3 text-center">42.41</td>
-                      <td className="px-4 py-3 text-center">0.1239</td>
-                      <td className="px-4 py-3 text-center font-semibold">130</td>
-                      <td className="px-4 py-3 text-center">100</td>
-                    </tr>
-                    <tr className="hover:bg-blue-50">
-                      <td className="px-4 py-3 font-mono font-bold">1/0</td>
-                      <td className="px-4 py-3 text-center">8.252</td>
-                      <td className="px-4 py-3 text-center">0.3249</td>
-                      <td className="px-4 py-3 text-center">53.49</td>
-                      <td className="px-4 py-3 text-center">0.0983</td>
-                      <td className="px-4 py-3 text-center font-semibold">150</td>
-                      <td className="px-4 py-3 text-center">120</td>
-                    </tr>
-                    <tr className="hover:bg-blue-50">
-                      <td className="px-4 py-3 font-mono font-bold">2/0</td>
-                      <td className="px-4 py-3 text-center">9.266</td>
-                      <td className="px-4 py-3 text-center">0.3648</td>
-                      <td className="px-4 py-3 text-center">67.43</td>
-                      <td className="px-4 py-3 text-center">0.0779</td>
-                      <td className="px-4 py-3 text-center font-semibold">175</td>
-                      <td className="px-4 py-3 text-center">135</td>
-                    </tr>
-                    <tr className="hover:bg-blue-50">
-                      <td className="px-4 py-3 font-mono font-bold">3/0</td>
-                      <td className="px-4 py-3 text-center">10.40</td>
-                      <td className="px-4 py-3 text-center">0.4096</td>
-                      <td className="px-4 py-3 text-center">85.01</td>
-                      <td className="px-4 py-3 text-center">0.0618</td>
-                      <td className="px-4 py-3 text-center font-semibold">200</td>
-                      <td className="px-4 py-3 text-center">155</td>
-                    </tr>
-                    <tr className="hover:bg-blue-50">
-                      <td className="px-4 py-3 font-mono font-bold">4/0</td>
-                      <td className="px-4 py-3 text-center">11.68</td>
-                      <td className="px-4 py-3 text-center">0.4600</td>
-                      <td className="px-4 py-3 text-center">107.2</td>
-                      <td className="px-4 py-3 text-center">0.0490</td>
-                      <td className="px-4 py-3 text-center font-semibold">230</td>
-                      <td className="px-4 py-3 text-center">180</td>
-                    </tr>
+                    {SUB_NEC_AWG.map((row) => (
+                      <tr key={row.awg} className="hover:bg-blue-50">
+                        <td className="px-4 py-3 font-mono font-bold">{row.awg}</td>
+                        <td className="px-4 py-3 text-center">{row.diameter_mm.toFixed(3)}</td>
+                        <td className="px-4 py-3 text-center">{row.diameter_in.toFixed(4)}</td>
+                        <td className="px-4 py-3 text-center">{row.area_mm2.toFixed(3)}</td>
+                        <td className="px-4 py-3 text-center">{row.resistance_20c.toFixed(3)}</td>
+                        <td className="px-4 py-3 text-center">—</td>
+                        <td className="px-4 py-3 text-center">—</td>
+                      </tr>
+                    ))}
+                    {AWG_CHART_ROWS.map((row) => {
+                      const cuLabel = row.copper_75c !== null ? `${row.copper_75c}${row.smallConductor ? '*' : ''}` : '—';
+                      const alLabel = row.aluminum_75c !== null ? `${row.aluminum_75c}${row.smallConductor ? '*' : ''}` : '—';
+                      const rowClass = row.smallConductor ? 'hover:bg-blue-50 bg-yellow-50' : 'hover:bg-blue-50';
+                      return (
+                        <tr key={row.awg} className={rowClass}>
+                          <td className="px-4 py-3 font-mono font-bold">{row.awg}</td>
+                          <td className="px-4 py-3 text-center">{row.diameter_mm.toFixed(3)}</td>
+                          <td className="px-4 py-3 text-center">{row.diameter_in.toFixed(4)}</td>
+                          <td className="px-4 py-3 text-center">{row.area_mm2.toFixed(2)}</td>
+                          <td className="px-4 py-3 text-center">{row.resistance_20c < 0.1 ? row.resistance_20c.toFixed(4) : row.resistance_20c.toFixed(3)}</td>
+                          <td className="px-4 py-3 text-center font-semibold">{cuLabel}</td>
+                          <td className="px-4 py-3 text-center">{alLabel}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -698,9 +620,17 @@ export default function AWGWireSizeChartPage() {
         path="/guides/awg-wire-size-chart"
         name="AWG Wire Size Chart — Diameter, Cross-Section, Resistance, Ampacity"
         alternateName={['American Wire Gauge Reference', 'AWG to mm² Conversion Chart']}
-        description="Comprehensive AWG (American Wire Gauge) reference table from 14 AWG through 750 kcmil. Per-row data: conductor diameter (mils, mm), cross-sectional area (kcmil, mm²), DC resistance per 1000 ft / km, weight per 1000 ft, and NEC 310.16 ampacity at 60°C / 75°C / 90°C for both copper and aluminum."
-        variableMeasured={['conductor diameter', 'cross-sectional area', 'DC resistance', 'weight per 1000 ft', 'ampacity']}
-        keywords={['AWG chart', 'American Wire Gauge', 'wire size chart', 'AWG to mm2', 'wire diameter', 'wire resistance', 'wire ampacity']}
+        description="Comprehensive AWG (American Wire Gauge) reference table from 18 AWG through 4/0 AWG. Per-row data: conductor diameter (mils, mm, inch), cross-sectional area (kcmil, mm²), DC resistance per 1000 ft at 20°C, and NEC 310.16 ampacity at 75°C for both copper and aluminum."
+        variableMeasured={[
+          { name: 'AWG size', description: 'American Wire Gauge designation per ASTM B258' },
+          { name: 'Conductor diameter (metric)', description: 'Bare conductor outside diameter', unitText: 'millimeter', unitCode: 'MMT' },
+          { name: 'Conductor diameter (imperial)', description: 'Bare conductor outside diameter', unitText: 'inch', unitCode: 'INH' },
+          { name: 'Cross-sectional area', description: 'Conductor cross-sectional area', unitText: 'square millimeter', unitCode: 'MMK' },
+          { name: 'DC resistance at 20°C', description: 'Direct-current resistance of uncoated copper conductor', unitText: 'ohm per 1000 foot' },
+          { name: 'Copper ampacity at 75°C', description: 'Allowable ampacity per NEC 310.16, copper conductor, 75°C insulation rating', unitText: 'ampere', unitCode: 'AMP' },
+          { name: 'Aluminum ampacity at 75°C', description: 'Allowable ampacity per NEC 310.16, aluminum conductor, 75°C insulation rating', unitText: 'ampere', unitCode: 'AMP' },
+        ]}
+        keywords={['AWG chart', 'American Wire Gauge', 'wire size chart', 'AWG to mm2', 'wire diameter', 'wire resistance', 'wire ampacity', 'NEC 310.16']}
         citation="NFPA 70 (NEC) 2023 Article 310 Table 310.16; ASTM B258 — Standard Specification for Standard Nominal Diameters and Cross-Sectional Areas of AWG Sizes; NEC Chapter 9 Tables 8 and 9"
         spatialCoverage="United States"
         datePublished={articleData.datePublished}

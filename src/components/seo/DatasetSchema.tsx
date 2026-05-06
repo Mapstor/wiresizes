@@ -4,6 +4,20 @@
 // is a citable data source.
 // https://schema.org/Dataset
 
+/**
+ * One variable / column the dataset publishes. Use the structured form
+ * (with unitText / unitCode) where the variable is numeric — Google
+ * Dataset Search and downstream consumers extract this metadata.
+ */
+export interface DatasetVariable {
+  name: string;
+  description?: string;
+  /** Human-readable unit, e.g., "ampere", "millimeter". */
+  unitText?: string;
+  /** UN/CEFACT Common Code, e.g., "AMP" amperes, "MMT" millimeters, "INH" inches. */
+  unitCode?: string;
+}
+
 interface DatasetSchemaProps {
   /** Path on the site, beginning with `/`. */
   path: string;
@@ -11,8 +25,11 @@ interface DatasetSchemaProps {
   /** Alternate name(s) — e.g., "NEC 310.16" for "Conductor Ampacities". */
   alternateName?: string | string[];
   description: string;
-  /** What the dataset measures (e.g., "ampacity", "conductor diameter"). */
-  variableMeasured?: string[];
+  /**
+   * What the dataset measures. Pass plain strings for simple variables,
+   * or DatasetVariable objects for structured metadata (units etc).
+   */
+  variableMeasured?: Array<string | DatasetVariable>;
   /** Free-text keywords for indexing. */
   keywords?: string[];
   /** Citation to the upstream authoritative source (e.g., NFPA 70). */
@@ -60,7 +77,11 @@ export function DatasetSchema({
   };
 
   if (alternateName) schema.alternateName = alternateName;
-  if (variableMeasured) schema.variableMeasured = variableMeasured;
+  if (variableMeasured) {
+    schema.variableMeasured = variableMeasured.map((v) =>
+      typeof v === 'string' ? v : { '@type': 'PropertyValue', ...v },
+    );
+  }
   if (keywords) schema.keywords = keywords;
   if (citation) schema.citation = citation;
   if (datePublished) schema.datePublished = datePublished;
