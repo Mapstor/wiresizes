@@ -15,8 +15,8 @@ import {
 import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service - WireSizes.com | Professional Electrical Calculator Platform',
-  description: 'Complete Terms of Service for WireSizes.com professional electrical wire sizing calculators and educational resources. Legal framework governing platform usage, user responsibilities, and service limitations.',
+  title: 'Terms of Service',
+  description: 'Legal terms for using WireSizes.com calculators and educational resources. Reference-only results; licensed-professional verification required.',
   keywords: [
     'terms of service',
     'electrical calculator terms',
@@ -34,6 +34,7 @@ export const metadata: Metadata = {
     title: 'Terms of Service - WireSizes.com',
     description: 'Legal terms and conditions for using WireSizes.com professional electrical calculators and resources',
     type: 'website',
+    images: ['/opengraph-image']
   },
   alternates: { canonical: '/terms' },
 };

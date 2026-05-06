@@ -6,8 +6,8 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'EV Charger Calculator | Electric Vehicle Charging Circuit Calculator',
-  description: 'Calculate wire size and circuit requirements for EV charging stations. NEC Article 625 compliant EV charger calculator for Level 1 and Level 2 charging installations.',
+  title: 'EV Charger Calculator — NEC 625.42',
+  description: 'Level 2 EV charger circuit sizing with 125% continuous-load factor per NEC 625.42. Wire, breaker, and EGC for 32A / 40A / 48A / 80A chargers.',
   keywords: 'EV charger calculator, electric vehicle charging, EVSE wire size, EV charging circuit, Level 2 charger installation, NEC Article 625, Tesla charger wire size',
   alternates: { canonical: '/calculators/ev-charger-calculator' },
 };

@@ -7,14 +7,15 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Kilowatts to Amps Calculator | kW to Amperage Converter | Power to Current',
-  description: 'Professional kilowatts to amps calculator for electrical contractors and engineers. Convert kW to amperage for single-phase and three-phase systems. Includes power factor calculations.',
+  title: 'Kilowatts to Amps Calculator — kW → A',
+  description: 'Convert kilowatts to amps for single-phase, three-phase, and DC circuits. Includes power-factor input for motors and inductive loads.',
   keywords: 'kilowatts to amps, kw to amperage calculator, power to current converter, electrical load calculator, three phase kw to amps, power factor calculator, electrical power conversion',
   openGraph: {
     title: 'Kilowatts to Amps Calculator - Convert kW to Amperage',
     description: 'Convert kilowatts to amps for electrical load calculations. Single and three-phase kW to amperage calculator with power factor.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/kilowatts-to-amps-calculator',
+    images: ['/opengraph-image']
   },
   alternates: { canonical: '/calculators/kilowatts-to-amps-calculator' },
 };

@@ -7,14 +7,15 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'kVA to Amps Calculator | Convert Kilovolt-Amperes to Amperage | Transformer Sizing',
-  description: 'Professional kVA to amps calculator for electrical engineers and contractors. Convert kilovolt-amperes to amperage for single-phase and three-phase systems with power factor correction. NEC compliant transformer and generator sizing.',
+  title: 'kVA to Amps Calculator — Apparent Power',
+  description: 'Convert apparent power (kVA) to current (amps) for single- and three-phase systems. Generator, transformer, and UPS sizing.',
   keywords: 'kva to amps, kilovolt amperes to amperage, transformer calculator, apparent power conversion, three phase kva, generator sizing, power factor calculator, electrical load calculator',
   openGraph: {
     title: 'kVA to Amps Calculator - Professional Electrical Conversion Tool',
     description: 'Convert kVA to amps for transformers, generators, and electrical equipment. Single and three-phase calculations with power factor.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/kva-to-amps-calculator',
+    images: ['/opengraph-image']
   },
   alternates: { canonical: '/calculators/kva-to-amps-calculator' },
 };

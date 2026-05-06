@@ -18,8 +18,8 @@ import {
 import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
 
 export const metadata: Metadata = {
-  title: 'Disclaimer - WireSizes.com | Professional Electrical Calculator Limitations',
-  description: 'Important disclaimer and limitations for WireSizes.com electrical wire sizing calculators. Understand professional responsibilities, safety requirements, and proper usage guidelines.',
+  title: 'Disclaimer — Professional Verification',
+  description: 'Calculations are reference values only. Licensed electrical professional must verify all results before installation. Local AHJ has final authority.',
   keywords: [
     'electrical calculator disclaimer',
     'wire sizing limitations',
@@ -37,6 +37,7 @@ export const metadata: Metadata = {
     title: 'Disclaimer - WireSizes.com',
     description: 'Important limitations and professional responsibilities for electrical calculation tools',
     type: 'website',
+    images: ['/opengraph-image']
   },
   alternates: { canonical: '/disclaimer' },
 };

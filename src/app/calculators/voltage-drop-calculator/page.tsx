@@ -22,8 +22,8 @@ import {
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Voltage Drop Calculator | NEC Compliant Wire Sizing | Calculate Electrical Voltage Loss',
-  description: 'Calculate voltage drop in electrical circuits instantly. Free NEC-compliant calculator for copper and aluminum wire. Includes distance calculations, 3% rule compliance, and wire size recommendations. Accurate voltage drop calculations for residential, commercial, and industrial applications.',
+  title: 'Voltage Drop Calculator — NEC 3% / 5%',
+  description: 'Single- and three-phase voltage drop per wire size and distance. Verifies NEC 3% branch / 5% combined feeder limits. Copper and aluminum at 75°C.',
   keywords: 'voltage drop calculator, electrical voltage drop, NEC voltage drop, wire voltage loss, voltage drop formula, 3 percent rule, copper wire voltage drop, aluminum wire voltage drop, voltage drop calculation, electrical wire calculator',
   alternates: { canonical: '/calculators/voltage-drop-calculator' },
 };

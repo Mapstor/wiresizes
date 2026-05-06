@@ -7,14 +7,15 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Horsepower to Amps Calculator | Motor Current Calculator | HP to Amperage',
-  description: 'Professional horsepower to amps calculator for motor applications. Convert HP to amperage for single-phase and three-phase motors. NEC motor full load current tables included.',
+  title: 'HP to Amps Calculator — NEC 430.248',
+  description: 'Motor full-load current (FLC) from horsepower per NEC Tables 430.247–430.250. Single- and three-phase, 115V through 575V motor circuits.',
   keywords: 'horsepower to amps, HP to amperage, motor current calculator, motor FLC calculator, NEC motor tables, electric motor sizing, motor circuit calculator',
   openGraph: {
     title: 'Horsepower to Amps Calculator - Motor Current Calculator',
     description: 'Convert horsepower to amps for motor applications. Single and three-phase motor current calculator with NEC tables.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/horsepower-to-amps-calculator',
+    images: ['/opengraph-image']
   },
   alternates: { canonical: '/calculators/horsepower-to-amps-calculator' },
 };

@@ -6,8 +6,8 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Electric Range Calculator | Range Circuit Calculator | NEC 220.55 Kitchen Appliances',
-  description: 'Calculate wire size and circuit requirements for electric ranges, cooktops, and ovens. Professional kitchen appliance electrical calculator with NEC 220.55 demand factors and 3-wire vs 4-wire installations.',
+  title: 'Range Calculator — NEC 220.55',
+  description: 'Electric range circuit sizing per NEC 220.55 demand factors. 30A, 40A, 50A circuits with 6 AWG to 8 AWG copper. 14-50 receptacle typical.',
   keywords: 'range calculator, electric range circuit, cooktop wire size, kitchen appliance calculator, NEC 220.55, range demand factor, oven circuit calculator, electric stove wiring',
   alternates: { canonical: '/calculators/range-calculator' },
 };

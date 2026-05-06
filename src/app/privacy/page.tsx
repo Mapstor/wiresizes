@@ -3,8 +3,8 @@ import { Shield, Eye, Lock, Database, Globe, Users, Calendar, AlertCircle } from
 import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | WireSizes.com',
-  description: 'Privacy Policy for WireSizes.com - Learn how we collect, use, and protect your information when using our electrical wire sizing calculators.',
+  title: 'Privacy Policy',
+  description: 'How WireSizes.com collects, uses, and protects your information. Calculations run client-side; no personal data stored on our servers.',
   keywords: 'privacy policy, data protection, wiresizes privacy, electrical calculator privacy',
   alternates: { canonical: '/privacy' },
 };

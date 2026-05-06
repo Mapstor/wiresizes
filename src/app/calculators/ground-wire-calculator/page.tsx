@@ -7,14 +7,15 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Ground Wire Calculator | Equipment Grounding Conductor Size | NEC Table 250.122',
-  description: 'Professional ground wire calculator for equipment grounding conductors. Calculate grounding conductor size per NEC Table 250.122. Includes service grounding and bonding requirements.',
+  title: 'Ground Wire Calculator — NEC 250.122',
+  description: 'Equipment grounding conductor (EGC) size by overcurrent device rating per NEC Table 250.122. Copper and aluminum, 15A through 2000A.',
   keywords: 'ground wire calculator, equipment grounding conductor, NEC 250.122, grounding conductor size, electrical grounding, bonding conductor, service grounding, ground wire sizing',
   openGraph: {
     title: 'Ground Wire Calculator - Equipment Grounding Conductor Sizing',
     description: 'Calculate equipment grounding conductor size per NEC requirements. Professional grounding and bonding calculator.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/ground-wire-calculator',
+    images: ['/opengraph-image']
   },
   alternates: { canonical: '/calculators/ground-wire-calculator' },
 };

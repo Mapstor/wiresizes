@@ -6,8 +6,8 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Pool Pump Calculator | Swimming Pool Pump Circuit Calculator | NEC 680',
-  description: 'Calculate wire size and circuit requirements for pool pumps per NEC Article 680. Professional pool equipment electrical calculator with comprehensive installation guidance.',
+  title: 'Pool Pump Calculator — NEC 680',
+  description: 'Swimming pool pump circuit per NEC Article 680. GFCI required, equipotential bonding, wire size for 1-3 HP pumps at 230V.',
   keywords: 'pool pump calculator, swimming pool pump circuit, NEC Article 680, pool equipment electrical, pool pump wire size, pool pump installation, variable speed pump',
   alternates: { canonical: '/calculators/pool-pump-calculator' },
 };

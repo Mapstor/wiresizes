@@ -7,14 +7,15 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Low Voltage Calculator | 12V 24V DC Wire Size Calculator | Marine Automotive',
-  description: 'Professional low voltage DC wire calculator for 12V and 24V systems. Calculate wire size for automotive, marine, solar, and RV applications. Includes voltage drop calculations.',
+  title: 'Low Voltage Calculator — 12V / 24V DC',
+  description: '12V and 24V DC circuit wire sizing for solar, battery banks, RV, and marine. Higher resistance per gauge requires upsized conductors.',
   keywords: 'low voltage calculator, 12v wire size, 24v dc calculator, automotive wire size, marine electrical, solar panel wiring, RV electrical, battery cable sizing',
   openGraph: {
     title: 'Low Voltage Calculator - 12V 24V DC Wire Size Calculator',
     description: 'Calculate wire size for low voltage DC systems. Automotive, marine, solar, and RV wire sizing calculator.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/low-voltage-calculator',
+    images: ['/opengraph-image']
   },
   alternates: { canonical: '/calculators/low-voltage-calculator' },
 };

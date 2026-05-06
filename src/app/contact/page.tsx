@@ -19,8 +19,8 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Contact WireSizes.com - Professional Electrical Calculator Support',
-  description: 'Get professional support for electrical wire sizing calculators, technical assistance, and expert guidance. Multiple contact channels for electrical professionals worldwide.',
+  title: 'Contact — Technical Support',
+  description: 'Contact channels for WireSizes.com: technical support, professional consulting, legal/compliance, and educational partnerships. 24-48hr response.',
   keywords: [
     'electrical calculator support',
     'wire sizing help',
@@ -38,6 +38,7 @@ export const metadata: Metadata = {
     title: 'Contact WireSizes.com - Professional Support',
     description: 'Get expert support for electrical calculations, wire sizing, and NEC compliance questions',
     type: 'website',
+    images: ['/opengraph-image']
   },
   alternates: { canonical: '/contact' },
 };

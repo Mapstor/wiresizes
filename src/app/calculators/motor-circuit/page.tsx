@@ -12,8 +12,8 @@ import { Badge } from '@/components/ui/Badge'
 import { CombinedSchema } from '@/components/seo/CombinedSchema'
 
 export const metadata: Metadata = {
-  title: 'Motor Circuit Calculator | NEC 430 Wire Size, Protection & Control',
-  description: 'Professional motor circuit calculator per NEC Article 430. Calculate wire size, overload protection, short circuit protection, and control circuit requirements.',
+  title: 'Motor Circuit — NEC Article 430',
+  description: 'Motor branch-circuit sizing per NEC Article 430: wire (430.22 at 125%), short-circuit protection (430.52), overload (430.32), control (430.72).',
   keywords: 'motor circuit calculator, NEC 430, motor wire size, motor protection, overload protection, short circuit protection, motor control circuit, FLC motor current',
   alternates: {
     canonical: '/calculators/motor-circuit'

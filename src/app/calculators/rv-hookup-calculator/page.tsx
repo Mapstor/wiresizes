@@ -6,8 +6,8 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'RV Hookup Calculator | RV Electrical Service Calculator | Campground Electrical Design',
-  description: 'Calculate electrical requirements for RV hookups and service pedestals. Complete RV park electrical calculator with 30A/50A service, GFCI/AFCI requirements, and campground installation guidance.',
+  title: 'RV Hookup Calculator — 30A / 50A',
+  description: 'RV pedestal wiring: 30A 120V (TT-30) and 50A 120/240V (14-50). Wire size, breaker, GFCI per NEC 551 and 220.21.',
   keywords: 'RV hookup calculator, RV electrical service, RV park calculator, recreational vehicle hookup, 30 amp RV service, 50 amp RV service, RV pedestal electrical, campground electrical design',
   alternates: { canonical: '/calculators/rv-hookup-calculator' },
 };

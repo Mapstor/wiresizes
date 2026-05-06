@@ -51,8 +51,8 @@ const HOWTO_100A_STEPS = [
 
 
 export const metadata: Metadata = {
-  title: 'Wire Size for 100 Amp Service & Subpanel | Complete Guide 2024',
-  description: 'Complete guide for 100 amp wire sizing. Learn correct wire sizes for 100A service entrance, subpanels, copper vs aluminum, distance considerations, and NEC code requirements.',
+  title: 'Wire Size for 100 Amp Service / Subpanel',
+  description: '100A residential service: 1 AWG copper or 1/0 aluminum (NEC 310.12). 100A subpanel: 3 AWG copper, 1 AWG aluminum at 75°C. EGC 8 AWG cu.',
   keywords: '100 amp wire size, wire for 100 amp service, 100 amp subpanel wire, 100A electrical service, NEC 100 amp requirements',
   alternates: { canonical: '/guides/wire-size-for-100-amp' },
 };

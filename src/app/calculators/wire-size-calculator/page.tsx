@@ -23,8 +23,8 @@ import { CombinedSchema } from '@/components/seo/CombinedSchema';
 import { NEC_310_16 } from '@/lib/data/nec-tables';
 
 export const metadata: Metadata = {
-  title: 'Wire Size Calculator | AWG Calculator | Electrical Wire Sizing',
-  description: 'Calculate the correct AWG wire size for any electrical circuit. Free NEC-compliant wire size calculator for copper and aluminum conductors. Includes voltage drop, ampacity, and distance calculations.',
+  title: 'Wire Size Calculator — AWG / NEC 310.16',
+  description: 'Calculate AWG wire size for any circuit. NEC 310.16 ampacity, voltage drop check, copper and aluminum, 60/75/90°C ratings, continuous-load 125%.',
   keywords: 'wire size calculator, AWG calculator, electrical wire sizing, cable size calculator, conductor sizing, NEC wire size, copper wire calculator, aluminum wire calculator',
   alternates: { canonical: '/calculators/wire-size-calculator' },
 };

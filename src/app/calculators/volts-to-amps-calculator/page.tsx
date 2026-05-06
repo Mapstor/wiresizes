@@ -7,14 +7,15 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Volts to Amps Calculator | Convert Voltage to Current | Ohms Law Calculator',
-  description: 'Professional volts to amps calculator using Ohms Law. Convert voltage to amperage for electrical circuits with power or resistance. Essential tool for electricians and engineers.',
+  title: 'Volts to Amps Calculator — V → A',
+  description: "Convert voltage and resistance to amps via Ohm's Law (I = V/R). For DC and resistive AC circuits. Solve any circuit current calculation.",
   keywords: 'volts to amps, voltage to current, ohms law calculator, electrical conversion, V to A, voltage amperage calculator, electrical current calculator',
   openGraph: {
     title: 'Volts to Amps Calculator - Professional Electrical Conversion Tool',
     description: 'Convert volts to amps using Ohms Law. Calculate current from voltage and power or resistance for electrical circuits.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/volts-to-amps-calculator',
+    images: ['/opengraph-image']
   },
   alternates: { canonical: '/calculators/volts-to-amps-calculator' },
 };

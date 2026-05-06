@@ -7,14 +7,15 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'BTU to Watts Calculator | Convert BTU/hr to Electrical Power | HVAC Calculator',
-  description: 'Professional BTU to watts converter for HVAC and electrical systems. Convert British Thermal Units to electrical power for heating, cooling, and energy calculations. Essential for electricians and HVAC technicians.',
+  title: 'BTU to Watts Calculator',
+  description: 'Convert BTU/hr to watts (1 W = 3.412 BTU/hr) for HVAC, heating, and electric resistance load calculations. Reverse direction supported.',
   keywords: 'btu to watts, btu/hr to watts, hvac calculator, heating cooling conversion, thermal to electrical, energy converter, heat pump sizing, air conditioner watts',
   openGraph: {
     title: 'BTU to Watts Calculator - HVAC & Electrical Power Conversion',
     description: 'Convert BTU/hr to watts for HVAC equipment sizing and electrical load calculations. Professional tool for heating and cooling systems.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/btu-to-watts-calculator',
+    images: ['/opengraph-image']
   },
   alternates: { canonical: '/calculators/btu-to-watts-calculator' },
 };

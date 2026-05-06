@@ -17,8 +17,8 @@ import {
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'About WireSizes.com | Professional Electrical Wire Sizing Tools',
-  description: 'Learn about WireSizes.com - the leading platform for NEC-compliant electrical wire sizing calculators. Trusted by electricians, contractors, and engineers worldwide.',
+  title: 'About — Professional Wire Sizing Tools',
+  description: 'About WireSizes.com: NEC-compliant electrical calculators built for licensed electricians, contractors, and engineers. Free, professional-grade tools.',
   keywords: 'about wiresizes, electrical calculators, NEC compliance, wire sizing tools, electrical engineering',
   alternates: {
     canonical: '/about'

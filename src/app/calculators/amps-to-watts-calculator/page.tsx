@@ -6,8 +6,8 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Amps to Watts Calculator | Convert Amperage to Watts | Power Calculator',
-  description: 'Free amps to watts calculator for single-phase and three-phase circuits. Convert electrical current (amperage) to power (watts) with voltage and power factor calculations.',
+  title: 'Amps to Watts Calculator — A → W',
+  description: 'Convert amps to watts for AC and DC circuits. Single-phase, three-phase, and DC formulas with optional power-factor input for inductive loads.',
   keywords: 'amps to watts calculator, current to power converter, amperage to watts, electrical power calculator, single phase watts, three phase watts, power factor calculator',
   alternates: { canonical: '/calculators/amps-to-watts-calculator' },
 };

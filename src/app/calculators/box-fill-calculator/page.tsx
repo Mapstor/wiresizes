@@ -7,14 +7,15 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Box Fill Calculator | NEC 314.16 Junction Box Capacity | Electrical Box Sizing',
-  description: 'Professional box fill calculator per NEC Article 314.16. Calculate electrical box capacity for switches, outlets, and junction boxes. Ensure code-compliant installations with proper conductor fill calculations.',
+  title: 'Box Fill Calculator — NEC 314.16',
+  description: 'Outlet and junction box fill calculation per NEC 314.16. Counts conductors, devices, and clamps with the proper volume allowances per AWG.',
   keywords: 'box fill calculator, nec 314.16, junction box sizing, electrical box capacity, outlet box fill, switch box calculator, conductor fill, box volume calculator',
   openGraph: {
     title: 'Box Fill Calculator - NEC 314.16 Electrical Box Capacity',
     description: 'Calculate electrical box fill capacity per NEC code. Ensure proper box sizing for switches, outlets, and junction boxes.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/box-fill-calculator',
+    images: ['/opengraph-image']
   },
   alternates: { canonical: '/calculators/box-fill-calculator' },
 };

@@ -38,8 +38,8 @@ const HOWTO_EV_STEPS = [
 import { Car, Zap, AlertTriangle, CheckCircle2, Info, Shield, Calculator, Clock } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'EV Charger Wire Size Guide | Level 1, 2 & 3 Charging Requirements',
-  description: 'Complete guide to wire sizing for EV chargers. Learn NEC Article 625 requirements for Level 1, Level 2, and DC fast charging installations with safety tips.',
+  title: 'Wire Size for EV Charger — Level 2',
+  description: 'Wire size for Level 2 EV chargers (NEC 625.42): 40A / 50A / 60A / 100A circuits. 6 AWG cu standard for 50A; hardwired vs NEMA 14-50.',
   keywords: 'EV charger wire size, electric vehicle charging, Level 2 charger wire, NEC 625, Tesla charger wire size, 50 amp EV circuit',
   alternates: {
     canonical: '/guides/wire-size-for-ev-charger'

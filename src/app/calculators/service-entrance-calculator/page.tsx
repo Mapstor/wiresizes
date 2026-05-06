@@ -6,8 +6,8 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Service Entrance Calculator | Electrical Service Wire Size & Main Panel',
-  description: 'Calculate service entrance requirements including wire size, grounding, meter base, and main panel specs per NEC 230 & 310.12. For 100A to 1200A residential and commercial services.',
+  title: 'Service Entrance — NEC 310.12',
+  description: 'Service-entrance conductor sizing for 100A, 150A, 200A, 320A residential services. Includes the NEC 310.12 dwelling-unit 83% allowance.',
   keywords: 'service entrance calculator, main electrical service, service wire size, meter base requirements, NEC 310.12, electrical service upgrade, 200 amp service wire, service entrance cable, main panel sizing, utility service requirements',
   alternates: { canonical: '/calculators/service-entrance-calculator' },
 };

@@ -7,8 +7,8 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Electrical Load Calculator | Service Load Calculator | NEC Article 220',
-  description: 'Calculate electrical load for residential and commercial services per NEC Article 220. Professional load calculations for service sizing and demand factors.',
+  title: 'Electrical Load Calculator — NEC 220',
+  description: 'Branch and feeder load calculation per NEC Article 220. Continuous-load 125%, demand factors, and total connected load for service sizing.',
   keywords: 'electrical load calculator, service load calculator, NEC Article 220, demand load calculation, electrical service sizing, connected load, electrical panel sizing',
   alternates: { canonical: '/calculators/electrical-load-calculator' },
 };

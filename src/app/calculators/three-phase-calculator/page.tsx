@@ -6,8 +6,8 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Three Phase Calculator | 3-Phase Power Calculator | Industrial Motor & Load Calculator',
-  description: 'Calculate three-phase electrical power, current, voltage, and motor loads for industrial and commercial applications. Professional 3-phase electrical calculations with power factor correction, load balancing, and transformer sizing.',
+  title: 'Three Phase Calculator — Δ / Y',
+  description: 'Three-phase power, current, and wire size for delta and wye systems. P = √3 × V × I × PF. Balanced and unbalanced load support.',
   keywords: 'three phase calculator, 3-phase power calculator, industrial electrical calculator, three phase current, 3-phase voltage calculations, motor calculator, transformer sizing, power factor correction',
   alternates: { canonical: '/calculators/three-phase-calculator' },
 };

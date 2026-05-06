@@ -20,8 +20,8 @@ import {
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Ampacity Calculator | Wire Current Capacity | NEC Table 310.16 Calculator',
-  description: 'Calculate wire ampacity with temperature and conduit fill derating factors. Free NEC-compliant ampacity calculator for copper and aluminum conductors at different temperature ratings.',
+  title: 'Ampacity Calculator — NEC Table 310.16',
+  description: 'NEC 310.16 ampacity for any AWG with temperature correction (310.15(B)(1)) and conductor-bundling adjustment (310.15(C)(1)). Copper and aluminum.',
   keywords: 'ampacity calculator, wire current capacity, NEC table 310.16, conductor ampacity, temperature derating, conduit fill derating, wire amp rating, electrical ampacity',
   alternates: { canonical: '/calculators/ampacity-calculator' },
 };

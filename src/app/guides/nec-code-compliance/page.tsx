@@ -45,8 +45,8 @@ const HOWTO_NEC_COMPLIANCE_STEPS = [
 
 
 export const metadata = {
-  title: 'NEC Code Compliance Guide | National Electrical Code Requirements 2023',
-  description: 'Comprehensive NEC code compliance guide covering wire sizing, circuit protection, grounding, load calculations, and safety requirements with detailed tables and examples.',
+  title: 'NEC Code Compliance — 2023 Branch Circuits',
+  description: 'Procedure for designing NEC-compliant branch circuits: load calc (Art. 220), ampacity (310.16), OCPD (240), grounding (250.122), conduit fill.',
   keywords: 'NEC code, National Electrical Code, electrical compliance, wire sizing code, circuit protection, electrical safety',
   alternates: { canonical: '/guides/nec-code-compliance' },
 };

@@ -6,8 +6,8 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Air Conditioner Calculator | AC Unit Wire Size Calculator | HVAC Electrical',
-  description: 'Calculate wire size and circuit requirements for air conditioning units and HVAC equipment. Professional HVAC electrical calculator with comprehensive installation guidance.',
+  title: 'AC Wire Size Calculator — NEC 440',
+  description: 'Air conditioner wire and breaker sizing per NEC Article 440. MCA / MOCP from nameplate. 1-ton through 5-ton residential and commercial units.',
   keywords: 'air conditioner calculator, AC unit wire size, HVAC electrical calculator, air conditioning circuit, central air installation, ductless mini split',
   alternates: { canonical: '/calculators/air-conditioner-calculator' },
 };

@@ -23,8 +23,8 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Professional Electrical Calculators - Wire Size, Voltage Drop, Ampacity & More | WireSizes.com',
-  description: 'Comprehensive suite of 30+ professional electrical calculators for wire sizing, voltage drop, ampacity, power conversions, and NEC-compliant calculations. Trusted by electricians and engineers worldwide.',
+  title: 'Electrical Calculators — NEC 2023',
+  description: '30+ free electrical calculators: wire size, voltage drop, ampacity, load calc, conduit fill. NEC 2023 compliant. Used by electricians and engineers.',
   keywords: [
     'electrical calculators',
     'wire size calculator',
@@ -40,25 +40,19 @@ export const metadata: Metadata = {
     canonical: '/calculators'
   },
   openGraph: {
-    title: 'Professional Electrical Calculators | WireSizes.com',
+    title: 'Electrical Calculators — NEC 2023',
     description: '30+ NEC-compliant electrical calculators for wire sizing, voltage drop, ampacity, and more.',
     url: 'https://wiresizes.com/calculators',
     siteName: 'WireSizes.com',
-    images: [
-      {
-        url: 'https://wiresizes.com/images/og-image.png',
-        width: 1200,
-        height: 630,
-      }
-    ],
     locale: 'en_US',
     type: 'website',
+    images: ['/opengraph-image'],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Professional Electrical Calculators',
+    title: 'Electrical Calculators — NEC 2023',
     description: '30+ NEC-compliant electrical calculators',
-    images: ['https://wiresizes.com/images/og-image.png'],
+    images: ['/twitter-image'],
   },
 };
 

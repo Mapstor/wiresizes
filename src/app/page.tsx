@@ -21,8 +21,8 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Electrical Calculators | Wire Size, Voltage Drop, Ampacity | WireSizes.com',
-  description: 'Professional electrical calculators: wire size, voltage drop, ampacity, load calculations. NEC code compliant. 30+ free tools for electricians and contractors.',
+  title: 'Wire Size Calculator — NEC 310.16',
+  description: 'Free NEC-compliant wire size calculator. Compute AWG, voltage drop, ampacity, and conduit fill. 30+ tools used by licensed electricians.',
   keywords: 'electrical calculator, wire size calculator, voltage drop, ampacity, NEC table 310.16, electrical load calculator',
   alternates: { canonical: '/' },
 };

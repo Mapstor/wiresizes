@@ -5,8 +5,8 @@ import { getArticleDates } from '@/lib/article-dates';
 
 
 export const metadata = {
-  title: 'Electrical Power Calculations Guide | Complete Tutorial with Examples',
-  description: 'Master electrical power calculations with this comprehensive guide covering watts, amps, volts, power factor, single-phase and three-phase systems with interactive examples.',
+  title: 'Electrical Power Calculations — W, A, V, PF',
+  description: 'Watts, amps, volts, and power factor formulas. Single-phase, three-phase, DC; real, reactive, apparent power. Worked examples with NEC values.',
   keywords: 'electrical power calculations, watts amps volts, power factor, ohms law, electrical engineering',
   alternates: { canonical: '/guides/electrical-power-calculations' },
 };

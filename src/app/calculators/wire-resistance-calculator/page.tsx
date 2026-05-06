@@ -7,14 +7,15 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Wire Resistance Calculator | Conductor Resistance Calculator | Ohms per Foot',
-  description: 'Professional wire resistance calculator for electrical engineers and contractors. Calculate conductor resistance, impedance, and voltage drop for copper and aluminum wires.',
+  title: 'Wire Resistance Calculator — Ω / 1000 ft',
+  description: 'DC resistance of copper and aluminum conductors per AWG and length. NEC Chapter 9 Table 8 values at 75°C. For voltage-drop calculations.',
   keywords: 'wire resistance calculator, conductor resistance, ohms per foot, wire impedance, electrical resistance, copper wire resistance, aluminum wire resistance, voltage drop resistance',
   openGraph: {
     title: 'Wire Resistance Calculator - Conductor Resistance and Impedance Tool',
     description: 'Calculate electrical resistance of wire conductors. Copper and aluminum wire resistance calculator with impedance calculations.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/wire-resistance-calculator',
+    images: ['/opengraph-image']
   },
   alternates: { canonical: '/calculators/wire-resistance-calculator' },
 };

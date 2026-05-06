@@ -50,8 +50,8 @@ const AWG_CHART_ROWS = NEC_310_16
 
 
 export const metadata: Metadata = {
-  title: 'AWG Wire Size Chart | Complete American Wire Gauge Reference Table',
-  description: 'Comprehensive AWG wire size chart with diameters, resistance, ampacity ratings for copper and aluminum. Includes metric conversions, NEC ampacity tables, and wire selection guide.',
+  title: 'AWG Wire Size Chart — Diameter & Ampacity',
+  description: 'Complete AWG reference: diameter (mm, inch), area (kcmil, mm²), DC resistance, NEC 310.16 copper and aluminum ampacity at 75°C.',
   keywords: 'AWG chart, wire size chart, American wire gauge, wire diameter table, AWG to mm conversion, wire resistance table, copper wire sizes, aluminum wire sizes, electrical wire chart',
   alternates: { canonical: '/guides/awg-wire-size-chart' },
 };

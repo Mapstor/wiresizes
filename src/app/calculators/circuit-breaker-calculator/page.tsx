@@ -7,14 +7,15 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Circuit Breaker Calculator | Breaker Size Calculator | NEC Breaker Sizing',
-  description: 'Professional circuit breaker calculator for electrical contractors and engineers. Calculate proper breaker size per NEC code requirements. Includes motor, continuous load, and OCPD sizing calculations.',
+  title: 'Circuit Breaker Calculator — NEC 240',
+  description: 'Overcurrent protection sizing per NEC Article 240. Standard breaker sizes (240.6), small-conductor rule (240.4(D)), continuous-load 125%.',
   keywords: 'circuit breaker calculator, breaker sizing, NEC breaker requirements, overcurrent protection, electrical breaker, OCPD calculator, motor breaker sizing, continuous load breaker',
   openGraph: {
     title: 'Circuit Breaker Calculator - NEC Compliant Breaker Sizing Tool',
     description: 'Calculate proper circuit breaker size per NEC requirements. Motor, continuous load, and standard circuit breaker sizing calculator.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/circuit-breaker-calculator',
+    images: ['/opengraph-image']
   },
   alternates: { canonical: '/calculators/circuit-breaker-calculator' },
 };

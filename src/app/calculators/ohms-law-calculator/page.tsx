@@ -7,14 +7,15 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Ohms Law Calculator | Voltage Current Resistance Power Calculator | V=IR',
-  description: 'Professional Ohms Law calculator for electrical engineers and technicians. Calculate voltage, current, resistance, and power using V=IR and P=VI formulas. AC and DC circuit calculations.',
+  title: "Ohm's Law Calculator — V, I, R, P",
+  description: "Solve any of voltage, current, resistance, or power given two values. V = IR, P = VI, with the full Ohm's Law / power triangle.",
   keywords: 'ohms law calculator, voltage current resistance power, V=IR calculator, electrical calculations, circuit analysis, power calculations, electrical formulas',
   openGraph: {
     title: 'Ohms Law Calculator - Voltage Current Resistance Power Calculator',
     description: 'Calculate voltage, current, resistance, and power using Ohms Law. Professional electrical calculations tool.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/ohms-law-calculator',
+    images: ['/opengraph-image']
   },
   alternates: { canonical: '/calculators/ohms-law-calculator' },
 };

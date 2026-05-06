@@ -6,8 +6,8 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Conduit Fill Calculator | NEC Chapter 9 Wire Fill Calculator',
-  description: 'Professional conduit fill calculator per NEC Chapter 9. Calculate wire fill percentage for EMT, PVC, rigid, and flexible conduit. Ensure code compliance.',
+  title: 'Conduit Fill Calculator — NEC Chapter 9',
+  description: 'Conduit fill percentage per NEC Chapter 9 Tables 4 and 5. EMT, IMC, RMC, PVC sch 40/80, FMC; 40% max for 3+ conductors.',
   keywords: 'conduit fill calculator, NEC chapter 9, wire fill percentage, EMT conduit fill, PVC conduit capacity, rigid conduit fill, electrical conduit sizing',
   alternates: { canonical: '/calculators/conduit-fill-calculator' },
 };

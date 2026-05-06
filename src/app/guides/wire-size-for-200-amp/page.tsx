@@ -38,8 +38,8 @@ const HOWTO_200A_STEPS = [
 import { Calculator, AlertTriangle, CheckCircle2, Info, Zap, Shield, Wrench } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Wire Size for 200 Amp Service | Complete NEC Guide 2024',
-  description: 'Complete guide to wire sizing for 200 amp electrical service. Learn NEC requirements, copper vs aluminum options, installation tips, and safety considerations.',
+  title: 'Wire Size for 200 Amp Service',
+  description: '200A residential service: 4/0 copper or 250 kcmil aluminum (NEC 310.12 83% rule). EGC 6 AWG copper. Mast and meter requirements.',
   keywords: '200 amp wire size, 200 amp service wire, electrical service upgrade, NEC 200 amp requirements, 3/0 copper wire, 4/0 aluminum wire',
   alternates: {
     canonical: '/guides/wire-size-for-200-amp'

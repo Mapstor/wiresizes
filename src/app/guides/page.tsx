@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { Calculator, Zap, AlertTriangle, Target, BarChart3, BookOpen, TrendingUp, Users, Award } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Electrical Engineering Guides | NEC Code, Wire Sizing & Power',
-  description: 'In-depth guides on electrical wire sizing, NEC code compliance, voltage drop, ampacity, and power calculations. Written for electricians, contractors, and engineers.',
+  title: 'Electrical Engineering Guides — NEC, AWG',
+  description: 'In-depth guides on wire sizing, NEC code compliance, voltage drop, ampacity, and electrical safety. For licensed electricians and contractors.',
   keywords: 'electrical guides, NEC compliance guide, wire sizing guide, voltage drop guide, electrical code, ampacity guide, electrical engineering',
   alternates: { canonical: '/guides' },
 };

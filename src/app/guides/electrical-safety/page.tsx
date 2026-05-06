@@ -4,8 +4,8 @@ import { getArticleDates } from '@/lib/article-dates';
 import { HowToSchema } from '@/components/seo/HowToSchema';
 
 export const metadata: Metadata = {
-  title: 'Electrical Safety Fundamentals | Arc Flash, PPE & OSHA',
-  description: 'Practical electrical safety guide: arc flash boundaries, incident energy, PPE categories, lockout/tagout procedures, and OSHA / NFPA 70E standards for safe electrical work and installations.',
+  title: 'Electrical Safety — Arc Flash, PPE, OSHA',
+  description: 'Electrical safety: arc flash boundaries, incident energy, NFPA 70E PPE categories, OSHA 1910.147 lockout/tagout, voltage verification.',
   keywords: 'electrical safety, arc flash safety, NFPA 70E, PPE categories, OSHA electrical, lockout tagout, incident energy, electrical hazards',
   alternates: { canonical: '/guides/electrical-safety' },
 };

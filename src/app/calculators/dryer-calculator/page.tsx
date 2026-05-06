@@ -6,8 +6,8 @@ import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
-  title: 'Electric Dryer Calculator | 240V Dryer Circuit Calculator | Clothes Dryer Wire Size',
-  description: 'Calculate wire size and circuit requirements for electric clothes dryers. Professional 240V dryer electrical calculator with comprehensive installation guidance.',
+  title: 'Dryer Calculator — Wire & Breaker Size',
+  description: 'Electric dryer circuit sizing: 30A / 240V / 4-wire per NEC 250.140. Wire size, breaker, and 14-30 NEMA receptacle requirements.',
   keywords: 'dryer calculator, electric dryer circuit, dryer wire size, 240V dryer installation, clothes dryer electrical, laundry room wiring',
   alternates: { canonical: '/calculators/dryer-calculator' },
 };
