@@ -332,9 +332,23 @@ export default function VoltageDropCalculatorPage() {
             <h1 className="text-3xl font-bold text-neutral-900 mb-3">
               Voltage Drop Calculator
             </h1>
-            <p className="text-lg text-neutral-700 mb-6">
-              Calculate electrical voltage drop over distance for any wire size and load. 
-              Ensure NEC compliance with the 3% rule for branch circuits and 5% total drop.
+            <p className="text-lg text-neutral-700 mb-3">
+              Calculate voltage drop in volts and percent for any conductor
+              run. Single-phase formula VD = (2 &times; L &times; I &times; R) &divide; 1000;
+              three-phase formula VD = (1.732 &times; L &times; I &times; R) &divide; 1000.
+              Verifies NEC informational-note targets of &le; 3 % on branch
+              circuits (210.19) and &le; 5 % combined feeder + branch (215.2).
+              Copper and aluminum at 75&deg;C using DC resistance values from
+              NEC Chapter 9 Table 8.
+            </p>
+            <p className="text-sm text-neutral-600 mb-6">
+              Inputs: wire size (AWG or kcmil from 14 through 750), conductor
+              material, current in amps, voltage (120 / 208 / 240 / 277 / 480 V),
+              one-way distance, single- or three-phase, optional power factor
+              for inductive loads. Outputs: voltage drop in volts and percent,
+              voltage at the load, NEC compliance check (green &lt; 3 %, amber
+              3&ndash;5 %, red &gt; 5 %), and recommended next-larger AWG if
+              the original is over the 3 % limit.
             </p>
             
             {/* Quick Answer Box */}

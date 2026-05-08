@@ -301,9 +301,25 @@ export default function AmpacityCalculatorPage() {
             <h1 className="text-3xl font-bold text-neutral-900 mb-3">
               Wire Ampacity Calculator - Current Carrying Capacity
             </h1>
-            <p className="text-lg text-neutral-700 mb-6">
-              Calculate the current carrying capacity (ampacity) of electrical wires with temperature and conduit fill derating. 
-              NEC Table 310.16 compliant calculations for all conductor types and conditions.
+            <p className="text-lg text-neutral-700 mb-3">
+              Calculate the actual ampacity of any AWG or kcmil conductor
+              after applying NEC 310.15(B)(1) ambient-temperature correction
+              and NEC 310.15(C)(1) bundling adjustment for &gt; 3 current-
+              carrying conductors in a raceway. Returns the derated ampacity
+              that determines the maximum load the conductor can carry —
+              not the table value.
+            </p>
+            <p className="text-sm text-neutral-600 mb-6">
+              Inputs: AWG (14 through 750 kcmil), conductor material (copper
+              or aluminum / copper-clad aluminum), insulation temperature
+              rating (60&deg;C / 75&deg;C / 90&deg;C — TW, THW, THWN, THHN,
+              XHHW, XHHW-2, RHW, USE-2, RHH, NM-B), ambient temperature
+              (10&ndash;60&deg;C / 50&ndash;140&deg;F), and number of current-
+              carrying conductors in raceway. Outputs: NEC 310.16 base
+              ampacity, ambient correction factor, bundling adjustment
+              factor, final adjusted ampacity, NEC 240.4(D) OCPD cap if
+              the conductor is 14 / 12 / 10 AWG, and minimum allowed
+              breaker size.
             </p>
             
             {/* Quick Answer Box */}

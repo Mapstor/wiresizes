@@ -276,9 +276,25 @@ export default function WireSizeCalculatorPage() {
             <h1 className="text-3xl font-bold text-neutral-900 mb-3">
               Wire Size Calculator - AWG Electrical Wire Sizing
             </h1>
-            <p className="text-lg text-neutral-700 mb-6">
-              Calculate the correct wire size (AWG) for any electrical circuit based on current, voltage, and distance. 
-              NEC-compliant calculations for both copper and aluminum conductors.
+            <p className="text-lg text-neutral-700 mb-3">
+              Calculate the correct AWG wire size for any branch circuit or
+              feeder. The calculator runs the full NEC 2023 procedure
+              against your inputs: NEC 310.16 ampacity lookup, NEC 210.19(A)
+              continuous-load 125% factor, NEC 310.15(B)(1) ambient-
+              temperature correction, NEC 310.15(C)(1) bundling adjustment
+              for &gt; 3 current-carrying conductors, NEC 240.4(D) small-
+              conductor OCPD cap, and 3% / 5% voltage-drop verification.
+              Both copper and aluminum at 60&deg;C / 75&deg;C / 90&deg;C
+              insulation ratings.
+            </p>
+            <p className="text-sm text-neutral-600 mb-6">
+              Inputs: amperage, voltage (single- or three-phase, AC or DC),
+              one-way distance, conductor material, insulation temperature
+              rating, ambient temperature, and number of current-carrying
+              conductors in the raceway. Outputs: minimum AWG (or kcmil),
+              actual ampacity after derating, voltage drop in volts and
+              percent, recommended OCPD breaker size, and equipment-grounding
+              conductor size per NEC Table 250.122.
             </p>
             
             {/* Quick Answer Box */}

@@ -320,9 +320,24 @@ export default function ElectricalLoadCalculatorPage() {
                 <Calculator className="w-12 h-12" />
                 <h1 className="text-4xl font-bold">Electrical Load Calculator</h1>
               </div>
-              <p className="text-xl mb-8 text-purple-50">
-                Calculate electrical load requirements for residential and commercial services per NEC Article 220 standards. 
-                Professional load calculations for accurate service sizing and electrical system design.
+              <p className="text-xl mb-3 text-purple-50">
+                Calculate the connected demand load and minimum service size
+                for any building per NEC Article 220 — the &ldquo;Standard&rdquo;
+                method of NEC 220.40 through 220.61, plus the &ldquo;Optional&rdquo;
+                methods of NEC 220.82 (single-family), 220.83 (existing
+                dwelling), 220.84 (multifamily), 220.86 (school), and 220.87
+                (existing installations).
+              </p>
+              <p className="text-base mb-8 text-purple-100">
+                Applies the correct demand factors per NEC Tables 220.42
+                (general lighting), 220.55 (electric range), 220.56 (kitchen
+                equipment), 220.61 (neutral feeder), and 220.84 (multifamily
+                diversity). Continuous loads automatically multiplied by
+                125% per NEC 215.2(A). Outputs total demand VA, service
+                amperage at 240 V or 208 V, recommended panel size from the
+                NEC 240.6 standard ladder (100 / 125 / 150 / 175 / 200 / 225
+                / 250 / 300 / 400 A), and NEC 310.12 dwelling-conductor size
+                if a residential service.
               </p>
               
               <div className="grid md:grid-cols-3 gap-6 mt-8">

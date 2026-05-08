@@ -157,9 +157,24 @@ export default function EVChargerWireSizeCalculatorPage() {
                 <Car className="w-10 h-10" />
                 <h1 className="text-4xl font-bold">EV Charger Wire Size Calculator</h1>
               </div>
-              <p className="text-xl mb-6 text-green-50">
-                Professional wire sizing for electric vehicle charger installation. Calculate exact wire gauge, 
-                breaker size, installation costs, and charging times for any EV model.
+              <p className="text-xl mb-3 text-green-50">
+                Wire and breaker sizing for Level 2 EV chargers per NEC
+                Article 625. Applies the 125% continuous-load factor of
+                NEC 625.42 / 210.19(A): a 32 A charger needs a 40 A circuit,
+                40 A → 50 A circuit, 48 A → 60 A circuit, 80 A → 100 A
+                circuit. Looks up the AWG from NEC 310.16 at 75&deg;C copper
+                terminations and rounds the breaker up to the next NEC
+                240.6 standard size.
+              </p>
+              <p className="text-base mb-6 text-green-100">
+                Inputs: charger amperage (8 / 12 / 16 / 24 / 32 / 40 / 48 / 50
+                / 80 A), supply voltage (208 V or 240 V), conductor material,
+                one-way run distance, indoor / outdoor environment. Outputs:
+                wire size in copper and aluminum, NEC 240.6 breaker rating,
+                voltage drop at full charging current, NEC 250.122 EGC
+                size, NEC 625.41 GFCI requirement, and the hardwire vs
+                NEMA 14-50 vs 6-50 receptacle decision (NEC 625.40 limits
+                receptacles to 50 A maximum).
               </p>
               <div className="flex flex-wrap gap-4">
                 <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">

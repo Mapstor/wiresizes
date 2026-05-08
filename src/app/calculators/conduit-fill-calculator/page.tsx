@@ -216,9 +216,24 @@ export default function ConduitFillCalculatorPage() {
                 <Package className="w-10 h-10" />
                 <h1 className="text-4xl font-bold">Conduit Fill Calculator</h1>
               </div>
-              <p className="text-xl mb-6 text-orange-50">
-                Calculate conduit fill percentage per NEC Chapter 9 requirements. Ensure code compliance for EMT, PVC, 
-                rigid, and flexible conduit installations with professional accuracy.
+              <p className="text-xl mb-3 text-orange-50">
+                Calculate conduit fill percentage and select the smallest
+                code-compliant raceway per NEC Chapter 9. Cross-sections from
+                Table 5 (insulated conductors) summed against the available
+                area from Table 4 (raceway interiors), checked against NEC
+                fill limits: 53 % for one conductor, 31 % for two, and 40 %
+                for three or more.
+              </p>
+              <p className="text-base mb-6 text-orange-100">
+                Supports EMT, IMC, RMC (rigid metal), PVC schedule 40 and
+                schedule 80, ENT, FMC, LFMC. Conductor types: THHN, THWN,
+                THWN-2, THW, RHH, RHW, RHW-2, XHHW, XHHW-2, USE-2, NM-B
+                (jacket dimensions). Outputs: total conductor area in mm&sup2;
+                and in&sup2;, available conduit area, fill percentage,
+                code compliance verdict, recommended next conduit size if
+                over the limit, and the NEC 310.15(C)(1) bundling derate
+                that applies to the conductors when &gt; 3 are
+                current-carrying.
               </p>
               <div className="flex flex-wrap gap-4">
                 <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
