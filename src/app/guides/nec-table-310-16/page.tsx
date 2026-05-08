@@ -468,6 +468,151 @@ export default function NECTable310_16Page() {
         </div>
       </section>
 
+      {/* How to actually use NEC 310.16 — full step-by-step */}
+      <section className="py-12 bg-gradient-to-br from-blue-50 to-cyan-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">How to Read and Apply NEC Table 310.16 — End-to-End</h2>
+            <p className="text-gray-600 mb-8">
+              Looking up a number in 310.16 is the easy part. Translating
+              that number into a code-compliant conductor selection requires
+              understanding which column to use, which derating factors
+              apply, and how the table interacts with NEC 240.4(D), NEC
+              110.14(C), NEC 310.15(B)(1) ambient correction, and NEC
+              310.15(C)(1) bundling adjustment. This section walks through
+              the full procedure with worked numbers.
+            </p>
+
+            {/* Anatomy */}
+            <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-200 mb-8">
+              <h3 className="text-xl font-bold text-blue-900 mb-3">Anatomy of NEC Table 310.16 — six columns, one row per AWG</h3>
+              <p className="text-sm text-slate-700 mb-3">
+                The table organizes ampacities by conductor material (copper
+                or aluminum) and insulation temperature class (60&deg;C,
+                75&deg;C, or 90&deg;C). The 90&deg;C column is the highest
+                ampacity but is rarely the operative number — most equipment
+                is rated for terminations at 75&deg;C maximum.
+              </p>
+              <div className="bg-blue-50 rounded p-4 text-sm space-y-2">
+                <div className="font-semibold">Decision tree to pick the column:</div>
+                <ol className="list-decimal list-inside space-y-1 text-slate-700">
+                  <li>What is the LOWEST temperature rating in the circuit? (Conductor, breaker terminals, panel lugs, equipment terminals.) Per NEC 110.14(C), that lowest rating is the column you use.</li>
+                  <li>Standard residential breakers (15&ndash;100 A frame) are rated 60&deg;C / 75&deg;C: use the 75&deg;C column for circuits 100 A and below per 110.14(C)(1)(a).</li>
+                  <li>Standard breakers above 100 A frame are rated 75&deg;C only: use the 75&deg;C column.</li>
+                  <li>The 90&deg;C column is used <strong>only</strong> as a starting point for derating calculations, never as the final ampacity unless every termination is rated 90&deg;C (rare; UL listed industrial equipment).</li>
+                </ol>
+              </div>
+            </div>
+
+            {/* Step-by-step calculation */}
+            <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-200 mb-8">
+              <h3 className="text-xl font-bold text-blue-900 mb-3">Worked example — 8 AWG THHN in a 105&deg;F attic with 6 conductors in conduit</h3>
+              <p className="text-sm text-slate-700 mb-3">
+                <strong>Scenario:</strong> 60 A continuous load (an EV
+                charger). Run is 8 AWG THHN copper through 1&Prime; EMT in a
+                hot attic. Ambient peaks at 105&deg;F = 41&deg;C. Six total
+                current-carrying conductors in the same conduit (two parallel
+                3-conductor cable runs, neutral counted as current-carrying
+                because the load is non-linear, e.g., switch-mode EV charger).
+              </p>
+              <div className="bg-blue-50 rounded p-4 font-mono text-sm space-y-1">
+                <div>Step 1 — Continuous-load 125% (NEC 210.19):</div>
+                <div>     1.25 &times; 60 A = 75 A required circuit ampacity</div>
+                <div></div>
+                <div>Step 2 — Look up base ampacity in 90&deg;C column for derating start:</div>
+                <div>     8 AWG THHN copper @ 90&deg;C = 55 A (per NEC 310.16)</div>
+                <div></div>
+                <div>Step 3 — Ambient-temperature correction (310.15(B)(1) at 41&deg;C ambient, 90&deg;C column):</div>
+                <div>     factor = 0.87 → 55 &times; 0.87 = 47.85 A</div>
+                <div></div>
+                <div>Step 4 — Conductor-bundling adjustment (310.15(C)(1) for 6 CCCs):</div>
+                <div>     factor = 0.80 → 47.85 &times; 0.80 = <strong>38.3 A adjusted ampacity</strong></div>
+                <div></div>
+                <div>Step 5 — Compare to required (75 A):</div>
+                <div>     38.3 A &lt; 75 A → 8 AWG IS NOT ADEQUATE</div>
+                <div></div>
+                <div>Step 6 — Try 6 AWG THHN @ 90&deg;C = 75 A:</div>
+                <div>     75 &times; 0.87 &times; 0.80 = <strong>52.2 A — still inadequate</strong></div>
+                <div></div>
+                <div>Step 7 — Try 4 AWG THHN @ 90&deg;C = 95 A:</div>
+                <div>     95 &times; 0.87 &times; 0.80 = <strong>66.1 A — still under 75 A</strong></div>
+                <div></div>
+                <div>Step 8 — Try 3 AWG THHN @ 90&deg;C = 115 A:</div>
+                <div>     115 &times; 0.87 &times; 0.80 = <strong>80.0 A &ge; 75 A ✓</strong></div>
+                <div></div>
+                <div>Step 9 — Cap at 75&deg;C termination column (NEC 110.14(C)):</div>
+                <div>     3 AWG @ 75&deg;C = 100 A (above derated 80 A — termination is not the limit here)</div>
+                <div></div>
+                <div className="font-bold">Final answer: 3 AWG THHN copper, 60 A breaker, 4 AWG NEC 250.122 EGC</div>
+              </div>
+              <p className="text-sm text-slate-700 mt-3">
+                Without derating, you might naively pick 6 AWG (rated 65 A
+                at 75&deg;C, &gt; 60 A load with 125 % factor). The combined
+                hot-attic + bundled-conductor derate eats into ampacity so
+                fast that you have to upsize <strong>two AWG steps</strong>.
+                This is why every NEC-compliant calculator must check ambient
+                and bundling — picking from the table alone routinely
+                undersizes hot-attic runs.
+              </p>
+            </div>
+
+            {/* Engineering supervision exception */}
+            <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-200 mb-8">
+              <h3 className="text-xl font-bold text-blue-900 mb-3">NEC 310.15(B)(7) — engineering supervision exception</h3>
+              <p className="text-sm text-slate-700 mb-3">
+                Industrial occupancies under engineering supervision can
+                replace the tabular ampacity values with calculations from
+                the Neher-McGrath equation (NEC 310.15(B)(7)). This produces
+                higher ampacities for buried conductors with favorable thermal
+                conditions but requires a registered professional engineer&rsquo;s
+                stamp on the calculation.
+              </p>
+              <div className="bg-blue-50 rounded p-3 font-mono text-xs space-y-1">
+                <div>Neher-McGrath form: I&sup2; = (T_c &minus; T_a &minus; &Delta;T_d) / (R_dc &times; (1 + Y_c) &times; R&sub;CA&sub;)</div>
+                <div>where:</div>
+                <div>  T_c = max conductor temp, T_a = ambient, &Delta;T_d = dielectric loss heating</div>
+                <div>  R_dc = DC resistance, Y_c = AC/DC resistance ratio (skin + proximity effects)</div>
+                <div>  R&sub;CA&sub; = thermal resistance of insulation, jacket, and surrounding earth</div>
+              </div>
+              <p className="text-sm text-slate-700 mt-3">
+                For most field work, the tabular values in NEC 310.16 are
+                conservative and adequate. The Neher-McGrath exception comes
+                up almost exclusively in utility duct-bank design and large
+                data-center power distribution.
+              </p>
+            </div>
+
+            {/* Common errors */}
+            <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-200 mb-8">
+              <h3 className="text-xl font-bold text-blue-900 mb-3">Five common 310.16 mistakes</h3>
+              <ol className="text-sm list-decimal list-inside space-y-2 text-slate-700">
+                <li><strong>Reading the wrong column.</strong> Pulling 8 AWG copper at 55 A (90&deg;C column) for a 50 A circuit when the breaker terminals are rated 75&deg;C and the actual ampacity is 50 A. NEC 110.14(C) caps at the lowest termination temperature.</li>
+                <li><strong>Forgetting NEC 240.4(D).</strong> 12 AWG&rsquo;s 75&deg;C ampacity is 25 A but the maximum OCPD is 20 A. The conductor can carry 25 A, but you can&rsquo;t install a 25 A breaker on it.</li>
+                <li><strong>Skipping NEC 334.80 for NM-B (Romex).</strong> NM-B cable conductors are 90&deg;C insulated but NEC 334.80 explicitly requires the 60&deg;C ampacity column for sizing. 12 AWG NM-B has 20 A ampacity, not 25 A.</li>
+                <li><strong>Cumulative derating in the wrong order.</strong> 90&deg;C ampacity &times; ambient factor &times; bundling factor → then compare to 75&deg;C termination cap. Some practitioners skip the 90&deg;C starting point and derate from the 75&deg;C value, which under-utilizes high-temperature insulation.</li>
+                <li><strong>Counting neutrals incorrectly.</strong> A balanced 3-phase wye circuit&rsquo;s neutral is NOT current-carrying for derating purposes (NEC 310.15(B)(5)). But on a 3-phase circuit with a major non-linear (harmonic) load, the neutral DOES count due to triplen harmonic current. Get this wrong and you over-derate or under-derate.</li>
+              </ol>
+            </div>
+
+            {/* Connection to NEC 240.4 */}
+            <div className="bg-amber-50 rounded-lg p-6 border border-amber-200">
+              <h3 className="text-lg font-bold text-amber-900 mb-3">NEC 310.16 only sets ampacity — overcurrent protection is a separate calculation</h3>
+              <p className="text-sm text-slate-700 mb-2">
+                The output of NEC 310.16 (after all derating) is the maximum
+                continuous current the conductor can carry. It is NOT the
+                breaker size. To pick the breaker:
+              </p>
+              <ol className="text-sm list-decimal list-inside space-y-1 text-slate-700">
+                <li><strong>NEC 240.4(D)</strong> — small-conductor rule caps OCPD at 15/20/30 A for 14/12/10 AWG copper.</li>
+                <li><strong>NEC 240.6(A)</strong> — standard breaker sizes are 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 110, 125, 150, 175, 200, 225, 250, 300, 350, 400, 500, 600, 700, 800, 1000, 1200, 1600, 2000, 2500, 3000, 4000, 5000, 6000.</li>
+                <li><strong>NEC 240.4(B)</strong> — next standard size up is OK if the conductor ampacity falls between standard sizes (the &ldquo;next-size-up rule&rdquo;).</li>
+                <li><strong>NEC 210.19(A) / 215.2(A)</strong> — for continuous loads, the OCPD must be at least 125 % of the continuous portion.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <ArticleSchema article={articleData} />
       <DatasetSchema
         path="/guides/nec-table-310-16"

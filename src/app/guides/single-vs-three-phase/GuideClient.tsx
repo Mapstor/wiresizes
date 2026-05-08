@@ -1099,6 +1099,199 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
         </div>
       </div>
 
+      {/* Deep dive — three-phase configurations and worked numbers */}
+      <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-8 border border-purple-200 mt-12 mb-12">
+        <h2 className="text-3xl font-bold text-gray-900 mb-2">Three-Phase Deep Dive — Wye, Delta, and the Math</h2>
+        <p className="text-gray-600 mb-8">
+          Three-phase power is not one system — it is a family of
+          configurations. The conductor count, voltage relationships,
+          neutral behavior, and grounding each depend on whether you have
+          wye (Y, also written &ldquo;star&rdquo;) or delta (&Delta;), with
+          or without a neutral, with or without a high-leg. Pick the wrong
+          one for your equipment and you can drop a 480 V motor onto 277 V
+          windings or vice-versa.
+        </p>
+
+        <div className="space-y-8">
+          {/* Wye (Y) configuration */}
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-purple-200">
+            <h3 className="text-xl font-bold text-purple-900 mb-3">Wye (Y) configuration — what most North American services use</h3>
+            <p className="text-sm text-slate-700 mb-3">
+              Three-phase windings join at a common neutral point.
+              Line-to-line voltage is &radic;3 times the line-to-neutral
+              voltage. Single-phase loads connect line-to-neutral; three-
+              phase motors connect line-to-line.
+            </p>
+            <div className="bg-purple-50 rounded p-4 font-mono text-sm space-y-1">
+              <div>Common North-American wye services:</div>
+              <div>  120 / 208 V wye  →  L-N = 120 V, L-L = 208 V (light commercial)</div>
+              <div>  277 / 480 V wye →  L-N = 277 V, L-L = 480 V (industrial; 277 V is standard fluorescent ballast voltage)</div>
+              <div>  347 / 600 V wye →  Canadian commercial</div>
+              <div></div>
+              <div>Single-phase load on wye: I_line = P / (V_LN &times; PF)</div>
+              <div>Three-phase load on wye: I_line = P / (&radic;3 &times; V_LL &times; PF)</div>
+              <div></div>
+              <div>Phase relation: each line is 120&deg; out of phase from the next</div>
+              <div>Sum of three balanced phase currents at neutral = 0 (no neutral current!)</div>
+            </div>
+            <p className="text-sm text-slate-700 mt-3">
+              <strong>Key practical fact:</strong> a balanced wye system
+              draws zero current in the neutral. This is why feeder neutrals
+              can be downsized in NEC 220.61 (&ldquo;reduced neutral&rdquo;
+              allowance) — the neutral only carries unbalanced single-phase
+              load. With heavy harmonic loads (LED dimmers, computer power
+              supplies, VFDs), the neutral can paradoxically carry MORE than
+              line current due to triplen harmonics adding rather than
+              canceling — which is why NEC 220.61(C) prohibits reducing the
+              neutral for non-linear loads.
+            </p>
+          </div>
+
+          {/* Delta configuration */}
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-purple-200">
+            <h3 className="text-xl font-bold text-purple-900 mb-3">Delta (&Delta;) configuration — older / industrial</h3>
+            <p className="text-sm text-slate-700 mb-3">
+              Three windings connect end-to-end forming a triangle. Line-to-
+              line voltage equals winding voltage (no &radic;3 multiplier).
+              No inherent neutral; some delta systems are grounded at one
+              corner (&ldquo;corner-grounded delta&rdquo;) or center-tapped on
+              one winding (&ldquo;high-leg delta&rdquo;).
+            </p>
+            <div className="bg-purple-50 rounded p-4 font-mono text-sm space-y-1">
+              <div>Common delta services:</div>
+              <div>  240 V delta (3-wire) →  no neutral, all loads L-L (older industrial)</div>
+              <div>  240 / 120 V high-leg delta (4-wire) →  one winding center-tapped</div>
+              <div>     L1-N = 120 V, L2-N = 120 V, <strong>L3-N = 208 V (the &ldquo;high leg&rdquo; or &ldquo;wild leg&rdquo;)</strong></div>
+              <div>     Per NEC 110.15, the high leg must be marked orange or 408 V</div>
+              <div>  480 V delta — industrial, no neutral, all motor loads</div>
+              <div></div>
+              <div>Phase / line relations in delta:</div>
+              <div>  V_phase = V_line</div>
+              <div>  I_phase = I_line / &radic;3</div>
+              <div>  Same total power formula: P = &radic;3 &times; V_LL &times; I_line &times; PF</div>
+            </div>
+            <p className="text-sm text-slate-700 mt-3">
+              <strong>The high-leg trap:</strong> on a 240 / 120 V high-leg
+              delta, never connect a 120 V single-phase load to L3 — you'll
+              put 208 V on a device rated 120 V and let the magic smoke out
+              instantly. Panel directories must clearly identify which slots
+              feed the high leg; NEC 110.15 also requires the high-leg
+              conductor to be marked orange (or some other distinguishing
+              color) for the entire run.
+            </p>
+          </div>
+
+          {/* Worked example: motor on wye vs delta */}
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-purple-200">
+            <h3 className="text-xl font-bold text-purple-900 mb-3">Worked example — same 50 HP motor, single-phase 240 V vs three-phase 480 V</h3>
+            <p className="text-sm text-slate-700 mb-3">
+              <strong>Scenario:</strong> a 50 HP irrigation pump can be ordered
+              as either single-phase 240 V or three-phase 480 V. The choice
+              dramatically changes the wire size, conduit, and breaker.
+            </p>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-purple-50 rounded p-4">
+                <div className="font-bold text-purple-900 mb-2">Single-phase 240 V (if even available)</div>
+                <div className="font-mono text-sm space-y-1">
+                  <div>P = 50 HP &times; 746 = 37.3 kW</div>
+                  <div>I = 37,300 / (240 &times; 0.85 PF &times; 0.91 eff)</div>
+                  <div>I = 37,300 / 185.8 = <strong>200.7 A</strong></div>
+                  <div>1.25 &times; 200.7 = 251 A circuit</div>
+                  <div>Wire: 250 kcmil Cu @ 75&deg;C (255 A)</div>
+                  <div>Conduit: 2&Prime; PVC sch 80</div>
+                  <div>Breaker: 250 A frame</div>
+                </div>
+              </div>
+              <div className="bg-purple-50 rounded p-4">
+                <div className="font-bold text-purple-900 mb-2">Three-phase 480 V</div>
+                <div className="font-mono text-sm space-y-1">
+                  <div>NEC 430.250 FLC for 50 HP @ 460 V = <strong>65 A</strong></div>
+                  <div>1.25 &times; 65 = 81 A circuit</div>
+                  <div>Wire: 4 AWG Cu @ 75&deg;C (85 A)</div>
+                  <div>Conduit: 1&frac14;&Prime; EMT</div>
+                  <div>Breaker: 250 % &times; 65 = 162.5 → 175 A</div>
+                </div>
+              </div>
+            </div>
+            <p className="text-sm text-slate-700 mt-3">
+              <strong>Cost delta:</strong> the three-phase install is
+              roughly <strong>1/3 the wire diameter, 1/2 the conduit size,
+              and 70 % less copper cost</strong> for the same shaft work.
+              For loads above ~10 HP, three-phase is almost always cheaper
+              to install AND operate (motors are simpler, more efficient,
+              and longer-lasting). The 50 HP single-phase motor likely
+              doesn&rsquo;t exist commercially above 25 HP because the
+              starting current would trip a residential service.
+            </p>
+          </div>
+
+          {/* Phase converters and rotary phase converters */}
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-purple-200">
+            <h3 className="text-xl font-bold text-purple-900 mb-3">Getting three-phase where the utility only has single-phase</h3>
+            <p className="text-sm text-slate-700 mb-3">
+              Rural shops, woodworking businesses, and small machine shops
+              frequently buy three-phase equipment off the surplus market
+              but only have a single-phase utility service. Three options:
+            </p>
+            <div className="space-y-3">
+              <div className="bg-purple-50 rounded p-4">
+                <div className="font-bold text-purple-900">Static phase converter — cheapest, lossiest</div>
+                <p className="text-sm text-slate-700">
+                  $200&ndash;$500 unit using start capacitors to bootstrap a
+                  three-phase motor. Output is unbalanced; motor runs at
+                  about 70 % of nameplate horsepower. Suitable for a single
+                  motor that doesn&rsquo;t start under load. Not for VFDs
+                  or sensitive electronics.
+                </p>
+              </div>
+              <div className="bg-purple-50 rounded p-4">
+                <div className="font-bold text-purple-900">Rotary phase converter — middle ground</div>
+                <p className="text-sm text-slate-700">
+                  $1,000&ndash;$5,000. An idler motor generates the third
+                  phase mechanically. Output is closer to balanced; can run
+                  multiple motors simultaneously. Idler must be sized 1.5
+                  &times; the largest single motor it will start. Wastes
+                  ~10 % of input power as idler losses.
+                </p>
+              </div>
+              <div className="bg-purple-50 rounded p-4">
+                <div className="font-bold text-purple-900">VFD (variable frequency drive) — modern best-practice</div>
+                <p className="text-sm text-slate-700">
+                  $400&ndash;$3,000 per motor. Takes single-phase 240 V in,
+                  outputs three-phase variable-frequency to one motor. Adds
+                  speed control as a bonus. Most efficient (~98 %), but
+                  one VFD per motor — can&rsquo;t run multiple motors off
+                  one drive. Requires line-reactor and dV/dt filter on long
+                  motor leads to protect winding insulation.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Cost-per-kVA comparison */}
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-purple-200">
+            <h3 className="text-xl font-bold text-purple-900 mb-3">Cost-per-kVA — the real reason three-phase wins above 25 kW</h3>
+            <p className="text-sm text-slate-700 mb-3">
+              For the same total power, three-phase needs less conductor
+              copper than single-phase. Quick rule: at 480 V three-phase
+              vs 240 V single-phase, copper cost drops by roughly 70 %.
+              Detailed math:
+            </p>
+            <div className="bg-purple-50 rounded p-4 font-mono text-sm space-y-1">
+              <div>50 kVA load:</div>
+              <div>  240 V 1&phi;: I = 50,000 / 240 = 208 A → 4/0 Cu (260 A) → 0.609 lb/ft &times; 100 ft &times; 2 wires = 122 lb</div>
+              <div>  480 V 3&phi;: I = 50,000 / (1.732 &times; 480) = 60 A → 6 AWG Cu (75 A) → 0.080 lb/ft &times; 100 ft &times; 3 wires = 24 lb</div>
+              <div>  Copper savings: 122 → 24 lb = <strong>80 % less copper</strong></div>
+              <div>  Conduit savings: 2&Prime; → 1&Prime; = ~50 % material cost</div>
+              <div>  Voltage drop at 100 ft, 50 kVA load:</div>
+              <div>     240 V 1&phi;: 4/0 Cu, 208 A → VD = (2 &times; 100 &times; 208 &times; 0.0608) / 1000 = 2.5 V = 1.05 %</div>
+              <div>     480 V 3&phi;: 6 AWG Cu, 60 A → VD = (1.732 &times; 100 &times; 60 &times; 0.491) / 1000 = 5.1 V = 1.06 %</div>
+              <div>     Same voltage drop, dramatically less copper</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <ArticleSchema article={articleData} />
     </div>
   );

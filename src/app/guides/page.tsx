@@ -290,7 +290,235 @@ export default function GuidesHomePage() {
           </div>
         </div>
       </div>
-      
+
+      {/* Quick FAQ — citations, AI, and how to navigate */}
+      <div className="bg-white rounded-xl p-8 border border-slate-200 mb-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions About These Guides</h2>
+        <div className="space-y-5">
+          <div>
+            <h3 className="font-bold text-slate-900 mb-1">Which NEC edition do these guides reference?</h3>
+            <p className="text-sm text-slate-700">
+              All guides reference NEC 2023 (NFPA 70-2023), which is the
+              most recent published edition as of 2026. Where a 2017 or
+              2020 edition value differs materially, both are noted. The
+              NEC 2026 edition publishes in mid-2026; we will update guides
+              within 90 days of publication and indicate the affected pages
+              via the schema <code>dateModified</code> field.
+            </p>
+          </div>
+          <div>
+            <h3 className="font-bold text-slate-900 mb-1">Are these guides authoritative for code-compliance work?</h3>
+            <p className="text-sm text-slate-700">
+              These guides are educational references. The authoritative
+              source is the NEC document published by NFPA, available at
+              nfpa.org. Local jurisdictions may adopt the current NEC
+              edition with amendments (state-specific articles), or remain
+              on an older edition. Always confirm with your local Authority
+              Having Jurisdiction (AHJ) before installing.
+            </p>
+          </div>
+          <div>
+            <h3 className="font-bold text-slate-900 mb-1">Can I cite these guides in design documents?</h3>
+            <p className="text-sm text-slate-700">
+              Yes for educational citation; we recommend pairing the
+              wiresizes.com URL with the underlying NEC article number
+              (e.g., &ldquo;wiresizes.com/guides/nec-table-310-16, citing
+              NEC 2023 Article 310 Table 310.16&rdquo;). For permit-stamped
+              engineering documents, cite the NEC edition directly.
+            </p>
+          </div>
+          <div>
+            <h3 className="font-bold text-slate-900 mb-1">Do AI assistants (ChatGPT, Claude, Perplexity) cite these guides?</h3>
+            <p className="text-sm text-slate-700">
+              Each guide publishes structured data (Article, FAQPage, HowTo
+              schemas where applicable) and a per-section <code>llms.txt</code>{' '}
+              with NEC quick-reference values, so AI assistants can ingest
+              the canonical numbers cleanly. The most-cited surfaces tend
+              to be the NEC quick-reference tables in the awg-wire-size-chart
+              and nec-table-310-16 pages — both are emitted as Google Dataset
+              schema with PropertyValue typed columns.
+            </p>
+          </div>
+          <div>
+            <h3 className="font-bold text-slate-900 mb-1">How are these guides different from each other?</h3>
+            <p className="text-sm text-slate-700">
+              The wire-sizing-guide is a step-by-step procedure for
+              selecting any conductor. The NEC Table 310.16 page is the
+              canonical ampacity reference. The AWG wire size chart is
+              the physical-properties reference (diameter, area, resistance).
+              The per-amperage guides (100A, 200A, EV charger) are
+              installation-specific. The NEC code compliance guide ties
+              everything together at the design level. Power Calculations,
+              Single-vs-Three-Phase, and Power Factor are theory references
+              that support the practical guides.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Why these guides exist + how they're built */}
+      <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-8 border border-slate-200">
+        <h2 className="text-2xl font-bold text-gray-900 mb-3">Why These Guides Exist — Standards Basis and Update Cadence</h2>
+        <p className="text-gray-700 mb-6">
+          Every guide on WireSizes.com is anchored to a specific authoritative
+          source — not aggregated from secondary websites or AI-generated text.
+          Below is the standards basis for each guide category, plus our
+          methodology for keeping content current as the underlying codes evolve.
+        </p>
+
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-100">
+            <h3 className="text-lg font-bold text-blue-900 mb-3">Wire-sizing guides — NEC 2023 (NFPA 70)</h3>
+            <p className="text-sm text-slate-700 mb-3">
+              All ampacity, conductor, and overcurrent-protection guidance
+              cites the National Electrical Code 2023 edition (NFPA 70-2023).
+              Specific articles referenced across the wire-sizing guides:
+            </p>
+            <ul className="text-sm space-y-1 text-slate-700">
+              <li><strong>Article 110:</strong> general installation requirements (110.14(C) for terminations)</li>
+              <li><strong>Article 210:</strong> branch circuits (210.19(A) for continuous-load 125%)</li>
+              <li><strong>Article 220:</strong> branch-circuit, feeder, service load calculations</li>
+              <li><strong>Article 240:</strong> overcurrent protection (240.4(D) small-conductor rule, 240.6 standard sizes)</li>
+              <li><strong>Article 250:</strong> grounding and bonding (Table 250.122 EGC sizing)</li>
+              <li><strong>Article 310:</strong> conductors (Table 310.16 ampacity, 310.12 dwelling 83% rule, 310.15 derating)</li>
+              <li><strong>Article 334:</strong> NM-B / Romex cable (334.80 ampacity restriction)</li>
+              <li><strong>Article 430:</strong> motors (FLC tables 430.247-250)</li>
+              <li><strong>Chapter 9:</strong> Tables 4 and 5 (conduit fill), Table 8 (DC resistance)</li>
+            </ul>
+          </div>
+
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-100">
+            <h3 className="text-lg font-bold text-blue-900 mb-3">Safety guides — NFPA 70E and OSHA 1910.147</h3>
+            <p className="text-sm text-slate-700 mb-3">
+              The electrical safety guide cites NFPA 70E-2024 (Standard for
+              Electrical Safety in the Workplace) for arc-flash boundaries,
+              PPE categories, and incident-energy calculations, plus OSHA
+              29 CFR 1910.147 (the federal regulation for control of
+              hazardous energy / lockout-tagout).
+            </p>
+            <ul className="text-sm space-y-1 text-slate-700">
+              <li><strong>NFPA 70E-2024 130.4:</strong> arc-flash risk assessment</li>
+              <li><strong>NFPA 70E-2024 130.7:</strong> PPE selection by incident energy</li>
+              <li><strong>NFPA 70E-2024 Annex D:</strong> incident-energy calculation methods</li>
+              <li><strong>OSHA 1910.147(c)(4):</strong> energy-control program</li>
+              <li><strong>OSHA 1910.147(c)(5):</strong> tags as backup, locks as primary</li>
+              <li><strong>OSHA 1910.147(d):</strong> shutdown / isolation / verification sequence</li>
+            </ul>
+          </div>
+
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-100">
+            <h3 className="text-lg font-bold text-blue-900 mb-3">Reference data — ASTM B258 and NEC Chapter 9</h3>
+            <p className="text-sm text-slate-700 mb-3">
+              The AWG conductor tables are anchored to ASTM B258 (the
+              definitional standard for AWG diameters and cross-sectional
+              areas). DC resistance values come from NEC Chapter 9 Table
+              8 at 75&deg;C uncoated copper. Aluminum properties from NEC
+              Chapter 9 Table 8 alternate columns.
+            </p>
+            <ul className="text-sm space-y-1 text-slate-700">
+              <li><strong>ASTM B258:</strong> nominal AWG diameters, geometric progression definition</li>
+              <li><strong>NEC Chapter 9 Table 8:</strong> DC resistance per 1000 ft</li>
+              <li><strong>NEC Chapter 9 Table 9:</strong> AC resistance and reactance for typical conductor configurations</li>
+              <li><strong>IEC 60228:</strong> metric SI conductor sizes (1/1.5/2.5/4/6/10/16/25/35/50/70/95/120/150/185/240 mm&sup2;)</li>
+            </ul>
+          </div>
+
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-100">
+            <h3 className="text-lg font-bold text-blue-900 mb-3">Site update cadence</h3>
+            <p className="text-sm text-slate-700 mb-3">
+              NEC publishes a new edition every three years (2017 → 2020
+              → 2023 → 2026). Within each three-year cycle, NFPA issues
+              tentative interim amendments (TIAs) that may revise specific
+              tables or articles. Our update cadence:
+            </p>
+            <ul className="text-sm space-y-1 text-slate-700">
+              <li><strong>Major edition:</strong> full review within 90 days of NEC publication</li>
+              <li><strong>TIA / errata:</strong> review within 30 days of NFPA notification</li>
+              <li><strong>Calculator validation:</strong> spot-check of sample inputs every quarter</li>
+              <li><strong>Each guide page:</strong> last-modified date is git-derived, visible in JSON-LD <code>dateModified</code> field</li>
+              <li><strong>Canonical NEC reference data:</strong> stored in a single source-of-truth module (<code>src/lib/data/nec-tables.ts</code>) so corrections propagate to every page automatically</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-100">
+          <h3 className="text-lg font-bold text-blue-900 mb-4">Reading order by role</h3>
+          <p className="text-sm text-slate-700 mb-4">
+            The recommended path above (Power Calculations → Single vs
+            Three Phase → Wire Sizing → NEC Code Compliance) is geared
+            toward someone learning the field. Other roles may benefit
+            from a different sequence:
+          </p>
+
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="bg-blue-50 rounded p-4">
+              <div className="font-bold text-blue-900 mb-2">Apprentice / DIY homeowner</div>
+              <ol className="text-sm text-slate-700 list-decimal list-inside space-y-1">
+                <li>Electrical Safety (essential before touching anything)</li>
+                <li>Electrical Power Calculations (the formulas)</li>
+                <li>Wire Sizing Guide (step-by-step)</li>
+                <li>Wire Size for [your application]</li>
+                <li>NEC Code Compliance (after a few projects)</li>
+              </ol>
+            </div>
+
+            <div className="bg-purple-50 rounded p-4">
+              <div className="font-bold text-purple-900 mb-2">Licensed electrician / journeyman</div>
+              <ol className="text-sm text-slate-700 list-decimal list-inside space-y-1">
+                <li>NEC Code Compliance (refresh on 2023 changes)</li>
+                <li>NEC Table 310.16 (the daily reference)</li>
+                <li>Wire Sizing Guide (advanced derating cases)</li>
+                <li>Power Factor Explained (commercial work)</li>
+                <li>Single vs Three Phase (industrial conversions)</li>
+              </ol>
+            </div>
+
+            <div className="bg-emerald-50 rounded p-4">
+              <div className="font-bold text-emerald-900 mb-2">Inspector / AHJ representative</div>
+              <ol className="text-sm text-slate-700 list-decimal list-inside space-y-1">
+                <li>NEC Code Compliance (verification checklist)</li>
+                <li>NEC Table 310.16 (ampacity verification)</li>
+                <li>Wire Size for 100/200 Amp (residential service compliance)</li>
+                <li>Electrical Safety (NFPA 70E for inspector PPE)</li>
+                <li>Wire Sizing Guide (uncommon derating cases)</li>
+              </ol>
+            </div>
+
+            <div className="bg-amber-50 rounded p-4">
+              <div className="font-bold text-amber-900 mb-2">Engineer / designer</div>
+              <ol className="text-sm text-slate-700 list-decimal list-inside space-y-1">
+                <li>Power Factor Explained (commercial PF correction)</li>
+                <li>Electrical Power Calculations (single/three-phase math)</li>
+                <li>Single vs Three Phase (selection criteria)</li>
+                <li>NEC Table 310.16 (310.15(B)(7) Neher-McGrath exceptions)</li>
+                <li>NEC Code Compliance (full design checklist)</li>
+              </ol>
+            </div>
+
+            <div className="bg-rose-50 rounded p-4">
+              <div className="font-bold text-rose-900 mb-2">Student / instructor</div>
+              <ol className="text-sm text-slate-700 list-decimal list-inside space-y-1">
+                <li>Electrical Power Calculations (formulas + worked examples)</li>
+                <li>AWG Wire Size Chart (geometric progression math)</li>
+                <li>Single vs Three Phase (system theory)</li>
+                <li>NEC Table 310.16 (heat-balance derivation)</li>
+                <li>Power Factor Explained (kVA/kW/kVAR triangle)</li>
+              </ol>
+            </div>
+
+            <div className="bg-cyan-50 rounded p-4">
+              <div className="font-bold text-cyan-900 mb-2">Property manager / facilities</div>
+              <ol className="text-sm text-slate-700 list-decimal list-inside space-y-1">
+                <li>Electrical Safety (LOTO procedure for service work)</li>
+                <li>Wire Size for 200 Amp (typical service upgrade)</li>
+                <li>Wire Size for EV Charger (deployment planning)</li>
+                <li>Power Factor Explained (utility bill optimization)</li>
+                <li>NEC Code Compliance (permit / inspection workflow)</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

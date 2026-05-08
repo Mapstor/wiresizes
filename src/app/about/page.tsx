@@ -455,6 +455,125 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Methodology — how the calculators are built */}
+      <section className="py-16 bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">How Our Calculators Are Built — Methodology and Validation</h2>
+            <p className="text-gray-700 mb-8">
+              Every calculator on WireSizes.com runs entirely client-side
+              in your browser. No calculation values are transmitted to our
+              servers; no calculation results are stored. Below is the
+              technical and editorial methodology behind the tools.
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <h3 className="text-xl font-bold text-blue-900 mb-3">Data sources</h3>
+                <p className="text-sm text-slate-700 mb-3">
+                  All NEC-derived values are sourced from primary code
+                  documents, never from secondary websites or AI-generated
+                  text. Specific data lineage:
+                </p>
+                <ul className="text-sm space-y-2 text-slate-700">
+                  <li><strong>NEC 2023 (NFPA 70):</strong> Table 310.16 ampacities, Table 250.122 grounding, Table 220.55 range demand, Article 430 motor FLC, Article 625 EV charging.</li>
+                  <li><strong>NEC Chapter 9:</strong> Table 8 DC resistance per 1000 ft at 75&deg;C uncoated copper / aluminum.</li>
+                  <li><strong>ASTM B258:</strong> nominal AWG diameters and cross-sectional areas.</li>
+                  <li><strong>NFPA 70E-2024:</strong> arc-flash boundary, PPE category determination.</li>
+                  <li><strong>OSHA 29 CFR 1910.147:</strong> lockout/tagout procedure.</li>
+                  <li><strong>ASHRAE / equipment manufacturer datasheets:</strong> typical motor power factors, A/C MCA/MOCP nameplates.</li>
+                </ul>
+              </div>
+
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <h3 className="text-xl font-bold text-blue-900 mb-3">Calculator architecture</h3>
+                <p className="text-sm text-slate-700 mb-3">
+                  Each calculator is a TypeScript-typed React component
+                  fed by a single canonical NEC reference module
+                  (<code>src/lib/data/nec-tables.ts</code>). When the
+                  underlying NEC data updates, every calculator and reference
+                  page picks up the new value on the next deploy — there
+                  are no out-of-sync inline tables.
+                </p>
+                <ul className="text-sm space-y-2 text-slate-700">
+                  <li><strong>Static prerender:</strong> all 53 pages are built at deploy time; no per-request server compute.</li>
+                  <li><strong>Client-side calculation:</strong> formulas execute in your browser, not on our servers.</li>
+                  <li><strong>No PII:</strong> we don&rsquo;t collect or store the values you enter into calculators.</li>
+                  <li><strong>Version-pinned data:</strong> NEC values committed to a single source-of-truth module under git history; older values are retrievable via git log.</li>
+                  <li><strong>Type-safe:</strong> AmpacityRow, GroundingRow, TempCorrectionRow types prevent shape drift.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 shadow-sm mb-8">
+              <h3 className="text-xl font-bold text-blue-900 mb-3">Validation — how we verify each calculator</h3>
+              <p className="text-sm text-slate-700 mb-4">
+                Before a calculator ships, it&rsquo;s validated against three
+                independent sources:
+              </p>
+              <ol className="text-sm space-y-2 text-slate-700 list-decimal list-inside">
+                <li><strong>NEC code text directly</strong> — every coded value (ampacity, EGC size, demand factor, FLC) is cross-checked against the printed NEC 2023 article cited in the calculator&rsquo;s help text.</li>
+                <li><strong>Worked-example inversion</strong> — given a known good answer (e.g., from Mike Holt&rsquo;s NEC instructor materials or a published utility design guide), we run the calculator backward and confirm it reproduces the reference output within rounding.</li>
+                <li><strong>Cross-page consistency</strong> — values that appear on multiple pages (e.g., 12 AWG copper at 75&deg;C = 25 A) are scripted-checked across rendered HTML so a typo or off-by-one drift on one page is caught automatically before deploy.</li>
+              </ol>
+              <p className="text-sm text-slate-700 mt-4">
+                This last check is unique to our build — every page&rsquo;s
+                NEC table values flow from a single canonical module, so
+                the cross-page consistency check is built-in. It caught
+                two real factual errors during development: an off-by-one
+                column shift in an early version of the wire-sizing-guide
+                AWG table (claiming 14 AWG @ 60&deg;C = 20 A when NEC says
+                15 A), and an aluminum 8 AWG @ 60&deg;C value of 30 A
+                where NEC says 35 A. Both fixes propagated automatically
+                to every page that referenced them.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 shadow-sm mb-8">
+              <h3 className="text-xl font-bold text-blue-900 mb-3">Correction policy — when we get something wrong</h3>
+              <p className="text-sm text-slate-700 mb-3">
+                Despite cross-checks, errors occasionally make it to
+                production. Our policy:
+              </p>
+              <ul className="text-sm space-y-2 text-slate-700">
+                <li><strong>Reporting:</strong> email <code>support@wiresizes.com</code> with the page URL, the field showing the wrong value, and the NEC article that contradicts it.</li>
+                <li><strong>Triage:</strong> safety-affecting errors (ampacity understated, EGC undersized) are fixed within 24 hours and announced via the page&rsquo;s <code>dateModified</code> field.</li>
+                <li><strong>Non-safety editorial corrections</strong> (cost estimates, typical equipment ratings) are batched into the next monthly deploy.</li>
+                <li><strong>Backward compatibility:</strong> we never silently change a calculator&rsquo;s output for the same inputs without noting the change in the page commit history (visible via git blame on the source file).</li>
+                <li><strong>Audit trail:</strong> the canonical NEC reference module is in git; every value has a discoverable commit date and rationale.</li>
+              </ul>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 shadow-sm mb-8">
+              <h3 className="text-xl font-bold text-blue-900 mb-3">Roadmap — what&rsquo;s coming next</h3>
+              <p className="text-sm text-slate-700 mb-3">
+                Calculator and content additions on the near-term roadmap:
+              </p>
+              <ul className="text-sm space-y-2 text-slate-700">
+                <li><strong>NEC 2026 readiness:</strong> the next NEC edition publishes mid-2026; we will track the public input phase via NFPA&rsquo;s document workflow and ship updated calculators within 90 days of publication.</li>
+                <li><strong>Per-amperage guides:</strong> dedicated &ldquo;wire size for [30, 40, 50, 60, 90, 125, 150, 400] amp&rdquo; pages mirroring the existing 100A and 200A guides. Each ~2,000 words with NEC-correct ampacity and EGC values.</li>
+                <li><strong>Reverse-lookup guides:</strong> &ldquo;[14, 12, 10, 8, 6, 4, 2, 1/0, 2/0, 4/0] AWG ampacity&rdquo; pages — what each conductor can actually carry at 60/75/90&deg;C.</li>
+                <li><strong>Conductor-type pages:</strong> THHN vs Romex (NM-B), THWN vs THWN-2 vs RHW, USE-2 direct-burial, TC-ER tray cable — selection criteria and code restrictions.</li>
+                <li><strong>Color-code reference:</strong> the canonical wire color chart for ungrounded / grounded / EGC across NEC 200, 210, 250 — a top citation target for AI assistants.</li>
+                <li><strong>Specialty calculators:</strong> water heater sizing, induction cooktop, mini-split heat pump, generator transfer switch sizing.</li>
+                <li><strong>Performance:</strong> we are collecting Core Web Vitals data via Vercel Speed Insights and will optimize the slowest calculator pages once we have a stable LCP baseline (3+ months of real-user traffic).</li>
+                <li><strong>API access:</strong> a read-only JSON endpoint for NEC table values and calculator outputs, intended for educational and integration use.</li>
+              </ul>
+            </div>
+
+            <div className="bg-amber-50 rounded-lg p-6 border border-amber-200">
+              <h3 className="text-xl font-bold text-amber-900 mb-3">What we won&rsquo;t do</h3>
+              <ul className="text-sm space-y-2 text-slate-700">
+                <li><strong>No paywalled content.</strong> All NEC reference data and calculators are free to use and free to cite. We don&rsquo;t lock NEC tables behind a subscription.</li>
+                <li><strong>No AI-generated NEC text.</strong> Every NEC value is sourced from the published code, not from a language model. AI is used for content scaffolding, never for code compliance facts.</li>
+                <li><strong>No fake user counts.</strong> Marketing claims (&ldquo;trusted by X&rdquo;) on this site are removed in favor of citing actual data sources and showing version-pinned NEC references.</li>
+                <li><strong>No selling installation services.</strong> We&rsquo;re a calculator and reference site, not an electrical contractor referral network. Find a licensed local electrician through your state licensing board.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
     </>
   );

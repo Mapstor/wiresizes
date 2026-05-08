@@ -470,6 +470,180 @@ export default function ElectricalPowerCalculationsGuide() {
         </div>
       </div>
 
+      {/* Worked Examples — full numerical walkthroughs */}
+      <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-8 border border-slate-200 mb-12">
+        <h2 className="text-3xl font-bold text-gray-900 mb-2">Worked Examples — Power Calculations With Real Numbers</h2>
+        <p className="text-gray-600 mb-8">
+          Every formula below is applied to a concrete circuit. All values are
+          NEC-accurate at standard reference conditions (75&deg;C terminations,
+          30&deg;C ambient, NEC 2023). Memorize the pattern, plug in your
+          numbers.
+        </p>
+
+        <div className="space-y-8">
+          {/* Example 1: Single-phase resistive load */}
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200">
+            <h3 className="text-xl font-bold text-blue-900 mb-3">Example 1 — Resistive load on 120 V single-phase</h3>
+            <p className="text-sm text-slate-600 mb-3"><strong>Scenario:</strong> A 1,500 W bathroom space heater on a 120 V branch circuit.</p>
+            <div className="bg-blue-50 rounded p-4 font-mono text-sm space-y-1">
+              <div>P = V &times; I        →   I = P / V</div>
+              <div>I = 1500 W / 120 V = 12.5 A</div>
+              <div>Continuous load? Yes (heaters run 3+ hr) → 1.25 &times; 12.5 = 15.6 A circuit minimum</div>
+              <div>NEC 240.6 next standard breaker: 20 A</div>
+              <div>NEC 310.16 conductor for 20 A @ 75&deg;C Cu = 12 AWG (capped at 20 A by NEC 240.4(D))</div>
+            </div>
+            <p className="text-sm text-slate-600 mt-3">
+              <strong>Why it matters:</strong> A 15 A breaker would trip during
+              normal operation because 12.5 A is 83 % of 15 A and the heater
+              runs continuously. Sizing to 125 % of the load (NEC 210.19(A))
+              prevents nuisance trips and overheats the conductor by no more
+              than the insulation rating allows.
+            </p>
+          </div>
+
+          {/* Example 2: Single-phase inductive load with PF */}
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200">
+            <h3 className="text-xl font-bold text-blue-900 mb-3">Example 2 — Inductive load with power factor (240 V single-phase)</h3>
+            <p className="text-sm text-slate-600 mb-3">
+              <strong>Scenario:</strong> A 5-ton residential central A/C
+              compressor: nameplate 7.2 kW (real power), power factor 0.85
+              (typical for an unloaded scroll compressor). 240 V single-phase.
+            </p>
+            <div className="bg-blue-50 rounded p-4 font-mono text-sm space-y-1">
+              <div>P (real) = V &times; I &times; PF       →   I = P / (V &times; PF)</div>
+              <div>I = 7200 W / (240 V &times; 0.85) = 35.3 A</div>
+              <div>Apparent power: S = V &times; I = 240 &times; 35.3 = 8,470 VA = 8.47 kVA</div>
+              <div>Reactive power: Q = &radic;(S&sup2; &minus; P&sup2;) = &radic;(8.47&sup2; &minus; 7.2&sup2;) = 4.46 kVAR</div>
+              <div>NEC 440.32: branch-circuit conductors at 125 % of compressor FLA = 1.25 &times; 35.3 = 44.1 A</div>
+              <div>NEC 310.16 conductor: 8 AWG copper @ 75&deg;C (50 A ampacity) — meets 44.1 A required</div>
+              <div>NEC 240.6 next standard breaker: 50 A</div>
+            </div>
+            <p className="text-sm text-slate-600 mt-3">
+              <strong>Power-factor takeaway:</strong> the same compressor at
+              PF 1.0 would draw only 30 A. The 0.85 PF forces 5.3 A of reactive
+              current the conductor must carry but no real work is done — a
+              full <strong>17 % current penalty</strong>. This is why utilities
+              charge commercial customers a power-factor-correction fee when
+              system PF drops below 0.95.
+            </p>
+          </div>
+
+          {/* Example 3: Three-phase motor */}
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200">
+            <h3 className="text-xl font-bold text-blue-900 mb-3">Example 3 — Three-phase motor (480 V industrial)</h3>
+            <p className="text-sm text-slate-600 mb-3">
+              <strong>Scenario:</strong> A 25 HP three-phase induction motor
+              on a 480 V, 3&phi; system. Service-factor 1.15, efficiency 92 %,
+              power factor 0.88 at full load.
+            </p>
+            <div className="bg-blue-50 rounded p-4 font-mono text-sm space-y-1">
+              <div>NEC Table 430.250 FLC for 25 HP at 460 V = 34 A (use this, not nameplate, per NEC 430.6(A))</div>
+              <div>P (output) = 25 HP &times; 746 W/HP = 18,650 W mechanical</div>
+              <div>P (input) = 18,650 / 0.92 = 20,272 W electrical real power</div>
+              <div>I (theory) = P / (&radic;3 &times; V &times; PF) = 20,272 / (1.732 &times; 480 &times; 0.88) = 27.7 A</div>
+              <div>NEC FLC value (34 A) is conservative vs theoretical 27.7 A; <strong>always use NEC table</strong></div>
+              <div>NEC 430.22 conductor: 1.25 &times; 34 = 42.5 A → 8 AWG Cu @ 75&deg;C (50 A) ✓</div>
+              <div>NEC 430.52 short-circuit (inverse-time CB): 250 % &times; 34 = 85 A → 90 A breaker</div>
+              <div>NEC 430.32 overload: 1.15 &times; 34 = 39 A overload heater</div>
+            </div>
+            <p className="text-sm text-slate-600 mt-3">
+              <strong>Why three protection elements:</strong> overload (motor
+              thermal protection at ~115 % of FLC) is separate from short-
+              circuit/ground-fault (the breaker, sized large enough to ride
+              through the 5-7&times; inrush current at start). NEC 430 is the
+              one place in the Code where the overcurrent device is allowed
+              to be larger than the conductor ampacity — because the overload
+              relay is the conductor&rsquo;s real protection.
+            </p>
+          </div>
+
+          {/* Example 4: Power factor correction */}
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200">
+            <h3 className="text-xl font-bold text-blue-900 mb-3">Example 4 — Capacitor bank for PF correction</h3>
+            <p className="text-sm text-slate-600 mb-3">
+              <strong>Scenario:</strong> A small machine shop draws 80 kW at
+              PF 0.78 lagging on 480 V three-phase. The utility imposes a
+              0.95 PF threshold or charges a $0.85/kVAR-month penalty.
+              Compute the kVAR of capacitors needed to correct PF to 0.95
+              and the resulting current reduction.
+            </p>
+            <div className="bg-blue-50 rounded p-4 font-mono text-sm space-y-1">
+              <div>Existing reactive power: Q1 = P &times; tan(arccos 0.78) = 80 &times; 0.802 = 64.2 kVAR</div>
+              <div>Target reactive power: Q2 = P &times; tan(arccos 0.95) = 80 &times; 0.329 = 26.3 kVAR</div>
+              <div>Capacitor bank size: Q1 &minus; Q2 = 64.2 &minus; 26.3 = <strong>37.9 kVAR</strong> (round up to 40 kVAR std)</div>
+              <div>Pre-correction current: I = 80,000 / (1.732 &times; 480 &times; 0.78) = 123.4 A</div>
+              <div>Post-correction current: I = 80,000 / (1.732 &times; 480 &times; 0.95) = 101.3 A</div>
+              <div>Conductor relief: <strong>22.1 A reduction</strong> = 18 % less I&sup2;R loss in feeders</div>
+              <div>Annual penalty saved: 38 kVAR &times; $0.85 &times; 12 = <strong>$387 / yr</strong></div>
+              <div>40 kVAR capacitor bank cost: ~$2,500 → payback ~6.5 yr (utility penalty alone, before considering loss savings and conductor upgrade avoidance)</div>
+            </div>
+          </div>
+
+          {/* Example 5: NEC 220.82 dwelling load calc */}
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200">
+            <h3 className="text-xl font-bold text-blue-900 mb-3">Example 5 — NEC 220.82 dwelling-unit load calculation</h3>
+            <p className="text-sm text-slate-600 mb-3">
+              <strong>Scenario:</strong> 2,400 sq ft single-family home,
+              electric range 12 kW, electric water heater 4.5 kW, electric
+              dryer 5 kW, central A/C 5 ton (40 A @ 240 V), 50 A EV charger
+              (continuous). Determine minimum service size per NEC 220.82
+              Standard Method.
+            </p>
+            <div className="bg-blue-50 rounded p-4 font-mono text-sm space-y-1">
+              <div>General lighting (NEC 220.12): 3 VA/sq ft &times; 2,400 = 7,200 VA</div>
+              <div>Two small-appliance branches (220.52): 2 &times; 1,500 VA = 3,000 VA</div>
+              <div>One laundry branch (220.52): 1,500 VA</div>
+              <div>Subtotal: 7,200 + 3,000 + 1,500 = 11,700 VA</div>
+              <div>Demand factor (220.82(B)(2)): first 10 kVA at 100 %, remainder at 35 %</div>
+              <div>= 10,000 + (1,700 &times; 0.35) = 10,595 VA</div>
+              <div>Fixed appliances (water heater 4,500 + dryer 5,000): 9,500 VA at 100 %</div>
+              <div>Range (220.55, Col B for one range &le;12 kW): 8,000 VA at 100 %</div>
+              <div>Largest of A/C vs heat (220.82(C)): A/C 40 A &times; 240 V &times; 1.0 = 9,600 VA</div>
+              <div>EV charger (continuous, 220.82): 50 &times; 240 &times; 1.25 = 15,000 VA</div>
+              <div className="font-bold pt-1 border-t border-blue-200">Total demand: 10,595 + 9,500 + 8,000 + 9,600 + 15,000 = 52,695 VA</div>
+              <div className="font-bold">Minimum service amps: 52,695 / 240 = 219.6 A → <strong>200 A service is INSUFFICIENT</strong></div>
+              <div className="font-bold">Required service: 225 A or 250 A panel</div>
+            </div>
+            <p className="text-sm text-slate-600 mt-3">
+              <strong>Real implication:</strong> a typical 2,400 sq ft home
+              with a 50 A EV charger plus electric range plus electric water
+              heater plus central A/C exceeds 200 A standard service. This
+              is why most NEC 2023-era dwellings adding EV charging need a
+              service upgrade or load-management system (NEC 750.30, &ldquo;EVEMS&rdquo;).
+            </p>
+          </div>
+
+          {/* Example 6: Energy cost */}
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200">
+            <h3 className="text-xl font-bold text-blue-900 mb-3">Example 6 — Annual energy cost of a continuous load</h3>
+            <p className="text-sm text-slate-600 mb-3">
+              <strong>Scenario:</strong> 120 V, 1,200 W refrigerator runs at
+              ~30 % duty cycle (about 7.2 hours equivalent full-load per day).
+              Utility rate $0.16 /kWh. Annual energy cost?
+            </p>
+            <div className="bg-blue-50 rounded p-4 font-mono text-sm space-y-1">
+              <div>Daily energy: 1.2 kW &times; 7.2 hr = 8.64 kWh/day</div>
+              <div>Annual energy: 8.64 &times; 365 = 3,154 kWh/year</div>
+              <div>Annual cost: 3,154 &times; $0.16 = <strong>$504.60 per year</strong></div>
+              <div>If switched to a 600 W ENERGY STAR unit (50 % reduction): saves $252 / yr</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+          <p className="text-sm text-amber-900">
+            <strong>Voltage drop reminder:</strong> All current values above
+            assume the conductor is sized for ampacity only. For runs over
+            ~50 ft on 120 V or ~100 ft on 240 V, also verify voltage drop is
+            &le; 3 % per NEC informational note 210.19. Use the{' '}
+            <Link href="/calculators/voltage-drop-calculator" className="text-blue-700 underline">
+              Voltage Drop Calculator
+            </Link>{' '}
+            for any installation longer than these thresholds.
+          </p>
+        </div>
+      </div>
+
       <ArticleSchema article={articleData} />
     </div>
   );

@@ -615,6 +615,188 @@ export default function AWGWireSizeChartPage() {
         </div>
       </section>
 
+      {/* Standards basis + math behind AWG */}
+      <section className="py-12 bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">The Math Behind AWG — ASTM B258 and the Geometric Progression</h2>
+            <p className="text-gray-600 mb-8">
+              AWG is not arbitrary. The numbers in the table above derive
+              from a specific geometric progression defined by ASTM B258
+              (the Standard Specification for Standard Nominal Diameters
+              and Cross-Sectional Areas of AWG Sizes of Solid Round Wires
+              Used as Electrical Conductors). Understanding the math lets
+              you derive any AWG specification from first principles.
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
+              <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-200">
+                <h3 className="text-lg font-bold text-blue-900 mb-3">The geometric definition</h3>
+                <p className="text-sm text-slate-700 mb-3">
+                  AWG is anchored at two endpoints: 0000 (4/0) AWG = 0.4600&Prime;
+                  diameter, and 36 AWG = 0.0050&Prime; diameter. The 38 sizes
+                  between 4/0 and 36 are spaced in a geometric progression.
+                </p>
+                <div className="bg-blue-50 rounded p-3 font-mono text-xs space-y-1">
+                  <div>Common ratio: r = (0.4600 / 0.0050)<sup>1/39</sup> = 92<sup>1/39</sup> &asymp; 1.1229</div>
+                  <div>Diameter formula: d_n = 0.0050 &times; 92<sup>(36-n)/39</sup> inches</div>
+                  <div>Each step UP in AWG (e.g., 14 → 12) multiplies diameter by 1.1229</div>
+                  <div>Each 6-step jump multiplies diameter by ~2 (a useful approximation)</div>
+                  <div>Each 3-step jump multiplies area by ~2</div>
+                  <div>Each 10-step jump multiplies resistance by ~10</div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-200">
+                <h3 className="text-lg font-bold text-blue-900 mb-3">Above 4/0 — kcmil takes over</h3>
+                <p className="text-sm text-slate-700 mb-3">
+                  AWG runs out at 4/0 (0.4600&Prime;). Larger conductors are
+                  specified by cross-sectional area in kcmil (thousands of
+                  circular mils). 1 circular mil = the area of a circle
+                  with diameter 0.001 inch (1 mil).
+                </p>
+                <div className="bg-blue-50 rounded p-3 font-mono text-xs space-y-1">
+                  <div>Area in cmil = (diameter in mils)&sup2;</div>
+                  <div>1 kcmil = 1,000 cmil = 0.5067 mm&sup2;</div>
+                  <div>Examples:</div>
+                  <div>  4/0 AWG &asymp; 211.6 kcmil (107 mm&sup2;)</div>
+                  <div>  250 kcmil = 250,000 cmil (127 mm&sup2;)</div>
+                  <div>  500 kcmil = 500,000 cmil (253 mm&sup2;)</div>
+                  <div>  Older spec uses MCM (Roman M = 1,000); MCM = kcmil</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Metric / SI cross-reference */}
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">AWG &harr; Metric SI conversion</h3>
+            <p className="text-gray-600 mb-4">
+              Most of the world uses metric SI sizes (mm&sup2;) instead of
+              AWG. Conversion is exact: 1 kcmil = 0.5067 mm&sup2;. The
+              table below pairs each AWG size with the closest commercial
+              metric SI size, the conversion factor, and a note on whether
+              the substitution is safe.
+            </p>
+
+            <div className="bg-white rounded-lg shadow-sm border border-blue-200 overflow-hidden mb-8">
+              <table className="w-full text-sm">
+                <thead className="bg-blue-600 text-white">
+                  <tr>
+                    <th className="px-4 py-3 text-left">AWG</th>
+                    <th className="px-4 py-3 text-center">Exact area (mm&sup2;)</th>
+                    <th className="px-4 py-3 text-center">Closest std SI size</th>
+                    <th className="px-4 py-3 text-center">SI vs AWG</th>
+                    <th className="px-4 py-3 text-left">Substitution note</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  <tr><td className="px-4 py-2 font-mono font-bold">14</td><td className="px-4 py-2 text-center">2.08</td><td className="px-4 py-2 text-center">2.5 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +20%</td><td className="px-4 py-2">2.5 mm&sup2; is fine for 14 AWG circuits; common in EU residential.</td></tr>
+                  <tr><td className="px-4 py-2 font-mono font-bold">12</td><td className="px-4 py-2 text-center">3.31</td><td className="px-4 py-2 text-center">4 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +21%</td><td className="px-4 py-2">4 mm&sup2; is the EU standard for 20 A circuits.</td></tr>
+                  <tr><td className="px-4 py-2 font-mono font-bold">10</td><td className="px-4 py-2 text-center">5.26</td><td className="px-4 py-2 text-center">6 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +14%</td><td className="px-4 py-2">6 mm&sup2; substitutes safely; common for EU dryers.</td></tr>
+                  <tr><td className="px-4 py-2 font-mono font-bold">8</td><td className="px-4 py-2 text-center">8.37</td><td className="px-4 py-2 text-center">10 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +20%</td><td className="px-4 py-2">10 mm&sup2; for cookers, water heaters in EU.</td></tr>
+                  <tr><td className="px-4 py-2 font-mono font-bold">6</td><td className="px-4 py-2 text-center">13.30</td><td className="px-4 py-2 text-center">16 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +20%</td><td className="px-4 py-2">16 mm&sup2; for sub-mains in EU dwellings.</td></tr>
+                  <tr><td className="px-4 py-2 font-mono font-bold">4</td><td className="px-4 py-2 text-center">21.15</td><td className="px-4 py-2 text-center">25 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +18%</td><td className="px-4 py-2">25 mm&sup2; for service-entrance / submains.</td></tr>
+                  <tr><td className="px-4 py-2 font-mono font-bold">2</td><td className="px-4 py-2 text-center">33.62</td><td className="px-4 py-2 text-center">35 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +4%</td><td className="px-4 py-2">35 mm&sup2; is closest match — same ampacity tier.</td></tr>
+                  <tr><td className="px-4 py-2 font-mono font-bold">1/0</td><td className="px-4 py-2 text-center">53.49</td><td className="px-4 py-2 text-center">50 mm&sup2;</td><td className="px-4 py-2 text-center">SI is &minus;6%</td><td className="px-4 py-2">50 mm&sup2; is slightly smaller — verify ampacity.</td></tr>
+                  <tr><td className="px-4 py-2 font-mono font-bold">2/0</td><td className="px-4 py-2 text-center">67.43</td><td className="px-4 py-2 text-center">70 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +4%</td><td className="px-4 py-2">70 mm&sup2; matches.</td></tr>
+                  <tr><td className="px-4 py-2 font-mono font-bold">4/0</td><td className="px-4 py-2 text-center">107.2</td><td className="px-4 py-2 text-center">120 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +12%</td><td className="px-4 py-2">120 mm&sup2; is the standard SI replacement for 4/0.</td></tr>
+                  <tr><td className="px-4 py-2 font-mono font-bold">250 kcmil</td><td className="px-4 py-2 text-center">126.7</td><td className="px-4 py-2 text-center">150 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +18%</td><td className="px-4 py-2">150 mm&sup2; runs cooler — preferred where available.</td></tr>
+                  <tr><td className="px-4 py-2 font-mono font-bold">500 kcmil</td><td className="px-4 py-2 text-center">253.4</td><td className="px-4 py-2 text-center">240 mm&sup2;</td><td className="px-4 py-2 text-center">SI is &minus;5%</td><td className="px-4 py-2">240 mm&sup2; is the closest standard size.</td></tr>
+                </tbody>
+              </table>
+              <div className="bg-amber-50 border-t border-amber-200 px-4 py-3 text-xs text-amber-900">
+                <strong>Note:</strong> NEC 310.16 ampacities are defined for AWG / kcmil
+                conductors. When substituting metric SI conductors in NEC-jurisdiction work,
+                verify the actual cross-sectional area meets or exceeds the AWG it replaces.
+                IEC 60364 ampacity tables differ in derating philosophy from NEC.
+              </div>
+            </div>
+
+            {/* Stranded vs Solid */}
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
+              <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-200">
+                <h3 className="text-lg font-bold text-blue-900 mb-3">Stranded vs solid — when each is required</h3>
+                <p className="text-sm text-slate-700 mb-3">
+                  All AWG diameters in the table above are for SOLID
+                  conductor. Stranded conductors of the same AWG have a
+                  slightly larger overall diameter (typically 8&ndash;15 %
+                  larger) because of the gaps between strands.
+                </p>
+                <ul className="text-sm space-y-2 text-slate-700">
+                  <li><strong>Solid:</strong> required for fixed wiring 14&ndash;10 AWG (NEC 334.10 NM-B cable). Cheaper, easier to terminate under screw lugs.</li>
+                  <li><strong>Stranded:</strong> required above 8 AWG (too stiff to bend). Required by Class B / Class C strand counts in NEC Chapter 9 Table 10. Necessary for control wiring, vibration applications.</li>
+                  <li><strong>Class B (typical building):</strong> 7 strands at small AWG, 19 strands above 1/0.</li>
+                  <li><strong>Class C / D / K (flexible):</strong> finer stranding for control cable, welding cable, portable cord.</li>
+                </ul>
+              </div>
+
+              <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-200">
+                <h3 className="text-lg font-bold text-blue-900 mb-3">Insulation type — pick by environment</h3>
+                <p className="text-sm text-slate-700 mb-3">
+                  Two conductors of identical AWG can have very different
+                  ampacities depending on insulation rating. NEC 310.16
+                  organizes by insulation temperature class:
+                </p>
+                <ul className="text-sm space-y-1 text-slate-700">
+                  <li><strong>60&deg;C (TW, UF):</strong> direct burial, wet locations, older NM. Lowest ampacity.</li>
+                  <li><strong>75&deg;C (THW, THWN, RHW, USE, XHHW wet, NM-B at conductor):</strong> general-purpose; most common termination rating.</li>
+                  <li><strong>90&deg;C (THHN, XHHW-2 dry, RHH, USE-2):</strong> highest ampacity in conduit. NM-B cable insulation is 90&deg;C but ampacity is capped at 60&deg;C column per NEC 334.80.</li>
+                </ul>
+                <p className="text-xs text-slate-600 mt-3">
+                  <strong>Key:</strong> the entire circuit&rsquo;s ampacity
+                  is limited by the lowest-rated component. Most breakers and
+                  panels in residential service are rated 75&deg;C, so even
+                  if you use 90&deg;C THHN conductor, you must use the 75&deg;C
+                  ampacity column — NEC 110.14(C).
+                </p>
+              </div>
+            </div>
+
+            {/* Real-world ampacity walk-through */}
+            <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-200 mb-8">
+              <h3 className="text-lg font-bold text-blue-900 mb-3">Worked derivation — why 12 AWG is rated 25 A at 75&deg;C</h3>
+              <p className="text-sm text-slate-700 mb-3">
+                The ampacity values in NEC 310.16 are not arbitrary. They
+                derive from a heat-balance equation between I&sup2;R losses
+                in the conductor and convective + radiative cooling at the
+                conductor surface, normalized to the insulation&rsquo;s rated
+                operating temperature with 30&deg;C ambient.
+              </p>
+              <div className="bg-blue-50 rounded p-4 font-mono text-xs space-y-1">
+                <div>12 AWG copper: diameter = 2.05 mm, surface area per ft = 0.0808&Prime; &times; &pi; &times; 12 = 3.05 in&sup2;</div>
+                <div>R<sub>20&deg;C</sub> = 1.588 &Omega;/1000 ft (NEC Chapter 9 Table 8)</div>
+                <div>R<sub>75&deg;C</sub> = R<sub>20&deg;C</sub> &times; (1 + 0.00393 &times; 55) = 1.588 &times; 1.216 = <strong>1.93 &Omega;/1000 ft</strong></div>
+                <div>At 25 A, I&sup2;R loss = 25&sup2; &times; 1.93 / 1000 = 1.21 W/ft</div>
+                <div>This power dissipation corresponds to a 45&deg;C rise above ambient (with 75&deg;C insulation, 30&deg;C ambient → 75&deg;C operating).</div>
+                <div>Push to 30 A: I&sup2;R = 30&sup2; &times; 1.93 / 1000 = 1.74 W/ft → 65&deg;C rise → exceeds 75&deg;C insulation rating</div>
+                <div>Hence 12 AWG @ 75&deg;C ampacity is exactly 25 A.</div>
+              </div>
+            </div>
+
+            {/* Wire ampacity vs OCPD distinction */}
+            <div className="bg-amber-50 rounded-lg p-6 border border-amber-200">
+              <h3 className="text-lg font-bold text-amber-900 mb-3">Why 12 AWG ampacity is 25 A but the breaker can&rsquo;t exceed 20 A</h3>
+              <p className="text-sm text-slate-700 mb-2">
+                NEC 240.4(D) is the &ldquo;small-conductor rule&rdquo;: regardless of higher 310.16 ampacity, the OCPD on 14, 12, 10 AWG copper is capped:
+              </p>
+              <ul className="text-sm space-y-1 text-slate-700">
+                <li><strong>14 AWG:</strong> ampacity 20 A (75&deg;C), OCPD max <strong>15 A</strong></li>
+                <li><strong>12 AWG:</strong> ampacity 25 A (75&deg;C), OCPD max <strong>20 A</strong></li>
+                <li><strong>10 AWG:</strong> ampacity 35 A (75&deg;C), OCPD max <strong>30 A</strong></li>
+              </ul>
+              <p className="text-sm text-slate-700 mt-3">
+                <strong>Why the discrepancy?</strong> Small conductors are
+                disproportionately sensitive to mechanical damage, poor
+                terminations, and accumulated dust. The 240.4(D) cap creates
+                a safety margin that 8 AWG and larger conductors don&rsquo;t
+                need. There are five exceptions (motor circuits, taps,
+                listed equipment, Air-conditioning per Article 440,
+                fire alarm per Article 760) but they&rsquo;re narrow.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <ArticleSchema article={articleData} />
       <DatasetSchema
         path="/guides/awg-wire-size-chart"
