@@ -260,9 +260,10 @@ export default function EVChargerWireSizeCalculator() {
     const continuousLoad = chargerType.current;
     const requiredCircuitSize = Math.ceil(continuousLoad * 1.25);
     
-    // Find appropriate wire size
-    const copperWire = WIRE_SIZES.find(w => w.copperAmpacity >= requiredCircuitSize);
-    const aluminumWire = WIRE_SIZES.find(w => w.aluminumAmpacity && w.aluminumAmpacity >= requiredCircuitSize);
+    // Find appropriate wire size — copperAmpacity can be null in canonical
+    // data for AWG sizes that NEC 310.16 doesn't list (e.g., aluminum 14 AWG).
+    const copperWire = WIRE_SIZES.find(w => w.copperAmpacity !== null && w.copperAmpacity >= requiredCircuitSize);
+    const aluminumWire = WIRE_SIZES.find(w => w.aluminumAmpacity !== null && w.aluminumAmpacity >= requiredCircuitSize);
     
     // Calculate voltage drop
     const totalDistance = distance * 2; // Round trip
