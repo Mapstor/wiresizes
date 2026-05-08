@@ -705,6 +705,112 @@ export default function WireSizeFor200AmpPage() {
         </div>
       </div>
 
+      {/* NEC 310.12 — the 83% dwelling-service rule */}
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-8 mt-8 mb-8">
+        <h2 className="text-2xl font-bold text-blue-900 mb-3">NEC 310.12 — The 83% Dwelling-Service Rule</h2>
+        <p className="text-slate-700 mb-4">
+          The single most important section of the NEC for residential
+          200-amp service sizing is <strong>NEC 310.12</strong>, often
+          called the &ldquo;83% rule.&rdquo; Without 310.12, you would need
+          3/0 AWG copper or 250 kcmil aluminum to serve 200 A in a single-
+          family dwelling. With 310.12, you can use the smaller 4/0 AWG
+          copper or 250 kcmil aluminum for the same 200 A service entrance —
+          a meaningful cost savings on copper and a noticeable conduit-size
+          reduction.
+        </p>
+
+        <div className="bg-white rounded-lg p-5 mb-4">
+          <h3 className="font-bold text-blue-900 mb-2">The exact wording of NEC 310.12 (2023):</h3>
+          <p className="text-sm text-slate-700 italic mb-3">
+            &ldquo;For one-family dwellings and the individual dwelling units
+            of two-family and multifamily dwellings, service and feeder
+            conductors supplied by a single-phase, 120/240-volt system
+            shall be permitted to be sized in accordance with 310.12(A)
+            through 310.12(D).&rdquo;
+          </p>
+          <p className="text-sm text-slate-700">
+            Specifically, NEC 310.12(B) Table 310.12 sizes service-entrance
+            conductors and feeders that supply the entire load by allowing
+            them to be sized for <strong>83% of the service rating</strong> —
+            hence the &ldquo;83% rule&rdquo; nickname.
+          </p>
+        </div>
+
+        <h3 className="font-bold text-blue-900 mb-2">NEC 310.12 Table — service / feeder conductor sizes for residential dwellings:</h3>
+        <div className="bg-white rounded-lg overflow-hidden mb-4">
+          <table className="w-full text-sm">
+            <thead className="bg-blue-100">
+              <tr>
+                <th className="px-4 py-2 text-left">Service Rating</th>
+                <th className="px-4 py-2 text-center">Copper (AWG)</th>
+                <th className="px-4 py-2 text-center">Aluminum (AWG / kcmil)</th>
+                <th className="px-4 py-2 text-center">Equiv 75&deg;C ampacity for 83%</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              <tr><td className="px-4 py-2 font-mono">100 A</td><td className="px-4 py-2 text-center">4 AWG</td><td className="px-4 py-2 text-center">2 AWG</td><td className="px-4 py-2 text-center">85 A &times; 1/0.83 = 102 A ✓</td></tr>
+              <tr><td className="px-4 py-2 font-mono">125 A</td><td className="px-4 py-2 text-center">2 AWG</td><td className="px-4 py-2 text-center">1/0 AWG</td><td className="px-4 py-2 text-center">115 A &times; 1/0.83 = 138 A ✓</td></tr>
+              <tr><td className="px-4 py-2 font-mono">150 A</td><td className="px-4 py-2 text-center">1 AWG</td><td className="px-4 py-2 text-center">2/0 AWG</td><td className="px-4 py-2 text-center">130 A &times; 1/0.83 = 156 A ✓</td></tr>
+              <tr><td className="px-4 py-2 font-mono">175 A</td><td className="px-4 py-2 text-center">1/0 AWG</td><td className="px-4 py-2 text-center">3/0 AWG</td><td className="px-4 py-2 text-center">150 A &times; 1/0.83 = 180 A ✓</td></tr>
+              <tr className="bg-blue-50"><td className="px-4 py-2 font-mono font-bold">200 A</td><td className="px-4 py-2 text-center font-bold">2/0 AWG</td><td className="px-4 py-2 text-center font-bold">4/0 AWG</td><td className="px-4 py-2 text-center font-bold">175 A &times; 1/0.83 = 211 A ✓</td></tr>
+              <tr><td className="px-4 py-2 font-mono">225 A</td><td className="px-4 py-2 text-center">3/0 AWG</td><td className="px-4 py-2 text-center">250 kcmil</td><td className="px-4 py-2 text-center">200 A &times; 1/0.83 = 241 A ✓</td></tr>
+              <tr className="bg-blue-50"><td className="px-4 py-2 font-mono font-bold">250 A</td><td className="px-4 py-2 text-center font-bold">4/0 AWG</td><td className="px-4 py-2 text-center font-bold">300 kcmil</td><td className="px-4 py-2 text-center font-bold">230 A &times; 1/0.83 = 277 A ✓</td></tr>
+              <tr><td className="px-4 py-2 font-mono">300 A</td><td className="px-4 py-2 text-center">250 kcmil</td><td className="px-4 py-2 text-center">350 kcmil</td><td className="px-4 py-2 text-center">255 A &times; 1/0.83 = 307 A ✓</td></tr>
+              <tr><td className="px-4 py-2 font-mono">400 A</td><td className="px-4 py-2 text-center">400 kcmil</td><td className="px-4 py-2 text-center">600 kcmil</td><td className="px-4 py-2 text-center">335 A &times; 1/0.83 = 404 A ✓</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p className="text-sm text-slate-700 mb-3">
+          <strong>Why the 83% factor exists:</strong> dwelling units have
+          highly diversified loads — not every appliance and circuit operates
+          at full capacity simultaneously. The NEC&rsquo;s decades of load-
+          survey data show that a typical dwelling&rsquo;s actual peak demand
+          is about 83% of its service rating, even with all appliances
+          installed. NEC 310.12 codifies that diversity into smaller, less
+          expensive service-entrance conductors. Commercial and industrial
+          services, where load diversity cannot be assumed, must use full
+          straight Table 310.16 ampacity.
+        </p>
+
+        <h3 className="font-bold text-blue-900 mb-2">When NEC 310.12 does NOT apply</h3>
+        <ul className="text-sm space-y-1 text-slate-700 list-disc list-inside mb-4">
+          <li><strong>Multi-family dwellings serving more than one unit:</strong> the main service feeder must use full Table 310.16 ampacity. Only individual dwelling-unit feeders inside the building qualify for 310.12.</li>
+          <li><strong>Commercial / industrial occupancies:</strong> retail, office, warehouse, manufacturing all use straight 310.16. Loads do not diversify the same way.</li>
+          <li><strong>Three-phase services:</strong> 310.12 explicitly applies to single-phase 120/240 V dwellings only; three-phase services revert to straight 310.16.</li>
+          <li><strong>208 Y / 120 V wye services:</strong> not covered by 310.12; multi-family buildings on 208 Y / 120 V cannot use the 83% allowance for the main service.</li>
+          <li><strong>Subpanel feeders that don&rsquo;t carry the entire service:</strong> only feeders supplying the entire dwelling load (typically the main service-entrance feeder from the meter to the main panel) qualify; downstream subpanels use full 310.16.</li>
+        </ul>
+
+        <h3 className="font-bold text-blue-900 mb-2">Worked example — 200 A service, NEC 310.12 vs straight 310.16</h3>
+        <div className="bg-white rounded-lg p-4 font-mono text-sm space-y-1">
+          <div><strong>Without 310.12 (e.g., a small commercial building):</strong></div>
+          <div>  200 A required at 75&deg;C → 3/0 copper (200 A) or 4/0 aluminum (180 A — insufficient!)</div>
+          <div>  Aluminum needs 250 kcmil (205 A) for commercial 200 A</div>
+          <div>  Conduit: 1.5&Prime; minimum, more often 2&Prime;</div>
+          <div></div>
+          <div><strong>With 310.12 (residential 200 A):</strong></div>
+          <div>  200 A &times; 0.83 = 166 A required ampacity</div>
+          <div>  2/0 copper (175 A &gt; 166) ✓</div>
+          <div>  4/0 aluminum (180 A &gt; 166) ✓</div>
+          <div>  Conduit: 1.25&Prime; (2/0 Cu) or 1.5&Prime; (4/0 Al)</div>
+          <div></div>
+          <div><strong>Cost savings (typical 100 ft service entrance, copper market):</strong></div>
+          <div>  3/0 Cu @ $9.50/ft &times; 100 ft &times; 3 conductors = $2,850</div>
+          <div>  2/0 Cu @ $7.20/ft &times; 100 ft &times; 3 conductors = $2,160</div>
+          <div>  Savings: <strong>$690 per 100 ft service drop</strong></div>
+          <div>  4/0 Al @ $4.20/ft &times; 100 ft &times; 3 conductors = $1,260 (most common residential)</div>
+        </div>
+        <p className="text-sm text-slate-700 mt-3">
+          NEC 310.12 is the reason a 200 A residential service costs
+          dramatically less than a 200 A commercial service of the same
+          rating. When you see a panel listed at 200 A &ldquo;residential&rdquo;
+          rating versus 200 A &ldquo;commercial&rdquo; rating, the difference
+          is rarely the panel itself — it&rsquo;s the conductor sizing rules
+          that apply to the upstream service entrance.
+        </p>
+      </div>
+
       <ArticleFAQSchema article={articleData} faqItems={faqs} />
       <HowToSchema
         path="/guides/wire-size-for-200-amp"

@@ -762,6 +762,48 @@ export default function WireSizingGuidePage({ datePublished, dateModified }: Gui
         </div>
       </div>
 
+      {/* NEC 240.4(D) small-conductor rule — explicit topical coverage */}
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-8 mt-8 mb-8">
+        <h2 className="text-2xl font-bold text-amber-900 mb-3">NEC 240.4(D) — The Small-Conductor Rule</h2>
+        <p className="text-slate-700 mb-4">
+          NEC 240.4(D) is the most-cited and most-misunderstood rule in wire
+          sizing. It caps the maximum overcurrent device on small copper
+          conductors regardless of their higher Table 310.16 ampacity. Without
+          it, you would be allowed to put a 25 A breaker on 12 AWG copper
+          (because 12 AWG @ 75&deg;C is rated 25 A) — and 12 AWG cannot
+          actually withstand sustained 25 A loads in real installations.
+        </p>
+        <div className="bg-white rounded-lg p-5 mb-4">
+          <h3 className="font-bold text-amber-900 mb-2">The exact rule (NEC 240.4(D)):</h3>
+          <ul className="text-sm space-y-1 text-slate-700">
+            <li><strong>14 AWG copper:</strong> max OCPD <strong>15 A</strong> (Table 310.16 ampacity = 20 A at 75&deg;C)</li>
+            <li><strong>12 AWG copper:</strong> max OCPD <strong>20 A</strong> (Table 310.16 ampacity = 25 A at 75&deg;C)</li>
+            <li><strong>10 AWG copper:</strong> max OCPD <strong>30 A</strong> (Table 310.16 ampacity = 35 A at 75&deg;C)</li>
+            <li><strong>12 AWG copper-clad aluminum / aluminum:</strong> max OCPD <strong>15 A</strong></li>
+            <li><strong>10 AWG aluminum:</strong> max OCPD <strong>25 A</strong></li>
+            <li><strong>8 AWG and larger:</strong> NO 240.4(D) cap; OCPD limited only by Table 310.16 ampacity</li>
+          </ul>
+        </div>
+        <h3 className="font-bold text-amber-900 mb-2">Five exceptions to 240.4(D):</h3>
+        <ol className="text-sm space-y-1 text-slate-700 list-decimal list-inside mb-4">
+          <li><strong>Motor circuits (NEC 430.52):</strong> branch-circuit short-circuit / ground-fault protection can be 175&ndash;300 % of motor FLC, much higher than 240.4(D) limits, because the motor overload relay protects the conductor.</li>
+          <li><strong>Tap conductors (NEC 240.21):</strong> short tap conductors of 10 ft or 25 ft can carry larger OCPD ratings if they meet specific conditions on length and termination.</li>
+          <li><strong>Listed equipment internal wiring:</strong> conductors inside listed appliances and equipment follow the listing&rsquo;s own protection rather than 240.4(D).</li>
+          <li><strong>Air-conditioning and refrigeration (NEC 440):</strong> Article 440 has separate motor / compressor sizing rules per 440.32 and 440.22 that override 240.4(D).</li>
+          <li><strong>Fire alarm circuits (NEC 760):</strong> power-limited fire-alarm circuits have their own protection rules.</li>
+        </ol>
+        <h3 className="font-bold text-amber-900 mb-2">Practical implication for everyday wiring</h3>
+        <p className="text-sm text-slate-700">
+          For 95 % of residential and small-commercial work — branch circuits
+          to receptacles, lighting, electric water heaters, dryers, ranges,
+          A/C disconnects — NEC 240.4(D) governs. Memorize the cap: 14 AWG
+          → 15 A, 12 AWG → 20 A, 10 AWG → 30 A. The conductor&rsquo;s higher
+          75&deg;C ampacity matters only after you apply ambient correction
+          and bundling adjustment factors that derate it below the OCPD cap.
+          Until then, 240.4(D) is the binding constraint.
+        </p>
+      </div>
+
       <ArticleSchema article={articleData} />
     </div>
   );
