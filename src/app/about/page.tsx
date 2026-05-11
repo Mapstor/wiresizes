@@ -180,7 +180,7 @@ export default function AboutPage() {
                 <Zap className="w-12 h-12 text-yellow-400" />
               </div>
               <div>
-                <h1 className="text-5xl font-bold mb-2">About WireSizes.com</h1>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 break-words">About WireSizes.com</h1>
                 <p className="text-xl text-blue-100">The Professional Standard for Electrical Wire Sizing</p>
               </div>
             </div>
@@ -275,16 +275,18 @@ export default function AboutPage() {
               <div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">Platform Specifications</h3>
                 <div className="bg-gray-50 rounded-xl p-6">
-                  <table className="w-full">
-                    <tbody className="divide-y divide-gray-200">
-                      {TECHNICAL_SPECIFICATIONS.map((spec, index) => (
-                        <tr key={index} className="py-3">
-                          <td className="font-semibold text-gray-700 py-2">{spec.feature}</td>
-                          <td className="text-gray-600 py-2">{spec.spec}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <tbody className="divide-y divide-gray-200">
+                        {TECHNICAL_SPECIFICATIONS.map((spec, index) => (
+                          <tr key={index} className="py-3">
+                            <td className="font-semibold text-gray-700 py-2">{spec.feature}</td>
+                            <td className="text-gray-600 py-2">{spec.spec}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
 

@@ -597,37 +597,39 @@ export default function VoltsToAmpsCalculatorPage() {
               
               <div>
                 <h4 className="font-semibold mb-2">Power Factor Impact:</h4>
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-1">Load Type</th>
-                      <th className="text-center py-1">PF Range</th>
-                      <th className="text-center py-1">Current Increase</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b">
-                      <td className="py-1">Resistive</td>
-                      <td className="text-center">1.0</td>
-                      <td className="text-center">0%</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-1">LED Lighting</td>
-                      <td className="text-center">0.9-0.95</td>
-                      <td className="text-center">5-11%</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-1">Motors</td>
-                      <td className="text-center">0.8-0.9</td>
-                      <td className="text-center">11-25%</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-1">Old Fluorescent</td>
-                      <td className="text-center">0.5-0.7</td>
-                      <td className="text-center">43-100%</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-1">Load Type</th>
+                        <th className="text-center py-1">PF Range</th>
+                        <th className="text-center py-1">Current Increase</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b">
+                        <td className="py-1">Resistive</td>
+                        <td className="text-center">1.0</td>
+                        <td className="text-center">0%</td>
+                      </tr>
+                      <tr className="border-b">
+                        <td className="py-1">LED Lighting</td>
+                        <td className="text-center">0.9-0.95</td>
+                        <td className="text-center">5-11%</td>
+                      </tr>
+                      <tr className="border-b">
+                        <td className="py-1">Motors</td>
+                        <td className="text-center">0.8-0.9</td>
+                        <td className="text-center">11-25%</td>
+                      </tr>
+                      <tr className="border-b">
+                        <td className="py-1">Old Fluorescent</td>
+                        <td className="text-center">0.5-0.7</td>
+                        <td className="text-center">43-100%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
@@ -710,42 +712,44 @@ export default function VoltsToAmpsCalculatorPage() {
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-xl font-bold mb-4 text-blue-600">Inrush Current Multipliers</h3>
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b-2 border-gray-200">
-                    <th className="text-left py-2">Starting Method</th>
-                    <th className="text-center py-2">Multiplier</th>
-                    <th className="text-center py-2">Typical Use</th>
-                  </tr>
-                </thead>
-                <tbody className="text-sm">
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2">Direct On Line</td>
-                    <td className="text-center font-mono">6-8×</td>
-                    <td className="text-center">Small motors</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2">Star-Delta</td>
-                    <td className="text-center font-mono">2-3×</td>
-                    <td className="text-center">Medium motors</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2">Soft Starter</td>
-                    <td className="text-center font-mono">2-4×</td>
-                    <td className="text-center">Pumps, fans</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2">VFD</td>
-                    <td className="text-center font-mono">1.5×</td>
-                    <td className="text-center">Variable speed</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2">Autotransformer</td>
-                    <td className="text-center font-mono">3-4×</td>
-                    <td className="text-center">Large motors</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b-2 border-gray-200">
+                      <th className="text-left py-2">Starting Method</th>
+                      <th className="text-center py-2">Multiplier</th>
+                      <th className="text-center py-2">Typical Use</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-sm">
+                    <tr className="border-b border-gray-100">
+                      <td className="py-2">Direct On Line</td>
+                      <td className="text-center font-mono">6-8×</td>
+                      <td className="text-center">Small motors</td>
+                    </tr>
+                    <tr className="border-b border-gray-100">
+                      <td className="py-2">Star-Delta</td>
+                      <td className="text-center font-mono">2-3×</td>
+                      <td className="text-center">Medium motors</td>
+                    </tr>
+                    <tr className="border-b border-gray-100">
+                      <td className="py-2">Soft Starter</td>
+                      <td className="text-center font-mono">2-4×</td>
+                      <td className="text-center">Pumps, fans</td>
+                    </tr>
+                    <tr className="border-b border-gray-100">
+                      <td className="py-2">VFD</td>
+                      <td className="text-center font-mono">1.5×</td>
+                      <td className="text-center">Variable speed</td>
+                    </tr>
+                    <tr className="border-b border-gray-100">
+                      <td className="py-2">Autotransformer</td>
+                      <td className="text-center font-mono">3-4×</td>
+                      <td className="text-center">Large motors</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
             
             <div>

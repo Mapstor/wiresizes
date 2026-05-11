@@ -195,7 +195,7 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Interactive System Comparison</h2>
         
         <div className="mb-6">
-          <div className="flex space-x-4 border-b">
+          <div className="flex space-x-4 border-b overflow-x-auto -mx-2 px-2 whitespace-nowrap">
             <button
               onClick={() => setSelectedComparison('voltage')}
               className={`px-4 py-2 font-medium border-b-2 transition-colors ${

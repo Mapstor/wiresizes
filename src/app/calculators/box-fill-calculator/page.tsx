@@ -388,16 +388,18 @@ export default function BoxFillCalculatorPage() {
               <p><strong>Wiring:</strong> 14-2 NM in, 14-2 NM out</p>
               <p><strong>Count Breakdown:</strong></p>
               <div className="bg-white/70 dark:bg-gray-900/70 rounded p-3 text-xs">
-                <table className="w-full">
-                  <tr><td>Hot in:</td><td className="text-right">1</td></tr>
-                  <tr><td>Neutral in:</td><td className="text-right">1</td></tr>
-                  <tr><td>Hot out:</td><td className="text-right">1</td></tr>
-                  <tr><td>Neutral out:</td><td className="text-right">1</td></tr>
-                  <tr><td>Grounds (all):</td><td className="text-right">1</td></tr>
-                  <tr><td>Switch device:</td><td className="text-right">2</td></tr>
-                  <tr><td>Cable clamps:</td><td className="text-right">1</td></tr>
-                  <tr className="font-bold border-t"><td>Total:</td><td className="text-right">8</td></tr>
-                </table>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <tr><td>Hot in:</td><td className="text-right">1</td></tr>
+                    <tr><td>Neutral in:</td><td className="text-right">1</td></tr>
+                    <tr><td>Hot out:</td><td className="text-right">1</td></tr>
+                    <tr><td>Neutral out:</td><td className="text-right">1</td></tr>
+                    <tr><td>Grounds (all):</td><td className="text-right">1</td></tr>
+                    <tr><td>Switch device:</td><td className="text-right">2</td></tr>
+                    <tr><td>Cable clamps:</td><td className="text-right">1</td></tr>
+                    <tr className="font-bold border-t"><td>Total:</td><td className="text-right">8</td></tr>
+                  </table>
+                </div>
               </div>
               <p><strong>Volume:</strong> 8 × 2.00 = 16 cu.in</p>
               <p className="text-green-700 dark:text-green-400 font-semibold">
@@ -416,18 +418,20 @@ export default function BoxFillCalculatorPage() {
               <p><strong>Wiring:</strong> 14-2 power, 14-3 traveler</p>
               <p><strong>Count Breakdown:</strong></p>
               <div className="bg-white/70 dark:bg-gray-900/70 rounded p-3 text-xs">
-                <table className="w-full">
-                  <tr><td>Power hot:</td><td className="text-right">1</td></tr>
-                  <tr><td>Power neutral:</td><td className="text-right">1</td></tr>
-                  <tr><td>Traveler 1:</td><td className="text-right">1</td></tr>
-                  <tr><td>Traveler 2:</td><td className="text-right">1</td></tr>
-                  <tr><td>Common:</td><td className="text-right">1</td></tr>
-                  <tr><td>Neutral (14-3):</td><td className="text-right">1</td></tr>
-                  <tr><td>Grounds:</td><td className="text-right">1</td></tr>
-                  <tr><td>3-way switch:</td><td className="text-right">2</td></tr>
-                  <tr><td>Cable clamps:</td><td className="text-right">1</td></tr>
-                  <tr className="font-bold border-t"><td>Total:</td><td className="text-right">10</td></tr>
-                </table>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <tr><td>Power hot:</td><td className="text-right">1</td></tr>
+                    <tr><td>Power neutral:</td><td className="text-right">1</td></tr>
+                    <tr><td>Traveler 1:</td><td className="text-right">1</td></tr>
+                    <tr><td>Traveler 2:</td><td className="text-right">1</td></tr>
+                    <tr><td>Common:</td><td className="text-right">1</td></tr>
+                    <tr><td>Neutral (14-3):</td><td className="text-right">1</td></tr>
+                    <tr><td>Grounds:</td><td className="text-right">1</td></tr>
+                    <tr><td>3-way switch:</td><td className="text-right">2</td></tr>
+                    <tr><td>Cable clamps:</td><td className="text-right">1</td></tr>
+                    <tr className="font-bold border-t"><td>Total:</td><td className="text-right">10</td></tr>
+                  </table>
+                </div>
               </div>
               <p><strong>Volume:</strong> 10 × 2.00 = 20 cu.in</p>
               <p className="text-green-700 dark:text-green-400 font-semibold">
@@ -447,16 +451,18 @@ export default function BoxFillCalculatorPage() {
               <p><strong>Wiring:</strong> 12-2 in, 12-2 load out</p>
               <p><strong>Count Breakdown:</strong></p>
               <div className="bg-white/70 dark:bg-gray-900/70 rounded p-3 text-xs">
-                <table className="w-full">
-                  <tr><td>Line hot:</td><td className="text-right">1</td></tr>
-                  <tr><td>Line neutral:</td><td className="text-right">1</td></tr>
-                  <tr><td>Load hot:</td><td className="text-right">1</td></tr>
-                  <tr><td>Load neutral:</td><td className="text-right">1</td></tr>
-                  <tr><td>Grounds:</td><td className="text-right">1</td></tr>
-                  <tr><td>GFCI device:</td><td className="text-right">2</td></tr>
-                  <tr><td>Cable clamps:</td><td className="text-right">1</td></tr>
-                  <tr className="font-bold border-t"><td>Total:</td><td className="text-right">8</td></tr>
-                </table>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <tr><td>Line hot:</td><td className="text-right">1</td></tr>
+                    <tr><td>Line neutral:</td><td className="text-right">1</td></tr>
+                    <tr><td>Load hot:</td><td className="text-right">1</td></tr>
+                    <tr><td>Load neutral:</td><td className="text-right">1</td></tr>
+                    <tr><td>Grounds:</td><td className="text-right">1</td></tr>
+                    <tr><td>GFCI device:</td><td className="text-right">2</td></tr>
+                    <tr><td>Cable clamps:</td><td className="text-right">1</td></tr>
+                    <tr className="font-bold border-t"><td>Total:</td><td className="text-right">8</td></tr>
+                  </table>
+                </div>
               </div>
               <p><strong>Volume:</strong> 8 × 2.25 = 18 cu.in</p>
               <p className="text-purple-700 dark:text-purple-400 font-semibold">
@@ -476,15 +482,17 @@ export default function BoxFillCalculatorPage() {
               <p><strong>Wiring:</strong> 4× 12-2 NM cables</p>
               <p><strong>Count Breakdown:</strong></p>
               <div className="bg-white/70 dark:bg-gray-900/70 rounded p-3 text-xs">
-                <table className="w-full">
-                  <tr><td>Circuit 1 (2 cond):</td><td className="text-right">2</td></tr>
-                  <tr><td>Circuit 2 (2 cond):</td><td className="text-right">2</td></tr>
-                  <tr><td>Circuit 3 (2 cond):</td><td className="text-right">2</td></tr>
-                  <tr><td>Circuit 4 (2 cond):</td><td className="text-right">2</td></tr>
-                  <tr><td>All grounds:</td><td className="text-right">1</td></tr>
-                  <tr><td>Cable clamps:</td><td className="text-right">1</td></tr>
-                  <tr className="font-bold border-t"><td>Total:</td><td className="text-right">10</td></tr>
-                </table>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <tr><td>Circuit 1 (2 cond):</td><td className="text-right">2</td></tr>
+                    <tr><td>Circuit 2 (2 cond):</td><td className="text-right">2</td></tr>
+                    <tr><td>Circuit 3 (2 cond):</td><td className="text-right">2</td></tr>
+                    <tr><td>Circuit 4 (2 cond):</td><td className="text-right">2</td></tr>
+                    <tr><td>All grounds:</td><td className="text-right">1</td></tr>
+                    <tr><td>Cable clamps:</td><td className="text-right">1</td></tr>
+                    <tr className="font-bold border-t"><td>Total:</td><td className="text-right">10</td></tr>
+                  </table>
+                </div>
               </div>
               <p><strong>Volume:</strong> 10 × 2.25 = 22.5 cu.in</p>
               <p className="text-orange-700 dark:text-orange-400 font-semibold">
@@ -504,16 +512,18 @@ export default function BoxFillCalculatorPage() {
               <p><strong>Wiring:</strong> 14-2 feed, 3× 14-2 switch legs</p>
               <p><strong>Count Breakdown:</strong></p>
               <div className="bg-white/70 dark:bg-gray-900/70 rounded p-3 text-xs">
-                <table className="w-full">
-                  <tr><td>Feed hot:</td><td className="text-right">1</td></tr>
-                  <tr><td>Feed neutral:</td><td className="text-right">1</td></tr>
-                  <tr><td>3 switch legs:</td><td className="text-right">3</td></tr>
-                  <tr><td>3 neutrals:</td><td className="text-right">3</td></tr>
-                  <tr><td>All grounds:</td><td className="text-right">1</td></tr>
-                  <tr><td>3 switches:</td><td className="text-right">6</td></tr>
-                  <tr><td>Cable clamps:</td><td className="text-right">1</td></tr>
-                  <tr className="font-bold border-t"><td>Total:</td><td className="text-right">16</td></tr>
-                </table>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <tr><td>Feed hot:</td><td className="text-right">1</td></tr>
+                    <tr><td>Feed neutral:</td><td className="text-right">1</td></tr>
+                    <tr><td>3 switch legs:</td><td className="text-right">3</td></tr>
+                    <tr><td>3 neutrals:</td><td className="text-right">3</td></tr>
+                    <tr><td>All grounds:</td><td className="text-right">1</td></tr>
+                    <tr><td>3 switches:</td><td className="text-right">6</td></tr>
+                    <tr><td>Cable clamps:</td><td className="text-right">1</td></tr>
+                    <tr className="font-bold border-t"><td>Total:</td><td className="text-right">16</td></tr>
+                  </table>
+                </div>
               </div>
               <p><strong>Volume:</strong> 16 × 2.00 = 32 cu.in</p>
               <p className="text-red-700 dark:text-red-400 font-semibold">
@@ -532,17 +542,19 @@ export default function BoxFillCalculatorPage() {
               <p><strong>Wiring:</strong> 14-3 from switch, 14-2 power</p>
               <p><strong>Count Breakdown:</strong></p>
               <div className="bg-white/70 dark:bg-gray-900/70 rounded p-3 text-xs">
-                <table className="w-full">
-                  <tr><td>Power hot:</td><td className="text-right">1</td></tr>
-                  <tr><td>Power neutral:</td><td className="text-right">1</td></tr>
-                  <tr><td>Fan hot:</td><td className="text-right">1</td></tr>
-                  <tr><td>Light hot:</td><td className="text-right">1</td></tr>
-                  <tr><td>Switch neutral:</td><td className="text-right">1</td></tr>
-                  <tr><td>All grounds:</td><td className="text-right">1</td></tr>
-                  <tr><td>Support fitting:</td><td className="text-right">1</td></tr>
-                  <tr><td>Cable clamps:</td><td className="text-right">1</td></tr>
-                  <tr className="font-bold border-t"><td>Total:</td><td className="text-right">8</td></tr>
-                </table>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <tr><td>Power hot:</td><td className="text-right">1</td></tr>
+                    <tr><td>Power neutral:</td><td className="text-right">1</td></tr>
+                    <tr><td>Fan hot:</td><td className="text-right">1</td></tr>
+                    <tr><td>Light hot:</td><td className="text-right">1</td></tr>
+                    <tr><td>Switch neutral:</td><td className="text-right">1</td></tr>
+                    <tr><td>All grounds:</td><td className="text-right">1</td></tr>
+                    <tr><td>Support fitting:</td><td className="text-right">1</td></tr>
+                    <tr><td>Cable clamps:</td><td className="text-right">1</td></tr>
+                    <tr className="font-bold border-t"><td>Total:</td><td className="text-right">8</td></tr>
+                  </table>
+                </div>
               </div>
               <p><strong>Volume:</strong> 8 × 2.00 = 16 cu.in</p>
               <p className="text-yellow-700 dark:text-yellow-400 font-semibold">

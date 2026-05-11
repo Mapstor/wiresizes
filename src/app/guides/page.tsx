@@ -367,7 +367,7 @@ export default function GuidesHomePage() {
         </p>
 
         <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-100">
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-100 min-w-0 break-words">
             <h3 className="text-lg font-bold text-blue-900 mb-3">Wire-sizing guides — NEC 2023 (NFPA 70)</h3>
             <p className="text-sm text-slate-700 mb-3">
               All ampacity, conductor, and overcurrent-protection guidance
@@ -387,7 +387,7 @@ export default function GuidesHomePage() {
             </ul>
           </div>
 
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-100">
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-100 min-w-0 break-words">
             <h3 className="text-lg font-bold text-blue-900 mb-3">Safety guides — NFPA 70E and OSHA 1910.147</h3>
             <p className="text-sm text-slate-700 mb-3">
               The electrical safety guide cites NFPA 70E-2024 (Standard for
@@ -406,7 +406,7 @@ export default function GuidesHomePage() {
             </ul>
           </div>
 
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-100">
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-100 min-w-0 break-words">
             <h3 className="text-lg font-bold text-blue-900 mb-3">Reference data — ASTM B258 and NEC Chapter 9</h3>
             <p className="text-sm text-slate-700 mb-3">
               The AWG conductor tables are anchored to ASTM B258 (the
@@ -423,7 +423,7 @@ export default function GuidesHomePage() {
             </ul>
           </div>
 
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-100">
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-100 min-w-0 break-words">
             <h3 className="text-lg font-bold text-blue-900 mb-3">Site update cadence</h3>
             <p className="text-sm text-slate-700 mb-3">
               NEC publishes a new edition every three years (2017 → 2020
@@ -435,8 +435,8 @@ export default function GuidesHomePage() {
               <li><strong>Major edition:</strong> full review within 90 days of NEC publication</li>
               <li><strong>TIA / errata:</strong> review within 30 days of NFPA notification</li>
               <li><strong>Calculator validation:</strong> spot-check of sample inputs every quarter</li>
-              <li><strong>Each guide page:</strong> last-modified date is git-derived, visible in JSON-LD <code>dateModified</code> field</li>
-              <li><strong>Canonical NEC reference data:</strong> stored in a single source-of-truth module (<code>src/lib/data/nec-tables.ts</code>) so corrections propagate to every page automatically</li>
+              <li><strong>Each guide page:</strong> last-modified date is git-derived, visible in JSON-LD <code className="break-all">dateModified</code> field</li>
+              <li><strong>Canonical NEC reference data:</strong> stored in a single source-of-truth module (<code className="break-all">src/lib/data/nec-tables.ts</code>) so corrections propagate to every page automatically</li>
             </ul>
           </div>
         </div>

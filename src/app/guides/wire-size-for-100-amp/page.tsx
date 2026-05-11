@@ -190,36 +190,38 @@ export default function WireSizeFor100AmpPage() {
               Wire Size by Distance - 100 Amp Service
             </h2>
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-gradient-to-r from-blue-600 to-blue-500 text-white">
-                    <th className="px-4 py-3 text-left">Distance</th>
-                    <th className="px-4 py-3 text-center">Copper Wire</th>
-                    <th className="px-4 py-3 text-center">Aluminum Wire</th>
-                    <th className="px-4 py-3 text-center">Voltage Drop</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {WIRE_SIZE_BY_DISTANCE.map((row, index) => (
-                    <tr key={index} className={index === 0 ? 'bg-green-50' : index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                      <td className="px-4 py-3 font-semibold">{row.distance}</td>
-                      <td className="px-4 py-3 text-center">
-                        <span className="font-mono font-bold text-orange-600">{row.copper}</span>
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <span className="font-mono font-bold text-gray-600">{row.aluminum}</span>
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <span className={`font-mono ${
-                          parseFloat(row.voltageDrop) <= 3 ? 'text-green-600' : 'text-amber-600'
-                        }`}>
-                          {row.voltageDrop}
-                        </span>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-gradient-to-r from-blue-600 to-blue-500 text-white">
+                      <th className="px-4 py-3 text-left">Distance</th>
+                      <th className="px-4 py-3 text-center">Copper Wire</th>
+                      <th className="px-4 py-3 text-center">Aluminum Wire</th>
+                      <th className="px-4 py-3 text-center">Voltage Drop</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {WIRE_SIZE_BY_DISTANCE.map((row, index) => (
+                      <tr key={index} className={index === 0 ? 'bg-green-50' : index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                        <td className="px-4 py-3 font-semibold">{row.distance}</td>
+                        <td className="px-4 py-3 text-center">
+                          <span className="font-mono font-bold text-orange-600">{row.copper}</span>
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <span className="font-mono font-bold text-gray-600">{row.aluminum}</span>
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <span className={`font-mono ${
+                            parseFloat(row.voltageDrop) <= 3 ? 'text-green-600' : 'text-amber-600'
+                          }`}>
+                            {row.voltageDrop}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
               <div className="p-4 bg-blue-50 border-t border-blue-200">
                 <p className="text-sm text-blue-800">
                   <strong>Note:</strong> NEC recommends maximum 3% voltage drop for branch circuits, 5% total for feeders and branch circuits combined.
@@ -269,32 +271,34 @@ export default function WireSizeFor100AmpPage() {
               Cost Comparison - Copper vs Aluminum
             </h2>
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-gradient-to-r from-green-600 to-emerald-500 text-white">
-                    <th className="px-4 py-3 text-left">Wire Type</th>
-                    <th className="px-4 py-3 text-center">Per Foot</th>
-                    <th className="px-4 py-3 text-center">100 ft Run</th>
-                    <th className="px-4 py-3 text-center">200 ft Run</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {COST_COMPARISON.map((row, index) => (
-                    <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                      <td className="px-4 py-3 font-semibold">
-                        {row.material.includes('Copper') ? (
-                          <span className="text-orange-600">{row.material}</span>
-                        ) : (
-                          <span className="text-gray-600">{row.material}</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-center font-mono">{row.costPerFoot}</td>
-                      <td className="px-4 py-3 text-center font-mono font-semibold">{row.cost100ft}</td>
-                      <td className="px-4 py-3 text-center font-mono font-semibold">{row.cost200ft}</td>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-gradient-to-r from-green-600 to-emerald-500 text-white">
+                      <th className="px-4 py-3 text-left">Wire Type</th>
+                      <th className="px-4 py-3 text-center">Per Foot</th>
+                      <th className="px-4 py-3 text-center">100 ft Run</th>
+                      <th className="px-4 py-3 text-center">200 ft Run</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {COST_COMPARISON.map((row, index) => (
+                      <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                        <td className="px-4 py-3 font-semibold">
+                          {row.material.includes('Copper') ? (
+                            <span className="text-orange-600">{row.material}</span>
+                          ) : (
+                            <span className="text-gray-600">{row.material}</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-center font-mono">{row.costPerFoot}</td>
+                        <td className="px-4 py-3 text-center font-mono font-semibold">{row.cost100ft}</td>
+                        <td className="px-4 py-3 text-center font-mono font-semibold">{row.cost200ft}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
               <div className="p-4 bg-green-50 border-t border-green-200">
                 <p className="text-sm text-green-800">
                   <strong>Savings:</strong> Aluminum wire typically costs 50-65% less than copper for the same ampacity. 
@@ -311,24 +315,26 @@ export default function WireSizeFor100AmpPage() {
               Installation Requirements & Code References
             </h2>
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-gradient-to-r from-orange-600 to-red-500 text-white">
-                    <th className="px-4 py-3 text-left">Component</th>
-                    <th className="px-4 py-3 text-left">Specification</th>
-                    <th className="px-4 py-3 text-left">NEC Reference</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {INSTALLATION_REQUIREMENTS.map((req, index) => (
-                    <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                      <td className="px-4 py-3 font-semibold">{req.item}</td>
-                      <td className="px-4 py-3 font-mono text-sm">{req.spec}</td>
-                      <td className="px-4 py-3 text-blue-600 font-mono text-sm">{req.code}</td>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-gradient-to-r from-orange-600 to-red-500 text-white">
+                      <th className="px-4 py-3 text-left">Component</th>
+                      <th className="px-4 py-3 text-left">Specification</th>
+                      <th className="px-4 py-3 text-left">NEC Reference</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {INSTALLATION_REQUIREMENTS.map((req, index) => (
+                      <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                        <td className="px-4 py-3 font-semibold">{req.item}</td>
+                        <td className="px-4 py-3 font-mono text-sm">{req.spec}</td>
+                        <td className="px-4 py-3 text-blue-600 font-mono text-sm">{req.code}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 

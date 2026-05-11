@@ -633,24 +633,26 @@ export default function HomePage() {
                 <h3 className="font-semibold text-neutral-900 text-sm">Common Wire Sizes</h3>
               </div>
               <div className="p-2">
-                <table className="w-full text-xs">
-                  <thead>
-                    <tr className="text-neutral-500">
-                      <th className="text-left font-medium">AWG</th>
-                      <th className="text-left font-medium">Amps</th>
-                      <th className="text-left font-medium">Use</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100">
-                    {COMMON_WIRE_SIZES.map((wire) => (
-                      <tr key={wire.awg}>
-                        <td className="py-1 font-mono">{wire.awg}</td>
-                        <td className="py-1 font-mono">{wire.amps}</td>
-                        <td className="py-1 text-neutral-600">{wire.use}</td>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="text-neutral-500">
+                        <th className="text-left font-medium">AWG</th>
+                        <th className="text-left font-medium">Amps</th>
+                        <th className="text-left font-medium">Use</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-neutral-100">
+                      {COMMON_WIRE_SIZES.map((wire) => (
+                        <tr key={wire.awg}>
+                          <td className="py-1 font-mono">{wire.awg}</td>
+                          <td className="py-1 font-mono">{wire.amps}</td>
+                          <td className="py-1 text-neutral-600">{wire.use}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
@@ -660,24 +662,26 @@ export default function HomePage() {
                 <h3 className="font-semibold text-neutral-900 text-sm">Service Entrance</h3>
               </div>
               <div className="p-2">
-                <table className="w-full text-xs">
-                  <thead>
-                    <tr className="text-neutral-500">
-                      <th className="text-left font-medium">Service</th>
-                      <th className="text-left font-medium">Copper</th>
-                      <th className="text-left font-medium">Aluminum</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100">
-                    {SERVICE_SIZES.map((service) => (
-                      <tr key={service.service}>
-                        <td className="py-1 font-mono">{service.service}</td>
-                        <td className="py-1 font-mono text-xs">{service.copper}</td>
-                        <td className="py-1 font-mono text-xs">{service.aluminum}</td>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="text-neutral-500">
+                        <th className="text-left font-medium">Service</th>
+                        <th className="text-left font-medium">Copper</th>
+                        <th className="text-left font-medium">Aluminum</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-neutral-100">
+                      {SERVICE_SIZES.map((service) => (
+                        <tr key={service.service}>
+                          <td className="py-1 font-mono">{service.service}</td>
+                          <td className="py-1 font-mono text-xs">{service.copper}</td>
+                          <td className="py-1 font-mono text-xs">{service.aluminum}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
@@ -687,24 +691,26 @@ export default function HomePage() {
                 <h3 className="font-semibold text-neutral-900 text-sm">Voltage Drop Limits</h3>
               </div>
               <div className="p-2">
-                <table className="w-full text-xs">
-                  <thead>
-                    <tr className="text-neutral-500">
-                      <th className="text-left font-medium">Circuit</th>
-                      <th className="text-left font-medium">Limit</th>
-                      <th className="text-left font-medium">NEC Ref</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100">
-                    {VOLTAGE_DROP_LIMITS.map((limit) => (
-                      <tr key={limit.circuit}>
-                        <td className="py-1">{limit.circuit}</td>
-                        <td className="py-1 font-mono">{limit.limit}</td>
-                        <td className="py-1 text-neutral-500 text-xs">{limit.reference}</td>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="text-neutral-500">
+                        <th className="text-left font-medium">Circuit</th>
+                        <th className="text-left font-medium">Limit</th>
+                        <th className="text-left font-medium">NEC Ref</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-neutral-100">
+                      {VOLTAGE_DROP_LIMITS.map((limit) => (
+                        <tr key={limit.circuit}>
+                          <td className="py-1">{limit.circuit}</td>
+                          <td className="py-1 font-mono">{limit.limit}</td>
+                          <td className="py-1 text-neutral-500 text-xs">{limit.reference}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
@@ -1059,26 +1065,28 @@ export default function HomePage() {
                   <h3 className="font-semibold text-neutral-900 text-sm">Common Equipment Loads</h3>
                 </div>
                 <div className="p-2">
-                  <table className="w-full text-xs">
-                    <thead>
-                      <tr className="text-neutral-500">
-                        <th className="text-left font-medium">Equipment</th>
-                        <th className="text-left font-medium">Load</th>
-                        <th className="text-left font-medium">Breaker</th>
-                        <th className="text-left font-medium">Wire</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-neutral-100">
-                      {EQUIPMENT_LOADS.map((item) => (
-                        <tr key={item.equipment}>
-                          <td className="py-1">{item.equipment}</td>
-                          <td className="py-1 font-mono">{item.load}</td>
-                          <td className="py-1 font-mono">{item.breaker}</td>
-                          <td className="py-1 font-mono">{item.wire}</td>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs">
+                      <thead>
+                        <tr className="text-neutral-500">
+                          <th className="text-left font-medium">Equipment</th>
+                          <th className="text-left font-medium">Load</th>
+                          <th className="text-left font-medium">Breaker</th>
+                          <th className="text-left font-medium">Wire</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-neutral-100">
+                        {EQUIPMENT_LOADS.map((item) => (
+                          <tr key={item.equipment}>
+                            <td className="py-1">{item.equipment}</td>
+                            <td className="py-1 font-mono">{item.load}</td>
+                            <td className="py-1 font-mono">{item.breaker}</td>
+                            <td className="py-1 font-mono">{item.wire}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
 
@@ -1087,24 +1095,26 @@ export default function HomePage() {
                   <h3 className="font-semibold text-neutral-900 text-sm">Grounding Electrode Conductors</h3>
                 </div>
                 <div className="p-2">
-                  <table className="w-full text-xs">
-                    <thead>
-                      <tr className="text-neutral-500">
-                        <th className="text-left font-medium">Service</th>
-                        <th className="text-left font-medium">Copper</th>
-                        <th className="text-left font-medium">Aluminum</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-neutral-100">
-                      {GROUNDING_CONDUCTORS.map((item) => (
-                        <tr key={item.service}>
-                          <td className="py-1 font-mono">{item.service}</td>
-                          <td className="py-1 font-mono">{item.copper}</td>
-                          <td className="py-1 font-mono">{item.aluminum}</td>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs">
+                      <thead>
+                        <tr className="text-neutral-500">
+                          <th className="text-left font-medium">Service</th>
+                          <th className="text-left font-medium">Copper</th>
+                          <th className="text-left font-medium">Aluminum</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-neutral-100">
+                        {GROUNDING_CONDUCTORS.map((item) => (
+                          <tr key={item.service}>
+                            <td className="py-1 font-mono">{item.service}</td>
+                            <td className="py-1 font-mono">{item.copper}</td>
+                            <td className="py-1 font-mono">{item.aluminum}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1116,24 +1126,26 @@ export default function HomePage() {
                   <h3 className="font-semibold text-neutral-900 text-sm">Motor Full Load Current (Single Phase)</h3>
                 </div>
                 <div className="p-2">
-                  <table className="w-full text-xs">
-                    <thead>
-                      <tr className="text-neutral-500">
-                        <th className="text-left font-medium">HP</th>
-                        <th className="text-left font-medium">115V</th>
-                        <th className="text-left font-medium">230V</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-neutral-100">
-                      {MOTOR_FLA.map((motor) => (
-                        <tr key={motor.hp}>
-                          <td className="py-1 font-mono">{motor.hp}</td>
-                          <td className="py-1 font-mono">{motor.amps_115v}A</td>
-                          <td className="py-1 font-mono">{motor.amps_230v}A</td>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs">
+                      <thead>
+                        <tr className="text-neutral-500">
+                          <th className="text-left font-medium">HP</th>
+                          <th className="text-left font-medium">115V</th>
+                          <th className="text-left font-medium">230V</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-neutral-100">
+                        {MOTOR_FLA.map((motor) => (
+                          <tr key={motor.hp}>
+                            <td className="py-1 font-mono">{motor.hp}</td>
+                            <td className="py-1 font-mono">{motor.amps_115v}A</td>
+                            <td className="py-1 font-mono">{motor.amps_230v}A</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
 
@@ -1142,26 +1154,28 @@ export default function HomePage() {
                   <h3 className="font-semibold text-neutral-900 text-sm">Wire Cost Comparison (Estimated)</h3>
                 </div>
                 <div className="p-2">
-                  <table className="w-full text-xs">
-                    <thead>
-                      <tr className="text-neutral-500">
-                        <th className="text-left font-medium">Size</th>
-                        <th className="text-left font-medium">Copper</th>
-                        <th className="text-left font-medium">Aluminum</th>
-                        <th className="text-left font-medium">Savings</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-neutral-100">
-                      {WIRE_COSTS.map((cost) => (
-                        <tr key={cost.awg}>
-                          <td className="py-1 font-mono">{cost.awg}</td>
-                          <td className="py-1 font-mono text-copper-600">{cost.copper}</td>
-                          <td className="py-1 font-mono text-aluminum-600">{cost.aluminum}</td>
-                          <td className="py-1 font-mono text-green-600">{cost.savings}</td>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs">
+                      <thead>
+                        <tr className="text-neutral-500">
+                          <th className="text-left font-medium">Size</th>
+                          <th className="text-left font-medium">Copper</th>
+                          <th className="text-left font-medium">Aluminum</th>
+                          <th className="text-left font-medium">Savings</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-neutral-100">
+                        {WIRE_COSTS.map((cost) => (
+                          <tr key={cost.awg}>
+                            <td className="py-1 font-mono">{cost.awg}</td>
+                            <td className="py-1 font-mono text-copper-600">{cost.copper}</td>
+                            <td className="py-1 font-mono text-aluminum-600">{cost.aluminum}</td>
+                            <td className="py-1 font-mono text-green-600">{cost.savings}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>

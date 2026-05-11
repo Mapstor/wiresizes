@@ -304,12 +304,12 @@ export default function ElectricalSafetyPage({ datePublished, dateModified }: Gu
         <div className="bg-yellow-50 rounded-lg p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Protective Equipment (PPE) Categories</h3>
           
-          <div className="flex gap-4 mb-6">
+          <div className="flex flex-wrap gap-2 sm:gap-4 mb-6">
             {PPE_CATEGORIES.map((category) => (
               <button
                 key={category.category}
                 onClick={() => setSelectedPPECategory(category.category)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base ${
                   selectedPPECategory === category.category
                     ? 'bg-yellow-600 text-white'
                     : 'bg-white text-yellow-700 border border-yellow-300 hover:bg-yellow-100'

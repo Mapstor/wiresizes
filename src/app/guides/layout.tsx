@@ -80,9 +80,11 @@ export default function GuidesLayout({
       </div>
 
       <div className="container mx-auto px-4 py-8">
+        {/* min-w-0 on grid children prevents max-content sizing from wide
+            tables in {children} bleeding into the sidebar column on mobile. */}
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Sidebar Navigation */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 min-w-0">
             <div className="bg-white rounded-lg shadow-sm border p-6 sticky top-8">
               <h2 className="font-semibold text-gray-900 mb-4">Guide Topics</h2>
               <nav className="space-y-2">
@@ -135,7 +137,7 @@ export default function GuidesLayout({
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 min-w-0">
             {children}
           </div>
         </div>

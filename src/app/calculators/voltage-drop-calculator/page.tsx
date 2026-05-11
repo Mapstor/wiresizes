@@ -823,50 +823,54 @@ export default function VoltageDropCalculatorPage() {
               <div>
                 <h3 className="font-semibold text-neutral-900 mb-3">Temperature Correction Factors</h3>
                 <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-                  <table className="w-full text-xs">
-                    <thead>
-                      <tr className="bg-neutral-50 border-b border-neutral-200">
-                        <th className="px-3 py-2 text-left">Temp °C</th>
-                        <th className="px-3 py-2 text-left">Temp °F</th>
-                        <th className="px-3 py-2 text-left">Copper</th>
-                        <th className="px-3 py-2 text-left">Aluminum</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-neutral-100">
-                      {TEMPERATURE_CORRECTIONS.map((temp) => (
-                        <tr key={temp.tempC} className="hover:bg-neutral-50">
-                          <td className="px-3 py-2">{temp.tempC}°C</td>
-                          <td className="px-3 py-2">{temp.tempF}°F</td>
-                          <td className="px-3 py-2 font-mono">{temp.copperFactor}</td>
-                          <td className="px-3 py-2 font-mono">{temp.aluminumFactor}</td>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs">
+                      <thead>
+                        <tr className="bg-neutral-50 border-b border-neutral-200">
+                          <th className="px-3 py-2 text-left">Temp °C</th>
+                          <th className="px-3 py-2 text-left">Temp °F</th>
+                          <th className="px-3 py-2 text-left">Copper</th>
+                          <th className="px-3 py-2 text-left">Aluminum</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-neutral-100">
+                        {TEMPERATURE_CORRECTIONS.map((temp) => (
+                          <tr key={temp.tempC} className="hover:bg-neutral-50">
+                            <td className="px-3 py-2">{temp.tempC}°C</td>
+                            <td className="px-3 py-2">{temp.tempF}°F</td>
+                            <td className="px-3 py-2 font-mono">{temp.copperFactor}</td>
+                            <td className="px-3 py-2 font-mono">{temp.aluminumFactor}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
               
               <div>
                 <h3 className="font-semibold text-neutral-900 mb-3">Power Factor Impact</h3>
                 <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-                  <table className="w-full text-xs">
-                    <thead>
-                      <tr className="bg-neutral-50 border-b border-neutral-200">
-                        <th className="px-3 py-2 text-left">PF</th>
-                        <th className="px-3 py-2 text-left">Load Type</th>
-                        <th className="px-3 py-2 text-left">Multiplier</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-neutral-100">
-                      {POWER_FACTOR_IMPACT.map((pf) => (
-                        <tr key={pf.pf} className="hover:bg-neutral-50">
-                          <td className="px-3 py-2 font-mono">{pf.pf}</td>
-                          <td className="px-3 py-2">{pf.type}</td>
-                          <td className="px-3 py-2 font-mono">{pf.multiplier}</td>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs">
+                      <thead>
+                        <tr className="bg-neutral-50 border-b border-neutral-200">
+                          <th className="px-3 py-2 text-left">PF</th>
+                          <th className="px-3 py-2 text-left">Load Type</th>
+                          <th className="px-3 py-2 text-left">Multiplier</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-neutral-100">
+                        {POWER_FACTOR_IMPACT.map((pf) => (
+                          <tr key={pf.pf} className="hover:bg-neutral-50">
+                            <td className="px-3 py-2 font-mono">{pf.pf}</td>
+                            <td className="px-3 py-2">{pf.type}</td>
+                            <td className="px-3 py-2 font-mono">{pf.multiplier}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
@@ -887,26 +891,28 @@ export default function VoltageDropCalculatorPage() {
               <div>
                 <h3 className="font-semibold text-neutral-900 mb-3">Motor Starting Current Impact</h3>
                 <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-neutral-50 border-b border-neutral-200">
-                        <th className="px-3 py-2 text-left">HP</th>
-                        <th className="px-3 py-2 text-left">FLC (240V)</th>
-                        <th className="px-3 py-2 text-left">LRC</th>
-                        <th className="px-3 py-2 text-left">Starting Drop</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-neutral-100">
-                      {MOTOR_STARTING_DATA.map((motor) => (
-                        <tr key={motor.hp} className="hover:bg-neutral-50">
-                          <td className="px-3 py-2 font-mono">{motor.hp}</td>
-                          <td className="px-3 py-2">{motor.flc}A</td>
-                          <td className="px-3 py-2">{motor.lrc}A</td>
-                          <td className="px-3 py-2 text-amber-600">{motor.startingDrop}</td>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-neutral-50 border-b border-neutral-200">
+                          <th className="px-3 py-2 text-left">HP</th>
+                          <th className="px-3 py-2 text-left">FLC (240V)</th>
+                          <th className="px-3 py-2 text-left">LRC</th>
+                          <th className="px-3 py-2 text-left">Starting Drop</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-neutral-100">
+                        {MOTOR_STARTING_DATA.map((motor) => (
+                          <tr key={motor.hp} className="hover:bg-neutral-50">
+                            <td className="px-3 py-2 font-mono">{motor.hp}</td>
+                            <td className="px-3 py-2">{motor.flc}A</td>
+                            <td className="px-3 py-2">{motor.lrc}A</td>
+                            <td className="px-3 py-2 text-amber-600">{motor.startingDrop}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
                 <p className="text-sm text-neutral-600 mt-3">
                   <strong>FLC:</strong> Full Load Current | <strong>LRC:</strong> Locked Rotor Current (starting)
@@ -958,24 +964,26 @@ export default function VoltageDropCalculatorPage() {
             </h2>
             
             <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-neutral-50 border-b border-neutral-200">
-                    <th className="px-4 py-3 text-left font-medium text-neutral-700">Distance Range</th>
-                    <th className="px-4 py-3 text-left font-medium text-neutral-700">General Recommendation</th>
-                    <th className="px-4 py-3 text-left font-medium text-neutral-700">Voltage Consideration</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-neutral-100">
-                  {DISTANCE_RECOMMENDATIONS.map((rec, idx) => (
-                    <tr key={idx} className="hover:bg-neutral-50">
-                      <td className="px-4 py-3 font-semibold">{rec.range}</td>
-                      <td className="px-4 py-3">{rec.recommendation}</td>
-                      <td className="px-4 py-3 text-sm text-neutral-600">{rec.voltageConsideration}</td>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-neutral-50 border-b border-neutral-200">
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Distance Range</th>
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">General Recommendation</th>
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Voltage Consideration</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-neutral-100">
+                    {DISTANCE_RECOMMENDATIONS.map((rec, idx) => (
+                      <tr key={idx} className="hover:bg-neutral-50">
+                        <td className="px-4 py-3 font-semibold">{rec.range}</td>
+                        <td className="px-4 py-3">{rec.recommendation}</td>
+                        <td className="px-4 py-3 text-sm text-neutral-600">{rec.voltageConsideration}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
             
             <div className="grid md:grid-cols-3 gap-4 mt-6">
@@ -1015,26 +1023,28 @@ export default function VoltageDropCalculatorPage() {
               <div>
                 <h3 className="font-semibold text-neutral-900 mb-3">Annual Energy Loss from Voltage Drop</h3>
                 <div className="bg-white rounded-lg border border-green-200 overflow-hidden">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-green-50 border-b border-green-200">
-                        <th className="px-3 py-2 text-left">Drop %</th>
-                        <th className="px-3 py-2 text-left">120V/20A Loss</th>
-                        <th className="px-3 py-2 text-left">240V/50A Loss</th>
-                        <th className="px-3 py-2 text-left">Payback</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-neutral-100">
-                      {VOLTAGE_DROP_COST_ANALYSIS.map((cost) => (
-                        <tr key={cost.drop} className="hover:bg-green-50">
-                          <td className="px-3 py-2 font-mono">{cost.drop}</td>
-                          <td className="px-3 py-2 text-red-600">{cost.annualLoss120V20A}/yr</td>
-                          <td className="px-3 py-2 text-red-600">{cost.annualLoss240V50A}/yr</td>
-                          <td className="px-3 py-2 text-green-600">{cost.paybackMonths} mo</td>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-green-50 border-b border-green-200">
+                          <th className="px-3 py-2 text-left">Drop %</th>
+                          <th className="px-3 py-2 text-left">120V/20A Loss</th>
+                          <th className="px-3 py-2 text-left">240V/50A Loss</th>
+                          <th className="px-3 py-2 text-left">Payback</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-neutral-100">
+                        {VOLTAGE_DROP_COST_ANALYSIS.map((cost) => (
+                          <tr key={cost.drop} className="hover:bg-green-50">
+                            <td className="px-3 py-2 font-mono">{cost.drop}</td>
+                            <td className="px-3 py-2 text-red-600">{cost.annualLoss120V20A}/yr</td>
+                            <td className="px-3 py-2 text-red-600">{cost.annualLoss240V50A}/yr</td>
+                            <td className="px-3 py-2 text-green-600">{cost.paybackMonths} mo</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
                 <p className="text-sm text-neutral-600 mt-3">
                   Based on $0.12/kWh, 8 hours/day operation, 365 days/year

@@ -496,24 +496,26 @@ export default function BTUToWattsCalculatorPage() {
                 <div className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded">
                   <h4 className="font-semibold mb-2">SEER to EER Conversion</h4>
                   <p className="text-sm">EER ≈ SEER × 0.875</p>
-                  <table className="w-full mt-2 text-xs">
-                    <tr className="border-b">
-                      <td>SEER 14</td>
-                      <td className="text-right">EER 12.3</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td>SEER 16</td>
-                      <td className="text-right">EER 14.0</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td>SEER 20</td>
-                      <td className="text-right">EER 17.5</td>
-                    </tr>
-                    <tr>
-                      <td>SEER 25</td>
-                      <td className="text-right">EER 21.9</td>
-                    </tr>
-                  </table>
+                  <div className="overflow-x-auto">
+                    <table className="w-full mt-2 text-xs">
+                      <tr className="border-b">
+                        <td>SEER 14</td>
+                        <td className="text-right">EER 12.3</td>
+                      </tr>
+                      <tr className="border-b">
+                        <td>SEER 16</td>
+                        <td className="text-right">EER 14.0</td>
+                      </tr>
+                      <tr className="border-b">
+                        <td>SEER 20</td>
+                        <td className="text-right">EER 17.5</td>
+                      </tr>
+                      <tr>
+                        <td>SEER 25</td>
+                        <td className="text-right">EER 21.9</td>
+                      </tr>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
@@ -542,20 +544,22 @@ export default function BTUToWattsCalculatorPage() {
                 <div className="p-3 bg-yellow-50 dark:bg-yellow-900/30 rounded">
                   <h4 className="font-semibold mb-2">AFUE (Annual Fuel Utilization Efficiency)</h4>
                   <p className="text-sm mb-2">For gas/oil furnaces</p>
-                  <table className="w-full mt-2 text-xs">
-                    <tr className="border-b">
-                      <td>Standard</td>
-                      <td className="text-right">80%</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td>High-Efficiency</td>
-                      <td className="text-right">90-95%</td>
-                    </tr>
-                    <tr>
-                      <td>Condensing</td>
-                      <td className="text-right">95-98%</td>
-                    </tr>
-                  </table>
+                  <div className="overflow-x-auto">
+                    <table className="w-full mt-2 text-xs">
+                      <tr className="border-b">
+                        <td>Standard</td>
+                        <td className="text-right">80%</td>
+                      </tr>
+                      <tr className="border-b">
+                        <td>High-Efficiency</td>
+                        <td className="text-right">90-95%</td>
+                      </tr>
+                      <tr>
+                        <td>Condensing</td>
+                        <td className="text-right">95-98%</td>
+                      </tr>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>

@@ -655,24 +655,26 @@ export default function AmpacityCalculatorPage() {
             <div className="grid lg:grid-cols-2 gap-6">
               <div>
                 <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-neutral-50 border-b border-neutral-200">
-                        <th className="px-4 py-3 text-left font-medium text-neutral-700">Number of Conductors</th>
-                        <th className="px-4 py-3 text-left font-medium text-neutral-700">Adjustment Factor</th>
-                        <th className="px-4 py-3 text-left font-medium text-neutral-700">Notes</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-neutral-100">
-                      {CONDUIT_FILL_FACTORS.map((factor, idx) => (
-                        <tr key={idx} className="hover:bg-neutral-50">
-                          <td className="px-4 py-3 font-medium">{factor.conductors}</td>
-                          <td className="px-4 py-3 font-mono font-bold text-purple-600">{factor.adjustment}</td>
-                          <td className="px-4 py-3 text-xs text-neutral-500">{factor.notes}</td>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-neutral-50 border-b border-neutral-200">
+                          <th className="px-4 py-3 text-left font-medium text-neutral-700">Number of Conductors</th>
+                          <th className="px-4 py-3 text-left font-medium text-neutral-700">Adjustment Factor</th>
+                          <th className="px-4 py-3 text-left font-medium text-neutral-700">Notes</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-neutral-100">
+                        {CONDUIT_FILL_FACTORS.map((factor, idx) => (
+                          <tr key={idx} className="hover:bg-neutral-50">
+                            <td className="px-4 py-3 font-medium">{factor.conductors}</td>
+                            <td className="px-4 py-3 font-mono font-bold text-purple-600">{factor.adjustment}</td>
+                            <td className="px-4 py-3 text-xs text-neutral-500">{factor.notes}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
               

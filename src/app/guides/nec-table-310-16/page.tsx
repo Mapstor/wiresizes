@@ -254,26 +254,28 @@ export default function NECTable310_16Page() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <h3 className="font-semibold text-lg mb-4">Current-Carrying Conductors</h3>
-                  <table className="w-full">
-                    <thead>
-                      <tr className="bg-purple-100">
-                        <th className="px-3 py-2 text-left">Number of Conductors</th>
-                        <th className="px-3 py-2 text-center">Adjustment Factor</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      <tr className="bg-green-50">
-                        <td className="px-3 py-2">1-3</td>
-                        <td className="px-3 py-2 text-center font-mono font-semibold">1.00</td>
-                      </tr>
-                      {BUNDLE_DERATING.map((row) => (
-                        <tr key={row.conductors} className="hover:bg-gray-50">
-                          <td className="px-3 py-2">{row.conductors}</td>
-                          <td className="px-3 py-2 text-center font-mono">{row.factor}</td>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="bg-purple-100">
+                          <th className="px-3 py-2 text-left">Number of Conductors</th>
+                          <th className="px-3 py-2 text-center">Adjustment Factor</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        <tr className="bg-green-50">
+                          <td className="px-3 py-2">1-3</td>
+                          <td className="px-3 py-2 text-center font-mono font-semibold">1.00</td>
+                        </tr>
+                        {BUNDLE_DERATING.map((row) => (
+                          <tr key={row.conductors} className="hover:bg-gray-50">
+                            <td className="px-3 py-2">{row.conductors}</td>
+                            <td className="px-3 py-2 text-center font-mono">{row.factor}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
                 <div>
                   <h3 className="font-semibold text-lg mb-4">Calculation Example</h3>
@@ -303,28 +305,30 @@ export default function NECTable310_16Page() {
               Common Circuit Applications
             </h2>
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-gradient-to-r from-green-600 to-teal-500 text-white">
-                    <th className="px-4 py-3 text-left">Circuit Type</th>
-                    <th className="px-4 py-3 text-center">Copper Wire</th>
-                    <th className="px-4 py-3 text-center">Aluminum Wire</th>
-                    <th className="px-4 py-3 text-center">Temp Rating</th>
-                    <th className="px-4 py-3 text-left">Common Uses</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {COMMON_APPLICATIONS.map((app, index) => (
-                    <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                      <td className="px-4 py-3 font-semibold">{app.circuit}</td>
-                      <td className="px-4 py-3 text-center font-mono text-orange-600">{app.copper}</td>
-                      <td className="px-4 py-3 text-center font-mono text-gray-600">{app.aluminum}</td>
-                      <td className="px-4 py-3 text-center">{app.temp}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{app.use}</td>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-gradient-to-r from-green-600 to-teal-500 text-white">
+                      <th className="px-4 py-3 text-left">Circuit Type</th>
+                      <th className="px-4 py-3 text-center">Copper Wire</th>
+                      <th className="px-4 py-3 text-center">Aluminum Wire</th>
+                      <th className="px-4 py-3 text-center">Temp Rating</th>
+                      <th className="px-4 py-3 text-left">Common Uses</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {COMMON_APPLICATIONS.map((app, index) => (
+                      <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                        <td className="px-4 py-3 font-semibold">{app.circuit}</td>
+                        <td className="px-4 py-3 text-center font-mono text-orange-600">{app.copper}</td>
+                        <td className="px-4 py-3 text-center font-mono text-gray-600">{app.aluminum}</td>
+                        <td className="px-4 py-3 text-center">{app.temp}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600">{app.use}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 

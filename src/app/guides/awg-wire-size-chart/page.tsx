@@ -222,57 +222,59 @@ export default function AWGWireSizeChartPage() {
             <div className="grid lg:grid-cols-2 gap-6">
               <div className="bg-white rounded-lg p-6 border border-neutral-200">
                 <h3 className="font-semibold text-neutral-900 mb-4">Common AWG to mm² Conversions</h3>
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-2">AWG</th>
-                      <th className="text-center py-2">mm²</th>
-                      <th className="text-center py-2">Nearest Metric</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y">
-                    <tr>
-                      <td className="py-2 font-mono">14 AWG</td>
-                      <td className="py-2 text-center">2.08</td>
-                      <td className="py-2 text-center">2.5 mm²</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 font-mono">12 AWG</td>
-                      <td className="py-2 text-center">3.31</td>
-                      <td className="py-2 text-center">4 mm²</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 font-mono">10 AWG</td>
-                      <td className="py-2 text-center">5.26</td>
-                      <td className="py-2 text-center">6 mm²</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 font-mono">8 AWG</td>
-                      <td className="py-2 text-center">8.37</td>
-                      <td className="py-2 text-center">10 mm²</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 font-mono">6 AWG</td>
-                      <td className="py-2 text-center">13.3</td>
-                      <td className="py-2 text-center">16 mm²</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 font-mono">4 AWG</td>
-                      <td className="py-2 text-center">21.2</td>
-                      <td className="py-2 text-center">25 mm²</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 font-mono">2 AWG</td>
-                      <td className="py-2 text-center">33.6</td>
-                      <td className="py-2 text-center">35 mm²</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 font-mono">1/0 AWG</td>
-                      <td className="py-2 text-center">53.5</td>
-                      <td className="py-2 text-center">50 mm²</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-2">AWG</th>
+                        <th className="text-center py-2">mm²</th>
+                        <th className="text-center py-2">Nearest Metric</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      <tr>
+                        <td className="py-2 font-mono">14 AWG</td>
+                        <td className="py-2 text-center">2.08</td>
+                        <td className="py-2 text-center">2.5 mm²</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 font-mono">12 AWG</td>
+                        <td className="py-2 text-center">3.31</td>
+                        <td className="py-2 text-center">4 mm²</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 font-mono">10 AWG</td>
+                        <td className="py-2 text-center">5.26</td>
+                        <td className="py-2 text-center">6 mm²</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 font-mono">8 AWG</td>
+                        <td className="py-2 text-center">8.37</td>
+                        <td className="py-2 text-center">10 mm²</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 font-mono">6 AWG</td>
+                        <td className="py-2 text-center">13.3</td>
+                        <td className="py-2 text-center">16 mm²</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 font-mono">4 AWG</td>
+                        <td className="py-2 text-center">21.2</td>
+                        <td className="py-2 text-center">25 mm²</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 font-mono">2 AWG</td>
+                        <td className="py-2 text-center">33.6</td>
+                        <td className="py-2 text-center">35 mm²</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 font-mono">1/0 AWG</td>
+                        <td className="py-2 text-center">53.5</td>
+                        <td className="py-2 text-center">50 mm²</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
               
               <div className="bg-white rounded-lg p-6 border border-neutral-200">
@@ -407,76 +409,78 @@ export default function AWGWireSizeChartPage() {
             </h2>
             
             <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-gradient-to-r from-green-600 to-emerald-600 text-white">
-                    <th className="px-4 py-3 text-left">Wire Size</th>
-                    <th className="px-4 py-3 text-center">Copper $/ft</th>
-                    <th className="px-4 py-3 text-center">Aluminum $/ft</th>
-                    <th className="px-4 py-3 text-center">Savings %</th>
-                    <th className="px-4 py-3 text-center">100ft Cost Cu</th>
-                    <th className="px-4 py-3 text-center">100ft Cost Al</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-neutral-100">
-                  <tr className="hover:bg-green-50">
-                    <td className="px-4 py-3 font-mono font-semibold">14 AWG</td>
-                    <td className="px-4 py-3 text-center">$0.45</td>
-                    <td className="px-4 py-3 text-center">—</td>
-                    <td className="px-4 py-3 text-center">—</td>
-                    <td className="px-4 py-3 text-center font-semibold">$45</td>
-                    <td className="px-4 py-3 text-center">—</td>
-                  </tr>
-                  <tr className="hover:bg-green-50">
-                    <td className="px-4 py-3 font-mono font-semibold">12 AWG</td>
-                    <td className="px-4 py-3 text-center">$0.65</td>
-                    <td className="px-4 py-3 text-center">$0.35</td>
-                    <td className="px-4 py-3 text-center text-green-600">46%</td>
-                    <td className="px-4 py-3 text-center font-semibold">$65</td>
-                    <td className="px-4 py-3 text-center">$35</td>
-                  </tr>
-                  <tr className="hover:bg-green-50">
-                    <td className="px-4 py-3 font-mono font-semibold">10 AWG</td>
-                    <td className="px-4 py-3 text-center">$0.95</td>
-                    <td className="px-4 py-3 text-center">$0.45</td>
-                    <td className="px-4 py-3 text-center text-green-600">53%</td>
-                    <td className="px-4 py-3 text-center font-semibold">$95</td>
-                    <td className="px-4 py-3 text-center">$45</td>
-                  </tr>
-                  <tr className="hover:bg-green-50">
-                    <td className="px-4 py-3 font-mono font-semibold">8 AWG</td>
-                    <td className="px-4 py-3 text-center">$1.55</td>
-                    <td className="px-4 py-3 text-center">$0.75</td>
-                    <td className="px-4 py-3 text-center text-green-600">52%</td>
-                    <td className="px-4 py-3 text-center font-semibold">$155</td>
-                    <td className="px-4 py-3 text-center">$75</td>
-                  </tr>
-                  <tr className="hover:bg-green-50">
-                    <td className="px-4 py-3 font-mono font-semibold">6 AWG</td>
-                    <td className="px-4 py-3 text-center">$2.80</td>
-                    <td className="px-4 py-3 text-center">$1.20</td>
-                    <td className="px-4 py-3 text-center text-green-600">57%</td>
-                    <td className="px-4 py-3 text-center font-semibold">$280</td>
-                    <td className="px-4 py-3 text-center">$120</td>
-                  </tr>
-                  <tr className="hover:bg-green-50">
-                    <td className="px-4 py-3 font-mono font-semibold">2 AWG</td>
-                    <td className="px-4 py-3 text-center">$5.50</td>
-                    <td className="px-4 py-3 text-center">$2.20</td>
-                    <td className="px-4 py-3 text-center text-green-600">60%</td>
-                    <td className="px-4 py-3 text-center font-semibold">$550</td>
-                    <td className="px-4 py-3 text-center">$220</td>
-                  </tr>
-                  <tr className="hover:bg-green-50">
-                    <td className="px-4 py-3 font-mono font-semibold">2/0 AWG</td>
-                    <td className="px-4 py-3 text-center">$12.50</td>
-                    <td className="px-4 py-3 text-center">$4.80</td>
-                    <td className="px-4 py-3 text-center text-green-600">62%</td>
-                    <td className="px-4 py-3 text-center font-semibold">$1,250</td>
-                    <td className="px-4 py-3 text-center">$480</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-gradient-to-r from-green-600 to-emerald-600 text-white">
+                      <th className="px-4 py-3 text-left">Wire Size</th>
+                      <th className="px-4 py-3 text-center">Copper $/ft</th>
+                      <th className="px-4 py-3 text-center">Aluminum $/ft</th>
+                      <th className="px-4 py-3 text-center">Savings %</th>
+                      <th className="px-4 py-3 text-center">100ft Cost Cu</th>
+                      <th className="px-4 py-3 text-center">100ft Cost Al</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-neutral-100">
+                    <tr className="hover:bg-green-50">
+                      <td className="px-4 py-3 font-mono font-semibold">14 AWG</td>
+                      <td className="px-4 py-3 text-center">$0.45</td>
+                      <td className="px-4 py-3 text-center">—</td>
+                      <td className="px-4 py-3 text-center">—</td>
+                      <td className="px-4 py-3 text-center font-semibold">$45</td>
+                      <td className="px-4 py-3 text-center">—</td>
+                    </tr>
+                    <tr className="hover:bg-green-50">
+                      <td className="px-4 py-3 font-mono font-semibold">12 AWG</td>
+                      <td className="px-4 py-3 text-center">$0.65</td>
+                      <td className="px-4 py-3 text-center">$0.35</td>
+                      <td className="px-4 py-3 text-center text-green-600">46%</td>
+                      <td className="px-4 py-3 text-center font-semibold">$65</td>
+                      <td className="px-4 py-3 text-center">$35</td>
+                    </tr>
+                    <tr className="hover:bg-green-50">
+                      <td className="px-4 py-3 font-mono font-semibold">10 AWG</td>
+                      <td className="px-4 py-3 text-center">$0.95</td>
+                      <td className="px-4 py-3 text-center">$0.45</td>
+                      <td className="px-4 py-3 text-center text-green-600">53%</td>
+                      <td className="px-4 py-3 text-center font-semibold">$95</td>
+                      <td className="px-4 py-3 text-center">$45</td>
+                    </tr>
+                    <tr className="hover:bg-green-50">
+                      <td className="px-4 py-3 font-mono font-semibold">8 AWG</td>
+                      <td className="px-4 py-3 text-center">$1.55</td>
+                      <td className="px-4 py-3 text-center">$0.75</td>
+                      <td className="px-4 py-3 text-center text-green-600">52%</td>
+                      <td className="px-4 py-3 text-center font-semibold">$155</td>
+                      <td className="px-4 py-3 text-center">$75</td>
+                    </tr>
+                    <tr className="hover:bg-green-50">
+                      <td className="px-4 py-3 font-mono font-semibold">6 AWG</td>
+                      <td className="px-4 py-3 text-center">$2.80</td>
+                      <td className="px-4 py-3 text-center">$1.20</td>
+                      <td className="px-4 py-3 text-center text-green-600">57%</td>
+                      <td className="px-4 py-3 text-center font-semibold">$280</td>
+                      <td className="px-4 py-3 text-center">$120</td>
+                    </tr>
+                    <tr className="hover:bg-green-50">
+                      <td className="px-4 py-3 font-mono font-semibold">2 AWG</td>
+                      <td className="px-4 py-3 text-center">$5.50</td>
+                      <td className="px-4 py-3 text-center">$2.20</td>
+                      <td className="px-4 py-3 text-center text-green-600">60%</td>
+                      <td className="px-4 py-3 text-center font-semibold">$550</td>
+                      <td className="px-4 py-3 text-center">$220</td>
+                    </tr>
+                    <tr className="hover:bg-green-50">
+                      <td className="px-4 py-3 font-mono font-semibold">2/0 AWG</td>
+                      <td className="px-4 py-3 text-center">$12.50</td>
+                      <td className="px-4 py-3 text-center">$4.80</td>
+                      <td className="px-4 py-3 text-center text-green-600">62%</td>
+                      <td className="px-4 py-3 text-center font-semibold">$1,250</td>
+                      <td className="px-4 py-3 text-center">$480</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
               <div className="px-4 py-3 bg-green-50 border-t border-green-200">
                 <p className="text-xs text-green-800">
                   *Prices are approximate 2024 market averages for THHN/THWN-2 wire and may vary by location and supplier.
@@ -678,31 +682,33 @@ export default function AWGWireSizeChartPage() {
             </p>
 
             <div className="bg-white rounded-lg shadow-sm border border-blue-200 overflow-hidden mb-8">
-              <table className="w-full text-sm">
-                <thead className="bg-blue-600 text-white">
-                  <tr>
-                    <th className="px-4 py-3 text-left">AWG</th>
-                    <th className="px-4 py-3 text-center">Exact area (mm&sup2;)</th>
-                    <th className="px-4 py-3 text-center">Closest std SI size</th>
-                    <th className="px-4 py-3 text-center">SI vs AWG</th>
-                    <th className="px-4 py-3 text-left">Substitution note</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  <tr><td className="px-4 py-2 font-mono font-bold">14</td><td className="px-4 py-2 text-center">2.08</td><td className="px-4 py-2 text-center">2.5 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +20%</td><td className="px-4 py-2">2.5 mm&sup2; is fine for 14 AWG circuits; common in EU residential.</td></tr>
-                  <tr><td className="px-4 py-2 font-mono font-bold">12</td><td className="px-4 py-2 text-center">3.31</td><td className="px-4 py-2 text-center">4 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +21%</td><td className="px-4 py-2">4 mm&sup2; is the EU standard for 20 A circuits.</td></tr>
-                  <tr><td className="px-4 py-2 font-mono font-bold">10</td><td className="px-4 py-2 text-center">5.26</td><td className="px-4 py-2 text-center">6 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +14%</td><td className="px-4 py-2">6 mm&sup2; substitutes safely; common for EU dryers.</td></tr>
-                  <tr><td className="px-4 py-2 font-mono font-bold">8</td><td className="px-4 py-2 text-center">8.37</td><td className="px-4 py-2 text-center">10 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +20%</td><td className="px-4 py-2">10 mm&sup2; for cookers, water heaters in EU.</td></tr>
-                  <tr><td className="px-4 py-2 font-mono font-bold">6</td><td className="px-4 py-2 text-center">13.30</td><td className="px-4 py-2 text-center">16 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +20%</td><td className="px-4 py-2">16 mm&sup2; for sub-mains in EU dwellings.</td></tr>
-                  <tr><td className="px-4 py-2 font-mono font-bold">4</td><td className="px-4 py-2 text-center">21.15</td><td className="px-4 py-2 text-center">25 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +18%</td><td className="px-4 py-2">25 mm&sup2; for service-entrance / submains.</td></tr>
-                  <tr><td className="px-4 py-2 font-mono font-bold">2</td><td className="px-4 py-2 text-center">33.62</td><td className="px-4 py-2 text-center">35 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +4%</td><td className="px-4 py-2">35 mm&sup2; is closest match — same ampacity tier.</td></tr>
-                  <tr><td className="px-4 py-2 font-mono font-bold">1/0</td><td className="px-4 py-2 text-center">53.49</td><td className="px-4 py-2 text-center">50 mm&sup2;</td><td className="px-4 py-2 text-center">SI is &minus;6%</td><td className="px-4 py-2">50 mm&sup2; is slightly smaller — verify ampacity.</td></tr>
-                  <tr><td className="px-4 py-2 font-mono font-bold">2/0</td><td className="px-4 py-2 text-center">67.43</td><td className="px-4 py-2 text-center">70 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +4%</td><td className="px-4 py-2">70 mm&sup2; matches.</td></tr>
-                  <tr><td className="px-4 py-2 font-mono font-bold">4/0</td><td className="px-4 py-2 text-center">107.2</td><td className="px-4 py-2 text-center">120 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +12%</td><td className="px-4 py-2">120 mm&sup2; is the standard SI replacement for 4/0.</td></tr>
-                  <tr><td className="px-4 py-2 font-mono font-bold">250 kcmil</td><td className="px-4 py-2 text-center">126.7</td><td className="px-4 py-2 text-center">150 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +18%</td><td className="px-4 py-2">150 mm&sup2; runs cooler — preferred where available.</td></tr>
-                  <tr><td className="px-4 py-2 font-mono font-bold">500 kcmil</td><td className="px-4 py-2 text-center">253.4</td><td className="px-4 py-2 text-center">240 mm&sup2;</td><td className="px-4 py-2 text-center">SI is &minus;5%</td><td className="px-4 py-2">240 mm&sup2; is the closest standard size.</td></tr>
-                </tbody>
-              </table>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-blue-600 text-white">
+                    <tr>
+                      <th className="px-4 py-3 text-left">AWG</th>
+                      <th className="px-4 py-3 text-center">Exact area (mm&sup2;)</th>
+                      <th className="px-4 py-3 text-center">Closest std SI size</th>
+                      <th className="px-4 py-3 text-center">SI vs AWG</th>
+                      <th className="px-4 py-3 text-left">Substitution note</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    <tr><td className="px-4 py-2 font-mono font-bold">14</td><td className="px-4 py-2 text-center">2.08</td><td className="px-4 py-2 text-center">2.5 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +20%</td><td className="px-4 py-2">2.5 mm&sup2; is fine for 14 AWG circuits; common in EU residential.</td></tr>
+                    <tr><td className="px-4 py-2 font-mono font-bold">12</td><td className="px-4 py-2 text-center">3.31</td><td className="px-4 py-2 text-center">4 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +21%</td><td className="px-4 py-2">4 mm&sup2; is the EU standard for 20 A circuits.</td></tr>
+                    <tr><td className="px-4 py-2 font-mono font-bold">10</td><td className="px-4 py-2 text-center">5.26</td><td className="px-4 py-2 text-center">6 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +14%</td><td className="px-4 py-2">6 mm&sup2; substitutes safely; common for EU dryers.</td></tr>
+                    <tr><td className="px-4 py-2 font-mono font-bold">8</td><td className="px-4 py-2 text-center">8.37</td><td className="px-4 py-2 text-center">10 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +20%</td><td className="px-4 py-2">10 mm&sup2; for cookers, water heaters in EU.</td></tr>
+                    <tr><td className="px-4 py-2 font-mono font-bold">6</td><td className="px-4 py-2 text-center">13.30</td><td className="px-4 py-2 text-center">16 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +20%</td><td className="px-4 py-2">16 mm&sup2; for sub-mains in EU dwellings.</td></tr>
+                    <tr><td className="px-4 py-2 font-mono font-bold">4</td><td className="px-4 py-2 text-center">21.15</td><td className="px-4 py-2 text-center">25 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +18%</td><td className="px-4 py-2">25 mm&sup2; for service-entrance / submains.</td></tr>
+                    <tr><td className="px-4 py-2 font-mono font-bold">2</td><td className="px-4 py-2 text-center">33.62</td><td className="px-4 py-2 text-center">35 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +4%</td><td className="px-4 py-2">35 mm&sup2; is closest match — same ampacity tier.</td></tr>
+                    <tr><td className="px-4 py-2 font-mono font-bold">1/0</td><td className="px-4 py-2 text-center">53.49</td><td className="px-4 py-2 text-center">50 mm&sup2;</td><td className="px-4 py-2 text-center">SI is &minus;6%</td><td className="px-4 py-2">50 mm&sup2; is slightly smaller — verify ampacity.</td></tr>
+                    <tr><td className="px-4 py-2 font-mono font-bold">2/0</td><td className="px-4 py-2 text-center">67.43</td><td className="px-4 py-2 text-center">70 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +4%</td><td className="px-4 py-2">70 mm&sup2; matches.</td></tr>
+                    <tr><td className="px-4 py-2 font-mono font-bold">4/0</td><td className="px-4 py-2 text-center">107.2</td><td className="px-4 py-2 text-center">120 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +12%</td><td className="px-4 py-2">120 mm&sup2; is the standard SI replacement for 4/0.</td></tr>
+                    <tr><td className="px-4 py-2 font-mono font-bold">250 kcmil</td><td className="px-4 py-2 text-center">126.7</td><td className="px-4 py-2 text-center">150 mm&sup2;</td><td className="px-4 py-2 text-center">SI is +18%</td><td className="px-4 py-2">150 mm&sup2; runs cooler — preferred where available.</td></tr>
+                    <tr><td className="px-4 py-2 font-mono font-bold">500 kcmil</td><td className="px-4 py-2 text-center">253.4</td><td className="px-4 py-2 text-center">240 mm&sup2;</td><td className="px-4 py-2 text-center">SI is &minus;5%</td><td className="px-4 py-2">240 mm&sup2; is the closest standard size.</td></tr>
+                  </tbody>
+                </table>
+              </div>
               <div className="bg-amber-50 border-t border-amber-200 px-4 py-3 text-xs text-amber-900">
                 <strong>Note:</strong> NEC 310.16 ampacities are defined for AWG / kcmil
                 conductors. When substituting metric SI conductors in NEC-jurisdiction work,

@@ -738,27 +738,29 @@ export default function WireSizeFor200AmpPage() {
 
         <h3 className="font-bold text-blue-900 mb-2">NEC 310.12 Table — service / feeder conductor sizes for residential dwellings:</h3>
         <div className="bg-white rounded-lg overflow-hidden mb-4">
-          <table className="w-full text-sm">
-            <thead className="bg-blue-100">
-              <tr>
-                <th className="px-4 py-2 text-left">Service Rating</th>
-                <th className="px-4 py-2 text-center">Copper (AWG)</th>
-                <th className="px-4 py-2 text-center">Aluminum (AWG / kcmil)</th>
-                <th className="px-4 py-2 text-center">Equiv 75&deg;C ampacity for 83%</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              <tr><td className="px-4 py-2 font-mono">100 A</td><td className="px-4 py-2 text-center">4 AWG</td><td className="px-4 py-2 text-center">2 AWG</td><td className="px-4 py-2 text-center">85 A &times; 1/0.83 = 102 A ✓</td></tr>
-              <tr><td className="px-4 py-2 font-mono">125 A</td><td className="px-4 py-2 text-center">2 AWG</td><td className="px-4 py-2 text-center">1/0 AWG</td><td className="px-4 py-2 text-center">115 A &times; 1/0.83 = 138 A ✓</td></tr>
-              <tr><td className="px-4 py-2 font-mono">150 A</td><td className="px-4 py-2 text-center">1 AWG</td><td className="px-4 py-2 text-center">2/0 AWG</td><td className="px-4 py-2 text-center">130 A &times; 1/0.83 = 156 A ✓</td></tr>
-              <tr><td className="px-4 py-2 font-mono">175 A</td><td className="px-4 py-2 text-center">1/0 AWG</td><td className="px-4 py-2 text-center">3/0 AWG</td><td className="px-4 py-2 text-center">150 A &times; 1/0.83 = 180 A ✓</td></tr>
-              <tr className="bg-blue-50"><td className="px-4 py-2 font-mono font-bold">200 A</td><td className="px-4 py-2 text-center font-bold">2/0 AWG</td><td className="px-4 py-2 text-center font-bold">4/0 AWG</td><td className="px-4 py-2 text-center font-bold">175 A &times; 1/0.83 = 211 A ✓</td></tr>
-              <tr><td className="px-4 py-2 font-mono">225 A</td><td className="px-4 py-2 text-center">3/0 AWG</td><td className="px-4 py-2 text-center">250 kcmil</td><td className="px-4 py-2 text-center">200 A &times; 1/0.83 = 241 A ✓</td></tr>
-              <tr className="bg-blue-50"><td className="px-4 py-2 font-mono font-bold">250 A</td><td className="px-4 py-2 text-center font-bold">4/0 AWG</td><td className="px-4 py-2 text-center font-bold">300 kcmil</td><td className="px-4 py-2 text-center font-bold">230 A &times; 1/0.83 = 277 A ✓</td></tr>
-              <tr><td className="px-4 py-2 font-mono">300 A</td><td className="px-4 py-2 text-center">250 kcmil</td><td className="px-4 py-2 text-center">350 kcmil</td><td className="px-4 py-2 text-center">255 A &times; 1/0.83 = 307 A ✓</td></tr>
-              <tr><td className="px-4 py-2 font-mono">400 A</td><td className="px-4 py-2 text-center">400 kcmil</td><td className="px-4 py-2 text-center">600 kcmil</td><td className="px-4 py-2 text-center">335 A &times; 1/0.83 = 404 A ✓</td></tr>
-            </tbody>
-          </table>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-blue-100">
+                <tr>
+                  <th className="px-4 py-2 text-left">Service Rating</th>
+                  <th className="px-4 py-2 text-center">Copper (AWG)</th>
+                  <th className="px-4 py-2 text-center">Aluminum (AWG / kcmil)</th>
+                  <th className="px-4 py-2 text-center">Equiv 75&deg;C ampacity for 83%</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                <tr><td className="px-4 py-2 font-mono">100 A</td><td className="px-4 py-2 text-center">4 AWG</td><td className="px-4 py-2 text-center">2 AWG</td><td className="px-4 py-2 text-center">85 A &times; 1/0.83 = 102 A ✓</td></tr>
+                <tr><td className="px-4 py-2 font-mono">125 A</td><td className="px-4 py-2 text-center">2 AWG</td><td className="px-4 py-2 text-center">1/0 AWG</td><td className="px-4 py-2 text-center">115 A &times; 1/0.83 = 138 A ✓</td></tr>
+                <tr><td className="px-4 py-2 font-mono">150 A</td><td className="px-4 py-2 text-center">1 AWG</td><td className="px-4 py-2 text-center">2/0 AWG</td><td className="px-4 py-2 text-center">130 A &times; 1/0.83 = 156 A ✓</td></tr>
+                <tr><td className="px-4 py-2 font-mono">175 A</td><td className="px-4 py-2 text-center">1/0 AWG</td><td className="px-4 py-2 text-center">3/0 AWG</td><td className="px-4 py-2 text-center">150 A &times; 1/0.83 = 180 A ✓</td></tr>
+                <tr className="bg-blue-50"><td className="px-4 py-2 font-mono font-bold">200 A</td><td className="px-4 py-2 text-center font-bold">2/0 AWG</td><td className="px-4 py-2 text-center font-bold">4/0 AWG</td><td className="px-4 py-2 text-center font-bold">175 A &times; 1/0.83 = 211 A ✓</td></tr>
+                <tr><td className="px-4 py-2 font-mono">225 A</td><td className="px-4 py-2 text-center">3/0 AWG</td><td className="px-4 py-2 text-center">250 kcmil</td><td className="px-4 py-2 text-center">200 A &times; 1/0.83 = 241 A ✓</td></tr>
+                <tr className="bg-blue-50"><td className="px-4 py-2 font-mono font-bold">250 A</td><td className="px-4 py-2 text-center font-bold">4/0 AWG</td><td className="px-4 py-2 text-center font-bold">300 kcmil</td><td className="px-4 py-2 text-center font-bold">230 A &times; 1/0.83 = 277 A ✓</td></tr>
+                <tr><td className="px-4 py-2 font-mono">300 A</td><td className="px-4 py-2 text-center">250 kcmil</td><td className="px-4 py-2 text-center">350 kcmil</td><td className="px-4 py-2 text-center">255 A &times; 1/0.83 = 307 A ✓</td></tr>
+                <tr><td className="px-4 py-2 font-mono">400 A</td><td className="px-4 py-2 text-center">400 kcmil</td><td className="px-4 py-2 text-center">600 kcmil</td><td className="px-4 py-2 text-center">335 A &times; 1/0.83 = 404 A ✓</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <p className="text-sm text-slate-700 mb-3">
