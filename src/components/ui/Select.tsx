@@ -18,17 +18,17 @@ interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ label, hint, error, options, placeholder, className, ...props }, ref) => {
     return (
-      <div className="space-y-1">
+      <div className="space-y-1 min-w-0">
         {label && (
           <label className="block text-sm font-medium text-neutral-700">
             {label}
           </label>
         )}
-        <div className="relative">
+        <div className="relative min-w-0">
           <select
             ref={ref}
             className={clsx(
-              'w-full px-4 py-3 border rounded-lg text-neutral-900 font-medium',
+              'w-full min-w-0 px-4 py-3 border rounded-lg text-neutral-900 font-medium',
               'bg-white appearance-none cursor-pointer',
               'focus:outline-none focus:ring-2 focus:border-primary-500 transition-shadow',
               error

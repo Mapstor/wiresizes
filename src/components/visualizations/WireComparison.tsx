@@ -15,12 +15,12 @@ export function WireComparison({ copperAwg, aluminumAwg, amps }: WireComparisonP
         Wire Size Comparison for {amps}A
       </h3>
       
-      <div className="flex justify-center items-end gap-8 md:gap-16">
+      <div className="flex flex-col sm:flex-row justify-center items-center sm:items-end gap-4 sm:gap-8 md:gap-16">
         {/* Copper */}
         <div className="flex flex-col items-center">
-          <WireVisualization 
-            awg={copperAwg} 
-            material="copper" 
+          <WireVisualization
+            awg={copperAwg}
+            material="copper"
             size="lg"
           />
           <div className="mt-4 px-4 py-2 bg-copper-100 rounded-lg">
@@ -29,15 +29,15 @@ export function WireComparison({ copperAwg, aluminumAwg, amps }: WireComparisonP
         </div>
 
         {/* VS */}
-        <div className="text-2xl font-bold text-neutral-300 self-center mb-16">
+        <div className="text-2xl font-bold text-neutral-300 self-center sm:mb-16">
           vs
         </div>
 
         {/* Aluminum */}
         <div className="flex flex-col items-center">
-          <WireVisualization 
-            awg={aluminumAwg} 
-            material="aluminum" 
+          <WireVisualization
+            awg={aluminumAwg}
+            material="aluminum"
             size="lg"
           />
           <div className="mt-4 px-4 py-2 bg-aluminum-100 rounded-lg">

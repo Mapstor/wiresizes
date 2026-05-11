@@ -422,7 +422,7 @@ export default function NECCodeComplianceGuide() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8 mb-8">
-          <div>
+          <div className="min-w-0">
             <h3 className="text-xl font-semibold text-gray-900 mb-4">NEC Article 250 - Grounding Requirements</h3>
             <div className="space-y-4">
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
@@ -448,7 +448,7 @@ export default function NECCodeComplianceGuide() {
             </div>
           </div>
 
-          <div>
+          <div className="min-w-0">
             <h3 className="text-xl font-semibold text-gray-900 mb-4">Grounding Conductor Sizing (NEC 250.122)</h3>
             <div className="overflow-x-auto">
               <table className="w-full border text-sm">

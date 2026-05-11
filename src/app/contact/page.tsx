@@ -368,19 +368,19 @@ export default function ContactPage() {
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Professional Support Channels</h2>
           <div className="grid lg:grid-cols-2 gap-6">
             {CONTACT_CHANNELS.map((channel, index) => (
-              <div key={index} className={`bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow`}>
+              <div key={index} className={`bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow min-w-0`}>
                 <div className="flex items-start gap-4">
-                  <div className={`p-3 rounded-lg bg-${channel.color}-100 text-${channel.color}-600`}>
+                  <div className={`p-3 rounded-lg bg-${channel.color}-100 text-${channel.color}-600 flex-shrink-0`}>
                     <channel.icon className="w-6 h-6" />
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">{channel.type}</h3>
                     <p className="text-gray-600 text-sm mb-4">{channel.description}</p>
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Mail className="w-4 h-4 text-gray-400" />
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Mail className="w-4 h-4 text-gray-400 flex-shrink-0" />
                         <span className="text-sm text-gray-600">{channel.method}:</span>
-                        <a href={`mailto:${channel.contact}`} className={`text-sm font-medium text-${channel.color}-600 hover:underline`}>
+                        <a href={`mailto:${channel.contact}`} className={`text-sm font-medium text-${channel.color}-600 hover:underline break-all`}>
                           {channel.contact}
                         </a>
                       </div>

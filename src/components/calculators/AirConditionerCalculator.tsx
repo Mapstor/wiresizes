@@ -317,7 +317,7 @@ export function AirConditionerCalculator() {
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Input Section */}
-          <div className="space-y-6">
+          <div className="space-y-6 min-w-0">
             <h2 className="text-lg font-semibold text-neutral-900 flex items-center gap-2">
               <Snowflake className="w-5 h-5 text-primary-600" />
               Air Conditioner Configuration
@@ -481,7 +481,7 @@ export function AirConditionerCalculator() {
           </div>
 
           {/* Results Section */}
-          <div className="space-y-6" ref={resultsRef}>
+          <div className="space-y-6 min-w-0" ref={resultsRef}>
             <h2 className="text-lg font-semibold text-neutral-900">
               Wire Size Results
             </h2>

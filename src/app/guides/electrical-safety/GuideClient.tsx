@@ -365,9 +365,9 @@ export default function ElectricalSafetyPage({ datePublished, dateModified }: Gu
 
         {/* Interactive LOTO Steps */}
         <div className="mb-6">
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-4">
             <h3 className="text-lg font-semibold text-gray-900">Six Steps of Lockout/Tagout</h3>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {LOCKOUT_STEPS.map((_, index) => (
                 <button
                   key={index}

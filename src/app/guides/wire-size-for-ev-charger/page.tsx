@@ -111,7 +111,7 @@ export default function WireSizeForEVChargerPage() {
               <div className="p-3 bg-green-100 rounded-lg">
                 <Zap className="w-6 h-6 text-green-600" />
               </div>
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">Quick Wire Size Reference</h2>
                 
                 <div className="overflow-x-auto">

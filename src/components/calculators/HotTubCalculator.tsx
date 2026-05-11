@@ -62,7 +62,7 @@ export function HotTubCalculator() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-4 lg:gap-6">
-          <div className="space-y-6">
+          <div className="space-y-6 min-w-0">
             <Select
               label="Hot Tub Size"
               options={HOT_TUB_SIZES.map((s) => ({
@@ -125,7 +125,7 @@ export function HotTubCalculator() {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-6 min-w-0">
             {/* Wire Comparison Visualization */}
             {copperResult && aluminumResult && (
               <WireComparison

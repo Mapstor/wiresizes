@@ -79,7 +79,7 @@ export function EVChargerCalculator() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-4 lg:gap-6">
-          <div className="space-y-6">
+          <div className="space-y-6 min-w-0">
             <Select
               label="Charger Type"
               options={EV_CHARGER_PRESETS.map((p) => ({
@@ -134,7 +134,7 @@ export function EVChargerCalculator() {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-6 min-w-0">
             {/* Wire Comparison Visualization */}
             {copperResult && aluminumResult && (
               <WireComparison
