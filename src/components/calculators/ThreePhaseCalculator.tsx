@@ -176,18 +176,6 @@ export function ThreePhaseCalculator() {
     return Math.ceil(lineCurrent * 100) / 100;
   }, [voltageSystem, calculationMode, power, current, powerFactor, efficiency, horsepower, loadBalance]);
 
-  const performCalculation = useCallback(() => {
-    calculate();
-    setShowResults(true);
-    // Scroll to results
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-    }, 100);
-  }, [calculate]);
-
   const handleReset = () => {
     setShowResults(false);
     // Reset form fields as needed
@@ -282,6 +270,18 @@ export function ThreePhaseCalculator() {
       warnings: [...aluminumWire.warnings, ...threePhaseWarnings]
     });
   }, [voltageSystem, loadBalance, connectionType, calculationMode, distance, power, current, powerFactor, efficiency, horsepower, includeNeutral, calculateLineCurrent, calculateNeutralCurrent]);
+
+  const performCalculation = useCallback(() => {
+    calculate();
+    setShowResults(true);
+    // Scroll to results
+    setTimeout(() => {
+      resultsRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }, 100);
+  }, [calculate]);
 
   // Auto-calculation disabled - user must click Calculate button
   // useEffect(() => {

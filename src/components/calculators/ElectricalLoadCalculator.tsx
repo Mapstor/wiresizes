@@ -186,18 +186,6 @@ export function ElectricalLoadCalculator() {
     return Math.ceil((demandLoad / voltage) * 100) / 100;
   }, [buildingArea, buildingType, voltage]);
 
-  const performCalculation = useCallback(() => {
-    calculate();
-    setShowResults(true);
-    // Scroll to results
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-    }, 100);
-  }, [calculate]);
-
   const handleReset = () => {
     setShowResults(false);
     // Reset form fields as needed
@@ -300,6 +288,18 @@ export function ElectricalLoadCalculator() {
       warnings: [...aluminumWire.warnings, ...loadWarnings]
     });
   }, [buildingType, buildingArea, voltage, phase, distance, useDetailedMethod, loads, getTotalLoad, getServiceSize]);
+
+  const performCalculation = useCallback(() => {
+    calculate();
+    setShowResults(true);
+    // Scroll to results
+    setTimeout(() => {
+      resultsRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }, 100);
+  }, [calculate]);
 
   // Auto-calculation disabled - user must click Calculate button
   // useEffect(() => {

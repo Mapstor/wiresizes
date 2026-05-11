@@ -138,18 +138,6 @@ export function GarageSubpanelCalculator() {
     return Math.ceil((demandLoad / 240) * 100) / 100;
   }, [garageSize, loadType, numOutlets, hasEVCharger, evChargerAmps, has240VTools, toolAmps]);
 
-  const performCalculation = useCallback(() => {
-    calculate();
-    setShowResults(true);
-    // Scroll to results
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-    }, 100);
-  }, [calculate]);
-
   const handleReset = () => {
     setShowResults(false);
     // Reset form fields as needed
@@ -227,6 +215,18 @@ export function GarageSubpanelCalculator() {
       warnings: [...aluminumWire.warnings, ...subpanelWarnings]
     });
   }, [subpanelSize, loadType, installationMethod, distance, garageSize, numOutlets, hasEVCharger, evChargerAmps, has240VTools, toolAmps, calculateTotalLoad, getRecommendedSubpanelSize]);
+
+  const performCalculation = useCallback(() => {
+    calculate();
+    setShowResults(true);
+    // Scroll to results
+    setTimeout(() => {
+      resultsRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }, 100);
+  }, [calculate]);
 
   // Auto-calculation disabled - user must click Calculate button
   // useEffect(() => {

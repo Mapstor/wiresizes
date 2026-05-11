@@ -22,6 +22,12 @@ export function ArticleSchema({ article }: ArticleSchemaProps) {
     '@id': `${article.url}#article`,
     headline: article.headline,
     description: article.description,
+    image: {
+      '@type': 'ImageObject',
+      url: 'https://wiresizes.com/opengraph-image',
+      width: 1200,
+      height: 630
+    },
     author: {
       '@type': 'Organization',
       '@id': 'https://wiresizes.com/#organization',
