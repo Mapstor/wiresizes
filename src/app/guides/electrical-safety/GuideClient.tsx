@@ -209,14 +209,14 @@ export default function ElectricalSafetyPage({ datePublished, dateModified }: Gu
       <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl p-8 border border-red-200">
         <div className="max-w-4xl">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 bg-red-100 rounded-xl flex items-center justify-center">
+            <div className="w-16 h-16 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
               <BookOpen className="w-8 h-8 text-red-600" />
             </div>
-            <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            <div className="min-w-0">
+              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 break-words">
                 Electrical Safety Fundamentals
               </h1>
-              <p className="text-xl text-gray-600">
+              <p className="text-lg sm:text-xl text-gray-600">
                 Essential safety practices, standards, and procedures for electrical work and installations
               </p>
             </div>

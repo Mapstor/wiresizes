@@ -345,14 +345,14 @@ export default function ContactPage() {
           <div className="bg-red-50 border border-red-200 rounded-xl p-6">
             <div className="flex items-start gap-4">
               <AlertTriangle className="w-6 h-6 text-red-600 flex-shrink-0 mt-1" />
-              <div>
+              <div className="min-w-0">
                 <h3 className="text-lg font-semibold text-red-800 mb-2">Critical Safety Issues</h3>
                 <p className="text-red-700 mb-4">
                   If you've identified a calculation error that could pose a safety risk, please contact us immediately at:
                 </p>
                 <div className="bg-red-100 rounded-lg p-4 border border-red-300">
-                  <p className="text-red-800 font-semibold">
-                    Emergency Contact: <a href="mailto:emergency@wiresizes.com" className="underline">emergency@wiresizes.com</a>
+                  <p className="text-red-800 font-semibold break-words">
+                    Emergency Contact: <a href="mailto:emergency@wiresizes.com" className="underline break-all">emergency@wiresizes.com</a>
                   </p>
                   <p className="text-red-700 text-sm mt-1">
                     Include "SAFETY CRITICAL" in the subject line for immediate escalation (2-hour response guarantee)

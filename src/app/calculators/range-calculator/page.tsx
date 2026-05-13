@@ -443,23 +443,23 @@ export default function RangeCalculatorPage() {
             
             <div className="grid gap-8">
               {RANGE_EXAMPLES.map((example, idx) => (
-                <div key={idx} className="border-l-4 border-red-500 bg-red-50 rounded-lg p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
+                <div key={idx} className="border-l-4 border-red-500 bg-red-50 rounded-lg p-6 min-w-0">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-3">
+                    <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-gray-900 text-lg mb-2">{example.title}</h3>
                       <p className="text-red-700 font-medium mb-2">{example.scenario}</p>
                       <p className="text-sm text-gray-600 mb-3"><span className="font-medium">Specifications:</span> {example.specs}</p>
                     </div>
-                    <div className="text-right ml-4">
+                    <div className="sm:text-right sm:ml-4 min-w-0">
                       <div className="text-2xl font-bold text-red-600 mb-1">{example.result}</div>
                       <div className="text-sm text-gray-500 mb-1">{example.outlet}</div>
                       <div className="text-sm text-orange-600 mb-1">{example.cost}</div>
                       <div className="text-xs text-blue-600">{example.compliance}</div>
                     </div>
                   </div>
-                  <div className="bg-white rounded-lg p-4">
+                  <div className="bg-white rounded-lg p-4 overflow-x-auto">
                     <h4 className="font-medium text-gray-900 mb-2">NEC 220.55 Calculation:</h4>
-                    <pre className="text-sm text-gray-700 whitespace-pre-line font-mono">{example.calculation}</pre>
+                    <pre className="text-sm text-gray-700 whitespace-pre-line font-mono break-words">{example.calculation}</pre>
                   </div>
                 </div>
               ))}

@@ -395,7 +395,7 @@ export function WelderCalculator() {
           </div>
           
           {/* Calculate and Reset Buttons */}
-          <div className="flex gap-4 mt-6">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
             <Button onClick={performCalculation} className="flex-1">
               <Calculator className="w-4 h-4" />
               Calculate

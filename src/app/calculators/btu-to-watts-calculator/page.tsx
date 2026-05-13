@@ -113,7 +113,7 @@ export default function BTUToWattsCalculatorPage() {
         
         <div className="grid md:grid-cols-2 gap-8">
           {/* Air Conditioner Sizes */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 min-w-0">
             <h3 className="text-xl font-bold mb-4 text-blue-600">Air Conditioner Sizes</h3>
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -196,7 +196,7 @@ export default function BTUToWattsCalculatorPage() {
           </div>
 
           {/* Heating Equipment */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 min-w-0">
             <h3 className="text-xl font-bold mb-4 text-orange-600">Heating Equipment</h3>
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -572,7 +572,7 @@ export default function BTUToWattsCalculatorPage() {
         </h2>
         
         <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 min-w-0">
             <h3 className="text-lg font-bold mb-4 text-blue-600">Residential Rules of Thumb</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between py-1 border-b">
@@ -602,7 +602,7 @@ export default function BTUToWattsCalculatorPage() {
             </div>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 min-w-0">
             <h3 className="text-lg font-bold mb-4 text-green-600">Commercial Spaces</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between py-1 border-b">
@@ -632,7 +632,7 @@ export default function BTUToWattsCalculatorPage() {
             </div>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 min-w-0">
             <h3 className="text-lg font-bold mb-4 text-purple-600">Additional Factors</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between py-1 border-b">

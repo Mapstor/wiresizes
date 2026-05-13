@@ -511,14 +511,14 @@ export default function WellPumpCalculatorPage() {
             <div className="grid gap-8">
               {WELL_PUMP_EXAMPLES.map((example, idx) => (
                 <div key={idx} className="border-l-4 border-blue-500 bg-blue-50 rounded-lg p-6">
-                  <div className="flex items-start justify-between mb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-3">
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900 text-lg mb-2">{example.title}</h3>
                       <p className="text-blue-700 font-medium mb-2">{example.scenario}</p>
                       <p className="text-sm text-gray-600 mb-2"><span className="font-medium">Specifications:</span> {example.specs}</p>
                       <p className="text-sm text-gray-600 mb-3"><span className="font-medium">Load Analysis:</span> {example.loads}</p>
                     </div>
-                    <div className="text-right ml-4">
+                    <div className="sm:text-right sm:ml-4 min-w-0">
                       <div className="text-2xl font-bold text-blue-600 mb-1">{example.result}</div>
                       <div className="text-sm text-gray-500 mb-1">{example.control}</div>
                       <div className="text-sm text-orange-600 mb-1">{example.cost}</div>

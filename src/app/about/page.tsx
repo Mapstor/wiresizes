@@ -176,12 +176,12 @@ export default function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl">
             <div className="flex items-center gap-4 mb-6">
-              <div className="p-4 bg-white/20 backdrop-blur-sm rounded-xl">
+              <div className="p-4 bg-white/20 backdrop-blur-sm rounded-xl flex-shrink-0">
                 <Zap className="w-12 h-12 text-yellow-400" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 break-words">About WireSizes.com</h1>
-                <p className="text-xl text-blue-100">The Professional Standard for Electrical Wire Sizing</p>
+                <p className="text-lg sm:text-xl text-blue-100 break-words">The Professional Standard for Electrical Wire Sizing</p>
               </div>
             </div>
             

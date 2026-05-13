@@ -395,13 +395,13 @@ export default function GarageSubpanelCalculatorPage() {
             <div className="grid gap-8">
               {GARAGE_EXAMPLES.map((example, idx) => (
                 <div key={idx} className="border-l-4 border-green-500 bg-green-50 rounded-lg p-6">
-                  <div className="flex items-start justify-between mb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-3">
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900 text-lg mb-2">{example.title}</h3>
                       <p className="text-green-700 font-medium mb-2">{example.scenario}</p>
                       <p className="text-sm text-gray-600 mb-3"><span className="font-medium">Load Breakdown:</span> {example.loads}</p>
                     </div>
-                    <div className="text-right ml-4">
+                    <div className="sm:text-right sm:ml-4 min-w-0">
                       <div className="text-2xl font-bold text-green-600 mb-1">{example.result}</div>
                       <div className="text-sm text-gray-500 mb-1">{example.grounding}</div>
                       <div className="text-sm text-orange-600 mb-1">{example.cost}</div>
@@ -426,11 +426,11 @@ export default function GarageSubpanelCalculatorPage() {
             
             <div className="grid md:grid-cols-2 gap-6">
               {NEC_225_REQUIREMENTS.map((req, idx) => (
-                <div key={idx} className="border rounded-lg p-6 bg-red-50">
+                <div key={idx} className="border rounded-lg p-6 bg-red-50 min-w-0">
                   <div className="flex items-start gap-3 mb-3">
-                    <div className="w-3 h-3 bg-red-500 rounded-full mt-2"></div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
+                    <div className="w-3 h-3 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2 mb-1">
                         <h3 className="font-semibold text-gray-900">{req.requirement}</h3>
                         <span className="text-xs bg-red-100 px-2 py-1 rounded">NEC {req.section}</span>
                       </div>

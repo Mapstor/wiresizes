@@ -296,15 +296,15 @@ export default function DisclaimerPage() {
                   : 'bg-yellow-50 border-yellow-200'
               }`}>
                 <div className="flex items-start gap-4">
-                  <div className={`p-3 rounded-lg ${
-                    category.severity === 'critical' 
-                      ? 'bg-red-100 text-red-600' 
+                  <div className={`p-3 rounded-lg flex-shrink-0 ${
+                    category.severity === 'critical'
+                      ? 'bg-red-100 text-red-600'
                       : 'bg-yellow-100 text-yellow-600'
                   }`}>
                     <category.icon className="w-6 h-6" />
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
                       <h3 className="text-xl font-semibold text-gray-900">{category.category}</h3>
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                         category.severity === 'critical'
@@ -478,9 +478,9 @@ export default function DisclaimerPage() {
                   If you identify any calculation errors or safety concerns with our platform, please report them immediately:
                 </p>
                 <div className="bg-red-100 rounded-lg p-4 border border-red-300">
-                  <div className="space-y-2">
-                    <p className="text-red-800 font-semibold">
-                      Emergency Safety Contact: <a href="mailto:emergency@wiresizes.com" className="underline">emergency@wiresizes.com</a>
+                  <div className="space-y-2 min-w-0">
+                    <p className="text-red-800 font-semibold break-words">
+                      Emergency Safety Contact: <a href="mailto:emergency@wiresizes.com" className="underline break-all">emergency@wiresizes.com</a>
                     </p>
                     <p className="text-red-700 text-sm">
                       Include "SAFETY CRITICAL" in the subject line for immediate escalation

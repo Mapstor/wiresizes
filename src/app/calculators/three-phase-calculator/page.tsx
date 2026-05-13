@@ -503,13 +503,13 @@ export default function ThreePhaseCalculatorPage() {
             <div className="grid gap-8">
               {THREE_PHASE_EXAMPLES.map((example, idx) => (
                 <div key={idx} className="border-l-4 border-red-500 bg-red-50 rounded-lg p-6">
-                  <div className="flex items-start justify-between mb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-3">
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900 text-lg mb-2">{example.title}</h3>
                       <p className="text-red-700 font-medium mb-2">{example.scenario}</p>
                       <p className="text-sm text-gray-600 mb-3"><span className="font-medium">Specifications:</span> {example.specs}</p>
                     </div>
-                    <div className="text-right ml-4">
+                    <div className="sm:text-right sm:ml-4 min-w-0">
                       <div className="text-2xl font-bold text-red-600 mb-1">{example.result}</div>
                       <div className="text-sm text-gray-500 mb-1">{example.starting}</div>
                       <div className="text-sm text-orange-600 mb-1">{example.cost}</div>
@@ -660,10 +660,10 @@ export default function ThreePhaseCalculatorPage() {
             
             <div className="grid md:grid-cols-2 gap-6">
               {INSTALLATION_COSTS.map((cost, idx) => (
-                <div key={idx} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <div className="flex justify-between items-start mb-2">
+                <div key={idx} className="border rounded-lg p-4 hover:shadow-md transition-shadow min-w-0">
+                  <div className="flex flex-wrap justify-between items-start gap-2 mb-2">
                     <h3 className="font-semibold text-gray-900">{cost.component}</h3>
-                    <span className="font-bold text-green-600">{cost.range}</span>
+                    <span className="font-bold text-green-600 whitespace-nowrap">{cost.range}</span>
                   </div>
                   <p className="text-sm text-gray-600">{cost.factors}</p>
                 </div>

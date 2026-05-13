@@ -109,7 +109,7 @@ export default function BoxFillCalculatorPage() {
         
         <div className="grid md:grid-cols-2 gap-8">
           {/* Standard Metal Boxes */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 min-w-0">
             <h3 className="text-xl font-bold mb-4 text-blue-600">Standard Device Boxes</h3>
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -185,7 +185,7 @@ export default function BoxFillCalculatorPage() {
           </div>
 
           {/* Square and Octagonal Boxes */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 min-w-0">
             <h3 className="text-xl font-bold mb-4 text-green-600">Square & Octagonal Boxes</h3>
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -570,7 +570,7 @@ export default function BoxFillCalculatorPage() {
         </h2>
         
         <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 min-w-0">
             <h3 className="text-lg font-bold mb-4 text-blue-600">Device Boxes</h3>
             <div className="space-y-2 text-sm">
               <div className="p-2 bg-gray-50 dark:bg-gray-700 rounded">
@@ -596,7 +596,7 @@ export default function BoxFillCalculatorPage() {
             </div>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 min-w-0">
             <h3 className="text-lg font-bold mb-4 text-green-600">Junction Boxes</h3>
             <div className="space-y-2 text-sm">
               <div className="p-2 bg-gray-50 dark:bg-gray-700 rounded">
@@ -622,7 +622,7 @@ export default function BoxFillCalculatorPage() {
             </div>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 min-w-0">
             <h3 className="text-lg font-bold mb-4 text-purple-600">Specialty Boxes</h3>
             <div className="space-y-2 text-sm">
               <div className="p-2 bg-gray-50 dark:bg-gray-700 rounded">

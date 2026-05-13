@@ -190,8 +190,8 @@ export default function WireSizingGuidePage({ datePublished, dateModified }: Gui
         </div>
 
         <div className="mb-6">
-          <div className="flex gap-4 mb-4">
-            <div>
+          <div className="flex flex-wrap gap-3 sm:gap-4 mb-4">
+            <div className="min-w-0">
               <label className="block text-sm font-medium text-gray-700 mb-2">Material</label>
               <select 
                 value={selectedMaterial} 
@@ -202,7 +202,7 @@ export default function WireSizingGuidePage({ datePublished, dateModified }: Gui
                 <option value="aluminum">Aluminum (AL)</option>
               </select>
             </div>
-            <div>
+            <div className="min-w-0">
               <label className="block text-sm font-medium text-gray-700 mb-2">Temperature Rating</label>
               <select 
                 value={selectedTemp} 
