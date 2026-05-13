@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import { BoxFillCalculator } from '@/components/calculators';
+import ClientBoxFillCalculator from '@/components/calculators/ClientBoxFillCalculator';
 import { Package, Calculator, AlertTriangle, AlertCircle, BookOpen, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
@@ -96,9 +96,7 @@ export default function BoxFillCalculatorPage() {
       {/* Calculator */}
       <section className="mb-12">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-          <Suspense fallback={<div>Loading calculator...</div>}>
-            <BoxFillCalculator />
-          </Suspense>
+          <ClientBoxFillCalculator />
         </div>
       </section>
 

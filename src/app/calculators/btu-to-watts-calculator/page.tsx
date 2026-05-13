@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import { BTUToWattsCalculator } from '@/components/calculators';
+import ClientBTUToWattsCalculator from '@/components/calculators/ClientBTUToWattsCalculator';
 import { Flame, Calculator, TrendingUp, AlertCircle, BookOpen, Snowflake } from 'lucide-react';
 import Link from 'next/link';
 import { calculatorFAQs } from '@/data/calculator-faqs';
@@ -100,9 +100,7 @@ export default function BTUToWattsCalculatorPage() {
       {/* Calculator */}
       <section className="mb-12">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-          <Suspense fallback={<div>Loading calculator...</div>}>
-            <BTUToWattsCalculator />
-          </Suspense>
+          <ClientBTUToWattsCalculator />
         </div>
       </section>
 
