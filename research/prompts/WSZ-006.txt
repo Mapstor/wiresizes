@@ -1,0 +1,72 @@
+WSZ-006 PHYSICS — wiresizes.com: rebuild the wire resistance, voltage drop, 12 V/DC and three-phase tools on the verified engines
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 has WSZ-005 FLAGSHIPS as done. If not, stop.
+Read first:
+- DEVLOG §0–§5 + last 10 §6 entries
+- research/page-specs.md, section "WSZ-006"
+- .claude/skills/content-page/SKILL.md and references/tool-pages.md, svg-spec.md, prepublish-checklist.md
+- .claude/skills/anti-slop-prose/SKILL.md
+- the engines in the verified data layer (DEVLOG §1 Key paths)
+- research/golden-cases.json
+
+Pages:
+- /calculators/wire-resistance-calculator (Bing: 8,389 impressions, 256 clicks)
+- /calculators/voltage-drop-calculator
+- /calculators/low-voltage-calculator
+- /calculators/three-phase-calculator
+
+These are the site's physics tools. They sit under Marko's BSc Physics byline, so the method has to be visible and exact.
+
+Tool-page rules (content-page tool anatomy):
+- H1 plus at most two plain lines above the tool.
+- The first input within about 60 rendered words of the H1.
+- Sensible defaults, so the first click works.
+- Results render only after the button. They explain every output number in plain words: what it means, how it compares, what to do with it.
+- Assumptions are stated, with a link to /methodology.
+- A server-rendered twin with the same substance: worked example, typical-values table, how to read the results.
+- Inputs: imperial first, metric toggles.
+- No live recomputation while typing.
+
+Calculations come only from the engines. Inputs and results never round-trip through hand-typed constants.
+
+1. Build each page to its spec in research/page-specs.md:
+   - inputs and outputs as listed
+   - worked examples = golden cases (render the engine's output for the golden inputs; never type the numbers)
+   - FAQ from the listed queries
+   - sources, byline, two SVGs (hero below the tool on tool pages)
+   - Article + SoftwareApplication schema (applicationCategory UtilitiesApplication, offers price 0) only where it matches visible content
+2. Specific requirements:
+   - Wire resistance:
+     · show the 20 °C and 75 °C results side by side;
+     · say values are for solid conductors and that stranded conductors run slightly higher, without a number;
+     · aluminum only for 12 AWG and larger.
+   - Voltage drop:
+     · single-phase and three-phase;
+     · parallel sets add area;
+     · "smallest size for your target" mode, where the target is the reader's (default 3%, labeled as the reader's choice, never as an NEC limit);
+     · say the resistive approximation leaves out AC reactance;
+     · optional energy line using the EIA price with its month (registry domain eia-electricity-price).
+   - 12 V/DC:
+     · the formula with K is shown on the page;
+     · temperature choice 20 °C or 75 °C;
+     · state that it checks voltage drop only and that the conductor must also be rated for the current (link the 310.16 page).
+   - Three-phase:
+     · conversions, line-to-neutral voltage, PF correction;
+     · no motor tables;
+     · no wire or breaker outputs.
+3. Remove any leftover old engine code for these four pages once nothing imports it.
+4. Add the four routes to scripts/gates.config.json enforce. Run anti-slop-prose on all copy (report the fix count). If impeccable is installed, run its audit on the tool template at 390 px and fix what it finds.
+5. Run the prepublish checklist per page. Fix every fail.
+6. Append a corrections line: "{date}: rebuilt the wire resistance, voltage drop, 12 V DC and three-phase calculators; the 12 V calculator's formula now includes copper resistivity."
+7. Verify:
+   - `npm run dates`
+   - `rm -rf .next && npm run build` (gates enforced on these routes)
+   - golden tests
+   - `npx tsc --noEmit`
+   - a node script that imports each page's calculation path and reproduces every golden case in the groups resistance, voltage-drop, dc-sizing and pf-correction
+8. Commit "feat(wsz-006): physics tools on verified engines". Don't push.
+
+Definition of done (paste each output): the golden reproduction script output; gate output for the four routes (0 hits); build/tsc lines; per page: inputs, outputs, word count below the tool, FAQ count, SVG titles; the checklist table; the anti-slop count; the impeccable result or "not installed".
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-006 PHYSICS. Status done only if the verification ran and passed; skipped tests and UI behaviour count as unverified. Also record these chat notes: §5: "When G2 is sourced, add the NEC informational notes on voltage drop to the voltage drop page." Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.

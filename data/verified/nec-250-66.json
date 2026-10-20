@@ -1,0 +1,61 @@
+{
+  "id": "nec-250-66",
+  "title": "Grounding electrode conductor for alternating-current systems",
+  "edition": "NFPA 70 Table 250.66 as shown in the NFPA 2020 fact sheet; 2023 and 2026 printings not seen",
+  "source": {
+    "publisher": "NFPA",
+    "document": "\"Using the Tables in Article 250 of the NEC®\" fact sheet (© 2020 NFPA, June 2020), Table 250.66",
+    "url": "https://www.salinas.gov/files/sharedassets/city/v/1/fire-department/documents/grounding-bonding-fact-sheet.pdf",
+    "retrieved": "2026-10-19",
+    "attribution": "Source: NFPA 70 (NEC), Table 250.66 — retrieved Oct 2026"
+  },
+  "notes": [
+    "Based on the largest ungrounded service-entrance conductor (or equivalent area for parallel sets).",
+    "Limits for rod/pipe/plate and concrete-encased electrode conductors (250.66(A)/(B)) not re-verified Oct 2026 — do not state them until sourced.",
+    "No 2026-draft evidence for Table 250.66 (the CMP-5 Second Draft only references it). Say \"values from NFPA's 2020 grounding fact sheet\" on pages."
+  ],
+  "rows": [
+    {
+      "service_cu": "2 or smaller",
+      "service_al_cca": "1/0 or smaller",
+      "gec_cu": "8",
+      "gec_al_cca": "6"
+    },
+    {
+      "service_cu": "1 or 1/0",
+      "service_al_cca": "2/0 or 3/0",
+      "gec_cu": "6",
+      "gec_al_cca": "4"
+    },
+    {
+      "service_cu": "2/0 or 3/0",
+      "service_al_cca": "4/0 or 250",
+      "gec_cu": "4",
+      "gec_al_cca": "2"
+    },
+    {
+      "service_cu": "Over 3/0 through 350",
+      "service_al_cca": "Over 250 through 500",
+      "gec_cu": "2",
+      "gec_al_cca": "1/0"
+    },
+    {
+      "service_cu": "Over 350 through 600",
+      "service_al_cca": "Over 500 through 900",
+      "gec_cu": "1/0",
+      "gec_al_cca": "3/0"
+    },
+    {
+      "service_cu": "Over 600 through 1100",
+      "service_al_cca": "Over 900 through 1750",
+      "gec_cu": "2/0",
+      "gec_al_cca": "4/0"
+    },
+    {
+      "service_cu": "Over 1100",
+      "service_al_cca": "Over 1750",
+      "gec_cu": "3/0",
+      "gec_al_cca": "250"
+    }
+  ]
+}

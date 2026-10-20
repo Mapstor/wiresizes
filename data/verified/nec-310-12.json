@@ -1,0 +1,78 @@
+{
+ "id": "nec-310-12",
+ "title": "Single-phase dwelling services and feeders (83% rule table)",
+ "edition": "NFPA 70-2023 Table 310.12 (labeled Table 310.12(A) in the 2026 draft; values unchanged by any First Revision)",
+ "source": {
+  "publisher": "NFPA",
+  "document": "CMP-6 First Draft final ballot results, A2025 (FR-7943/7953/8031)",
+  "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_FD_BallotFinal.pdf",
+  "retrieved": "2026-10-19",
+  "attribution": "Source: NFPA 70 (NEC) 2023, Table 310.12 — retrieved Oct 2026"
+ },
+ "rules_seen": [
+  "310.12(A) services: conductor ampacity permitted to be not less than 83 percent of the service rating.",
+  "310.12(B) feeders: not less than 83 percent of the feeder rating (dwelling main power feeder).",
+  "Where 310.15(B)/(C) correction or adjustment applies, it applies (relocated from former (D) in the 2026 draft)."
+ ],
+ "notes": [
+  "Applies to 120/240 V single-phase dwelling services and the main power feeder; a subpanel feeder that is not the main power feeder uses 310.16.",
+  "310.12(C)/(D) 2023 wording not seen."
+ ],
+ "rows": [
+  {
+   "rating_a": 100.0,
+   "cu": "4",
+   "al_cca": "2"
+  },
+  {
+   "rating_a": 110.0,
+   "cu": "3",
+   "al_cca": "1"
+  },
+  {
+   "rating_a": 125.0,
+   "cu": "2",
+   "al_cca": "1/0"
+  },
+  {
+   "rating_a": 150.0,
+   "cu": "1",
+   "al_cca": "2/0"
+  },
+  {
+   "rating_a": 175.0,
+   "cu": "1/0",
+   "al_cca": "3/0"
+  },
+  {
+   "rating_a": 200.0,
+   "cu": "2/0",
+   "al_cca": "4/0"
+  },
+  {
+   "rating_a": 225.0,
+   "cu": "3/0",
+   "al_cca": "250"
+  },
+  {
+   "rating_a": 250.0,
+   "cu": "4/0",
+   "al_cca": "300"
+  },
+  {
+   "rating_a": 300.0,
+   "cu": "250",
+   "al_cca": "350"
+  },
+  {
+   "rating_a": 350.0,
+   "cu": "350",
+   "al_cca": "500"
+  },
+  {
+   "rating_a": 400.0,
+   "cu": "400",
+   "al_cca": "600"
+  }
+ ]
+}

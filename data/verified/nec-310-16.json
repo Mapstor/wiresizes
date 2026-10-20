@@ -1,0 +1,331 @@
+{
+  "id": "nec-310-16",
+  "title": "Allowable ampacities, not more than three current-carrying conductors in raceway, cable or earth, 30 °C (86 °F) ambient",
+  "edition": "NFPA 70-2023 (NEC), Table 310.16",
+  "source": {
+    "publisher": "National Fire Protection Association (NFPA)",
+    "document": "NFPA TIA Log 1691 public-comment circulation (14 Feb 2023), which reprints 2023 Table 310.16; TIA failed (ballot 21 Feb 2023), so the printed 2023 table stands",
+    "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_Log1691_PubCommCirc.pdf",
+    "url_ballot": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_Log1691_BallotFinal.pdf",
+    "cross_checks": [
+      "NFPA CMP-6 2026 First Draft ballot FR-8257 (rows 12 AWG–2000 kcmil identical)",
+      "NFPA CMP-6 2026 Second Draft SR-8602 (rows 12 AWG–2000 kcmil identical)"
+    ],
+    "retrieved": "2026-10-19",
+    "attribution": "Source: NFPA 70 (NEC) 2023, Table 310.16 — retrieved Oct 2026"
+  },
+  "notes": [
+    "Ampere values only; ambient other than 30 °C → 310.15(B); more than three current-carrying conductors → 310.15(C)(1).",
+    "18 AWG and 16 AWG copper appear only in the 90 °C column (14 A and 18 A) in 2023.",
+    "2026 drafts (not final text): 18 AWG row moved to MI/MTW notes; 16 AWG Cu 60 °C = 10 A and 14 AWG copper-clad aluminum 60 °C = 10 A added; 12 AWG–2000 kcmil unchanged. Do not publish 2026 deltas as final.",
+    "NM cable (334.80) uses the 60 °C column for ampacity — section text not re-verified in Oct 2026; cite only after verification.",
+    "Sizes marked small_conductor_240_4D are limited by 240.4(D). Verified limits (see nec-240-4-d.json): 14 AWG Cu 15 A, 12 AWG Cu 20 A, 10 AWG Cu 30 A, 14 AWG CCA 10 A. Aluminum 12/10 AWG and 18/16 AWG limits not verified — do not render them."
+  ],
+  "columns_types": {
+    "cu_60": "TW, UF",
+    "cu_75": "RHW, THHW, THW, THWN, XHHW, XHWN, USE, ZW",
+    "cu_90": "THHN, THWN-2, XHHW-2, USE-2, RHW-2, and others"
+  },
+  "rows": [
+    {
+      "size": "18",
+      "cu_60": null,
+      "cu_75": null,
+      "cu_90": 14.0,
+      "al_60": null,
+      "al_75": null,
+      "al_90": null,
+      "small_conductor_240_4D": true
+    },
+    {
+      "size": "16",
+      "cu_60": null,
+      "cu_75": null,
+      "cu_90": 18.0,
+      "al_60": null,
+      "al_75": null,
+      "al_90": null,
+      "small_conductor_240_4D": true
+    },
+    {
+      "size": "14",
+      "cu_60": 15.0,
+      "cu_75": 20.0,
+      "cu_90": 25.0,
+      "al_60": null,
+      "al_75": null,
+      "al_90": null,
+      "small_conductor_240_4D": true
+    },
+    {
+      "size": "12",
+      "cu_60": 20.0,
+      "cu_75": 25.0,
+      "cu_90": 30.0,
+      "al_60": 15.0,
+      "al_75": 20.0,
+      "al_90": 25.0,
+      "small_conductor_240_4D": true
+    },
+    {
+      "size": "10",
+      "cu_60": 30.0,
+      "cu_75": 35.0,
+      "cu_90": 40.0,
+      "al_60": 25.0,
+      "al_75": 30.0,
+      "al_90": 35.0,
+      "small_conductor_240_4D": true
+    },
+    {
+      "size": "8",
+      "cu_60": 40.0,
+      "cu_75": 50.0,
+      "cu_90": 55.0,
+      "al_60": 35.0,
+      "al_75": 40.0,
+      "al_90": 45.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "6",
+      "cu_60": 55.0,
+      "cu_75": 65.0,
+      "cu_90": 75.0,
+      "al_60": 40.0,
+      "al_75": 50.0,
+      "al_90": 55.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "4",
+      "cu_60": 70.0,
+      "cu_75": 85.0,
+      "cu_90": 95.0,
+      "al_60": 55.0,
+      "al_75": 65.0,
+      "al_90": 75.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "3",
+      "cu_60": 85.0,
+      "cu_75": 100.0,
+      "cu_90": 115.0,
+      "al_60": 65.0,
+      "al_75": 75.0,
+      "al_90": 85.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "2",
+      "cu_60": 95.0,
+      "cu_75": 115.0,
+      "cu_90": 130.0,
+      "al_60": 75.0,
+      "al_75": 90.0,
+      "al_90": 100.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "1",
+      "cu_60": 110.0,
+      "cu_75": 130.0,
+      "cu_90": 145.0,
+      "al_60": 85.0,
+      "al_75": 100.0,
+      "al_90": 115.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "1/0",
+      "cu_60": 125.0,
+      "cu_75": 150.0,
+      "cu_90": 170.0,
+      "al_60": 100.0,
+      "al_75": 120.0,
+      "al_90": 135.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "2/0",
+      "cu_60": 145.0,
+      "cu_75": 175.0,
+      "cu_90": 195.0,
+      "al_60": 115.0,
+      "al_75": 135.0,
+      "al_90": 150.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "3/0",
+      "cu_60": 165.0,
+      "cu_75": 200.0,
+      "cu_90": 225.0,
+      "al_60": 130.0,
+      "al_75": 155.0,
+      "al_90": 175.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "4/0",
+      "cu_60": 195.0,
+      "cu_75": 230.0,
+      "cu_90": 260.0,
+      "al_60": 150.0,
+      "al_75": 180.0,
+      "al_90": 205.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "250",
+      "cu_60": 215.0,
+      "cu_75": 255.0,
+      "cu_90": 290.0,
+      "al_60": 170.0,
+      "al_75": 205.0,
+      "al_90": 230.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "300",
+      "cu_60": 240.0,
+      "cu_75": 285.0,
+      "cu_90": 320.0,
+      "al_60": 195.0,
+      "al_75": 230.0,
+      "al_90": 260.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "350",
+      "cu_60": 260.0,
+      "cu_75": 310.0,
+      "cu_90": 350.0,
+      "al_60": 210.0,
+      "al_75": 250.0,
+      "al_90": 280.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "400",
+      "cu_60": 280.0,
+      "cu_75": 335.0,
+      "cu_90": 380.0,
+      "al_60": 225.0,
+      "al_75": 270.0,
+      "al_90": 305.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "500",
+      "cu_60": 320.0,
+      "cu_75": 380.0,
+      "cu_90": 430.0,
+      "al_60": 260.0,
+      "al_75": 310.0,
+      "al_90": 350.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "600",
+      "cu_60": 350.0,
+      "cu_75": 420.0,
+      "cu_90": 475.0,
+      "al_60": 285.0,
+      "al_75": 340.0,
+      "al_90": 385.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "700",
+      "cu_60": 385.0,
+      "cu_75": 460.0,
+      "cu_90": 520.0,
+      "al_60": 315.0,
+      "al_75": 375.0,
+      "al_90": 425.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "750",
+      "cu_60": 400.0,
+      "cu_75": 475.0,
+      "cu_90": 535.0,
+      "al_60": 320.0,
+      "al_75": 385.0,
+      "al_90": 435.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "800",
+      "cu_60": 410.0,
+      "cu_75": 490.0,
+      "cu_90": 555.0,
+      "al_60": 330.0,
+      "al_75": 395.0,
+      "al_90": 445.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "900",
+      "cu_60": 435.0,
+      "cu_75": 520.0,
+      "cu_90": 585.0,
+      "al_60": 355.0,
+      "al_75": 425.0,
+      "al_90": 480.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "1000",
+      "cu_60": 455.0,
+      "cu_75": 545.0,
+      "cu_90": 615.0,
+      "al_60": 375.0,
+      "al_75": 445.0,
+      "al_90": 500.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "1250",
+      "cu_60": 495.0,
+      "cu_75": 590.0,
+      "cu_90": 665.0,
+      "al_60": 405.0,
+      "al_75": 485.0,
+      "al_90": 545.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "1500",
+      "cu_60": 525.0,
+      "cu_75": 625.0,
+      "cu_90": 705.0,
+      "al_60": 435.0,
+      "al_75": 520.0,
+      "al_90": 585.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "1750",
+      "cu_60": 545.0,
+      "cu_75": 650.0,
+      "cu_90": 735.0,
+      "al_60": 455.0,
+      "al_75": 545.0,
+      "al_90": 615.0,
+      "small_conductor_240_4D": false
+    },
+    {
+      "size": "2000",
+      "cu_60": 555.0,
+      "cu_75": 665.0,
+      "cu_90": 750.0,
+      "al_60": 470.0,
+      "al_75": 560.0,
+      "al_90": 630.0,
+      "small_conductor_240_4D": false
+    }
+  ]
+}

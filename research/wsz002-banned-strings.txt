@@ -1,0 +1,73 @@
+# WSZ-002 definition of done: none of these may appear (case-insensitive) in any prerendered HTML page,
+# in sitemap.xml, robots.txt, llms.txt, OG/Twitter tags or JSON-LD after `rm -rf .next && npm run build`.
+# One phrase per line; lines starting with # are comments. Source: research/AUDIT-2026-10.md §4–§5 and research/sources/verification.md.
+# Withdrawn pages are included in the scan (their old content must be gone too).
+
+# fabricated social proof and badges
+Trusted by
+50,000+
+100,000
+50+ Countries
+30+ Professional Tools
+Professional Grade
+NEC Code Compliant
+NEC 2023 Compliant
+FREE Always
+used by licensed electricians
+Trusted worldwide
+engineers educated
+Used by over
+
+# fabricated authority and service promises (/about, /contact, /disclaimer)
+reviewed by licensed
+master electricians
+Industry Recognition
+Recommended tool for field calculations
+Valuable reference for code compliance
+Featured in top electrical tools roundup
+Cited in continuing education materials
+99.9%
+uptime SLA
+±0.1%
+Accuracy Guarantee
+Monthly code review
+Built by electrical professionals
+Calculations Per Month
+24/7
+2-hour response
+Critical Support
+emergency@
+support@wiresizes
+consulting@
+legal@wiresizes
+education@
+international@
+Headquarters
+
+# personas and stale or wrong claims
+Sarah
+Backyard Oasis
+JuiceBox
+through 2032
+Download NEC Table
+PE stamp
+60% of electrical
+NEC 2024
+4/0 copper or 250 kcmil aluminum
+1 AWG copper or 1/0 aluminum
+2/0 aluminum per
+6-25R
+408 V
+408V
+0.609 lb
+Generally not required for ranges
+remainder @ 80%
+THHN-2
+NEC 2026 publishes
+most recent edition
+3.5 VA per sq ft
+
+# builder/AI talk on reader pages
+Do AI assistants
+llms.txt
+git-derived

@@ -1,0 +1,114 @@
+{
+ "id": "nec-250-122",
+ "title": "Minimum size equipment grounding conductors",
+ "edition": "NFPA 70 Table 250.122 (2020 fact sheet = 2026 Second Draft; 2023 not seen directly; 2026 label 250.122(A))",
+ "source": {
+  "publisher": "NFPA",
+  "document": "\"Using the Tables in Article 250 of the NEC®\" fact sheet (© 2020 NFPA, June 2020); Table 250.122 also identical in CMP-5 2026 Second Draft SR-8360 (\"No technical changes\")",
+  "url": "https://www.salinas.gov/files/sharedassets/city/v/1/fire-department/documents/grounding-bonding-fact-sheet.pdf",
+  "url_2": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P05_SD_PrelimSR.pdf",
+  "retrieved": "2026-10-19",
+  "attribution": "Source: NFPA 70 (NEC), Table 250.122 — retrieved Oct 2026"
+ },
+ "notes": [
+  "Size by the rating of the overcurrent device ahead of the circuit, \"not exceeding\".",
+  "Where ungrounded conductors are increased in size for voltage drop, 250.122(B) proportional increase applies (text not re-verified Oct 2026)."
+ ],
+ "rows": [
+  {
+   "ocpd_a_not_exceeding": 15.0,
+   "cu": "14",
+   "al_cca": "12"
+  },
+  {
+   "ocpd_a_not_exceeding": 20.0,
+   "cu": "12",
+   "al_cca": "10"
+  },
+  {
+   "ocpd_a_not_exceeding": 60.0,
+   "cu": "10",
+   "al_cca": "8"
+  },
+  {
+   "ocpd_a_not_exceeding": 100.0,
+   "cu": "8",
+   "al_cca": "6"
+  },
+  {
+   "ocpd_a_not_exceeding": 200.0,
+   "cu": "6",
+   "al_cca": "4"
+  },
+  {
+   "ocpd_a_not_exceeding": 300.0,
+   "cu": "4",
+   "al_cca": "2"
+  },
+  {
+   "ocpd_a_not_exceeding": 400.0,
+   "cu": "3",
+   "al_cca": "1"
+  },
+  {
+   "ocpd_a_not_exceeding": 500.0,
+   "cu": "2",
+   "al_cca": "1/0"
+  },
+  {
+   "ocpd_a_not_exceeding": 600.0,
+   "cu": "1",
+   "al_cca": "2/0"
+  },
+  {
+   "ocpd_a_not_exceeding": 800.0,
+   "cu": "1/0",
+   "al_cca": "3/0"
+  },
+  {
+   "ocpd_a_not_exceeding": 1000.0,
+   "cu": "2/0",
+   "al_cca": "4/0"
+  },
+  {
+   "ocpd_a_not_exceeding": 1200.0,
+   "cu": "3/0",
+   "al_cca": "250"
+  },
+  {
+   "ocpd_a_not_exceeding": 1600.0,
+   "cu": "4/0",
+   "al_cca": "350"
+  },
+  {
+   "ocpd_a_not_exceeding": 2000.0,
+   "cu": "250",
+   "al_cca": "400"
+  },
+  {
+   "ocpd_a_not_exceeding": 2500.0,
+   "cu": "350",
+   "al_cca": "600"
+  },
+  {
+   "ocpd_a_not_exceeding": 3000.0,
+   "cu": "400",
+   "al_cca": "600"
+  },
+  {
+   "ocpd_a_not_exceeding": 4000.0,
+   "cu": "500",
+   "al_cca": "750"
+  },
+  {
+   "ocpd_a_not_exceeding": 5000.0,
+   "cu": "700",
+   "al_cca": "1250"
+  },
+  {
+   "ocpd_a_not_exceeding": 6000.0,
+   "cu": "800",
+   "al_cca": "1250"
+  }
+ ]
+}

@@ -1,0 +1,103 @@
+WSZ-001 BOOTSTRAP (revised 2026-10-20; replaces the 2026-10-19 text) — wiresizes.com: DEVLOG, research pack, box and repo check, code inventory (no page changes)
+
+REPO GUARD: you run in /workspace (the owner's ~/dev/wiresizes). Run:
+- `git rev-parse --is-inside-work-tree`
+- `git remote get-url origin`
+- `grep -rIl "wiresizes.com" --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=wsz-pack . | head -5`
+
+Then:
+- If this is not a git work tree, or it has no origin remote: do steps 3–6 only (read only, no commit) and stop with a clear note. The owner then has to clone the GitHub repo, because pushes are what deploy the site.
+- Continue normally only if the origin URL contains "wiresizes" (any case) or the grep finds the domain in the app code. If DEVLOG.md exists, its §1 domain must also be wiresizes.com.
+
+Context:
+- On 2026-10-19 chat audited every live page of wiresizes.com against primary sources: NFPA documents, NIST handbooks, state code-adoption records and manufacturer manuals.
+- The findings, verified data and rebuild plan are in wsz-pack/. The owner unzipped wiresizes-research-pack-v2.zip into the project folder.
+- This prompt installs the pack, records the box and repo state, and inventories the code. It changes no page content.
+
+1. DEVLOG
+   - If DEVLOG.md exists: read §0–§5 and the last 10 §6 entries before anything else.
+   - If it is missing: bootstrap it per the devlog skill, section 4. Use .claude/skills/devlog/SKILL.md; if that file is missing, use wsz-pack/skills/devlog/SKILL.md (step 2 installs it). Use evidence only. §1 values supplied here:
+     · Owner: Marko Visic (pushes from his Mac)
+     · Author: Marko Visic · BSc Physics, Faculty of Mathematics and Physics, University of Ljubljana · sameAs https://www.linkedin.com/in/marko-visic/
+     · Publisher and data controller: Moving Data Systems d.o.o., Maribor, Slovenia
+     · Project folder ~/dev/wiresizes (box: /workspace) · box project claude-sandbox-wiresizes · preview port 3022
+     · Data sources: research/data-sources.csv (registry), data/verified/*.json
+     · Prompt code: WSZ
+   - Add the DEVLOG block to CLAUDE.md as the skill says. Append it; never duplicate it.
+
+2. Install the pack. Never overwrite an existing file; list every conflict and stop if there is one.
+   - wsz-pack/research/ → research/
+   - wsz-pack/data/verified/ → data/verified/
+   - wsz-pack/skills/<name>/ → .claude/skills/<name>/, only for skills not already installed. Never replace an existing skill folder.
+   - Then delete wsz-pack/.
+   - Run: `ls research research/sources research/prompts data/verified .claude/skills`
+
+3. Box and network (record the results in DEVLOG §1 and §4):
+   - `node -v` and `npm -v`. The image is node:22, so `node --test --experimental-strip-types` should work for TypeScript tests; confirm it with a 3-line throwaway test, then delete the file.
+   - Firewall: read /usr/local/bin/init-firewall.sh and list the domains or IP sets it allows.
+   - `timeout 15 git ls-remote origin HEAD` → does GitHub work from the box?
+   - `timeout 15 npm ping` → does the npm registry work? Do not install anything.
+   - Playwright: is it installed, and does a Chromium binary exist?
+   - Port: what .devcontainer/ sets, and how the dev server is started on 3022.
+
+4. Git state:
+   - `git fetch origin` (if step 3 showed no GitHub access, say so; origin/* refs may then be stale)
+   - `git status --short`
+   - `git log --oneline -5`
+   - `git log origin/main..main --oneline`
+   - `git log main..origin/main --oneline`
+   - `git log --date=short --format='%ad %h %s' | tail -3` (the first commits)
+   - `git log --date=short --format='%ad %h %s' | wc -l`
+   - Record the main HEAD hash. List untracked files, such as a freshly copied .devcontainer/.
+
+5. Code inventory, read only. Write it to research/inventory-2026-10.md:
+   - Next.js version, router type, TypeScript version, and the scripts and devDependencies in package.json (including any test runner).
+   - Every route: file path, dynamic params, and whether its calculator logic runs client-side.
+   - Also: sitemap source; robots; redirects in next.config.* and vercel.json; trailingSlash; the site-URL constant or metadataBase; where canonical, OG URL and JSON-LD are built.
+   - Shared header, footer, badge and hero components. Name the file and line where each fabricated badge lives ("Trusted by…", "Used in 50+ Countries", "30+ Professional Tools", "NEC 2023 Compliant").
+   - Every file that holds NEC/AWG tables or electrical constants (for example src/lib/data/nec-tables.ts), with its importers, and every calculator's calculation function (file and function name).
+   - Third-party scripts and services: grep for gtag, googletagmanager, @vercel/analytics, @vercel/speed-insights, raptive, adthrive, cmp, consent, fonts.googleapis, plausible and hotjar. List exactly what loads (this feeds the privacy page).
+   - llms.txt, public/*.pdf, and any downloadable NEC table.
+   - How dates are produced today (build time, git, hard-coded) for sitemap lastmod and any "updated" text.
+   - Cross-check every slug in research/page-map.csv against the route list. Flag routes with no map row and map rows with no route.
+
+6. Checks (report only, fix nothing):
+   - `python3 -I research/check_sources.py research/data-sources.csv research/page-map.csv` → expect "RESULT: OK (14 warnings)". If python3 is missing in the box, say so and skip this check.
+   - `rm -rf .next && npm run build` → pass or fail, the number of prerendered routes, and any warnings worth noting.
+
+7. Fill DEVLOG §1 from steps 3–5: commands, stack, Node in box, network, key paths, skills in repo, analytics. Unknowns stay "?" and go to §0 Open questions.
+
+8. Commit only the files this prompt created or moved: DEVLOG.md, CLAUDE.md, research/, data/verified/ and the new .claude/skills/ folders. Message: "chore(wsz-001): DEVLOG, research pack, inventory". Leave every other untracked or modified file alone and list it. Don't push.
+
+Definition of done (paste each output):
+- the `ls` from step 2 and any install conflicts
+- the step 3 results: node, firewall allowlist, git ls-remote, npm ping, Playwright, port
+- the step 4 git outputs
+- the check_sources result line
+- the build result line and prerendered route count
+- route count vs page-map count, with every mismatch
+- the third-party script list
+- which of these skills are in .claude/skills: devlog, anti-slop-prose, impeccable, content-page, data-sourcing, google-ai-content-policy, seo-visibility, site-audit, raptive-ready
+- `git status --short` after the commit
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-001 BOOTSTRAP. Status done only if the verification ran and passed; skipped tests and UI behaviour count as unverified.
+
+Also record these chat notes:
+- §5 Backlog = the waves in research/AUDIT-2026-10.md §7:
+  · WSZ-002 stop-the-bleed (chat revises it after reading the source code)
+  · WSZ-003 data layer and gates
+  · WSZ-004 trust frame
+  · WSZ-005 flagships
+  · WSZ-006 physics tools
+  · WSZ-007 converters
+  · WSZ-008 to WSZ-011 held until the GAPs in AUDIT §8 are sourced
+  · WSZ-012 QA
+- §4 Gotchas:
+  · "No number goes on a page unless it traces to data/verified/*.json, research/golden-cases.json or an engine; no NEC section reference outside research/nec-sections-allowlist.csv."
+  · "NFPA owns the NEC text: values as data with attribution, short quotes only, no PDFs of NEC tables."
+  · Plus whatever step 3 found about network access (git, npm).
+- §0 Open questions:
+  · canonical host www vs apex (chat recommends www)
+  · does the contact@wiresizes.com forwarding alias exist?
+
+Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.

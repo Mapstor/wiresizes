@@ -1,0 +1,94 @@
+WSZ-003 DATALAYER — wiresizes.com: verified data module, calculation engines, golden tests and the three build gates
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 has WSZ-002 STOPBLEED as done. If not, stop.
+Read first: DEVLOG §0–§5 + last 10 §6 entries; research/golden-cases.json; research/nec-sections-allowlist.csv; research/data-sources.csv; data/verified/*.json (read each file's notes); .claude/skills/content-page/SKILL.md ("Rendering rules"); .claude/skills/data-sourcing/SKILL.md.
+
+Constraint: the box has no network. Add no npm packages. Use what package.json already has plus Node built-ins (node:test, node:assert, node:fs, node:path). If tests need TypeScript, use, in this order:
+1. the repo's existing test runner;
+2. `node --test --experimental-strip-types` if `node -v` is 22.6 or newer (engine code must then use erasable TypeScript only: no enums, no namespaces, no parameter properties);
+3. `npx tsc` to a temp folder, then node --test on the output.
+Record the choice in DEVLOG §1 Commands.
+
+1. Verified data module (one import point for every number on the site)
+   - Create src/lib/verified/ (or the repo's existing lib folder if it uses another path; record it in DEVLOG §1 Key paths). It imports data/verified/*.json with TypeScript types and exposes:
+     · awgRow(size)
+     · kcmilRow(size)
+     · table31016(size)
+     · correction(ambientC, column)
+     · adjustment(nConductors)
+     · table31012(ratingA): returns null when the rating is not a table row; never interpolate.
+     · egc(ocpdA): the first row not exceeded; null above 6000 A.
+     · gec(serviceSize, material)
+     · max240_4D(size, material): only for the verified rows; returns null for every other size.
+     · adoption(): the verified rows only.
+   - Delete the old hard-coded NEC/AWG tables (for example src/lib/data/nec-tables.ts) once nothing imports them. Every remaining importer must move to the new module. Withdrawn pages keep their old code unused; leave it, but it must not be imported by any live page.
+   - registry.ts: parse research/data-sources.csv at build time with a small RFC 4180 CSV parser (quoted fields contain commas). Expose:
+     · attribution(domain) → { text, url, verified_date, status };
+     · it throws during the build if a page asks for a domain that is not status "verified".
+
+2. Engines (src/lib/engine/, pure functions, no React). Each module exports ENGINE_ID and DOMAINS (the registry domains it uses, all verified).
+   - awg-geometry: diameter from the definition d = 0.005 in × 92^((36 − n)/39); area in cmil and mm²; step ratios.
+   - resistance: R(T) for copper (R20 from awg.json × (1 + 0.00393 (T − 20))) and EC-H19 aluminum (17.002/cmil × 1000 × (1 + 0.00403 (T − 20))); per run, per 1000 ft, per km; loop.
+   - voltage-drop: k × L × I × R / 1000 (k = 2 single-phase, √3 three-phase), parallel sets (areas add), smallest size for a target %.
+   - dc-sizing: CM = 2 × K × I × L / VD; smallest gauge by awg.json area.
+   - ampacity-arithmetic: table value × correction × adjustment. No termination-temperature step yet (110.14(C) is not sourced); the result object says so in a field, not in page text.
+   - power: kW ↔ A ↔ kVA for single- and three-phase with PF; PF correction (kVAR = P × (tan φ1 − tan φ2); current reduction = 1 − PF1/PF2).
+   - conversions: NIST SP 811 factors (Btu_IT/h ↔ W, hp electric 746 W, hp 745.6999 W, ton of refrigeration 3516.853 W).
+
+3. Golden tests
+   - tests/golden.test.* loads research/golden-cases.json and runs every case (the file's "count" field; 85 today) through the matching data function or engine, within each case's tolerance ('exact' means equality).
+   - It fails if any group in the file has no test mapping.
+   - Add "test" (or "test:golden") to package.json scripts.
+
+4. Rendering components (server components)
+   - <Val v={number} unit="A" src="nec-310-16" digits={…}/>: renders <span data-src="nec-310-16">20 A</span>. The non-breaking space and the units come from one formatter: US style, imperial first, metric in parentheses where both are shown.
+   - Engine outputs use src="calc:<ENGINE_ID>".
+   - <Sources domains={[…]} />: renders registry attribution strings, each linked to its registry url. Never hand-typed.
+   - <AsOf domain="…" />: renders "Data as of {Mon YYYY}" from verified_date.
+   - Size names (14 AWG, 4/0, 250 kcmil) are names, not measurements: render them through <Size s="4/0"/>, which checks the size exists in awg.json, nec-310-16.json or the kcmil list.
+
+5. Gates (scripts/*.mjs, Node built-ins only; small HTML tokenizer that tracks the open-element stack; skip <style>, <noscript> and every <script> except type="application/ld+json", which gates a and c read as JSON strings; the Next.js RSC payload contains $-prefixed tokens and must never be scanned)
+   a. check-rendered-text.mjs: if a check-rendered-text.mjs from poolsolver exists on this machine (search ~ for it, depth 4), copy it and extend it; otherwise write it to the content-page "Rendering rules" spec. It scans:
+      · title, meta description, og:* and twitter:* tags, alt/title/aria-label attributes;
+      · visible text, SVG <text>, JSON-LD string values, llms.txt.
+      It looks for:
+      · spec vocabulary: hook, promise, wedge, information gain, fan-out, attack plan, ledger, registry, archetype, cluster, flagship, money query, engine, single-sourced, by construction, build pipeline, crawlable, crawler, LLM, citation-worthy, "cite us";
+      · status notes: "coming soon", "shipping later", "now shipped", "when … ships";
+      · self-praise: trusted, professional-grade, ultimate, comprehensive guide, rigorous, honest, exact, accurate (as self-description);
+      · UK spellings: colour, behaviour, metre, litre, centre, aluminium, analyse, modelling;
+      · joined words: a digit or a closing inline tag running straight into a letter.
+      Keep an allowlist file with a reason per entry.
+   b. check-number-trace.mjs: every unit-bearing number in visible text must sit inside an element with data-src, and that data-src must be a verified registry domain or a calc:<ENGINE_ID> whose DOMAINS are all verified.
+      · Units: A, amps, V, volts, kV, W, kW, kVA, kVAR, VA, Ω, ohms, °C, °F, %, ft, feet, in, inches, mm, mm², m, km, cmil, kcmil, lb, kg, hp, Btu/h, ton.
+      · A "$" amount counts as unit-bearing.
+      · Size names inside <Size> are exempt, and so are years, dates and NEC section numbers.
+   c. check-nec-refs.mjs: every NEC reference in rendered text ("Table 310.16", "310.12", "240.4(D)", "Article 120") must match a ref in research/nec-sections-allowlist.csv. A number followed by a unit is not a reference.
+   - Staged rollout: scripts/gates.config.json has
+     · enforce: [routes] for gates b and c (start with an empty list; each rebuild wave adds its routes),
+     · reportOnly: everything else.
+     Withdrawn (noindex) routes are skipped. Gate a enforces site-wide from now on (fix or allowlist what it finds). The "$" check enforces site-wide from now on (WSZ-002 removed them all).
+   - package.json: "postbuild": run the three gates plus check-banned.mjs. Report-only routes print a count; enforced routes fail the build.
+
+6. Build stamp: add <meta name="x-build" content={first 7 chars of process.env.VERCEL_GIT_COMMIT_SHA, or "local"}> to the root layout, so chat can confirm production = main by fetching the page.
+
+7. Optional 390 px check: only if Playwright and a Chromium binary are already in the box, add scripts/check-overflow.mjs (each prerendered route at 390 px wide: document.scrollWidth ≤ 390). If not available, skip it and write "unverified: overflow" in DEVLOG.
+
+8. Verify: `rm -rf .next && npm run build` (gates run in postbuild); the golden tests (all cases pass, 0 skipped); `npx tsc --noEmit`; `python3 -I research/check_sources.py research/data-sources.csv research/page-map.csv`.
+
+9. Commit "feat(wsz-003): verified data layer, engines, golden tests, rendered-text/number-trace/NEC-ref gates". Don't push.
+
+Definition of done (paste each output):
+- golden test summary (passed = the file's count, 0 failed, 0 skipped)
+- gate output: gate a hits (must be 0 after fixes/allowlist); gates b and c report-only counts per route
+- the "$" check (0)
+- build and tsc result lines
+- list of files that still import the old tables (must be only withdrawn pages)
+- the x-build meta in one built HTML file
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-003 DATALAYER. Status done only if the verification ran and passed; skipped tests and UI behaviour count as unverified. Also record these chat notes:
+- §4 Gotchas:
+  · "Every unit-bearing number renders through <Val>/<Size> with data-src; gates b/c enforce per route via scripts/gates.config.json — add a route when its rebuild lands."
+  · "golden-cases.json is generated in chat from data/verified; regenerate it, never hand-edit."
+- §1 Key paths: verified module, engines, components, gates, tests.
+Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.

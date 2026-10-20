@@ -1,0 +1,53 @@
+{
+  "id": "nec-240-4-d",
+  "title": "Small-conductor overcurrent protection limits, NEC 240.4(D)",
+  "edition": "Values seen in NFPA's 2026 revision record (CMP-10 Second Draft, SR-8377); 2023 lead-in and item (D)(3) seen in the 2023 text (Leviton Captain Code 2023, reprinted with NFPA permission)",
+  "source": {
+    "publisher": "NFPA",
+    "document": "NFPA 70 A2025 CMP-10 Second Draft working draft (Oct 2024), SR-8377; Leviton Captain Code 2023 node 313",
+    "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P10_SD_PrelimSR.pdf",
+    "url_2023": "https://captaincode2023.leviton.com/node/313",
+    "retrieved": "2026-10-19",
+    "attribution": "Source: NFPA 70 (NEC), 240.4(D) — NFPA revision record SR-8377 and 2023 text (Leviton reprint) — retrieved Oct 2026"
+  },
+  "rule_2023_leadin": "Unless specifically permitted in 240.4(E) or (G), the overcurrent protection shall not exceed that required by 240.4(D)(1) through (D)(8) after any correction factors for ambient temperature and number of conductors have been applied.",
+  "rows": [
+    {
+      "size": "14",
+      "material": "Cu",
+      "max_ocpd_a": 15,
+      "status": "verified (2026 revision record)"
+    },
+    {
+      "size": "12",
+      "material": "Cu",
+      "max_ocpd_a": 20,
+      "status": "verified (2026 revision record)"
+    },
+    {
+      "size": "10",
+      "material": "Cu",
+      "max_ocpd_a": 30,
+      "status": "verified (2026 revision record)"
+    },
+    {
+      "size": "14",
+      "material": "CCA",
+      "max_ocpd_a": 10,
+      "status": "verified (2023 item (D)(3); conditions apply: continuous load not over 8 A, OCPD listed and marked for 14 AWG CCA)"
+    }
+  ],
+  "not_verified": [
+    "18 AWG Cu",
+    "16 AWG Cu",
+    "12 AWG Al/CCA",
+    "10 AWG Al/CCA",
+    "240.4(E)/(G) exceptions",
+    "240.4(B) next size up",
+    "240.6(A) standard ratings"
+  ],
+  "notes": [
+    "Cite as 'NEC 240.4(D)' without an item number for copper (2023 item numbers for copper not seen).",
+    "Applies to the overcurrent device, not to the conductor's ampacity: a 14 AWG Cu conductor has a 20 A ampacity in the 75 °C column of Table 310.16 but may not be protected above 15 A."
+  ]
+}

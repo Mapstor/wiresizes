@@ -1,0 +1,65 @@
+WSZ-004 TRUSTFRAME — wiresizes.com: byline and real dates on every page, Person/Organization schema, /methodology from the registry, corrections log, footer
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 has WSZ-003 DATALAYER as done. If not, stop.
+Read first: DEVLOG §0–§5 + last 10 §6 entries; research/trust-frame-spec.md (it is the spec for this wave); .claude/skills/raptive-ready/SKILL.md ("Trust and author-identity standard"); .claude/skills/seo-visibility (schema guidance); .claude/skills/anti-slop-prose/SKILL.md.
+
+1. Real dates
+   - scripts/update-page-dates.mjs: for each live route, take the last commit date (`git log -1 --format=%cs -- <the route's files and the data/verified files it imports>`) and write it to src/data/page-dates.json. This runs in the box before each content commit; Vercel builds have no git history.
+   - Never use build time as a content date.
+   - Sitemap lastmod reads the same JSON.
+   - Add an npm script "dates".
+
+2. Byline block, visible on every content and tool page (above the fold on guides; below the tool on tool pages):
+   "By Marko Visic, BSc Physics · Updated {date} · Sources below"
+   - The name links to /about.
+   - "Reviewed" never appears unless DEVLOG logs a dated review.
+   - Withdrawn pages get no byline.
+
+3. Schema (JSON-LD, site level plus per page):
+   - Organization: Moving Data Systems d.o.o., url https://www.wiresizes.com, no sameAs unless a real profile exists.
+   - Person: Marko Visic.
+     · alumniOf: CollegeOrUniversity "University of Ljubljana, Faculty of Mathematics and Physics";
+     · hasCredential: EducationalOccupationalCredential "BSc Physics";
+     · knowsAbout: ["conductor resistance", "electrical units and conversions", "wire gauge geometry"];
+     · sameAs: https://www.linkedin.com/in/marko-visic/.
+   - Article or WebPage on content pages:
+     · author → Person; publisher → Organization;
+     · datePublished only if a real first-publish date is known from git; dateModified from page-dates.json.
+   - BreadcrumbList on every non-home page.
+   - No aggregateRating, Review or HowTo. Validate the JSON-LD shape with a small script (required keys present, URLs on the www host).
+
+4. /about (final version of the WSZ-002 text, sections per trust-frame-spec.md §/about):
+   - add a visible rel="me" link to the LinkedIn profile;
+   - add a "Corrections" section that renders a dated list from src/data/corrections.json (start with the WSZ-002 entry; each later wave appends one line).
+
+5. /methodology (new page; add it to the sitemap and the footer):
+   - Generated from research/data-sources.csv: one section per verified domain, giving:
+     · what it is;
+     · publisher;
+     · edition or date;
+     · deep link;
+     · retrieved date;
+     · what the site calculates from it, with the formula in plain notation;
+     · known limits from the coverage and notes fields, rewritten for readers.
+   - A short section "Not covered yet" lists, in plain words, the topics whose sources are still open (from the GAP rows). No status words, no build talk.
+   - Formulas published here: AWG diameter definition; R(T) for copper and aluminum; voltage drop (single- and three-phase); DC circular mils; ampacity correction and adjustment arithmetic; power and PF correction.
+   - Attribution strings come from the registry, never hand-typed.
+
+6. Footer: About · Methodology · Contact · Privacy · Terms · Disclaimer, plus the NFPA trademark notice. Check that favicon/manifest exist and a custom 404 page exists (report; create a plain 404 if missing).
+
+7. Prose: run anti-slop-prose on every new or changed sentence in this wave. Report the fix count.
+
+8. Verify:
+   - `npm run dates`
+   - `rm -rf .next && npm run build` (all gates; add /about, /methodology, /contact, /privacy, /terms and /disclaimer to the gates' enforce list)
+   - golden tests
+   - `npx tsc --noEmit`
+   - the JSON-LD check script
+   - a script that confirms every live page's HTML contains the byline text and an "Updated" date equal to page-dates.json.
+
+9. Commit "feat(wsz-004): byline, dates, schema, methodology, corrections log". Don't push.
+
+Definition of done (paste each output): the byline/date script result (live pages checked = live route count); the JSON-LD check; gate results with the enforced routes; golden and tsc lines; the /methodology section list.
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-004 TRUSTFRAME. Status done only if the verification ran and passed; skipped tests and UI behaviour count as unverified. Also record these chat notes: §4 Gotchas: "Run `npm run dates` before every content commit; append a line to src/data/corrections.json for every substantive correction." Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.

@@ -1,0 +1,31 @@
+ref,kind,edition,topic,domain,status,render_note
+310.16,table,2023,"Allowable ampacities, not more than three current-carrying conductors, 30 °C",nec-310-16,verified,"Render as 'Table 310.16'"
+310.15(B)(1)(1),table,2023,Ambient temperature correction factors (30 °C basis),nec-310-15-corrections,verified,"Render as 'Table 310.15(B)(1)(1)'"
+310.15(C)(1),table,2023,Adjustment factors for more than three current-carrying conductors,nec-310-15-corrections,verified,"Render as 'Table 310.15(C)(1)'"
+310.12,table,2023,Single-phase dwelling services and main power feeders (83% table),nec-310-12,verified,"Section and table; 2026 label Table 310.12(A)"
+250.66,table,2023,Grounding electrode conductor for AC systems,nec-250-grounding,verified,"Render as 'Table 250.66'; do not state 250.66(A)/(B) limits"
+250.122,table,2023,Minimum size equipment grounding conductors,nec-250-grounding,verified,"Render as 'Table 250.122'; 2026 label 250.122(A)"
+240.4(D),section,2023,Small-conductor overcurrent protection limits,nec-240-4-d,verified,"Copper 14/12/10 AWG and 14 AWG CCA only"
+240.4(D)(3),section,2023,14 AWG copper-clad aluminum (10 A),nec-240-4-d,verified,"Only for 14 AWG CCA"
+310.3(A),section,2023,Minimum conductor sizes (14 AWG Cu; 12 AWG CCA; 12 AWG Al),nec-2023-rule-excerpts,verified,
+310.3(C),section,2023,Conductors 8 AWG and larger in raceways shall be stranded,nec-310-16,verified,"Source: NFPA CMP-6 Second Draft SR-8425 (existing 2023 text)"
+210.8(A)(6),section,2023,Kitchen receptacles 125–250 V need GFCI,nec-2023-rule-excerpts,verified,
+210.8(D),section,2023,"GFCI for ranges, wall ovens, counter-mounted cooking units, clothes dryers, microwaves",nec-2023-rule-excerpts,verified,
+210.8(F),section,2023,Dwelling outdoor outlets up to 50 A (60 A in 2026),nec-2023-rule-excerpts,verified,"Say the 2026 threshold is 60 A (nec-2026-edition)"
+210.23(A),section,2023,Permissible loads on 15/20 A branch circuits,nec-2023-rule-excerpts,verified,
+220.53,section,2023,Appliance load demand factor (four or more appliances),nec-2023-rule-excerpts,verified,
+220.57,section,2023,EVSE load: larger of 7200 W or nameplate,nec-2023-rule-excerpts,verified,
+430.6(A),section,2023,Table FLC for conductors and SC/GF protection; nameplate for overloads,nec-2023-rule-excerpts,verified,
+551.71,section,2023,RV site receptacle types and GFCI,nec-2023-rule-excerpts,verified,
+551.71(F),section,2023,GFCI for 125 V 15/20 A RV site receptacles,nec-2023-rule-excerpts,verified,
+625.40,section,2023,Individual branch circuit for EVSE above 16 A or 120 V,nec-2023-rule-excerpts,verified,
+625.42,section,2023,EV charging is a continuous load,nec-2023-rule-excerpts,verified,
+625.43,section,2023,"Disconnect for EVSE above 60 A or 150 V to ground: readily accessible, lockable",nec-2023-rule-excerpts,verified,
+680.5,section,2023,GFCI and SPGFCI classes for pools and spas,nec-2023-rule-excerpts,verified,
+680.22(A)(4),section,2023,Receptacles within 20 ft of a pool need GFCI,nec-2023-rule-excerpts,verified,
+Article 220,article,2023,Branch-circuit/feeder/service load calculations (2023 location),nec-2026-edition,verified,"Location only; no values until G7 closes"
+Article 120,article,2026,Load calculations (2026 location),nec-2026-edition,verified,"Location only; no values until G7 closes"
+310.5,section,2026,"Minimum sizes 16 AWG Cu, 14 AWG CCA, 12 AWG Al (was 310.3)",nec-2026-edition,verified,
+230.70,section,2026,One/two-family dwelling service disconnect outdoors; serves as emergency disconnect,nec-2026-edition,verified,
+230.85,section,2023,Emergency disconnect for one/two-family dwellings (deleted in 2026),nec-2026-edition,verified,
+120.7,section,2026,Power Control System (was 220.70 EMS),nec-2026-edition,verified,

@@ -1,0 +1,41 @@
+WSZ-007 CONVERTERS — wiresizes.com: rebuild the 7 unit converters and 3 power guides on the verified engines
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 has WSZ-006 PHYSICS as done. If not, stop.
+Read first: DEVLOG §0–§5 + last 10 §6 entries; research/page-specs.md section "WSZ-007"; .claude/skills/content-page (tool-pages.md for the converters, intro-and-hooks.md for the guides); .claude/skills/anti-slop-prose/SKILL.md; research/golden-cases.json.
+
+Pages:
+- /calculators/kilowatts-to-amps-calculator
+- /calculators/kva-to-amps-calculator
+- /calculators/watts-to-amps-calculator
+- /calculators/amps-to-watts-calculator
+- /calculators/volts-to-amps-calculator
+- /calculators/ohms-law-calculator
+- /calculators/btu-to-watts-calculator
+- /guides/power-factor-explained
+- /guides/single-vs-three-phase
+- /guides/electrical-power-calculations
+
+Rules: same as WSZ-006 (tool-first anatomy for the converters, article anatomy for the guides, engines only, <Val>/<Size>, registry sources, byline, two SVGs).
+- These are short pages: depth comes from answering the listed questions, not from length.
+- Converters share an engine but must not share one H2 skeleton or one FAQ set. Each page answers its own queries.
+
+1. Build each page to its spec line in research/page-specs.md. Worked examples are the listed golden cases, rendered from the engine.
+2. Specific requirements:
+   - volts-to-amps: the tool must do what its description says (I = P / (V × PF), plus the Ohm's-law path I = V / R).
+   - single-vs-three-phase: write a title and meta that answer the question directly (446 impressions at position 7.9 with 0 clicks), and include the engine-computed comparison of one 10 kW load at 240 V single-phase, 208 V three-phase and 480 V three-phase.
+   - power-factor-explained: use the DOE example as DOE states it (about 26% less current) next to the engine's exact numbers. Never copy DOE's "67-kW" misprint.
+   - electrical-power-calculations: the formula table plus engine examples only.
+3. Add the ten routes to scripts/gates.config.json enforce. Run anti-slop-prose (report the count). If impeccable is installed, run its audit on the converter template and the guide template at 390 px.
+4. Run the prepublish checklist per page and fix every fail. Append a corrections line: "{date}: rebuilt the power converters and guides; removed unsourced equipment tables."
+5. Verify:
+   - `npm run dates`
+   - `rm -rf .next && npm run build`
+   - golden tests
+   - `npx tsc --noEmit`
+   - a node script that reproduces every golden case in the groups power, conversion and pf-correction through each page's calculation path
+6. Commit "feat(wsz-007): converters and power guides on verified engines". Don't push.
+
+Definition of done (paste each output): the golden reproduction output; gate output for the ten routes (0 hits); build/tsc lines; one line per page (word count, H2 count, FAQ count, SVG titles); the checklist table; the anti-slop count; the impeccable result or "not installed".
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-007 CONVERTERS. Status done only if the verification ran and passed; skipped tests and UI behaviour count as unverified. Also record these chat notes: §0 Next action: "WSZ-008 is held until chat closes G14/G2/G13 (next sourcing session); owner pastes DEVLOG §0 into chat with 'continue sourcing'." Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.
