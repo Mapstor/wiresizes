@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useId } from 'react';
 import { clsx } from 'clsx';
 import { Zap } from 'lucide-react';
 
@@ -32,6 +32,7 @@ export function VoltageInput({
   max = 1000, 
   className 
 }: VoltageInputProps) {
+  const id = useId();
   const [inputMode, setInputMode] = useState<'select' | 'custom'>('select');
   const [customValue, setCustomValue] = useState(value.toString());
 
@@ -71,7 +72,7 @@ export function VoltageInput({
   return (
     <div className={clsx("space-y-1", className)}>
       {label && (
-        <label className="block text-sm font-medium text-neutral-700 flex items-center gap-2">
+        <label htmlFor={id} className="block text-sm font-medium text-neutral-700 flex items-center gap-2">
           <Zap className="w-4 h-4 text-blue-600" />
           {label}
         </label>
@@ -109,6 +110,7 @@ export function VoltageInput({
         {/* Input Field */}
         {inputMode === 'select' ? (
           <select
+            id={id}
             value={value.toString()}
             onChange={(e) => handleSelectChange(e.target.value)}
             className="w-full px-4 py-3 border border-neutral-300 rounded-lg text-neutral-900 font-medium bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
@@ -123,6 +125,7 @@ export function VoltageInput({
         ) : (
           <div className="relative">
             <input
+              id={id}
               type="number"
               min={min}
               max={max}

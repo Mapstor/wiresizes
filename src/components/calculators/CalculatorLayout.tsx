@@ -30,14 +30,14 @@ export function CalculatorLayout({
         <div className="flex gap-2">
           {onShare && (
             <Tooltip content="Share Results">
-              <Button variant="ghost" size="sm" onClick={onShare}>
+              <Button variant="ghost" size="sm" onClick={onShare} aria-label="Share this result">
                 <Share2 className="w-4 h-4" />
               </Button>
             </Tooltip>
           )}
           {onPrint && (
             <Tooltip content="Print Results">
-              <Button variant="ghost" size="sm" onClick={onPrint}>
+              <Button variant="ghost" size="sm" onClick={onPrint} aria-label="Print this result">
                 <Printer className="w-4 h-4" />
               </Button>
             </Tooltip>

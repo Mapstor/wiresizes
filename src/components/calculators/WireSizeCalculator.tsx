@@ -2,74 +2,166 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Select } from '@/components/ui/Select';
-import { VoltageInput } from '@/components/ui/VoltageInput';
-import { Slider } from '@/components/ui/Slider';
+import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { CalculatorLayout } from './CalculatorLayout';
 import { CalculatorResult } from './CalculatorResult';
 import { WireComparison } from '@/components/visualizations/WireComparison';
-import { calculateWireSize, WireSizeInput, WireSizeResult } from '@/lib/calculations/wire-sizing';
+import {
+  BASIS_LINES,
+  EGC_LARGER_THAN_CONDUCTOR_NOTE,
+  EGC_NONE_MESSAGE,
+  EGC_UPSIZED_NOTE,
+  isSizingError,
+  sizeConductor,
+  SIZING_ERROR_MESSAGES,
+  WIRE_SIZE_DEFAULTS,
+  WIRE_SIZE_RATINGS,
+} from '@/lib/calculations/conductor-sizing';
+import type { SizeConductorResult } from '@/lib/calculations/conductor-sizing';
+import { formatSize } from '@/lib/calculations/sizes';
+import type { Material } from '@/lib/calculations/sizes';
+import { voltageOptions, voltsAfterPhaseChange } from '@/lib/calculations/inputs';
+import type { Phase } from '@/lib/calculations/inputs';
+import { LENGTH_MAX_FT, LENGTH_MIN_FT, targetTitle, VD_TARGET_OPTIONS } from '@/lib/calculations/voltage-drop';
 import { useShareableUrl } from '@/lib/hooks/useShareableUrl';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { RefreshCw, Calculator } from 'lucide-react';
-
-const VOLTAGE_OPTIONS = [
-  { value: '120', label: '120V' },
-  { value: '208', label: '208V' },
-  { value: '240', label: '240V' },
-  { value: '277', label: '277V' },
-  { value: '480', label: '480V' },
-];
 
 const PHASE_OPTIONS = [
   { value: 'single', label: 'Single-Phase' },
   { value: 'three', label: 'Three-Phase' },
 ];
 
+const RATING_OPTIONS = WIRE_SIZE_RATINGS.map((a) => ({ value: String(a), label: `${a} A` }));
+const TARGET_OPTIONS = VD_TARGET_OPTIONS.map((pct) => ({ value: String(pct), label: `${pct} %` }));
+
+const MATERIALS: { material: Material; key: 'copper' | 'aluminum'; label: string }[] = [
+  { material: 'Cu', key: 'copper', label: 'Copper' },
+  { material: 'Al', key: 'aluminum', label: 'Aluminum' },
+];
+
+const GROUND_WIRE_LABELS = {
+  copper: 'Ground wire (copper)',
+  aluminum: 'Ground wire (aluminum or copper-clad aluminum)',
+};
+
+interface Inputs {
+  ocpdA: number;
+  /** '' = use the rating */
+  loadA: number | '';
+  lengthFt: number | '';
+  volts: number;
+  phase: Phase;
+  vdTargetPct: number;
+}
+
+const DEFAULT_INPUTS: Inputs = {
+  ocpdA: WIRE_SIZE_DEFAULTS.ocpdA,
+  loadA: '',
+  lengthFt: WIRE_SIZE_DEFAULTS.lengthFt,
+  volts: WIRE_SIZE_DEFAULTS.volts,
+  phase: WIRE_SIZE_DEFAULTS.phase,
+  vdTargetPct: WIRE_SIZE_DEFAULTS.vdTargetPct,
+};
+
+/** Inputs from a share link: rating, load, length, voltage, phase and target; old links carried amps and distance. */
+function inputsFromQuery(query: string): Inputs | null {
+  const params = new URLSearchParams(query);
+  if ([...params.keys()].length === 0) return null;
+  const num = (key: string): number | null => {
+    const raw = params.get(key);
+    if (raw === null || raw.trim() === '') return null;
+    const value = Number(raw);
+    return Number.isFinite(value) ? value : null;
+  };
+  const next: Inputs = { ...DEFAULT_INPUTS };
+  // the old amps value counts as the rating only when it is a standard rating from 15 to 400 A
+  const rating = num('rating') ?? num('amps');
+  if (rating !== null && WIRE_SIZE_RATINGS.includes(rating)) next.ocpdA = rating;
+  const load = num('load');
+  if (load !== null && load >= 0 && load <= next.ocpdA) next.loadA = load;
+  const length = num('length') ?? num('distance');
+  if (length !== null && length >= LENGTH_MIN_FT && length <= LENGTH_MAX_FT) next.lengthFt = length;
+  const phase = params.get('phase');
+  if (phase === 'single' || phase === 'three') next.phase = phase;
+  const volts = num('voltage');
+  next.volts = volts !== null && voltageOptions(next.phase).includes(volts) ? volts : voltsAfterPhaseChange(next.volts, next.phase);
+  const target = num('target');
+  if (target !== null && VD_TARGET_OPTIONS.includes(target)) next.vdTargetPct = target;
+  return next;
+}
+
+function materialNotes(result: SizeConductorResult): string[] {
+  const notes: string[] = [];
+  if (result.egcUpsized) notes.push(EGC_UPSIZED_NOTE);
+  if (result.egcLargerThanConductor) notes.push(EGC_LARGER_THAN_CONDUCTOR_NOTE);
+  return notes;
+}
+
+interface Outcome {
+  error: string | null;
+  results: { material: Material; key: 'copper' | 'aluminum'; label: string; result: SizeConductorResult }[];
+}
+
+function calculate(inputs: Inputs): Outcome {
+  const results: Outcome['results'] = [];
+  for (const m of MATERIALS) {
+    const result = sizeConductor({
+      ocpdA: inputs.ocpdA,
+      loadA: inputs.loadA === '' ? null : inputs.loadA,
+      lengthFt: inputs.lengthFt === '' ? Number.NaN : inputs.lengthFt,
+      volts: inputs.volts,
+      phase: inputs.phase,
+      material: m.material,
+      vdTargetPct: inputs.vdTargetPct,
+    });
+    if (isSizingError(result)) return { error: SIZING_ERROR_MESSAGES[result.error], results: [] };
+    results.push({ ...m, result });
+  }
+  return { error: null, results };
+}
+
 interface WireSizeCalculatorProps {
   enableUrlSharing?: boolean;
 }
 
 export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculatorProps) {
-  const [inputs, setInputs] = useState<WireSizeInput>({
-    amps: 100,
-    distance: 100,
-    voltage: 240,
-    phase: 'single',
-  });
-
-  const [copperResult, setCopperResult] = useState<WireSizeResult | null>(null);
-  const [aluminumResult, setAluminumResult] = useState<WireSizeResult | null>(null);
-  const [showResults, setShowResults] = useState(false);
+  const [inputs, setInputs] = useState<Inputs>(DEFAULT_INPUTS);
+  const [outcome, setOutcome] = useState<Outcome | null>(null);
+  const [calculatedFor, setCalculatedFor] = useState<Inputs | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
 
+  // Read a share link once on load
+  useEffect(() => {
+    if (!enableUrlSharing) return;
+    const fromQuery = inputsFromQuery(window.location.search);
+    if (fromQuery) setInputs(fromQuery);
+  }, [enableUrlSharing]);
+
   const shareableInputs = {
-    amps: inputs.amps,
-    distance: inputs.distance,
-    voltage: inputs.voltage,
+    rating: inputs.ocpdA,
+    load: inputs.loadA,
+    length: inputs.lengthFt,
+    voltage: inputs.volts,
     phase: inputs.phase,
+    target: inputs.vdTargetPct,
   };
   const { getShareableUrl } = useShareableUrl(shareableInputs, { enabled: enableUrlSharing });
   const { print } = usePrintExport();
 
-  // Calculate both copper and aluminum
   const performCalculation = useCallback(() => {
-    const copperCalc = calculateWireSize({ ...inputs, material: 'copper' });
-    const aluminumCalc = calculateWireSize({ ...inputs, material: 'aluminum' });
-    setCopperResult(copperCalc);
-    setAluminumResult(aluminumCalc);
-    setShowResults(true);
-    
+    setOutcome(calculate(inputs));
+    setCalculatedFor(inputs);
+
     // Scroll to results
     setTimeout(() => {
-      resultsRef.current?.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
+      resultsRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
       });
     }, 100);
   }, [inputs]);
-
-  
 
   const handleShare = useCallback(async () => {
     const url = getShareableUrl();
@@ -78,37 +170,40 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
   }, [getShareableUrl]);
 
   const handlePrint = useCallback(() => {
-    if (!copperResult || !aluminumResult) return;
+    if (!outcome || !calculatedFor || outcome.error) return;
+    const results: Record<string, string> = {};
+    const notes: string[] = [];
+    for (const { key, label, result } of outcome.results) {
+      results[label] = `${formatSize(result.size)} (${targetTitle(result.meetsTarget)})`;
+      results[`${label} 60 °C ampacity`] = `${result.ampacity60} A`;
+      results[`${label} voltage drop`] = `${result.vdPct.toFixed(2)} % (${result.vdVolts.toFixed(2)} V)`;
+      results[GROUND_WIRE_LABELS[key]] = result.egc ? formatSize(result.egc) : EGC_NONE_MESSAGE;
+      notes.push(...materialNotes(result).map((note) => `${label}: ${note}`));
+      notes.push(...result.steps.map((step, i) => `${label}, step ${i + 1}: ${step}`));
+    }
+    notes.push(...BASIS_LINES);
     print({
       title: 'Wire Size Calculation',
       inputs: {
-        Amperage: `${inputs.amps}A`,
-        Distance: `${inputs.distance} ft`,
-        Voltage: `${inputs.voltage}V`,
-        Phase: inputs.phase,
+        'Breaker or fuse rating': `${calculatedFor.ocpdA} A`,
+        'Load current for voltage drop (A)': `${calculatedFor.loadA === '' ? calculatedFor.ocpdA : calculatedFor.loadA} A`,
+        'Length (one-way)': `${calculatedFor.lengthFt} ft`,
+        Voltage: `${calculatedFor.volts} V`,
+        Phase: calculatedFor.phase === 'three' ? 'Three-Phase' : 'Single-Phase',
+        'Voltage-drop target (your choice)': `${calculatedFor.vdTargetPct} %`,
       },
-      results: {
-        'Copper Wire': `#${copperResult.awg} AWG`,
-        'Copper Ampacity': `${copperResult.ampacity}A`,
-        'Copper Voltage Drop': `${copperResult.voltageDropPercent.toFixed(2)}%`,
-        'Aluminum Wire': `#${aluminumResult.awg} AWG`,
-        'Aluminum Ampacity': `${aluminumResult.ampacity}A`,
-        'Aluminum Voltage Drop': `${aluminumResult.voltageDropPercent.toFixed(2)}%`,
-        'Ground Wire': `#${copperResult.groundWire} AWG`,
-      },
-      notes: [...(copperResult.warnings || []), ...(aluminumResult.warnings || [])],
+      results,
+      notes,
     });
-  }, [copperResult, aluminumResult, inputs, print]);
+  }, [outcome, calculatedFor, print]);
 
   const handleReset = () => {
-    setInputs({
-      amps: 100,
-      distance: 100,
-      voltage: 240,
-      phase: 'single',
-    });
-    setShowResults(false);
+    setInputs(DEFAULT_INPUTS);
+    setOutcome(null);
+    setCalculatedFor(null);
   };
+
+  const voltageSelectOptions = voltageOptions(inputs.phase).map((v) => ({ value: String(v), label: `${v} V` }));
 
   return (
     <CalculatorLayout
@@ -122,48 +217,62 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
         <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
           <h2 className="text-lg font-semibold mb-6">Input Parameters</h2>
           <div className="grid lg:grid-cols-2 gap-4 lg:gap-6">
-            {/* Amperage Slider */}
-            <Slider
-              label="Amperage"
-              value={inputs.amps}
-              onChange={(amps) => setInputs((prev) => ({ ...prev, amps }))}
-              min={15}
-              max={400}
-              step={5}
+            <Select
+              label="Breaker or fuse rating"
+              options={RATING_OPTIONS}
+              value={String(inputs.ocpdA)}
+              onChange={(e) => setInputs((prev) => ({ ...prev, ocpdA: Number(e.target.value) }))}
+            />
+
+            <Input
+              label="Load current for voltage drop (A)"
+              type="number"
+              value={inputs.loadA}
+              placeholder={String(inputs.ocpdA)}
+              onChange={(e) =>
+                setInputs((prev) => ({ ...prev, loadA: e.target.value === '' ? '' : Number(e.target.value) }))
+              }
+              min={0}
+              max={inputs.ocpdA}
+              step="any"
               suffix="A"
             />
 
-            {/* Distance Slider */}
-            <Slider
-              label="Distance (one-way)"
-              value={inputs.distance}
-              onChange={(distance) => setInputs((prev) => ({ ...prev, distance }))}
-              min={0}
-              max={500}
-              step={10}
-              suffix=" ft"
+            <Input
+              label="Length (one-way)"
+              type="number"
+              value={inputs.lengthFt}
+              onChange={(e) =>
+                setInputs((prev) => ({ ...prev, lengthFt: e.target.value === '' ? '' : Number(e.target.value) }))
+              }
+              min={LENGTH_MIN_FT}
+              max={LENGTH_MAX_FT}
+              step={1}
+              suffix="ft"
             />
 
-            {/* Voltage Input */}
-            <VoltageInput
+            <Select
               label="Voltage"
-              value={inputs.voltage}
-              onChange={(voltage) => setInputs((prev) => ({ ...prev, voltage }))}
-              min={1}
-              max={1000}
+              options={voltageSelectOptions}
+              value={String(inputs.volts)}
+              onChange={(e) => setInputs((prev) => ({ ...prev, volts: Number(e.target.value) }))}
             />
 
-            {/* Phase Select */}
             <Select
               label="Phase"
               options={PHASE_OPTIONS}
               value={inputs.phase}
-              onChange={(e) =>
-                setInputs((prev) => ({
-                  ...prev,
-                  phase: e.target.value as 'single' | 'three',
-                }))
-              }
+              onChange={(e) => {
+                const phase = e.target.value as Phase;
+                setInputs((prev) => ({ ...prev, phase, volts: voltsAfterPhaseChange(prev.volts, phase) }));
+              }}
+            />
+
+            <Select
+              label="Voltage-drop target (your choice)"
+              options={TARGET_OPTIONS}
+              value={String(inputs.vdTargetPct)}
+              onChange={(e) => setInputs((prev) => ({ ...prev, vdTargetPct: Number(e.target.value) }))}
             />
           </div>
 
@@ -181,62 +290,64 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
         </div>
 
         {/* Results Section */}
-        {showResults && (
+        {outcome && calculatedFor && (
           <div className="space-y-6" ref={resultsRef}>
             <h2 className="text-lg font-semibold">Calculation Results</h2>
-            
-            {/* Wire Comparison Visualization */}
-            {copperResult && aluminumResult && (
-              <WireComparison
-                copperAwg={copperResult.awg}
-                aluminumAwg={aluminumResult.awg}
-                amps={inputs.amps}
-              />
+
+            {outcome.error ? (
+              <div className="rounded-xl p-6 bg-red-50 border border-red-200 text-sm text-red-700" role="alert">
+                {outcome.error}
+              </div>
+            ) : (
+              <>
+                {/* Wire Comparison Visualization */}
+                <WireComparison
+                  copperAwg={outcome.results[0].result.size}
+                  aluminumAwg={outcome.results[1].result.size}
+                  amps={calculatedFor.ocpdA}
+                />
+
+                {/* Results Display for Both Materials */}
+                <div className="grid lg:grid-cols-2 gap-4">
+                  {outcome.results.map(({ key, label, result }) => (
+                    <div key={key}>
+                      <h3
+                        className={`text-sm font-semibold mb-2 flex items-center gap-2 ${
+                          key === 'copper' ? 'text-copper-600' : 'text-aluminum-600'
+                        }`}
+                      >
+                        <div
+                          className={`w-3 h-3 rounded-full bg-gradient-to-br ${
+                            key === 'copper' ? 'from-copper-400 to-copper-600' : 'from-aluminum-300 to-aluminum-500'
+                          }`}
+                        ></div>
+                        {label} Wire
+                      </h3>
+                      <CalculatorResult
+                        awg={result.size}
+                        ampacity={result.ampacity60}
+                        ampacityLabel="60 °C ampacity"
+                        voltageDropPercent={result.vdPct}
+                        voltageDropVolts={result.vdVolts}
+                        groundWire={result.egc ?? ''}
+                        groundWireMessage={result.egc ? undefined : EGC_NONE_MESSAGE}
+                        material={key}
+                        isCompliant={result.meetsTarget}
+                        meetsTarget={result.meetsTarget}
+                        warnings={materialNotes(result)}
+                        steps={result.steps}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="space-y-2 text-sm text-neutral-600">
+                  {BASIS_LINES.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
+                </div>
+              </>
             )}
-
-            {/* Results Display for Both Materials */}
-            <div className="grid lg:grid-cols-2 gap-4">
-              {/* Copper Result */}
-              {copperResult && (
-                <div>
-                  <h3 className="text-sm font-semibold text-copper-600 mb-2 flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-gradient-to-br from-copper-400 to-copper-600"></div>
-                    Copper Wire
-                  </h3>
-                  <CalculatorResult
-                    awg={copperResult.awg}
-                    ampacity={copperResult.ampacity}
-                    voltageDropPercent={copperResult.voltageDropPercent}
-                    groundWire={copperResult.groundWire}
-                    material="copper"
-                    isCompliant={copperResult.isCompliant}
-                    warnings={copperResult.warnings}
-                    necReference={copperResult.necReference}
-                  />
-                </div>
-              )}
-
-              {/* Aluminum Result */}
-              {aluminumResult && (
-                <div>
-                  <h3 className="text-sm font-semibold text-aluminum-600 mb-2 flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-gradient-to-br from-aluminum-300 to-aluminum-500"></div>
-                    Aluminum Wire
-                  </h3>
-                  <CalculatorResult
-                    awg={aluminumResult.awg}
-                    ampacity={aluminumResult.ampacity}
-                    voltageDropPercent={aluminumResult.voltageDropPercent}
-                    groundWire={aluminumResult.groundWire}
-                    material="aluminum"
-                    isCompliant={aluminumResult.isCompliant}
-                    warnings={aluminumResult.warnings}
-                    necReference={aluminumResult.necReference}
-                  />
-                </div>
-              )}
-            </div>
-
           </div>
         )}
       </div>

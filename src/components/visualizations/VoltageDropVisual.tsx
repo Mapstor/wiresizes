@@ -1,6 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
+import { formatSize } from '@/lib/calculations/sizes';
+import { DEFAULT_VD_TARGET_PCT, targetTitle } from '@/lib/calculations/voltage-drop';
 
 interface VoltageDropVisualProps {
   sourceVoltage: number;
@@ -8,6 +10,8 @@ interface VoltageDropVisualProps {
   dropPercent: number;
   distance: number;
   wireSize?: string;  // Add wire size prop
+  /** The reader's voltage-drop target in percent. */
+  targetPct?: number;
 }
 
 export function VoltageDropVisual({
@@ -16,22 +20,19 @@ export function VoltageDropVisual({
   dropPercent,
   distance,
   wireSize = '12',  // Default to 12 AWG
+  targetPct = DEFAULT_VD_TARGET_PCT,
 }: VoltageDropVisualProps) {
-  const isAcceptable = dropPercent <= 3;
-  const isMarginal = dropPercent > 3 && dropPercent <= 5;
-  
-  const gradientColors = isAcceptable
-    ? ['#22c55e', '#86efac']
-    : isMarginal
-    ? ['#f59e0b', '#fcd34d']
-    : ['#ef4444', '#fca5a5'];
+  const meetsTarget = dropPercent <= targetPct;
+
+  const gradientColors = meetsTarget ? ['#22c55e', '#86efac'] : ['#f59e0b', '#fcd34d'];
+  const textColor = meetsTarget ? '#15803d' : '#b45309';
 
   // Calculate wire length based on distance (min 100px, max 260px)
   const wireLength = useMemo(() => {
     const minLength = 100;
     const maxLength = 260;
-    // Scale distance: 0-500ft maps to minLength-maxLength
-    const scaledLength = minLength + (distance / 500) * (maxLength - minLength);
+    // Scale distance: 0-2000 ft maps to minLength-maxLength
+    const scaledLength = minLength + (distance / 2000) * (maxLength - minLength);
     return Math.min(Math.max(scaledLength, minLength), maxLength);
   }, [distance]);
 
@@ -60,7 +61,8 @@ export function VoltageDropVisual({
       '400': 32,
       '500': 35,
     };
-    return sizeMap[wireSize] || 6; // Default to 12 AWG thickness
+    // Sizes above 500 kcmil draw at the 500 kcmil thickness
+    return sizeMap[wireSize] ?? (Number(wireSize) > 500 ? 35 : 6);
   }, [wireSize]);
 
   // Calculate positions based on wire length
@@ -121,7 +123,7 @@ export function VoltageDropVisual({
           fontSize="9"
           fontWeight="600"
         >
-          {wireSize.includes('/') || parseInt(wireSize) >= 250 ? wireSize : `#${wireSize} AWG`}
+          {formatSize(wireSize)}
         </text>
         
         {/* Animated electrons showing current flow - adjust to wire thickness */}
@@ -155,9 +157,9 @@ export function VoltageDropVisual({
           textAnchor="middle"
           fontSize="14"
           fontWeight="800"
-          fill={isAcceptable ? '#15803d' : isMarginal ? '#b45309' : '#b91c1c'}
+          fill={textColor}
         >
-          -{dropPercent.toFixed(2)}% drop
+          -{dropPercent.toFixed(2)} % drop
         </text>
 
         {/* Load (end) - position based on wire length */}
@@ -166,20 +168,16 @@ export function VoltageDropVisual({
           LOAD
         </text>
         <text x={loadX + 30} y="110" textAnchor="middle" fontSize="12" fontWeight="bold"
-          fill={isAcceptable ? '#15803d' : isMarginal ? '#b45309' : '#b91c1c'}>
+          fill={textColor}>
           {loadVoltage.toFixed(1)}V
         </text>
       </svg>
 
       {/* Status message */}
       <div className={`mt-4 p-3 rounded-lg text-center ${
-        isAcceptable ? 'bg-green-50 text-green-700' :
-        isMarginal ? 'bg-amber-50 text-amber-700' :
-        'bg-red-50 text-red-700'
+        meetsTarget ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700'
       }`}>
-        {isAcceptable && '✓ Voltage drop is within NEC 3% recommendation'}
-        {isMarginal && '⚠ Voltage drop exceeds 3% but within 5% limit'}
-        {!isAcceptable && !isMarginal && '✕ Voltage drop exceeds 5% - consider larger wire'}
+        {targetTitle(meetsTarget)} ({targetPct} %)
       </div>
     </div>
   );

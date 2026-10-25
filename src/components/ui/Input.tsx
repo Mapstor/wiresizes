@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, useId } from 'react';
 import { clsx } from 'clsx';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -10,11 +10,14 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, hint, error, icon, suffix, className, ...props }, ref) => {
+  ({ label, hint, error, icon, suffix, className, id, ...props }, ref) => {
+    const generatedId = useId();
+    const inputId = id ?? generatedId;
+    const noteId = `${inputId}-note`;
     return (
       <div className="space-y-1">
         {label && (
-          <label className="block text-sm font-medium text-neutral-700">
+          <label htmlFor={inputId} className="block text-sm font-medium text-neutral-700">
             {label}
           </label>
         )}
@@ -26,6 +29,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
           <input
             ref={ref}
+            id={inputId}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={hint || error ? noteId : undefined}
             className={clsx(
               'w-full px-4 py-3 border rounded-lg text-neutral-900 font-mono text-lg',
               'placeholder:text-neutral-400',
@@ -46,10 +52,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
         </div>
         {hint && !error && (
-          <p className="text-sm text-neutral-500">{hint}</p>
+          <p id={noteId} className="text-sm text-neutral-500">{hint}</p>
         )}
         {error && (
-          <p className="text-sm text-red-600">{error}</p>
+          <p id={noteId} className="text-sm text-red-600">{error}</p>
         )}
       </div>
     );

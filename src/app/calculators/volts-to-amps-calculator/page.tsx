@@ -7,11 +7,11 @@ import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Volts to Amps Calculator — V → A',
-  description: "Convert voltage and resistance to amps via Ohm's Law (I = V/R). For DC and resistive AC circuits. Solve any circuit current calculation.",
+  description: 'Current from power and voltage: I = P ÷ (V × PF) single-phase, I = P ÷ (√3 × V × PF) three-phase.',
   keywords: 'volts to amps, voltage to current, ohms law calculator, electrical conversion, V to A, voltage amperage calculator, electrical current calculator',
   openGraph: {
     title: 'Volts to Amps Calculator - Electrical Conversion Tool',
-    description: 'Convert volts to amps using Ohms Law. Calculate current from voltage and power or resistance for electrical circuits.',
+    description: 'Current from power and voltage: I = P ÷ (V × PF) single-phase, I = P ÷ (√3 × V × PF) three-phase.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/volts-to-amps-calculator',
     images: ['/opengraph-image']
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 const webAppData = {
   name: "Volts to Amps Calculator",
   url: "https://wiresizes.com/calculators/volts-to-amps-calculator",
-  description: "Professional volts to amps calculator using Ohms Law. Convert voltage to amperage for electrical circuits with power or resistance. Essential tool for electricians and engineers."
+  description: "Current from power and voltage: I = P ÷ (V × PF) single-phase, I = P ÷ (√3 × V × PF) three-phase."
 };
 
 const voltsToAmpsFAQs = [

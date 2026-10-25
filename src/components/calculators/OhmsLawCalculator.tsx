@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback , useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
@@ -8,108 +8,35 @@ import { CalculatorLayout } from './CalculatorLayout';
 import { useShareableUrl } from '@/lib/hooks/useShareableUrl';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { Calculator, RefreshCw } from 'lucide-react';
-
-type CalculationMode = 'voltage' | 'current' | 'resistance' | 'power';
-
-const CALCULATION_OPTIONS = [
-  { value: 'voltage', label: 'Calculate Voltage (V)' },
-  { value: 'current', label: 'Calculate Current (I)' },
-  { value: 'resistance', label: 'Calculate Resistance (R)' },
-  { value: 'power', label: 'Calculate Power (P)' },
-];
-
-interface OhmsLawResults {
-  voltage: number;
-  current: number;
-  resistance: number;
-  power: number;
-}
+import {
+  formatSi,
+  OHMS_LAW_DEFAULTS,
+  OHMS_LAW_EMPTY_HINT,
+  OHMS_LAW_EMPTY_TITLE,
+  OHMS_LAW_MODE_OPTIONS,
+  solveOhmsLaw,
+} from '@/lib/calculations/ohms-law';
+import type { OhmsLawMode, OhmsLawValues } from '@/lib/calculations/ohms-law';
 
 export function OhmsLawCalculator() {
-  const [mode, setMode] = useState<CalculationMode>('voltage');
-  const [voltage, setVoltage] = useState<number | ''>('');
-  const [current, setCurrent] = useState<number | ''>('');
-  const [resistance, setResistance] = useState<number | ''>('');
-  const [power, setPower] = useState<number | ''>('');
-  const [results, setResults] = useState<OhmsLawResults | null>(null);
+  const [mode, setMode] = useState<OhmsLawMode>(OHMS_LAW_DEFAULTS.mode);
+  const [voltage, setVoltage] = useState<number | ''>(OHMS_LAW_DEFAULTS.voltage);
+  const [current, setCurrent] = useState<number | ''>(OHMS_LAW_DEFAULTS.current);
+  const [resistance, setResistance] = useState<number | ''>(OHMS_LAW_DEFAULTS.resistance);
+  const [power, setPower] = useState<number | ''>(OHMS_LAW_DEFAULTS.power);
+  const [results, setResults] = useState<OhmsLawValues | null>(null);
   const [showResults, setShowResults] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
 
+  // Values stay unrounded; display formats them to 4 significant figures
   const calculate = useCallback(() => {
-    let v = typeof voltage === 'number' ? voltage : 0;
-    let i = typeof current === 'number' ? current : 0;
-    let r = typeof resistance === 'number' ? resistance : 0;
-    let p = typeof power === 'number' ? power : 0;
-
-    // Calculate based on mode and available inputs
-    switch (mode) {
-      case 'voltage':
-        // V = I × R or V = √(P × R) or V = P / I
-        if (i > 0 && r > 0) {
-          v = i * r;
-          p = i * i * r;
-        } else if (p > 0 && r > 0) {
-          v = Math.sqrt(p * r);
-          i = v / r;
-        } else if (p > 0 && i > 0) {
-          v = p / i;
-          r = v / i;
-        }
-        break;
-
-      case 'current':
-        // I = V / R or I = P / V or I = √(P / R)
-        if (v > 0 && r > 0) {
-          i = v / r;
-          p = v * v / r;
-        } else if (p > 0 && v > 0) {
-          i = p / v;
-          r = v / i;
-        } else if (p > 0 && r > 0) {
-          i = Math.sqrt(p / r);
-          v = i * r;
-        }
-        break;
-
-      case 'resistance':
-        // R = V / I or R = V² / P or R = P / I²
-        if (v > 0 && i > 0) {
-          r = v / i;
-          p = v * i;
-        } else if (v > 0 && p > 0) {
-          r = (v * v) / p;
-          i = p / v;
-        } else if (p > 0 && i > 0) {
-          r = p / (i * i);
-          v = i * r;
-        }
-        break;
-
-      case 'power':
-        // P = V × I or P = V² / R or P = I² × R
-        if (v > 0 && i > 0) {
-          p = v * i;
-          r = v / i;
-        } else if (v > 0 && r > 0) {
-          p = (v * v) / r;
-          i = v / r;
-        } else if (i > 0 && r > 0) {
-          p = i * i * r;
-          v = i * r;
-        }
-        break;
-    }
-
-    if (v > 0 && i > 0 && r > 0 && p > 0) {
-      setResults({
-        voltage: Math.round(v * 1000) / 1000,
-        current: Math.round(i * 1000) / 1000,
-        resistance: Math.round(r * 1000) / 1000,
-        power: Math.round(p * 1000) / 1000,
-      });
-    } else {
-      setResults(null);
-    }
+    const value = (v: number | '') => (typeof v === 'number' ? v : null);
+    setResults(solveOhmsLaw(mode, {
+      voltage: value(voltage),
+      current: value(current),
+      resistance: value(resistance),
+      power: value(power),
+    }));
   }, [mode, voltage, current, resistance, power]);
 
   // Auto-calculation disabled - user must click Calculate button
@@ -150,22 +77,23 @@ export function OhmsLawCalculator() {
     print({
       title: 'Ohm\'s Law Calculation',
       inputs: {
-        'Calculation Mode': mode,
+        'What to Calculate?': OHMS_LAW_MODE_OPTIONS.find((o) => o.value === mode)?.label ?? mode,
       },
       results: {
-        'Voltage': `${results.voltage} V`,
-        'Current': `${results.current} A`,
-        'Resistance': `${results.resistance} Ω`,
-        'Power': `${results.power} W`,
+        'Voltage': formatSi(results.voltage, 'V'),
+        'Current': formatSi(results.current, 'A'),
+        'Resistance': formatSi(results.resistance, 'Ω'),
+        'Power': formatSi(results.power, 'W'),
+        'Conductance (S)': formatSi(1 / results.resistance, 'S'),
       },
     });
   }, [results, mode, print]);
 
   const handleReset = () => {
-    setVoltage('');
-    setCurrent('');
-    setResistance('');
-    setPower('');
+    setVoltage(OHMS_LAW_DEFAULTS.voltage);
+    setCurrent(OHMS_LAW_DEFAULTS.current);
+    setResistance(OHMS_LAW_DEFAULTS.resistance);
+    setPower(OHMS_LAW_DEFAULTS.power);
     setResults(null);
   };
 
@@ -183,10 +111,10 @@ export function OhmsLawCalculator() {
           <div className="grid md:grid-cols-2 gap-6">
           <Select
             label="What to Calculate?"
-            options={CALCULATION_OPTIONS}
+            options={OHMS_LAW_MODE_OPTIONS}
             value={mode}
             onChange={(e) => {
-              setMode(e.target.value as CalculationMode);
+              setMode(e.target.value as OhmsLawMode);
               handleReset();
             }}
           />
@@ -250,7 +178,7 @@ export function OhmsLawCalculator() {
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
               <Calculator className="w-4 h-4 text-blue-600" />
-              <span className="text-sm font-medium text-blue-800">Ohm\'s Law Formulas</span>
+              <span className="text-sm font-medium text-blue-800">Ohm&apos;s Law Formulas</span>
             </div>
             <div className="text-xs font-mono text-blue-700 space-y-1">
               <div>V = I × R</div>
@@ -282,7 +210,7 @@ export function OhmsLawCalculator() {
             <h2 className="text-lg font-semibold">Calculation Results</h2>
             {results ? (
             <>
-              {/* Ohm\'s Law Circle Visualization */}
+              {/* Ohm's Law Circle Visualization */}
               <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl p-6">
                 <div className="text-center mb-4">
                   <h3 className="text-lg font-semibold text-primary-900">Calculated Values</h3>
@@ -293,33 +221,29 @@ export function OhmsLawCalculator() {
                   <div className={`bg-white rounded-lg p-4 text-center ${mode === 'voltage' ? 'ring-2 ring-primary-500' : ''}`}>
                     <div className="text-sm text-neutral-600">Voltage</div>
                     <div className="text-2xl font-bold font-mono text-primary-700">
-                      {results.voltage}
+                      {formatSi(results.voltage, 'V')}
                     </div>
-                    <div className="text-sm text-neutral-500">V</div>
                   </div>
 
                   <div className={`bg-white rounded-lg p-4 text-center ${mode === 'current' ? 'ring-2 ring-primary-500' : ''}`}>
                     <div className="text-sm text-neutral-600">Current</div>
                     <div className="text-2xl font-bold font-mono text-primary-700">
-                      {results.current}
+                      {formatSi(results.current, 'A')}
                     </div>
-                    <div className="text-sm text-neutral-500">A</div>
                   </div>
 
                   <div className={`bg-white rounded-lg p-4 text-center ${mode === 'resistance' ? 'ring-2 ring-primary-500' : ''}`}>
                     <div className="text-sm text-neutral-600">Resistance</div>
                     <div className="text-2xl font-bold font-mono text-primary-700">
-                      {results.resistance}
+                      {formatSi(results.resistance, 'Ω')}
                     </div>
-                    <div className="text-sm text-neutral-500">Ω</div>
                   </div>
 
                   <div className={`bg-white rounded-lg p-4 text-center ${mode === 'power' ? 'ring-2 ring-primary-500' : ''}`}>
                     <div className="text-sm text-neutral-600">Power</div>
                     <div className="text-2xl font-bold font-mono text-primary-700">
-                      {results.power}
+                      {formatSi(results.power, 'W')}
                     </div>
-                    <div className="text-sm text-neutral-500">W</div>
                   </div>
                 </div>
               </div>
@@ -329,20 +253,8 @@ export function OhmsLawCalculator() {
                 <div className="text-sm font-medium text-neutral-700 mb-3">Additional Information</div>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-neutral-600">Power (kW):</span>
-                    <span className="font-mono font-semibold">{(results.power / 1000).toFixed(3)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-neutral-600">Current (mA):</span>
-                    <span className="font-mono font-semibold">{(results.current * 1000).toFixed(1)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-neutral-600">Resistance (kΩ):</span>
-                    <span className="font-mono font-semibold">{(results.resistance / 1000).toFixed(3)}</span>
-                  </div>
-                  <div className="flex justify-between">
                     <span className="text-neutral-600">Conductance (S):</span>
-                    <span className="font-mono font-semibold">{(1 / results.resistance).toFixed(6)}</span>
+                    <span className="font-mono font-semibold">{formatSi(1 / results.resistance, 'S')}</span>
                   </div>
                 </div>
               </div>
@@ -351,9 +263,9 @@ export function OhmsLawCalculator() {
           ) : (
             <div className="bg-neutral-50 border-2 border-dashed border-neutral-300 rounded-xl p-8 text-center">
               <Calculator className="w-12 h-12 text-neutral-400 mx-auto mb-3" />
-              <p className="text-neutral-600">Enter values to calculate</p>
+              <p className="text-neutral-600">{OHMS_LAW_EMPTY_TITLE}</p>
               <p className="text-sm text-neutral-500 mt-2">
-                Provide any two values to calculate the others
+                {OHMS_LAW_EMPTY_HINT}
               </p>
             </div>
           )}

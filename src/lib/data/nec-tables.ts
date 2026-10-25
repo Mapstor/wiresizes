@@ -28,10 +28,6 @@ export interface AmpacityRow {
   area_mm2: number;
   /** Conductor diameter in millimeters. */
   diameter_mm: number;
-  /** DC resistance at 25°C, ohms per 1000 ft (NEC Chapter 9 Table 8). */
-  dc_resistance_ohms_per_1000ft: number;
-  /** Approximate weight per 1000 ft, pounds (uncoated bare copper). */
-  weight_lb_per_1000ft: number;
   /** NEC 310.16 ampacity in 60°C insulation column (e.g., TW). */
   copper_60c: number | null;
   /** NEC 310.16 ampacity in 75°C insulation column (e.g., THWN, THW, RHW). */
@@ -47,28 +43,35 @@ export interface AmpacityRow {
 }
 
 export const NEC_310_16: AmpacityRow[] = [
-  // Aluminum is not commonly available below 12 AWG, hence nulls.
-  { awg: '14',    area_kcmil: 4.11,   diameter_mils: 64.1,  area_mm2: 2.08,  diameter_mm: 1.63,  dc_resistance_ohms_per_1000ft: 3.07,    weight_lb_per_1000ft: 12.4,  copper_60c: 15,  copper_75c: 20,  copper_90c: 25,  aluminum_60c: null, aluminum_75c: null, aluminum_90c: null },
-  { awg: '12',    area_kcmil: 6.53,   diameter_mils: 80.8,  area_mm2: 3.31,  diameter_mm: 2.05,  dc_resistance_ohms_per_1000ft: 1.93,    weight_lb_per_1000ft: 19.8,  copper_60c: 20,  copper_75c: 25,  copper_90c: 30,  aluminum_60c: 15,   aluminum_75c: 20,   aluminum_90c: 25 },
-  { awg: '10',    area_kcmil: 10.38,  diameter_mils: 101.9, area_mm2: 5.26,  diameter_mm: 2.59,  dc_resistance_ohms_per_1000ft: 1.21,    weight_lb_per_1000ft: 31.4,  copper_60c: 30,  copper_75c: 35,  copper_90c: 40,  aluminum_60c: 25,   aluminum_75c: 30,   aluminum_90c: 35 },
-  { awg: '8',     area_kcmil: 16.51,  diameter_mils: 128.5, area_mm2: 8.37,  diameter_mm: 3.26,  dc_resistance_ohms_per_1000ft: 0.764,   weight_lb_per_1000ft: 49.9,  copper_60c: 40,  copper_75c: 50,  copper_90c: 55,  aluminum_60c: 35,   aluminum_75c: 40,   aluminum_90c: 45 },
-  { awg: '6',     area_kcmil: 26.24,  diameter_mils: 162.0, area_mm2: 13.3,  diameter_mm: 4.11,  dc_resistance_ohms_per_1000ft: 0.491,   weight_lb_per_1000ft: 79.5,  copper_60c: 55,  copper_75c: 65,  copper_90c: 75,  aluminum_60c: 40,   aluminum_75c: 50,   aluminum_90c: 55 },
-  { awg: '4',     area_kcmil: 41.74,  diameter_mils: 204.3, area_mm2: 21.2,  diameter_mm: 5.19,  dc_resistance_ohms_per_1000ft: 0.308,   weight_lb_per_1000ft: 126.4, copper_60c: 70,  copper_75c: 85,  copper_90c: 95,  aluminum_60c: 55,   aluminum_75c: 65,   aluminum_90c: 75 },
-  { awg: '3',     area_kcmil: 52.62,  diameter_mils: 229.4, area_mm2: 26.7,  diameter_mm: 5.83,  dc_resistance_ohms_per_1000ft: 0.245,   weight_lb_per_1000ft: 159.3, copper_60c: 85,  copper_75c: 100, copper_90c: 115, aluminum_60c: 65,   aluminum_75c: 75,   aluminum_90c: 85 },
-  { awg: '2',     area_kcmil: 66.36,  diameter_mils: 257.6, area_mm2: 33.6,  diameter_mm: 6.54,  dc_resistance_ohms_per_1000ft: 0.194,   weight_lb_per_1000ft: 201.0, copper_60c: 95,  copper_75c: 115, copper_90c: 130, aluminum_60c: 75,   aluminum_75c: 90,   aluminum_90c: 100 },
-  { awg: '1',     area_kcmil: 83.69,  diameter_mils: 289.3, area_mm2: 42.4,  diameter_mm: 7.35,  dc_resistance_ohms_per_1000ft: 0.154,   weight_lb_per_1000ft: 253.3, copper_60c: 110, copper_75c: 130, copper_90c: 145, aluminum_60c: 85,   aluminum_75c: 100,  aluminum_90c: 115 },
-  { awg: '1/0',   area_kcmil: 105.6,  diameter_mils: 325.0, area_mm2: 53.5,  diameter_mm: 8.25,  dc_resistance_ohms_per_1000ft: 0.122,   weight_lb_per_1000ft: 319.5, copper_60c: 125, copper_75c: 150, copper_90c: 170, aluminum_60c: 100,  aluminum_75c: 120,  aluminum_90c: 135 },
-  { awg: '2/0',   area_kcmil: 133.1,  diameter_mils: 364.8, area_mm2: 67.4,  diameter_mm: 9.27,  dc_resistance_ohms_per_1000ft: 0.0967,  weight_lb_per_1000ft: 402.8, copper_60c: 145, copper_75c: 175, copper_90c: 195, aluminum_60c: 115,  aluminum_75c: 135,  aluminum_90c: 150 },
-  { awg: '3/0',   area_kcmil: 167.8,  diameter_mils: 409.6, area_mm2: 85.0,  diameter_mm: 10.4,  dc_resistance_ohms_per_1000ft: 0.0766,  weight_lb_per_1000ft: 508.0, copper_60c: 165, copper_75c: 200, copper_90c: 225, aluminum_60c: 130,  aluminum_75c: 155,  aluminum_90c: 175 },
-  { awg: '4/0',   area_kcmil: 211.6,  diameter_mils: 460.0, area_mm2: 107,   diameter_mm: 11.7,  dc_resistance_ohms_per_1000ft: 0.0608,  weight_lb_per_1000ft: 640.5, copper_60c: 195, copper_75c: 230, copper_90c: 260, aluminum_60c: 150,  aluminum_75c: 180,  aluminum_90c: 205 },
-  { awg: '250',   area_kcmil: 250,    diameter_mils: 522.5, area_mm2: 127,   diameter_mm: 12.7,  dc_resistance_ohms_per_1000ft: 0.0515,  weight_lb_per_1000ft: 770,   copper_60c: 215, copper_75c: 255, copper_90c: 290, aluminum_60c: 170,  aluminum_75c: 205,  aluminum_90c: 230 },
-  { awg: '300',   area_kcmil: 300,    diameter_mils: 572.3, area_mm2: 152,   diameter_mm: 13.9,  dc_resistance_ohms_per_1000ft: 0.0429,  weight_lb_per_1000ft: 925,   copper_60c: 240, copper_75c: 285, copper_90c: 320, aluminum_60c: 195,  aluminum_75c: 230,  aluminum_90c: 260 },
-  { awg: '350',   area_kcmil: 350,    diameter_mils: 618.5, area_mm2: 177,   diameter_mm: 15.0,  dc_resistance_ohms_per_1000ft: 0.0367,  weight_lb_per_1000ft: 1080,  copper_60c: 260, copper_75c: 310, copper_90c: 350, aluminum_60c: 210,  aluminum_75c: 250,  aluminum_90c: 280 },
-  { awg: '400',   area_kcmil: 400,    diameter_mils: 661.6, area_mm2: 203,   diameter_mm: 16.1,  dc_resistance_ohms_per_1000ft: 0.0321,  weight_lb_per_1000ft: 1235,  copper_60c: 280, copper_75c: 335, copper_90c: 380, aluminum_60c: 225,  aluminum_75c: 270,  aluminum_90c: 305 },
-  { awg: '500',   area_kcmil: 500,    diameter_mils: 739.8, area_mm2: 253,   diameter_mm: 18.0,  dc_resistance_ohms_per_1000ft: 0.0258,  weight_lb_per_1000ft: 1545,  copper_60c: 320, copper_75c: 380, copper_90c: 430, aluminum_60c: 260,  aluminum_75c: 310,  aluminum_90c: 350 },
-  { awg: '600',   area_kcmil: 600,    diameter_mils: 813.0, area_mm2: 304,   diameter_mm: 19.7,  dc_resistance_ohms_per_1000ft: 0.0214,  weight_lb_per_1000ft: 1850,  copper_60c: 350, copper_75c: 420, copper_90c: 475, aluminum_60c: 285,  aluminum_75c: 340,  aluminum_90c: 385 },
-  { awg: '750',   area_kcmil: 750,    diameter_mils: 908.0, area_mm2: 380,   diameter_mm: 22.0,  dc_resistance_ohms_per_1000ft: 0.0171,  weight_lb_per_1000ft: 2310,  copper_60c: 400, copper_75c: 475, copper_90c: 535, aluminum_60c: 320,  aluminum_75c: 385,  aluminum_90c: 435 },
-  { awg: '1000',  area_kcmil: 1000,   diameter_mils: 1060,  area_mm2: 507,   diameter_mm: 26.9,  dc_resistance_ohms_per_1000ft: 0.0129,  weight_lb_per_1000ft: 3085,  copper_60c: 455, copper_75c: 545, copper_90c: 615, aluminum_60c: 375,  aluminum_75c: 445,  aluminum_90c: 500 },
+  // NEC Table 310.16 has no aluminum values for 14 AWG.
+  { awg: '14',    area_kcmil: 4.11,   diameter_mils: 64.1,  area_mm2: 2.08,  diameter_mm: 1.63,  copper_60c: 15,  copper_75c: 20,  copper_90c: 25,  aluminum_60c: null, aluminum_75c: null, aluminum_90c: null },
+  { awg: '12',    area_kcmil: 6.53,   diameter_mils: 80.8,  area_mm2: 3.31,  diameter_mm: 2.05,  copper_60c: 20,  copper_75c: 25,  copper_90c: 30,  aluminum_60c: 15,   aluminum_75c: 20,   aluminum_90c: 25 },
+  { awg: '10',    area_kcmil: 10.38,  diameter_mils: 101.9, area_mm2: 5.26,  diameter_mm: 2.59,  copper_60c: 30,  copper_75c: 35,  copper_90c: 40,  aluminum_60c: 25,   aluminum_75c: 30,   aluminum_90c: 35 },
+  { awg: '8',     area_kcmil: 16.51,  diameter_mils: 128.5, area_mm2: 8.37,  diameter_mm: 3.26,  copper_60c: 40,  copper_75c: 50,  copper_90c: 55,  aluminum_60c: 35,   aluminum_75c: 40,   aluminum_90c: 45 },
+  { awg: '6',     area_kcmil: 26.24,  diameter_mils: 162.0, area_mm2: 13.3,  diameter_mm: 4.11,  copper_60c: 55,  copper_75c: 65,  copper_90c: 75,  aluminum_60c: 40,   aluminum_75c: 50,   aluminum_90c: 55 },
+  { awg: '4',     area_kcmil: 41.74,  diameter_mils: 204.3, area_mm2: 21.2,  diameter_mm: 5.19,  copper_60c: 70,  copper_75c: 85,  copper_90c: 95,  aluminum_60c: 55,   aluminum_75c: 65,   aluminum_90c: 75 },
+  { awg: '3',     area_kcmil: 52.62,  diameter_mils: 229.4, area_mm2: 26.7,  diameter_mm: 5.83,  copper_60c: 85,  copper_75c: 100, copper_90c: 115, aluminum_60c: 65,   aluminum_75c: 75,   aluminum_90c: 85 },
+  { awg: '2',     area_kcmil: 66.36,  diameter_mils: 257.6, area_mm2: 33.6,  diameter_mm: 6.54,  copper_60c: 95,  copper_75c: 115, copper_90c: 130, aluminum_60c: 75,   aluminum_75c: 90,   aluminum_90c: 100 },
+  { awg: '1',     area_kcmil: 83.69,  diameter_mils: 289.3, area_mm2: 42.4,  diameter_mm: 7.35,  copper_60c: 110, copper_75c: 130, copper_90c: 145, aluminum_60c: 85,   aluminum_75c: 100,  aluminum_90c: 115 },
+  { awg: '1/0',   area_kcmil: 105.6,  diameter_mils: 325.0, area_mm2: 53.5,  diameter_mm: 8.25,  copper_60c: 125, copper_75c: 150, copper_90c: 170, aluminum_60c: 100,  aluminum_75c: 120,  aluminum_90c: 135 },
+  { awg: '2/0',   area_kcmil: 133.1,  diameter_mils: 364.8, area_mm2: 67.4,  diameter_mm: 9.27,  copper_60c: 145, copper_75c: 175, copper_90c: 195, aluminum_60c: 115,  aluminum_75c: 135,  aluminum_90c: 150 },
+  { awg: '3/0',   area_kcmil: 167.8,  diameter_mils: 409.6, area_mm2: 85.0,  diameter_mm: 10.4,  copper_60c: 165, copper_75c: 200, copper_90c: 225, aluminum_60c: 130,  aluminum_75c: 155,  aluminum_90c: 175 },
+  { awg: '4/0',   area_kcmil: 211.6,  diameter_mils: 460.0, area_mm2: 107,   diameter_mm: 11.7,  copper_60c: 195, copper_75c: 230, copper_90c: 260, aluminum_60c: 150,  aluminum_75c: 180,  aluminum_90c: 205 },
+  { awg: '250',   area_kcmil: 250,    diameter_mils: 522.5, area_mm2: 127,   diameter_mm: 12.7,  copper_60c: 215, copper_75c: 255, copper_90c: 290, aluminum_60c: 170,  aluminum_75c: 205,  aluminum_90c: 230 },
+  { awg: '300',   area_kcmil: 300,    diameter_mils: 572.3, area_mm2: 152,   diameter_mm: 13.9,  copper_60c: 240, copper_75c: 285, copper_90c: 320, aluminum_60c: 195,  aluminum_75c: 230,  aluminum_90c: 260 },
+  { awg: '350',   area_kcmil: 350,    diameter_mils: 618.5, area_mm2: 177,   diameter_mm: 15.0,  copper_60c: 260, copper_75c: 310, copper_90c: 350, aluminum_60c: 210,  aluminum_75c: 250,  aluminum_90c: 280 },
+  { awg: '400',   area_kcmil: 400,    diameter_mils: 661.6, area_mm2: 203,   diameter_mm: 16.1,  copper_60c: 280, copper_75c: 335, copper_90c: 380, aluminum_60c: 225,  aluminum_75c: 270,  aluminum_90c: 305 },
+  { awg: '500',   area_kcmil: 500,    diameter_mils: 739.8, area_mm2: 253,   diameter_mm: 18.0,  copper_60c: 320, copper_75c: 380, copper_90c: 430, aluminum_60c: 260,  aluminum_75c: 310,  aluminum_90c: 350 },
+  { awg: '600',   area_kcmil: 600,    diameter_mils: 813.0, area_mm2: 304,   diameter_mm: 19.7,  copper_60c: 350, copper_75c: 420, copper_90c: 475, aluminum_60c: 285,  aluminum_75c: 340,  aluminum_90c: 385 },
+  { awg: '700',   area_kcmil: 700,    diameter_mils: 836.7,  area_mm2: 354.7,  diameter_mm: 21.25,  copper_60c: 385, copper_75c: 460, copper_90c: 520, aluminum_60c: 315,  aluminum_75c: 375,  aluminum_90c: 425 },
+  { awg: '750',   area_kcmil: 750,    diameter_mils: 908.0, area_mm2: 380,   diameter_mm: 22.0,  copper_60c: 400, copper_75c: 475, copper_90c: 535, aluminum_60c: 320,  aluminum_75c: 385,  aluminum_90c: 435 },
+  { awg: '800',   area_kcmil: 800,    diameter_mils: 894.4,  area_mm2: 405.4,  diameter_mm: 22.72,  copper_60c: 410, copper_75c: 490, copper_90c: 555, aluminum_60c: 330,  aluminum_75c: 395,  aluminum_90c: 445 },
+  { awg: '900',   area_kcmil: 900,    diameter_mils: 948.7,  area_mm2: 456.0,  diameter_mm: 24.1,   copper_60c: 435, copper_75c: 520, copper_90c: 585, aluminum_60c: 355,  aluminum_75c: 425,  aluminum_90c: 480 },
+  { awg: '1000',  area_kcmil: 1000,   diameter_mils: 1060,  area_mm2: 507,   diameter_mm: 26.9,  copper_60c: 455, copper_75c: 545, copper_90c: 615, aluminum_60c: 375,  aluminum_75c: 445,  aluminum_90c: 500 },
+  { awg: '1250',  area_kcmil: 1250,   diameter_mils: 1118.0,  area_mm2: 633.4,  diameter_mm: 28.4,   copper_60c: 495, copper_75c: 590, copper_90c: 665, aluminum_60c: 405,  aluminum_75c: 485,  aluminum_90c: 545 },
+  { awg: '1500',  area_kcmil: 1500,   diameter_mils: 1224.7,  area_mm2: 760.1,  diameter_mm: 31.11,  copper_60c: 525, copper_75c: 625, copper_90c: 705, aluminum_60c: 435,  aluminum_75c: 520,  aluminum_90c: 585 },
+  { awg: '1750',  area_kcmil: 1750,   diameter_mils: 1322.9,  area_mm2: 886.7,  diameter_mm: 33.6,   copper_60c: 545, copper_75c: 650, copper_90c: 735, aluminum_60c: 455,  aluminum_75c: 545,  aluminum_90c: 615 },
+  { awg: '2000',  area_kcmil: 2000,   diameter_mils: 1414.2,  area_mm2: 1013.0,  diameter_mm: 35.92,  copper_60c: 555, copper_75c: 665, copper_90c: 750, aluminum_60c: 470,  aluminum_75c: 560,  aluminum_90c: 630 },
 ];
 
 /**
@@ -126,77 +129,6 @@ export function getAllWireSizes(): string[] {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// NEC 240.4(D) — Small-conductor overcurrent protection rule.
-// Limits maximum OCPD (breaker / fuse) on 14, 12, and 10 AWG regardless
-// of higher 310.16 ampacity. Applies to general-purpose branch circuits;
-// specific applications (e.g., motors per Article 430) override.
-// ─────────────────────────────────────────────────────────────────────────────
-
-export const NEC_240_4_D_MAX_OCPD: Record<string, number> = {
-  '14': 15,
-  '12': 20,
-  '10': 30,
-};
-
-// ─────────────────────────────────────────────────────────────────────────────
-// NEC 250.122 — Minimum equipment grounding conductor (EGC) size.
-// Sized by upstream OCPD rating, not by load.
-// ─────────────────────────────────────────────────────────────────────────────
-
-export interface GroundingRow {
-  ocpd_amps: number;
-  copper_awg: string;
-  aluminum_awg: string;
-}
-
-export const NEC_250_122: GroundingRow[] = [
-  { ocpd_amps: 15,   copper_awg: '14',   aluminum_awg: '12' },
-  { ocpd_amps: 20,   copper_awg: '12',   aluminum_awg: '10' },
-  { ocpd_amps: 30,   copper_awg: '10',   aluminum_awg: '8' },
-  { ocpd_amps: 40,   copper_awg: '10',   aluminum_awg: '8' },
-  { ocpd_amps: 60,   copper_awg: '10',   aluminum_awg: '8' },
-  { ocpd_amps: 100,  copper_awg: '8',    aluminum_awg: '6' },
-  { ocpd_amps: 200,  copper_awg: '6',    aluminum_awg: '4' },
-  { ocpd_amps: 300,  copper_awg: '4',    aluminum_awg: '2' },
-  { ocpd_amps: 400,  copper_awg: '3',    aluminum_awg: '1' },
-  { ocpd_amps: 500,  copper_awg: '2',    aluminum_awg: '1/0' },
-  { ocpd_amps: 600,  copper_awg: '1',    aluminum_awg: '2/0' },
-  { ocpd_amps: 800,  copper_awg: '1/0',  aluminum_awg: '3/0' },
-  { ocpd_amps: 1000, copper_awg: '2/0',  aluminum_awg: '4/0' },
-  { ocpd_amps: 1200, copper_awg: '3/0',  aluminum_awg: '250' },
-  { ocpd_amps: 1600, copper_awg: '4/0',  aluminum_awg: '350' },
-  { ocpd_amps: 2000, copper_awg: '250',  aluminum_awg: '400' },
-];
-
-// ─────────────────────────────────────────────────────────────────────────────
-// NEC 310.15(B)(1) — Ambient-temperature correction factors for ampacities
-// at 30°C (86°F). Multiply the 310.16 ampacity by this factor.
-// ─────────────────────────────────────────────────────────────────────────────
-
-export interface TempCorrectionRow {
-  ambient_min_c: number;
-  ambient_max_c: number;
-  ambient_min_f: number;
-  ambient_max_f: number;
-  factor_60c: number;
-  factor_75c: number;
-  factor_90c: number;
-}
-
-export const NEC_310_15_TEMP_CORRECTION: TempCorrectionRow[] = [
-  { ambient_min_c: 10, ambient_max_c: 15, ambient_min_f: 50,  ambient_max_f: 59,  factor_60c: 1.29, factor_75c: 1.20, factor_90c: 1.15 },
-  { ambient_min_c: 16, ambient_max_c: 20, ambient_min_f: 61,  ambient_max_f: 68,  factor_60c: 1.22, factor_75c: 1.15, factor_90c: 1.11 },
-  { ambient_min_c: 21, ambient_max_c: 25, ambient_min_f: 70,  ambient_max_f: 77,  factor_60c: 1.15, factor_75c: 1.11, factor_90c: 1.08 },
-  { ambient_min_c: 26, ambient_max_c: 30, ambient_min_f: 79,  ambient_max_f: 86,  factor_60c: 1.00, factor_75c: 1.00, factor_90c: 1.00 },
-  { ambient_min_c: 31, ambient_max_c: 35, ambient_min_f: 88,  ambient_max_f: 95,  factor_60c: 0.91, factor_75c: 0.94, factor_90c: 0.96 },
-  { ambient_min_c: 36, ambient_max_c: 40, ambient_min_f: 97,  ambient_max_f: 104, factor_60c: 0.82, factor_75c: 0.88, factor_90c: 0.91 },
-  { ambient_min_c: 41, ambient_max_c: 45, ambient_min_f: 106, ambient_max_f: 113, factor_60c: 0.71, factor_75c: 0.82, factor_90c: 0.87 },
-  { ambient_min_c: 46, ambient_max_c: 50, ambient_min_f: 115, ambient_max_f: 122, factor_60c: 0.58, factor_75c: 0.75, factor_90c: 0.82 },
-  { ambient_min_c: 51, ambient_max_c: 55, ambient_min_f: 124, ambient_max_f: 131, factor_60c: 0.41, factor_75c: 0.67, factor_90c: 0.76 },
-  { ambient_min_c: 56, ambient_max_c: 60, ambient_min_f: 133, ambient_max_f: 140, factor_60c: 0,    factor_75c: 0.58, factor_90c: 0.71 },
-];
-
-// ─────────────────────────────────────────────────────────────────────────────
 // NEC 310.15(C)(1) — Adjustment factors for more than three current-
 // carrying conductors in a raceway or cable.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -209,23 +141,3 @@ export const NEC_310_15_C_1_BUNDLING: Array<{ conductors: string; factor: number
   { conductors: '31–40', factor: 0.40 },
   { conductors: '41+',   factor: 0.35 },
 ];
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Convenience: 75°C copper terminations (the most-common projection),
-// joined with NEC 240.4(D) max OCPD where applicable.
-// ─────────────────────────────────────────────────────────────────────────────
-
-export interface CommonReferenceRow {
-  awg: string;
-  copper_ampacity_75c: number | null;
-  aluminum_ampacity_75c: number | null;
-  /** Max breaker per NEC 240.4(D); null if not capped (only 14/12/10). */
-  max_ocpd: number | null;
-}
-
-export const NEC_COMMON_REFERENCE_75C: CommonReferenceRow[] = NEC_310_16.map((row) => ({
-  awg: row.awg,
-  copper_ampacity_75c: row.copper_75c,
-  aluminum_ampacity_75c: row.aluminum_75c,
-  max_ocpd: NEC_240_4_D_MAX_OCPD[row.awg] ?? null,
-}));

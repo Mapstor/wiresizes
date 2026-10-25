@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, useId } from 'react';
 import { clsx } from 'clsx';
 import { ChevronDown } from 'lucide-react';
 
@@ -16,17 +16,23 @@ interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, hint, error, options, placeholder, className, ...props }, ref) => {
+  ({ label, hint, error, options, placeholder, className, id, ...props }, ref) => {
+    const generatedId = useId();
+    const selectId = id ?? generatedId;
+    const noteId = `${selectId}-note`;
     return (
       <div className="space-y-1 min-w-0">
         {label && (
-          <label className="block text-sm font-medium text-neutral-700">
+          <label htmlFor={selectId} className="block text-sm font-medium text-neutral-700">
             {label}
           </label>
         )}
         <div className="relative min-w-0">
           <select
             ref={ref}
+            id={selectId}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={hint || error ? noteId : undefined}
             className={clsx(
               'w-full min-w-0 px-4 py-3 border rounded-lg text-neutral-900 font-medium',
               'bg-white appearance-none cursor-pointer',
@@ -52,10 +58,10 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
         </div>
         {hint && !error && (
-          <p className="text-sm text-neutral-500">{hint}</p>
+          <p id={noteId} className="text-sm text-neutral-500">{hint}</p>
         )}
         {error && (
-          <p className="text-sm text-red-600">{error}</p>
+          <p id={noteId} className="text-sm text-red-600">{error}</p>
         )}
       </div>
     );

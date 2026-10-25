@@ -1,5 +1,6 @@
 'use client';
 
+import { useId } from 'react';
 import { clsx } from 'clsx';
 
 interface SliderProps {
@@ -11,6 +12,8 @@ interface SliderProps {
   step?: number;
   suffix?: string;
   className?: string;
+  /** Names the slider when there is no visible label. */
+  ariaLabel?: string;
 }
 
 export function Slider({
@@ -22,14 +25,16 @@ export function Slider({
   step = 1,
   suffix = '',
   className,
+  ariaLabel,
 }: SliderProps) {
+  const id = useId();
   const percentage = ((value - min) / (max - min)) * 100;
 
   return (
     <div className={clsx('space-y-2', className)}>
       {label && (
         <div className="flex justify-between items-center">
-          <label className="text-sm font-medium text-neutral-700">{label}</label>
+          <label htmlFor={id} className="text-sm font-medium text-neutral-700">{label}</label>
           <span className="text-lg font-mono font-semibold text-primary-600">
             {value}{suffix}
           </span>
@@ -37,6 +42,8 @@ export function Slider({
       )}
       <div className="relative">
         <input
+          id={id}
+          aria-label={label ? undefined : ariaLabel}
           type="range"
           min={min}
           max={max}
