@@ -1,8 +1,7 @@
 import { Metadata } from 'next';
 import { AmpsToWattsCalculator } from '@/components/calculators';
-import { Zap, Calculator, AlertTriangle, CheckCircle, Settings, Target, DollarSign, BookOpen, Users, Wrench, TrendingUp, Power } from 'lucide-react';
+import { Zap, Calculator, AlertTriangle, CheckCircle, Settings, Target, BookOpen, Users, Wrench, TrendingUp, Power } from 'lucide-react';
 import Link from 'next/link';
-import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
@@ -167,33 +166,6 @@ const NEC_COMPLIANCE_INFO = [
   }
 ];
 
-const ENERGY_COST_ANALYSIS = [
-  {
-    scenario: 'Continuous Industrial Motor',
-    power: '10kW (13.4 HP)',
-    hours: '8760 hours/year (24/7)',
-    calculation: '10kW × 8760 hours = 87,600 kWh/year\nAt $0.12/kWh: 87,600 × $0.12 = $10,512/year\nPower factor penalty (0.80): Additional ~15% = $1,577\nTotal annual cost: $12,089',
-    costFactors: 'Power factor penalties, demand charges, time-of-use rates',
-    savings: 'Power factor correction can save 10-20% on electricity costs'
-  },
-  {
-    scenario: 'Commercial LED Lighting',
-    power: '5kW lighting system',
-    hours: '4380 hours/year (12 hours/day)',
-    calculation: '5kW × 4380 hours = 21,900 kWh/year\nAt $0.15/kWh: 21,900 × $0.15 = $3,285/year\nvs Fluorescent (7kW): 7kW × 4380 × $0.15 = $4,599\nLED savings: $1,314/year',
-    costFactors: 'Higher power factor, lower maintenance, longer life',
-    savings: '30-50% energy reduction vs traditional lighting'
-  },
-  {
-    scenario: 'Electric Water Heater',
-    power: '4.5kW residential unit',
-    hours: '2920 hours/year (8 hours/day)',
-    calculation: '4.5kW × 2920 hours = 13,140 kWh/year\nAt $0.13/kWh: 13,140 × $0.13 = $1,708/year\nWith heat pump upgrade (1.5kW): $569/year\nSavings: $1,139/year',
-    costFactors: 'Time-of-use rates, peak demand charges',
-    savings: 'Heat pump water heaters use 60-70% less energy'
-  }
-];
-
 const TROUBLESHOOTING_GUIDE = [
   {
     problem: 'Calculated power doesn\'t match actual consumption',
@@ -217,17 +189,6 @@ const TROUBLESHOOTING_GUIDE = [
     ],
     prevention: 'Follow NEC sizing rules, consider all operating conditions'
   },
-  {
-    problem: 'High electricity bills despite efficient equipment',
-    causes: ['Poor power factor', 'Peak demand charges', 'Time-of-use rate penalties', 'Inefficient system operation'],
-    solutions: [
-      'Install power factor correction capacitors',
-      'Implement demand management controls',
-      'Shift loads to off-peak hours when possible',
-      'Regular maintenance and system optimization'
-    ],
-    prevention: 'Monitor power factor, demand patterns, and system efficiency'
-  }
 ];
 
 const ADVANCED_CALCULATIONS = [
@@ -303,10 +264,6 @@ const COMPREHENSIVE_FAQS = [
     answer: 'Harmonics from non-linear loads increase total power consumption. While fundamental power remains the same, harmonic distortion creates additional heating and losses. Total power = fundamental power × √(1 + THD²). This affects wire sizing and transformer capacity.'
   },
   {
-    question: 'What causes power factor penalties on utility bills?',
-    answer: 'Utilities charge penalties for power factors below 0.90-0.95 because reactive power requires additional generation and transmission capacity. Poor power factor increases current for the same real power, causing system losses and voltage regulation problems.'
-  },
-  {
     question: 'How do I size a generator for my calculated load?',
     answer: 'Size generator 25-30% larger than calculated running load to handle starting currents and future expansion. For motor loads, consider starting kVA = 6× running kW. Account for altitude derating (3% per 1000ft above sea level) and temperature derating.'
   },
@@ -321,7 +278,6 @@ export default function AmpsToWattsCalculatorPage() {
     <div className="min-h-screen bg-gray-50">
       <CombinedSchema 
         webApp={webAppData} 
-        faqItems={calculatorFAQs['amps-to-watts-calculator']} 
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">
@@ -351,7 +307,6 @@ export default function AmpsToWattsCalculatorPage() {
                 </div>
                 <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
                   <div className="text-sm text-green-100">Energy Planning</div>
-                  <div className="font-semibold">Cost Analysis Tools</div>
                 </div>
               </div>
             </div>
@@ -551,75 +506,6 @@ export default function AmpsToWattsCalculatorPage() {
             </div>
           </div>
 
-          {/* Energy Cost Analysis */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <DollarSign className="w-6 h-6 text-green-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Energy Cost Analysis & Savings</h2>
-            </div>
-            
-            <div className="grid gap-6">
-              {ENERGY_COST_ANALYSIS.map((analysis, idx) => (
-                <div key={idx} className="border rounded-lg p-6 bg-green-50">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h3 className="font-semibold text-gray-900 text-lg">{analysis.scenario}</h3>
-                      <p className="text-green-700 font-medium">{analysis.power} - {analysis.hours}</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">
-                        {analysis.calculation.match(/\$[\d,]+\/year/)?.[0] || 'Cost Analysis'}
-                      </div>
-                      <div className="text-sm text-gray-500">Annual Operating Cost</div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white rounded-lg p-4 mb-4">
-                    <pre className="text-sm text-gray-700 whitespace-pre-line font-mono">{analysis.calculation}</pre>
-                  </div>
-                  
-                  <div className="grid md:grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="font-medium text-gray-900">Cost Factors: </span>
-                      <span className="text-gray-700">{analysis.costFactors}</span>
-                    </div>
-                    <div>
-                      <span className="font-medium text-green-800">Energy Savings: </span>
-                      <span className="text-green-700">{analysis.savings}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-yellow-600" />
-                Utility Rate Structures & Power Factor Impact
-              </h3>
-              <div className="grid md:grid-cols-2 gap-6 text-sm">
-                <div>
-                  <h4 className="font-medium text-yellow-800 mb-2">Common Rate Structures</h4>
-                  <ul className="text-gray-700 space-y-1">
-                    <li>• <strong>Time-of-Use (TOU):</strong> Higher rates during peak hours (2-8 PM)</li>
-                    <li>• <strong>Demand Charges:</strong> Based on highest 15-minute kW usage</li>
-                    <li>• <strong>Tiered Rates:</strong> Increasing cost per kWh with usage</li>
-                    <li>• <strong>Seasonal Rates:</strong> Higher summer rates for cooling loads</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-medium text-yellow-800 mb-2">Power Factor Penalties</h4>
-                  <ul className="text-gray-700 space-y-1">
-                    <li>• <strong>Penalty Threshold:</strong> Typically PF &lt; 0.90-0.95</li>
-                    <li>• <strong>Penalty Calculation:</strong> Additional 1-30% charge</li>
-                    <li>• <strong>Correction Benefits:</strong> 5-20% bill reduction possible</li>
-                    <li>• <strong>Payback Period:</strong> Capacitor banks: 1-3 years</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Advanced Calculations */}
           <div className="bg-white rounded-xl shadow-lg p-8">
             <div className="flex items-center gap-3 mb-6">
@@ -786,22 +672,16 @@ export default function AmpsToWattsCalculatorPage() {
           {/* Related Tools */}
           <div className="bg-gradient-to-r from-green-50 to-teal-50 rounded-xl p-8">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Related Power Calculators</h2>
-              <p className="text-gray-600">Complete electrical power analysis with these tools</p>
+              <h2 className="text-2xl font-bold text-gray-900">Related calculators</h2>
             </div>
             
-            <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
               <Link href="/calculators/watts-to-amps-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
                 <Power className="w-8 h-8 text-green-600 mb-2" />
                 <h3 className="font-semibold text-gray-900 text-sm">Watts to Amps</h3>
                 <p className="text-xs text-gray-600">Reverse calculation</p>
               </Link>
               
-              <Link href="/calculators/electrical-load-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
-                <Calculator className="w-8 h-8 text-blue-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 text-sm">Load Calculator</h3>
-                <p className="text-xs text-gray-600">Service sizing</p>
-              </Link>
               
               <Link href="/calculators/three-phase-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
                 <Settings className="w-8 h-8 text-red-600 mb-2" />

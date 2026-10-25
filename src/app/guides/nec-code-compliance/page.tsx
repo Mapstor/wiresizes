@@ -1,52 +1,13 @@
 import Link from 'next/link';
-import { Target, AlertTriangle, CheckCircle, BookOpen, Calculator, Zap, FileText, ExternalLink, ArrowRight, Shield, Activity, Eye, TrendingUp, BarChart3 } from 'lucide-react';
+import { Target, AlertTriangle, CheckCircle, Calculator, Zap, FileText, ArrowRight, Shield, Activity, Eye, TrendingUp, BarChart3 } from 'lucide-react';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
-import { HowToSchema } from '@/components/seo/HowToSchema';
 import { getArticleDates } from '@/lib/article-dates';
 
-const HOWTO_NEC_COMPLIANCE_STEPS = [
-  {
-    name: 'Confirm the NEC edition adopted by your jurisdiction',
-    text: 'NEC publishes a new edition every three years (2017, 2020, 2023, 2026). Different states and AHJs adopt different editions and may add local amendments. Check with your local authority having jurisdiction (AHJ) before designing — installing to NEC 2023 in a jurisdiction still on NEC 2017 can fail inspection if the older code is more permissive in that section.',
-  },
-  {
-    name: 'Run a load calculation per NEC Article 220',
-    text: 'For dwellings use NEC 220.82 (Standard) or 220.83 (Optional). Multiply general lighting at 3 VA/sq ft; add 1500 VA per laundry circuit; 3000 VA per small-appliance branch; nameplate ratings for fixed appliances. Apply demand factors. The result determines minimum service / feeder size.',
-  },
-  {
-    name: 'Size conductors per NEC 310.16 ampacity',
-    text: 'Match conductor ampacity to the load (apply 125% for continuous loads per NEC 210.19/215.2). Use the column matching the lowest termination temperature in the circuit — virtually always 75°C for residential and small commercial.',
-  },
-  {
-    name: 'Apply NEC 310.15(B)(1) and (C)(1) derating',
-    text: 'Adjust ampacity for ambient temperature above 30°C using Table 310.15(B)(1). For >3 current-carrying conductors in a raceway, multiply by the bundling factor in Table 310.15(C)(1) (0.80, 0.70, 0.50, etc.). Both derates apply cumulatively.',
-  },
-  {
-    name: 'Apply the NEC 240.4(D) small-conductor rule',
-    text: 'Regardless of higher Table 310.16 ampacity, overcurrent protection is capped at 15 A for 14 AWG, 20 A for 12 AWG, and 30 A for 10 AWG copper (with limited exceptions for motor circuits, taps, and listed equipment). This rule prevents over-fusing of small conductors.',
-  },
-  {
-    name: 'Select the standard overcurrent device per NEC 240.6',
-    text: 'Pick the smallest standard breaker (15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 110, 125, 150, 175, 200, etc.) that is at or below the conductor ampacity from step 4 and at or above the load from step 2. For continuous loads, the OCPD is also sized at 125% of the load.',
-  },
-  {
-    name: 'Size the equipment grounding conductor per NEC 250.122',
-    text: 'EGC is sized by the OCPD ampacity, not the load. Use Table 250.122: 15 A → 14 AWG copper, 20 A → 12 AWG, 30–60 A → 10 AWG, 100 A → 8 AWG, 200 A → 6 AWG, 400 A → 3 AWG.',
-  },
-  {
-    name: 'Verify conduit fill per NEC Chapter 9',
-    text: 'For >2 conductors in a raceway, the maximum total cross-sectional area is 40% of the conduit interior. Use Chapter 9 Table 4 for raceway dimensions and Table 5 for conductor dimensions. Exceeding fill triggers additional bundling derate beyond 310.15(C)(1).',
-  },
-  {
-    name: 'Document calculations and pull permit before installing',
-    text: 'Maintain written load calcs, voltage-drop calcs, and conductor selection rationale for inspector review. Most jurisdictions require a permit for new circuits, panel changes, and service upgrades. Schedule inspection at rough-in (before drywall) and final.',
-  },
-];
 
 
 export const metadata = {
   title: 'NEC Code Compliance — 2023 Branch Circuits',
-  description: 'Procedure for designing NEC-compliant branch circuits: load calc (Art. 220), ampacity (310.16), OCPD (240), grounding (250.122), conduit fill.',
+  description: 'Procedure for designing branch circuits: load calc (Art. 220), ampacity (310.16), OCPD (240), grounding (250.122), conduit fill.',
   keywords: 'NEC code, National Electrical Code, electrical compliance, wire sizing code, circuit protection, electrical safety',
   alternates: { canonical: '/guides/nec-code-compliance' },
 };
@@ -161,14 +122,6 @@ export default function NECCodeComplianceGuide() {
               <Calculator className="w-5 h-5" />
               Wire Size Calculator
             </Link>
-            <div className="flex items-center gap-2 text-sm text-amber-700">
-              <Shield className="w-4 h-4" />
-              NEC 2023 Compliant
-            </div>
-            <div className="flex items-center gap-2 text-sm text-amber-700">
-              <BookOpen className="w-4 h-4" />
-              25 min comprehensive read
-            </div>
           </div>
         </div>
       </div>
@@ -404,13 +357,6 @@ export default function NECCodeComplianceGuide() {
         </div>
 
         <div className="mt-6 text-center">
-          <Link 
-            href="/calculators/circuit-breaker-calculator"
-            className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors"
-          >
-            <Shield className="w-5 h-5" />
-            Circuit Breaker Calculator
-          </Link>
         </div>
       </div>
 
@@ -557,10 +503,6 @@ export default function NECCodeComplianceGuide() {
               <h4 className="font-semibold text-purple-800 mb-3">Dwelling Unit Load Calculation</h4>
               <div className="space-y-3 text-sm">
                 <div className="bg-white rounded p-3">
-                  <strong>1. General Lighting Load:</strong><br/>
-                  <span className="text-purple-700">3.5 VA per sq ft × dwelling area</span>
-                </div>
-                <div className="bg-white rounded p-3">
                   <strong>2. Small Appliance Circuits:</strong><br/>
                   <span className="text-purple-700">1,500 VA × number of circuits (minimum 2)</span>
                 </div>
@@ -670,13 +612,6 @@ export default function NECCodeComplianceGuide() {
         </div>
 
         <div className="text-center">
-          <Link 
-            href="/calculators/electrical-load-calculator"
-            className="inline-flex items-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors"
-          >
-            <Calculator className="w-5 h-5" />
-            Load Calculation Calculator
-          </Link>
         </div>
       </div>
 
@@ -882,14 +817,12 @@ export default function NECCodeComplianceGuide() {
 
       {/* Related Tools */}
       <div className="bg-white rounded-xl border p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">NEC Compliance Calculators</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Related calculators</h2>
         <div className="grid md:grid-cols-3 gap-6">
           {[
-            { name: 'Wire Size Calculator', slug: 'wire-size-calculator', icon: Calculator, color: 'blue', description: 'NEC compliant wire sizing' },
+            { name: 'Wire Size Calculator', slug: 'wire-size-calculator', icon: Calculator, color: 'blue', description: 'Wire sizing' },
             { name: 'Ampacity Calculator', slug: 'ampacity-calculator', icon: BarChart3, color: 'green', description: 'Derating factors included' },
-            { name: 'Load Calculator', slug: 'electrical-load-calculator', icon: TrendingUp, color: 'purple', description: 'Article 220 calculations' },
             { name: 'Ground Wire Calculator', slug: 'ground-wire-calculator', icon: Zap, color: 'yellow', description: 'Table 250.122 sizing' },
-            { name: 'Circuit Breaker Calculator', slug: 'circuit-breaker-calculator', icon: Shield, color: 'red', description: 'OCPD sizing per 240.4' },
             { name: 'Voltage Drop Calculator', slug: 'voltage-drop-calculator', icon: Activity, color: 'indigo', description: 'NEC recommendations' },
           ].map((calc, index) => {
             const IconComponent = calc.icon;
@@ -915,23 +848,20 @@ export default function NECCodeComplianceGuide() {
 
       {/* Next Steps */}
       <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Continue Your NEC Education</h2>
-        <p className="text-gray-600 mb-6">
-          Master more aspects of electrical code compliance with these related guides and advanced topics.
-        </p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Continue Your NEC Education</h2>
         <div className="flex flex-wrap gap-4">
           <Link 
-            href="/guides/wire-sizing-guide"
+            href="/calculators/wire-size-calculator"
             className="bg-amber-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-amber-700 transition-colors flex items-center gap-2"
           >
             <ArrowRight className="w-5 h-5" />
-            Complete Wire Sizing Guide
+            Wire Size Calculator
           </Link>
           <Link 
-            href="/guides/electrical-safety"
+            href="/guides"
             className="border border-amber-600 text-amber-700 px-6 py-3 rounded-lg font-medium hover:bg-amber-50 transition-colors"
           >
-            Electrical Safety Guide
+            Electrical Engineering Education
           </Link>
           <Link 
             href="/guides/electrical-power-calculations"
@@ -943,13 +873,6 @@ export default function NECCodeComplianceGuide() {
       </div>
 
       <ArticleSchema article={articleData} />
-      <HowToSchema
-        path="/guides/nec-code-compliance"
-        name="How to Apply NEC Code Requirements to a Branch-Circuit Design"
-        description="Nine-step procedure for designing an NEC-compliant branch circuit: load calculation, ampacity lookup, derating, OCPD sizing, grounding, conduit fill, and inspection prep."
-        totalTime="PT20M"
-        steps={HOWTO_NEC_COMPLIANCE_STEPS}
-      />
     </div>
   );
 }

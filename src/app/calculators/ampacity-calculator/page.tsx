@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 const webAppData = {
   name: "Wire Ampacity Calculator - Current Carrying Capacity",
   url: "https://wiresizes.com/calculators/ampacity-calculator",
-  description: "Calculate wire ampacity with temperature and conduit fill derating factors. Free NEC-compliant ampacity calculator for copper and aluminum conductors at different temperature ratings."
+  description: "Calculate wire ampacity with temperature and conduit fill derating factors. Free ampacity calculator for copper and aluminum conductors at different temperature ratings."
 };
 
 // Ampacity derating scenarios
@@ -928,16 +928,12 @@ export default function AmpacityCalculatorPage() {
                 <h3 className="font-semibold text-neutral-900 mb-1">Voltage Drop Calculator</h3>
                 <p className="text-sm text-neutral-600">Calculate voltage loss over distance</p>
               </a>
-              <a href="/calculators/conduit-fill-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 className="font-semibold text-neutral-900 mb-1">Conduit Fill Calculator</h3>
-                <p className="text-sm text-neutral-600">Determine conduit size for multiple wires</p>
-              </a>
             </div>
           </div>
         </div>
       </section>
 
-      <CombinedSchema webApp={webAppData} faqItems={faqItems} />
+      <CombinedSchema webApp={webAppData} />
     </>
   );
 }

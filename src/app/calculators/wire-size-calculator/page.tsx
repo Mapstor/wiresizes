@@ -1,24 +1,6 @@
 import { Metadata } from 'next';
 import { WireSizeCalculator } from '@/components/calculators/WireSizeCalculator';
-import { 
-  AlertTriangle, 
-  Calculator, 
-  Zap, 
-  TrendingDown,
-  DollarSign,
-  BookOpen,
-  Info,
-  CheckCircle,
-  XCircle,
-  ArrowRight,
-  Gauge,
-  AlertCircle,
-  Shield,
-  Lightbulb,
-  Wrench,
-  Activity,
-  ExternalLink
-} from 'lucide-react';
+import { AlertTriangle, Calculator, Zap, BookOpen, Info, CheckCircle, ArrowRight, Gauge, AlertCircle, Shield, Lightbulb, Wrench, Activity } from 'lucide-react';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 import { NEC_310_16 } from '@/lib/data/nec-tables';
 
@@ -33,7 +15,7 @@ export const metadata: Metadata = {
 const webAppData = {
   name: "Wire Size Calculator - AWG Electrical Wire Sizing",
   url: "https://wiresizes.com/calculators/wire-size-calculator",
-  description: "Calculate the correct AWG wire size for any electrical circuit. Free NEC-compliant wire size calculator for copper and aluminum conductors. Includes voltage drop, ampacity, and distance calculations."
+  description: "Calculate the correct AWG wire size for any electrical circuit. Free wire size calculator for copper and aluminum conductors. Includes voltage drop, ampacity, and distance calculations."
 };
 
 // Common wire sizing scenarios
@@ -72,7 +54,7 @@ const COMMON_WIRE_SIZES = [
     maxLength120V: "N/A",
     maxLength240V: "70 ft",
     application: "Electric range/oven",
-    notes: "May use 50A breaker"
+    notes: ""
   },
   { 
     circuit: "50A EV Charger",
@@ -171,21 +153,10 @@ const COMMON_MISTAKES = [
   }
 ];
 
-// Cost comparison data
-const WIRE_COST_COMPARISON = [
-  { size: "14 AWG", copperPerFt: "$0.45", aluminumPerFt: "N/A", typicalRun: "50 ft", copperTotal: "$22.50" },
-  { size: "12 AWG", copperPerFt: "$0.65", aluminumPerFt: "$0.35", typicalRun: "50 ft", copperTotal: "$32.50" },
-  { size: "10 AWG", copperPerFt: "$1.15", aluminumPerFt: "$0.60", typicalRun: "75 ft", copperTotal: "$86.25" },
-  { size: "8 AWG", copperPerFt: "$1.95", aluminumPerFt: "$1.05", typicalRun: "60 ft", copperTotal: "$117.00" },
-  { size: "6 AWG", copperPerFt: "$3.25", aluminumPerFt: "$1.75", typicalRun: "60 ft", copperTotal: "$195.00" },
-  { size: "4 AWG", copperPerFt: "$5.20", aluminumPerFt: "$2.80", typicalRun: "80 ft", copperTotal: "$416.00" },
-  { size: "2 AWG", copperPerFt: "$8.15", aluminumPerFt: "$4.40", typicalRun: "100 ft", copperTotal: "$815.00" }
-];
-
 const faqItems = [
   {
     question: "What size wire for 20 amp circuit?",
-    answer: "A 20 amp circuit requires 12 AWG copper wire or 10 AWG aluminum wire per NEC Table 310.16. This assumes 75°C rated conductors and terminations, which is standard for residential wiring."
+    answer: "A 20 amp circuit requires 12 AWG copper wire or 10 AWG aluminum wire per NEC Table 310.16."
   },
   {
     question: "How do I calculate wire size for distance?",
@@ -197,7 +168,7 @@ const faqItems = [
   },
   {
     question: "Can I use aluminum wire instead of copper?",
-    answer: "Yes, aluminum wire is safe when properly installed with AL-rated connections and anti-oxidant compound. Aluminum requires one size larger than copper for same ampacity (e.g., 8 AWG aluminum vs 10 AWG copper for 30A). Cost savings can be 40-50%."
+    answer: "Yes, aluminum wire is safe when properly installed with AL-rated connections and anti-oxidant compound. Aluminum requires one size larger than copper for same ampacity (e.g., 8 AWG aluminum vs 10 AWG copper for 30A)."
   },
   {
     question: "What size wire for 50 amp hot tub?",
@@ -208,20 +179,12 @@ const faqItems = [
     answer: "12 AWG copper wire is rated for 25 amps at 75°C per NEC Table 310.16, but must be protected at 20 amps maximum per NEC 240.4(D). For continuous loads, derate to 80% (16 amps continuous on 20A breaker)."
   },
   {
-    question: "What size wire for 100 amp subpanel 150 feet away?",
-    answer: "For 100A subpanel at 150 feet, use 1/0 AWG copper or 3/0 AWG aluminum to maintain under 3% voltage drop. Ampacity alone would allow 1 AWG copper or 1/0 aluminum, but distance requires upsizing."
-  },
-  {
     question: "Do I need to upsize wire for motor loads?",
     answer: "Yes, size wire at 125% of motor full-load current per NEC 430.22. For example, a 5 HP 240V motor (28A FLC) needs wire sized for 35A minimum. Also consider voltage drop during starting (6x running current)."
   },
   {
     question: "What's the maximum distance for 12 AWG wire?",
     answer: "For 12 AWG copper at 20A/120V maintaining 3% voltage drop: maximum 57 feet. At 240V: maximum 114 feet. These distances assume single-phase circuits. Reduce by 13% for three-phase."
-  },
-  {
-    question: "Can I run 10 gauge wire on a 30 amp breaker?",
-    answer: "Yes, 10 AWG copper is rated for 35 amps at 75°C, making it suitable for 30A breakers. However, for receptacle circuits, NEC 240.4(D) limits 10 AWG to 30A overcurrent protection maximum."
   },
   {
     question: "What size ground wire do I need?",
@@ -233,7 +196,7 @@ const faqItems = [
   },
   {
     question: "What wire size for 200 amp service entrance?",
-    answer: "200A residential service typically uses 2/0 copper or 4/0 aluminum service entrance conductors. Many areas allow 2/0 aluminum for dwelling services per NEC 310.12. Verify local requirements."
+    answer: "200A residential service typically uses 2/0 copper or 4/0 aluminum service entrance conductors. Verify local requirements."
   },
   {
     question: "Can I use 14 gauge wire on a 20 amp circuit?",
@@ -249,7 +212,7 @@ const faqItems = [
   },
   {
     question: "Should I oversize wire for future expansion?",
-    answer: "Yes, oversizing by one AWG provides headroom for future loads and reduces voltage drop. The added cost (typically 30-40%) is often justified by energy savings and flexibility. Document spare capacity for future reference."
+    answer: "Yes, oversizing by one AWG provides headroom for future loads and reduces voltage drop. Document spare capacity for future reference."
   },
   {
     question: "What's the difference between stranded and solid wire?",
@@ -674,62 +637,6 @@ export default function WireSizeCalculatorPage() {
         </div>
       </section>
 
-      {/* Cost Comparison Section */}
-      <section className="py-8">
-        <div className="container">
-          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <DollarSign className="w-6 h-6 text-green-600" />
-              Wire Cost Comparison - Copper vs Aluminum
-            </h2>
-            
-            <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-green-50 border-b border-green-200">
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Wire Size</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Copper $/ft</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Aluminum $/ft</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Typical Run</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Copper Total</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100">
-                    {WIRE_COST_COMPARISON.map((cost, idx) => (
-                      <tr key={idx} className="hover:bg-green-50">
-                        <td className="px-4 py-3 font-mono font-semibold">{cost.size}</td>
-                        <td className="px-4 py-3 text-red-600 font-semibold">{cost.copperPerFt}</td>
-                        <td className="px-4 py-3 text-green-600 font-semibold">{cost.aluminumPerFt}</td>
-                        <td className="px-4 py-3">{cost.typicalRun}</td>
-                        <td className="px-4 py-3 font-semibold">{cost.copperTotal}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            
-            <div className="mt-6 grid lg:grid-cols-2 gap-4">
-              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                <h3 className="font-semibold text-green-900 mb-2">Aluminum Wire Savings</h3>
-                <p className="text-sm text-green-800">
-                  Aluminum wire typically costs 40-50% less than copper. For large feeders and services, 
-                  the savings can be thousands of dollars. Requires proper AL-rated connections and installation techniques.
-                </p>
-              </div>
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <h3 className="font-semibold text-blue-900 mb-2">When to Choose Copper</h3>
-                <p className="text-sm text-blue-800">
-                  Use copper for: branch circuits under 30A, tight spaces (smaller diameter), 
-                  corrosive environments, high vibration areas, and where superior conductivity justifies cost.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Special Considerations */}
       <section className="py-8 bg-neutral-50 border-y">
         <div className="container">
@@ -1013,137 +920,6 @@ export default function WireSizeCalculatorPage() {
         </div>
       </section>
 
-      {/* Authority Resources Section */}
-      <section className="py-8">
-        <div className="container">
-          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <BookOpen className="w-6 h-6 text-blue-600" />
-              Industry Standards & Authority Resources
-            </h2>
-            
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-              <div className="bg-white rounded-lg border border-neutral-200 p-4">
-                <h3 className="font-semibold text-neutral-900 mb-3">National Electrical Code (NEC)</h3>
-                <ul className="space-y-2 text-sm">
-                  <li>
-                    <a href="https://www.nfpa.org/codes-and-standards/nfpa-70-national-electrical-code" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       className="text-blue-600 hover:underline flex items-center gap-1">
-                      NFPA 70 - National Electrical Code
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://www.nfpa.org/News-and-Research/Resources/Electrical" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       className="text-blue-600 hover:underline flex items-center gap-1">
-                      NFPA Electrical Resources
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </li>
-                  <li className="text-neutral-600">Article 310 - Conductors</li>
-                  <li className="text-neutral-600">Table 310.16 - Ampacities</li>
-                  <li className="text-neutral-600">Article 240.4(D) - Small Conductors</li>
-                </ul>
-              </div>
-              
-              <div className="bg-white rounded-lg border border-neutral-200 p-4">
-                <h3 className="font-semibold text-neutral-900 mb-3">Professional Organizations</h3>
-                <ul className="space-y-2 text-sm">
-                  <li>
-                    <a href="https://www.necanet.org/" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       className="text-blue-600 hover:underline flex items-center gap-1">
-                      NECA - National Electrical Contractors
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://www.iaei.org/" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       className="text-blue-600 hover:underline flex items-center gap-1">
-                      IAEI - Electrical Inspectors
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://www.ieee.org/" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       className="text-blue-600 hover:underline flex items-center gap-1">
-                      IEEE - Electrical Engineers
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://www.ul.com/" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       className="text-blue-600 hover:underline flex items-center gap-1">
-                      UL - Underwriters Laboratories
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="bg-white rounded-lg border border-neutral-200 p-4">
-                <h3 className="font-semibold text-neutral-900 mb-3">Manufacturer Resources</h3>
-                <ul className="space-y-2 text-sm">
-                  <li>
-                    <a href="https://www.southwire.com/calculator-vdrop" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       className="text-blue-600 hover:underline flex items-center gap-1">
-                      Southwire Voltage Drop Calculator
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://www.cerrowire.com/products/resources/tables-calculators/" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       className="text-blue-600 hover:underline flex items-center gap-1">
-                      Cerro Wire Resources
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://www.generalcable.com/na" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       className="text-blue-600 hover:underline flex items-center gap-1">
-                      General Cable Technical Info
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://www.okonite.com/" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       className="text-blue-600 hover:underline flex items-center gap-1">
-                      Okonite Cable Company
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <p className="text-sm text-blue-900">
-                <strong>Professional Tip:</strong> Always consult the latest edition of the NEC and local amendments. Many jurisdictions have specific requirements that supersede national standards. When in doubt, consult with a licensed electrician or electrical inspector.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* FAQ Section */}
       <section className="py-8 bg-neutral-50 border-y">
         <div className="container">
@@ -1188,28 +964,16 @@ export default function WireSizeCalculatorPage() {
                 <h3 className="font-semibold text-neutral-900 mb-1">Ampacity Calculator</h3>
                 <p className="text-sm text-neutral-600">Find current carrying capacity with derating factors</p>
               </a>
-              <a href="/calculators/conduit-fill-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 className="font-semibold text-neutral-900 mb-1">Conduit Fill Calculator</h3>
-                <p className="text-sm text-neutral-600">Calculate conduit size for multiple conductors</p>
-              </a>
               <a href="/calculators/ground-wire-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
                 <h3 className="font-semibold text-neutral-900 mb-1">Ground Wire Calculator</h3>
                 <p className="text-sm text-neutral-600">Size equipment grounding conductors per NEC 250.122</p>
-              </a>
-              <a href="/calculators/circuit-breaker-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 className="font-semibold text-neutral-900 mb-1">Circuit Breaker Calculator</h3>
-                <p className="text-sm text-neutral-600">Size breakers for proper overcurrent protection</p>
-              </a>
-              <a href="/calculators/electrical-load-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 className="font-semibold text-neutral-900 mb-1">Load Calculator</h3>
-                <p className="text-sm text-neutral-600">Calculate total electrical load for service sizing</p>
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      <CombinedSchema webApp={webAppData} faqItems={faqItems} />
+      <CombinedSchema webApp={webAppData} />
     </>
   );
 }

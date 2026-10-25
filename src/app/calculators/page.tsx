@@ -2,29 +2,19 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import {
   Calculator,
-  Zap, 
-  Home, 
-  Car, 
-  Plug, 
-  Wrench,
+  Zap,
   Activity,
-  TrendingUp,
   AlertCircle,
-  CheckCircle,
   ArrowRight,
   Cpu,
   Gauge,
   Battery,
-  Thermometer,
-  Building,
-  Shield,
   FileText,
-  Settings
 } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Electrical Calculators — NEC 2023',
-  description: '30+ free electrical calculators: wire size, voltage drop, ampacity, load calc, conduit fill. NEC 2023 compliant. Used by electricians and engineers.',
+  description: 'Free electrical calculators: wire size, voltage drop, ampacity.',
   keywords: [
     'electrical calculators',
     'wire size calculator',
@@ -33,15 +23,14 @@ export const metadata: Metadata = {
     'NEC calculators',
     'electrical engineering tools',
     'power conversion calculators',
-    'three phase calculator',
-    'conduit fill calculator'
+    'three phase calculator'
   ],
   alternates: {
     canonical: '/calculators'
   },
   openGraph: {
     title: 'Electrical Calculators — NEC 2023',
-    description: '30+ NEC-compliant electrical calculators for wire sizing, voltage drop, ampacity, and more.',
+    description: 'Electrical calculators for wire sizing, voltage drop, ampacity, and more.',
     url: 'https://wiresizes.com/calculators',
     siteName: 'WireSizes.com',
     locale: 'en_US',
@@ -51,7 +40,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Electrical Calculators — NEC 2023',
-    description: '30+ NEC-compliant electrical calculators',
+    description: 'Electrical calculators',
     images: ['/twitter-image'],
   },
 };
@@ -64,37 +53,25 @@ const calculatorCategories = [
     featured: true,
     color: 'blue',
     calculators: [
-      { 
-        name: 'Wire Size Calculator', 
-        href: '/calculators/wire-size-calculator', 
-        desc: 'Determines proper wire gauge based on amperage, voltage, distance, and installation method',
-        example: 'Example: 50A circuit at 240V over 100 feet → Recommends 6 AWG copper or 4 AWG aluminum',
-        features: ['NEC 2023 compliant', 'Voltage drop included', 'Temperature derating', 'Conduit fill check'],
-        popularity: 95
+      {
+        name: 'Wire Size Calculator',
+        href: '/calculators/wire-size-calculator',
+        desc: 'Determines wire gauge based on amperage, voltage, and distance',
       },
-      { 
-        name: 'Voltage Drop Calculator', 
-        href: '/calculators/voltage-drop-calculator', 
-        desc: 'Calculates voltage drop percentage to ensure compliance with 3% branch and 5% feeder limits',
-        example: 'Example: 100 ft of 12 AWG copper carrying 20A at 120V → 3.2% voltage drop',
-        features: ['Single & three phase', 'AC/DC calculations', 'Wire size recommendations', 'NEC compliance check'],
-        popularity: 88
+      {
+        name: 'Voltage Drop Calculator',
+        href: '/calculators/voltage-drop-calculator',
+        desc: 'Calculates voltage drop percentage',
       },
-      { 
-        name: 'Ampacity Calculator', 
-        href: '/calculators/ampacity-calculator', 
+      {
+        name: 'Ampacity Calculator',
+        href: '/calculators/ampacity-calculator',
         desc: 'Look up NEC Table 310.16 ampacity ratings with temperature and bundling adjustments',
-        example: 'Example: 10 AWG THHN at 90°C in conduit → 40A ampacity (derated to 35A at 30°C ambient)',
-        features: ['NEC Table 310.16', 'Temperature correction', 'Bundling derating', 'All conductor types'],
-        popularity: 82
       },
-      { 
-        name: 'Ground Wire Size', 
-        href: '/calculators/ground-wire-calculator', 
+      {
+        name: 'Ground Wire Size',
+        href: '/calculators/ground-wire-calculator',
         desc: 'Determines equipment grounding conductor size per NEC Table 250.122',
-        example: 'Example: 100A circuit breaker → Requires 8 AWG copper or 6 AWG aluminum ground',
-        features: ['NEC Table 250.122', 'Service entrance grounds', 'Equipment grounds', 'Grounding electrode conductors'],
-        popularity: 75
       },
     ],
   },
@@ -105,163 +82,48 @@ const calculatorCategories = [
     featured: true,
     color: 'green',
     calculators: [
-      { 
-        name: 'Watts to Amps', 
-        href: '/calculators/watts-to-amps-calculator', 
+      {
+        name: 'Watts to Amps',
+        href: '/calculators/watts-to-amps-calculator',
         desc: 'Convert power in watts to current in amps for any voltage',
-        example: 'Example: 1500W heater at 120V → 12.5 amps',
-        features: ['Single phase', 'Three phase', 'Power factor', 'DC circuits'],
-        popularity: 92
       },
-      { 
-        name: 'Amps to Watts', 
-        href: '/calculators/amps-to-watts-calculator', 
+      {
+        name: 'Amps to Watts',
+        href: '/calculators/amps-to-watts-calculator',
         desc: 'Convert current in amps to power in watts',
-        example: 'Example: 20A at 240V → 4800 watts',
-        features: ['AC/DC conversion', 'Power factor adjustment', 'Three phase option', 'Efficiency calculation'],
-        popularity: 90
       },
-      { 
-        name: 'Ohm\'s Law Calculator', 
-        href: '/calculators/ohms-law-calculator', 
+      {
+        name: 'Ohm\'s Law Calculator',
+        href: '/calculators/ohms-law-calculator',
         desc: 'Complete Ohm\'s Law and power calculations - solve for V, I, R, or P',
-        example: 'Example: 120V with 10Ω resistance → 12A current, 1440W power',
-        features: ['Voltage calculation', 'Current calculation', 'Resistance calculation', 'Power calculation'],
-        popularity: 85
       },
-      { 
-        name: 'kW to Amps', 
-        href: '/calculators/kilowatts-to-amps-calculator', 
-        desc: 'Convert kilowatts to amps for sizing circuits and breakers',
-        example: 'Example: 10kW at 240V three-phase → 24.1 amps per phase',
-        features: ['Single phase', 'Three phase', 'Power factor correction', 'Line vs phase current'],
-        popularity: 78
-      },
-      { 
-        name: 'Kilowatts to Amps', 
-        href: '/calculators/kilowatts-to-amps-calculator', 
-        desc: 'Extended kilowatt to amp conversion with detailed calculations',
-        example: 'Example: 5.5kW motor at 480V three-phase → 6.6 amps',
-        features: ['Motor calculations', 'Efficiency factors', 'Starting current', 'Demand factors'],
-        popularity: 72
-      },
-      { 
-        name: 'Horsepower to Amps', 
-        href: '/calculators/horsepower-to-amps-calculator', 
-        desc: 'Convert motor horsepower to full load amps per NEC',
-        example: 'Example: 10 HP motor at 240V → 38 amps full load current',
-        features: ['NEC Table 430.248', 'Single & three phase', 'Motor efficiency', 'Service factor'],
-        popularity: 70
-      },
-    ],
-  },
-  {
-    name: 'Equipment Specific',
-    icon: Home,
-    description: 'Specialized calculators for common residential and commercial equipment installations',
-    featured: true,
-    color: 'purple',
-    calculators: [
-      { 
-        name: 'EV Charger Wire Size', 
-        href: '/calculators/ev-charger-wire-size-calculator', 
-        desc: 'Calculate wire size for Level 2 electric vehicle charging stations',
-        example: 'Example: 48A charger at 50 feet → 6 AWG copper or 4 AWG aluminum required',
-        features: ['Level 2 chargers', 'Continuous load factor', 'NEMA outlet types', 'Installation guidance'],
-        popularity: 88
-      },
-      { 
-        name: 'Hot Tub Wire Size', 
-        href: '/calculators/hot-tub-wire-size-calculator', 
-        desc: 'Determine wire and breaker size for spa and hot tub installations',
-        example: 'Example: 50A hot tub at 75 feet → 6 AWG copper in conduit',
-        features: ['GFCI requirements', 'Disconnect sizing', 'Burial depth', 'Bonding requirements'],
-        popularity: 82
-      },
-      { 
-        name: 'Garage Subpanel', 
-        href: '/calculators/garage-subpanel-calculator', 
-        desc: 'Size feeder wire for detached garage and workshop subpanels',
-        example: 'Example: 60A subpanel at 150 feet → 4 AWG aluminum URD cable',
-        features: ['Subpanel sizing', 'Ground rod requirements', 'Feeder protection', 'Load calculations'],
-        popularity: 76
-      },
-      { 
-        name: 'AC Wire Size', 
-        href: '/calculators/air-conditioner-calculator', 
-        desc: 'Calculate wire size for air conditioner and heat pump circuits',
-        example: 'Example: 3-ton AC unit → 30A breaker with 10 AWG wire',
-        features: ['BTU to tonnage', 'MCA/MOP values', 'Disconnect requirements', 'Whip specifications'],
-        popularity: 80
-      },
-      { 
-        name: 'Pool Pump Calculator', 
-        href: '/calculators/pool-pump-calculator', 
-        desc: 'Wire sizing for pool pumps and equipment',
-        example: 'Example: 2 HP pump at 230V → 20A circuit with 12 AWG wire',
-        features: ['GFCI protection', 'Bonding requirements', 'Timer circuits', 'Multiple pump support'],
-        popularity: 68
+      {
+        name: 'kW to Amps',
+        href: '/calculators/kilowatts-to-amps-calculator',
+        desc: 'Convert kilowatts to amps',
       },
     ],
   },
   {
     name: 'Advanced Calculators',
     icon: Cpu,
-    description: 'Professional tools for complex electrical calculations and commercial installations',
     color: 'orange',
     calculators: [
-      { 
-        name: 'Three Phase Calculator', 
-        href: '/calculators/three-phase-calculator', 
-        desc: 'Comprehensive three-phase power, current, and wire size calculations',
-        example: 'Example: 100kW at 480V → 120.3A per phase, recommends 1/0 AWG',
-        features: ['Delta/Wye systems', 'Power factor', 'Unbalanced loads', 'Voltage imbalance'],
-        popularity: 74
+      {
+        name: 'Three Phase Calculator',
+        href: '/calculators/three-phase-calculator',
+        desc: 'Three-phase power and current calculations',
       },
-      { 
-        name: 'Conduit Fill Calculator', 
-        href: '/calculators/conduit-fill-calculator', 
-        desc: 'Calculate conduit fill percentage per NEC Chapter 9 requirements',
-        example: 'Example: Three 10 AWG THHN in 3/4" EMT → 16% fill (40% max allowed)',
-        features: ['NEC Chapter 9', 'Multiple conductor types', 'All conduit types', 'Jam ratio check'],
-        popularity: 71
-      },
-      { 
-        name: 'Electrical Load Calculator', 
-        href: '/calculators/residential-load-calculator', 
-        desc: 'Residential service load calculation per NEC Article 220',
-        example: 'Example: 2000 sq ft home → 150A service recommended',
-        features: ['NEC Article 220', 'Demand factors', 'Optional calculations', 'Service sizing'],
-        popularity: 69
-      },
-      { 
-        name: 'Service Entrance Calculator', 
-        href: '/calculators/service-entrance-calculator', 
-        desc: 'Size service entrance conductors and equipment',
-        example: 'Example: 200A service → 2/0 copper or 4/0 aluminum service entrance cable',
-        features: ['Service conductor sizing', 'Meter base requirements', 'Grounding electrode', 'Main breaker sizing'],
-        popularity: 66
-      },
-      { 
-        name: 'Motor Circuit Calculator', 
-        href: '/calculators/motor-circuit', 
-        desc: 'Complete motor circuit design including wire, breaker, and overload sizing',
-        example: 'Example: 25 HP motor → 40A wire, 70A breaker, 38A overloads',
-        features: ['NEC Article 430', 'Overload protection', 'Short circuit protection', 'Control circuits'],
-        popularity: 63
+      {
+        name: 'Service Entrance Calculator',
+        href: '/calculators/service-entrance-calculator',
+        desc: 'Size service entrance conductors',
       },
     ],
   },
 ];
 
 const featuredTools = [
-  {
-    title: 'Most Popular',
-    icon: TrendingUp,
-    href: '/calculators/wire-size-calculator',
-    description: 'Wire Size Calculator - Used by over 50,000 professionals monthly',
-    color: 'blue'
-  },
   {
     title: 'Quick Convert',
     icon: Activity,
@@ -270,16 +132,9 @@ const featuredTools = [
     color: 'green'
   },
   {
-    title: 'NEC Compliant',
-    icon: Shield,
-    href: '/calculators/ampacity-calculator',
-    description: 'Ampacity Tables - Official NEC 2023 ampacity ratings',
-    color: 'purple'
-  },
-  {
     title: 'EV Ready',
     icon: Battery,
-    href: '/calculators/ev-charger-wire-size-calculator',
+    href: '/guides/wire-size-for-ev-charger',
     description: 'EV Charger Sizing - Level 2 charger installations',
     color: 'orange'
   }
@@ -294,35 +149,16 @@ const ALL_CALCULATORS = [
   { slug: 'ampacity-calculator', name: 'Ampacity Calculator' },
   { slug: 'ground-wire-calculator', name: 'Ground Wire Calculator' },
   { slug: 'wire-resistance-calculator', name: 'Wire Resistance Calculator' },
-  { slug: 'conduit-fill-calculator', name: 'Conduit Fill Calculator' },
-  { slug: 'box-fill-calculator', name: 'Box Fill Calculator' },
-  { slug: 'circuit-breaker-calculator', name: 'Circuit Breaker Calculator' },
   { slug: 'watts-to-amps-calculator', name: 'Watts to Amps Calculator' },
   { slug: 'amps-to-watts-calculator', name: 'Amps to Watts Calculator' },
   { slug: 'volts-to-amps-calculator', name: 'Volts to Amps Calculator' },
   { slug: 'kilowatts-to-amps-calculator', name: 'Kilowatts to Amps Calculator' },
   { slug: 'kva-to-amps-calculator', name: 'kVA to Amps Calculator' },
-  { slug: 'horsepower-to-amps-calculator', name: 'Horsepower to Amps Calculator' },
   { slug: 'btu-to-watts-calculator', name: 'BTU to Watts Calculator' },
   { slug: 'ohms-law-calculator', name: 'Ohm’s Law Calculator' },
-  { slug: 'ev-charger-calculator', name: 'EV Charger Calculator' },
-  { slug: 'ev-charger-wire-size-calculator', name: 'EV Charger Wire Size Calculator' },
-  { slug: 'hot-tub-calculator', name: 'Hot Tub Calculator' },
-  { slug: 'hot-tub-wire-size-calculator', name: 'Hot Tub Wire Size Calculator' },
-  { slug: 'air-conditioner-calculator', name: 'Air Conditioner Calculator' },
-  { slug: 'dryer-calculator', name: 'Dryer Calculator' },
-  { slug: 'range-calculator', name: 'Range Calculator' },
-  { slug: 'welder-calculator', name: 'Welder Calculator' },
-  { slug: 'pool-pump-calculator', name: 'Pool Pump Calculator' },
-  { slug: 'well-pump-calculator', name: 'Well Pump Calculator' },
-  { slug: 'rv-hookup-calculator', name: 'RV Hookup Calculator' },
-  { slug: 'garage-subpanel-calculator', name: 'Garage Subpanel Calculator' },
-  { slug: 'electrical-load-calculator', name: 'Electrical Load Calculator' },
-  { slug: 'residential-load-calculator', name: 'Residential Load Calculator' },
   { slug: 'service-entrance-calculator', name: 'Service Entrance Calculator' },
   { slug: 'three-phase-calculator', name: 'Three Phase Calculator' },
   { slug: 'low-voltage-calculator', name: 'Low Voltage Calculator' },
-  { slug: 'motor-circuit', name: 'Motor Circuit Calculator' },
 ];
 
 const calculatorsCollectionSchema = {
@@ -332,9 +168,8 @@ const calculatorsCollectionSchema = {
       '@type': 'CollectionPage',
       '@id': 'https://wiresizes.com/calculators#webpage',
       url: 'https://wiresizes.com/calculators',
-      name: 'Professional Electrical Calculators',
-      description:
-        '30+ NEC-compliant electrical calculators for wire sizing, voltage drop, ampacity, conduit fill, and load calculations. Free, professional-grade tools used by licensed electricians.',
+      name: 'Electrical Calculators',
+      description: 'Electrical calculators for wire sizing, voltage drop and ampacity.',
       isPartOf: { '@id': 'https://wiresizes.com/#website' },
       publisher: { '@id': 'https://wiresizes.com/#organization' },
       inLanguage: 'en-US',
@@ -380,26 +215,8 @@ export default function CalculatorsPage() {
               <Calculator className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900">
-              Professional Electrical Calculators
+              Electrical Calculators
             </h1>
-          </div>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-            Complete suite of NEC 2023 compliant electrical calculators for wire sizing, voltage drop, 
-            ampacity, and power conversions. Trusted by over 100,000 electrical professionals worldwide.
-          </p>
-          <div className="flex items-center justify-center gap-6 mt-6 text-sm text-gray-500">
-            <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-500" />
-              <span>NEC 2023 Compliant</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Shield className="w-4 h-4 text-blue-500" />
-              <span>Professional Grade</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-purple-500" />
-              <span>30+ Calculators</span>
-            </div>
           </div>
         </div>
 
@@ -462,7 +279,7 @@ export default function CalculatorsPage() {
                     </span>
                   )}
                 </div>
-                <p className="text-gray-600 max-w-3xl">{category.description}</p>
+                {category.description && <p className="text-gray-600 max-w-3xl">{category.description}</p>}
               </div>
 
               {/* Calculator Cards */}
@@ -479,42 +296,14 @@ export default function CalculatorsPage() {
                           <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
                             {calc.name}
                           </h3>
-                          {calc.popularity && (
-                            <div className="flex items-center gap-2 mt-2">
-                              <div className="w-24 bg-gray-200 rounded-full h-2 overflow-hidden">
-                                <div 
-                                  className="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full transition-all"
-                                  style={{ width: `${calc.popularity}%` }}
-                                />
-                              </div>
-                              <span className="text-xs text-gray-500">{calc.popularity}% usage</span>
-                            </div>
-                          )}
                         </div>
                         <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
                       </div>
 
                       {/* Description */}
-                      <p className="text-gray-600 mb-4 text-sm leading-relaxed">
+                      <p className="text-gray-600 text-sm leading-relaxed">
                         {calc.desc}
                       </p>
-
-                      {/* Example */}
-                      <div className="bg-gray-50 rounded-lg p-3 mb-4 border border-gray-100">
-                        <p className="text-xs text-gray-700">
-                          <span className="font-medium">📊 {calc.example}</span>
-                        </p>
-                      </div>
-
-                      {/* Features */}
-                      <div className="grid grid-cols-2 gap-2">
-                        {calc.features.map((feature, idx) => (
-                          <div key={idx} className="flex items-center gap-1.5">
-                            <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0" />
-                            <span className="text-xs text-gray-600">{feature}</span>
-                          </div>
-                        ))}
-                      </div>
                     </Link>
                   </div>
                 ))}
@@ -526,7 +315,7 @@ export default function CalculatorsPage() {
         {/* Additional Resources */}
         <div className="mt-16 bg-gray-50 rounded-2xl p-8 border border-gray-200">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Additional Resources</h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
             <Link href="/guides" className="bg-white rounded-xl p-6 border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
               <FileText className="w-8 h-8 text-blue-600 mb-3" />
               <h3 className="font-semibold text-gray-900 mb-2">Wire Sizing Guides</h3>
@@ -544,30 +333,8 @@ export default function CalculatorsPage() {
               </p>
               <span className="text-green-600 text-sm font-medium">View Tables →</span>
             </Link>
-            
-            <Link href="/guides/electrical-safety" className="bg-white rounded-xl p-6 border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
-              <Shield className="w-8 h-8 text-red-600 mb-3" />
-              <h3 className="font-semibold text-gray-900 mb-2">Safety Guidelines</h3>
-              <p className="text-sm text-gray-600 mb-3">
-                Essential electrical safety information and best practices for installations
-              </p>
-              <span className="text-red-600 text-sm font-medium">Learn More →</span>
-            </Link>
-          </div>
-        </div>
 
-        {/* Call to Action */}
-        <div className="mt-12 text-center">
-          <p className="text-gray-600 mb-6">
-            Need help choosing the right calculator for your project?
-          </p>
-          <Link 
-            href="/contact" 
-            className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <Settings className="w-5 h-5" />
-            Contact Our Support Team
-          </Link>
+          </div>
         </div>
 
       </div>

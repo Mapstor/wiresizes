@@ -422,28 +422,6 @@ export function KilowattsToAmpsCalculator() {
                 </div>
               </div>
 
-              {/* Cost Analysis */}
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <div className="text-sm font-medium text-green-800 mb-3">Operating Cost Estimate</div>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-green-600">Cost per Hour @ $0.12/kWh:</span>
-                    <span className="font-mono font-semibold">${(result.kilowatts * 0.12).toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-green-600">Daily (8 hours):</span>
-                    <span className="font-mono font-semibold">${(result.kilowatts * 8 * 0.12).toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-green-600">Monthly (22 days):</span>
-                    <span className="font-mono font-semibold">${(result.kilowatts * 8 * 22 * 0.12).toFixed(0)}</span>
-                  </div>
-                  <div className="flex justify-between border-t border-green-200 pt-2">
-                    <span className="text-green-600">Annual:</span>
-                    <span className="font-mono font-semibold">${(result.kilowatts * 8 * 250 * 0.12).toFixed(0)}</span>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         )}

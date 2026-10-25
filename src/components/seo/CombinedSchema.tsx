@@ -6,23 +6,17 @@ interface WebApplicationData {
   description: string;
 }
 
-interface FAQItem {
-  question: string;
-  answer: string;
-}
-
 interface CombinedSchemaProps {
   webApp: WebApplicationData;
-  faqItems: FAQItem[];
 }
 
-export function CombinedSchema({ webApp, faqItems }: CombinedSchemaProps) {
+export function CombinedSchema({ webApp }: CombinedSchemaProps) {
   const webApplicationSchema = {
     '@type': 'WebApplication',
     '@id': `${webApp.url}#webapp`,
     name: webApp.name,
     url: webApp.url,
-    applicationCategory: 'UtilityApplication',
+    applicationCategory: 'UtilitiesApplication',
     operatingSystem: 'All',
     offers: {
       '@type': 'Offer',
@@ -32,24 +26,11 @@ export function CombinedSchema({ webApp, faqItems }: CombinedSchemaProps) {
     description: webApp.description
   };
 
-  const faqPageSchema = {
-    '@type': 'FAQPage',
-    '@id': `${webApp.url}#faq`,
-    mainEntity: faqItems.map((item) => ({
-      '@type': 'Question',
-      name: item.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: item.answer
-      }
-    }))
-  };
-
   const breadcrumbSchema = generateBreadcrumbSchema(webApp.url);
 
   const combinedSchema = {
     '@context': 'https://schema.org',
-    '@graph': [webApplicationSchema, faqPageSchema, breadcrumbSchema]
+    '@graph': [webApplicationSchema, breadcrumbSchema]
   };
 
   return (

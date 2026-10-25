@@ -5,7 +5,6 @@ import {
   Home, 
   Calculator, 
   BookOpen, 
-  Search,
   Zap,
   AlertTriangle,
   ArrowLeft,
@@ -41,25 +40,16 @@ export default function NotFound() {
       title: 'Wire & Cable Calculators',
       icon: <Zap className="w-5 h-5" />,
       href: '/calculators#wire-cable',
-      count: 5
     },
     {
       title: 'Load & Power Calculators',
       icon: <TrendingUp className="w-5 h-5" />,
       href: '/calculators#load-power',
-      count: 6
-    },
-    {
-      title: 'Appliance Calculators',
-      icon: <Calculator className="w-5 h-5" />,
-      href: '/calculators#appliances',
-      count: 12
     },
     {
       title: 'Electrical Guides',
       icon: <BookOpen className="w-5 h-5" />,
       href: '/guides',
-      count: 11
     },
   ];
 
@@ -85,26 +75,6 @@ export default function NotFound() {
           <p className="text-xl text-neutral-600 mb-8 max-w-2xl mx-auto">
             Looks like this circuit is broken! The page you're looking for doesn't exist or has been moved.
           </p>
-
-          {/* Search Bar */}
-          <div className="max-w-md mx-auto mb-8">
-            <form action="/search" method="GET" className="relative">
-              <input
-                type="search"
-                name="q"
-                placeholder="Search for calculators or guides..."
-                className="w-full px-4 py-3 pl-12 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                aria-label="Search"
-              />
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" aria-hidden="true" />
-              <button
-                type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors"
-              >
-                Search
-              </button>
-            </form>
-          </div>
 
           {/* Quick Actions */}
           <div className="flex flex-wrap justify-center gap-4 mb-12">
@@ -167,7 +137,7 @@ export default function NotFound() {
           <h2 id="categories-title" className="text-2xl font-bold text-neutral-900 mb-6 text-center">
             Browse by Category
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid md:grid-cols-3 gap-4">
             {categories.map((category) => (
               <Link
                 key={category.href}
@@ -180,9 +150,6 @@ export default function NotFound() {
                 <h3 className="font-semibold text-neutral-900 group-hover:text-primary-600 transition-colors">
                   {category.title}
                 </h3>
-                <p className="text-sm text-neutral-500 mt-1">
-                  {category.count} tools available
-                </p>
               </Link>
             ))}
           </div>
@@ -235,11 +202,6 @@ export default function NotFound() {
                 "@type": "WebSite",
                 "name": "WireSizes.com",
                 "url": "https://wiresizes.com"
-              },
-              "potentialAction": {
-                "@type": "SearchAction",
-                "target": "https://wiresizes.com/search?q={search_term_string}",
-                "query-input": "required name=search_term_string"
               }
             }),
           }}

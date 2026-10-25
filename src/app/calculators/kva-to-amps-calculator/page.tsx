@@ -3,7 +3,6 @@ import { Suspense } from 'react';
 import { KVAToAmpsCalculator } from '@/components/calculators';
 import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Shield } from 'lucide-react';
 import Link from 'next/link';
-import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
   description: 'Convert apparent power (kVA) to current (amps) for single- and three-phase systems. Generator, transformer, and UPS sizing.',
   keywords: 'kva to amps, kilovolt amperes to amperage, transformer calculator, apparent power conversion, three phase kva, generator sizing, power factor calculator, electrical load calculator',
   openGraph: {
-    title: 'kVA to Amps Calculator - Professional Electrical Conversion Tool',
+    title: 'kVA to Amps Calculator - Electrical Conversion Tool',
     description: 'Convert kVA to amps for transformers, generators, and electrical equipment. Single and three-phase calculations with power factor.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/kva-to-amps-calculator',
@@ -25,7 +24,7 @@ export const metadata: Metadata = {
 const webAppData = {
   name: "kVA to Amps Calculator",
   url: "https://wiresizes.com/calculators/kva-to-amps-calculator",
-  description: "Professional kVA to amps calculator for electrical engineers and contractors. Convert kilovolt-amperes to amperage for single-phase and three-phase systems with power factor correction. NEC compliant transformer and generator sizing."
+  description: "Professional kVA to amps calculator for electrical engineers and contractors. Convert kilovolt-amperes to amperage for single-phase and three-phase systems with power factor correction."
 };
 
 const kvaToAmpsFAQs = [
@@ -56,7 +55,6 @@ export default function KVAToAmpsCalculatorPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <CombinedSchema 
         webApp={webAppData} 
-        faqItems={calculatorFAQs['kva-to-amps-calculator']} 
       />
       
       
@@ -76,12 +74,7 @@ export default function KVAToAmpsCalculatorPage() {
               Professional kilovolt-amperes to amperage converter for transformers, generators, and electrical equipment sizing. 
               Calculate full load current for single-phase and three-phase systems with power factor correction.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg">
-                <TrendingUp className="h-8 w-8 text-green-600 mb-2 mx-auto" />
-                <h3 className="font-semibold text-gray-900 dark:text-white">Transformer Sizing</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">NEC Article 450 compliant</p>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
               <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg">
                 <Shield className="h-8 w-8 text-blue-600 mb-2 mx-auto" />
                 <h3 className="font-semibold text-gray-900 dark:text-white">Generator Ratings</h3>
@@ -562,8 +555,7 @@ export default function KVAToAmpsCalculatorPage() {
                 <p className="text-sm">
                   <strong className="text-yellow-700 dark:text-yellow-400">Impact:</strong> 
                   Poor power factor significantly increases current draw, requiring larger cables, 
-                  transformers, and switchgear. Power factor correction can reduce equipment costs 
-                  and utility penalties.
+                  transformers, and switchgear.
                 </p>
               </div>
             </div>
@@ -766,75 +758,6 @@ export default function KVAToAmpsCalculatorPage() {
             <h3 className="font-semibold mb-1">Wire Size</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Calculate required wire gauge</p>
           </Link>
-        </div>
-      </section>
-
-      {/* Authority Links */}
-      <section className="mb-12">
-        <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-          Industry Standards & References
-        </h2>
-        
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <a href="https://www.nfpa.org/codes-and-standards/nfpa-70-national-electrical-code" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-red-700 dark:text-red-400">NFPA 70 - NEC</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              National Electrical Code Article 450 for transformer installations and protection requirements
-            </p>
-          </a>
-          
-          <a href="https://standards.ieee.org/ieee/446/7298/" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-blue-700 dark:text-blue-400">IEEE 446</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              Recommended Practice for Emergency and Standby Power Systems
-            </p>
-          </a>
-          
-          <a href="https://www.schneider-electric.com/en/work/solutions/power-and-energy-monitoring/" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-green-700 dark:text-green-400">Schneider Electric</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              Power system design guides and transformer selection tools
-            </p>
-          </a>
-          
-          <a href="https://www.eaton.com/us/en-us/products/electrical-circuit-protection/molded-case-circuit-breakers.html" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-purple-700 dark:text-purple-400">Eaton Corporation</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              Circuit protection and power distribution equipment specifications
-            </p>
-          </a>
-          
-          <a href="https://new.abb.com/power-converters-inverters" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-orange-700 dark:text-orange-400">ABB Group</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              Industrial transformers and power conversion systems
-            </p>
-          </a>
-          
-          <a href="https://www.generac.com/industrial/products/diesel-generators" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/30 dark:to-yellow-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-yellow-700 dark:text-yellow-400">Generac Power Systems</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              Industrial generator sizing and application guides
-            </p>
-          </a>
         </div>
       </section>
 

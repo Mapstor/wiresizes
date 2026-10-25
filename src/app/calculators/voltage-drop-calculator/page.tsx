@@ -1,24 +1,6 @@
 import { Metadata } from 'next';
 import { VoltageDropCalculator } from '@/components/calculators/VoltageDropCalculator';
-import { 
-  AlertTriangle, 
-  Calculator, 
-  Zap, 
-  TrendingDown,
-  DollarSign,
-  BookOpen,
-  Info,
-  CheckCircle,
-  XCircle,
-  ArrowRight,
-  Thermometer,
-  Activity,
-  Settings,
-  Gauge,
-  Battery,
-  AlertCircle,
-  Lightbulb
-} from 'lucide-react';
+import { AlertTriangle, Calculator, Zap, BookOpen, Info, CheckCircle, XCircle, ArrowRight, Activity, Settings, Gauge, Battery, AlertCircle, Lightbulb } from 'lucide-react';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
@@ -32,7 +14,7 @@ export const metadata: Metadata = {
 const webAppData = {
   name: "Voltage Drop Calculator",
   url: "https://wiresizes.com/calculators/voltage-drop-calculator",
-  description: "Calculate voltage drop in electrical circuits instantly. Free NEC-compliant calculator for copper and aluminum wire. Includes distance calculations, 3% rule compliance, and wire size recommendations."
+  description: "Calculate voltage drop in electrical circuits instantly. Free calculator for copper and aluminum wire. Includes distance calculations and wire size recommendations."
 };
 
 // Real voltage drop scenarios data - expanded
@@ -211,7 +193,7 @@ const TEMPERATURE_CORRECTIONS = [
 const VOLTAGE_DROP_EFFECTS = [
   { percentage: "1%", effect: "Optimal efficiency", impact: "No noticeable effect on equipment" },
   { percentage: "2%", effect: "Good efficiency", impact: "Slight reduction in motor torque" },
-  { percentage: "3%", effect: "Acceptable (NEC recommendation)", impact: "Minor efficiency loss, compliant with standards" },
+  { percentage: "3%", effect: "Acceptable (NEC recommendation)", impact: "Minor efficiency loss" },
   { percentage: "4%", effect: "Marginal performance", impact: "Noticeable dimming, motor heating increases" },
   { percentage: "5%", effect: "Poor performance", impact: "Equipment damage risk, significant energy waste" },
   { percentage: "6%", effect: "Unacceptable", impact: "Motors may fail to start, electronics malfunction" },
@@ -228,15 +210,6 @@ const POWER_FACTOR_IMPACT = [
   { pf: "0.80", type: "Large motors", multiplier: "1.25", notes: "Industrial motors" },
   { pf: "0.75", type: "Welders", multiplier: "1.33", notes: "Arc welding equipment" },
   { pf: "0.70", type: "Heavily loaded motors", multiplier: "1.43", notes: "Starting or stalled motors" }
-];
-
-// Cost analysis for voltage drop
-const VOLTAGE_DROP_COST_ANALYSIS = [
-  { drop: "1%", annualLoss120V20A: "$21", annualLoss240V50A: "$131", paybackMonths: "48" },
-  { drop: "2%", annualLoss120V20A: "$42", annualLoss240V50A: "$262", paybackMonths: "24" },
-  { drop: "3%", annualLoss120V20A: "$63", annualLoss240V50A: "$394", paybackMonths: "16" },
-  { drop: "4%", annualLoss120V20A: "$84", annualLoss240V50A: "$525", paybackMonths: "12" },
-  { drop: "5%", annualLoss120V20A: "$105", annualLoss240V50A: "$656", paybackMonths: "10" }
 ];
 
 const faqItems = [
@@ -258,7 +231,7 @@ const faqItems = [
   },
   {
     question: "What happens if voltage drop exceeds 5%?",
-    answer: "Excessive voltage drop causes: dimming lights, motors running hot and inefficiently, reduced equipment lifespan, potential failure to start motors, and increased energy costs. Electronic equipment may malfunction or shut down."
+    answer: "Excessive voltage drop causes: dimming lights, motors running hot and inefficiently, reduced equipment lifespan, and potential failure to start motors. Electronic equipment may malfunction or shut down."
   },
   {
     question: "How much does wire size affect voltage drop?",
@@ -313,10 +286,6 @@ const faqItems = [
     answer: "Using 6 AWG copper at 240V: VD = (2 × 75 × 50 × 0.491) ÷ 1000 = 3.68V or 1.53%. This is well within the 3% recommendation. 8 AWG would give 2.43% drop."
   },
   {
-    question: "Should I oversize wire for future loads?",
-    answer: "Yes, oversizing by one AWG size typically adds 30-40% to material cost but provides headroom for future loads and reduces energy losses. The payback period is usually 2-4 years from energy savings alone."
-  },
-  {
     question: "How does voltage drop affect solar panels?",
     answer: "Solar DC circuits are particularly sensitive to voltage drop because MPPT controllers need minimum voltage to operate. Keep DC voltage drop under 2% to maintain optimal power harvest from panels."
   }
@@ -346,9 +315,7 @@ export default function VoltageDropCalculatorPage() {
               material, current in amps, voltage (120 / 208 / 240 / 277 / 480 V),
               one-way distance, single- or three-phase, optional power factor
               for inductive loads. Outputs: voltage drop in volts and percent,
-              voltage at the load, NEC compliance check (green &lt; 3 %, amber
-              3&ndash;5 %, red &gt; 5 %), and recommended next-larger AWG if
-              the original is over the 3 % limit.
+              and voltage at the load.
             </p>
             
             {/* Quick Answer Box */}
@@ -521,7 +488,6 @@ export default function VoltageDropCalculatorPage() {
                       <li>• <strong>Motors:</strong> Overheat, reduced torque, premature failure</li>
                       <li>• <strong>Lights:</strong> Dimming, flickering, reduced lifespan</li>
                       <li>• <strong>Electronics:</strong> Malfunction, random resets, data corruption</li>
-                      <li>• <strong>Energy waste:</strong> Higher electric bills from I²R losses</li>
                       <li>• <strong>Fire hazard:</strong> Overheated connections and conductors</li>
                       <li>• <strong>Equipment damage:</strong> Compressors, pumps fail to start</li>
                     </ul>
@@ -535,9 +501,7 @@ export default function VoltageDropCalculatorPage() {
                     <ul className="text-sm space-y-2 text-green-800">
                       <li>• <strong>Efficiency:</strong> Equipment operates at rated performance</li>
                       <li>• <strong>Longevity:</strong> Extended equipment lifespan</li>
-                      <li>• <strong>Savings:</strong> Lower energy consumption</li>
                       <li>• <strong>Reliability:</strong> Stable voltage for sensitive electronics</li>
-                      <li>• <strong>Compliance:</strong> Meets NEC and local codes</li>
                       <li>• <strong>Safety:</strong> Reduced fire and equipment hazard</li>
                     </ul>
                   </div>
@@ -1010,108 +974,6 @@ export default function VoltageDropCalculatorPage() {
         </div>
       </section>
 
-      {/* Cost Analysis Section */}
-      <section className="py-8 bg-green-50 border-y">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <DollarSign className="w-6 h-6 text-green-600" />
-              Voltage Drop Cost Analysis & ROI
-            </h2>
-            
-            <div className="grid lg:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-semibold text-neutral-900 mb-3">Annual Energy Loss from Voltage Drop</h3>
-                <div className="bg-white rounded-lg border border-green-200 overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="bg-green-50 border-b border-green-200">
-                          <th className="px-3 py-2 text-left">Drop %</th>
-                          <th className="px-3 py-2 text-left">120V/20A Loss</th>
-                          <th className="px-3 py-2 text-left">240V/50A Loss</th>
-                          <th className="px-3 py-2 text-left">Payback</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-neutral-100">
-                        {VOLTAGE_DROP_COST_ANALYSIS.map((cost) => (
-                          <tr key={cost.drop} className="hover:bg-green-50">
-                            <td className="px-3 py-2 font-mono">{cost.drop}</td>
-                            <td className="px-3 py-2 text-red-600">{cost.annualLoss120V20A}/yr</td>
-                            <td className="px-3 py-2 text-red-600">{cost.annualLoss240V50A}/yr</td>
-                            <td className="px-3 py-2 text-green-600">{cost.paybackMonths} mo</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <p className="text-sm text-neutral-600 mt-3">
-                  Based on $0.12/kWh, 8 hours/day operation, 365 days/year
-                </p>
-              </div>
-              
-              <div>
-                <h3 className="font-semibold text-neutral-900 mb-3">Wire Upgrade Cost vs Benefit</h3>
-                <div className="space-y-3">
-                  <div className="bg-white p-4 rounded-lg border border-neutral-200">
-                    <h4 className="font-semibold text-neutral-800 mb-2">Typical Wire Cost Increases</h4>
-                    <ul className="text-sm space-y-1 text-neutral-600">
-                      <li>• 12 → 10 AWG: +$0.35/ft (+40%)</li>
-                      <li>• 10 → 8 AWG: +$0.90/ft (+75%)</li>
-                      <li>• 8 → 6 AWG: +$1.70/ft (+80%)</li>
-                      <li>• 6 → 4 AWG: +$2.40/ft (+60%)</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                    <h4 className="font-semibold text-green-900 mb-2">Example ROI Calculation</h4>
-                    <p className="text-sm text-green-800">
-                      100ft run, 30A @ 240V continuous:<br/>
-                      • 10 AWG: 3.1% drop, $130/yr loss<br/>
-                      • 8 AWG: 1.9% drop, $80/yr loss<br/>
-                      • Upgrade cost: $90 additional<br/>
-                      • <strong>Annual savings: $50</strong><br/>
-                      • <strong>Payback: 1.8 years</strong>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h3 className="font-semibold text-blue-900 mb-2">Hidden Costs of Voltage Drop</h3>
-              <div className="grid md:grid-cols-3 gap-4 text-sm text-blue-800">
-                <div>
-                  <strong>Equipment Life:</strong>
-                  <ul className="mt-1 space-y-1">
-                    <li>• Motors: -30% life per 5% drop</li>
-                    <li>• LED drivers: -20% life</li>
-                    <li>• Compressors: -25% life</li>
-                  </ul>
-                </div>
-                <div>
-                  <strong>Productivity:</strong>
-                  <ul className="mt-1 space-y-1">
-                    <li>• Slower motor speeds</li>
-                    <li>• Dimmer lighting</li>
-                    <li>• Equipment malfunctions</li>
-                  </ul>
-                </div>
-                <div>
-                  <strong>Maintenance:</strong>
-                  <ul className="mt-1 space-y-1">
-                    <li>• More frequent repairs</li>
-                    <li>• Overheated connections</li>
-                    <li>• Nuisance trips</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Troubleshooting Section */}
       <section className="py-8">
         <div className="container">
@@ -1441,54 +1303,17 @@ export default function VoltageDropCalculatorPage() {
                 <h3 className="font-semibold text-neutral-900 mb-1">Ampacity Calculator</h3>
                 <p className="text-sm text-neutral-600">Find current carrying capacity with temperature and fill derating</p>
               </a>
-              <a href="/calculators/circuit-breaker-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 className="font-semibold text-neutral-900 mb-1">Circuit Breaker Calculator</h3>
-                <p className="text-sm text-neutral-600">Size circuit breakers for proper overcurrent protection</p>
-              </a>
               <a href="/calculators/three-phase-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
                 <h3 className="font-semibold text-neutral-900 mb-1">Three Phase Calculator</h3>
                 <p className="text-sm text-neutral-600">Calculate three-phase power, current, and voltage drop</p>
               </a>
-              <a href="/calculators/motor-circuit" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 className="font-semibold text-neutral-900 mb-1">Motor Wire Calculator</h3>
-                <p className="text-sm text-neutral-600">Size conductors for motor circuits with starting considerations</p>
-              </a>
-              <a href="/calculators/conduit-fill-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 className="font-semibold text-neutral-900 mb-1">Conduit Fill Calculator</h3>
-                <p className="text-sm text-neutral-600">Calculate conduit size for multiple conductors</p>
-              </a>
             </div>
             
-            <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-lg border border-blue-200">
-              <h3 className="font-semibold text-neutral-900 mb-3">Professional Resources</h3>
-              <div className="grid md:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <h4 className="font-medium text-neutral-800 mb-2">NEC References</h4>
-                  <ul className="space-y-1 text-neutral-600">
-                    <li>• Article 210 - Branch Circuits</li>
-                    <li>• Article 215 - Feeders</li>
-                    <li>• Article 220 - Load Calculations</li>
-                    <li>• Table 310.16 - Ampacities</li>
-                    <li>• Chapter 9, Table 8 - Conductor Properties</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-medium text-neutral-800 mb-2">Industry Standards</h4>
-                  <ul className="space-y-1 text-neutral-600">
-                    <li>• IEEE Std 141 (Red Book) - Industrial Power</li>
-                    <li>• IEEE Std 1100 (Emerald Book) - Sensitive Equipment</li>
-                    <li>• NFPA 70E - Electrical Safety</li>
-                    <li>• ANSI C84.1 - Voltage Ratings</li>
-                    <li>• IEC 60364 - International Standards</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      <CombinedSchema webApp={webAppData} faqItems={faqItems} />
+      <CombinedSchema webApp={webAppData} />
     </>
   );
 }

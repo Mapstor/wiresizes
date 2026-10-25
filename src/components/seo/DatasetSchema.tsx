@@ -65,13 +65,6 @@ export function DatasetSchema({
     description,
     url,
     isAccessibleForFree: true,
-    license: 'https://creativecommons.org/licenses/by/4.0/',
-    creator: {
-      '@type': 'Organization',
-      '@id': `${ORIGIN}/#organization`,
-      name: 'WireSizes.com',
-      url: ORIGIN,
-    },
     publisher: { '@id': `${ORIGIN}/#organization` },
     inLanguage: 'en-US',
   };

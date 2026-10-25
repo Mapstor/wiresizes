@@ -7,7 +7,7 @@ import { Select } from '@/components/ui/Select';
 import { CalculatorLayout } from './CalculatorLayout';
 import { useShareableUrl } from '@/lib/hooks/useShareableUrl';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
-import { Calculator, Zap, RefreshCw } from 'lucide-react';
+import { Calculator, RefreshCw } from 'lucide-react';
 
 type CalculationMode = 'voltage' | 'current' | 'resistance' | 'power';
 
@@ -347,19 +347,6 @@ export function OhmsLawCalculator() {
                 </div>
               </div>
 
-              {/* Energy Cost Estimate */}
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Zap className="w-4 h-4 text-amber-600" />
-                  <span className="text-sm font-medium text-amber-800">Energy Cost Estimate</span>
-                </div>
-                <div className="text-xs text-amber-700 space-y-1">
-                  <div>• Per Hour: {(results.power / 1000).toFixed(3)} kWh</div>
-                  <div>• Per Day: {(results.power * 24 / 1000).toFixed(2)} kWh</div>
-                  <div>• Per Month: {(results.power * 24 * 30 / 1000).toFixed(1)} kWh</div>
-                  <div>• Monthly Cost @ $0.12/kWh: ${(results.power * 24 * 30 / 1000 * 0.12).toFixed(2)}</div>
-                </div>
-              </div>
             </>
           ) : (
             <div className="bg-neutral-50 border-2 border-dashed border-neutral-300 rounded-xl p-8 text-center">

@@ -1,17 +1,5 @@
 import { Metadata } from 'next';
-import { 
-  FileText, 
-  Calculator, 
-  AlertTriangle, 
-  CheckCircle,
-  Thermometer,
-  BookOpen,
-  Shield,
-  Download,
-  ArrowRight,
-  Info,
-  Zap
-} from 'lucide-react';
+import { FileText, Calculator, AlertTriangle, CheckCircle, Thermometer, BookOpen, Shield, ArrowRight, Info, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { DatasetSchema } from '@/components/seo/DatasetSchema';
@@ -421,54 +409,6 @@ export default function NECTable310_16Page() {
             </div>
           </div>
 
-          {/* Authority References */}
-          <div className="bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl p-6">
-            <h3 className="font-semibold text-lg mb-4">Authority References & Standards</h3>
-            <div className="grid md:grid-cols-4 gap-4">
-              <a href="https://www.nfpa.org/codes-and-standards/nfpa-70-national-electrical-code" 
-                target="_blank" rel="noopener noreferrer"
-                className="bg-white rounded-lg p-3 shadow hover:shadow-md transition-shadow">
-                <Shield className="w-5 h-5 text-red-600 mb-1" />
-                <div className="text-sm font-semibold">NFPA 70</div>
-                <div className="text-xs text-gray-600">National Electrical Code</div>
-              </a>
-              <a href="https://www.ul.com/news/understanding-wire-and-cable" 
-                target="_blank" rel="noopener noreferrer"
-                className="bg-white rounded-lg p-3 shadow hover:shadow-md transition-shadow">
-                <Shield className="w-5 h-5 text-blue-600 mb-1" />
-                <div className="text-sm font-semibold">UL Standards</div>
-                <div className="text-xs text-gray-600">Wire & Cable Testing</div>
-              </a>
-              <a href="https://www.copper.org/applications/electrical/building/" 
-                target="_blank" rel="noopener noreferrer"
-                className="bg-white rounded-lg p-3 shadow hover:shadow-md transition-shadow">
-                <Shield className="w-5 h-5 text-orange-600 mb-1" />
-                <div className="text-sm font-semibold">Copper Institute</div>
-                <div className="text-xs text-gray-600">Technical Resources</div>
-              </a>
-              <a href="https://www.aluminum.org/resources/electrical" 
-                target="_blank" rel="noopener noreferrer"
-                className="bg-white rounded-lg p-3 shadow hover:shadow-md transition-shadow">
-                <Shield className="w-5 h-5 text-gray-600 mb-1" />
-                <div className="text-sm font-semibold">Aluminum Assoc.</div>
-                <div className="text-xs text-gray-600">Electrical Applications</div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Download Section */}
-      <section className="py-8 bg-gray-100">
-        <div className="container mx-auto px-4">
-          <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-            <Download className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-            <h3 className="text-xl font-bold mb-2">Download NEC Table 310.16 PDF</h3>
-            <p className="text-gray-600 mb-4">Get a printable reference for field use</p>
-            <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-              Download PDF Reference
-            </button>
-          </div>
         </div>
       </section>
 
@@ -477,15 +417,6 @@ export default function NECTable310_16Page() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">How to Read and Apply NEC Table 310.16 — End-to-End</h2>
-            <p className="text-gray-600 mb-8">
-              Looking up a number in 310.16 is the easy part. Translating
-              that number into a code-compliant conductor selection requires
-              understanding which column to use, which derating factors
-              apply, and how the table interacts with NEC 240.4(D), NEC
-              110.14(C), NEC 310.15(B)(1) ambient correction, and NEC
-              310.15(C)(1) bundling adjustment. This section walks through
-              the full procedure with worked numbers.
-            </p>
 
             {/* Anatomy */}
             <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-200 mb-8">
@@ -554,9 +485,6 @@ export default function NECTable310_16Page() {
                 at 75&deg;C, &gt; 60 A load with 125 % factor). The combined
                 hot-attic + bundled-conductor derate eats into ampacity so
                 fast that you have to upsize <strong>two AWG steps</strong>.
-                This is why every NEC-compliant calculator must check ambient
-                and bundling — picking from the table alone routinely
-                undersizes hot-attic runs.
               </p>
             </div>
 

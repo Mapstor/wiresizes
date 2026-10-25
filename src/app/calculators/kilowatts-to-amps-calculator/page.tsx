@@ -3,7 +3,6 @@ import { Suspense } from 'react';
 import { KilowattsToAmpsCalculator } from '@/components/calculators';
 import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Settings } from 'lucide-react';
 import Link from 'next/link';
-import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
@@ -56,7 +55,6 @@ export default function KilowattsToAmpsCalculatorPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <CombinedSchema 
         webApp={webAppData} 
-        faqItems={calculatorFAQs['kilowatts-to-amps-calculator']} 
       />
       
       
@@ -685,7 +683,6 @@ export default function KilowattsToAmpsCalculatorPage() {
                       <li>• I²R losses increase with current</li>
                       <li>• Poor power factor increases losses</li>
                       <li>• Consider economic analysis of conductor sizing</li>
-                      <li>• Larger conductors reduce long-term operating costs</li>
                     </ul>
                   </div>
                   <div>
@@ -800,7 +797,7 @@ export default function KilowattsToAmpsCalculatorPage() {
 
               <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-                  Professional Disclaimer
+                  Disclaimer
                 </h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   This calculator provides estimates based on ideal conditions. Actual current requirements 
@@ -868,18 +865,6 @@ export default function KilowattsToAmpsCalculatorPage() {
               </p>
             </Link>
 
-            <Link 
-              href="/calculators/horsepower-to-amps-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <Settings className="h-6 w-6 text-purple-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Horsepower to Amps</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Calculate motor current from horsepower ratings
-              </p>
-            </Link>
 
             <Link 
               href="/calculators/three-phase-calculator"
@@ -907,86 +892,10 @@ export default function KilowattsToAmpsCalculatorPage() {
               </p>
             </Link>
 
-            <Link 
-              href="/calculators/circuit-breaker-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <BookOpen className="h-6 w-6 text-yellow-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Circuit Breaker Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Size overcurrent protection for calculated loads
-              </p>
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* Authority Links */}
-      <section className="mb-16">
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
-            Professional Resources and Standards
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <a 
-              href="https://www.nfpa.org/codes-and-standards/all-codes-and-standards/list-of-codes-and-standards/detail?code=70"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <BookOpen className="h-5 w-5 text-blue-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">NFPA 70 (NEC)</span>
-            </a>
-            <a 
-              href="https://www.ieee.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <Calculator className="h-5 w-5 text-green-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">IEEE Standards</span>
-            </a>
-            <a 
-              href="https://www.nema.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <Settings className="h-5 w-5 text-purple-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">NEMA Guidelines</span>
-            </a>
-            <a 
-              href="https://www.eia.gov/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <Zap className="h-5 w-5 text-orange-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">US Energy Information</span>
-            </a>
-            <a 
-              href="https://www.ul.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <AlertCircle className="h-5 w-5 text-red-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">UL Standards</span>
-            </a>
-            <a 
-              href="https://www.iec.ch/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <TrendingUp className="h-5 w-5 text-indigo-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">IEC Standards</span>
-            </a>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

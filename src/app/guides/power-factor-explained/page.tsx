@@ -4,7 +4,7 @@ import { getArticleDates } from '@/lib/article-dates';
 
 export const metadata: Metadata = {
   title: 'Power Factor Explained — kVA, kW, PF',
-  description: 'Power factor, reactive power, apparent power. kVA vs kW, why low PF inflates utility bills, capacitor-bank correction for inductive loads.',
+  description: 'Power factor, reactive power, apparent power. kVA vs kW, capacitor-bank correction for inductive loads.',
   keywords: 'power factor, reactive power, apparent power, kVA vs kW, power factor correction, capacitor bank, lagging power factor, leading power factor',
   alternates: { canonical: '/guides/power-factor-explained' },
 };

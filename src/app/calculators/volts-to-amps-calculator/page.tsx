@@ -3,7 +3,6 @@ import { Suspense } from 'react';
 import { VoltsToAmpsCalculator } from '@/components/calculators';
 import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Battery } from 'lucide-react';
 import Link from 'next/link';
-import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
   description: "Convert voltage and resistance to amps via Ohm's Law (I = V/R). For DC and resistive AC circuits. Solve any circuit current calculation.",
   keywords: 'volts to amps, voltage to current, ohms law calculator, electrical conversion, V to A, voltage amperage calculator, electrical current calculator',
   openGraph: {
-    title: 'Volts to Amps Calculator - Professional Electrical Conversion Tool',
+    title: 'Volts to Amps Calculator - Electrical Conversion Tool',
     description: 'Convert volts to amps using Ohms Law. Calculate current from voltage and power or resistance for electrical circuits.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/volts-to-amps-calculator',
@@ -56,7 +55,6 @@ export default function VoltsToAmpsCalculatorPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <CombinedSchema 
         webApp={webAppData} 
-        faqItems={calculatorFAQs['volts-to-amps-calculator']} 
       />
       
       
@@ -811,75 +809,6 @@ export default function VoltsToAmpsCalculatorPage() {
             <h3 className="font-semibold mb-1">Voltage Drop</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Calculate circuit voltage loss</p>
           </Link>
-        </div>
-      </section>
-
-      {/* Authority Links */}
-      <section className="mb-12">
-        <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-          Industry Standards & References
-        </h2>
-        
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <a href="https://www.nfpa.org/codes-and-standards/nfpa-70-national-electrical-code" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-red-700 dark:text-red-400">NFPA 70 - NEC</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              National Electrical Code for circuit calculations and conductor sizing
-            </p>
-          </a>
-          
-          <a href="https://www.ieee.org/standards/" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-blue-700 dark:text-blue-400">IEEE Standards</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              Electrical and electronics engineering standards
-            </p>
-          </a>
-          
-          <a href="https://www.fluke.com/en-us/learn/blog/electrical" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/30 dark:to-yellow-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-yellow-700 dark:text-yellow-400">Fluke Corporation</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              Electrical measurement and testing resources
-            </p>
-          </a>
-          
-          <a href="https://www.mikeholt.com/" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-green-700 dark:text-green-400">Mike Holt Enterprises</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              Electrical training and code education
-            </p>
-          </a>
-          
-          <a href="https://www.ecmweb.com/" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-purple-700 dark:text-purple-400">EC&M Magazine</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              Electrical construction and maintenance resources
-            </p>
-          </a>
-          
-          <a href="https://www.osha.gov/electrical" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-orange-700 dark:text-orange-400">OSHA Electrical Safety</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              Workplace electrical safety standards and guidelines
-            </p>
-          </a>
         </div>
       </section>
 

@@ -1,8 +1,7 @@
 import { Metadata } from 'next';
 import ServiceEntranceCalculator from '@/components/calculators/ServiceEntranceCalculator';
-import { Building, Shield, DollarSign, FileText, AlertTriangle, CheckCircle, Zap, Home, Factory, Calculator, Target, Wrench, Users, TrendingUp } from 'lucide-react';
+import { Building, Shield, AlertTriangle, Zap, Home, Calculator, Wrench, Users } from 'lucide-react';
 import Link from 'next/link';
-import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
@@ -27,15 +26,11 @@ const COMPREHENSIVE_FAQS = [
   },
   {
     question: 'What\'s the difference between overhead and underground service?',
-    answer: 'Overhead service uses aerial cables from utility pole to weatherhead, costs less ($2,000-4,000), but is weather-exposed. Underground service uses buried cables, costs more ($3,500-6,000) due to trenching, but provides better aesthetics and weather protection. Underground requires special cable types (USE-2, URD) and conduit protection.'
+    answer: 'Overhead service uses aerial cables from utility pole to weatherhead, but is weather-exposed. Underground service uses buried cables, but provides better aesthetics and weather protection. Underground requires special cable types (USE-2, URD) and conduit protection.'
   },
   {
     question: 'How do I calculate service entrance size?',
     answer: 'Calculate total connected load per NEC 220, apply demand factors, add 25% for continuous loads and largest motor. Size service at 125% of calculated demand for growth. Example: 32kW demand = 133A at 240V, requires 200A service. Always include future loads like EV charging.'
-  },
-  {
-    question: 'What permits are required for service entrance upgrade?',
-    answer: 'Service upgrades require electrical permit ($200-500), utility coordination/approval, and inspection. Process: submit load calculations with permit application, schedule utility disconnect, complete installation, pass rough-in and final inspections, utility reconnects service. Timeline typically 2-4 weeks.'
   },
   {
     question: 'Can I install my own service entrance?',
@@ -43,7 +38,7 @@ const COMPREHENSIVE_FAQS = [
   },
   {
     question: 'What\'s included in service entrance installation?',
-    answer: 'Complete installation includes: service drop/lateral from utility, weatherhead/riser (overhead) or underground conduit, meter base, service entrance conductors, main breaker panel, grounding electrode system, bonding of metal systems. Cost typically $3,000-8,000 depending on size and type.'
+    answer: 'Complete installation includes: service drop/lateral from utility, weatherhead/riser (overhead) or underground conduit, meter base, service entrance conductors, main breaker panel, grounding electrode system, bonding of metal systems.'
   },
   {
     question: 'How long do service entrance cables last?',
@@ -55,64 +50,11 @@ const COMPREHENSIVE_FAQS = [
   },
   {
     question: 'Do I need surge protection on service entrance?',
-    answer: 'NEC 2020 requires surge protection for dwelling units (230.67). Type 1 SPD at service entrance recommended, Type 2 at panel. Protects against utility surges, lightning. Cost $200-500, prevents damage to electronics, HVAC, appliances worth thousands.'
+    answer: 'NEC 2020 requires surge protection for dwelling units (230.67). Type 1 SPD at service entrance recommended, Type 2 at panel. Protects against utility surges, lightning.'
   },
   {
     question: 'What clearances are required for service entrance?',
     answer: 'Service drop must maintain: 10 ft above ground/sidewalk, 12 ft above residential driveways, 18 ft above roads. Meter base: 4-6 ft above grade. Working clearance at panel: 3 ft wide × 6.5 ft high × 36" deep. Service mast extends 18-24" above roof.'
-  }
-];
-
-const SERVICE_UPGRADE_SCENARIOS = [
-  {
-    current: '60A',
-    upgrade: '200A',
-    reason: 'Fuse box to modern breaker panel',
-    typicalHome: 'Pre-1960s homes',
-    drivers: 'Safety, insurance requirements, modern appliances',
-    cost: '$3,500-5,000',
-    timeframe: '1-2 days',
-    benefits: 'Eliminates fire hazard, enables AFCI/GFCI, increases home value $5,000-8,000'
-  },
-  {
-    current: '100A',
-    upgrade: '200A',
-    reason: 'Capacity for modern loads',
-    typicalHome: '1960s-1980s homes',
-    drivers: 'Central AC, electric appliances, EV charging',
-    cost: '$3,000-4,500',
-    timeframe: '1-2 days',
-    benefits: 'Supports modern lifestyle, eliminates overload, enables additions'
-  },
-  {
-    current: '150A',
-    upgrade: '200A',
-    reason: 'Future-proofing',
-    typicalHome: '1990s homes',
-    drivers: 'Home additions, hot tub, workshop',
-    cost: '$2,500-3,500',
-    timeframe: '1 day',
-    benefits: 'Growth capacity, supports multiple high-demand loads'
-  },
-  {
-    current: '200A',
-    upgrade: '400A',
-    reason: 'Luxury features or large home',
-    typicalHome: '4,000+ sq ft homes',
-    drivers: 'Pool/spa, multiple EVs, workshop, guest house',
-    cost: '$5,000-8,000',
-    timeframe: '2-3 days',
-    benefits: 'Unlimited electrical capacity, commercial-grade service'
-  },
-  {
-    current: '200A',
-    upgrade: '320A/400A',
-    reason: 'All-electric home conversion',
-    typicalHome: 'Gas to electric conversion',
-    drivers: 'Electrification, heat pumps, induction cooking',
-    cost: '$4,500-7,000',
-    timeframe: '2 days',
-    benefits: 'Eliminates gas bills, qualifies for electrification incentives'
   }
 ];
 
@@ -122,7 +64,6 @@ const WIRE_TYPE_COMPARISON = [
     application: 'Indoor panels from meter',
     advantages: 'Flexible, easy installation, no conduit needed',
     disadvantages: 'Indoor only, not for wet locations',
-    cost: '$$',
     ampRating: 'Full ampacity at 75°C'
   },
   {
@@ -130,7 +71,6 @@ const WIRE_TYPE_COMPARISON = [
     application: 'Overhead service drops',
     advantages: 'Sunlight resistant, direct burial rated',
     disadvantages: 'Requires conduit for physical protection',
-    cost: '$',
     ampRating: 'Full ampacity at 75°C'
   },
   {
@@ -138,7 +78,6 @@ const WIRE_TYPE_COMPARISON = [
     application: 'Underground service, wet locations',
     advantages: 'Direct burial, wet location rated, high temp',
     disadvantages: 'More expensive, requires pulling',
-    cost: '$$$',
     ampRating: 'Full ampacity at 90°C wet'
   },
   {
@@ -146,7 +85,6 @@ const WIRE_TYPE_COMPARISON = [
     application: 'Conduit installations',
     advantages: 'Versatile, wet/dry rated, pulls easily',
     disadvantages: 'Requires conduit always',
-    cost: '$$',
     ampRating: 'Full ampacity at 75°C'
   },
   {
@@ -154,7 +92,6 @@ const WIRE_TYPE_COMPARISON = [
     application: 'Commercial/industrial service',
     advantages: 'High temperature, wet/dry, tough jacket',
     disadvantages: 'Expensive, harder to pull',
-    cost: '$$$',
     ampRating: 'Full ampacity at 90°C'
   },
   {
@@ -162,7 +99,6 @@ const WIRE_TYPE_COMPARISON = [
     application: 'Manufactured homes',
     advantages: 'Listed for mobile homes, 4-wire',
     disadvantages: 'Limited to mobile home use',
-    cost: '$$',
     ampRating: 'Per manufacturer specs'
   }
 ];
@@ -225,91 +161,10 @@ const INSPECTION_CHECKLIST = [
   }
 ];
 
-const UTILITY_CONNECTION_PROCESS = [
-  {
-    step: 1,
-    phase: 'Pre-Installation',
-    tasks: [
-      'Submit service application to utility',
-      'Provide load calculation and site plan',
-      'Pay utility connection fees',
-      'Schedule utility engineering review',
-      'Receive approval and service design'
-    ],
-    timeline: '2-4 weeks',
-    cost: '$250-1,500'
-  },
-  {
-    step: 2,
-    phase: 'Coordination',
-    tasks: [
-      'Pull electrical permit',
-      'Order meter base from utility-approved list',
-      'Schedule utility disconnect (if upgrade)',
-      'Coordinate with utility for new transformer if needed',
-      'Arrange temporary power if required'
-    ],
-    timeline: '1-2 weeks',
-    cost: '$200-500 permits'
-  },
-  {
-    step: 3,
-    phase: 'Installation',
-    tasks: [
-      'Install service entrance equipment',
-      'Run service conductors',
-      'Install grounding system',
-      'Complete all electrical connections',
-      'Self-inspection before official inspection'
-    ],
-    timeline: '1-3 days',
-    cost: 'Per contractor quote'
-  },
-  {
-    step: 4,
-    phase: 'Inspection',
-    tasks: [
-      'Schedule rough-in inspection if required',
-      'Complete any corrections',
-      'Schedule final electrical inspection',
-      'Obtain inspection approval',
-      'Notify utility of passed inspection'
-    ],
-    timeline: '3-5 days',
-    cost: 'Included in permit'
-  },
-  {
-    step: 5,
-    phase: 'Utility Connection',
-    tasks: [
-      'Utility schedules connection crew',
-      'Utility installs meter and makes connection',
-      'Utility energizes service',
-      'Test all circuits and equipment',
-      'Utility seals meter'
-    ],
-    timeline: '3-10 days',
-    cost: 'Connection fees if applicable'
-  }
-];
-
-const COST_BREAKDOWN_TABLE = [
-  { component: 'Meter Base', size100A: '$150', size200A: '$250', size400A: '$600', sizeCT: '$1,500', notes: 'Utility-approved models only' },
-  { component: 'Service Cable (per ft)', size100A: '$3', size200A: '$8', size400A: '$18', sizeCT: '$35', notes: 'Copper prices fluctuate' },
-  { component: 'Main Breaker', size100A: '$75', size200A: '$150', size400A: '$500', sizeCT: '$800', notes: 'Quality brands recommended' },
-  { component: 'Panel Cabinet', size100A: '$150', size200A: '$300', size400A: '$800', sizeCT: '$1,200', notes: 'Spaces affect price' },
-  { component: 'Weatherhead/Mast', size100A: '$100', size200A: '$150', size400A: '$300', sizeCT: '$500', notes: 'Overhead only' },
-  { component: 'Ground System', size100A: '$150', size200A: '$200', size400A: '$300', sizeCT: '$400', notes: 'Rods, clamps, wire' },
-  { component: 'Conduit/Fittings', size100A: '$100', size200A: '$200', size400A: '$400', sizeCT: '$600', notes: 'PVC or rigid metal' },
-  { component: 'Labor (typical)', size100A: '$1,200', size200A: '$1,800', size400A: '$3,500', sizeCT: '$5,000', notes: 'Varies by region' },
-  { component: 'Permit/Inspection', size100A: '$200', size200A: '$300', size400A: '$500', sizeCT: '$750', notes: 'Local fees vary' },
-  { component: 'Utility Fees', size100A: '$250', size200A: '$250', size400A: '$500', sizeCT: '$1,000', notes: 'New service or upgrade' }
-];
-
 export default function ServiceEntranceCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <CombinedSchema webApp={webAppData} faqItems={calculatorFAQs['service-entrance-calculator']} />
+      <CombinedSchema webApp={webAppData} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">
           {/* Hero Section */}
@@ -325,7 +180,6 @@ export default function ServiceEntranceCalculatorPage() {
               </p>
               <div className="flex flex-wrap gap-4">
                 <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
-                  <div className="text-sm text-purple-100">NEC Compliant</div>
                   <div className="font-semibold">Article 230 & 310.12</div>
                 </div>
                 <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
@@ -337,7 +191,6 @@ export default function ServiceEntranceCalculatorPage() {
                   <div className="font-semibold">Overhead & Underground</div>
                 </div>
                 <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
-                  <div className="text-sm text-purple-100">Cost Estimates</div>
                   <div className="font-semibold">Materials + Labor</div>
                 </div>
               </div>
@@ -364,49 +217,6 @@ export default function ServiceEntranceCalculatorPage() {
           {/* Main Calculator */}
           <ServiceEntranceCalculator />
 
-          {/* Service Upgrade Scenarios */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <TrendingUp className="w-6 h-6 text-green-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Common Service Upgrade Scenarios</h2>
-            </div>
-            
-            <p className="text-gray-600 mb-6">
-              Typical residential service upgrades, costs, and benefits. Most homes built before 1990 need upgrades for modern electrical demands.
-            </p>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-green-50">
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Current → Upgrade</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Typical Home</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Drivers</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Cost</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Timeline</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Benefits</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {SERVICE_UPGRADE_SCENARIOS.map((scenario, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50">
-                      <td className="border border-gray-300 px-4 py-3 font-medium">
-                        {scenario.current} → {scenario.upgrade}
-                      </td>
-                      <td className="border border-gray-300 px-4 py-3 text-sm">{scenario.typicalHome}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-sm">{scenario.drivers}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center font-medium text-green-600">
-                        {scenario.cost}
-                      </td>
-                      <td className="border border-gray-300 px-4 py-3 text-center">{scenario.timeframe}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-sm">{scenario.benefits}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
           {/* Wire Type Comparison */}
           <div className="bg-white rounded-xl shadow-lg p-8">
             <div className="flex items-center gap-3 mb-6">
@@ -426,7 +236,6 @@ export default function ServiceEntranceCalculatorPage() {
                     <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Application</th>
                     <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Advantages</th>
                     <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Disadvantages</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Cost</th>
                     <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Ampacity</th>
                   </tr>
                 </thead>
@@ -437,113 +246,11 @@ export default function ServiceEntranceCalculatorPage() {
                       <td className="border border-gray-300 px-4 py-3 text-sm">{wire.application}</td>
                       <td className="border border-gray-300 px-4 py-3 text-sm text-green-600">{wire.advantages}</td>
                       <td className="border border-gray-300 px-4 py-3 text-sm text-red-600">{wire.disadvantages}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center font-medium">{wire.cost}</td>
                       <td className="border border-gray-300 px-4 py-3 text-sm">{wire.ampRating}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            </div>
-          </div>
-
-          {/* Cost Breakdown Table */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <DollarSign className="w-6 h-6 text-green-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Service Installation Cost Breakdown</h2>
-            </div>
-            
-            <p className="text-gray-600 mb-6">
-              Typical component costs for different service sizes. Prices vary by location and market conditions.
-            </p>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-green-50">
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Component</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">100A Service</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">200A Service</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">400A Service</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">CT Metering</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Notes</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {COST_BREAKDOWN_TABLE.map((item, idx) => (
-                    <tr key={idx} className={idx === COST_BREAKDOWN_TABLE.length - 3 ? 'font-semibold bg-gray-50' : 'hover:bg-gray-50'}>
-                      <td className="border border-gray-300 px-4 py-3">{item.component}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center">{item.size100A}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center">{item.size200A}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center">{item.size400A}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center">{item.sizeCT}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-sm text-gray-600">{item.notes}</td>
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot>
-                  <tr className="bg-green-100 font-bold">
-                    <td className="border border-gray-300 px-4 py-3">Typical Total</td>
-                    <td className="border border-gray-300 px-4 py-3 text-center">$2,500</td>
-                    <td className="border border-gray-300 px-4 py-3 text-center">$3,800</td>
-                    <td className="border border-gray-300 px-4 py-3 text-center">$7,500</td>
-                    <td className="border border-gray-300 px-4 py-3 text-center">$12,000</td>
-                    <td className="border border-gray-300 px-4 py-3 text-sm">Overhead service</td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </div>
-
-          {/* Utility Connection Process */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Target className="w-6 h-6 text-purple-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Utility Connection Process Timeline</h2>
-            </div>
-            
-            <p className="text-gray-600 mb-6">
-              Step-by-step process for coordinating service installation with utility company. Timeline varies by utility and location.
-            </p>
-            
-            <div className="space-y-6">
-              {UTILITY_CONNECTION_PROCESS.map((phase, idx) => (
-                <div key={idx} className="border-l-4 border-purple-500 bg-purple-50 rounded-lg p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <span className="inline-block bg-purple-600 text-white px-3 py-1 rounded text-sm font-medium mb-2">
-                        Step {phase.step}
-                      </span>
-                      <h3 className="font-semibold text-gray-900 text-lg">{phase.phase}</h3>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm text-gray-500">Timeline</div>
-                      <div className="font-semibold text-purple-600">{phase.timeline}</div>
-                      <div className="text-sm text-gray-500">Cost</div>
-                      <div className="font-medium text-green-600">{phase.cost}</div>
-                    </div>
-                  </div>
-                  
-                  <ul className="space-y-2">
-                    {phase.tasks.map((task, taskIdx) => (
-                      <li key={taskIdx} className="flex items-start gap-2">
-                        <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm text-gray-700">{task}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-            
-            <div className="mt-6 bg-yellow-50 rounded-lg p-4 border border-yellow-200">
-              <h4 className="font-semibold text-yellow-800 mb-2">Important Timeline Notes:</h4>
-              <ul className="text-sm text-yellow-700 space-y-1">
-                <li>• Total process typically takes 4-8 weeks from application to energization</li>
-                <li>• Utility engineering review can add 2-4 weeks for complex installations</li>
-                <li>• Weather and utility crew availability affect connection timeline</li>
-                <li>• Expedited service may be available for additional fees</li>
-              </ul>
             </div>
           </div>
 
@@ -611,16 +318,10 @@ export default function ServiceEntranceCalculatorPage() {
           {/* Related Tools */}
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-8">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Related Electrical Calculators</h2>
-              <p className="text-gray-600">Complete your electrical service planning with these tools</p>
+              <h2 className="text-2xl font-bold text-gray-900">Related calculators</h2>
             </div>
             
-            <div className="grid md:grid-cols-4 gap-4">
-              <Link href="/calculators/residential-load-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
-                <Home className="w-8 h-8 text-purple-600 mb-2" />
-                <h3 className="font-semibold text-gray-900">Load Calculator</h3>
-                <p className="text-sm text-gray-600">Calculate service size</p>
-              </Link>
+            <div className="grid md:grid-cols-3 gap-4">
               
               <Link href="/calculators/wire-size-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
                 <Calculator className="w-8 h-8 text-blue-600 mb-2" />

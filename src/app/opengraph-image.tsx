@@ -5,7 +5,7 @@ import { ImageResponse } from 'next/og';
 // for Facebook, LinkedIn, Slack, Twitter (summary_large_image), Discord,
 // iMessage. Generated at build time — no runtime cost.
 
-export const alt = 'WireSizes.com — Free NEC-compliant electrical wire size calculator';
+export const alt = 'wiresizes.com: wire gauge charts and calculators';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -14,9 +14,6 @@ const BLUE = '#1d4ed8';
 const INDIGO = '#1e3a8a';
 const AMBER = '#fbbf24';
 const SKY = '#bae6fd';
-const SLATE_300 = '#cbd5e1';
-const WHITE_10 = 'rgba(255, 255, 255, 0.08)';
-const WHITE_20 = 'rgba(255, 255, 255, 0.18)';
 
 export default async function OgImage() {
   return new ImageResponse(
@@ -77,7 +74,7 @@ export default async function OgImage() {
               WireSizes.com
             </span>
             <span style={{ fontSize: 20, color: SKY, fontWeight: 500 }}>
-              Professional Electrical Calculators
+              Wire gauge charts and calculators
             </span>
           </div>
         </div>
@@ -103,53 +100,6 @@ export default async function OgImage() {
           >
             Wire Size Calculator
           </div>
-          <div
-            style={{
-              fontSize: 36,
-              color: SLATE_300,
-              marginTop: 20,
-              fontWeight: 500,
-              display: 'flex',
-            }}
-          >
-            Free • NEC 2023 compliant • Trusted by 50,000+ electricians
-          </div>
-        </div>
-
-        {/* Reference pills */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          {[
-            ['15 A', '14 AWG'],
-            ['20 A', '12 AWG'],
-            ['30 A', '10 AWG'],
-            ['50 A', '6 AWG'],
-            ['100 A', '1 AWG'],
-            ['200 A', '2/0'],
-          ].map(([amps, awg], i) => (
-            <div
-              key={amps}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                background: WHITE_10,
-                border: `1px solid ${WHITE_20}`,
-                borderRadius: 999,
-                padding: '14px 22px',
-                fontSize: 22,
-                fontWeight: 600,
-                marginRight: i === 5 ? 0 : 12,
-              }}
-            >
-              <span style={{ color: AMBER, marginRight: 10 }}>{amps}</span>
-              <span style={{ color: 'white', opacity: 0.6, marginRight: 10 }}>→</span>
-              <span style={{ color: 'white' }}>{awg}</span>
-            </div>
-          ))}
         </div>
       </div>
     ),

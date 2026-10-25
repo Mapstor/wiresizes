@@ -3,7 +3,6 @@ import { Suspense } from 'react';
 import { WireResistanceCalculator } from '@/components/calculators';
 import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Settings } from 'lucide-react';
 import Link from 'next/link';
-import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
@@ -43,7 +42,7 @@ const wireResistanceFAQs = [
   },
   {
     question: "Why is copper wire resistance lower than aluminum?",
-    answer: "Copper has lower resistivity than aluminum: 1.72 × 10⁻⁸ ohm-meters vs 2.82 × 10⁻⁸ ohm-meters. This means aluminum has about 64% higher resistance than copper for the same size conductor. However, aluminum is lighter and less expensive, making it suitable for transmission lines where weight and cost are important factors."
+    answer: "Copper has lower resistivity than aluminum: 1.72 × 10⁻⁸ ohm-meters vs 2.82 × 10⁻⁸ ohm-meters. This means aluminum has about 64% higher resistance than copper for the same size conductor."
   },
   {
     question: "How do I calculate voltage drop from wire resistance?",
@@ -56,7 +55,6 @@ export default function WireResistanceCalculatorPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <CombinedSchema 
         webApp={webAppData} 
-        faqItems={calculatorFAQs['wire-resistance-calculator']} 
       />
       
       
@@ -617,7 +615,6 @@ export default function WireResistanceCalculatorPage() {
                     <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
                       <li>• Power loss = I² × R (watts per conductor)</li>
                       <li>• Annual energy loss = Loss × 8760 hours</li>
-                      <li>• Economic optimization balances conductor cost vs losses</li>
                       <li>• Critical for high-current, long-distance applications</li>
                     </ul>
                   </div>
@@ -689,32 +686,6 @@ export default function WireResistanceCalculatorPage() {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                  <TrendingUp className="h-6 w-6 text-green-600" />
-                  Economic Analysis
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Life-Cycle Costing:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Initial conductor cost vs ongoing loss costs</li>
-                      <li>• Energy cost escalation over system life</li>
-                      <li>• Optimal conductor size minimizes total cost</li>
-                      <li>• Consider maintenance and reliability factors</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Material Selection:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Copper: Lower resistance, higher cost</li>
-                      <li>• Aluminum: Higher resistance, lower cost, lighter</li>
-                      <li>• Consider termination requirements and connections</li>
-                      <li>• Evaluate thermal expansion differences</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -732,33 +703,6 @@ export default function WireResistanceCalculatorPage() {
           
           <div className="grid lg:grid-cols-2 gap-8">
             <div className="space-y-6">
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Industry Standards
-                </h3>
-                <ul className="space-y-3 text-gray-700 dark:text-gray-300">
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>IEEE 738: Calculating Current-Temperature Relationships</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>ASTM B193: Test Method for Resistivity of Electrical Conductor Materials</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>IEC 60287: Electric cables - Calculation of current rating</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>NEMA WC 70: Power Cables Rated 2000 Volts or Less</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>ICEA specifications for conductor resistance limits</span>
-                  </li>
-                </ul>
-              </div>
 
               <div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
@@ -816,7 +760,7 @@ export default function WireResistanceCalculatorPage() {
 
               <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-                  Professional Disclaimer
+                  Disclaimer
                 </h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   This calculator provides theoretical resistance values. Actual measurements may vary due to 
@@ -938,70 +882,6 @@ export default function WireResistanceCalculatorPage() {
         </div>
       </section>
 
-      {/* Authority Links */}
-      <section className="mb-16">
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
-            Professional Resources and Standards
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <a 
-              href="https://www.ieee.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <BookOpen className="h-5 w-5 text-blue-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">IEEE Standards</span>
-            </a>
-            <a 
-              href="https://www.astm.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <Calculator className="h-5 w-5 text-green-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">ASTM International</span>
-            </a>
-            <a 
-              href="https://www.iec.ch/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <Zap className="h-5 w-5 text-purple-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">IEC Standards</span>
-            </a>
-            <a 
-              href="https://www.nema.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <Settings className="h-5 w-5 text-orange-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">NEMA Standards</span>
-            </a>
-            <a 
-              href="https://www.icea.net/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <TrendingUp className="h-5 w-5 text-indigo-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">ICEA Cable Standards</span>
-            </a>
-            <a 
-              href="https://www.ul.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <AlertCircle className="h-5 w-5 text-red-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">UL Safety Standards</span>
-            </a>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

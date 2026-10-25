@@ -1,8 +1,7 @@
 import { Metadata } from 'next';
 import ClientThreePhaseCalculator from '@/components/calculators/ClientThreePhaseCalculator';
-import { Zap, Calculator, Settings, Target, BookOpen, Users, AlertTriangle, Shield, Factory, Cog, TrendingUp, DollarSign, MapPin } from 'lucide-react';
+import { Zap, Calculator, Settings, Target, Users, AlertTriangle, Shield, Factory, Cog, TrendingUp, MapPin } from 'lucide-react';
 import Link from 'next/link';
-import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
@@ -27,9 +26,7 @@ const THREE_PHASE_EXAMPLES = [
     specs: 'Power: 50 HP (37.3 kW), Voltage: 460V, Efficiency: 92%',
     calculation: '3-Phase Motor Calculation:\nRated Power: 50 HP = 37,300W\nActual Power: 37,300W ÷ 0.92 efficiency = 40,543W\nLine Current: 40,543W ÷ (460V × √3 × 0.85 PF) = 59.7A\nStarting Current: 59.7A × 6 = 358A (typical 6×)\nWire Size: 6 AWG copper (75A capacity)\nBreaker: 100A (125% of FLA per NEC 430.52)\nDisconnect: 100A motor-rated switch',
     result: '100A circuit, 6 AWG wire',
-    starting: '358A starting current',
-    cost: '$2,200 motor circuit installation',
-    compliance: 'NEC Article 430 motors'
+    starting: '358A starting current'
   },
   {
     title: 'Manufacturing Facility Load',
@@ -37,9 +34,7 @@ const THREE_PHASE_EXAMPLES = [
     specs: 'Motors: 200A, Lighting: 50A, HVAC: 75A, Other: 25A',
     calculation: 'Industrial Load Calculation:\nMotor Loads: 200A @ 0.8 PF\nLighting: 50A @ 0.95 PF (LED)\nHVAC: 75A @ 0.88 PF\nOther: 25A @ 0.9 PF\nTotal Apparent Power: √3 × V × I total\nPower Factor Correction needed\nMain Service: 400A minimum\nFeeder: 500 kcmil per phase\nTransformer: 480V to 208V/120V',
     result: '400A service, 500 kcmil',
-    starting: 'Motor starting analysis required',
-    cost: '$15,000 main service installation',
-    compliance: 'NEC 220 load calculations'
+    starting: 'Motor starting analysis required'
   },
   {
     title: 'Commercial Building HVAC',
@@ -47,9 +42,7 @@ const THREE_PHASE_EXAMPLES = [
     specs: '5 units, 15 HP each, variable loads',
     calculation: 'Commercial HVAC System:\nUnit Load: 15 HP = 11.2 kW each\nTotal Load: 5 × 11.2 kW = 56 kW\nLine Current per unit: 11,200W ÷ (208V × √3 × 0.85) = 36.6A\nTotal Current: 5 × 36.6A = 183A\nDemand Factor: 100% (critical loads)\nFeeder Size: 4/0 AWG copper\nMain Breaker: 225A\nIndividual Unit Breakers: 50A each',
     result: '225A feeder, 4/0 AWG',
-    starting: 'Soft starters recommended',
-    cost: '$8,500 HVAC electrical system',
-    compliance: 'NEC 440 air conditioning'
+    starting: 'Soft starters recommended'
   },
   {
     title: 'Data Center UPS System',
@@ -57,9 +50,7 @@ const THREE_PHASE_EXAMPLES = [
     specs: 'UPS: 200kW, Efficiency: 94%, Battery backup',
     calculation: 'Data Center UPS Calculation:\nUPS Input: 200kW ÷ 0.94 = 212.8kW\nInput Current: 212,800W ÷ (480V × √3 × 0.98 PF) = 260A\nBattery Charger: Additional 20A\nTotal Input: 280A\nBypass Circuit: 300A (125% of load)\nFeeder: 600 kcmil per phase\nRedundant Feeds: Dual 300A services\nGrounding: Enhanced for IT loads',
     result: '300A service, 600 kcmil',
-    starting: 'Soft start for UPS input',
-    cost: '$25,000 UPS electrical installation',
-    compliance: 'NEC 645 IT equipment'
+    starting: 'Soft start for UPS input'
   },
   {
     title: 'Welding Shop Distribution',
@@ -67,9 +58,7 @@ const THREE_PHASE_EXAMPLES = [
     specs: '10 welding stations, 100A each, 60% duty cycle',
     calculation: 'Welding Shop Load Analysis:\nConnected Load: 10 × 100A = 1,000A\nDemand Factor: 100% first welder + 85% remainder\nDemand Calculation: 100A + (900A × 0.85) = 865A\nDuty Cycle Factor: 865A × √0.6 = 670A\nService Required: 800A main service\nFeeder per station: 4 AWG per phase\nMain Feeder: (2) 500 kcmil parallel\nGrounding: Enhanced for welding loads',
     result: '800A service, parallel feeders',
-    starting: 'Arc starting consideration',
-    cost: '$35,000 welding shop electrical',
-    compliance: 'NEC 630 welding equipment'
+    starting: 'Arc starting consideration'
   },
   {
     title: 'Water Treatment Plant',
@@ -77,9 +66,7 @@ const THREE_PHASE_EXAMPLES = [
     specs: 'Primary: 100 HP, Secondary: 3 × 25 HP, Controls',
     calculation: 'Water Treatment Electrical:\nPrimary Pump: 100 HP = 74.6 kW\nSecondary Pumps: 3 × 25 HP = 55.9 kW\nControls & Instrumentation: 10 kW\nTotal Load: 140.5 kW\nPrimary Current: 112A @ 460V\nSecondary Current: 3 × 28A = 84A\nDiversity: Not all pumps run simultaneously\nService: 600A main service\nVFDs: Variable frequency drives for all pumps',
     result: '600A service with VFDs',
-    starting: 'VFD controlled starting',
-    cost: '$45,000 treatment plant electrical',
-    compliance: 'NEC 430 + local codes'
+    starting: 'VFD controlled starting'
   }
 ];
 
@@ -221,62 +208,25 @@ const POWER_FACTOR_CORRECTION = [
     originalPF: '0.70',
     targetPF: '0.95',
     improvement: '35.7%',
-    kvarRequired: '51.4 kVAR per 100kW',
-    savings: 'Significant utility penalty reduction'
+    kvarRequired: '51.4 kVAR per 100kW'
   },
   {
     originalPF: '0.80',
     targetPF: '0.95',
     improvement: '18.8%',
-    kvarRequired: '32.9 kVAR per 100kW',
-    savings: 'Moderate utility penalty reduction'
+    kvarRequired: '32.9 kVAR per 100kW'
   },
   {
     originalPF: '0.85',
     targetPF: '0.95',
     improvement: '11.8%',
-    kvarRequired: '22.3 kVAR per 100kW',
-    savings: 'Good practice for efficiency'
+    kvarRequired: '22.3 kVAR per 100kW'
   },
   {
     originalPF: '0.90',
     targetPF: '0.95',
     improvement: '5.6%',
-    kvarRequired: '11.0 kVAR per 100kW',
-    savings: 'Fine tuning for optimal PF'
-  }
-];
-
-const INSTALLATION_COSTS = [
-  {
-    component: '50 HP Motor Circuit',
-    range: '$1,800-$2,500',
-    factors: 'Wire, conduit, disconnect, starter'
-  },
-  {
-    component: '100A 3-Phase Panel',
-    range: '$1,200-$2,000',
-    factors: 'Panel, breakers, installation'
-  },
-  {
-    component: '480V to 208V Transformer (45kVA)',
-    range: '$2,500-$4,000',
-    factors: 'Transformer, pad, connections'
-  },
-  {
-    component: 'Power Factor Correction (100kVAR)',
-    range: '$3,000-$5,000',
-    factors: 'Capacitors, controls, installation'
-  },
-  {
-    component: 'VFD Installation (50 HP)',
-    range: '$4,500-$7,000',
-    factors: 'VFD, bypass, programming'
-  },
-  {
-    component: 'Industrial Service Upgrade (400A)',
-    range: '$15,000-$25,000',
-    factors: 'Service entrance, meter, main panel'
+    kvarRequired: '11.0 kVAR per 100kW'
   }
 ];
 
@@ -415,7 +365,7 @@ const COMPREHENSIVE_FAQS = [
   },
   {
     question: 'Why is power factor important in 3-phase systems?',
-    answer: 'Power factor affects system efficiency and utility costs. Low power factor increases current draw for the same power, requiring larger wires and equipment. Many utilities charge penalties for power factor below 0.90-0.95. Power factor correction using capacitors can reduce these costs.'
+    answer: 'Power factor affects system efficiency. Low power factor increases current draw for the same power, requiring larger wires and equipment.'
   },
   {
     question: 'What causes voltage imbalance in 3-phase systems?',
@@ -423,7 +373,7 @@ const COMPREHENSIVE_FAQS = [
   },
   {
     question: 'When should I use a Variable Frequency Drive (VFD)?',
-    answer: 'VFDs are beneficial for applications requiring speed control, energy savings, or soft starting. They reduce starting current, provide precise speed control, and can significantly reduce energy consumption in variable load applications like pumps and fans.'
+    answer: 'VFDs are beneficial for applications requiring speed control or soft starting. They reduce starting current and provide precise speed control.'
   },
   {
     question: 'How do I size a transformer for 3-phase loads?',
@@ -436,7 +386,6 @@ export default function ThreePhaseCalculatorPage() {
     <div className="min-h-screen bg-gray-50">
       <CombinedSchema 
         webApp={webAppData} 
-        faqItems={calculatorFAQs['three-phase-calculator']} 
       />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -466,7 +415,6 @@ export default function ThreePhaseCalculatorPage() {
                   <div className="font-semibold">Power, Current, PF</div>
                 </div>
                 <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
-                  <div className="text-sm text-red-100">Code Compliance</div>
                   <div className="font-semibold">NEC Articles 430, 440</div>
                 </div>
               </div>
@@ -512,8 +460,6 @@ export default function ThreePhaseCalculatorPage() {
                     <div className="sm:text-right sm:ml-4 min-w-0">
                       <div className="text-2xl font-bold text-red-600 mb-1">{example.result}</div>
                       <div className="text-sm text-gray-500 mb-1">{example.starting}</div>
-                      <div className="text-sm text-orange-600 mb-1">{example.cost}</div>
-                      <div className="text-xs text-blue-600">{example.compliance}</div>
                     </div>
                   </div>
                   <div className="bg-white rounded-lg p-4">
@@ -633,7 +579,6 @@ export default function ThreePhaseCalculatorPage() {
                     <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Target PF</th>
                     <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Current Reduction</th>
                     <th className="border border-gray-300 px-4 py-3 text-center font-semibold">kVAR Required</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Economic Impact</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -643,31 +588,10 @@ export default function ThreePhaseCalculatorPage() {
                       <td className="border border-gray-300 px-4 py-3 text-center font-bold text-green-600">{pf.targetPF}</td>
                       <td className="border border-gray-300 px-4 py-3 text-center font-medium text-blue-600">{pf.improvement}</td>
                       <td className="border border-gray-300 px-4 py-3 text-center font-medium">{pf.kvarRequired}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-sm">{pf.savings}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            </div>
-          </div>
-
-          {/* Installation Costs */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <DollarSign className="w-6 h-6 text-green-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Industrial Installation Costs</h2>
-            </div>
-            
-            <div className="grid md:grid-cols-2 gap-6">
-              {INSTALLATION_COSTS.map((cost, idx) => (
-                <div key={idx} className="border rounded-lg p-4 hover:shadow-md transition-shadow min-w-0">
-                  <div className="flex flex-wrap justify-between items-start gap-2 mb-2">
-                    <h3 className="font-semibold text-gray-900">{cost.component}</h3>
-                    <span className="font-bold text-green-600 whitespace-nowrap">{cost.range}</span>
-                  </div>
-                  <p className="text-sm text-gray-600">{cost.factors}</p>
-                </div>
-              ))}
             </div>
           </div>
 
@@ -810,8 +734,7 @@ export default function ThreePhaseCalculatorPage() {
           {/* Related Tools */}
           <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl p-8">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Related Industrial Calculators</h2>
-              <p className="text-gray-600">Complete your industrial electrical design</p>
+              <h2 className="text-2xl font-bold text-gray-900">Related calculators</h2>
             </div>
             
             <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -827,23 +750,8 @@ export default function ThreePhaseCalculatorPage() {
                 <p className="text-xs text-gray-600">Long run analysis</p>
               </Link>
               
-              <Link href="/calculators/welder-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
-                <Cog className="w-8 h-8 text-orange-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 text-sm">Welder Calculator</h3>
-                <p className="text-xs text-gray-600">Industrial welding</p>
-              </Link>
               
-              <Link href="/calculators/electrical-load-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
-                <BookOpen className="w-8 h-8 text-blue-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 text-sm">Load Calculator</h3>
-                <p className="text-xs text-gray-600">Service sizing</p>
-              </Link>
               
-              <Link href="/calculators/conduit-fill-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
-                <Shield className="w-8 h-8 text-purple-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 text-sm">Conduit Fill</h3>
-                <p className="text-xs text-gray-600">Raceway sizing</p>
-              </Link>
               
               <Link href="/calculators/ampacity-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
                 <TrendingUp className="w-8 h-8 text-indigo-600 mb-2" />
@@ -851,17 +759,7 @@ export default function ThreePhaseCalculatorPage() {
                 <p className="text-xs text-gray-600">Wire capacity</p>
               </Link>
               
-              <Link href="/calculators/garage-subpanel-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
-                <Factory className="w-8 h-8 text-emerald-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 text-sm">Subpanel</h3>
-                <p className="text-xs text-gray-600">Industrial buildings</p>
-              </Link>
               
-              <Link href="/calculators/well-pump-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
-                <Settings className="w-8 h-8 text-cyan-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 text-sm">Well Pump</h3>
-                <p className="text-xs text-gray-600">Water systems</p>
-              </Link>
             </div>
           </div>
         </div>

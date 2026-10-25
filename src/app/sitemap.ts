@@ -65,42 +65,21 @@ const calculators = [
   'ampacity-calculator',
   'ground-wire-calculator',
   'wire-resistance-calculator',
-  'conduit-fill-calculator',
-  'box-fill-calculator',
-  'circuit-breaker-calculator',
   // Power conversions
   'watts-to-amps-calculator',
   'amps-to-watts-calculator',
   'volts-to-amps-calculator',
   'kilowatts-to-amps-calculator',
   'kva-to-amps-calculator',
-  'horsepower-to-amps-calculator',
   'btu-to-watts-calculator',
   'ohms-law-calculator',
-  // Equipment
-  'ev-charger-calculator',
-  'ev-charger-wire-size-calculator',
-  'hot-tub-calculator',
-  'hot-tub-wire-size-calculator',
-  'air-conditioner-calculator',
-  'dryer-calculator',
-  'range-calculator',
-  'welder-calculator',
-  'pool-pump-calculator',
-  'well-pump-calculator',
-  'rv-hookup-calculator',
-  'garage-subpanel-calculator',
   // Service / load
-  'electrical-load-calculator',
-  'residential-load-calculator',
   'service-entrance-calculator',
   'three-phase-calculator',
   'low-voltage-calculator',
-  'motor-circuit',
 ];
 
 const guides = [
-  'wire-sizing-guide',
   'awg-wire-size-chart',
   'nec-table-310-16',
   'nec-code-compliance',
@@ -108,7 +87,6 @@ const guides = [
   'wire-size-for-200-amp',
   'wire-size-for-ev-charger',
   'electrical-power-calculations',
-  'electrical-safety',
   'single-vs-three-phase',
   'power-factor-explained',
 ];
@@ -119,12 +97,9 @@ const TOP_CALCULATORS = new Set([
   'wire-size-calculator',
   'voltage-drop-calculator',
   'ampacity-calculator',
-  'ev-charger-wire-size-calculator',
-  'electrical-load-calculator',
 ]);
 
 const TOP_GUIDES = new Set([
-  'wire-sizing-guide',
   'awg-wire-size-chart',
   'nec-table-310-16',
   'wire-size-for-200-amp',

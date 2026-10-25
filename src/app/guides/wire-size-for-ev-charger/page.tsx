@@ -2,39 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
 import { ArticleFAQSchema } from '@/components/seo/ArticleFAQSchema'
-import { HowToSchema } from '@/components/seo/HowToSchema';
 import { getArticleDates } from '@/lib/article-dates';
 
-const HOWTO_EV_STEPS = [
-  {
-    name: 'Determine the charger amperage rating',
-    text: 'Common Level 2 chargers: 32A (Tesla Mobile Connector, basic wall units), 40A (mid-tier wall connectors like ChargePoint Home Flex, JuiceBox 40), 48A (high-power Tesla Wall Connector, Wallbox Pulsar), 80A (commercial). Use the charger’s rated continuous output, not the marketing peak.',
-  },
-  {
-    name: 'Apply the 125% continuous-load factor (NEC 625.42, 210.19(A))',
-    text: 'EV charging is a continuous load (operates 3+ hours). The branch-circuit conductors and overcurrent device must be sized at 125% of the charger output. A 40A charger needs a 50A circuit; a 48A charger needs a 60A circuit; an 80A charger needs a 100A circuit.',
-  },
-  {
-    name: 'Look up wire size from NEC 310.16 at 75°C copper',
-    text: 'Match the circuit ampacity from step 2 to the smallest conductor that meets it. 50A circuit → 6 AWG copper (8 AWG aluminum); 60A circuit → 6 AWG copper (4 AWG aluminum, since 6 AWG aluminum is only 50A at 75°C); 100A circuit → 1 AWG copper (1/0 aluminum).',
-  },
-  {
-    name: 'Decide between hardwired and NEMA receptacle',
-    text: 'Up to 50A you can use a NEMA 14-50 receptacle for plug-in convenience (Tesla Mobile, JuiceBox, etc.). For 48A+ chargers you must hardwire (NEC 625.40 effectively requires it because no listed receptacle exists above 50A). Hardwiring also avoids the 80% derating that some AHJs apply to receptacles on continuous loads.',
-  },
-  {
-    name: 'Calculate voltage drop on long runs',
-    text: 'Voltage drop = (2 × L × I × R) ÷ 1000 single-phase. Example: 40A continuous (50A circuit) at 50ft on 6 AWG copper (R = 0.491 Ω/1000ft) at 240V = 0.8% — fine. At 100ft = 1.6% — still fine. Beyond 100ft on 50A circuits, upsize to 4 AWG.',
-  },
-  {
-    name: 'Size the breaker at 125% of the charger rating',
-    text: 'Per NEC 240.6, round up to the next standard breaker size: 32A charger → 40A breaker, 40A charger → 50A breaker, 48A charger → 60A breaker, 80A charger → 100A breaker. The breaker rating must equal the wire ampacity in step 3.',
-  },
-  {
-    name: 'Verify GFCI / equipment-protective device requirements',
-    text: 'Most modern Level 2 chargers (EVSE) have integrated GFCI; check the manufacturer specifications. If the charger does not provide GFCI internally, install a GFCI or AFCI/GFCI breaker per NEC 625.41 / 210.8. The equipment grounding conductor is sized per NEC 250.122 — 10 AWG copper for 50A, 10 AWG for 60A, 8 AWG for 100A.',
-  },
-];
 import { Car, Zap, AlertTriangle, CheckCircle2, Info, Shield, Calculator, Clock } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -512,27 +481,6 @@ export default function WireSizeForEVChargerPage() {
                 </p>
               </div>
 
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 mb-3">Cost-Saving Tips for Long Runs</h3>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>Consider aluminum wire for runs over 75 feet (saves 40-60% on wire cost)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>Install a subpanel closer to charging location for very long runs</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>Use direct burial cable instead of conduit where allowed</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>Consider lower amperage charger if distance is extreme</span>
-                  </li>
-                </ul>
-              </div>
             </section>
 
             {/* Load Management */}
@@ -609,77 +557,15 @@ export default function WireSizeForEVChargerPage() {
               </div>
             </section>
 
-            {/* Installation Costs */}
+            {/* Federal credit */}
             <section className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Installation Cost Breakdown</h2>
-              
               <div className="space-y-6">
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="bg-gray-100">
-                        <th className="border border-gray-300 px-4 py-2 text-left">Component</th>
-                        <th className="border border-gray-300 px-4 py-2">Basic Install</th>
-                        <th className="border border-gray-300 px-4 py-2">Complex Install</th>
-                      </tr>
-                    </thead>
-                    <tbody className="text-sm">
-                      <tr>
-                        <td className="border border-gray-300 px-4 py-2 font-medium">Charger Unit</td>
-                        <td className="border border-gray-300 px-4 py-2 text-center">$400-600</td>
-                        <td className="border border-gray-300 px-4 py-2 text-center">$600-1,200</td>
-                      </tr>
-                      <tr className="bg-gray-50">
-                        <td className="border border-gray-300 px-4 py-2 font-medium">Wire (6 AWG, 30 ft)</td>
-                        <td className="border border-gray-300 px-4 py-2 text-center">$150-200</td>
-                        <td className="border border-gray-300 px-4 py-2 text-center">$300-600</td>
-                      </tr>
-                      <tr>
-                        <td className="border border-gray-300 px-4 py-2 font-medium">Circuit Breaker</td>
-                        <td className="border border-gray-300 px-4 py-2 text-center">$50-75</td>
-                        <td className="border border-gray-300 px-4 py-2 text-center">$75-150</td>
-                      </tr>
-                      <tr className="bg-gray-50">
-                        <td className="border border-gray-300 px-4 py-2 font-medium">Conduit & Fittings</td>
-                        <td className="border border-gray-300 px-4 py-2 text-center">$50-100</td>
-                        <td className="border border-gray-300 px-4 py-2 text-center">$200-400</td>
-                      </tr>
-                      <tr>
-                        <td className="border border-gray-300 px-4 py-2 font-medium">Permit</td>
-                        <td className="border border-gray-300 px-4 py-2 text-center">$100-200</td>
-                        <td className="border border-gray-300 px-4 py-2 text-center">$150-300</td>
-                      </tr>
-                      <tr className="bg-gray-50">
-                        <td className="border border-gray-300 px-4 py-2 font-medium">Labor (4-6 hours)</td>
-                        <td className="border border-gray-300 px-4 py-2 text-center">$400-600</td>
-                        <td className="border border-gray-300 px-4 py-2 text-center">$800-1,500</td>
-                      </tr>
-                      <tr className="font-semibold bg-green-50">
-                        <td className="border border-gray-300 px-4 py-2">Total Range</td>
-                        <td className="border border-gray-300 px-4 py-2 text-center">$1,150-1,775</td>
-                        <td className="border border-gray-300 px-4 py-2 text-center">$2,125-4,150</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="bg-green-50 rounded-lg p-4">
                     <h3 className="font-semibold text-green-900 mb-3">Available Incentives</h3>
                     <ul className="space-y-2 text-sm text-green-800">
                       <li>• Federal tax credit: 30% up to $1,000</li>
-                      <li>• State rebates: $250-1,500 (varies)</li>
-                      <li>• Utility rebates: $200-800</li>
-                      <li>• Time-of-use rate discounts</li>
-                    </ul>
-                  </div>
-                  <div className="bg-blue-50 rounded-lg p-4">
-                    <h3 className="font-semibold text-blue-900 mb-3">Cost-Saving Tips</h3>
-                    <ul className="space-y-2 text-sm text-blue-800">
-                      <li>• Combine with other electrical work</li>
-                      <li>• Install during construction/renovation</li>
-                      <li>• Choose plug-in over hardwired</li>
-                      <li>• Consider lower amperage if adequate</li>
                     </ul>
                   </div>
                 </div>
@@ -720,7 +606,7 @@ export default function WireSizeForEVChargerPage() {
               </div>
 
               <div className="mt-6 bg-yellow-50 rounded-lg p-4 border border-yellow-200">
-                <h3 className="font-semibold text-yellow-900 mb-2">⚠️ Common Installation Mistakes</h3>
+                <h3 className="font-semibold text-yellow-900 mb-2">Common Installation Mistakes</h3>
                 <ul className="text-sm text-yellow-800 space-y-1">
                   <li>• Undersizing wire for actual distance</li>
                   <li>• Using standard outlet instead of industrial grade</li>
@@ -743,13 +629,6 @@ export default function WireSizeForEVChargerPage() {
                   installation, including voltage drop calculations for long runs.
                 </p>
                 <div className="flex gap-4 justify-center flex-wrap">
-                  <Link 
-                    href="/calculators/ev-charger-wire-size-calculator"
-                    className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors inline-flex items-center gap-2"
-                  >
-                    <Car className="w-5 h-5" />
-                    EV Charger Calculator
-                  </Link>
                   <Link 
                     href="/calculators/wire-size-calculator"
                     className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
@@ -796,14 +675,7 @@ export default function WireSizeForEVChargerPage() {
         </div>
       </div>
 
-      <ArticleFAQSchema article={articleData} faqItems={faqs} />
-      <HowToSchema
-        path="/guides/wire-size-for-ev-charger"
-        name="How to Size Wire for a Level 2 EV Charger"
-        description="Seven-step procedure for sizing the branch circuit for a Level 2 EV charger: continuous-load factor, NEC 310.16 wire lookup, hardwired vs NEMA receptacle, voltage drop, breaker sizing, and GFCI / EGC requirements."
-        totalTime="PT12M"
-        steps={HOWTO_EV_STEPS}
-      />
+      <ArticleFAQSchema article={articleData} />
     </div>
   )
 }

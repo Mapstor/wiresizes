@@ -72,7 +72,7 @@ export default function Error({
           </h1>
           <p className="text-xl text-neutral-600 mb-8 max-w-2xl mx-auto">
             We've encountered an unexpected electrical fault. Don't worry - no breakers were harmed! 
-            Our team has been notified and is working to fix the issue.
+            Something went wrong while loading this page. Reload it, or go to the homepage.
           </p>
 
           {/* Error Details (in development) */}
@@ -177,9 +177,6 @@ export default function Error({
         <div className="mt-8 text-center">
           <p className="text-sm text-neutral-500">
             Error reference: {new Date().toISOString()}
-          </p>
-          <p className="text-sm text-neutral-500 mt-1">
-            If this problem persists, please contact support
           </p>
         </div>
       </div>

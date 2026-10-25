@@ -321,29 +321,6 @@ export function VoltsToAmpsCalculator() {
                 </div>
               </div>
 
-              {/* Energy Calculations */}
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <div className="text-sm font-medium text-green-800 mb-3">Energy Cost Estimate</div>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-green-600">Energy per Hour:</span>
-                    <span className="font-mono font-semibold">{(result.power / 1000).toFixed(2)} kWh</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-green-600">Daily (8 hours):</span>
-                    <span className="font-mono font-semibold">{(result.power * 8 / 1000).toFixed(1)} kWh</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-green-600">Monthly (30 days):</span>
-                    <span className="font-mono font-semibold">{(result.power * 8 * 30 / 1000).toFixed(0)} kWh</span>
-                  </div>
-                  <div className="flex justify-between border-t border-green-200 pt-2">
-                    <span className="text-green-600">Cost @ $0.12/kWh:</span>
-                    <span className="font-mono font-semibold">${(result.power * 8 * 30 / 1000 * 0.12).toFixed(2)}/month</span>
-                  </div>
-                </div>
-              </div>
-
               {/* Comparison Table */}
               <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
                 <div className="text-sm font-medium text-neutral-700 mb-3">Common Voltage Comparisons</div>

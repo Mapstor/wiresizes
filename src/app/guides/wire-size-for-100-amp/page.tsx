@@ -1,58 +1,14 @@
 import { Metadata } from 'next';
-import { 
-  Zap, 
-  Calculator, 
-  AlertTriangle, 
-  CheckCircle,
-  TrendingUp,
-  Home,
-  Wrench,
-  DollarSign,
-  Thermometer,
-  MapPin,
-  ArrowRight,
-  Shield
-} from 'lucide-react';
+import { Zap, Calculator, AlertTriangle, CheckCircle, TrendingUp, Home, Wrench, Thermometer, MapPin, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
-import { HowToSchema } from '@/components/seo/HowToSchema';
 import { getArticleDates } from '@/lib/article-dates';
 
-const HOWTO_100A_STEPS = [
-  {
-    name: 'Determine if this is a service entrance or a subpanel feeder',
-    text: 'Different NEC rules apply. Service-entrance conductors for a 120/240V single-phase residential dwelling can use NEC 310.12 (the 83% rule). Subpanel feeders use straight NEC 310.16 ampacity at the termination temperature rating (typically 75°C).',
-  },
-  {
-    name: 'Choose copper or aluminum',
-    text: 'Copper conductors are smaller for the same ampacity and more forgiving at terminations. Aluminum is 40-50% cheaper for service-size wire and is the practical choice for most 100A residential services. Both require AL-rated lugs and antioxidant compound on aluminum.',
-  },
-  {
-    name: 'Apply NEC 310.12 for residential service-entrance conductors',
-    text: 'For a 120/240V single-phase dwelling service, NEC 310.12 allows 1 AWG copper or 1/0 AWG aluminum (or copper-clad aluminum) for a 100A service entrance. This is the most common residential 100A service-entrance wire size.',
-  },
-  {
-    name: 'Use straight NEC 310.16 ampacity for 100A subpanel feeders',
-    text: 'Subpanels do not get the 310.12 reduction. At 75°C copper terminations, 100A requires 3 AWG copper minimum (110A ampacity) or 1 AWG aluminum (100A ampacity). Most installations upsize to 1 AWG copper or 2/0 aluminum to leave headroom and keep voltage drop low.',
-  },
-  {
-    name: 'Calculate voltage drop for runs over 50 feet',
-    text: 'Voltage drop = (2 × L × I × R) ÷ 1000 for single-phase. Example: 100A at 100ft on 1 AWG copper (R = 0.154 Ω/1000ft) at 240V = 3.1% — borderline. NEC informational notes target ≤3% on branch and ≤5% combined feeder + branch. Upsize one AWG step if exceeded.',
-  },
-  {
-    name: 'Size the equipment grounding conductor (NEC 250.122)',
-    text: 'For a 100A breaker, the EGC must be at least 8 AWG copper or 6 AWG aluminum. The grounded (neutral) conductor is sized by the load, typically the same gauge as the ungrounded for a 100A service.',
-  },
-  {
-    name: 'Pull permits and schedule inspection',
-    text: 'Service-entrance work requires utility coordination (the service drop is the utility’s responsibility) and AHJ inspection. Pull a permit before disconnecting; have the inspector verify the new service before re-energizing.',
-  },
-];
 
 
 export const metadata: Metadata = {
   title: 'Wire Size for 100 Amp Service / Subpanel',
-  description: '100A residential service: 1 AWG copper or 1/0 aluminum (NEC 310.12). 100A subpanel: 3 AWG copper, 1 AWG aluminum at 75°C. EGC 8 AWG cu.',
+  description: 'Wire size for a 100 A dwelling service: 4 AWG copper or 2 AWG aluminum (2023 NEC Table 310.12).',
   keywords: '100 amp wire size, wire for 100 amp service, 100 amp subpanel wire, 100A electrical service, NEC 100 amp requirements',
   alternates: { canonical: '/guides/wire-size-for-100-amp' },
 };
@@ -109,14 +65,6 @@ const APPLICATIONS_100A = [
     conduit: '1¼" PVC',
     ground: '8 AWG copper'
   },
-];
-
-// Cost comparison
-const COST_COMPARISON = [
-  { material: 'Copper 3 AWG', costPerFoot: '$8.50', cost100ft: '$850', cost200ft: '$1,700' },
-  { material: 'Copper 2 AWG', costPerFoot: '$11.20', cost100ft: '$1,120', cost200ft: '$2,240' },
-  { material: 'Aluminum 1 AWG', costPerFoot: '$3.85', cost100ft: '$385', cost200ft: '$770' },
-  { material: 'Aluminum 1/0 AWG', costPerFoot: '$4.60', cost100ft: '$460', cost200ft: '$920' },
 ];
 
 // Installation requirements
@@ -264,50 +212,6 @@ export default function WireSizeFor100AmpPage() {
             </div>
           </div>
 
-          {/* Cost Analysis */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <DollarSign className="w-6 h-6 text-green-600" />
-              Cost Comparison - Copper vs Aluminum
-            </h2>
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="bg-gradient-to-r from-green-600 to-emerald-500 text-white">
-                      <th className="px-4 py-3 text-left">Wire Type</th>
-                      <th className="px-4 py-3 text-center">Per Foot</th>
-                      <th className="px-4 py-3 text-center">100 ft Run</th>
-                      <th className="px-4 py-3 text-center">200 ft Run</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {COST_COMPARISON.map((row, index) => (
-                      <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                        <td className="px-4 py-3 font-semibold">
-                          {row.material.includes('Copper') ? (
-                            <span className="text-orange-600">{row.material}</span>
-                          ) : (
-                            <span className="text-gray-600">{row.material}</span>
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-center font-mono">{row.costPerFoot}</td>
-                        <td className="px-4 py-3 text-center font-mono font-semibold">{row.cost100ft}</td>
-                        <td className="px-4 py-3 text-center font-mono font-semibold">{row.cost200ft}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="p-4 bg-green-50 border-t border-green-200">
-                <p className="text-sm text-green-800">
-                  <strong>Savings:</strong> Aluminum wire typically costs 50-65% less than copper for the same ampacity. 
-                  Consider total project cost including terminations and labor.
-                </p>
-              </div>
-            </div>
-          </div>
-
           {/* Installation Requirements */}
           <div className="mb-12">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
@@ -422,10 +326,6 @@ export default function WireSizeFor100AmpPage() {
                   </li>
                   <li className="flex gap-2">
                     <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                    <span>Use THHN-2 rated for 90°C in dry locations</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
                     <span>Consider upsizing wire for extreme heat conditions</span>
                   </li>
                 </ul>
@@ -517,51 +417,10 @@ export default function WireSizeFor100AmpPage() {
             </div>
           </div>
 
-          {/* Authority References */}
-          <div className="bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl p-6">
-            <h3 className="font-semibold text-lg mb-4">Professional Resources & Standards</h3>
-            <div className="grid md:grid-cols-4 gap-4">
-              <a href="https://www.nfpa.org/codes-and-standards/nfpa-70-national-electrical-code" 
-                target="_blank" rel="noopener noreferrer"
-                className="bg-white rounded-lg p-3 shadow hover:shadow-md transition-shadow">
-                <Shield className="w-5 h-5 text-red-600 mb-1" />
-                <div className="text-sm font-semibold">NFPA 70</div>
-                <div className="text-xs text-gray-600">National Electrical Code</div>
-              </a>
-              <a href="https://www.mikeholt.com/" 
-                target="_blank" rel="noopener noreferrer"
-                className="bg-white rounded-lg p-3 shadow hover:shadow-md transition-shadow">
-                <Shield className="w-5 h-5 text-blue-600 mb-1" />
-                <div className="text-sm font-semibold">Mike Holt</div>
-                <div className="text-xs text-gray-600">NEC Training Resources</div>
-              </a>
-              <a href="https://iaei.org/" 
-                target="_blank" rel="noopener noreferrer"
-                className="bg-white rounded-lg p-3 shadow hover:shadow-md transition-shadow">
-                <Shield className="w-5 h-5 text-green-600 mb-1" />
-                <div className="text-sm font-semibold">IAEI</div>
-                <div className="text-xs text-gray-600">Electrical Inspectors</div>
-              </a>
-              <a href="https://www.southwire.com/calculator-conduit" 
-                target="_blank" rel="noopener noreferrer"
-                className="bg-white rounded-lg p-3 shadow hover:shadow-md transition-shadow">
-                <Shield className="w-5 h-5 text-orange-600 mb-1" />
-                <div className="text-sm font-semibold">Southwire</div>
-                <div className="text-xs text-gray-600">Wire & Cable Tools</div>
-              </a>
-            </div>
-          </div>
         </div>
       </section>
       
       <ArticleSchema article={articleData} />
-      <HowToSchema
-        path="/guides/wire-size-for-100-amp"
-        name="How to Size Wire for a 100 Amp Service or Subpanel"
-        description="Seven-step procedure for selecting wire size for a 100A residential service entrance or subpanel feeder, including the NEC 310.12 83% allowance, voltage-drop check, and grounding conductor sizing per NEC 250.122."
-        totalTime="PT15M"
-        steps={HOWTO_100A_STEPS}
-      />
     </div>
   );
 }

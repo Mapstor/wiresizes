@@ -3,7 +3,6 @@ import { Suspense } from 'react';
 import ClientBTUToWattsCalculator from '@/components/calculators/ClientBTUToWattsCalculator';
 import { Flame, Calculator, TrendingUp, AlertCircle, BookOpen, Snowflake } from 'lucide-react';
 import Link from 'next/link';
-import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
@@ -56,7 +55,6 @@ export default function BTUToWattsCalculatorPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <CombinedSchema 
         webApp={webAppData} 
-        faqItems={calculatorFAQs['btu-to-watts-calculator']} 
       />
       
       
@@ -329,13 +327,8 @@ export default function BTUToWattsCalculatorPage() {
                 36,000 ÷ (18 × 0.875) = 2,286W<br/>
                 Current = 2,286W ÷ 240V = 9.5A
               </div>
-              <p className="text-green-700 dark:text-green-400 font-semibold">
-                Energy Savings: 44%
-              </p>
               <p className="text-gray-700 dark:text-gray-300">
-                <strong>Annual Savings:</strong> ~$650<br/>
-                <strong>Existing Circuit:</strong> Adequate<br/>
-                <strong>ROI:</strong> 5-7 years
+                <strong>Existing Circuit:</strong> Adequate
               </p>
             </div>
           </div>
@@ -417,11 +410,7 @@ export default function BTUToWattsCalculatorPage() {
                 400,000 BTU × 0.293 = 117kW<br/>
                 Current: 282A @ 480V 3-phase
               </div>
-              <p className="text-red-700 dark:text-red-400 font-semibold">
-                Gas: More economical
-              </p>
               <p className="text-gray-700 dark:text-gray-300">
-                <strong>Operating Cost:</strong> $2,400/mo vs $8,500/mo<br/>
                 <strong>Installation:</strong> Gas piping required
               </p>
             </div>
@@ -453,8 +442,7 @@ export default function BTUToWattsCalculatorPage() {
               </p>
               <p className="text-gray-700 dark:text-gray-300">
                 <strong>Wire:</strong> 8 AWG THWN<br/>
-                <strong>Runtime:</strong> 20 hrs initial<br/>
-                <strong>Daily Cost:</strong> ~$8.50
+                <strong>Runtime:</strong> 20 hrs initial
               </p>
             </div>
           </div>
@@ -767,93 +755,13 @@ export default function BTUToWattsCalculatorPage() {
         </div>
       </section>
 
-      {/* Energy Cost Comparison */}
-      <section className="mb-12">
-        <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-          Heating Cost Comparison by Fuel Type
-        </h2>
-        
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <p className="text-gray-700 dark:text-gray-300 mb-6">
-            Cost to generate 1 million BTU of heat (assuming $0.12/kWh electricity, $1.50/therm gas, $3.00/gal propane):
-          </p>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b-2 border-gray-200">
-                  <th className="text-left py-2">Heating Method</th>
-                  <th className="text-center py-2">Efficiency</th>
-                  <th className="text-center py-2">Cost/Million BTU</th>
-                  <th className="text-center py-2">Annual Cost*</th>
-                  <th className="text-center py-2">CO₂ Impact</th>
-                </tr>
-              </thead>
-              <tbody className="text-sm">
-                <tr className="border-b border-gray-100 bg-green-50 dark:bg-green-900/20">
-                  <td className="py-2 font-medium">Heat Pump (COP 3.5)</td>
-                  <td className="text-center">350%</td>
-                  <td className="text-center">$10.05</td>
-                  <td className="text-center">$1,005</td>
-                  <td className="text-center">Low-Medium</td>
-                </tr>
-                <tr className="border-b border-gray-100">
-                  <td className="py-2 font-medium">Heat Pump (COP 2.5)</td>
-                  <td className="text-center">250%</td>
-                  <td className="text-center">$14.07</td>
-                  <td className="text-center">$1,407</td>
-                  <td className="text-center">Medium</td>
-                </tr>
-                <tr className="border-b border-gray-100">
-                  <td className="py-2 font-medium">Natural Gas (95%)</td>
-                  <td className="text-center">95%</td>
-                  <td className="text-center">$15.79</td>
-                  <td className="text-center">$1,579</td>
-                  <td className="text-center">Medium</td>
-                </tr>
-                <tr className="border-b border-gray-100">
-                  <td className="py-2 font-medium">Natural Gas (80%)</td>
-                  <td className="text-center">80%</td>
-                  <td className="text-center">$18.75</td>
-                  <td className="text-center">$1,875</td>
-                  <td className="text-center">Medium-High</td>
-                </tr>
-                <tr className="border-b border-gray-100">
-                  <td className="py-2 font-medium">Propane (95%)</td>
-                  <td className="text-center">95%</td>
-                  <td className="text-center">$34.48</td>
-                  <td className="text-center">$3,448</td>
-                  <td className="text-center">High</td>
-                </tr>
-                <tr className="border-b border-gray-100">
-                  <td className="py-2 font-medium">Electric Resistance</td>
-                  <td className="text-center">100%</td>
-                  <td className="text-center">$35.17</td>
-                  <td className="text-center">$3,517</td>
-                  <td className="text-center">Highest</td>
-                </tr>
-                <tr className="border-b border-gray-100">
-                  <td className="py-2 font-medium">Oil (85%)</td>
-                  <td className="text-center">85%</td>
-                  <td className="text-center">$25.49</td>
-                  <td className="text-center">$2,549</td>
-                  <td className="text-center">High</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
-            * Annual cost based on 100 million BTU/year (typical 2,000 sq ft home in moderate climate)
-          </p>
-        </div>
-      </section>
-
       {/* Related Calculators */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
           Related HVAC & Electrical Calculators
         </h2>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid md:grid-cols-2 gap-4">
           <Link href="/calculators/watts-to-amps-calculator" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
             <Calculator className="h-8 w-8 text-blue-600 mb-2" />
             <h3 className="font-semibold mb-1">Watts to Amps</h3>
@@ -866,86 +774,7 @@ export default function BTUToWattsCalculatorPage() {
             <p className="text-sm text-gray-600 dark:text-gray-400">Size conductors for HVAC</p>
           </Link>
           
-          <Link href="/calculators/air-conditioner-calculator" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
-            <Snowflake className="h-8 w-8 text-cyan-600 mb-2" />
-            <h3 className="font-semibold mb-1">AC Wire Size</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Air conditioner circuits</p>
-          </Link>
           
-          <Link href="/calculators/electrical-load-calculator" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
-            <Flame className="h-8 w-8 text-orange-600 mb-2" />
-            <h3 className="font-semibold mb-1">Load Calculator</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Total electrical demand</p>
-          </Link>
-        </div>
-      </section>
-
-      {/* Authority Links */}
-      <section className="mb-12">
-        <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-          Industry Standards & References
-        </h2>
-        
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <a href="https://www.ashrae.org/technical-resources/standards-and-guidelines" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-blue-700 dark:text-blue-400">ASHRAE Standards</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              Heating, ventilation, air conditioning, and refrigeration engineering standards
-            </p>
-          </a>
-          
-          <a href="https://www.energystar.gov/products/heating_cooling" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-green-700 dark:text-green-400">ENERGY STAR</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              Energy efficiency ratings and certified HVAC equipment database
-            </p>
-          </a>
-          
-          <a href="https://www.acca.org/standards/technical-manuals" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-orange-700 dark:text-orange-400">ACCA Manuals</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              Manual J load calculations and HVAC system design standards
-            </p>
-          </a>
-          
-          <a href="https://www.carrier.com/residential/en/us/products/" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-purple-700 dark:text-purple-400">Carrier Corporation</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              HVAC equipment specifications and sizing resources
-            </p>
-          </a>
-          
-          <a href="https://www.trane.com/residential/en/resources/" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-red-700 dark:text-red-400">Trane Technologies</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              Heat pump and air conditioning technical resources
-            </p>
-          </a>
-          
-          <a href="https://www.nfpa.org/codes-and-standards/nfpa-90a-standard" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/30 dark:to-yellow-800/30 rounded-xl p-6 hover:shadow-lg transition-shadow">
-            <h3 className="font-bold mb-2 text-yellow-700 dark:text-yellow-400">NFPA 90A</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              Installation standards for air-conditioning and ventilation systems
-            </p>
-          </a>
         </div>
       </section>
 

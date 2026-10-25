@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Calculator, BookOpen, Zap, Shield, Award, Users } from 'lucide-react';
+import { Menu, X, Calculator, BookOpen, Zap } from 'lucide-react';
 
 const navigation = [
   { name: 'Calculators', href: '/calculators', icon: Calculator },
@@ -15,29 +15,9 @@ export function Header() {
 
   return (
     <header className="bg-white border-b border-neutral-200 sticky top-0 z-50 shadow-sm">
-      {/* Professional Trust Bar */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-1.5">
-        <div className="container">
-          <div className="flex items-center justify-center gap-6 text-xs font-medium">
-            <div className="flex items-center gap-1.5">
-              <Shield className="w-3 h-3" />
-              <span>NEC Code Compliant</span>
-            </div>
-            <div className="hidden sm:flex items-center gap-1.5">
-              <Award className="w-3 h-3" />
-              <span>Professional Grade</span>
-            </div>
-            <div className="hidden md:flex items-center gap-1.5">
-              <Users className="w-3 h-3" />
-              <span>Trusted by 50,000+ Electricians</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <nav className="container" aria-label="Main navigation">
         <div className="flex items-center justify-between h-16">
-          {/* Enhanced Logo */}
+          {/* Logo */}
           <Link 
             href="/" 
             className="flex items-center gap-3 font-bold text-xl text-primary-600 hover:text-primary-700 transition-colors group"
@@ -48,13 +28,10 @@ export function Header() {
               </div>
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
             </div>
-            <div className="flex flex-col">
-              <span className="leading-tight">WireSizes</span>
-              <span className="text-xs font-normal text-neutral-500 leading-none">Professional Tools</span>
-            </div>
+            <span className="leading-tight">WireSizes</span>
           </Link>
 
-          {/* Desktop Navigation with Professional Styling */}
+          {/* Desktop navigation */}
           <div className="hidden md:flex items-center gap-2">
             {navigation.map((item) => (
               <Link
@@ -66,20 +43,10 @@ export function Header() {
                 {item.name}
               </Link>
             ))}
-            <div className="ml-3 pl-3 border-l border-neutral-200">
-              <div className="flex flex-col text-right">
-                <span className="text-xs font-semibold text-green-600">FREE</span>
-                <span className="text-xs text-neutral-500">Always</span>
-              </div>
-            </div>
           </div>
 
-          {/* Mobile menu button with professional styling */}
+          {/* Mobile menu button */}
           <div className="md:hidden flex items-center gap-3">
-            <div className="flex flex-col text-right">
-              <span className="text-xs font-semibold text-green-600">FREE</span>
-              <span className="text-xs text-neutral-500">Always</span>
-            </div>
             <button
               type="button"
               className="p-2 text-neutral-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors border border-neutral-200"
@@ -99,7 +66,7 @@ export function Header() {
           </div>
         </div>
 
-        {/* Enhanced Mobile Navigation */}
+        {/* Mobile navigation */}
         {mobileMenuOpen && (
           <div 
             id="mobile-menu" 
@@ -117,18 +84,6 @@ export function Header() {
                   {item.name}
                 </Link>
               ))}
-              <div className="mt-3 pt-3 border-t border-neutral-200 px-4">
-                <div className="flex items-center gap-4 text-xs text-neutral-600">
-                  <div className="flex items-center gap-1">
-                    <Shield className="w-3 h-3 text-blue-600" />
-                    <span>NEC Compliant</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Award className="w-3 h-3 text-blue-600" />
-                    <span>Professional</span>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         )}

@@ -1,8 +1,7 @@
 import { Metadata } from 'next';
 import { WattsToAmpsCalculator } from '@/components/calculators';
-import { Zap, Calculator, AlertTriangle, CheckCircle, Settings, Target, DollarSign, BookOpen, Users, Wrench, TrendingUp, Power } from 'lucide-react';
+import { Zap, Calculator, AlertTriangle, Settings, Target, BookOpen, Users, Wrench, TrendingUp, Power } from 'lucide-react';
 import Link from 'next/link';
-import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
@@ -205,10 +204,6 @@ const COMPREHENSIVE_FAQS = [
     answer: 'Three-phase formula: I = P ÷ (√3 × V × PF). √3 = 1.732. Use line-to-line voltage (480V, 208V). Result is current per line. Example: 10kW at 480V with 0.85 PF: 10000 ÷ (1.732 × 480 × 0.85) = 14.1A per line.'
   },
   {
-    question: 'Do I need to upsize the circuit for the calculated current?',
-    answer: 'Yes, for continuous loads (operate 3+ hours), multiply by 1.25. Non-continuous loads use calculated current directly. Motors require 125% sizing. Example: 16A continuous load needs 20A circuit minimum (16 × 1.25 = 20A).'
-  },
-  {
     question: 'What if my appliance shows both watts and amps?',
     answer: 'Use the amp rating from the nameplate - it accounts for power factor and includes all electrical characteristics. Watts ÷ voltage might not match nameplate amps due to power factor, starting currents, or reactive components.'
   },
@@ -233,7 +228,7 @@ const COMPREHENSIVE_FAQS = [
 export default function WattsToAmpsCalculatorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <CombinedSchema webApp={webAppData} faqItems={calculatorFAQs['watts-to-amps-calculator']} />
+      <CombinedSchema webApp={webAppData} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-12">
           {/* Hero Section */}
@@ -262,7 +257,6 @@ export default function WattsToAmpsCalculatorPage() {
                 </div>
                 <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
                   <div className="text-sm text-purple-100">Circuit Sizing</div>
-                  <div className="font-semibold">NEC Compliant Design</div>
                 </div>
               </div>
             </div>
@@ -467,9 +461,8 @@ export default function WattsToAmpsCalculatorPage() {
               <h4 className="font-semibold text-red-800 mb-2">Power Factor Impact:</h4>
               <ul className="text-sm text-red-700 space-y-1">
                 <li>• Lower power factor increases current for same real power consumption</li>
-                <li>• Poor power factor causes higher energy costs and reduces system capacity</li>
+                <li>• Poor power factor reduces system capacity</li>
                 <li>• Power factor correction capacitors can improve PF for inductive loads</li>
-                <li>• Utilities may charge penalties for poor power factor in commercial installations</li>
               </ul>
             </div>
           </div>
@@ -593,11 +586,10 @@ export default function WattsToAmpsCalculatorPage() {
           {/* Related Tools */}
           <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-8">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Related Electrical Calculators</h2>
-              <p className="text-gray-600">Complete your electrical calculations with these professional tools</p>
+              <h2 className="text-2xl font-bold text-gray-900">Related calculators</h2>
             </div>
             
-            <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
               <Link href="/calculators/amps-to-watts-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
                 <Power className="w-8 h-8 text-purple-600 mb-2" />
                 <h3 className="font-semibold text-gray-900 text-sm">Amps to Watts</h3>
@@ -622,11 +614,6 @@ export default function WattsToAmpsCalculatorPage() {
                 <p className="text-xs text-gray-600">Industrial loads</p>
               </Link>
               
-              <Link href="/calculators/electrical-load-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
-                <Calculator className="w-8 h-8 text-green-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 text-sm">Load Calculator</h3>
-                <p className="text-xs text-gray-600">Service sizing</p>
-              </Link>
               
               <Link href="/calculators/ampacity-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
                 <Target className="w-8 h-8 text-orange-600 mb-2" />

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Zap, Calculator, BarChart3, TrendingUp, AlertTriangle, CheckCircle, Settings, Activity, ArrowRight, Target, Gauge, Home, Building2, Factory, DollarSign } from 'lucide-react';
+import { Zap, Calculator, BarChart3, TrendingUp, AlertTriangle, CheckCircle, Activity, ArrowRight, Target, Home, Building2, Factory } from 'lucide-react';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 
 const VOLTAGE_SYSTEMS = [
@@ -14,7 +14,7 @@ const VOLTAGE_SYSTEMS = [
     power_formula: 'P = V × I × PF',
     applications: ['Residential homes', 'Small commercial', 'Light industrial'],
     max_power: '25 kW typical',
-    advantages: ['Simple installation', 'Lower cost', 'Familiar to electricians', 'Good for resistive loads'],
+    advantages: ['Simple installation', 'Familiar to electricians', 'Good for resistive loads'],
     disadvantages: ['Limited power capacity', 'Motor starting issues', 'Voltage fluctuations', 'Higher current for same power'],
     color: 'blue'
   },
@@ -27,77 +27,17 @@ const VOLTAGE_SYSTEMS = [
     applications: ['Industrial facilities', 'Large commercial', 'Motor drives', 'Heavy equipment'],
     max_power: '1000+ kW',
     advantages: ['Higher power density', 'Better motor performance', 'Balanced loading', 'More efficient transmission'],
-    disadvantages: ['Higher installation cost', 'More complex wiring', 'Requires balanced loads', 'More expensive equipment'],
+    disadvantages: ['More complex wiring', 'Requires balanced loads'],
     color: 'purple'
   }
 ];
 
 const MOTOR_COMPARISON = [
-  { hp: 0.5, single_phase: { current: 6.9, starting_current: 35, torque: 'Poor', efficiency: '75%', cost: '$150' }, three_phase: { current: 1.4, starting_current: 8.5, torque: 'Excellent', efficiency: '85%', cost: '$200' } },
-  { hp: 1, single_phase: { current: 13.8, starting_current: 70, torque: 'Poor', efficiency: '76%', cost: '$200' }, three_phase: { current: 2.8, starting_current: 17, torque: 'Excellent', efficiency: '86%', cost: '$250' } },
-  { hp: 2, single_phase: { current: 24, starting_current: 120, torque: 'Fair', efficiency: '77%', cost: '$300' }, three_phase: { current: 5.6, starting_current: 34, torque: 'Excellent', efficiency: '87%', cost: '$350' } },
-  { hp: 3, single_phase: { current: 36, starting_current: 180, torque: 'Fair', efficiency: '78%', cost: '$400' }, three_phase: { current: 8.4, starting_current: 50, torque: 'Excellent', efficiency: '88%', cost: '$450' } },
-  { hp: 5, single_phase: { current: 56, starting_current: 280, torque: 'Poor', efficiency: '79%', cost: 'N/A' }, three_phase: { current: 14, starting_current: 84, torque: 'Excellent', efficiency: '89%', cost: '$600' } },
-];
-
-const COST_ANALYSIS = [
-  { 
-    scenario: 'Residential Home (5 kW)',
-    single_phase: { 
-      equipment_cost: '$2,000', 
-      installation_cost: '$1,500', 
-      annual_energy: '$1,200',
-      total_5yr: '$8,500',
-      pros: ['Lower upfront cost', 'Simple installation', 'Standard for residential'],
-      cons: ['Higher operating costs', 'Limited expansion']
-    },
-    three_phase: { 
-      equipment_cost: '$3,500', 
-      installation_cost: '$2,500', 
-      annual_energy: '$1,080',
-      total_5yr: '$11,400',
-      pros: ['10% energy savings', 'Better power quality', 'Future expansion ready'],
-      cons: ['Higher initial cost', 'Not always available']
-    }
-  },
-  {
-    scenario: 'Small Commercial (25 kW)',
-    single_phase: { 
-      equipment_cost: '$8,000', 
-      installation_cost: '$5,000', 
-      annual_energy: '$6,000',
-      total_5yr: '$43,000',
-      pros: ['Lower equipment cost', 'Simpler maintenance'],
-      cons: ['Poor motor performance', 'Voltage drop issues', 'Higher demand charges']
-    },
-    three_phase: { 
-      equipment_cost: '$10,000', 
-      installation_cost: '$6,000', 
-      annual_energy: '$5,100',
-      total_5yr: '$41,500',
-      pros: ['15% energy savings', 'Better equipment performance', 'Lower demand charges'],
-      cons: ['Higher upfront investment', 'More complex wiring']
-    }
-  },
-  {
-    scenario: 'Industrial Facility (100 kW)',
-    single_phase: { 
-      equipment_cost: 'N/A', 
-      installation_cost: 'N/A', 
-      annual_energy: 'N/A',
-      total_5yr: 'Not Practical',
-      pros: ['None at this scale'],
-      cons: ['Impossible for large motors', 'Extreme current requirements', 'Voltage regulation issues']
-    },
-    three_phase: { 
-      equipment_cost: '$25,000', 
-      installation_cost: '$15,000', 
-      annual_energy: '$18,000',
-      total_5yr: '$130,000',
-      pros: ['Only viable option', 'Excellent efficiency', 'Balanced loading', 'Motor compatibility'],
-      cons: ['Higher complexity', 'Requires skilled technicians']
-    }
-  }
+  { hp: 0.5, single_phase: { current: 6.9, starting_current: 35, torque: 'Poor', efficiency: '75%' }, three_phase: { current: 1.4, starting_current: 8.5, torque: 'Excellent', efficiency: '85%' } },
+  { hp: 1, single_phase: { current: 13.8, starting_current: 70, torque: 'Poor', efficiency: '76%' }, three_phase: { current: 2.8, starting_current: 17, torque: 'Excellent', efficiency: '86%' } },
+  { hp: 2, single_phase: { current: 24, starting_current: 120, torque: 'Fair', efficiency: '77%' }, three_phase: { current: 5.6, starting_current: 34, torque: 'Excellent', efficiency: '87%' } },
+  { hp: 3, single_phase: { current: 36, starting_current: 180, torque: 'Fair', efficiency: '78%' }, three_phase: { current: 8.4, starting_current: 50, torque: 'Excellent', efficiency: '88%' } },
+  { hp: 5, single_phase: { current: 56, starting_current: 280, torque: 'Poor', efficiency: '79%' }, three_phase: { current: 14, starting_current: 84, torque: 'Excellent', efficiency: '89%' } },
 ];
 
 const WIRING_CONFIGURATIONS = [
@@ -144,13 +84,12 @@ interface GuideProps {
 export default function SingleVsThreePhaseGuide({ datePublished, dateModified }: GuideProps = {}) {
   const articleData = {
     headline: "Single vs Three Phase Systems",
-    description: "Understanding the fundamental differences between single-phase and three-phase electrical systems is crucial for proper system design. This comprehensive guide covers voltage configurations, power calculations, applications, and economic considerations with interactive comparisons.",
+    description: "Understanding the fundamental differences between single-phase and three-phase electrical systems is crucial for proper system design. This comprehensive guide covers voltage configurations, power calculations and applications with interactive comparisons.",
     url: "https://wiresizes.com/guides/single-vs-three-phase",
     datePublished,
     dateModified,
   };
-  const [selectedComparison, setSelectedComparison] = useState<'voltage' | 'cost' | 'motor' | 'wiring'>('voltage');
-  const [selectedApplication, setSelectedApplication] = useState<'residential' | 'commercial' | 'industrial'>('residential');
+  const [selectedComparison, setSelectedComparison] = useState<'voltage' | 'motor' | 'wiring'>('voltage');
 
   return (
     <div className="space-y-12">
@@ -164,7 +103,7 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
           <p className="text-xl text-gray-600 mb-6">
             Understanding the fundamental differences between single-phase and three-phase electrical systems 
             is crucial for proper system design. This comprehensive guide covers voltage configurations, 
-            power calculations, applications, and economic considerations with interactive comparisons.
+            power calculations and applications with interactive comparisons.
           </p>
           <div className="flex flex-wrap gap-4">
             <Link 
@@ -177,14 +116,6 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
             <div className="flex items-center gap-2 text-sm text-purple-700">
               <Target className="w-4 h-4" />
               System Comparison
-            </div>
-            <div className="flex items-center gap-2 text-sm text-purple-700">
-              <DollarSign className="w-4 h-4" />
-              Cost Analysis
-            </div>
-            <div className="flex items-center gap-2 text-sm text-purple-700">
-              <Activity className="w-4 h-4" />
-              18 min read
             </div>
           </div>
         </div>
@@ -215,16 +146,6 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
               }`}
             >
               Motor Performance
-            </button>
-            <button
-              onClick={() => setSelectedComparison('cost')}
-              className={`px-4 py-2 font-medium border-b-2 transition-colors ${
-                selectedComparison === 'cost'
-                  ? 'border-purple-500 text-purple-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Cost Analysis
             </button>
             <button
               onClick={() => setSelectedComparison('wiring')}
@@ -411,20 +332,18 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
                 <thead>
                   <tr className="bg-gray-50">
                     <th className="border px-4 py-3 text-left font-semibold" rowSpan={2}>Motor Size</th>
-                    <th className="border px-4 py-3 text-center font-semibold" colSpan={5}>Single-Phase (240V)</th>
-                    <th className="border px-4 py-3 text-center font-semibold" colSpan={5}>Three-Phase (240V)</th>
+                    <th className="border px-4 py-3 text-center font-semibold" colSpan={4}>Single-Phase (240V)</th>
+                    <th className="border px-4 py-3 text-center font-semibold" colSpan={4}>Three-Phase (240V)</th>
                   </tr>
                   <tr className="bg-gray-50 text-xs">
                     <th className="border px-2 py-2">Current</th>
                     <th className="border px-2 py-2">Starting</th>
                     <th className="border px-2 py-2">Torque</th>
                     <th className="border px-2 py-2">Efficiency</th>
-                    <th className="border px-2 py-2">Cost</th>
                     <th className="border px-2 py-2">Current</th>
                     <th className="border px-2 py-2">Starting</th>
                     <th className="border px-2 py-2">Torque</th>
                     <th className="border px-2 py-2">Efficiency</th>
-                    <th className="border px-2 py-2">Cost</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -445,7 +364,6 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
                         </span>
                       </td>
                       <td className="border px-2 py-3 text-center font-mono text-sm">{motor.single_phase.efficiency}</td>
-                      <td className="border px-2 py-3 text-center font-mono text-sm">{motor.single_phase.cost}</td>
                       
                       {/* Three-phase data */}
                       <td className="border px-2 py-3 text-center font-mono text-sm text-green-600">{motor.three_phase.current}A</td>
@@ -456,7 +374,6 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
                         </span>
                       </td>
                       <td className="border px-2 py-3 text-center font-mono text-sm text-green-600">{motor.three_phase.efficiency}</td>
-                      <td className="border px-2 py-3 text-center font-mono text-sm">{motor.three_phase.cost}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -506,176 +423,6 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
                 </div>
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Cost Analysis */}
-        {selectedComparison === 'cost' && (
-          <div className="space-y-6">
-            <div className="flex gap-4 mb-6">
-              <button
-                onClick={() => setSelectedApplication('residential')}
-                className={`px-4 py-2 rounded-lg border font-medium flex items-center gap-2 ${
-                  selectedApplication === 'residential'
-                    ? 'bg-blue-500 text-white border-blue-500'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                }`}
-              >
-                <Home className="w-4 h-4" />
-                Residential
-              </button>
-              <button
-                onClick={() => setSelectedApplication('commercial')}
-                className={`px-4 py-2 rounded-lg border font-medium flex items-center gap-2 ${
-                  selectedApplication === 'commercial'
-                    ? 'bg-green-500 text-white border-green-500'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                }`}
-              >
-                <Building2 className="w-4 h-4" />
-                Commercial
-              </button>
-              <button
-                onClick={() => setSelectedApplication('industrial')}
-                className={`px-4 py-2 rounded-lg border font-medium flex items-center gap-2 ${
-                  selectedApplication === 'industrial'
-                    ? 'bg-purple-500 text-white border-purple-500'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                }`}
-              >
-                <Factory className="w-4 h-4" />
-                Industrial
-              </button>
-            </div>
-
-            {COST_ANALYSIS
-              .filter((analysis) => 
-                (selectedApplication === 'residential' && analysis.scenario.includes('Residential')) ||
-                (selectedApplication === 'commercial' && analysis.scenario.includes('Commercial')) ||
-                (selectedApplication === 'industrial' && analysis.scenario.includes('Industrial'))
-              )
-              .map((analysis, index) => (
-                <div key={index} className="border rounded-lg p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-6">{analysis.scenario}</h3>
-                  
-                  <div className="grid lg:grid-cols-2 gap-8">
-                    {/* Single-Phase */}
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                      <h4 className="text-lg font-semibold text-blue-800 mb-4">Single-Phase System</h4>
-                      
-                      <div className="space-y-4 mb-6">
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div>
-                            <span className="text-blue-700">Equipment Cost:</span>
-                            <div className="font-mono font-bold">{analysis.single_phase.equipment_cost}</div>
-                          </div>
-                          <div>
-                            <span className="text-blue-700">Installation:</span>
-                            <div className="font-mono font-bold">{analysis.single_phase.installation_cost}</div>
-                          </div>
-                          <div>
-                            <span className="text-blue-700">Annual Energy:</span>
-                            <div className="font-mono font-bold">{analysis.single_phase.annual_energy}</div>
-                          </div>
-                          <div>
-                            <span className="text-blue-700">5-Year Total:</span>
-                            <div className="font-mono font-bold text-lg">{analysis.single_phase.total_5yr}</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                          <h5 className="font-medium text-blue-800 mb-2">Advantages:</h5>
-                          <ul className="space-y-1">
-                            {analysis.single_phase.pros.map((pro, proIndex) => (
-                              <li key={proIndex} className="text-sm text-blue-700 flex items-center gap-2">
-                                <CheckCircle className="w-3 h-3" />
-                                {pro}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <h5 className="font-medium text-blue-800 mb-2">Disadvantages:</h5>
-                          <ul className="space-y-1">
-                            {analysis.single_phase.cons.map((con, conIndex) => (
-                              <li key={conIndex} className="text-sm text-blue-700 flex items-center gap-2">
-                                <AlertTriangle className="w-3 h-3" />
-                                {con}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Three-Phase */}
-                    <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
-                      <h4 className="text-lg font-semibold text-purple-800 mb-4">Three-Phase System</h4>
-                      
-                      <div className="space-y-4 mb-6">
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div>
-                            <span className="text-purple-700">Equipment Cost:</span>
-                            <div className="font-mono font-bold">{analysis.three_phase.equipment_cost}</div>
-                          </div>
-                          <div>
-                            <span className="text-purple-700">Installation:</span>
-                            <div className="font-mono font-bold">{analysis.three_phase.installation_cost}</div>
-                          </div>
-                          <div>
-                            <span className="text-purple-700">Annual Energy:</span>
-                            <div className="font-mono font-bold">{analysis.three_phase.annual_energy}</div>
-                          </div>
-                          <div>
-                            <span className="text-purple-700">5-Year Total:</span>
-                            <div className="font-mono font-bold text-lg">{analysis.three_phase.total_5yr}</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                          <h5 className="font-medium text-purple-800 mb-2">Advantages:</h5>
-                          <ul className="space-y-1">
-                            {analysis.three_phase.pros.map((pro, proIndex) => (
-                              <li key={proIndex} className="text-sm text-purple-700 flex items-center gap-2">
-                                <CheckCircle className="w-3 h-3" />
-                                {pro}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <h5 className="font-medium text-purple-800 mb-2">Disadvantages:</h5>
-                          <ul className="space-y-1">
-                            {analysis.three_phase.cons.map((con, conIndex) => (
-                              <li key={conIndex} className="text-sm text-purple-700 flex items-center gap-2">
-                                <AlertTriangle className="w-3 h-3" />
-                                {con}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Cost Comparison Summary */}
-                  {analysis.single_phase.total_5yr !== 'Not Practical' && (
-                    <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                      <h5 className="font-semibold text-yellow-800 mb-2">Economic Analysis:</h5>
-                      <p className="text-sm text-yellow-700">
-                        {parseFloat(analysis.three_phase.total_5yr.replace(/[$,]/g, '')) < parseFloat(analysis.single_phase.total_5yr.replace(/[$,]/g, '')) 
-                          ? `Three-phase system saves $${(parseFloat(analysis.single_phase.total_5yr.replace(/[$,]/g, '')) - parseFloat(analysis.three_phase.total_5yr.replace(/[$,]/g, ''))).toLocaleString()} over 5 years due to energy efficiency.`
-                          : `Single-phase system has ${((parseFloat(analysis.three_phase.total_5yr.replace(/[$,]/g, '')) - parseFloat(analysis.single_phase.total_5yr.replace(/[$,]/g, ''))) / parseFloat(analysis.single_phase.total_5yr.replace(/[$,]/g, '')) * 100).toFixed(1)}% higher cost but may be worth it for performance benefits.`
-                        }
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ))}
           </div>
         )}
 
@@ -841,9 +588,6 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
             </div>
             
             <div className="mt-4 p-3 bg-white rounded border border-blue-300">
-              <div className="text-sm">
-                <strong>Cost Impact:</strong> Three-phase may add $2,000-5,000 but provides 10-15% energy savings
-              </div>
             </div>
           </div>
 
@@ -933,17 +677,6 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
               </tr>
             </thead>
             <tbody>
-              <tr className="hover:bg-gray-50">
-                <td className="border px-4 py-3 font-medium">Initial Cost</td>
-                <td className="border px-4 py-3 text-center">High</td>
-                <td className="border px-4 py-3 text-center">
-                  <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-sm font-semibold">Excellent</span>
-                </td>
-                <td className="border px-4 py-3 text-center">
-                  <span className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-sm font-semibold">Fair</span>
-                </td>
-                <td className="border px-4 py-3 text-sm">Single-phase typically 30-50% lower upfront cost</td>
-              </tr>
               <tr className="hover:bg-gray-50">
                 <td className="border px-4 py-3 font-medium">Operating Efficiency</td>
                 <td className="border px-4 py-3 text-center">High</td>
@@ -1042,8 +775,6 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
         <div className="grid md:grid-cols-3 gap-6">
           {[
             { name: 'Three Phase Calculator', slug: 'three-phase-calculator', icon: Zap, color: 'purple', description: 'Complete 3-phase calculations' },
-            { name: 'Motor Amps Calculator', slug: 'horsepower-to-amps-calculator', icon: Settings, color: 'blue', description: 'Single vs three-phase motors' },
-            { name: 'Load Calculator', slug: 'electrical-load-calculator', icon: Calculator, color: 'green', description: 'System load analysis' },
             { name: 'Voltage Drop', slug: 'voltage-drop-calculator', icon: TrendingUp, color: 'red', description: 'Multi-phase voltage drop' },
             { name: 'Wire Size Calculator', slug: 'wire-size-calculator', icon: BarChart3, color: 'amber', description: 'Phase-specific sizing' },
             { name: 'Power Calculator', slug: 'amps-to-watts-calculator', icon: Activity, color: 'indigo', description: 'Single & three-phase power' },
@@ -1071,11 +802,7 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
 
       {/* Next Steps */}
       <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl border p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Master Electrical System Design</h2>
-        <p className="text-gray-600 mb-6">
-          Continue learning about electrical systems with these comprehensive guides that build on 
-          phase system knowledge for complete electrical engineering expertise.
-        </p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Master Electrical System Design</h2>
         <div className="flex flex-wrap gap-4">
           <Link 
             href="/guides/electrical-power-calculations"
@@ -1091,10 +818,10 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
             Power Factor Deep Dive
           </Link>
           <Link 
-            href="/guides/wire-sizing-guide"
+            href="/calculators/wire-size-calculator"
             className="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors"
           >
-            Wire Sizing Guide
+            Wire Size Calculator
           </Link>
         </div>
       </div>
@@ -1162,7 +889,6 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
               <div>  240 V delta (3-wire) →  no neutral, all loads L-L (older industrial)</div>
               <div>  240 / 120 V high-leg delta (4-wire) →  one winding center-tapped</div>
               <div>     L1-N = 120 V, L2-N = 120 V, <strong>L3-N = 208 V (the &ldquo;high leg&rdquo; or &ldquo;wild leg&rdquo;)</strong></div>
-              <div>     Per NEC 110.15, the high leg must be marked orange or 408 V</div>
               <div>  480 V delta — industrial, no neutral, all motor loads</div>
               <div></div>
               <div>Phase / line relations in delta:</div>
@@ -1213,16 +939,6 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
                 </div>
               </div>
             </div>
-            <p className="text-sm text-slate-700 mt-3">
-              <strong>Cost delta:</strong> the three-phase install is
-              roughly <strong>1/3 the wire diameter, 1/2 the conduit size,
-              and 70 % less copper cost</strong> for the same shaft work.
-              For loads above ~10 HP, three-phase is almost always cheaper
-              to install AND operate (motors are simpler, more efficient,
-              and longer-lasting). The 50 HP single-phase motor likely
-              doesn&rsquo;t exist commercially above 25 HP because the
-              starting current would trip a residential service.
-            </p>
           </div>
 
           {/* Phase converters and rotary phase converters */}
@@ -1235,9 +951,9 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
             </p>
             <div className="space-y-3">
               <div className="bg-purple-50 rounded p-4">
-                <div className="font-bold text-purple-900">Static phase converter — cheapest, lossiest</div>
+                <div className="font-bold text-purple-900">Static phase converter — lossiest</div>
                 <p className="text-sm text-slate-700">
-                  $200&ndash;$500 unit using start capacitors to bootstrap a
+                  Uses start capacitors to bootstrap a
                   three-phase motor. Output is unbalanced; motor runs at
                   about 70 % of nameplate horsepower. Suitable for a single
                   motor that doesn&rsquo;t start under load. Not for VFDs
@@ -1247,7 +963,7 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
               <div className="bg-purple-50 rounded p-4">
                 <div className="font-bold text-purple-900">Rotary phase converter — middle ground</div>
                 <p className="text-sm text-slate-700">
-                  $1,000&ndash;$5,000. An idler motor generates the third
+                  An idler motor generates the third
                   phase mechanically. Output is closer to balanced; can run
                   multiple motors simultaneously. Idler must be sized 1.5
                   &times; the largest single motor it will start. Wastes
@@ -1257,7 +973,7 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
               <div className="bg-purple-50 rounded p-4">
                 <div className="font-bold text-purple-900">VFD (variable frequency drive) — modern best-practice</div>
                 <p className="text-sm text-slate-700">
-                  $400&ndash;$3,000 per motor. Takes single-phase 240 V in,
+                  Takes single-phase 240 V in,
                   outputs three-phase variable-frequency to one motor. Adds
                   speed control as a bonus. Most efficient (~98 %), but
                   one VFD per motor — can&rsquo;t run multiple motors off
@@ -1268,27 +984,6 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
             </div>
           </div>
 
-          {/* Cost-per-kVA comparison */}
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-purple-200">
-            <h3 className="text-xl font-bold text-purple-900 mb-3">Cost-per-kVA — the real reason three-phase wins above 25 kW</h3>
-            <p className="text-sm text-slate-700 mb-3">
-              For the same total power, three-phase needs less conductor
-              copper than single-phase. Quick rule: at 480 V three-phase
-              vs 240 V single-phase, copper cost drops by roughly 70 %.
-              Detailed math:
-            </p>
-            <div className="bg-purple-50 rounded p-4 font-mono text-sm space-y-1">
-              <div>50 kVA load:</div>
-              <div>  240 V 1&phi;: I = 50,000 / 240 = 208 A → 4/0 Cu (260 A) → 0.609 lb/ft &times; 100 ft &times; 2 wires = 122 lb</div>
-              <div>  480 V 3&phi;: I = 50,000 / (1.732 &times; 480) = 60 A → 6 AWG Cu (75 A) → 0.080 lb/ft &times; 100 ft &times; 3 wires = 24 lb</div>
-              <div>  Copper savings: 122 → 24 lb = <strong>80 % less copper</strong></div>
-              <div>  Conduit savings: 2&Prime; → 1&Prime; = ~50 % material cost</div>
-              <div>  Voltage drop at 100 ft, 50 kVA load:</div>
-              <div>     240 V 1&phi;: 4/0 Cu, 208 A → VD = (2 &times; 100 &times; 208 &times; 0.0608) / 1000 = 2.5 V = 1.05 %</div>
-              <div>     480 V 3&phi;: 6 AWG Cu, 60 A → VD = (1.732 &times; 100 &times; 60 &times; 0.491) / 1000 = 5.1 V = 1.06 %</div>
-              <div>     Same voltage drop, dramatically less copper</div>
-            </div>
-          </div>
         </div>
       </div>
 

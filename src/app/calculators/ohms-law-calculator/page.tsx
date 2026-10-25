@@ -3,7 +3,6 @@ import { Suspense } from 'react';
 import { OhmsLawCalculator } from '@/components/calculators';
 import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Settings } from 'lucide-react';
 import Link from 'next/link';
-import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
@@ -12,7 +11,7 @@ export const metadata: Metadata = {
   keywords: 'ohms law calculator, voltage current resistance power, V=IR calculator, electrical calculations, circuit analysis, power calculations, electrical formulas',
   openGraph: {
     title: 'Ohms Law Calculator - Voltage Current Resistance Power Calculator',
-    description: 'Calculate voltage, current, resistance, and power using Ohms Law. Professional electrical calculations tool.',
+    description: 'Calculate voltage, current, resistance, and power using Ohms Law.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/ohms-law-calculator',
     images: ['/opengraph-image']
@@ -56,7 +55,6 @@ export default function OhmsLawCalculatorPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <CombinedSchema 
         webApp={webAppData} 
-        faqItems={calculatorFAQs['ohms-law-calculator']} 
       />
       
       
@@ -642,7 +640,7 @@ export default function OhmsLawCalculatorPage() {
 
               <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-                  Professional Disclaimer
+                  Disclaimer
                 </h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   This calculator provides theoretical calculations based on ideal conditions. 
@@ -749,86 +747,10 @@ export default function OhmsLawCalculatorPage() {
               </p>
             </Link>
 
-            <Link 
-              href="/calculators/circuit-breaker-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <BookOpen className="h-6 w-6 text-yellow-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Circuit Breaker Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Size protection based on Ohms Law current calculations
-              </p>
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* Authority Links */}
-      <section className="mb-16">
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
-            Professional Resources and Standards
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <a 
-              href="https://www.ieee.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <BookOpen className="h-5 w-5 text-blue-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">IEEE Standards</span>
-            </a>
-            <a 
-              href="https://www.iec.ch/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <Calculator className="h-5 w-5 text-green-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">IEC Standards</span>
-            </a>
-            <a 
-              href="https://www.nist.gov/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <Settings className="h-5 w-5 text-purple-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">NIST Measurements</span>
-            </a>
-            <a 
-              href="https://www.nfpa.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <Zap className="h-5 w-5 text-orange-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">NFPA Electrical Safety</span>
-            </a>
-            <a 
-              href="https://www.ul.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <AlertCircle className="h-5 w-5 text-red-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">UL Safety Standards</span>
-            </a>
-            <a 
-              href="https://www.nema.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <TrendingUp className="h-5 w-5 text-indigo-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">NEMA Guidelines</span>
-            </a>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

@@ -237,13 +237,6 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
               )}
             </div>
 
-            {/* Cost Comparison Note */}
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-              <p className="text-sm text-amber-800">
-                <strong>Cost Tip:</strong> Aluminum wire costs 30-50% less than copper but requires larger sizes. 
-                Consider installation complexity and connection requirements when choosing.
-              </p>
-            </div>
           </div>
         )}
       </div>

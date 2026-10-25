@@ -1,10 +1,10 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { BookOpen, Calculator, Zap, AlertTriangle, Target, BarChart3 } from 'lucide-react';
+import { BookOpen, Calculator, Zap, Target, BarChart3 } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Electrical Guides',
-  description: 'Comprehensive electrical engineering guides covering wire sizing, power calculations, NEC codes, and electrical safety.',
+  description: 'Comprehensive electrical engineering guides covering wire sizing, power calculations and NEC codes.',
 };
 
 const GUIDES = [
@@ -40,22 +40,6 @@ const GUIDES = [
     color: 'purple',
     topics: ['Voltage Systems', 'Load Distribution', 'Motor Applications', 'Power Transmission']
   },
-  {
-    slug: 'wire-sizing-guide',
-    title: 'Complete Wire Sizing Guide',
-    description: 'Everything you need to know about selecting the right wire size',
-    icon: AlertTriangle,
-    color: 'red',
-    topics: ['AWG Sizes', 'Ampacity Tables', 'Voltage Drop', 'Temperature Derating']
-  },
-  {
-    slug: 'electrical-safety',
-    title: 'Electrical Safety Fundamentals',
-    description: 'Essential safety practices for electrical work and installations',
-    icon: BookOpen,
-    color: 'gray',
-    topics: ['Arc Flash', 'OSHA Standards', 'PPE Requirements', 'Lockout/Tagout']
-  },
 ];
 
 export default function GuidesLayout({
@@ -68,14 +52,10 @@ export default function GuidesLayout({
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3">
             <BookOpen className="w-8 h-8 text-primary-600" />
             <span className="text-3xl font-bold text-gray-900">Electrical Engineering Guides</span>
           </div>
-          <p className="text-gray-600 max-w-2xl">
-            Professional-grade electrical engineering education with interactive calculators,
-            detailed explanations, and real-world examples.
-          </p>
         </div>
       </div>
 

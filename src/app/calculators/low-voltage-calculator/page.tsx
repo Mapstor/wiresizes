@@ -3,7 +3,6 @@ import { Suspense } from 'react';
 import { LowVoltageCalculator } from '@/components/calculators';
 import { Battery, Calculator, TrendingUp, AlertCircle, BookOpen, Zap } from 'lucide-react';
 import Link from 'next/link';
-import { calculatorFAQs } from '@/data/calculator-faqs';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
@@ -56,7 +55,6 @@ export default function LowVoltageCalculatorPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <CombinedSchema 
         webApp={webAppData} 
-        faqItems={calculatorFAQs['low-voltage-calculator']} 
       />
       
       
@@ -747,12 +745,12 @@ export default function LowVoltageCalculatorPage() {
 
               <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-                  Professional Disclaimer
+                  Disclaimer
                 </h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   This calculator provides estimates for DC low voltage systems. Always consult manufacturer 
                   specifications, applicable codes, and qualified professionals. Installation should comply with 
-                  local electrical codes, manufacturer requirements, and industry standards.
+                  local electrical codes and manufacturer requirements.
                 </p>
               </div>
             </div>
@@ -853,86 +851,10 @@ export default function LowVoltageCalculatorPage() {
               </p>
             </Link>
 
-            <Link 
-              href="/calculators/circuit-breaker-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <BookOpen className="h-6 w-6 text-yellow-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Circuit Breaker Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Size circuit breakers for electrical protection
-              </p>
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* Authority Links */}
-      <section className="mb-16">
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
-            Professional Resources and Standards
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <a 
-              href="https://www.abycinc.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <BookOpen className="h-5 w-5 text-blue-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">ABYC Marine Standards</span>
-            </a>
-            <a 
-              href="https://www.sae.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <Battery className="h-5 w-5 text-green-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">SAE Automotive Standards</span>
-            </a>
-            <a 
-              href="https://www.rvia.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <TrendingUp className="h-5 w-5 text-purple-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">RVIA RV Standards</span>
-            </a>
-            <a 
-              href="https://www.nrel.gov/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <Zap className="h-5 w-5 text-yellow-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">NREL Solar Resources</span>
-            </a>
-            <a 
-              href="https://www.ieee.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <Calculator className="h-5 w-5 text-orange-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">IEEE Standards</span>
-            </a>
-            <a 
-              href="https://www.ul.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <AlertCircle className="h-5 w-5 text-red-600" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">UL Safety Standards</span>
-            </a>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

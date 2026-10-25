@@ -2,26 +2,25 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { BarChart3, Zap, TrendingUp, AlertTriangle, CheckCircle, Calculator, Activity, Eye, Target, ArrowRight, Lightbulb, Settings, DollarSign, Clock } from 'lucide-react';
+import { BarChart3, Zap, TrendingUp, AlertTriangle, CheckCircle, Calculator, Activity, Eye, Target, ArrowRight, Lightbulb, Settings } from 'lucide-react';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 
 const EQUIPMENT_POWER_FACTORS = [
-  { equipment: 'Incandescent Lights', pf: 1.0, type: 'resistive', color: 'green', efficiency: 'Perfect', cost_impact: 'None' },
-  { equipment: 'Electric Heaters', pf: 1.0, type: 'resistive', color: 'green', efficiency: 'Perfect', cost_impact: 'None' },
-  { equipment: 'LED Lights (Quality)', pf: 0.95, type: 'capacitive', color: 'green', efficiency: 'Excellent', cost_impact: 'Minimal' },
-  { equipment: 'Fluorescent (Electronic Ballast)', pf: 0.90, type: 'slightly_inductive', color: 'green', efficiency: 'Good', cost_impact: 'Low' },
-  { equipment: 'Computer Power Supplies', pf: 0.98, type: 'corrected', color: 'green', efficiency: 'Excellent', cost_impact: 'None' },
-  { equipment: 'Induction Motors (Loaded)', pf: 0.85, type: 'inductive', color: 'yellow', efficiency: 'Good', cost_impact: 'Moderate' },
-  { equipment: 'Induction Motors (Unloaded)', pf: 0.65, type: 'inductive', color: 'orange', efficiency: 'Poor', cost_impact: 'High' },
-  { equipment: 'Welding Equipment', pf: 0.60, type: 'inductive', color: 'red', efficiency: 'Poor', cost_impact: 'High' },
-  { equipment: 'Fluorescent (Magnetic Ballast)', pf: 0.50, type: 'inductive', color: 'red', efficiency: 'Very Poor', cost_impact: 'Very High' },
+  { equipment: 'Incandescent Lights', pf: 1.0, type: 'resistive', color: 'green', efficiency: 'Perfect' },
+  { equipment: 'Electric Heaters', pf: 1.0, type: 'resistive', color: 'green', efficiency: 'Perfect' },
+  { equipment: 'LED Lights (Quality)', pf: 0.95, type: 'capacitive', color: 'green', efficiency: 'Excellent' },
+  { equipment: 'Fluorescent (Electronic Ballast)', pf: 0.90, type: 'slightly_inductive', color: 'green', efficiency: 'Good' },
+  { equipment: 'Computer Power Supplies', pf: 0.98, type: 'corrected', color: 'green', efficiency: 'Excellent' },
+  { equipment: 'Induction Motors (Loaded)', pf: 0.85, type: 'inductive', color: 'yellow', efficiency: 'Good' },
+  { equipment: 'Induction Motors (Unloaded)', pf: 0.65, type: 'inductive', color: 'orange', efficiency: 'Poor' },
+  { equipment: 'Welding Equipment', pf: 0.60, type: 'inductive', color: 'red', efficiency: 'Poor' },
+  { equipment: 'Fluorescent (Magnetic Ballast)', pf: 0.50, type: 'inductive', color: 'red', efficiency: 'Very Poor' },
 ];
 
 const CORRECTION_METHODS = [
   { 
     method: 'Capacitor Banks', 
     effectiveness: 'High', 
-    cost: 'Medium', 
     maintenance: 'Low',
     applications: ['Industrial facilities', 'Large commercial buildings'],
     pros: ['Improves voltage regulation', 'Reduces losses', 'Can be automated'],
@@ -30,30 +29,19 @@ const CORRECTION_METHODS = [
   { 
     method: 'Synchronous Motors', 
     effectiveness: 'Very High', 
-    cost: 'High', 
     maintenance: 'High',
     applications: ['Large industrial loads', 'Constant-speed applications'],
     pros: ['Provides leading power factor', 'Constant speed', 'High efficiency'],
-    cons: ['High initial cost', 'Complex control', 'Requires DC excitation']
+    cons: ['Complex control', 'Requires DC excitation']
   },
   { 
     method: 'Power Factor Correction Equipment', 
     effectiveness: 'High', 
-    cost: 'Low', 
     maintenance: 'Very Low',
     applications: ['Individual equipment', 'Electronic devices'],
     pros: ['Built into equipment', 'No external components', 'Automatic operation'],
-    cons: ['Equipment-specific', 'May not be available for all loads', 'Slightly higher equipment cost']
+    cons: ['Equipment-specific', 'May not be available for all loads']
   },
-];
-
-const COST_ANALYSIS_DATA = [
-  { pf: 0.5, apparent_power: 200, real_power: 100, reactive_power: 173, line_losses: 400, relative_cost: 4.0 },
-  { pf: 0.6, apparent_power: 167, real_power: 100, reactive_power: 133, line_losses: 278, relative_cost: 2.78 },
-  { pf: 0.7, apparent_power: 143, real_power: 100, reactive_power: 102, line_losses: 204, relative_cost: 2.04 },
-  { pf: 0.8, apparent_power: 125, real_power: 100, reactive_power: 75, line_losses: 156, relative_cost: 1.56 },
-  { pf: 0.9, apparent_power: 111, real_power: 100, reactive_power: 48, line_losses: 123, relative_cost: 1.23 },
-  { pf: 1.0, apparent_power: 100, real_power: 100, reactive_power: 0, line_losses: 100, relative_cost: 1.0 },
 ];
 
 // Article data for schema
@@ -65,7 +53,7 @@ interface GuideProps {
 export default function PowerFactorExplainedGuide({ datePublished, dateModified }: GuideProps = {}) {
   const articleData = {
     headline: "Power Factor Explained",
-    description: "Understanding power factor is crucial for electrical efficiency and cost management. This comprehensive guide explains reactive power, apparent power, and power factor correction with interactive visualizations and real-world examples.",
+    description: "Understanding power factor is crucial for electrical efficiency. This comprehensive guide explains reactive power, apparent power, and power factor correction with interactive visualizations and real-world examples.",
     url: "https://wiresizes.com/guides/power-factor-explained",
     datePublished,
     dateModified,
@@ -106,7 +94,7 @@ export default function PowerFactorExplainedGuide({ datePublished, dateModified 
             <h1 className="text-4xl font-bold text-gray-900">Power Factor Explained</h1>
           </div>
           <p className="text-xl text-gray-600 mb-6">
-            Understanding power factor is crucial for electrical efficiency and cost management. 
+            Understanding power factor is crucial for electrical efficiency. 
             This comprehensive guide explains reactive power, apparent power, and power factor correction 
             with interactive visualizations and real-world examples.
           </p>
@@ -121,14 +109,6 @@ export default function PowerFactorExplainedGuide({ datePublished, dateModified 
             <div className="flex items-center gap-2 text-sm text-green-700">
               <TrendingUp className="w-4 h-4" />
               Improve Efficiency
-            </div>
-            <div className="flex items-center gap-2 text-sm text-green-700">
-              <DollarSign className="w-4 h-4" />
-              Reduce Costs
-            </div>
-            <div className="flex items-center gap-2 text-sm text-green-700">
-              <Clock className="w-4 h-4" />
-              20 min read
             </div>
           </div>
         </div>
@@ -325,7 +305,6 @@ export default function PowerFactorExplainedGuide({ datePublished, dateModified 
                 <th className="border px-4 py-3 text-center font-semibold">Power Factor</th>
                 <th className="border px-4 py-3 text-center font-semibold">Load Type</th>
                 <th className="border px-4 py-3 text-center font-semibold">Efficiency</th>
-                <th className="border px-4 py-3 text-center font-semibold">Cost Impact</th>
                 <th className="border px-4 py-3 text-center font-semibold">Action Needed</th>
               </tr>
             </thead>
@@ -355,7 +334,6 @@ export default function PowerFactorExplainedGuide({ datePublished, dateModified 
                     </span>
                   </td>
                   <td className="border px-4 py-3 text-center text-sm">{equipment.efficiency}</td>
-                  <td className="border px-4 py-3 text-center text-sm">{equipment.cost_impact}</td>
                   <td className="border px-4 py-3 text-center">
                     {equipment.pf < 0.85 ? (
                       <span className="text-red-600 font-medium">Correction Recommended</span>
@@ -422,88 +400,6 @@ export default function PowerFactorExplainedGuide({ datePublished, dateModified 
         </div>
       </div>
 
-      {/* Cost Analysis Chart */}
-      <div className="bg-white rounded-xl border p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Economic Impact of Power Factor</h2>
-        
-        <div className="grid lg:grid-cols-2 gap-8">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Cost Comparison Chart</h3>
-            <div className="bg-gray-50 rounded-lg p-4">
-              <div className="space-y-4">
-                {COST_ANALYSIS_DATA.map((data, index) => (
-                  <div key={index} className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-3 h-3 rounded ${
-                        data.pf >= 0.95 ? 'bg-green-500' :
-                        data.pf >= 0.85 ? 'bg-yellow-500' :
-                        data.pf >= 0.70 ? 'bg-orange-500' : 'bg-red-500'
-                      }`}></div>
-                      <span className="font-mono text-sm">PF: {data.pf.toFixed(1)}</span>
-                    </div>
-                    <div className="flex items-center gap-4 text-sm">
-                      <span>S: {data.apparent_power} VA</span>
-                      <span>Q: {data.reactive_power} VAR</span>
-                      <span className="font-semibold text-red-600">
-                        Cost: {data.relative_cost.toFixed(1)}x
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="mt-6 p-4 bg-yellow-100 rounded-lg">
-                <h4 className="font-semibold text-yellow-800 mb-2">Key Insight:</h4>
-                <p className="text-sm text-yellow-700">
-                  A facility with 0.5 power factor pays <strong>4x more</strong> for line losses 
-                  compared to unity power factor, while doing the same useful work.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Annual Cost Calculator</h3>
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-800 mb-2">
-                    Monthly kW Demand: 100 kW
-                  </label>
-                  <div className="bg-white rounded p-3">
-                    <div className="text-sm">Base electrical cost calculation:</div>
-                    <div className="font-mono text-xs text-gray-600 mt-1">
-                      Demand charges + Energy charges + Power factor penalties
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white rounded p-3">
-                    <div className="text-sm font-medium text-green-800">Good PF (0.95)</div>
-                    <div className="text-lg font-bold text-green-600">$1,200/mo</div>
-                    <div className="text-xs text-green-600">No penalties</div>
-                  </div>
-                  <div className="bg-white rounded p-3">
-                    <div className="text-sm font-medium text-red-800">Poor PF (0.65)</div>
-                    <div className="text-lg font-bold text-red-600">$1,680/mo</div>
-                    <div className="text-xs text-red-600">40% penalty</div>
-                  </div>
-                </div>
-
-                <div className="bg-green-100 rounded p-3">
-                  <div className="text-sm font-semibold text-green-800">Annual Savings Potential:</div>
-                  <div className="text-xl font-bold text-green-700">$5,760</div>
-                  <div className="text-xs text-green-600">
-                    From improving power factor from 0.65 to 0.95
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Power Factor Correction Methods */}
       <div className="bg-white rounded-xl border p-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Power Factor Correction Methods</h2>
@@ -520,13 +416,6 @@ export default function PowerFactorExplainedGuide({ datePublished, dateModified 
                     'bg-yellow-200 text-yellow-800'
                   }`}>
                     {method.effectiveness} Effectiveness
-                  </span>
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    method.cost === 'Low' ? 'bg-green-200 text-green-800' :
-                    method.cost === 'Medium' ? 'bg-yellow-200 text-yellow-800' :
-                    'bg-red-200 text-red-800'
-                  }`}>
-                    {method.cost} Cost
                   </span>
                 </div>
               </div>
@@ -625,7 +514,6 @@ export default function PowerFactorExplainedGuide({ datePublished, dateModified 
                   <li>• Continuous monitoring</li>
                   <li>• Automatic switching</li>
                   <li>• Historical data</li>
-                  <li>• Cost analysis</li>
                 </ul>
               </div>
             </div>
@@ -646,10 +534,6 @@ export default function PowerFactorExplainedGuide({ datePublished, dateModified 
                     <span>Review power factor trends</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Monthly:</span>
-                    <span>Analyze cost impact</span>
-                  </div>
-                  <div className="flex justify-between">
                     <span>Quarterly:</span>
                     <span>Equipment assessment</span>
                   </div>
@@ -667,10 +551,8 @@ export default function PowerFactorExplainedGuide({ datePublished, dateModified 
                 </h4>
                 <ul className="text-sm text-red-700 space-y-2">
                   <li>• Power factor below 0.85</li>
-                  <li>• Increasing utility penalties</li>
                   <li>• Voltage fluctuations</li>
                   <li>• Equipment overheating</li>
-                  <li>• Higher than expected energy costs</li>
                   <li>• Harmonics distortion &gt; 5%</li>
                 </ul>
               </div>
@@ -712,8 +594,6 @@ export default function PowerFactorExplainedGuide({ datePublished, dateModified 
             { name: 'Amps to Watts', slug: 'amps-to-watts-calculator', icon: Calculator, color: 'blue', description: 'Calculate with power factor' },
             { name: 'kVA to Amps', slug: 'kva-to-amps-calculator', icon: TrendingUp, color: 'green', description: 'Apparent power calculations' },
             { name: 'Three Phase', slug: 'three-phase-calculator', icon: Zap, color: 'purple', description: 'Multi-phase power factor' },
-            { name: 'Motor Calculator', slug: 'horsepower-to-amps-calculator', icon: Settings, color: 'amber', description: 'Motor power factor analysis' },
-            { name: 'Load Calculator', slug: 'electrical-load-calculator', icon: BarChart3, color: 'red', description: 'System-wide analysis' },
             { name: 'Efficiency Calculator', slug: 'btu-to-watts-calculator', icon: Lightbulb, color: 'green', description: 'Energy efficiency metrics' },
           ].map((calc, index) => {
             const IconComponent = calc.icon;
@@ -739,11 +619,7 @@ export default function PowerFactorExplainedGuide({ datePublished, dateModified 
 
       {/* Next Steps */}
       <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Master Electrical Efficiency</h2>
-        <p className="text-gray-600 mb-6">
-          Continue building your electrical engineering expertise with these related topics 
-          that complement power factor knowledge.
-        </p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Master Electrical Efficiency</h2>
         <div className="flex flex-wrap gap-4">
           <Link 
             href="/guides/electrical-power-calculations"
@@ -759,10 +635,10 @@ export default function PowerFactorExplainedGuide({ datePublished, dateModified 
             Three-Phase Systems
           </Link>
           <Link 
-            href="/guides/wire-sizing-guide"
+            href="/calculators/wire-size-calculator"
             className="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors"
           >
-            Wire Sizing Guide
+            Wire Size Calculator
           </Link>
         </div>
       </div>

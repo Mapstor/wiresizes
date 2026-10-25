@@ -1,45 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Badge } from '@/components/ui/Badge'
 import { ArticleFAQSchema } from '@/components/seo/ArticleFAQSchema'
-import { HowToSchema } from '@/components/seo/HowToSchema';
 import { getArticleDates } from '@/lib/article-dates';
 
-const HOWTO_200A_STEPS = [
-  {
-    name: 'Confirm 200 amp is correct for the building load',
-    text: 'Run an NEC 220.82 (Standard Method) or 220.83 (Optional Method) load calculation. 200A is the standard for most homes 2,000–4,000 sq ft with electric heat, central AC, EV charging, or large electric appliances. Smaller homes may only need 100A or 150A.',
-  },
-  {
-    name: 'Choose between copper (2/0) and aluminum (4/0)',
-    text: 'For a 200A service-entrance, copper requires 2/0 AWG and aluminum requires 4/0 AWG at 75°C. Aluminum 4/0 SE cable is the most common residential choice — it costs 40-50% less than equivalent copper and is well-supported by all panel manufacturers. Use AL-rated terminations and antioxidant compound.',
-  },
-  {
-    name: 'Apply NEC 310.12 (the residential 83% rule)',
-    text: 'For a 120/240V single-phase dwelling service, NEC 310.12 allows reduced conductor sizing. The 83% allowance lets you use 4/0 copper OR 250 kcmil aluminum (or copper-clad aluminum) for a 200A service entrance — a meaningful savings versus straight Table 310.16 sizing which would require 3/0 copper.',
-  },
-  {
-    name: 'Verify the service mast and conduit support the cable',
-    text: '4/0 SE-style cable needs a 1.5"–2" service entrance conduit (or properly clamped exposed mast). Check the meter base lug ratings and main breaker terminal sizes; oversize lugs are sometimes required for aluminum 4/0.',
-  },
-  {
-    name: 'Calculate voltage drop on long runs from meter to panel',
-    text: 'For runs of 100ft+ between meter and main panel, voltage drop on 4/0 aluminum (R ≈ 0.0823 Ω/1000ft) at 200A 240V = ~2.7% over 100ft. Acceptable, but upsize to 250 kcmil for runs over 150ft to keep within 3%.',
-  },
-  {
-    name: 'Size the equipment grounding conductor (NEC 250.122)',
-    text: 'For a 200A overcurrent device, the EGC must be 6 AWG copper or 4 AWG aluminum minimum. The grounding electrode conductor (separate from EGC) is sized per NEC 250.66 — typically 4 AWG copper for a 200A service.',
-  },
-  {
-    name: 'Coordinate with the utility and pull a permit',
-    text: 'The service drop from utility transformer to weatherhead is the utility’s responsibility; from weatherhead through meter to panel is yours. Pull a permit, schedule a power-cut with the utility, and arrange AHJ inspection before re-energizing.',
-  },
-];
 import { Calculator, AlertTriangle, CheckCircle2, Info, Zap, Shield, Wrench } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Wire Size for 200 Amp Service',
-  description: '200A residential service: 4/0 copper or 250 kcmil aluminum (NEC 310.12 83% rule). EGC 6 AWG copper. Mast and meter requirements.',
+  description: '2/0 AWG copper or 4/0 AWG aluminum for a 120/240 V dwelling service (2023 NEC Table 310.12).',
   keywords: '200 amp wire size, 200 amp service wire, electrical service upgrade, NEC 200 amp requirements, 3/0 copper wire, 4/0 aluminum wire',
   alternates: {
     canonical: '/guides/wire-size-for-200-amp'
@@ -61,15 +29,11 @@ const faqs = [
   },
   {
     question: "Can I use aluminum wire for 200 amp service?",
-    answer: "Yes, aluminum wire is commonly used for 200 amp service. You'll need 4/0 AWG aluminum or aluminum alloy conductors. Aluminum is more cost-effective than copper for large services but requires proper anti-oxidant compound and rated connectors."
+    answer: "Yes, aluminum wire is commonly used for 200 amp service. You'll need 4/0 AWG aluminum or aluminum alloy conductors. Aluminum requires proper anti-oxidant compound and rated connectors."
   },
   {
     question: "What size ground wire for 200 amp service?",
     answer: "Per NEC Table 250.66, 200 amp service requires a #4 AWG copper or #2 AWG aluminum grounding electrode conductor. The equipment grounding conductor size depends on the overcurrent protection per NEC Table 250.122."
-  },
-  {
-    question: "How much does 200 amp wire cost?",
-    answer: "200 amp service wire costs vary: 3/0 copper runs $8-12 per foot, while 4/0 aluminum costs $3-5 per foot. For a typical 100-foot service run, expect $2,400-3,600 for copper or $900-1,500 for aluminum, plus installation."
   },
   {
     question: "What's the voltage drop for 200 amp service?",
@@ -93,13 +57,8 @@ export default function WireSizeFor200AmpPage() {
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Complete guide to selecting and installing the correct wire size for 200 amp electrical service 
-              per NEC 2024 requirements.
+              per 2023 NEC requirements.
             </p>
-            <div className="flex flex-wrap justify-center gap-2 mt-6">
-              <Badge variant="success">NEC Compliant</Badge>
-              <Badge variant="info">Residential & Commercial</Badge>
-              <Badge variant="warning">Professional Guide</Badge>
-            </div>
           </div>
 
           {/* Quick Answer Box */}
@@ -115,13 +74,11 @@ export default function WireSizeFor200AmpPage() {
                     <h3 className="font-semibold text-blue-900 mb-2">Copper Wire</h3>
                     <p className="text-3xl font-bold text-blue-600 mb-1">3/0 AWG</p>
                     <p className="text-sm text-gray-600">200A @ 75°C rating</p>
-                    <p className="text-xs text-gray-500 mt-1">More expensive, easier to work with</p>
                   </div>
                   <div className="bg-white rounded-lg p-4 border border-blue-200">
                     <h3 className="font-semibold text-blue-900 mb-2">Aluminum Wire</h3>
                     <p className="text-3xl font-bold text-blue-600 mb-1">4/0 AWG</p>
                     <p className="text-sm text-gray-600">200A @ 75°C rating</p>
-                    <p className="text-xs text-gray-500 mt-1">Cost-effective, requires special handling</p>
                   </div>
                 </div>
               </div>
@@ -249,7 +206,7 @@ export default function WireSizeFor200AmpPage() {
                           <td className="border border-green-300 px-4 py-2 font-medium">Aluminum XHHW</td>
                           <td className="border border-green-300 px-4 py-2 text-center font-bold">4/0</td>
                           <td className="border border-green-300 px-4 py-2 text-center">200A</td>
-                          <td className="border border-green-300 px-4 py-2">Cost-effective option</td>
+                          <td className="border border-green-300 px-4 py-2"></td>
                         </tr>
                         <tr>
                           <td className="border border-green-300 px-4 py-2 font-medium">Copper THHN</td>
@@ -313,25 +270,19 @@ export default function WireSizeFor200AmpPage() {
                   </div>
                   <div className="p-4 space-y-4">
                     <div>
-                      <h4 className="font-semibold text-green-700 mb-2">✓ Advantages</h4>
+                      <h4 className="font-semibold text-green-700 mb-2">Advantages</h4>
                       <ul className="text-sm space-y-1 text-gray-700">
                         <li>• Superior conductivity and durability</li>
                         <li>• Smaller diameter, easier routing</li>
                         <li>• No special anti-oxidant required</li>
                         <li>• Better for long runs (less voltage drop)</li>
-                        <li>• Higher resale value</li>
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-red-700 mb-2">✗ Disadvantages</h4>
+                      <h4 className="font-semibold text-red-700 mb-2">Disadvantages</h4>
                       <ul className="text-sm space-y-1 text-gray-700">
-                        <li>• 2-3x more expensive than aluminum</li>
                         <li>• Heavier and harder to pull</li>
-                        <li>• Higher material cost ($8-12/ft)</li>
                       </ul>
-                    </div>
-                    <div className="bg-orange-50 rounded p-3">
-                      <p className="text-sm font-medium text-orange-900">Typical Cost: $2,400-3,600 per 100ft</p>
                     </div>
                   </div>
                 </div>
@@ -342,26 +293,21 @@ export default function WireSizeFor200AmpPage() {
                   </div>
                   <div className="p-4 space-y-4">
                     <div>
-                      <h4 className="font-semibold text-green-700 mb-2">✓ Advantages</h4>
+                      <h4 className="font-semibold text-green-700 mb-2">Advantages</h4>
                       <ul className="text-sm space-y-1 text-gray-700">
-                        <li>• Significantly lower cost</li>
                         <li>• Lighter weight, easier handling</li>
-                        <li>• Industry standard for services</li>
                         <li>• Readily available</li>
                         <li>• Proven reliability with proper installation</li>
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-red-700 mb-2">✗ Disadvantages</h4>
+                      <h4 className="font-semibold text-red-700 mb-2">Disadvantages</h4>
                       <ul className="text-sm space-y-1 text-gray-700">
                         <li>• Requires anti-oxidant compound</li>
                         <li>• Larger diameter wire</li>
                         <li>• Special AL-rated connectors needed</li>
                         <li>• More expansion/contraction</li>
                       </ul>
-                    </div>
-                    <div className="bg-gray-50 rounded p-3">
-                      <p className="text-sm font-medium text-gray-900">Typical Cost: $900-1,500 per 100ft</p>
                     </div>
                   </div>
                 </div>
@@ -434,7 +380,7 @@ export default function WireSizeFor200AmpPage() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="bg-yellow-50 rounded-lg p-4">
-                    <h3 className="font-semibold text-yellow-900 mb-3">⚠️ Critical Installation Tips</h3>
+                    <h3 className="font-semibold text-yellow-900 mb-3">Critical Installation Tips</h3>
                     <ul className="space-y-2 text-sm text-yellow-800">
                       <li>• Use proper wire pulling lubricant</li>
                       <li>• Maintain minimum bend radius (5x cable diameter)</li>
@@ -446,7 +392,7 @@ export default function WireSizeFor200AmpPage() {
                   </div>
 
                   <div className="bg-red-50 rounded-lg p-4">
-                    <h3 className="font-semibold text-red-900 mb-3">⛔ Common Mistakes to Avoid</h3>
+                    <h3 className="font-semibold text-red-900 mb-3">Common Mistakes to Avoid</h3>
                     <ul className="space-y-2 text-sm text-red-800">
                       <li>• Using undersized wire for the run length</li>
                       <li>• Mixing copper and aluminum improperly</li>
@@ -523,83 +469,6 @@ export default function WireSizeFor200AmpPage() {
               </div>
             </section>
 
-            {/* Cost Analysis */}
-            <section className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Cost Analysis & Budget Planning</h2>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-green-50 rounded-lg p-6">
-                  <h3 className="font-semibold text-green-900 mb-4">Typical Project Costs</h3>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-700">Wire (100ft run)</span>
-                      <span className="font-medium">$900-3,600</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-700">200A Panel</span>
-                      <span className="font-medium">$500-1,200</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-700">Meter Base</span>
-                      <span className="font-medium">$200-400</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-700">Conduit & Fittings</span>
-                      <span className="font-medium">$300-600</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-700">Grounding Materials</span>
-                      <span className="font-medium">$150-300</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-700">Permits & Inspections</span>
-                      <span className="font-medium">$200-500</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-700">Labor (if hired)</span>
-                      <span className="font-medium">$2,000-4,000</span>
-                    </div>
-                    <div className="border-t pt-3 mt-3">
-                      <div className="flex justify-between font-semibold text-green-900">
-                        <span>Total Project Range</span>
-                        <span>$4,250-10,600</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-blue-50 rounded-lg p-6">
-                  <h3 className="font-semibold text-blue-900 mb-4">Money-Saving Tips</h3>
-                  <ul className="space-y-3 text-sm text-blue-800">
-                    <li className="flex items-start gap-2">
-                      <span className="font-bold">1.</span>
-                      <span>Use aluminum wire instead of copper (save $1,500-2,100)</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="font-bold">2.</span>
-                      <span>Buy materials yourself, hire labor only</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="font-bold">3.</span>
-                      <span>Combine with other electrical work</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="font-bold">4.</span>
-                      <span>Get multiple contractor quotes</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="font-bold">5.</span>
-                      <span>Schedule during slow seasons</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="font-bold">6.</span>
-                      <span>Check for utility company rebates</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-
             {/* Safety Warnings */}
             <section className="bg-red-50 rounded-xl p-8 border-2 border-red-200">
               <h2 className="text-2xl font-bold text-red-900 mb-6 flex items-center gap-3">
@@ -609,7 +478,7 @@ export default function WireSizeFor200AmpPage() {
               
               <div className="space-y-4 text-red-800">
                 <div className="bg-white rounded-lg p-4 border border-red-200">
-                  <h3 className="font-semibold mb-2">⚡ Electrical Hazards</h3>
+                  <h3 className="font-semibold mb-2">Electrical Hazards</h3>
                   <ul className="text-sm space-y-1">
                     <li>• Service entrance work involves lethal voltages</li>
                     <li>• Power must be disconnected by utility company</li>
@@ -619,7 +488,7 @@ export default function WireSizeFor200AmpPage() {
                 </div>
 
                 <div className="bg-white rounded-lg p-4 border border-red-200">
-                  <h3 className="font-semibold mb-2">📋 Legal Requirements</h3>
+                  <h3 className="font-semibold mb-2">Legal Requirements</h3>
                   <ul className="text-sm space-y-1">
                     <li>• Must be performed by licensed electrician</li>
                     <li>• Requires electrical permit and inspections</li>
@@ -629,7 +498,7 @@ export default function WireSizeFor200AmpPage() {
                 </div>
 
                 <div className="bg-white rounded-lg p-4 border border-red-200">
-                  <h3 className="font-semibold mb-2">⚠️ Common Hazards</h3>
+                  <h3 className="font-semibold mb-2">Common Hazards</h3>
                   <ul className="text-sm space-y-1">
                     <li>• Overhead power lines during installation</li>
                     <li>• Improper grounding creating shock hazards</li>
@@ -711,12 +580,7 @@ export default function WireSizeFor200AmpPage() {
         <p className="text-slate-700 mb-4">
           The single most important section of the NEC for residential
           200-amp service sizing is <strong>NEC 310.12</strong>, often
-          called the &ldquo;83% rule.&rdquo; Without 310.12, you would need
-          3/0 AWG copper or 250 kcmil aluminum to serve 200 A in a single-
-          family dwelling. With 310.12, you can use the smaller 4/0 AWG
-          copper or 250 kcmil aluminum for the same 200 A service entrance —
-          a meaningful cost savings on copper and a noticeable conduit-size
-          reduction.
+          called the &ldquo;83% rule.&rdquo;
         </p>
 
         <div className="bg-white rounded-lg p-5 mb-4">
@@ -796,31 +660,10 @@ export default function WireSizeFor200AmpPage() {
           <div>  2/0 copper (175 A &gt; 166) ✓</div>
           <div>  4/0 aluminum (180 A &gt; 166) ✓</div>
           <div>  Conduit: 1.25&Prime; (2/0 Cu) or 1.5&Prime; (4/0 Al)</div>
-          <div></div>
-          <div><strong>Cost savings (typical 100 ft service entrance, copper market):</strong></div>
-          <div>  3/0 Cu @ $9.50/ft &times; 100 ft &times; 3 conductors = $2,850</div>
-          <div>  2/0 Cu @ $7.20/ft &times; 100 ft &times; 3 conductors = $2,160</div>
-          <div>  Savings: <strong>$690 per 100 ft service drop</strong></div>
-          <div>  4/0 Al @ $4.20/ft &times; 100 ft &times; 3 conductors = $1,260 (most common residential)</div>
         </div>
-        <p className="text-sm text-slate-700 mt-3">
-          NEC 310.12 is the reason a 200 A residential service costs
-          dramatically less than a 200 A commercial service of the same
-          rating. When you see a panel listed at 200 A &ldquo;residential&rdquo;
-          rating versus 200 A &ldquo;commercial&rdquo; rating, the difference
-          is rarely the panel itself — it&rsquo;s the conductor sizing rules
-          that apply to the upstream service entrance.
-        </p>
       </div>
 
-      <ArticleFAQSchema article={articleData} faqItems={faqs} />
-      <HowToSchema
-        path="/guides/wire-size-for-200-amp"
-        name="How to Size Wire for a 200 Amp Residential Service"
-        description="Seven-step procedure for sizing service-entrance conductors for a 200A residential 120/240V single-phase service, including the NEC 310.12 83% rule (allowing 4/0 Cu or 250 kcmil Al), voltage-drop check, and grounding."
-        totalTime="PT15M"
-        steps={HOWTO_200A_STEPS}
-      />
+      <ArticleFAQSchema article={articleData} />
     </div>
   )
 }

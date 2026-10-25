@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Zap, Calculator, Wrench, Home, Cpu, ArrowRight } from 'lucide-react';
+import { Zap, Calculator, Home, Cpu, ArrowRight } from 'lucide-react';
 
 const footerLinks = {
   coreCalculators: [
@@ -8,9 +8,6 @@ const footerLinks = {
     { name: 'Ampacity Calculator', href: '/calculators/ampacity-calculator' },
     { name: 'Ground Wire Calculator', href: '/calculators/ground-wire-calculator' },
     { name: 'Wire Resistance Calculator', href: '/calculators/wire-resistance-calculator' },
-    { name: 'Conduit Fill Calculator', href: '/calculators/conduit-fill-calculator' },
-    { name: 'Box Fill Calculator', href: '/calculators/box-fill-calculator' },
-    { name: 'Circuit Breaker Calculator', href: '/calculators/circuit-breaker-calculator' },
     { name: 'View All Core Tools', href: '/calculators', isViewAll: true },
   ],
   conversionCalculators: [
@@ -19,33 +16,14 @@ const footerLinks = {
     { name: 'Volts to Amps', href: '/calculators/volts-to-amps-calculator' },
     { name: 'Kilowatts to Amps', href: '/calculators/kilowatts-to-amps-calculator' },
     { name: 'kVA to Amps', href: '/calculators/kva-to-amps-calculator' },
-    { name: 'Horsepower to Amps', href: '/calculators/horsepower-to-amps-calculator' },
     { name: 'BTU to Watts', href: '/calculators/btu-to-watts-calculator' },
     { name: "Ohm's Law Calculator", href: '/calculators/ohms-law-calculator' },
     { name: 'View All Conversions', href: '/calculators', isViewAll: true },
   ],
-  equipmentCalculators: [
-    { name: 'AC Wire Size', href: '/calculators/air-conditioner-calculator' },
-    { name: 'EV Charger Calculator', href: '/calculators/ev-charger-calculator' },
-    { name: 'EV Charger Wire Size', href: '/calculators/ev-charger-wire-size-calculator' },
-    { name: 'Hot Tub Calculator', href: '/calculators/hot-tub-calculator' },
-    { name: 'Hot Tub Wire Size', href: '/calculators/hot-tub-wire-size-calculator' },
-    { name: 'Dryer Calculator', href: '/calculators/dryer-calculator' },
-    { name: 'Range Calculator', href: '/calculators/range-calculator' },
-    { name: 'Welder Calculator', href: '/calculators/welder-calculator' },
-    { name: 'Pool Pump Calculator', href: '/calculators/pool-pump-calculator' },
-    { name: 'Well Pump Calculator', href: '/calculators/well-pump-calculator' },
-    { name: 'RV Hookup Calculator', href: '/calculators/rv-hookup-calculator' },
-    { name: 'Garage Subpanel', href: '/calculators/garage-subpanel-calculator' },
-    { name: 'View All Equipment', href: '/calculators', isViewAll: true },
-  ],
   advancedCalculators: [
     { name: 'Three Phase Calculator', href: '/calculators/three-phase-calculator' },
     { name: 'Low Voltage Calculator', href: '/calculators/low-voltage-calculator' },
-    { name: 'Electrical Load Calculator', href: '/calculators/electrical-load-calculator' },
-    { name: 'Residential Load Calculator', href: '/calculators/residential-load-calculator' },
     { name: 'Service Entrance Calculator', href: '/calculators/service-entrance-calculator' },
-    { name: 'Motor Circuit Calculator', href: '/calculators/motor-circuit' },
     { name: 'View All Advanced', href: '/calculators', isViewAll: true },
   ],
   guides: [
@@ -57,14 +35,20 @@ const footerLinks = {
     { name: 'View All Guides', href: '/guides', isViewAll: true },
   ],
   resources: [
-    { name: 'Wire Sizing Guide', href: '/guides/wire-sizing-guide' },
-    { name: 'Electrical Safety', href: '/guides/electrical-safety' },
     { name: 'NEC Code Compliance', href: '/guides/nec-code-compliance' },
     { name: 'Power Calculations', href: '/guides/electrical-power-calculations' },
     { name: 'Single vs Three Phase', href: '/guides/single-vs-three-phase' },
     { name: 'Power Factor Explained', href: '/guides/power-factor-explained' },
   ],
 };
+
+const sitePages = [
+  { name: 'About', href: '/about' },
+  { name: 'Contact', href: '/contact' },
+  { name: 'Privacy', href: '/privacy' },
+  { name: 'Terms', href: '/terms' },
+  { name: 'Disclaimer', href: '/disclaimer' },
+];
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -85,18 +69,12 @@ export function Footer() {
             <span>WireSizes.com</span>
           </Link>
           <p className="text-neutral-300 text-lg max-w-2xl leading-relaxed">
-            Professional electrical wire sizing calculators and comprehensive guides based on NEC 2023 requirements. 
-            Trusted by electricians, contractors, engineers, and electrical professionals worldwide.
+            Wire gauge charts, NEC table values and calculators for sizing conductors.
           </p>
-          <div className="flex gap-6 mt-4 text-sm text-neutral-400">
-            <span>🔥 30+ Professional Tools</span>
-            <span>⚡ NEC 2023 Compliant</span>
-            <span>🌍 Used in 50+ Countries</span>
-          </div>
         </div>
 
         {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           
           {/* Core Calculators */}
           <div className="lg:col-span-1">
@@ -134,29 +112,6 @@ export function Footer() {
                     href={link.href}
                     className={`text-neutral-300 hover:text-yellow-400 text-sm transition-colors flex items-center gap-1 ${
                       link.isViewAll ? 'font-semibold mt-3 text-yellow-300' : ''
-                    }`}
-                  >
-                    {link.isViewAll && <ArrowRight className="w-3 h-3" />}
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Equipment Specific */}
-          <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <Wrench className="w-5 h-5 text-green-400" />
-              <h3 className="font-semibold text-white">Equipment</h3>
-            </div>
-            <ul className="space-y-2">
-              {footerLinks.equipmentCalculators.map((link) => (
-                <li key={link.href}>
-                  <Link 
-                    href={link.href}
-                    className={`text-neutral-300 hover:text-green-400 text-sm transition-colors flex items-center gap-1 ${
-                      link.isViewAll ? 'font-semibold mt-3 text-green-300' : ''
                     }`}
                   >
                     {link.isViewAll && <ArrowRight className="w-3 h-3" />}
@@ -235,64 +190,31 @@ export function Footer() {
 
         </div>
 
-        {/* Professional Authority Links */}
+        {/* Site pages and trademark notice */}
         <div className="mt-12 pt-8 border-t border-neutral-700">
-          <h3 className="font-semibold text-white mb-4">Industry Standards & Authority Links</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <a href="https://www.nfpa.org/codes-and-standards/nfpa-70-national-electrical-code" 
-              target="_blank" rel="noopener noreferrer"
-              className="bg-white/10 backdrop-blur-sm rounded-lg p-3 hover:bg-white/20 transition-all text-center">
-              <div className="text-xs font-semibold text-red-400">NFPA 70</div>
-              <div className="text-xs text-neutral-400">National Electrical Code</div>
-            </a>
-            <a href="https://www.ul.com/news/understanding-wire-and-cable" 
-              target="_blank" rel="noopener noreferrer"
-              className="bg-white/10 backdrop-blur-sm rounded-lg p-3 hover:bg-white/20 transition-all text-center">
-              <div className="text-xs font-semibold text-blue-400">UL Standards</div>
-              <div className="text-xs text-neutral-400">Wire & Cable Testing</div>
-            </a>
-            <a href="https://www.copper.org/applications/electrical/building/" 
-              target="_blank" rel="noopener noreferrer"
-              className="bg-white/10 backdrop-blur-sm rounded-lg p-3 hover:bg-white/20 transition-all text-center">
-              <div className="text-xs font-semibold text-orange-400">Copper Dev Assoc</div>
-              <div className="text-xs text-neutral-400">Technical Resources</div>
-            </a>
-            <a href="https://www.aluminum.org/resources/electrical" 
-              target="_blank" rel="noopener noreferrer"
-              className="bg-white/10 backdrop-blur-sm rounded-lg p-3 hover:bg-white/20 transition-all text-center">
-              <div className="text-xs font-semibold text-gray-400">Aluminum Assoc</div>
-              <div className="text-xs text-neutral-400">Electrical Apps</div>
-            </a>
-            <a href="https://iaei.org/" 
-              target="_blank" rel="noopener noreferrer"
-              className="bg-white/10 backdrop-blur-sm rounded-lg p-3 hover:bg-white/20 transition-all text-center">
-              <div className="text-xs font-semibold text-green-400">IAEI</div>
-              <div className="text-xs text-neutral-400">Electrical Inspectors</div>
-            </a>
-            <a href="https://www.neca-neis.org/" 
-              target="_blank" rel="noopener noreferrer"
-              className="bg-white/10 backdrop-blur-sm rounded-lg p-3 hover:bg-white/20 transition-all text-center">
-              <div className="text-xs font-semibold text-purple-400">NECA</div>
-              <div className="text-xs text-neutral-400">Electrical Contractors</div>
-            </a>
-          </div>
+          <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+            {sitePages.map((page) => (
+              <li key={page.href}>
+                <Link href={page.href} className="text-neutral-300 hover:text-blue-400 transition-colors">
+                  {page.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-4 text-neutral-400 text-xs leading-relaxed max-w-3xl">
+            NFPA 70®, National Electrical Code® and NEC® are registered trademarks of the National Fire Protection
+            Association. wiresizes.com is not affiliated with or endorsed by NFPA.
+          </p>
         </div>
 
-        {/* Professional Disclaimer */}
+        {/* Disclaimer */}
         <div className="mt-8 pt-6 border-t border-neutral-700">
           <div className="bg-amber-600/20 border border-amber-500/30 rounded-lg p-4">
-            <div className="flex gap-3">
-              <div className="text-amber-400 flex-shrink-0">⚠️</div>
-              <div>
-                <p className="text-amber-200 text-sm font-semibold mb-1">Professional Disclaimer</p>
-                <p className="text-amber-100 text-sm leading-relaxed">
-                  These calculators are provided for reference and educational purposes only. All electrical work 
-                  must be performed by licensed professionals in accordance with local electrical codes and regulations. 
-                  Always verify calculations with official NEC tables and consult your local Authority Having Jurisdiction (AHJ). 
-                  Users assume full responsibility for the application of these calculations.
-                </p>
-              </div>
-            </div>
+            <p className="text-amber-200 text-sm font-semibold mb-1">Disclaimer</p>
+            <p className="text-amber-100 text-sm leading-relaxed">
+              Reference values for planning. Check them against the NEC edition your jurisdiction enforces and the
+              equipment&apos;s instructions. The author is a physicist, not a licensed electrician or engineer.
+            </p>
           </div>
         </div>
       </div>
@@ -300,49 +222,7 @@ export function Footer() {
       {/* Bottom Footer */}
       <div className="bg-neutral-900 border-t border-neutral-700">
         <div className="container py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex flex-col md:flex-row items-center gap-4">
-              <p className="text-neutral-400 text-sm">
-                © {currentYear} WireSizes.com. All rights reserved.
-              </p>
-              <div className="text-neutral-500 text-xs">
-                Professional electrical calculation tools • NEC 2023 compliant • Trusted worldwide
-              </div>
-            </div>
-            
-            <div className="flex flex-wrap gap-6 text-sm">
-              <Link 
-                href="/about"
-                className="text-neutral-400 hover:text-blue-400 transition-colors"
-              >
-                About
-              </Link>
-              <Link 
-                href="/terms"
-                className="text-neutral-400 hover:text-blue-400 transition-colors"
-              >
-                Terms of Service
-              </Link>
-              <Link 
-                href="/privacy"
-                className="text-neutral-400 hover:text-blue-400 transition-colors"
-              >
-                Privacy Policy
-              </Link>
-              <Link 
-                href="/contact"
-                className="text-neutral-400 hover:text-blue-400 transition-colors"
-              >
-                Contact
-              </Link>
-              <Link 
-                href="/disclaimer"
-                className="text-neutral-400 hover:text-blue-400 transition-colors"
-              >
-                Disclaimer
-              </Link>
-            </div>
-          </div>
+          <p className="text-neutral-400 text-sm">© {currentYear} Moving Data Systems d.o.o.</p>
         </div>
       </div>
     </footer>

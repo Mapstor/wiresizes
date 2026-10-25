@@ -78,6 +78,37 @@ const nextConfig: NextConfig = {
         destination: '/calculators/garage-subpanel-calculator',
         permanent: true,
       },
+      // WSZ-002: overlapping or retired pages merged into their closest page
+      {
+        source: '/calculators/ev-charger-calculator',
+        destination: '/guides/wire-size-for-ev-charger',
+        permanent: true,
+      },
+      {
+        source: '/calculators/ev-charger-wire-size-calculator',
+        destination: '/guides/wire-size-for-ev-charger',
+        permanent: true,
+      },
+      {
+        source: '/calculators/hot-tub-wire-size-calculator',
+        destination: '/calculators/hot-tub-calculator',
+        permanent: true,
+      },
+      {
+        source: '/calculators/electrical-load-calculator',
+        destination: '/calculators/residential-load-calculator',
+        permanent: true,
+      },
+      {
+        source: '/guides/wire-sizing-guide',
+        destination: '/calculators/wire-size-calculator',
+        permanent: true,
+      },
+      {
+        source: '/guides/electrical-safety',
+        destination: '/guides',
+        permanent: true,
+      },
     ];
   },
   async headers() {

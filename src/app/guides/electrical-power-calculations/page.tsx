@@ -54,7 +54,6 @@ const CALCULATION_EXAMPLES = [
     result: '15.8 Amps',
     powerFactor: 0.85,
     necCode: 'NEC 430.250',
-    calculatorLink: '/calculators/horsepower-to-amps-calculator'
   },
 ];
 
@@ -87,14 +86,6 @@ export default function ElectricalPowerCalculationsGuide() {
               <Calculator className="w-5 h-5" />
               Try Calculator
             </Link>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <CheckCircle className="w-4 h-4" />
-              15 min read
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Target className="w-4 h-4" />
-              Beginner to Intermediate
-            </div>
           </div>
         </div>
       </div>
@@ -304,13 +295,15 @@ export default function ElectricalPowerCalculationsGuide() {
             <div key={index} className="border-l-4 border-primary-500 bg-primary-50 rounded-r-lg p-6">
               <div className="flex justify-between items-start mb-4">
                 <h3 className="text-xl font-semibold text-primary-900">{example.title}</h3>
-                <Link 
-                  href={example.calculatorLink}
-                  className="bg-primary-600 text-white px-3 py-1 rounded text-sm hover:bg-primary-700 transition-colors flex items-center gap-1"
-                >
-                  <Calculator className="w-4 h-4" />
-                  Try Calculator
-                </Link>
+                {example.calculatorLink && (
+                  <Link 
+                    href={example.calculatorLink}
+                    className="bg-primary-600 text-white px-3 py-1 rounded text-sm hover:bg-primary-700 transition-colors flex items-center gap-1"
+                  >
+                    <Calculator className="w-4 h-4" />
+                    Try Calculator
+                  </Link>
+                )}
               </div>
               
               <p className="text-primary-800 mb-4">{example.scenario}</p>
@@ -419,7 +412,6 @@ export default function ElectricalPowerCalculationsGuide() {
             { name: 'Ohms Law', slug: 'ohms-law-calculator', icon: BarChart3, color: 'purple' },
             { name: 'Three Phase', slug: 'three-phase-calculator', icon: Target, color: 'amber' },
             { name: 'kVA to Amps', slug: 'kva-to-amps-calculator', icon: TrendingUp, color: 'red' },
-            { name: 'Horsepower to Amps', slug: 'horsepower-to-amps-calculator', icon: AlertTriangle, color: 'gray' },
           ].map((calc, index) => {
             const IconComponent = calc.icon;
             return (
@@ -462,10 +454,10 @@ export default function ElectricalPowerCalculationsGuide() {
             Power Factor Deep Dive
           </Link>
           <Link 
-            href="/guides/wire-sizing-guide"
+            href="/calculators/wire-size-calculator"
             className="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors"
           >
-            Wire Sizing Guide
+            Wire Size Calculator
           </Link>
         </div>
       </div>
@@ -562,8 +554,7 @@ export default function ElectricalPowerCalculationsGuide() {
             <h3 className="text-xl font-bold text-blue-900 mb-3">Example 4 — Capacitor bank for PF correction</h3>
             <p className="text-sm text-slate-600 mb-3">
               <strong>Scenario:</strong> A small machine shop draws 80 kW at
-              PF 0.78 lagging on 480 V three-phase. The utility imposes a
-              0.95 PF threshold or charges a $0.85/kVAR-month penalty.
+              PF 0.78 lagging on 480 V three-phase.
               Compute the kVAR of capacitors needed to correct PF to 0.95
               and the resulting current reduction.
             </p>
@@ -574,8 +565,6 @@ export default function ElectricalPowerCalculationsGuide() {
               <div>Pre-correction current: I = 80,000 / (1.732 &times; 480 &times; 0.78) = 123.4 A</div>
               <div>Post-correction current: I = 80,000 / (1.732 &times; 480 &times; 0.95) = 101.3 A</div>
               <div>Conductor relief: <strong>22.1 A reduction</strong> = 18 % less I&sup2;R loss in feeders</div>
-              <div>Annual penalty saved: 38 kVAR &times; $0.85 &times; 12 = <strong>$387 / yr</strong></div>
-              <div>40 kVAR capacitor bank cost: ~$2,500 → payback ~6.5 yr (utility penalty alone, before considering loss savings and conductor upgrade avoidance)</div>
             </div>
           </div>
 
@@ -613,21 +602,6 @@ export default function ElectricalPowerCalculationsGuide() {
             </p>
           </div>
 
-          {/* Example 6: Energy cost */}
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200">
-            <h3 className="text-xl font-bold text-blue-900 mb-3">Example 6 — Annual energy cost of a continuous load</h3>
-            <p className="text-sm text-slate-600 mb-3">
-              <strong>Scenario:</strong> 120 V, 1,200 W refrigerator runs at
-              ~30 % duty cycle (about 7.2 hours equivalent full-load per day).
-              Utility rate $0.16 /kWh. Annual energy cost?
-            </p>
-            <div className="bg-blue-50 rounded p-4 font-mono text-sm space-y-1">
-              <div>Daily energy: 1.2 kW &times; 7.2 hr = 8.64 kWh/day</div>
-              <div>Annual energy: 8.64 &times; 365 = 3,154 kWh/year</div>
-              <div>Annual cost: 3,154 &times; $0.16 = <strong>$504.60 per year</strong></div>
-              <div>If switched to a 600 W ENERGY STAR unit (50 % reduction): saves $252 / yr</div>
-            </div>
-          </div>
         </div>
 
         <div className="mt-8 p-4 bg-amber-50 border border-amber-200 rounded-lg">

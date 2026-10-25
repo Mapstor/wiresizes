@@ -10,19 +10,13 @@ interface ArticleData {
   dateModified?: string;
 }
 
-interface FAQItem {
-  question: string;
-  answer: string;
-}
-
 interface ArticleFAQSchemaProps {
   article: ArticleData;
-  faqItems: FAQItem[];
 }
 
 const FALLBACK_DATE = '2026-01-01';
 
-export function ArticleFAQSchema({ article, faqItems }: ArticleFAQSchemaProps) {
+export function ArticleFAQSchema({ article }: ArticleFAQSchemaProps) {
   const articleSchema = {
     '@type': 'Article',
     '@id': `${article.url}#article`,
@@ -60,24 +54,11 @@ export function ArticleFAQSchema({ article, faqItems }: ArticleFAQSchemaProps) {
     }
   };
 
-  const faqPageSchema = {
-    '@type': 'FAQPage',
-    '@id': `${article.url}#faq`,
-    mainEntity: faqItems.map((item) => ({
-      '@type': 'Question',
-      name: item.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: item.answer
-      }
-    }))
-  };
-
   const breadcrumbSchema = generateBreadcrumbSchema(article.url);
 
   const combinedSchema = {
     '@context': 'https://schema.org',
-    '@graph': [articleSchema, faqPageSchema, breadcrumbSchema]
+    '@graph': [articleSchema, breadcrumbSchema]
   };
 
   return (
