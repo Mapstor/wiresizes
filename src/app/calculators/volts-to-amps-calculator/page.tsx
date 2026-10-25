@@ -1,14 +1,14 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { VoltsToAmpsCalculator } from '@/components/calculators';
-import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Battery } from 'lucide-react';
+import { Zap, Calculator, TrendingUp, AlertCircle, Battery } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Volts to Amps Calculator — V → A',
   description: 'Current from power and voltage: I = P ÷ (V × PF) single-phase, I = P ÷ (√3 × V × PF) three-phase.',
-  keywords: 'volts to amps, voltage to current, ohms law calculator, electrical conversion, V to A, voltage amperage calculator, electrical current calculator',
+  keywords: 'volts to amps, voltage to current, electrical conversion, V to A, voltage amperage calculator, electrical current calculator',
   openGraph: {
     title: 'Volts to Amps Calculator - Electrical Conversion Tool',
     description: 'Current from power and voltage: I = P ÷ (V × PF) single-phase, I = P ÷ (√3 × V × PF) three-phase.',
@@ -26,29 +26,6 @@ const webAppData = {
   url: "https://wiresizes.com/calculators/volts-to-amps-calculator",
   description: "Current from power and voltage: I = P ÷ (V × PF) single-phase, I = P ÷ (√3 × V × PF) three-phase."
 };
-
-const voltsToAmpsFAQs = [
-  {
-    question: "How do I convert volts to amps?",
-    answer: "To convert volts to amps, you need either power (watts) or resistance (ohms). Using power: Amps = Watts ÷ Volts. Using resistance: Amps = Volts ÷ Ohms. For example, a 1200W appliance on 120V uses 10 amps (1200W ÷ 120V = 10A)."
-  },
-  {
-    question: "Can you convert volts directly to amps without other information?",
-    answer: "No, you cannot convert volts directly to amps without knowing either the power (watts) or resistance (ohms) of the circuit. Voltage is electrical pressure, while current (amps) is the flow rate. You need to know either how much power is being consumed or the resistance to calculate current flow."
-  },
-  {
-    question: "What is Ohm's Law and how does it relate volts to amps?",
-    answer: "Ohm's Law states that V = I × R, where V is voltage, I is current (amps), and R is resistance (ohms). This fundamental law shows the relationship between voltage, current, and resistance. Rearranged for current: I = V ÷ R. This means current is directly proportional to voltage and inversely proportional to resistance."
-  },
-  {
-    question: "How do I calculate amps for three-phase systems?",
-    answer: "For three-phase systems, the formula is: Amps = Watts ÷ (Volts × √3 × Power Factor). The √3 (approximately 1.732) accounts for the three-phase configuration. For example, a 10kW three-phase motor at 480V with 0.85 power factor: I = 10,000 ÷ (480 × 1.732 × 0.85) = 14.1 amps."
-  },
-  {
-    question: "What's the difference between AC and DC when converting volts to amps?",
-    answer: "For DC circuits, the conversion is straightforward: Amps = Watts ÷ Volts. For AC circuits, you must consider power factor: Amps = Watts ÷ (Volts × Power Factor). AC circuits with inductive loads (motors, transformers) have power factors less than 1.0, requiring more current for the same power."
-  }
-];
 
 export default function VoltsToAmpsCalculatorPage() {
   return (
@@ -71,24 +48,14 @@ export default function VoltsToAmpsCalculatorPage() {
               Volts to Amps Calculator
             </h1>
             <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
-              Professional voltage to current converter using Ohm's Law. Calculate electrical current (amperage) 
-              from voltage and power or resistance for AC and DC circuits.
+              Calculate electrical current (amperage) 
+              from voltage and power for AC circuits.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg">
-                <Battery className="h-8 w-8 text-yellow-600 mb-2 mx-auto" />
-                <h3 className="font-semibold text-gray-900 dark:text-white">Ohm's Law</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">V = I × R calculations</p>
-              </div>
               <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg">
                 <TrendingUp className="h-8 w-8 text-green-600 mb-2 mx-auto" />
                 <h3 className="font-semibold text-gray-900 dark:text-white">Power Formula</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">P = V × I conversions</p>
-              </div>
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg">
-                <Calculator className="h-8 w-8 text-blue-600 mb-2 mx-auto" />
-                <h3 className="font-semibold text-gray-900 dark:text-white">AC/DC Support</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Single & three-phase</p>
               </div>
             </div>
           </div>
@@ -101,359 +68,6 @@ export default function VoltsToAmpsCalculatorPage() {
           <Suspense fallback={<div>Loading calculator...</div>}>
             <VoltsToAmpsCalculator />
           </Suspense>
-        </div>
-      </section>
-
-      {/* Quick Reference Tables */}
-      <section className="mb-12">
-        <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white flex items-center">
-          <Calculator className="mr-3 h-8 w-8 text-blue-600" />
-          Common Volts to Amps Conversions
-        </h2>
-        
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* 120V Household Appliances */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-            <h3 className="text-xl font-bold mb-4 text-blue-600">120V Household Appliances</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b-2 border-gray-200">
-                    <th className="text-left py-2">Appliance</th>
-                    <th className="text-center py-2">Power (W)</th>
-                    <th className="text-center py-2">Current (A)</th>
-                    <th className="text-center py-2">Wire Size</th>
-                  </tr>
-                </thead>
-                <tbody className="text-sm">
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">LED Bulb (60W eq)</td>
-                    <td className="text-center">9W</td>
-                    <td className="text-center">0.08A</td>
-                    <td className="text-center">14 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Phone Charger</td>
-                    <td className="text-center">20W</td>
-                    <td className="text-center">0.17A</td>
-                    <td className="text-center">14 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Laptop</td>
-                    <td className="text-center">90W</td>
-                    <td className="text-center">0.75A</td>
-                    <td className="text-center">14 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">TV (55" LED)</td>
-                    <td className="text-center">150W</td>
-                    <td className="text-center">1.25A</td>
-                    <td className="text-center">14 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Coffee Maker</td>
-                    <td className="text-center">900W</td>
-                    <td className="text-center">7.5A</td>
-                    <td className="text-center">14 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Microwave</td>
-                    <td className="text-center">1200W</td>
-                    <td className="text-center">10A</td>
-                    <td className="text-center">12 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Space Heater</td>
-                    <td className="text-center">1500W</td>
-                    <td className="text-center">12.5A</td>
-                    <td className="text-center">12 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Hair Dryer</td>
-                    <td className="text-center">1800W</td>
-                    <td className="text-center">15A</td>
-                    <td className="text-center">12 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Window AC</td>
-                    <td className="text-center">1440W</td>
-                    <td className="text-center">12A</td>
-                    <td className="text-center">12 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Vacuum Cleaner</td>
-                    <td className="text-center">1400W</td>
-                    <td className="text-center">11.7A</td>
-                    <td className="text-center">12 AWG</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* 240V Major Appliances */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-            <h3 className="text-xl font-bold mb-4 text-green-600">240V Major Appliances</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b-2 border-gray-200">
-                    <th className="text-left py-2">Appliance</th>
-                    <th className="text-center py-2">Power (W)</th>
-                    <th className="text-center py-2">Current (A)</th>
-                    <th className="text-center py-2">Wire Size</th>
-                  </tr>
-                </thead>
-                <tbody className="text-sm">
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Level 2 EV Charger</td>
-                    <td className="text-center">7200W</td>
-                    <td className="text-center">30A</td>
-                    <td className="text-center">10 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Electric Dryer</td>
-                    <td className="text-center">5000W</td>
-                    <td className="text-center">20.8A</td>
-                    <td className="text-center">10 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Electric Range</td>
-                    <td className="text-center">12000W</td>
-                    <td className="text-center">50A</td>
-                    <td className="text-center">6 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Water Heater (50 gal)</td>
-                    <td className="text-center">4500W</td>
-                    <td className="text-center">18.8A</td>
-                    <td className="text-center">10 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Central AC (3-ton)</td>
-                    <td className="text-center">3600W</td>
-                    <td className="text-center">15A</td>
-                    <td className="text-center">12 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Hot Tub</td>
-                    <td className="text-center">6000W</td>
-                    <td className="text-center">25A</td>
-                    <td className="text-center">10 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Tankless Water Heater</td>
-                    <td className="text-center">27000W</td>
-                    <td className="text-center">112.5A</td>
-                    <td className="text-center">2 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Electric Furnace</td>
-                    <td className="text-center">20000W</td>
-                    <td className="text-center">83.3A</td>
-                    <td className="text-center">3 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Welder (220V)</td>
-                    <td className="text-center">8000W</td>
-                    <td className="text-center">33.3A</td>
-                    <td className="text-center">8 AWG</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-2 font-medium">Pool Pump (2 HP)</td>
-                    <td className="text-center">1864W</td>
-                    <td className="text-center">7.8A</td>
-                    <td className="text-center">14 AWG</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Practical Examples */}
-      <section className="mb-12">
-        <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white flex items-center">
-          <BookOpen className="mr-3 h-8 w-8 text-purple-600" />
-          Real-World Volts to Amps Examples
-        </h2>
-        
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Example 1: Kitchen Circuit */}
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl p-6">
-            <h3 className="text-xl font-bold mb-3 text-blue-700 dark:text-blue-400">
-              Kitchen Circuit Loading
-            </h3>
-            <div className="space-y-2 text-sm">
-              <p><strong>Scenario:</strong> Multiple appliances on 120V circuit</p>
-              <p><strong>Appliances:</strong></p>
-              <ul className="ml-4 space-y-1">
-                <li>• Microwave: 1200W</li>
-                <li>• Coffee Maker: 900W</li>
-                <li>• Toaster: 800W</li>
-              </ul>
-              <p><strong>Calculations:</strong></p>
-              <div className="bg-white/70 dark:bg-gray-900/70 rounded p-3 font-mono text-xs">
-                Microwave: 1200W ÷ 120V = 10A<br/>
-                Coffee: 900W ÷ 120V = 7.5A<br/>
-                Toaster: 800W ÷ 120V = 6.7A<br/>
-                Total: 24.2A (overload!)
-              </div>
-              <p className="text-red-700 dark:text-red-400 font-semibold">
-                Result: Requires two 20A circuits
-              </p>
-              <p className="text-gray-700 dark:text-gray-300">
-                <strong>Solution:</strong> Split appliances across two circuits to prevent overload
-              </p>
-            </div>
-          </div>
-
-          {/* Example 2: EV Charging */}
-          <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 rounded-xl p-6">
-            <h3 className="text-xl font-bold mb-3 text-green-700 dark:text-green-400">
-              EV Charger Installation
-            </h3>
-            <div className="space-y-2 text-sm">
-              <p><strong>Scenario:</strong> Level 2 home charger</p>
-              <p><strong>Specifications:</strong></p>
-              <ul className="ml-4 space-y-1">
-                <li>• Voltage: 240V</li>
-                <li>• Power: 9600W (40A charger)</li>
-                <li>• Efficiency: 95%</li>
-              </ul>
-              <p><strong>Calculation:</strong></p>
-              <div className="bg-white/70 dark:bg-gray-900/70 rounded p-3 font-mono text-xs">
-                I = P ÷ V<br/>
-                I = 9600W ÷ 240V = 40A<br/>
-                Circuit = 40A × 1.25 = 50A
-              </div>
-              <p className="text-green-700 dark:text-green-400 font-semibold">
-                Result: 50A circuit required
-              </p>
-              <p className="text-gray-700 dark:text-gray-300">
-                <strong>Wire Size:</strong> 6 AWG copper<br/>
-                <strong>Breaker:</strong> 50A double-pole<br/>
-                <strong>Charging Speed:</strong> 25-30 miles/hour
-              </p>
-            </div>
-          </div>
-
-          {/* Example 3: Workshop Setup */}
-          <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 rounded-xl p-6">
-            <h3 className="text-xl font-bold mb-3 text-purple-700 dark:text-purple-400">
-              Workshop Power Planning
-            </h3>
-            <div className="space-y-2 text-sm">
-              <p><strong>Scenario:</strong> Home workshop tools</p>
-              <p><strong>Equipment:</strong></p>
-              <ul className="ml-4 space-y-1">
-                <li>• Table Saw: 1800W @ 120V</li>
-                <li>• Dust Collector: 1100W @ 120V</li>
-                <li>• Air Compressor: 3700W @ 240V</li>
-              </ul>
-              <p><strong>Current Draw:</strong></p>
-              <div className="bg-white/70 dark:bg-gray-900/70 rounded p-3 font-mono text-xs">
-                Saw: 1800W ÷ 120V = 15A<br/>
-                Dust: 1100W ÷ 120V = 9.2A<br/>
-                Compressor: 3700W ÷ 240V = 15.4A
-              </div>
-              <p className="text-purple-700 dark:text-purple-400 font-semibold">
-                Result: Multiple circuits needed
-              </p>
-              <p className="text-gray-700 dark:text-gray-300">
-                <strong>Setup:</strong> Two 20A/120V + one 20A/240V circuit
-              </p>
-            </div>
-          </div>
-
-          {/* Example 4: Solar System */}
-          <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/30 dark:to-yellow-800/30 rounded-xl p-6">
-            <h3 className="text-xl font-bold mb-3 text-yellow-700 dark:text-yellow-400">
-              Solar Panel String
-            </h3>
-            <div className="space-y-2 text-sm">
-              <p><strong>Scenario:</strong> Residential solar array</p>
-              <p><strong>Configuration:</strong></p>
-              <ul className="ml-4 space-y-1">
-                <li>• 10 panels in series</li>
-                <li>• Voc: 40V per panel = 400V</li>
-                <li>• Power: 3500W total</li>
-              </ul>
-              <p><strong>DC Current:</strong></p>
-              <div className="bg-white/70 dark:bg-gray-900/70 rounded p-3 font-mono text-xs">
-                I = P ÷ V<br/>
-                I = 3500W ÷ 400V = 8.75A<br/>
-                Wire sizing: 8.75A × 1.56 = 13.7A
-              </div>
-              <p className="text-yellow-700 dark:text-yellow-400 font-semibold">
-                Result: 10 AWG DC wire
-              </p>
-              <p className="text-gray-700 dark:text-gray-300">
-                <strong>NEC 690:</strong> 1.56 safety factor<br/>
-                <strong>Wire Type:</strong> THWN-2 or PV wire<br/>
-                <strong>Protection:</strong> 15A DC breaker
-              </p>
-            </div>
-          </div>
-
-          {/* Example 5: Data Center */}
-          <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 rounded-xl p-6">
-            <h3 className="text-xl font-bold mb-3 text-red-700 dark:text-red-400">
-              Server Rack Power
-            </h3>
-            <div className="space-y-2 text-sm">
-              <p><strong>Scenario:</strong> 42U server rack</p>
-              <p><strong>Load Analysis:</strong></p>
-              <ul className="ml-4 space-y-1">
-                <li>• Servers: 4800W</li>
-                <li>• Network: 600W</li>
-                <li>• Storage: 1200W</li>
-              </ul>
-              <p><strong>208V 3-Phase PDU:</strong></p>
-              <div className="bg-white/70 dark:bg-gray-900/70 rounded p-3 font-mono text-xs">
-                Total: 6600W<br/>
-                I = 6600W ÷ (208V × √3)<br/>
-                I = 6600W ÷ 360.3V = 18.3A
-              </div>
-              <p className="text-red-700 dark:text-red-400 font-semibold">
-                Result: 30A 3-phase circuit
-              </p>
-              <p className="text-gray-700 dark:text-gray-300">
-                <strong>Redundancy:</strong> A+B power feeds<br/>
-                <strong>PDUs:</strong> 2× 30A L21-30 outlets
-              </p>
-            </div>
-          </div>
-
-          {/* Example 6: HVAC System */}
-          <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 rounded-xl p-6">
-            <h3 className="text-xl font-bold mb-3 text-orange-700 dark:text-orange-400">
-              Heat Pump Installation
-            </h3>
-            <div className="space-y-2 text-sm">
-              <p><strong>Scenario:</strong> 4-ton heat pump system</p>
-              <p><strong>Components:</strong></p>
-              <ul className="ml-4 space-y-1">
-                <li>• Outdoor Unit: 240V</li>
-                <li>• MCA: 28.5A</li>
-                <li>• MOP: 40A</li>
-              </ul>
-              <p><strong>Power Calculation:</strong></p>
-              <div className="bg-white/70 dark:bg-gray-900/70 rounded p-3 font-mono text-xs">
-                P = V × I × PF<br/>
-                P = 240V × 28.5A × 0.85<br/>
-                P = 5814W (running)
-              </div>
-              <p className="text-orange-700 dark:text-orange-400 font-semibold">
-                Result: 40A circuit, 8 AWG wire
-              </p>
-              <p className="text-gray-700 dark:text-gray-300">
-                <strong>Disconnect:</strong> 60A weatherproof<br/>
-                <strong>Wire Type:</strong> THHN in conduit
-              </p>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -575,11 +189,6 @@ export default function VoltsToAmpsCalculatorPage() {
                 </ul>
               </div>
               
-              <div className="p-3 bg-yellow-50 dark:bg-yellow-900/30 rounded">
-                <p className="text-sm">
-                  <strong>Note:</strong> DC systems require larger conductors for same power due to no RMS advantage
-                </p>
-              </div>
             </div>
           </div>
           
@@ -593,42 +202,6 @@ export default function VoltsToAmpsCalculatorPage() {
                 <p className="font-mono text-lg">I = P ÷ (V × √3 × PF)</p>
               </div>
               
-              <div>
-                <h4 className="font-semibold mb-2">Power Factor Impact:</h4>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left py-1">Load Type</th>
-                        <th className="text-center py-1">PF Range</th>
-                        <th className="text-center py-1">Current Increase</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b">
-                        <td className="py-1">Resistive</td>
-                        <td className="text-center">1.0</td>
-                        <td className="text-center">0%</td>
-                      </tr>
-                      <tr className="border-b">
-                        <td className="py-1">LED Lighting</td>
-                        <td className="text-center">0.9-0.95</td>
-                        <td className="text-center">5-11%</td>
-                      </tr>
-                      <tr className="border-b">
-                        <td className="py-1">Motors</td>
-                        <td className="text-center">0.8-0.9</td>
-                        <td className="text-center">11-25%</td>
-                      </tr>
-                      <tr className="border-b">
-                        <td className="py-1">Old Fluorescent</td>
-                        <td className="text-center">0.5-0.7</td>
-                        <td className="text-center">43-100%</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -672,12 +245,6 @@ export default function VoltsToAmpsCalculatorPage() {
                 <li>• Proper power output</li>
                 <li>• Normal operating temp</li>
               </ul>
-              <div className="mt-3 p-2 bg-white dark:bg-gray-900 rounded">
-                <p className="text-xs font-mono">
-                  Acceptable range:<br/>
-                  ±5% of nominal
-                </p>
-              </div>
             </div>
             
             <div className="bg-yellow-50 dark:bg-yellow-900/30 rounded-lg p-4">
@@ -694,85 +261,6 @@ export default function VoltsToAmpsCalculatorPage() {
                   Example: 10% overvoltage<br/>
                   = Reduced equipment life
                 </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Motor Starting Currents */}
-      <section className="mb-12">
-        <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-          Motor Starting Current Calculations
-        </h2>
-        
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-xl font-bold mb-4 text-blue-600">Inrush Current Multipliers</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b-2 border-gray-200">
-                      <th className="text-left py-2">Starting Method</th>
-                      <th className="text-center py-2">Multiplier</th>
-                      <th className="text-center py-2">Typical Use</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-sm">
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2">Direct On Line</td>
-                      <td className="text-center font-mono">6-8×</td>
-                      <td className="text-center">Small motors</td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2">Star-Delta</td>
-                      <td className="text-center font-mono">2-3×</td>
-                      <td className="text-center">Medium motors</td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2">Soft Starter</td>
-                      <td className="text-center font-mono">2-4×</td>
-                      <td className="text-center">Pumps, fans</td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2">VFD</td>
-                      <td className="text-center font-mono">1.5×</td>
-                      <td className="text-center">Variable speed</td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2">Autotransformer</td>
-                      <td className="text-center font-mono">3-4×</td>
-                      <td className="text-center">Large motors</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            
-            <div>
-              <h3 className="text-xl font-bold mb-4 text-green-600">Example: 10 HP Motor</h3>
-              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                <p className="font-semibold mb-3">240V Single-Phase Motor</p>
-                <div className="space-y-2 text-sm">
-                  <p><strong>Running Current:</strong></p>
-                  <p className="font-mono bg-white dark:bg-gray-900 p-2 rounded">
-                    I = (10 HP × 746W) ÷ (240V × 0.85)<br/>
-                    I = 7460W ÷ 204V = 36.6A
-                  </p>
-                  
-                  <p className="mt-3"><strong>Starting Current (DOL):</strong></p>
-                  <p className="font-mono bg-white dark:bg-gray-900 p-2 rounded">
-                    Istart = 36.6A × 6 = 219.6A
-                  </p>
-                  
-                  <p className="mt-3"><strong>Circuit Requirements:</strong></p>
-                  <ul className="ml-4 space-y-1">
-                    <li>• Wire: 8 AWG (125% FLA)</li>
-                    <li>• Breaker: 50A (time-delay)</li>
-                    <li>• Starter: NEMA Size 2</li>
-                  </ul>
-                </div>
               </div>
             </div>
           </div>

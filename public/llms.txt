@@ -26,11 +26,11 @@
 - [NEC Table 310.16](https://wiresizes.com/guides/nec-table-310-16): All 30 rows of NEC Table 310.16 (2023), copper and aluminum in the 60, 75 and 90 °C columns, with the 16 ambient correction rows of Table 310.15(B)(1)(1) and the adjustment factors of Table 310.15(C)(1).
 - [Wire Size for 200 Amp](https://wiresizes.com/guides/wire-size-for-200-amp): 2/0 AWG copper or 4/0 AWG aluminum for a 120/240 V dwelling service, from NEC Table 310.12 (2023).
 - [Wire Size for 100 Amp](https://wiresizes.com/guides/wire-size-for-100-amp): 4 AWG copper or 2 AWG aluminum for a 120/240 V dwelling service, from NEC Table 310.12 (2023).
-- [Wire Size for EV Charger](https://wiresizes.com/guides/wire-size-for-ev-charger): Branch circuits for Level 2 EV chargers under the 2023 NEC rules for EV charging equipment (625.40, 625.42, 625.43).
+- [Wire Size for EV Charger](https://wiresizes.com/guides/wire-size-for-ev-charger): Level 1, Level 2 and DC fast charging, the 2023 NEC rule that EV charging is a continuous load (625.42), charger specifications, and copper and aluminum wire sizes for 40 A and 50 A charger circuits.
 - [Electrical Power Calculations](https://wiresizes.com/guides/electrical-power-calculations): Formulas for power, current, voltage and resistance in DC, single-phase and three-phase circuits.
 - [Single vs Three Phase](https://wiresizes.com/guides/single-vs-three-phase): Single-phase and three-phase voltage systems and the power formulas for each.
 - [Power Factor Explained](https://wiresizes.com/guides/power-factor-explained): Real, reactive and apparent power and power factor, PF = P ÷ S.
-- [NEC Code Compliance](https://wiresizes.com/guides/nec-code-compliance): Overview of the NEC articles that govern wire sizing.
+- [NEC Code Compliance](https://wiresizes.com/guides/nec-code-compliance): NEC overcurrent protection (standard ratings from Table 240.6(A) and the 240.4(D) small-conductor limits), grounding and bonding, the voltage drop formula and GFCI locations.
 
 ## Site
 

@@ -25,7 +25,7 @@ const GUIDES = [
     description: 'Navigate the National Electrical Code requirements for safe electrical installations with detailed code references.',
     icon: Target,
     color: 'amber',
-    topics: ['Wire Sizing Rules & Tables', 'Circuit Protection Requirements', 'Grounding Systems', 'Load Calculations'],
+    topics: ['Circuit Protection Requirements', 'Grounding Systems'],
     calculators: ['wire-size-calculator', 'ground-wire-calculator']
   },
   {
@@ -199,12 +199,7 @@ export default function GuidesHomePage() {
           <div>
             <h3 className="font-bold text-slate-900 mb-1">Which NEC edition do these guides reference?</h3>
             <p className="text-sm text-slate-700">
-              All guides reference NEC 2023 (NFPA 70-2023), which is the
-              most recent published edition as of 2026. Where a 2017 or
-              2020 edition value differs materially, both are noted. The
-              NEC 2026 edition publishes in mid-2026; we will update guides
-              within 90 days of publication and indicate the affected pages
-              via the schema <code>dateModified</code> field.
+              The guides cite the 2023 NEC unless a page names another edition. The 2026 NEC was issued by NFPA on August 20, 2025 and took effect September 9, 2025.
             </p>
           </div>
           <div>
@@ -225,8 +220,7 @@ export default function GuidesHomePage() {
               canonical ampacity reference. The AWG wire size chart is
               the physical-properties reference (diameter, area, resistance).
               The per-amperage guides (100A, 200A, EV charger) are
-              installation-specific. The NEC code compliance guide ties
-              everything together at the design level. Power Calculations,
+              installation-specific. Power Calculations,
               Single-vs-Three-Phase, and Power Factor are theory references
               that support the practical guides.
             </p>

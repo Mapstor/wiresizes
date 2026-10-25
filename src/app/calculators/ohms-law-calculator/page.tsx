@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 const webAppData = {
   name: "Ohms Law Calculator",
   url: "https://wiresizes.com/calculators/ohms-law-calculator",
-  description: "Professional Ohms Law calculator for electrical engineers and technicians. Calculate voltage, current, resistance, and power using V=IR and P=VI formulas. AC and DC circuit calculations."
+  description: "Ohms Law calculator for electrical engineers and technicians. Calculate voltage, current, resistance, and power using V=IR and P=VI formulas. AC and DC circuit calculations."
 };
 
 const ohmsLawFAQs = [
@@ -66,8 +66,7 @@ export default function OhmsLawCalculatorPage() {
               Ohms Law Calculator
             </h1>
             <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-              Calculate voltage, current, resistance, and power using fundamental electrical laws. 
-              Professional tool for electrical analysis and circuit design.
+              Calculate voltage, current, resistance, and power using fundamental electrical laws.
             </p>
           </div>
           
@@ -340,13 +339,10 @@ export default function OhmsLawCalculatorPage() {
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     <span className="font-medium">Test Power:</span> P = V × I = 24V × 8.5A = 204W
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Temperature Note:</span> Resistance increases ~40% from cold to hot
-                  </p>
                 </div>
                 <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
                   <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: Winding resistance 2.82Ω cold, expect ~3.95Ω at operating temperature
+                    Result: Winding resistance 2.82Ω cold
                   </p>
                 </div>
               </div>
@@ -564,10 +560,6 @@ export default function OhmsLawCalculatorPage() {
                   <li className="flex items-start gap-2">
                     <span className="text-red-500 mt-1">•</span>
                     <span>Always de-energize circuits before making resistance measurements</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Use proper PPE and follow lockout/tagout procedures</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-red-500 mt-1">•</span>

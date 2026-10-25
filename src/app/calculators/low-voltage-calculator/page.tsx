@@ -7,8 +7,8 @@ import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Low Voltage Calculator — 12V / 24V DC',
-  description: '12V and 24V DC circuit wire sizing for solar, battery banks, RV, and marine. Higher resistance per gauge requires upsized conductors.',
-  keywords: 'low voltage calculator, 12v wire size, 24v dc calculator, automotive wire size, marine electrical, solar panel wiring, RV electrical, battery cable sizing',
+  description: '12V and 24V DC circuit wire sizing for solar, battery banks, RV, and marine.',
+  keywords: 'low voltage calculator, 12v wire size, 24v dc calculator, automotive wire size, marine electrical, solar panel wiring, RV electrical',
   openGraph: {
     title: 'Low Voltage Calculator - 12V 24V DC Wire Size Calculator',
     description: 'Calculate wire size for low voltage DC systems. Automotive, marine, solar, and RV wire sizing calculator.',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 const webAppData = {
   name: "Low Voltage Calculator",
   url: "https://wiresizes.com/calculators/low-voltage-calculator",
-  description: "Professional low voltage DC wire calculator for 12V and 24V systems. Calculate wire size for automotive, marine, solar, and RV applications. Includes voltage drop calculations."
+  description: "Low voltage DC wire calculator for 12V and 24V systems. Calculate wire size for automotive, marine, solar, and RV applications. Includes voltage drop calculations."
 };
 
 const lowVoltageFAQs = [
@@ -32,14 +32,6 @@ const lowVoltageFAQs = [
     question: "Why are wire sizes larger in low voltage DC systems?",
     answer: "Low voltage DC systems carry much higher current for the same power level. Power = Voltage × Current, so at 12V instead of 120V, you need 10 times the current. For example, a 120W load requires 10A at 12V but only 1A at 120V. Higher current requires larger conductors to prevent excessive voltage drop and heat."
   },
-  {
-    question: "How do I size battery cables for automotive applications?",
-    answer: "Battery cables must handle starter motor current, typically 150-400A depending on engine size. Use minimum #4 AWG for small engines, #2 AWG for mid-size, and #1/0 AWG for large engines. Keep positive and negative cables the same size and as short as possible. Consider upgrading to larger cables for performance applications."
-  },
-  {
-    question: "What's different about marine low voltage wiring?",
-    answer: "Marine wiring requires tinned copper conductors and appropriate insulation for marine environments. ABYC standards require larger wire sizes than automotive due to safety considerations. All connections must be waterproof, and circuits should have proper overcurrent protection. Use marine-grade wire rated for the environment (engine room, bilge, etc.)."
-  }
 ];
 
 export default function LowVoltageCalculatorPage() {
@@ -58,8 +50,7 @@ export default function LowVoltageCalculatorPage() {
               Low Voltage Calculator
             </h1>
             <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-              Calculate wire sizes for 12V and 24V DC systems. Professional tool for automotive, 
-              marine, solar, and RV electrical applications.
+              Calculate wire sizes for 12V and 24V DC systems.
             </p>
           </div>
           
@@ -76,13 +67,6 @@ export default function LowVoltageCalculatorPage() {
               <h3 className="text-xl font-semibold mb-2">Multiple Applications</h3>
               <p className="text-gray-600 dark:text-gray-400">
                 Automotive, marine, solar, RV, and off-grid system wire sizing.
-              </p>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-              <TrendingUp className="h-12 w-12 text-green-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Precision Results</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Accurate wire sizing with voltage drop calculations and safety factors.
               </p>
             </div>
           </div>
@@ -185,129 +169,6 @@ export default function LowVoltageCalculatorPage() {
         </div>
       </section>
 
-      {/* Application-Specific Guidelines */}
-      <section className="mb-16">
-        <div className="bg-gradient-to-br from-blue-50 to-cyan-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Application-Specific Wiring Guidelines
-          </h2>
-          
-          <div className="grid lg:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                  <Battery className="h-6 w-6 text-blue-600" />
-                  Automotive Wiring Standards
-                </h3>
-                <div className="space-y-3">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">SAE Standards:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Use SAE J1128 rated automotive wire</li>
-                      <li>• Temperature rating: -40°F to +200°F</li>
-                      <li>• Voltage rating: 50V or higher for 12V systems</li>
-                      <li>• Cross-linked polyethylene (XLPE) insulation preferred</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Protection Requirements:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Fuse within 18" of battery positive</li>
-                      <li>• Use weatherproof fuse holders</li>
-                      <li>• Ground connections to chassis or dedicated ground</li>
-                      <li>• Protect wiring from heat, sharp edges, and moisture</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                  <Zap className="h-6 w-6 text-cyan-600" />
-                  Marine Electrical Standards
-                </h3>
-                <div className="space-y-3">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">ABYC Requirements:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Use tinned copper conductors only</li>
-                      <li>• Marine-grade adhesive-lined heat shrink</li>
-                      <li>• Voltage drop limited to 10% for lighting, 3% for electronics</li>
-                      <li>• All connections above bilge level when possible</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Environmental Considerations:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Use proper wire support every 18" maximum</li>
-                      <li>• Seal all penetrations through bulkheads</li>
-                      <li>• Route wiring away from bilge and exhaust</li>
-                      <li>• Label all circuits at panel and connections</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                  <TrendingUp className="h-6 w-6 text-yellow-600" />
-                  Solar/Off-Grid Systems
-                </h3>
-                <div className="space-y-3">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">NEC Article 690:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Use THWN-2 or USE-2 for outdoor wiring</li>
-                      <li>• Size conductors for 125% of maximum current</li>
-                      <li>• Provide disconnects within sight of equipment</li>
-                      <li>• Use properly rated DC circuit breakers</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">System Design:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Keep DC wiring runs as short as possible</li>
-                      <li>• Use MC4 connectors for panel connections</li>
-                      <li>• Install proper grounding electrode system</li>
-                      <li>• Consider rapid shutdown requirements</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                  <Calculator className="h-6 w-6 text-purple-600" />
-                  RV/Mobile Applications
-                </h3>
-                <div className="space-y-3">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">RVIA Standards:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Use stranded copper wire for flexibility</li>
-                      <li>• Secure wiring every 4.5 feet maximum</li>
-                      <li>• Protect against vibration and movement</li>
-                      <li>• Use appropriate connector types for environment</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Installation Practices:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Route wiring through protected raceways</li>
-                      <li>• Use service loops at moving connections</li>
-                      <li>• Install battery disconnect in accessible location</li>
-                      <li>• Provide adequate ventilation for batteries</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Safety and Best Practices */}
       <section className="mb-16">
         <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-8">
@@ -353,10 +214,6 @@ export default function LowVoltageCalculatorPage() {
                   Wire Selection Guidelines
                 </h3>
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Copper vs Aluminum:</span>
-                    <span className="text-gray-800 dark:text-gray-200">Always use copper for DC</span>
-                  </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Stranding:</span>
                     <span className="text-gray-800 dark:text-gray-200">Use stranded for flexibility</span>

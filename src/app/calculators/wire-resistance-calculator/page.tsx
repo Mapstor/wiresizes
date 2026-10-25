@@ -4,14 +4,17 @@ import { WireResistanceCalculator } from '@/components/calculators';
 import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import { conductor, formatSize, TABLE_310_16_SIZES } from '@/lib/calculations/sizes';
+import type { ConductorData } from '@/lib/calculations/sizes';
+import { RESISTANCE_NOTES } from '@/lib/calculations/resistance';
 
 export const metadata: Metadata = {
   title: 'Wire Resistance Calculator — Ω / 1000 ft',
-  description: 'DC resistance of copper and aluminum conductors per AWG and length. NEC Chapter 9 Table 8 values at 75°C. For voltage-drop calculations.',
+  description: 'DC resistance of copper and aluminum conductors per AWG and length. For voltage-drop calculations.',
   keywords: 'wire resistance calculator, conductor resistance, ohms per foot, wire impedance, electrical resistance, copper wire resistance, aluminum wire resistance, voltage drop resistance',
   openGraph: {
-    title: 'Wire Resistance Calculator - Conductor Resistance and Impedance Tool',
-    description: 'Calculate electrical resistance of wire conductors. Copper and aluminum wire resistance calculator with impedance calculations.',
+    title: 'Wire Resistance Calculator - Conductor Resistance Tool',
+    description: 'Calculate electrical resistance of wire conductors. Copper and aluminum wire resistance calculator.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/wire-resistance-calculator',
     images: ['/opengraph-image']
@@ -24,17 +27,22 @@ export const metadata: Metadata = {
 const webAppData = {
   name: "Wire Resistance Calculator",
   url: "https://wiresizes.com/calculators/wire-resistance-calculator",
-  description: "Professional wire resistance calculator for electrical engineers and contractors. Calculate conductor resistance, impedance, and voltage drop for copper and aluminum wires."
+  description: "Calculate wire resistance and power loss for copper and aluminum conductors."
 };
+
+// Ω per 1000 ft from data/verified/awg.json, 18 AWG to 500 kcmil
+const RESISTANCE_ROWS: ConductorData[] = TABLE_310_16_SIZES.slice(0, TABLE_310_16_SIZES.indexOf('500') + 1)
+  .map((key) => conductor(key))
+  .filter((row): row is ConductorData => row !== null);
 
 const wireResistanceFAQs = [
   {
     question: "How do I calculate the resistance of a wire?",
-    answer: "Wire resistance is calculated using R = ρL/A, where R is resistance, ρ (rho) is resistivity, L is length, and A is cross-sectional area. For practical calculations, use: R = (Resistance per 1000 feet × Length in feet) ÷ 1000. For example, #12 AWG copper has 1.93 ohms per 1000 feet, so 100 feet = 0.193 ohms."
+    answer: "Wire resistance is calculated using R = ρL/A, where R is resistance, ρ (rho) is resistivity, L is length, and A is cross-sectional area. For practical calculations, use: R = (Resistance per 1000 feet × Length in feet) ÷ 1000. For example, 12 AWG copper has 1.93 ohms per 1000 feet at 75°C, so 100 feet = 0.193 ohms."
   },
   {
     question: "What's the difference between resistance and impedance?",
-    answer: "Resistance is the opposition to DC current flow, measured in ohms. Impedance is the total opposition to AC current flow, including both resistance and reactance (inductive and capacitive). For power frequencies (50-60 Hz), wire resistance and impedance are nearly equal, but at higher frequencies, impedance becomes significantly higher due to skin effect and proximity effect."
+    answer: "Resistance is the opposition to DC current flow, measured in ohms. Impedance is the total opposition to AC current flow, including both resistance and reactance (inductive and capacitive)."
   },
   {
     question: "How does temperature affect wire resistance?",
@@ -46,7 +54,7 @@ const wireResistanceFAQs = [
   },
   {
     question: "How do I calculate voltage drop from wire resistance?",
-    answer: "Voltage drop equals current times resistance: VD = I × R. For single-phase: VD = I × R × 2 (accounting for both conductors). For three-phase: VD = I × R × 1.732. The total circuit resistance includes both hot and neutral (or ground) conductors. Use this to verify voltage drop stays within acceptable limits (typically 3-5%)."
+    answer: "Voltage drop equals current times resistance: VD = I × R. For single-phase: VD = I × R × 2 (accounting for both conductors). For three-phase: VD = I × R × 1.732."
   }
 ];
 
@@ -66,8 +74,7 @@ export default function WireResistanceCalculatorPage() {
               Wire Resistance Calculator
             </h1>
             <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-              Calculate electrical resistance and impedance of wire conductors. Professional tool for 
-              engineers, electricians, and designers working with power and signal transmission.
+              Calculate electrical resistance of wire conductors.
             </p>
           </div>
           
@@ -83,7 +90,7 @@ export default function WireResistanceCalculatorPage() {
               <Calculator className="h-12 w-12 text-indigo-600 mb-4" />
               <h3 className="text-xl font-semibold mb-2">Multiple Parameters</h3>
               <p className="text-gray-600 dark:text-gray-400">
-                Calculate resistance, impedance, voltage drop, and power loss for any conductor.
+                Calculate resistance and power loss for any conductor.
               </p>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
@@ -218,198 +225,6 @@ export default function WireResistanceCalculatorPage() {
           </h2>
           
           <div className="grid lg:grid-cols-2 gap-8">
-            {/* Example 1: Power Transmission Line */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
-                  <Zap className="h-6 w-6 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Transmission Line Analysis
-                </h3>
-              </div>
-              <div className="space-y-3">
-                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                  <p className="font-medium text-gray-900 dark:text-white mb-2">Scenario:</p>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    500 MCM aluminum conductor, 2 miles long, 75°C operating temperature
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Conductor Size:</span> 500 MCM = 500,000 CM = 253.4 mm²
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Length:</span> 2 miles = 10,560 feet
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Material:</span> Aluminum (ρ = 2.82 × 10⁻⁸ Ω⋅m at 20°C)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">DC Resistance (20°C):</span> 0.206 ohms/1000ft
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Temperature Correction:</span> R₇₅ = R₂₀ × [1 + 0.00403 × (75-20)]
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Resistance at 75°C:</span> 0.206 × 1.222 = 0.252 ohms/1000ft
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Total Resistance:</span> 0.252 × 10.56 = 2.66 ohms
-                  </p>
-                </div>
-                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: 2.66 ohms total resistance at 75°C operating temperature
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Example 2: Motor Feeder Circuit */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-lg">
-                  <TrendingUp className="h-6 w-6 text-purple-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Motor Feeder Resistance
-                </h3>
-              </div>
-              <div className="space-y-3">
-                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                  <p className="font-medium text-gray-900 dark:text-white mb-2">Scenario:</p>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    #6 AWG copper feeder, 150 feet to motor, 480V 3-phase, 65A load
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Conductor:</span> #6 AWG copper (26,240 CM)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">DC Resistance:</span> 0.410 ohms per 1000 feet at 75°C
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">AC Resistance:</span> 0.491 ohms per 1000 feet at 75°C
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Reactance:</span> 0.0590 ohms per 1000 feet
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Per-phase Resistance:</span> 0.491 × 0.15 = 0.0737 ohms
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Voltage Drop:</span> √3 × 65A × 0.0737Ω = 8.3V
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Percentage Drop:</span> 8.3V ÷ 480V = 1.73%
-                  </p>
-                </div>
-                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: 1.73% voltage drop - within acceptable limits for motor circuits
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Example 3: Control Circuit */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-orange-100 dark:bg-orange-900/30 p-2 rounded-lg">
-                  <Settings className="h-6 w-6 text-orange-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Control Circuit Analysis
-                </h3>
-              </div>
-              <div className="space-y-3">
-                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                  <p className="font-medium text-gray-900 dark:text-white mb-2">Scenario:</p>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    #14 AWG copper control wire, 300 feet, 24V DC, 0.5A load
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Conductor:</span> #14 AWG copper (4,110 CM)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">DC Resistance:</span> 2.57 ohms per 1000 feet at 75°C
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">One-way Resistance:</span> 2.57 × 0.30 = 0.771 ohms
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Loop Resistance:</span> 0.771 × 2 = 1.542 ohms
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Voltage Drop:</span> 0.5A × 1.542Ω = 0.771V
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Percentage Drop:</span> 0.771V ÷ 24V = 3.2%
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Power Loss:</span> 0.5² × 1.542 = 0.386W
-                  </p>
-                </div>
-                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: 3.2% voltage drop acceptable for control circuits
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Example 4: High-Frequency Application */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-indigo-100 dark:bg-indigo-900/30 p-2 rounded-lg">
-                  <Calculator className="h-6 w-6 text-indigo-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  RF/High-Frequency Analysis
-                </h3>
-              </div>
-              <div className="space-y-3">
-                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                  <p className="font-medium text-gray-900 dark:text-white mb-2">Scenario:</p>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    #12 AWG copper at 1 MHz frequency, skin effect analysis
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Conductor:</span> #12 AWG copper (3.31mm diameter)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">DC Resistance:</span> 5.21 ohms per 1000m at 20°C
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Frequency:</span> 1 MHz
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Skin Depth:</span> δ = √(2/(ωμσ)) = 66.1 μm
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Wire Radius:</span> 1.655 mm
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Ratio:</span> radius/skin depth = 25.0
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">AC Resistance:</span> ~25× DC resistance = 130 ohms/1000m
-                  </p>
-                </div>
-                <div className="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-yellow-800 dark:text-yellow-300">
-                    Result: Significant skin effect requires special consideration for RF applications
-                  </p>
-                </div>
-              </div>
-            </div>
-
             {/* Example 5: Temperature Effects */}
             <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg lg:col-span-2">
               <div className="flex items-center gap-3 mb-4">
@@ -424,7 +239,7 @@ export default function WireResistanceCalculatorPage() {
                 <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                   <p className="font-medium text-gray-900 dark:text-white mb-2">Analysis:</p>
                   <p className="text-gray-700 dark:text-gray-300 mb-4">
-                    #4/0 AWG copper conductor resistance at various operating temperatures
+                    4/0 AWG copper conductor resistance at various operating temperatures
                   </p>
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -483,83 +298,41 @@ export default function WireResistanceCalculatorPage() {
             Wire Resistance Reference Tables
           </h2>
           
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Copper Wire Resistance */}
-            <div className="space-y-6">
-              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                Copper Wire DC Resistance (75°C)
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full border border-gray-300 dark:border-gray-600 rounded-lg">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        AWG Size
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Ω/1000ft
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Ω/km
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#18</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">8.08</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">26.5</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#16</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">5.08</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">16.7</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#14</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">3.19</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">10.5</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#12</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">2.01</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">6.59</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#10</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.26</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">4.14</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#8</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.786</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">2.58</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#6</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.491</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.61</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#4</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.308</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.01</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#2</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.194</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.636</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#1/0</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.122</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.400</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#2/0</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.0967</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.317</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#4/0</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.0608</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.199</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Aluminum Wire Resistance */}
-            <div className="space-y-6">
-              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                Aluminum Wire DC Resistance (75°C)
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full border border-gray-300 dark:border-gray-600 rounded-lg">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        AWG Size
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Ω/1000ft
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Ω/km
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#12</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">3.28</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">10.8</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#10</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">2.07</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">6.79</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#8</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.30</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">4.26</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#6</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.808</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">2.65</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#4</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.508</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.67</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#2</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.319</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.05</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#1/0</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.201</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.659</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#2/0</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.159</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.522</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#3/0</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.126</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.413</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#4/0</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.100</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.328</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">250 MCM</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.0847</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.278</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">500 MCM</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.0424</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.139</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+          <div className="overflow-x-auto">
+            <table className="w-full border border-gray-300 dark:border-gray-600 rounded-lg">
+              <thead className="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
+                    Size
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
+                    Copper, 20 °C (NIST Handbook 100; kcmil calculated), Ω/1000 ft
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
+                    Copper, 75 °C (calculated), Ω/1000 ft
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
+                    Aluminum EC-H19, 20 °C (calculated), Ω/1000 ft
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
+                    Aluminum EC-H19, 75 °C (calculated), Ω/1000 ft
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
+                {RESISTANCE_ROWS.map((row) => (
+                  <tr key={row.key}>
+                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{formatSize(row.key)}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.r20Cu}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.r75Cu}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.r20Al ?? '—'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.r75Al ?? '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
+          <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">{RESISTANCE_NOTES[0]}</p>
 
           <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
             <h4 className="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-3">
@@ -587,7 +360,6 @@ export default function WireResistanceCalculatorPage() {
                   <div>• 0°C: 0.92× resistance at 20°C</div>
                   <div>• 20°C: 1.00× reference temperature</div>
                   <div>• 75°C: 1.22× resistance at 20°C</div>
-                  <div>• 90°C: 1.29× resistance at 20°C</div>
                 </div>
               </div>
             </div>
@@ -624,7 +396,6 @@ export default function WireResistanceCalculatorPage() {
                       <li>• Use worst-case temperature for resistance calculations</li>
                       <li>• Consider load growth and future expansion</li>
                       <li>• Account for parallel conductor skin effect</li>
-                      <li>• Evaluate conductor material economics</li>
                     </ul>
                   </div>
                 </div>
@@ -671,7 +442,6 @@ export default function WireResistanceCalculatorPage() {
                       <li>• Current concentrates at conductor surface at higher frequencies</li>
                       <li>• Skin depth δ = √(2/(ωμσ))</li>
                       <li>• Resistance increases with √frequency</li>
-                      <li>• Significant above ~1 kHz for large conductors</li>
                     </ul>
                   </div>
                   <div>

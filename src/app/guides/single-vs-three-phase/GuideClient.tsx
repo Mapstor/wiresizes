@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Zap, Calculator, BarChart3, TrendingUp, AlertTriangle, CheckCircle, Activity, ArrowRight, Target, Home, Building2, Factory } from 'lucide-react';
+import { Zap, Calculator, BarChart3, TrendingUp, AlertTriangle, CheckCircle, Activity, ArrowRight, Target } from 'lucide-react';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 
 const VOLTAGE_SYSTEMS = [
@@ -13,7 +13,6 @@ const VOLTAGE_SYSTEMS = [
     waveform_description: 'Simple sinusoidal waveform',
     power_formula: 'P = V × I × PF',
     applications: ['Residential homes', 'Small commercial', 'Light industrial'],
-    max_power: '25 kW typical',
     advantages: ['Simple installation', 'Familiar to electricians', 'Good for resistive loads'],
     disadvantages: ['Limited power capacity', 'Motor starting issues', 'Voltage fluctuations', 'Higher current for same power'],
     color: 'blue'
@@ -25,19 +24,10 @@ const VOLTAGE_SYSTEMS = [
     waveform_description: 'Three sinusoidal waves 120° apart',
     power_formula: 'P = √3 × V × I × PF',
     applications: ['Industrial facilities', 'Large commercial', 'Motor drives', 'Heavy equipment'],
-    max_power: '1000+ kW',
     advantages: ['Higher power density', 'Better motor performance', 'Balanced loading', 'More efficient transmission'],
     disadvantages: ['More complex wiring', 'Requires balanced loads'],
     color: 'purple'
   }
-];
-
-const MOTOR_COMPARISON = [
-  { hp: 0.5, single_phase: { current: 6.9, starting_current: 35, torque: 'Poor', efficiency: '75%' }, three_phase: { current: 1.4, starting_current: 8.5, torque: 'Excellent', efficiency: '85%' } },
-  { hp: 1, single_phase: { current: 13.8, starting_current: 70, torque: 'Poor', efficiency: '76%' }, three_phase: { current: 2.8, starting_current: 17, torque: 'Excellent', efficiency: '86%' } },
-  { hp: 2, single_phase: { current: 24, starting_current: 120, torque: 'Fair', efficiency: '77%' }, three_phase: { current: 5.6, starting_current: 34, torque: 'Excellent', efficiency: '87%' } },
-  { hp: 3, single_phase: { current: 36, starting_current: 180, torque: 'Fair', efficiency: '78%' }, three_phase: { current: 8.4, starting_current: 50, torque: 'Excellent', efficiency: '88%' } },
-  { hp: 5, single_phase: { current: 56, starting_current: 280, torque: 'Poor', efficiency: '79%' }, three_phase: { current: 14, starting_current: 84, torque: 'Excellent', efficiency: '89%' } },
 ];
 
 const WIRING_CONFIGURATIONS = [
@@ -46,7 +36,6 @@ const WIRING_CONFIGURATIONS = [
     wires: 2,
     description: 'Hot, Neutral',
     typical_use: 'Lighting, small appliances',
-    current_rating: '15-20A',
     voltage: '120V'
   },
   {
@@ -54,7 +43,6 @@ const WIRING_CONFIGURATIONS = [
     wires: 3,
     description: 'Hot, Hot, Ground',
     typical_use: 'Water heaters, dryers, AC',
-    current_rating: '30-50A',
     voltage: '240V'
   },
   {
@@ -62,7 +50,6 @@ const WIRING_CONFIGURATIONS = [
     wires: 4,
     description: '3 Hot, Neutral',
     typical_use: 'Balanced loads, lighting',
-    current_rating: 'Varies',
     voltage: '208V/120V, 480V/277V'
   },
   {
@@ -70,7 +57,6 @@ const WIRING_CONFIGURATIONS = [
     wires: 3,
     description: '3 Hot wires only',
     typical_use: 'Motor loads, heating',
-    current_rating: 'Varies',
     voltage: '240V, 480V'
   }
 ];
@@ -323,71 +309,16 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
               <h3 className="font-semibold text-yellow-800 mb-2">Motor Performance Impact</h3>
               <p className="text-sm text-yellow-700">
                 Three-phase motors offer significant advantages over single-phase motors including better starting torque, 
-                higher efficiency, and lower operating current. Single-phase motors above 3 HP become impractical.
+                higher efficiency, and lower operating current.
               </p>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full border">
-                <thead>
-                  <tr className="bg-gray-50">
-                    <th className="border px-4 py-3 text-left font-semibold" rowSpan={2}>Motor Size</th>
-                    <th className="border px-4 py-3 text-center font-semibold" colSpan={4}>Single-Phase (240V)</th>
-                    <th className="border px-4 py-3 text-center font-semibold" colSpan={4}>Three-Phase (240V)</th>
-                  </tr>
-                  <tr className="bg-gray-50 text-xs">
-                    <th className="border px-2 py-2">Current</th>
-                    <th className="border px-2 py-2">Starting</th>
-                    <th className="border px-2 py-2">Torque</th>
-                    <th className="border px-2 py-2">Efficiency</th>
-                    <th className="border px-2 py-2">Current</th>
-                    <th className="border px-2 py-2">Starting</th>
-                    <th className="border px-2 py-2">Torque</th>
-                    <th className="border px-2 py-2">Efficiency</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {MOTOR_COMPARISON.map((motor) => (
-                    <tr key={motor.hp} className="hover:bg-gray-50">
-                      <td className="border px-4 py-3 font-bold">{motor.hp} HP</td>
-                      
-                      {/* Single-phase data */}
-                      <td className="border px-2 py-3 text-center font-mono text-sm">{motor.single_phase.current}A</td>
-                      <td className="border px-2 py-3 text-center font-mono text-sm text-red-600">{motor.single_phase.starting_current}A</td>
-                      <td className="border px-2 py-3 text-center">
-                        <span className={`px-2 py-1 rounded text-xs ${
-                          motor.single_phase.torque === 'Poor' ? 'bg-red-100 text-red-700' :
-                          motor.single_phase.torque === 'Fair' ? 'bg-yellow-100 text-yellow-700' :
-                          'bg-green-100 text-green-700'
-                        }`}>
-                          {motor.single_phase.torque}
-                        </span>
-                      </td>
-                      <td className="border px-2 py-3 text-center font-mono text-sm">{motor.single_phase.efficiency}</td>
-                      
-                      {/* Three-phase data */}
-                      <td className="border px-2 py-3 text-center font-mono text-sm text-green-600">{motor.three_phase.current}A</td>
-                      <td className="border px-2 py-3 text-center font-mono text-sm text-green-600">{motor.three_phase.starting_current}A</td>
-                      <td className="border px-2 py-3 text-center">
-                        <span className="px-2 py-1 rounded text-xs bg-green-100 text-green-700">
-                          {motor.three_phase.torque}
-                        </span>
-                      </td>
-                      <td className="border px-2 py-3 text-center font-mono text-sm text-green-600">{motor.three_phase.efficiency}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                 <h4 className="font-semibold text-red-800 mb-3">Single-Phase Motor Limitations</h4>
                 <ul className="text-sm text-red-700 space-y-2">
-                  <li>• High starting current (5-8x running current)</li>
                   <li>• Poor starting torque without capacitors</li>
                   <li>• Lower efficiency, especially at partial loads</li>
-                  <li>• Practical limit around 3-5 HP</li>
                   <li>• Unbalanced magnetic field</li>
                 </ul>
               </div>
@@ -395,32 +326,11 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                 <h4 className="font-semibold text-green-800 mb-3">Three-Phase Motor Advantages</h4>
                 <ul className="text-sm text-green-700 space-y-2">
-                  <li>• Lower starting current (2-3x running current)</li>
                   <li>• Excellent starting torque</li>
                   <li>• Higher efficiency across load range</li>
                   <li>• Available in all sizes</li>
                   <li>• Balanced rotating magnetic field</li>
                 </ul>
-              </div>
-
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h4 className="font-semibold text-blue-800 mb-3">Current Comparison</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span>1 HP Motor:</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Single-phase:</span>
-                    <span className="font-mono text-red-600">13.8A</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Three-phase:</span>
-                    <span className="font-mono text-green-600">2.8A</span>
-                  </div>
-                  <div className="border-t pt-2 mt-2">
-                    <span className="font-semibold text-blue-700">80% Current Reduction!</span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -446,10 +356,6 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
                     <div>
                       <span className="text-gray-600">Voltage:</span>
                       <span className="font-mono ml-2">{config.voltage}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">Typical Rating:</span>
-                      <span className="font-mono ml-2">{config.current_rating}</span>
                     </div>
                     <div>
                       <span className="text-gray-600">Use:</span>
@@ -554,227 +460,12 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
         )}
       </div>
 
-      {/* Application Guide */}
-      <div className="bg-white rounded-xl border p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Application Selection Guide</h2>
-        
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Home className="w-8 h-8 text-blue-600" />
-              <h3 className="text-lg font-semibold text-blue-900">Residential Applications</h3>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-semibold text-blue-800 mb-2">Single-Phase Recommended:</h4>
-                <ul className="text-sm text-blue-700 space-y-1">
-                  <li>• Homes under 200A service</li>
-                  <li>• Standard appliances (dryer, range, AC)</li>
-                  <li>• Pool pumps under 2 HP</li>
-                  <li>• Workshop equipment under 3 HP</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold text-blue-800 mb-2">Consider Three-Phase For:</h4>
-                <ul className="text-sm text-blue-700 space-y-1">
-                  <li>• Large homes (400A+ service)</li>
-                  <li>• Multiple large motors</li>
-                  <li>• Home workshops with industrial equipment</li>
-                  <li>• Geothermal heat pump systems</li>
-                </ul>
-              </div>
-            </div>
-            
-            <div className="mt-4 p-3 bg-white rounded border border-blue-300">
-            </div>
-          </div>
-
-          <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Building2 className="w-8 h-8 text-green-600" />
-              <h3 className="text-lg font-semibold text-green-900">Commercial Applications</h3>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-semibold text-green-800 mb-2">Three-Phase Strongly Recommended:</h4>
-                <ul className="text-sm text-green-700 space-y-1">
-                  <li>• HVAC systems over 5 tons</li>
-                  <li>• Elevators and escalators</li>
-                  <li>• Commercial kitchen equipment</li>
-                  <li>• Compressors and pumps</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold text-green-800 mb-2">Single-Phase Acceptable For:</h4>
-                <ul className="text-sm text-green-700 space-y-1">
-                  <li>• Small retail spaces under 2,000 sq ft</li>
-                  <li>• Office lighting and receptacles</li>
-                  <li>• Small restaurants without major equipment</li>
-                </ul>
-              </div>
-            </div>
-            
-            <div className="mt-4 p-3 bg-white rounded border border-green-300">
-              <div className="text-sm">
-                <strong>Utility Requirement:</strong> Many utilities require three-phase for commercial services over 100A
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Factory className="w-8 h-8 text-purple-600" />
-              <h3 className="text-lg font-semibold text-purple-900">Industrial Applications</h3>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-semibold text-purple-800 mb-2">Three-Phase Required:</h4>
-                <ul className="text-sm text-purple-700 space-y-1">
-                  <li>• All motors over 3 HP</li>
-                  <li>• Manufacturing equipment</li>
-                  <li>• Welding operations</li>
-                  <li>• Process control systems</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold text-purple-800 mb-2">Voltage Selection:</h4>
-                <ul className="text-sm text-purple-700 space-y-1">
-                  <li>• 208V: Light industrial, small motors</li>
-                  <li>• 480V: Standard industrial, large motors</li>
-                  <li>• 600V+: Heavy industrial applications</li>
-                </ul>
-              </div>
-            </div>
-            
-            <div className="mt-4 p-3 bg-white rounded border border-purple-300">
-              <div className="text-sm">
-                <strong>Efficiency Gain:</strong> Three-phase can improve overall facility efficiency by 15-25%
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Decision Matrix */}
-      <div className="bg-white rounded-xl border p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Decision Matrix: Single vs Three Phase</h2>
-        
-        <div className="overflow-x-auto">
-          <table className="w-full border">
-            <thead>
-              <tr className="bg-gray-50">
-                <th className="border px-4 py-3 text-left font-semibold">Factor</th>
-                <th className="border px-4 py-3 text-center font-semibold">Weight</th>
-                <th className="border px-4 py-3 text-center font-semibold">Single-Phase</th>
-                <th className="border px-4 py-3 text-center font-semibold">Three-Phase</th>
-                <th className="border px-4 py-3 text-left font-semibold">Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="hover:bg-gray-50">
-                <td className="border px-4 py-3 font-medium">Operating Efficiency</td>
-                <td className="border px-4 py-3 text-center">High</td>
-                <td className="border px-4 py-3 text-center">
-                  <span className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-sm font-semibold">Good</span>
-                </td>
-                <td className="border px-4 py-3 text-center">
-                  <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-sm font-semibold">Excellent</span>
-                </td>
-                <td className="border px-4 py-3 text-sm">Three-phase 15-25% more efficient for motor loads</td>
-              </tr>
-              <tr className="hover:bg-gray-50">
-                <td className="border px-4 py-3 font-medium">Motor Performance</td>
-                <td className="border px-4 py-3 text-center">Medium</td>
-                <td className="border px-4 py-3 text-center">
-                  <span className="bg-red-100 text-red-700 px-2 py-1 rounded text-sm font-semibold">Poor</span>
-                </td>
-                <td className="border px-4 py-3 text-center">
-                  <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-sm font-semibold">Excellent</span>
-                </td>
-                <td className="border px-4 py-3 text-sm">Single-phase motors limited to ~3 HP practical max</td>
-              </tr>
-              <tr className="hover:bg-gray-50">
-                <td className="border px-4 py-3 font-medium">Installation Complexity</td>
-                <td className="border px-4 py-3 text-center">Medium</td>
-                <td className="border px-4 py-3 text-center">
-                  <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-sm font-semibold">Simple</span>
-                </td>
-                <td className="border px-4 py-3 text-center">
-                  <span className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-sm font-semibold">Complex</span>
-                </td>
-                <td className="border px-4 py-3 text-sm">Three-phase requires more skilled installation</td>
-              </tr>
-              <tr className="hover:bg-gray-50">
-                <td className="border px-4 py-3 font-medium">Power Capacity</td>
-                <td className="border px-4 py-3 text-center">High</td>
-                <td className="border px-4 py-3 text-center">
-                  <span className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-sm font-semibold">Limited</span>
-                </td>
-                <td className="border px-4 py-3 text-center">
-                  <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-sm font-semibold">Unlimited</span>
-                </td>
-                <td className="border px-4 py-3 text-sm">Single-phase practical limit ~25 kW residential</td>
-              </tr>
-              <tr className="hover:bg-gray-50">
-                <td className="border px-4 py-3 font-medium">Equipment Availability</td>
-                <td className="border px-4 py-3 text-center">Low</td>
-                <td className="border px-4 py-3 text-center">
-                  <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-sm font-semibold">Excellent</span>
-                </td>
-                <td className="border px-4 py-3 text-center">
-                  <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-sm font-semibold">Excellent</span>
-                </td>
-                <td className="border px-4 py-3 text-sm">Both readily available in most markets</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        
-        <div className="mt-6 grid md:grid-cols-3 gap-6">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h4 className="font-semibold text-blue-800 mb-2">Choose Single-Phase When:</h4>
-            <ul className="text-sm text-blue-700 space-y-1">
-              <li>• Residential application under 10 kW</li>
-              <li>• Budget constraints are primary concern</li>
-              <li>• No large motors (under 2 HP)</li>
-              <li>• Utility three-phase not available</li>
-            </ul>
-          </div>
-
-          <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-            <h4 className="font-semibold text-purple-800 mb-2">Choose Three-Phase When:</h4>
-            <ul className="text-sm text-purple-700 space-y-1">
-              <li>• Commercial or industrial application</li>
-              <li>• Multiple motors over 2 HP</li>
-              <li>• Long-term energy efficiency important</li>
-              <li>• Power quality critical</li>
-            </ul>
-          </div>
-
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <h4 className="font-semibold text-yellow-800 mb-2">Consider Both When:</h4>
-            <ul className="text-sm text-yellow-700 space-y-1">
-              <li>• Large residential (200A+ service)</li>
-              <li>• Small commercial under 50 kW</li>
-              <li>• Mixed residential/commercial use</li>
-              <li>• Future expansion planned</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
       {/* Related Calculators */}
       <div className="bg-white rounded-xl border p-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Phase System Calculators</h2>
         <div className="grid md:grid-cols-3 gap-6">
           {[
-            { name: 'Three Phase Calculator', slug: 'three-phase-calculator', icon: Zap, color: 'purple', description: 'Complete 3-phase calculations' },
+            { name: 'Three Phase Calculator', slug: 'three-phase-calculator', icon: Zap, color: 'purple' },
             { name: 'Voltage Drop', slug: 'voltage-drop-calculator', icon: TrendingUp, color: 'red', description: 'Multi-phase voltage drop' },
             { name: 'Wire Size Calculator', slug: 'wire-size-calculator', icon: BarChart3, color: 'amber', description: 'Phase-specific sizing' },
             { name: 'Power Calculator', slug: 'amps-to-watts-calculator', icon: Activity, color: 'indigo', description: 'Single & three-phase power' },
@@ -790,7 +481,7 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
                   <IconComponent className={`w-6 h-6 text-${calc.color}-600`} />
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2">{calc.name}</h3>
-                <p className="text-sm text-gray-600 mb-3">{calc.description}</p>
+                {calc.description && <p className="text-sm text-gray-600 mb-3">{calc.description}</p>}
                 <div className={`text-${calc.color}-600 text-sm flex items-center gap-1`}>
                   Try Calculator <ArrowRight className="w-4 h-4" />
                 </div>
@@ -900,88 +591,8 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
               <strong>The high-leg trap:</strong> on a 240 / 120 V high-leg
               delta, never connect a 120 V single-phase load to L3 — you'll
               put 208 V on a device rated 120 V and let the magic smoke out
-              instantly. Panel directories must clearly identify which slots
-              feed the high leg; NEC 110.15 also requires the high-leg
-              conductor to be marked orange (or some other distinguishing
-              color) for the entire run.
+              instantly.
             </p>
-          </div>
-
-          {/* Worked example: motor on wye vs delta */}
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-purple-200">
-            <h3 className="text-xl font-bold text-purple-900 mb-3">Worked example — same 50 HP motor, single-phase 240 V vs three-phase 480 V</h3>
-            <p className="text-sm text-slate-700 mb-3">
-              <strong>Scenario:</strong> a 50 HP irrigation pump can be ordered
-              as either single-phase 240 V or three-phase 480 V. The choice
-              dramatically changes the wire size, conduit, and breaker.
-            </p>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-purple-50 rounded p-4">
-                <div className="font-bold text-purple-900 mb-2">Single-phase 240 V (if even available)</div>
-                <div className="font-mono text-sm space-y-1">
-                  <div>P = 50 HP &times; 746 = 37.3 kW</div>
-                  <div>I = 37,300 / (240 &times; 0.85 PF &times; 0.91 eff)</div>
-                  <div>I = 37,300 / 185.8 = <strong>200.7 A</strong></div>
-                  <div>1.25 &times; 200.7 = 251 A circuit</div>
-                  <div>Wire: 250 kcmil Cu @ 75&deg;C (255 A)</div>
-                  <div>Conduit: 2&Prime; PVC sch 80</div>
-                  <div>Breaker: 250 A frame</div>
-                </div>
-              </div>
-              <div className="bg-purple-50 rounded p-4">
-                <div className="font-bold text-purple-900 mb-2">Three-phase 480 V</div>
-                <div className="font-mono text-sm space-y-1">
-                  <div>NEC 430.250 FLC for 50 HP @ 460 V = <strong>65 A</strong></div>
-                  <div>1.25 &times; 65 = 81 A circuit</div>
-                  <div>Wire: 4 AWG Cu @ 75&deg;C (85 A)</div>
-                  <div>Conduit: 1&frac14;&Prime; EMT</div>
-                  <div>Breaker: 250 % &times; 65 = 162.5 → 175 A</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Phase converters and rotary phase converters */}
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-purple-200">
-            <h3 className="text-xl font-bold text-purple-900 mb-3">Getting three-phase where the utility only has single-phase</h3>
-            <p className="text-sm text-slate-700 mb-3">
-              Rural shops, woodworking businesses, and small machine shops
-              frequently buy three-phase equipment off the surplus market
-              but only have a single-phase utility service. Three options:
-            </p>
-            <div className="space-y-3">
-              <div className="bg-purple-50 rounded p-4">
-                <div className="font-bold text-purple-900">Static phase converter — lossiest</div>
-                <p className="text-sm text-slate-700">
-                  Uses start capacitors to bootstrap a
-                  three-phase motor. Output is unbalanced; motor runs at
-                  about 70 % of nameplate horsepower. Suitable for a single
-                  motor that doesn&rsquo;t start under load. Not for VFDs
-                  or sensitive electronics.
-                </p>
-              </div>
-              <div className="bg-purple-50 rounded p-4">
-                <div className="font-bold text-purple-900">Rotary phase converter — middle ground</div>
-                <p className="text-sm text-slate-700">
-                  An idler motor generates the third
-                  phase mechanically. Output is closer to balanced; can run
-                  multiple motors simultaneously. Idler must be sized 1.5
-                  &times; the largest single motor it will start. Wastes
-                  ~10 % of input power as idler losses.
-                </p>
-              </div>
-              <div className="bg-purple-50 rounded p-4">
-                <div className="font-bold text-purple-900">VFD (variable frequency drive) — modern best-practice</div>
-                <p className="text-sm text-slate-700">
-                  Takes single-phase 240 V in,
-                  outputs three-phase variable-frequency to one motor. Adds
-                  speed control as a bonus. Most efficient (~98 %), but
-                  one VFD per motor — can&rsquo;t run multiple motors off
-                  one drive. Requires line-reactor and dV/dt filter on long
-                  motor leads to protect winding insulation.
-                </p>
-              </div>
-            </div>
           </div>
 
         </div>

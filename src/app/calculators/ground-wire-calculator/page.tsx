@@ -4,14 +4,18 @@ import { GroundWireCalculator } from '@/components/calculators';
 import { Shield, Calculator, TrendingUp, AlertCircle, BookOpen, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import table25066 from '../../../../data/verified/nec-250-66.json';
+import { TABLE_250_122_ROWS } from '@/lib/calculations/grounding';
+import { SCOPE_LINES } from '@/lib/calculations/service-lookup';
+import { formatSize } from '@/lib/calculations/sizes';
 
 export const metadata: Metadata = {
   title: 'Ground Wire Calculator — NEC 250.122',
-  description: 'Equipment grounding conductor (EGC) size by overcurrent device rating per NEC Table 250.122. Copper and aluminum, 15A through 2000A.',
+  description: 'Equipment grounding conductor (EGC) size by overcurrent device rating per NEC Table 250.122. Copper and aluminum, 15 A to 6000 A.',
   keywords: 'ground wire calculator, equipment grounding conductor, NEC 250.122, grounding conductor size, electrical grounding, bonding conductor, service grounding, ground wire sizing',
   openGraph: {
     title: 'Ground Wire Calculator - Equipment Grounding Conductor Sizing',
-    description: 'Calculate equipment grounding conductor size per NEC requirements. Professional grounding and bonding calculator.',
+    description: 'Calculate equipment grounding conductor size per NEC requirements.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/ground-wire-calculator',
     images: ['/opengraph-image']
@@ -24,13 +28,13 @@ export const metadata: Metadata = {
 const webAppData = {
   name: "Ground Wire Calculator",
   url: "https://wiresizes.com/calculators/ground-wire-calculator",
-  description: "Professional ground wire calculator for equipment grounding conductors. Calculate grounding conductor size per NEC Table 250.122. Includes service grounding and bonding requirements."
+  description: "Calculate grounding conductor size per NEC Table 250.122."
 };
 
 const groundWireFAQs = [
   {
     question: "How do I determine the size of equipment grounding conductors?",
-    answer: "Equipment grounding conductor size is determined by the rating of the circuit overcurrent protective device using NEC Table 250.122. For example, if the circuit breaker is 60A, the equipment grounding conductor must be minimum #10 AWG copper or #8 AWG aluminum. This table provides minimum sizes - larger sizes may be used but are not required unless specified by other code sections."
+    answer: "Equipment grounding conductor size is determined by the rating of the circuit overcurrent protective device using NEC Table 250.122. For example, if the circuit breaker is 60A, the equipment grounding conductor must be minimum 10 AWG copper or 8 AWG aluminum. This table provides minimum sizes - larger sizes may be used but are not required unless specified by other code sections."
   },
   {
     question: "What's the difference between grounding and bonding?",
@@ -46,7 +50,7 @@ const groundWireFAQs = [
   },
   {
     question: "How do I size the grounding electrode conductor?",
-    answer: "Grounding electrode conductor size is based on the service conductor size per NEC Table 250.66. For example, 4/0 AWG service conductors require a minimum #2 AWG copper grounding electrode conductor. For multiple service disconnects, each requires individual grounding electrode conductors unless a common grounding electrode conductor is used per NEC 250.64(D)."
+    answer: "Grounding electrode conductor size is based on the service conductor size per NEC Table 250.66. For example, 4/0 AWG copper service conductors require a minimum 2 AWG copper grounding electrode conductor."
   }
 ];
 
@@ -66,8 +70,7 @@ export default function GroundWireCalculatorPage() {
               Ground Wire Calculator
             </h1>
             <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-              Calculate equipment grounding conductor sizes per NEC requirements. Professional tool for 
-              electrical safety, grounding, and bonding system design.
+              Calculate equipment grounding conductor sizes per NEC requirements.
             </p>
           </div>
           
@@ -77,13 +80,6 @@ export default function GroundWireCalculatorPage() {
               <h3 className="text-xl font-semibold mb-2">NEC Table 250.122</h3>
               <p className="text-gray-600 dark:text-gray-400">
                 Based on official NEC equipment grounding conductor sizing requirements.
-              </p>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-              <Calculator className="h-12 w-12 text-emerald-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Multiple Applications</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Equipment grounding, service grounding, and bonding conductor calculations.
               </p>
             </div>
           </div>
@@ -236,16 +232,16 @@ export default function GroundWireCalculatorPage() {
                     <span className="font-medium">Service Disconnect:</span> 200A main breaker
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Grounding Electrode Conductor:</span> #2 AWG copper (NEC Table 250.66)
+                    <span className="font-medium">Grounding Electrode Conductor:</span> 2 AWG copper (NEC Table 250.66)
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Main Bonding Jumper:</span> #2 AWG copper minimum
+                    <span className="font-medium">Main Bonding Jumper:</span> 2 AWG copper minimum
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     <span className="font-medium">Grounding Electrodes:</span> Water pipe + 2 ground rods
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Equipment Ground:</span> #6 AWG to first branch panel
+                    <span className="font-medium">Equipment Ground:</span> 6 AWG to first branch panel
                   </p>
                 </div>
               </div>
@@ -276,7 +272,7 @@ export default function GroundWireCalculatorPage() {
                     <span className="font-medium">Circuit Protection:</span> 125A circuit breaker
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Equipment Ground:</span> #6 AWG copper (NEC Table 250.122)
+                    <span className="font-medium">Equipment Ground:</span> 6 AWG copper (NEC Table 250.122)
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     <span className="font-medium">Raceway:</span> Rigid steel conduit (provides equipment ground path)
@@ -290,7 +286,7 @@ export default function GroundWireCalculatorPage() {
                 </div>
                 <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
                   <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: #6 AWG equipment grounding conductor for safe motor installation
+                    Result: 6 AWG equipment grounding conductor for safe motor installation
                   </p>
                 </div>
               </div>
@@ -318,16 +314,13 @@ export default function GroundWireCalculatorPage() {
                     <span className="font-medium">Feeder Protection:</span> 100A circuit breaker at main panel
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Feeder Conductors:</span> #3 AWG copper
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Equipment Grounding Conductor:</span> #8 AWG copper
+                    <span className="font-medium">Equipment Grounding Conductor:</span> 8 AWG copper
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     <span className="font-medium">Separate Structure:</span> Grounding electrode required at building
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Grounding Electrode:</span> #8 AWG to building ground rod
+                    <span className="font-medium">Grounding Electrode:</span> 8 AWG to building ground rod
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     <span className="font-medium">Neutral Isolation:</span> Neutral and ground separated at subpanel
@@ -335,7 +328,7 @@ export default function GroundWireCalculatorPage() {
                 </div>
                 <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
                   <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: #8 AWG equipment grounding and grounding electrode conductors
+                    Result: 8 AWG equipment grounding and grounding electrode conductors
                   </p>
                 </div>
               </div>
@@ -363,7 +356,7 @@ export default function GroundWireCalculatorPage() {
                     <span className="font-medium">Intersystem Bonding:</span> Required per NEC 250.94
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Bonding Conductor:</span> #6 AWG copper minimum
+                    <span className="font-medium">Bonding Conductor:</span> 6 AWG copper minimum
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     <span className="font-medium">Connection Point:</span> Service equipment grounding electrode
@@ -404,10 +397,7 @@ export default function GroundWireCalculatorPage() {
                   </p>
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Bonding Grid:</span> #8 AWG solid copper minimum
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Pool Structure:</span> Rebar bonded at 18" on center
+                      <span className="font-medium">Bonding Grid:</span> 8 AWG solid copper minimum
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       <span className="font-medium">Metal Components:</span> All bonded to common grid
@@ -461,28 +451,21 @@ export default function GroundWireCalculatorPage() {
                         Overcurrent Device
                       </th>
                       <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Copper AWG
+                        Copper
                       </th>
                       <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Aluminum AWG
+                        Aluminum or copper-clad aluminum
                       </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">15A</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#14</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#12</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">20A</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#12</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#10</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">30A</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#10</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#8</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">40A</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#10</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#8</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">60A</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#10</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#8</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">100A</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#8</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#6</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">200A</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#6</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#4</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">300A</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#4</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#2</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">400A</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#3</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#1</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">500A</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#2</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#1/0</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">600A</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#1</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#2/0</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">800A</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#1/0</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#3/0</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1000A</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#2/0</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#4/0</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1200A</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#3/0</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">250 MCM</td></tr>
+                    {TABLE_250_122_ROWS.map((row) => (
+                      <tr key={row.rowA}>
+                        <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.rowA}A</td>
+                        <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{formatSize(row.cu)}</td>
+                        <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{formatSize(row.alCca)}</td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -498,7 +481,10 @@ export default function GroundWireCalculatorPage() {
                   <thead className="bg-gray-50 dark:bg-gray-700">
                     <tr>
                       <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Service Conductor
+                        Copper Service Conductor (AWG/kcmil)
+                      </th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
+                        Aluminum or Copper-Clad Aluminum Service Conductor (AWG/kcmil)
                       </th>
                       <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
                         Copper GEC
@@ -509,13 +495,14 @@ export default function GroundWireCalculatorPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#2 or smaller</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#8</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#6</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#1 or #1/0</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#6</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#4</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#2/0 or #3/0</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#4</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#2</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Over #3/0 to 350 MCM</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#2</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#1/0</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Over 350 to 600 MCM</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#1/0</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#3/0</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Over 600 to 1100 MCM</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#2/0</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#4/0</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Over 1100 MCM</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">#3/0</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">250 MCM</td></tr>
+                    {table25066.rows.map((row) => (
+                      <tr key={row.service_cu}>
+                        <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.service_cu}</td>
+                        <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.service_al_cca}</td>
+                        <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{formatSize(row.gec_cu)}</td>
+                        <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{formatSize(row.gec_al_cca)}</td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -525,6 +512,7 @@ export default function GroundWireCalculatorPage() {
                   means are used, the grounding electrode conductor size is based on the sum of the circular mil 
                   areas of the largest service conductors.
                 </p>
+                <p className="text-sm text-blue-800 dark:text-blue-300 mt-2">{SCOPE_LINES[1]}</p>
               </div>
             </div>
           </div>
@@ -616,7 +604,7 @@ export default function GroundWireCalculatorPage() {
                     <h4 className="font-medium text-gray-900 dark:text-white mb-2">Swimming Pools:</h4>
                     <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
                       <li>• Equipotential bonding required</li>
-                      <li>• #8 AWG solid copper minimum for bonding</li>
+                      <li>• 8 AWG solid copper minimum for bonding</li>
                       <li>• All metallic components must be bonded</li>
                       <li>• Equipment grounding per standard requirements</li>
                     </ul>
@@ -712,10 +700,6 @@ export default function GroundWireCalculatorPage() {
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Grounding Electrodes:</span>
                     <span className="text-gray-800 dark:text-gray-200">Bond all available types</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Bonding Jumpers:</span>
-                    <span className="text-gray-800 dark:text-gray-200">Only at service equipment</span>
                   </div>
                 </div>
               </div>

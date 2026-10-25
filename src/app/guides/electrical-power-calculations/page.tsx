@@ -1,28 +1,27 @@
 import Link from 'next/link';
-import { Calculator, Zap, BarChart3, Target, TrendingUp, AlertTriangle, CheckCircle, ArrowRight, ExternalLink } from 'lucide-react';
+import { Calculator, Zap, BarChart3, Target, TrendingUp, CheckCircle, ArrowRight, ExternalLink } from 'lucide-react';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { getArticleDates } from '@/lib/article-dates';
 
-
 export const metadata = {
   title: 'Electrical Power Calculations — W, A, V, PF',
-  description: 'Watts, amps, volts, and power factor formulas. Single-phase, three-phase, DC; real, reactive, apparent power. Worked examples with NEC values.',
+  description: 'Watts, amps, volts, and power factor formulas. Single-phase, three-phase, DC; real, reactive, apparent power. Worked examples.',
   keywords: 'electrical power calculations, watts amps volts, power factor, ohms law, electrical engineering',
   alternates: { canonical: '/guides/electrical-power-calculations' },
 };
 
 const POWER_TRIANGLE_DATA = [
   { angle: 0, realPower: 100, reactivePower: 0, apparentPower: 100, powerFactor: 1.0, description: 'Pure Resistive Load' },
-  { angle: 30, realPower: 86.6, reactivePower: 50, apparentPower: 100, powerFactor: 0.866, description: 'Good Power Factor' },
-  { angle: 45, realPower: 70.7, reactivePower: 70.7, apparentPower: 100, powerFactor: 0.707, description: 'Fair Power Factor' },
-  { angle: 60, realPower: 50, reactivePower: 86.6, apparentPower: 100, powerFactor: 0.5, description: 'Poor Power Factor' },
+  { angle: 30, realPower: 86.6, reactivePower: 50, apparentPower: 100, powerFactor: 0.866 },
+  { angle: 45, realPower: 70.7, reactivePower: 70.7, apparentPower: 100, powerFactor: 0.707 },
+  { angle: 60, realPower: 50, reactivePower: 86.6, apparentPower: 100, powerFactor: 0.5 },
 ];
 
 const VOLTAGE_SYSTEMS = [
-  { system: 'Single-Phase 120V', voltage: 120, phases: 1, applications: ['Residential outlets', 'Small appliances', 'Lighting'], maxPower: '1.8 kW' },
-  { system: 'Single-Phase 240V', voltage: 240, phases: 1, applications: ['Water heaters', 'Dryers', 'AC units'], maxPower: '7.2 kW' },
-  { system: 'Three-Phase 208V', voltage: 208, phases: 3, applications: ['Commercial lighting', 'Small motors', 'Office equipment'], maxPower: '12.5 kW' },
-  { system: 'Three-Phase 480V', voltage: 480, phases: 3, applications: ['Industrial motors', 'Large HVAC', 'Manufacturing'], maxPower: '50+ kW' },
+  { system: 'Single-Phase 120V', voltage: 120, phases: 1, applications: ['Residential outlets', 'Small appliances', 'Lighting'] },
+  { system: 'Single-Phase 240V', voltage: 240, phases: 1, applications: ['Water heaters', 'Dryers', 'AC units'] },
+  { system: 'Three-Phase 208V', voltage: 208, phases: 3, applications: ['Commercial lighting', 'Small motors', 'Office equipment'] },
+  { system: 'Three-Phase 480V', voltage: 480, phases: 3, applications: ['Industrial motors', 'Large HVAC', 'Manufacturing'] },
 ];
 
 const CALCULATION_EXAMPLES = [
@@ -33,7 +32,6 @@ const CALCULATION_EXAMPLES = [
     solution: 'I = P ÷ V = 4500W ÷ 240V = 18.75A',
     result: '18.75 Amps',
     powerFactor: 1.0,
-    necCode: 'NEC 422.13',
     calculatorLink: '/calculators/watts-to-amps-calculator'
   },
   {
@@ -43,17 +41,7 @@ const CALCULATION_EXAMPLES = [
     solution: 'P = I × V × PF = 50A × 277V × 0.95 = 13,158W',
     result: '13.16 kW',
     powerFactor: 0.95,
-    necCode: 'NEC 220.14',
     calculatorLink: '/calculators/amps-to-watts-calculator'
-  },
-  {
-    title: 'Three-Phase Motor',
-    scenario: '15HP motor at 480V, three-phase, 0.85 power factor',
-    given: ['Power: 15HP (11.19kW)', 'Voltage: 480V', 'Power Factor: 0.85', 'Phases: 3'],
-    solution: 'I = P ÷ (V × √3 × PF) = 11,190W ÷ (480V × 1.732 × 0.85) = 15.8A',
-    result: '15.8 Amps',
-    powerFactor: 0.85,
-    necCode: 'NEC 430.250',
   },
 ];
 
@@ -217,7 +205,7 @@ export default function ElectricalPowerCalculationsGuide() {
               {POWER_TRIANGLE_DATA.map((data, index) => (
                 <div key={index} className="border rounded-lg p-4 hover:bg-gray-50">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="font-medium">{data.description}</span>
+                    <span className="font-medium">{data.description ?? ''}</span>
                     <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">
                       PF = {data.powerFactor}
                     </span>
@@ -226,23 +214,6 @@ export default function ElectricalPowerCalculationsGuide() {
                     <div>Real: {data.realPower}W</div>
                     <div>Reactive: {data.reactivePower}VAR</div>
                     <div>Apparent: {data.apparentPower}VA</div>
-                  </div>
-                  
-                  {/* Mini progress bar for efficiency */}
-                  <div className="mt-2">
-                    <div className="flex items-center gap-2 text-xs">
-                      <span>Efficiency:</span>
-                      <div className="flex-1 bg-gray-200 rounded-full h-2">
-                        <div 
-                          className={`h-2 rounded-full transition-all ${
-                            data.powerFactor >= 0.9 ? 'bg-green-500' :
-                            data.powerFactor >= 0.7 ? 'bg-yellow-500' : 'bg-red-500'
-                          }`}
-                          style={{ width: `${data.powerFactor * 100}%` }}
-                        />
-                      </div>
-                      <span>{(data.powerFactor * 100).toFixed(1)}%</span>
-                    </div>
                   </div>
                 </div>
               ))}
@@ -263,14 +234,7 @@ export default function ElectricalPowerCalculationsGuide() {
               </div>
               
               <h3 className="font-semibold text-gray-900 mb-3">{system.system}</h3>
-              
-              <div className="space-y-2 mb-4">
-                <div className="text-sm">
-                  <span className="text-gray-600">Max Power:</span>
-                  <span className="font-mono ml-2 text-green-600">{system.maxPower}</span>
-                </div>
-              </div>
-              
+
               <div>
                 <div className="text-sm font-medium text-gray-700 mb-2">Applications:</div>
                 <ul className="space-y-1">
@@ -333,7 +297,6 @@ export default function ElectricalPowerCalculationsGuide() {
                   <div className="text-2xl font-bold text-primary-600 mb-2">{example.result}</div>
                   <div className="text-xs text-primary-700">
                     <div>PF: {example.powerFactor}</div>
-                    <div>{example.necCode}</div>
                   </div>
                 </div>
               </div>
@@ -347,42 +310,8 @@ export default function ElectricalPowerCalculationsGuide() {
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Key Concepts to Remember</h2>
         <div className="grid md:grid-cols-2 gap-8">
           <div>
-            <h3 className="text-lg font-semibold text-amber-800 mb-4">Power Factor Impact</h3>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
-                <div>
-                  <div className="font-medium">PF = 1.0 (Unity)</div>
-                  <div className="text-sm text-gray-600">Most efficient - all power does useful work</div>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-yellow-600 mt-0.5" />
-                <div>
-                  <div className="font-medium">PF = 0.85-0.95</div>
-                  <div className="text-sm text-gray-600">Good efficiency - typical for quality equipment</div>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5" />
-                <div>
-                  <div className="font-medium">PF &lt; 0.85</div>
-                  <div className="text-sm text-gray-600">Poor efficiency - consider power factor correction</div>
-                </div>
-              </li>
-            </ul>
-          </div>
-          
-          <div>
             <h3 className="text-lg font-semibold text-amber-800 mb-4">Three-Phase Benefits</h3>
             <ul className="space-y-3">
-              <li className="flex items-start gap-3">
-                <TrendingUp className="w-5 h-5 text-blue-600 mt-0.5" />
-                <div>
-                  <div className="font-medium">73% More Power</div>
-                  <div className="text-sm text-gray-600">Same conductor size carries more power</div>
-                </div>
-              </li>
               <li className="flex items-start gap-3">
                 <BarChart3 className="w-5 h-5 text-purple-600 mt-0.5" />
                 <div>
@@ -466,92 +395,14 @@ export default function ElectricalPowerCalculationsGuide() {
       <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-8 border border-slate-200 mb-12">
         <h2 className="text-3xl font-bold text-gray-900 mb-2">Worked Examples — Power Calculations With Real Numbers</h2>
         <p className="text-gray-600 mb-8">
-          Every formula below is applied to a concrete circuit. All values are
-          NEC-accurate at standard reference conditions (75&deg;C terminations,
-          30&deg;C ambient, NEC 2023). Memorize the pattern, plug in your
+          Every formula below is applied to a concrete circuit. Memorize the pattern, plug in your
           numbers.
         </p>
 
         <div className="space-y-8">
-          {/* Example 1: Single-phase resistive load */}
+          {/* Example: Power factor correction */}
           <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200">
-            <h3 className="text-xl font-bold text-blue-900 mb-3">Example 1 — Resistive load on 120 V single-phase</h3>
-            <p className="text-sm text-slate-600 mb-3"><strong>Scenario:</strong> A 1,500 W bathroom space heater on a 120 V branch circuit.</p>
-            <div className="bg-blue-50 rounded p-4 font-mono text-sm space-y-1">
-              <div>P = V &times; I        →   I = P / V</div>
-              <div>I = 1500 W / 120 V = 12.5 A</div>
-              <div>Continuous load? Yes (heaters run 3+ hr) → 1.25 &times; 12.5 = 15.6 A circuit minimum</div>
-              <div>NEC 240.6 next standard breaker: 20 A</div>
-              <div>NEC 310.16 conductor for 20 A @ 75&deg;C Cu = 12 AWG (capped at 20 A by NEC 240.4(D))</div>
-            </div>
-            <p className="text-sm text-slate-600 mt-3">
-              <strong>Why it matters:</strong> A 15 A breaker would trip during
-              normal operation because 12.5 A is 83 % of 15 A and the heater
-              runs continuously. Sizing to 125 % of the load (NEC 210.19(A))
-              prevents nuisance trips and overheats the conductor by no more
-              than the insulation rating allows.
-            </p>
-          </div>
-
-          {/* Example 2: Single-phase inductive load with PF */}
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200">
-            <h3 className="text-xl font-bold text-blue-900 mb-3">Example 2 — Inductive load with power factor (240 V single-phase)</h3>
-            <p className="text-sm text-slate-600 mb-3">
-              <strong>Scenario:</strong> A 5-ton residential central A/C
-              compressor: nameplate 7.2 kW (real power), power factor 0.85
-              (typical for an unloaded scroll compressor). 240 V single-phase.
-            </p>
-            <div className="bg-blue-50 rounded p-4 font-mono text-sm space-y-1">
-              <div>P (real) = V &times; I &times; PF       →   I = P / (V &times; PF)</div>
-              <div>I = 7200 W / (240 V &times; 0.85) = 35.3 A</div>
-              <div>Apparent power: S = V &times; I = 240 &times; 35.3 = 8,470 VA = 8.47 kVA</div>
-              <div>Reactive power: Q = &radic;(S&sup2; &minus; P&sup2;) = &radic;(8.47&sup2; &minus; 7.2&sup2;) = 4.46 kVAR</div>
-              <div>NEC 440.32: branch-circuit conductors at 125 % of compressor FLA = 1.25 &times; 35.3 = 44.1 A</div>
-              <div>NEC 310.16 conductor: 8 AWG copper @ 75&deg;C (50 A ampacity) — meets 44.1 A required</div>
-              <div>NEC 240.6 next standard breaker: 50 A</div>
-            </div>
-            <p className="text-sm text-slate-600 mt-3">
-              <strong>Power-factor takeaway:</strong> the same compressor at
-              PF 1.0 would draw only 30 A. The 0.85 PF forces 5.3 A of reactive
-              current the conductor must carry but no real work is done — a
-              full <strong>17 % current penalty</strong>. This is why utilities
-              charge commercial customers a power-factor-correction fee when
-              system PF drops below 0.95.
-            </p>
-          </div>
-
-          {/* Example 3: Three-phase motor */}
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200">
-            <h3 className="text-xl font-bold text-blue-900 mb-3">Example 3 — Three-phase motor (480 V industrial)</h3>
-            <p className="text-sm text-slate-600 mb-3">
-              <strong>Scenario:</strong> A 25 HP three-phase induction motor
-              on a 480 V, 3&phi; system. Service-factor 1.15, efficiency 92 %,
-              power factor 0.88 at full load.
-            </p>
-            <div className="bg-blue-50 rounded p-4 font-mono text-sm space-y-1">
-              <div>NEC Table 430.250 FLC for 25 HP at 460 V = 34 A (use this, not nameplate, per NEC 430.6(A))</div>
-              <div>P (output) = 25 HP &times; 746 W/HP = 18,650 W mechanical</div>
-              <div>P (input) = 18,650 / 0.92 = 20,272 W electrical real power</div>
-              <div>I (theory) = P / (&radic;3 &times; V &times; PF) = 20,272 / (1.732 &times; 480 &times; 0.88) = 27.7 A</div>
-              <div>NEC FLC value (34 A) is conservative vs theoretical 27.7 A; <strong>always use NEC table</strong></div>
-              <div>NEC 430.22 conductor: 1.25 &times; 34 = 42.5 A → 8 AWG Cu @ 75&deg;C (50 A) ✓</div>
-              <div>NEC 430.52 short-circuit (inverse-time CB): 250 % &times; 34 = 85 A → 90 A breaker</div>
-              <div>NEC 430.32 overload: 1.15 &times; 34 = 39 A overload heater</div>
-            </div>
-            <p className="text-sm text-slate-600 mt-3">
-              <strong>Why three protection elements:</strong> overload (motor
-              thermal protection at ~115 % of FLC) is separate from short-
-              circuit/ground-fault (the breaker, sized large enough to ride
-              through the 5-7&times; inrush current at start). NEC 430 is the
-              one place in the Code where the overcurrent device is allowed
-              to be larger than the conductor ampacity — because the overload
-              relay is the conductor&rsquo;s real protection.
-            </p>
-          </div>
-
-          {/* Example 4: Power factor correction */}
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200">
-            <h3 className="text-xl font-bold text-blue-900 mb-3">Example 4 — Capacitor bank for PF correction</h3>
+            <h3 className="text-xl font-bold text-blue-900 mb-3">Example — Capacitor bank for PF correction</h3>
             <p className="text-sm text-slate-600 mb-3">
               <strong>Scenario:</strong> A small machine shop draws 80 kW at
               PF 0.78 lagging on 480 V three-phase.
@@ -561,60 +412,12 @@ export default function ElectricalPowerCalculationsGuide() {
             <div className="bg-blue-50 rounded p-4 font-mono text-sm space-y-1">
               <div>Existing reactive power: Q1 = P &times; tan(arccos 0.78) = 80 &times; 0.802 = 64.2 kVAR</div>
               <div>Target reactive power: Q2 = P &times; tan(arccos 0.95) = 80 &times; 0.329 = 26.3 kVAR</div>
-              <div>Capacitor bank size: Q1 &minus; Q2 = 64.2 &minus; 26.3 = <strong>37.9 kVAR</strong> (round up to 40 kVAR std)</div>
+              <div>Capacitor bank size: Q1 &minus; Q2 = 64.2 &minus; 26.3 = <strong>37.9 kVAR</strong></div>
               <div>Pre-correction current: I = 80,000 / (1.732 &times; 480 &times; 0.78) = 123.4 A</div>
               <div>Post-correction current: I = 80,000 / (1.732 &times; 480 &times; 0.95) = 101.3 A</div>
-              <div>Conductor relief: <strong>22.1 A reduction</strong> = 18 % less I&sup2;R loss in feeders</div>
+              <div>Conductor relief: <strong>22.1 A reduction</strong></div>
             </div>
           </div>
-
-          {/* Example 5: NEC 220.82 dwelling load calc */}
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200">
-            <h3 className="text-xl font-bold text-blue-900 mb-3">Example 5 — NEC 220.82 dwelling-unit load calculation</h3>
-            <p className="text-sm text-slate-600 mb-3">
-              <strong>Scenario:</strong> 2,400 sq ft single-family home,
-              electric range 12 kW, electric water heater 4.5 kW, electric
-              dryer 5 kW, central A/C 5 ton (40 A @ 240 V), 50 A EV charger
-              (continuous). Determine minimum service size per NEC 220.82
-              Standard Method.
-            </p>
-            <div className="bg-blue-50 rounded p-4 font-mono text-sm space-y-1">
-              <div>General lighting (NEC 220.12): 3 VA/sq ft &times; 2,400 = 7,200 VA</div>
-              <div>Two small-appliance branches (220.52): 2 &times; 1,500 VA = 3,000 VA</div>
-              <div>One laundry branch (220.52): 1,500 VA</div>
-              <div>Subtotal: 7,200 + 3,000 + 1,500 = 11,700 VA</div>
-              <div>Demand factor (220.82(B)(2)): first 10 kVA at 100 %, remainder at 35 %</div>
-              <div>= 10,000 + (1,700 &times; 0.35) = 10,595 VA</div>
-              <div>Fixed appliances (water heater 4,500 + dryer 5,000): 9,500 VA at 100 %</div>
-              <div>Range (220.55, Col B for one range &le;12 kW): 8,000 VA at 100 %</div>
-              <div>Largest of A/C vs heat (220.82(C)): A/C 40 A &times; 240 V &times; 1.0 = 9,600 VA</div>
-              <div>EV charger (continuous, 220.82): 50 &times; 240 &times; 1.25 = 15,000 VA</div>
-              <div className="font-bold pt-1 border-t border-blue-200">Total demand: 10,595 + 9,500 + 8,000 + 9,600 + 15,000 = 52,695 VA</div>
-              <div className="font-bold">Minimum service amps: 52,695 / 240 = 219.6 A → <strong>200 A service is INSUFFICIENT</strong></div>
-              <div className="font-bold">Required service: 225 A or 250 A panel</div>
-            </div>
-            <p className="text-sm text-slate-600 mt-3">
-              <strong>Real implication:</strong> a typical 2,400 sq ft home
-              with a 50 A EV charger plus electric range plus electric water
-              heater plus central A/C exceeds 200 A standard service. This
-              is why most NEC 2023-era dwellings adding EV charging need a
-              service upgrade or load-management system (NEC 750.30, &ldquo;EVEMS&rdquo;).
-            </p>
-          </div>
-
-        </div>
-
-        <div className="mt-8 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-          <p className="text-sm text-amber-900">
-            <strong>Voltage drop reminder:</strong> All current values above
-            assume the conductor is sized for ampacity only. For runs over
-            ~50 ft on 120 V or ~100 ft on 240 V, also verify voltage drop is
-            &le; 3 % per NEC informational note 210.19. Use the{' '}
-            <Link href="/calculators/voltage-drop-calculator" className="text-blue-700 underline">
-              Voltage Drop Calculator
-            </Link>{' '}
-            for any installation longer than these thresholds.
-          </p>
         </div>
       </div>
 

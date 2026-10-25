@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 import { WattsToAmpsCalculator } from '@/components/calculators';
-import { Zap, Calculator, AlertTriangle, Settings, Target, BookOpen, Users, Wrench, TrendingUp, Power } from 'lucide-react';
+import { Zap, Calculator, AlertTriangle, Settings, Target, BookOpen, Users, TrendingUp, Power } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Watts to Amps Calculator — W → A',
-  description: 'Convert watts to amps for AC single-phase, three-phase, and DC circuits. Includes power-factor adjustment for non-resistive loads.',
-  keywords: 'watts to amps calculator, power to current converter, electrical power calculator, amperage from watts, single phase amps, three phase amps, power factor calculator, electrical load calculator',
+  description: 'Convert watts to amps for AC single-phase and three-phase circuits. Includes power-factor adjustment for non-resistive loads.',
+  keywords: 'watts to amps calculator, power to current converter, electrical power calculator, amperage from watts, single phase amps, three phase amps, power factor calculator',
   alternates: { canonical: '/calculators/watts-to-amps-calculator' },
 };
 
@@ -18,81 +18,6 @@ const webAppData = {
   url: "https://wiresizes.com/calculators/watts-to-amps-calculator",
   description: "Free watts to amps calculator for single-phase and three-phase circuits. Convert electrical power (watts) to current (amperage) with voltage and power factor calculations."
 };
-
-const WATTS_TO_AMPS_EXAMPLES = [
-  {
-    title: 'Household Microwave Oven',
-    scenario: '1200 watts, 120V single-phase, PF=1.0',
-    calculation: 'Single-Phase Formula: I = P ÷ V\nCurrent = 1200W ÷ 120V = 10 Amps\nCircuit size: 10A × 1.25 = 12.5A minimum\nRecommended: 15A circuit with 14 AWG wire',
-    result: '10 Amps',
-    circuitSize: '15A circuit required',
-    wireSize: '14 AWG minimum',
-    application: 'Kitchen appliances, countertop equipment'
-  },
-  {
-    title: 'Electric Water Heater',
-    scenario: '4500 watts, 240V single-phase, PF=1.0',
-    calculation: 'Single-Phase Formula: I = P ÷ V\nCurrent = 4500W ÷ 240V = 18.75 Amps\nContinuous load: 18.75A × 1.25 = 23.4A\nCircuit size: 25A or 30A circuit\nWire size: 12 AWG for 25A, 10 AWG for 30A',
-    result: '18.75 Amps',
-    circuitSize: '30A circuit (continuous)',
-    wireSize: '10 AWG copper',
-    application: 'Water heaters, baseboard heating'
-  },
-  {
-    title: 'LED Light Array',
-    scenario: '480 watts, 120V single-phase, PF=0.95',
-    calculation: 'With Power Factor: I = P ÷ (V × PF)\nCurrent = 480W ÷ (120V × 0.95) = 4.21 Amps\nCircuit load: Well within 15A or 20A circuit\nWire size: 14 AWG adequate\nNote: LEDs typically have high power factor',
-    result: '4.21 Amps',
-    circuitSize: '15A circuit adequate',
-    wireSize: '14 AWG copper',
-    application: 'LED lighting systems, commercial lighting'
-  },
-  {
-    title: 'Industrial Motor - 3-Phase',
-    scenario: '10,000 watts, 480V three-phase, PF=0.85',
-    calculation: '3-Phase Formula: I = P ÷ (√3 × V × PF)\nCurrent = 10000W ÷ (1.73 × 480V × 0.85)\nCurrent = 10000 ÷ 706.32 = 14.16 Amps\nMotor sizing: Use motor FLA tables for wire sizing\nCircuit protection: 175% for motor starting',
-    result: '14.16 Amps',
-    circuitSize: '20A motor circuit',
-    wireSize: '12 AWG per phase',
-    application: 'Industrial motors, HVAC equipment'
-  },
-  {
-    title: 'Electric Vehicle Charger',
-    scenario: '7200 watts, 240V single-phase, PF=1.0',
-    calculation: 'Single-Phase: I = P ÷ V\nCurrent = 7200W ÷ 240V = 30 Amps\nContinuous load: 30A × 1.25 = 37.5A circuit\nCircuit size: 40A circuit minimum\nWire size: 8 AWG copper (50A capacity)',
-    result: '30 Amps',
-    circuitSize: '40A circuit (continuous)',
-    wireSize: '8 AWG copper',
-    application: 'EV charging, continuous duty loads'
-  },
-  {
-    title: 'Air Conditioner Condenser',
-    scenario: '3600 watts, 240V single-phase, PF=0.9',
-    calculation: 'With Power Factor: I = P ÷ (V × PF)\nCurrent = 3600W ÷ (240V × 0.9) = 16.67 Amps\nMotor load: Size for nameplate FLA\nCircuit protection: Use manufacturer specs\nWire size: Typically 12 AWG for <20A',
-    result: '16.67 Amps',
-    circuitSize: '20A motor circuit',
-    wireSize: '12 AWG copper',
-    application: 'Air conditioners, heat pumps'
-  },
-  {
-    title: 'Commercial Kitchen Equipment',
-    scenario: '2400 watts, 208V three-phase, PF=0.95',
-    calculation: '3-Phase: I = P ÷ (√3 × V × PF)\nCurrent = 2400W ÷ (1.73 × 208V × 0.95)\nCurrent = 2400 ÷ 342.17 = 7.01 Amps\nCircuit size: 15A three-phase adequate\nWire size: 14 AWG per phase',
-    result: '7.01 Amps per phase',
-    circuitSize: '15A 3-phase circuit',
-    wireSize: '14 AWG × 3',
-    application: 'Commercial cooking, food service'
-  },
-  {
-    title: 'Welding Machine',
-    scenario: '5000 watts, 240V single-phase, PF=0.7 (inductive)',
-    calculation: 'Inductive Load: I = P ÷ (V × PF)\nCurrent = 5000W ÷ (240V × 0.7) = 29.76 Amps\nWelding duty cycle affects circuit sizing\nTypical: 30A circuit for light duty\nWire size: 10 AWG copper minimum',
-    result: '29.76 Amps',
-    circuitSize: '30A circuit',
-    wireSize: '10 AWG copper',
-    application: 'Welding equipment, inductive loads'
-  }
-];
 
 const POWER_FORMULAS_TABLE = [
   { 
@@ -135,55 +60,8 @@ const POWER_FORMULAS_TABLE = [
     formula: 'Use NEC Table 430.248/250', 
     example: '5HP 480V 3Φ = 7.6A (table)', 
     applications: 'Motor circuit design',
-    notes: 'Always use table values, not nameplate'
+    notes: ''
   }
-];
-
-const COMMON_APPLIANCE_WATTS = [
-  { appliance: 'Microwave Oven', watts: '700-1200', voltage: '120V', amps: '5.8-10A', circuit: '15A', powerFactor: '1.0' },
-  { appliance: 'Electric Range (large burner)', watts: '2500-3500', voltage: '240V', amps: '10.4-14.6A', circuit: '50A total', powerFactor: '1.0' },
-  { appliance: 'Clothes Dryer', watts: '3000-5000', voltage: '240V', amps: '12.5-20.8A', circuit: '30A', powerFactor: '1.0' },
-  { appliance: 'Water Heater', watts: '3500-4500', voltage: '240V', amps: '14.6-18.8A', circuit: '25-30A', powerFactor: '1.0' },
-  { appliance: 'Central Air Conditioner', watts: '2000-5000', voltage: '240V', amps: '8.3-20.8A', circuit: '15-30A', powerFactor: '0.85-0.95' },
-  { appliance: 'Heat Pump', watts: '3000-6000', voltage: '240V', amps: '12.5-25A', circuit: '30-40A', powerFactor: '0.85-0.95' },
-  { appliance: 'Electric Oven', watts: '2000-5000', voltage: '240V', amps: '8.3-20.8A', circuit: '40-50A', powerFactor: '1.0' },
-  { appliance: 'Window AC Unit', watts: '500-1500', voltage: '120V', amps: '4.2-12.5A', circuit: '15-20A', powerFactor: '0.85-0.90' },
-  { appliance: 'Refrigerator', watts: '100-800', voltage: '120V', amps: '0.8-6.7A', circuit: '15A', powerFactor: '0.85-0.95' },
-  { appliance: 'Dishwasher', watts: '1200-1800', voltage: '120V', amps: '10-15A', circuit: '20A', powerFactor: '0.95-1.0' },
-  { appliance: 'Garbage Disposal', watts: '400-900', voltage: '120V', amps: '3.3-7.5A', circuit: '15A', powerFactor: '0.85-0.90' },
-  { appliance: 'Pool Pump (1HP)', watts: '750-1000', voltage: '240V', amps: '3.1-4.2A', circuit: '20A', powerFactor: '0.85-0.90' },
-  { appliance: 'Hot Tub Heater', watts: '3000-6000', voltage: '240V', amps: '12.5-25A', circuit: '30-50A', powerFactor: '1.0' },
-  { appliance: 'EV Charger Level 2', watts: '3300-7200', voltage: '240V', amps: '13.8-30A', circuit: '20-50A', powerFactor: '1.0' }
-];
-
-const POWER_FACTOR_GUIDE = [
-  { loadType: 'Resistive Loads', powerFactor: '1.00', examples: 'Heaters, incandescent lights, toasters', characteristics: 'Current in phase with voltage' },
-  { loadType: 'LED Lighting', powerFactor: '0.90-0.98', examples: 'LED fixtures, drivers, controls', characteristics: 'High-quality LEDs have good PF' },
-  { loadType: 'Fluorescent Lighting', powerFactor: '0.85-0.95', examples: 'T8/T5 fixtures with ballasts', characteristics: 'Electronic ballasts better than magnetic' },
-  { loadType: 'Electric Motors', powerFactor: '0.75-0.90', examples: 'Pumps, fans, compressors', characteristics: 'Varies with load, lower when lightly loaded' },
-  { loadType: 'Transformers (unloaded)', powerFactor: '0.10-0.30', examples: 'No-load transformers', characteristics: 'Very low PF when unloaded' },
-  { loadType: 'Welding Equipment', powerFactor: '0.50-0.80', examples: 'Arc welders, induction heating', characteristics: 'Highly inductive, poor PF' },
-  { loadType: 'Computer Equipment', powerFactor: '0.60-0.95', examples: 'Servers, UPS systems', characteristics: 'Switching power supplies' },
-  { loadType: 'Variable Frequency Drives', powerFactor: '0.96-0.98', examples: 'VFDs, motor controls', characteristics: 'Active PF correction' }
-];
-
-const CIRCUIT_SIZING_GUIDELINES = [
-  { loadType: 'General Lighting', sizingRule: '100%', continuousFactor: 'N/A', example: '10A load = 10A circuit', notes: 'Non-continuous loads' },
-  { loadType: 'Continuous Loads (3+ hrs)', sizingRule: '125%', continuousFactor: '1.25', example: '10A load = 12.5A circuit min', notes: 'Most appliances' },
-  { loadType: 'Motor Loads', sizingRule: '125% of FLA', continuousFactor: '1.25', example: '10A motor = 12.5A circuit', notes: 'Use NEC motor tables' },
-  { loadType: 'Air Conditioning', sizingRule: '125% of FLA', continuousFactor: '1.25', example: '15A AC = 18.75A circuit', notes: 'Continuous motor load' },
-  { loadType: 'Electric Heating', sizingRule: '125%', continuousFactor: '1.25', example: '20A heater = 25A circuit', notes: 'Continuous resistive load' },
-  { loadType: 'Welding Receptacles', sizingRule: '100%', continuousFactor: 'N/A', example: '50A welder = 50A circuit', notes: 'Intermittent duty' },
-  { loadType: 'EV Charging', sizingRule: '125%', continuousFactor: '1.25', example: '32A EVSE = 40A circuit', notes: 'Continuous duty per NEC 625' }
-];
-
-const VOLTAGE_LEVEL_COMPARISONS = [
-  { voltage: '120V Single-Phase', applications: 'Lighting, small appliances, receptacles', advantages: 'Safe, standard residential', disadvantages: 'Limited power capacity', maxPracticalAmps: '20A' },
-  { voltage: '240V Single-Phase', applications: 'Large appliances, HVAC, water heaters', advantages: 'Higher power, lower current', disadvantages: 'Higher voltage hazard', maxPracticalAmps: '60A' },
-  { voltage: '208V Three-Phase', applications: 'Commercial lighting, small motors', advantages: 'Balanced loads, efficient', disadvantages: 'Lower voltage than 240V', maxPracticalAmps: '100A+' },
-  { voltage: '240V Three-Phase', applications: 'Residential services, small commercial', advantages: 'Higher voltage, balanced', disadvantages: 'Less common than 208V', maxPracticalAmps: '200A+' },
-  { voltage: '480V Three-Phase', applications: 'Industrial motors, large equipment', advantages: 'High power, low current', disadvantages: 'High voltage hazard', maxPracticalAmps: '800A+' },
-  { voltage: '277V Single-Phase', applications: 'Commercial lighting (480V systems)', advantages: 'Good for lighting loads', disadvantages: 'Dangerous if miswired', maxPracticalAmps: '30A' }
 ];
 
 const COMPREHENSIVE_FAQS = [
@@ -193,7 +71,7 @@ const COMPREHENSIVE_FAQS = [
   },
   {
     question: 'What is power factor and when do I use it?',
-    answer: 'Power factor (PF) is the ratio of real power to apparent power, ranging from 0 to 1. Use PF for inductive loads like motors (0.8-0.9), fluorescent lights (0.85-0.95), and transformers. Resistive loads like heaters have PF = 1.0. LED lights typically have PF 0.9-0.98.'
+    answer: 'Power factor (PF) is the ratio of real power to apparent power, ranging from 0 to 1. Use PF for inductive loads like motors, fluorescent lights, and transformers. Resistive loads like heaters have PF = 1.0.'
   },
   {
     question: 'Why do I get different amps at 120V vs 240V?',
@@ -201,27 +79,15 @@ const COMPREHENSIVE_FAQS = [
   },
   {
     question: 'How do I calculate three-phase current?',
-    answer: 'Three-phase formula: I = P ÷ (√3 × V × PF). √3 = 1.732. Use line-to-line voltage (480V, 208V). Result is current per line. Example: 10kW at 480V with 0.85 PF: 10000 ÷ (1.732 × 480 × 0.85) = 14.1A per line.'
+    answer: 'Three-phase formula: I = P ÷ (√3 × V × PF). √3 = 1.732. Use line-to-line voltage (480V, 208V). Result is current per line.'
   },
   {
     question: 'What if my appliance shows both watts and amps?',
     answer: 'Use the amp rating from the nameplate - it accounts for power factor and includes all electrical characteristics. Watts ÷ voltage might not match nameplate amps due to power factor, starting currents, or reactive components.'
   },
   {
-    question: 'How do I handle variable loads like motors?',
-    answer: 'For motors, use NEC Table 430.248 (single-phase) or 430.250 (three-phase) full load currents, not nameplate or calculated values. Size conductors at 125% of table FLA. Motor starting current is much higher but handled by protective devices.'
-  },
-  {
-    question: 'Can I add up watts from multiple appliances?',
-    answer: 'Yes, but apply demand factors per NEC Article 220. Not all loads operate simultaneously. Use diversity factors: kitchen appliances (less than 100%), general lighting (various factors), motors (largest + others at reduced factors).'
-  },
-  {
-    question: 'What about inrush current vs running current?',
-    answer: 'Calculated current is typically running current. Inrush (starting) current can be 3-8x higher for motors, transformers. Circuit protection handles inrush, but consider voltage drop during starting for long wire runs or weak supply systems.'
-  },
-  {
     question: 'How does efficiency affect current calculations?',
-    answer: 'Input current is higher than calculated from output power due to losses. For motors, use efficiency ratings: Input Watts = Output Watts ÷ Efficiency. Example: 1HP motor (746W output) at 85% efficiency needs 746 ÷ 0.85 = 877W input.'
+    answer: 'Input current is higher than calculated from output power due to losses. For motors, use efficiency ratings: Input Watts = Output Watts ÷ Efficiency.'
   }
 ];
 
@@ -239,8 +105,7 @@ export default function WattsToAmpsCalculatorPage() {
                 <h1 className="text-4xl font-bold">Watts to Amps Calculator</h1>
               </div>
               <p className="text-xl mb-6 text-purple-50">
-                Convert electrical power (watts) to current (amperage) for single-phase and three-phase systems. 
-                Professional calculations with power factor correction for accurate circuit design.
+                Convert electrical power (watts) to current (amperage) for single-phase and three-phase systems.
               </p>
               <div className="flex flex-wrap gap-4">
                 <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
@@ -248,15 +113,8 @@ export default function WattsToAmpsCalculatorPage() {
                   <div className="font-semibold">1Φ & 3Φ Calculations</div>
                 </div>
                 <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
-                  <div className="text-sm text-purple-100">Power Factor</div>
-                  <div className="font-semibold">Reactive Load Correction</div>
-                </div>
-                <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
                   <div className="text-sm text-purple-100">Voltage Levels</div>
                   <div className="font-semibold">120V - 480V Systems</div>
-                </div>
-                <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
-                  <div className="text-sm text-purple-100">Circuit Sizing</div>
                 </div>
               </div>
             </div>
@@ -271,8 +129,6 @@ export default function WattsToAmpsCalculatorPage() {
                 <ul className="text-blue-800 space-y-1 text-sm">
                   <li>• Always use nameplate values when available - calculated values may not account for all factors</li>
                   <li>• Power factor significantly affects current - motors and fluorescent lights are not unity power factor</li>
-                  <li>• Continuous loads (3+ hours operation) require 125% circuit sizing per NEC</li>
-                  <li>• Motor starting current can be 3-8x running current - affects circuit protection and voltage drop</li>
                   <li>• Three-phase calculations use line-to-line voltage, result is current per conductor</li>
                 </ul>
               </div>
@@ -281,51 +137,6 @@ export default function WattsToAmpsCalculatorPage() {
 
           {/* Main Calculator */}
           <WattsToAmpsCalculator />
-
-          {/* Real-World Examples */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Calculator className="w-6 h-6 text-green-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Watts to Amps Calculation Examples</h2>
-            </div>
-            
-            <p className="text-gray-600 mb-6">
-              Real-world examples showing how to convert watts to amps for common electrical loads and equipment.
-            </p>
-            
-            <div className="grid gap-6">
-              {WATTS_TO_AMPS_EXAMPLES.map((example, idx) => (
-                <div key={idx} className="border-l-4 border-purple-500 bg-purple-50 rounded-lg p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h3 className="font-semibold text-gray-900 text-lg">{example.title}</h3>
-                      <p className="text-purple-700 font-medium">{example.scenario}</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-purple-600">{example.result}</div>
-                      <div className="text-sm text-gray-500">{example.circuitSize}</div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white rounded-lg p-4 mb-4">
-                    <h4 className="font-medium text-gray-900 mb-2">Calculation Steps:</h4>
-                    <pre className="text-sm text-gray-700 whitespace-pre-line font-mono">{example.calculation}</pre>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-sm text-gray-500">Wire Size: </span>
-                      <span className="text-sm font-medium text-green-700">{example.wireSize}</span>
-                    </div>
-                    <div>
-                      <span className="text-sm text-gray-500">Application: </span>
-                      <span className="text-sm font-medium">{example.application}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
 
           {/* Power Formulas Table */}
           <div className="bg-white rounded-xl shadow-lg p-8">
@@ -369,194 +180,6 @@ export default function WattsToAmpsCalculatorPage() {
                 <li>• I = Current in Amperes • P = Power in Watts • V = Voltage • PF = Power Factor</li>
                 <li>• √3 = 1.732 (square root of 3 for three-phase calculations)</li>
                 <li>• For three-phase, use line-to-line voltage (480V, 208V, etc.)</li>
-                <li>• Power factor ranges from 0.1 to 1.0, with 1.0 being purely resistive loads</li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Common Appliance Reference */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Settings className="w-6 h-6 text-green-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Common Appliance Power & Current Chart</h2>
-            </div>
-            
-            <p className="text-gray-600 mb-6">
-              Typical power consumption and current draw for common household and commercial appliances.
-            </p>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-green-50">
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Appliance</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Power (Watts)</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Voltage</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Current (Amps)</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Circuit Size</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Power Factor</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {COMMON_APPLIANCE_WATTS.map((appliance, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50">
-                      <td className="border border-gray-300 px-4 py-3 font-medium">{appliance.appliance}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center font-semibold text-orange-600">{appliance.watts}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center">{appliance.voltage}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center font-semibold text-blue-600">{appliance.amps}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center font-medium">{appliance.circuit}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center text-sm">{appliance.powerFactor}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            
-            <div className="mt-4 bg-green-50 rounded-lg p-4 border border-green-200">
-              <h4 className="font-semibold text-green-800 mb-2">Appliance Notes:</h4>
-              <ul className="text-sm text-green-700 space-y-1">
-                <li>• Power ratings are typical - always check appliance nameplate for exact specifications</li>
-                <li>• Motor-driven appliances may have lower power factors affecting current draw</li>
-                <li>• Starting current for motors can be 3-8 times running current</li>
-                <li>• Electric heating elements are purely resistive (power factor = 1.0)</li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Power Factor Guide */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Target className="w-6 h-6 text-red-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Power Factor Reference Guide</h2>
-            </div>
-            
-            <p className="text-gray-600 mb-6">
-              Power factor values for different types of electrical loads. Critical for accurate current calculations.
-            </p>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-red-50">
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Load Type</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Typical Power Factor</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Common Examples</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Characteristics</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {POWER_FACTOR_GUIDE.map((load, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50">
-                      <td className="border border-gray-300 px-4 py-3 font-medium">{load.loadType}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center font-bold text-red-600">{load.powerFactor}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-sm">{load.examples}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-sm text-gray-600">{load.characteristics}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            
-            <div className="mt-4 bg-red-50 rounded-lg p-4 border border-red-200">
-              <h4 className="font-semibold text-red-800 mb-2">Power Factor Impact:</h4>
-              <ul className="text-sm text-red-700 space-y-1">
-                <li>• Lower power factor increases current for same real power consumption</li>
-                <li>• Poor power factor reduces system capacity</li>
-                <li>• Power factor correction capacitors can improve PF for inductive loads</li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Circuit Sizing Guidelines */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Wrench className="w-6 h-6 text-purple-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Circuit Sizing Guidelines</h2>
-            </div>
-            
-            <p className="text-gray-600 mb-6">
-              NEC requirements for sizing circuits based on calculated current draw from different load types.
-            </p>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-purple-50">
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Load Type</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Sizing Rule</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Factor</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Example</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">NEC Notes</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {CIRCUIT_SIZING_GUIDELINES.map((guideline, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50">
-                      <td className="border border-gray-300 px-4 py-3 font-medium">{guideline.loadType}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center font-semibold text-purple-600">{guideline.sizingRule}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center font-bold">{guideline.continuousFactor}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-sm font-medium text-green-600">{guideline.example}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-sm text-gray-600">{guideline.notes}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            
-            <div className="mt-4 bg-purple-50 rounded-lg p-4 border border-purple-200">
-              <h4 className="font-semibold text-purple-800 mb-2">Circuit Sizing Rules:</h4>
-              <ul className="text-sm text-purple-700 space-y-1">
-                <li>• Continuous loads operate for 3 or more hours - most appliances qualify</li>
-                <li>• Non-continuous loads: general lighting, most receptacles (except kitchen)</li>
-                <li>• Motor loads always require 125% sizing regardless of duty cycle</li>
-                <li>• Always use next standard circuit breaker size above calculated requirement</li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Voltage Level Comparison */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Zap className="w-6 h-6 text-yellow-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Voltage Level Applications & Characteristics</h2>
-            </div>
-            
-            <p className="text-gray-600 mb-6">
-              Common voltage levels used in electrical systems and their typical applications.
-            </p>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-yellow-50">
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Voltage Level</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Typical Applications</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Advantages</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Disadvantages</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Max Practical Amps</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {VOLTAGE_LEVEL_COMPARISONS.map((voltage, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50">
-                      <td className="border border-gray-300 px-4 py-3 font-bold text-yellow-700">{voltage.voltage}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-sm">{voltage.applications}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-sm text-green-600">{voltage.advantages}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-sm text-red-600">{voltage.disadvantages}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center font-semibold">{voltage.maxPracticalAmps}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            
-            <div className="mt-4 bg-yellow-50 rounded-lg p-4 border border-yellow-200">
-              <h4 className="font-semibold text-yellow-800 mb-2">Voltage Selection Considerations:</h4>
-              <ul className="text-sm text-yellow-700 space-y-1">
-                <li>• Higher voltage reduces current for same power, allowing smaller wire sizes</li>
-                <li>• 240V single-phase common for residential large appliances</li>
-                <li>• Three-phase provides more efficient power distribution for balanced loads</li>
-                <li>• 480V three-phase standard for industrial and large commercial applications</li>
               </ul>
             </div>
           </div>

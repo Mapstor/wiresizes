@@ -103,7 +103,8 @@ export function generateBreadcrumbSchema(url: string) {
   
   return {
     '@type': 'BreadcrumbList',
-    '@id': `${url}#breadcrumb`,
+    // the homepage URL has no path: keep the @id under https://wiresizes.com/
+    '@id': `${/^https?:\/\/[^/]+$/.test(url) ? `${url}/` : url}#breadcrumb`,
     itemListElement: breadcrumbs.map((breadcrumb, index) => ({
       '@type': 'ListItem',
       position: index + 1,

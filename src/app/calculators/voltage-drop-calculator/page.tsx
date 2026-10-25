@@ -1,12 +1,13 @@
 import { Metadata } from 'next';
 import { VoltageDropCalculator } from '@/components/calculators/VoltageDropCalculator';
-import { AlertTriangle, Calculator, Zap, BookOpen, Info, CheckCircle, XCircle, ArrowRight, Activity, Settings, Gauge, Battery, AlertCircle, Lightbulb } from 'lucide-react';
+import { Calculator, Zap, BookOpen, Info, CheckCircle, XCircle, ArrowRight, Settings, Gauge, Battery, Lightbulb } from 'lucide-react';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import { formatSize } from '@/lib/calculations/sizes';
 
 export const metadata: Metadata = {
-  title: 'Voltage Drop Calculator — NEC 3% / 5%',
-  description: 'Single- and three-phase voltage drop per wire size and distance. Verifies NEC 3% branch / 5% combined feeder limits. Copper and aluminum at 75°C.',
-  keywords: 'voltage drop calculator, electrical voltage drop, NEC voltage drop, wire voltage loss, voltage drop formula, 3 percent rule, copper wire voltage drop, aluminum wire voltage drop, voltage drop calculation, electrical wire calculator',
+  title: 'Voltage Drop Calculator',
+  description: 'Single- and three-phase voltage drop per wire size and distance. Copper and aluminum at 75°C.',
+  keywords: 'voltage drop calculator, electrical voltage drop, NEC voltage drop, wire voltage loss, voltage drop formula, copper wire voltage drop, aluminum wire voltage drop, voltage drop calculation, electrical wire calculator',
   alternates: { canonical: '/calculators/voltage-drop-calculator' },
 };
 
@@ -14,122 +15,8 @@ export const metadata: Metadata = {
 const webAppData = {
   name: "Voltage Drop Calculator",
   url: "https://wiresizes.com/calculators/voltage-drop-calculator",
-  description: "Calculate voltage drop in electrical circuits instantly. Free calculator for copper and aluminum wire. Includes distance calculations and wire size recommendations."
+  description: "Calculate voltage drop in electrical circuits instantly. Free calculator for copper and aluminum wire. Includes distance calculations."
 };
-
-// Real voltage drop scenarios data - expanded
-const COMMON_SCENARIOS = [
-  { 
-    application: "Garage Subpanel", 
-    distance: 75, 
-    current: 60, 
-    voltage: 240, 
-    wireSize: "6 AWG",
-    copperDrop: "2.8%",
-    aluminumDrop: "4.6%",
-    recommendation: "Use 4 AWG aluminum or 6 AWG copper",
-    notes: "Common for detached garage workshops"
-  },
-  { 
-    application: "Pool Equipment", 
-    distance: 100, 
-    current: 30, 
-    voltage: 240, 
-    wireSize: "10 AWG",
-    copperDrop: "2.5%",
-    aluminumDrop: "4.1%",
-    recommendation: "Use 8 AWG aluminum or 10 AWG copper",
-    notes: "Includes pump and lighting circuits"
-  },
-  { 
-    application: "Outdoor Lighting", 
-    distance: 150, 
-    current: 15, 
-    voltage: 120, 
-    wireSize: "12 AWG",
-    copperDrop: "5.8%",
-    aluminumDrop: "9.5%",
-    recommendation: "Upsize to 8 AWG for this distance",
-    notes: "Landscape and security lighting"
-  },
-  { 
-    application: "EV Charger", 
-    distance: 50, 
-    current: 48, 
-    voltage: 240, 
-    wireSize: "6 AWG",
-    copperDrop: "1.8%",
-    aluminumDrop: "3.0%",
-    recommendation: "6 AWG copper meets requirements",
-    notes: "Level 2 charger at 11.5kW"
-  },
-  { 
-    application: "Shed/Workshop", 
-    distance: 100, 
-    current: 20, 
-    voltage: 120, 
-    wireSize: "12 AWG",
-    copperDrop: "6.5%",
-    aluminumDrop: "10.6%",
-    recommendation: "Requires 8 AWG minimum",
-    notes: "Power tools and lighting"
-  },
-  { 
-    application: "Hot Tub", 
-    distance: 60, 
-    current: 40, 
-    voltage: 240, 
-    wireSize: "8 AWG",
-    copperDrop: "2.0%",
-    aluminumDrop: "3.2%",
-    recommendation: "8 AWG copper is adequate",
-    notes: "50A GFCI breaker required"
-  },
-  { 
-    application: "Barn/Agricultural", 
-    distance: 200, 
-    current: 100, 
-    voltage: 240, 
-    wireSize: "2 AWG",
-    copperDrop: "3.2%",
-    aluminumDrop: "5.3%",
-    recommendation: "1/0 aluminum or 2 AWG copper",
-    notes: "Farm equipment and lighting"
-  },
-  { 
-    application: "RV Pedestal", 
-    distance: 80, 
-    current: 50, 
-    voltage: 240, 
-    wireSize: "6 AWG",
-    copperDrop: "2.5%",
-    aluminumDrop: "4.0%",
-    recommendation: "6 AWG copper or 4 AWG aluminum",
-    notes: "50A RV service connection"
-  },
-  { 
-    application: "Solar Array", 
-    distance: 150, 
-    current: 40, 
-    voltage: 240, 
-    wireSize: "6 AWG",
-    copperDrop: "3.7%",
-    aluminumDrop: "6.1%",
-    recommendation: "4 AWG copper recommended",
-    notes: "DC circuits need special consideration"
-  },
-  { 
-    application: "Well Pump", 
-    distance: 250, 
-    current: 15, 
-    voltage: 240, 
-    wireSize: "10 AWG",
-    copperDrop: "3.9%",
-    aluminumDrop: "6.4%",
-    recommendation: "8 AWG copper or 6 AWG aluminum",
-    notes: "Deep well submersible pump"
-  }
-];
 
 // Extended wire resistance data with temperature coefficients
 const WIRE_RESISTANCE_DATA_EXTENDED = [
@@ -155,68 +42,7 @@ const WIRE_RESISTANCE_DATA_EXTENDED = [
   { awg: "500", copperOhms: 0.0258, aluminumOhms: 0.0424, diameter: 17.9, area: 500000 }
 ];
 
-// Motor starting voltage drop considerations
-const MOTOR_STARTING_DATA = [
-  { hp: "1/2", flc: 4.9, lrc: 29.4, startingDrop: "15-20%" },
-  { hp: "3/4", flc: 6.9, lrc: 41.4, startingDrop: "15-20%" },
-  { hp: "1", flc: 8, lrc: 48, startingDrop: "15-20%" },
-  { hp: "1.5", flc: 10, lrc: 60, startingDrop: "15-20%" },
-  { hp: "2", flc: 12, lrc: 72, startingDrop: "15-20%" },
-  { hp: "3", flc: 17, lrc: 102, startingDrop: "15-20%" },
-  { hp: "5", flc: 28, lrc: 168, startingDrop: "20-25%" },
-  { hp: "7.5", flc: 40, lrc: 240, startingDrop: "20-25%" },
-  { hp: "10", flc: 50, lrc: 300, startingDrop: "20-25%" }
-];
-
-// Distance-based recommendations
-const DISTANCE_RECOMMENDATIONS = [
-  { range: "0-50 ft", recommendation: "Standard sizing usually adequate", voltageConsideration: "Minimal concern" },
-  { range: "50-100 ft", recommendation: "Check voltage drop calculation", voltageConsideration: "May need one size larger" },
-  { range: "100-200 ft", recommendation: "Voltage drop often controls", voltageConsideration: "Usually need 1-2 sizes larger" },
-  { range: "200-300 ft", recommendation: "Careful calculation required", voltageConsideration: "Consider 240V over 120V" },
-  { range: "300+ ft", recommendation: "Consider voltage boosting", voltageConsideration: "May need transformer" }
-];
-
-// Temperature correction factors
-const TEMPERATURE_CORRECTIONS = [
-  { tempC: "10", tempF: "50", copperFactor: 0.97, aluminumFactor: 0.97 },
-  { tempC: "20", tempF: "68", copperFactor: 0.99, aluminumFactor: 0.99 },
-  { tempC: "25", tempF: "77", copperFactor: 1.00, aluminumFactor: 1.00 },
-  { tempC: "30", tempF: "86", copperFactor: 1.01, aluminumFactor: 1.01 },
-  { tempC: "40", tempF: "104", copperFactor: 1.04, aluminumFactor: 1.04 },
-  { tempC: "50", tempF: "122", copperFactor: 1.06, aluminumFactor: 1.06 },
-  { tempC: "60", tempF: "140", copperFactor: 1.08, aluminumFactor: 1.08 },
-  { tempC: "75", tempF: "167", copperFactor: 1.12, aluminumFactor: 1.12 }
-];
-
-// Voltage drop effects at different percentages
-const VOLTAGE_DROP_EFFECTS = [
-  { percentage: "1%", effect: "Optimal efficiency", impact: "No noticeable effect on equipment" },
-  { percentage: "2%", effect: "Good efficiency", impact: "Slight reduction in motor torque" },
-  { percentage: "3%", effect: "Acceptable (NEC recommendation)", impact: "Minor efficiency loss" },
-  { percentage: "4%", effect: "Marginal performance", impact: "Noticeable dimming, motor heating increases" },
-  { percentage: "5%", effect: "Poor performance", impact: "Equipment damage risk, significant energy waste" },
-  { percentage: "6%", effect: "Unacceptable", impact: "Motors may fail to start, electronics malfunction" },
-  { percentage: "8%", effect: "Dangerous", impact: "Fire hazard, immediate correction required" },
-  { percentage: "10%", effect: "Critical failure", impact: "Equipment damage likely, code violation" }
-];
-
-// Power factor impact on voltage drop
-const POWER_FACTOR_IMPACT = [
-  { pf: "1.0", type: "Resistive (heaters, incandescent)", multiplier: "1.0", notes: "No reactive component" },
-  { pf: "0.95", type: "Electronic loads", multiplier: "1.05", notes: "Computers, LED drivers" },
-  { pf: "0.90", type: "Fluorescent lighting", multiplier: "1.11", notes: "Commercial lighting" },
-  { pf: "0.85", type: "Small motors", multiplier: "1.18", notes: "Fans, pumps under 5 HP" },
-  { pf: "0.80", type: "Large motors", multiplier: "1.25", notes: "Industrial motors" },
-  { pf: "0.75", type: "Welders", multiplier: "1.33", notes: "Arc welding equipment" },
-  { pf: "0.70", type: "Heavily loaded motors", multiplier: "1.43", notes: "Starting or stalled motors" }
-];
-
 const faqItems = [
-  {
-    question: "What is acceptable voltage drop for a 120V circuit?",
-    answer: "For a 120V circuit, the NEC recommends maximum 3% voltage drop (3.6V) for branch circuits and 5% total (6V) from service to final outlet. This ensures equipment operates efficiently and prevents premature failure."
-  },
   {
     question: "How do you calculate voltage drop for a 100 foot run?",
     answer: "For single-phase: Voltage Drop = (2 × Length × Current × Resistance) ÷ 1000. For a 100ft run at 20A using 12 AWG copper: VD = (2 × 100 × 20 × 1.98) ÷ 1000 = 7.92V or 6.6% at 120V."
@@ -234,16 +60,12 @@ const faqItems = [
     answer: "Excessive voltage drop causes: dimming lights, motors running hot and inefficiently, reduced equipment lifespan, and potential failure to start motors. Electronic equipment may malfunction or shut down."
   },
   {
-    question: "How much does wire size affect voltage drop?",
-    answer: "Each AWG size increase (smaller number) roughly halves the resistance. Upgrading from 12 AWG to 10 AWG reduces voltage drop by about 37%, while going from 10 AWG to 8 AWG reduces it by another 37%."
-  },
-  {
     question: "Should I calculate voltage drop for LED lighting?",
     answer: "Yes, LED drivers are sensitive to voltage variations. While LEDs use less current than incandescent bulbs, voltage drop still affects driver efficiency and can cause flickering or premature driver failure."
   },
   {
     question: "What's the voltage drop formula for 3-phase circuits?",
-    answer: "For 3-phase: VD = (√3 × Length × Current × Resistance) ÷ 1000. The factor is 1.732 instead of 2, making 3-phase more efficient for long-distance power transmission."
+    answer: "For 3-phase: VD = (√3 × Length × Current × Resistance) ÷ 1000. The factor is 1.732 instead of 2."
   },
   {
     question: "Can I use voltage drop to size my wire?",
@@ -258,20 +80,12 @@ const faqItems = [
     answer: "Wire resistance increases about 0.4% per degree Celsius above 20°C. In a hot attic (50°C), resistance can be 12% higher than at room temperature, increasing voltage drop proportionally."
   },
   {
-    question: "What size wire for 200 amp service 150 feet away?",
-    answer: "For 200A service at 150 feet with 3% voltage drop, you need 350 MCM copper or 500 MCM aluminum. This accounts for the 240V service voltage and keeps drop under 7.2V."
-  },
-  {
     question: "How do I calculate voltage drop for DC circuits?",
     answer: "DC voltage drop uses the same formula as single-phase AC: VD = (2 × L × I × R) ÷ 1000. However, DC circuits don't have power factor considerations, making calculations simpler."
   },
   {
-    question: "Does conduit type affect voltage drop?",
-    answer: "Conduit type doesn't directly affect resistance, but metal conduit can increase wire temperature, raising resistance. PVC conduit in sunlight can reach 70°C, increasing resistance by 20%."
-  },
-  {
     question: "What is voltage drop for parallel conductors?",
-    answer: "For parallel conductors, divide the resistance by the number of conductors. Two parallel 1/0 AWG conductors have half the resistance of a single 1/0, effectively acting like one 3/0 AWG conductor."
+    answer: "For parallel conductors, divide the resistance by the number of conductors. Two parallel 1/0 AWG conductors have half the resistance of a single 1/0."
   },
   {
     question: "How do I measure actual voltage drop?",
@@ -283,11 +97,11 @@ const faqItems = [
   },
   {
     question: "What's the voltage drop for a 50 amp hot tub 75 feet away?",
-    answer: "Using 6 AWG copper at 240V: VD = (2 × 75 × 50 × 0.491) ÷ 1000 = 3.68V or 1.53%. This is well within the 3% recommendation. 8 AWG would give 2.43% drop."
+    answer: "Using 6 AWG copper at 240V: VD = (2 × 75 × 50 × 0.491) ÷ 1000 = 3.68V or 1.53%."
   },
   {
     question: "How does voltage drop affect solar panels?",
-    answer: "Solar DC circuits are particularly sensitive to voltage drop because MPPT controllers need minimum voltage to operate. Keep DC voltage drop under 2% to maintain optimal power harvest from panels."
+    answer: "Solar DC circuits are particularly sensitive to voltage drop because MPPT controllers need minimum voltage to operate."
   }
 ];
 
@@ -301,21 +115,10 @@ export default function VoltageDropCalculatorPage() {
             <h1 className="text-3xl font-bold text-neutral-900 mb-3">
               Voltage Drop Calculator
             </h1>
-            <p className="text-lg text-neutral-700 mb-3">
+            <p className="text-lg text-neutral-700 mb-6">
               Calculate voltage drop in volts and percent for any conductor
               run. Single-phase formula VD = (2 &times; L &times; I &times; R) &divide; 1000;
               three-phase formula VD = (1.732 &times; L &times; I &times; R) &divide; 1000.
-              Verifies NEC informational-note targets of &le; 3 % on branch
-              circuits (210.19) and &le; 5 % combined feeder + branch (215.2).
-              Copper and aluminum at 75&deg;C using DC resistance values from
-              NEC Chapter 9 Table 8.
-            </p>
-            <p className="text-sm text-neutral-600 mb-6">
-              Inputs: wire size (AWG or kcmil from 14 through 750), conductor
-              material, current in amps, voltage (120 / 208 / 240 / 277 / 480 V),
-              one-way distance, single- or three-phase, optional power factor
-              for inductive loads. Outputs: voltage drop in volts and percent,
-              and voltage at the load.
             </p>
             
             {/* Quick Answer Box */}
@@ -329,20 +132,16 @@ export default function VoltageDropCalculatorPage() {
                       <h3 className="font-semibold text-neutral-800 mb-2">12 AWG Copper at 120V, 20A:</h3>
                       <ul className="space-y-1 text-sm text-neutral-600">
                         <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span>25 ft = 1.65% drop (excellent)</span>
+                          <span>25 ft = 1.65% drop</span>
                         </li>
                         <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span>50 ft = 3.3% drop (acceptable)</span>
+                          <span>50 ft = 3.3% drop</span>
                         </li>
                         <li className="flex items-center gap-2">
-                          <AlertCircle className="w-4 h-4 text-amber-500" />
-                          <span>75 ft = 4.95% drop (marginal)</span>
+                          <span>75 ft = 4.95% drop</span>
                         </li>
                         <li className="flex items-center gap-2">
-                          <XCircle className="w-4 h-4 text-red-500" />
-                          <span>100 ft = 6.6% drop (too high)</span>
+                          <span>100 ft = 6.6% drop</span>
                         </li>
                       </ul>
                     </div>
@@ -350,20 +149,16 @@ export default function VoltageDropCalculatorPage() {
                       <h3 className="font-semibold text-neutral-800 mb-2">10 AWG Copper at 240V, 30A:</h3>
                       <ul className="space-y-1 text-sm text-neutral-600">
                         <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span>50 ft = 1.55% drop (excellent)</span>
+                          <span>50 ft = 1.55% drop</span>
                         </li>
                         <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span>100 ft = 3.1% drop (acceptable)</span>
+                          <span>100 ft = 3.1% drop</span>
                         </li>
                         <li className="flex items-center gap-2">
-                          <AlertCircle className="w-4 h-4 text-amber-500" />
-                          <span>150 ft = 4.65% drop (marginal)</span>
+                          <span>150 ft = 4.65% drop</span>
                         </li>
                         <li className="flex items-center gap-2">
-                          <XCircle className="w-4 h-4 text-red-500" />
-                          <span>200 ft = 6.2% drop (too high)</span>
+                          <span>200 ft = 6.2% drop</span>
                         </li>
                       </ul>
                     </div>
@@ -371,20 +166,16 @@ export default function VoltageDropCalculatorPage() {
                       <h3 className="font-semibold text-neutral-800 mb-2">6 AWG Copper at 240V, 50A:</h3>
                       <ul className="space-y-1 text-sm text-neutral-600">
                         <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span>50 ft = 1.02% drop (excellent)</span>
+                          <span>50 ft = 1.02% drop</span>
                         </li>
                         <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span>100 ft = 2.05% drop (good)</span>
+                          <span>100 ft = 2.05% drop</span>
                         </li>
                         <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span>150 ft = 3.07% drop (acceptable)</span>
+                          <span>150 ft = 3.07% drop</span>
                         </li>
                         <li className="flex items-center gap-2">
-                          <AlertCircle className="w-4 h-4 text-amber-500" />
-                          <span>200 ft = 4.09% drop (marginal)</span>
+                          <span>200 ft = 4.09% drop</span>
                         </li>
                       </ul>
                     </div>
@@ -460,9 +251,6 @@ export default function VoltageDropCalculatorPage() {
                     <div className="font-mono text-blue-600 font-bold text-center mb-2">
                       VD = (1.732 × L × I × R) ÷ 1000
                     </div>
-                    <p className="text-sm text-blue-800">
-                      The factor 1.732 (√3) replaces 2 because three-phase power is more efficient.
-                    </p>
                   </div>
                   
                   <div className="bg-amber-50 p-4 rounded border border-amber-200">
@@ -488,7 +276,6 @@ export default function VoltageDropCalculatorPage() {
                       <li>• <strong>Motors:</strong> Overheat, reduced torque, premature failure</li>
                       <li>• <strong>Lights:</strong> Dimming, flickering, reduced lifespan</li>
                       <li>• <strong>Electronics:</strong> Malfunction, random resets, data corruption</li>
-                      <li>• <strong>Fire hazard:</strong> Overheated connections and conductors</li>
                       <li>• <strong>Equipment damage:</strong> Compressors, pumps fail to start</li>
                     </ul>
                   </div>
@@ -502,242 +289,8 @@ export default function VoltageDropCalculatorPage() {
                       <li>• <strong>Efficiency:</strong> Equipment operates at rated performance</li>
                       <li>• <strong>Longevity:</strong> Extended equipment lifespan</li>
                       <li>• <strong>Reliability:</strong> Stable voltage for sensitive electronics</li>
-                      <li>• <strong>Safety:</strong> Reduced fire and equipment hazard</li>
                     </ul>
                   </div>
-                  
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                    <h4 className="font-semibold text-blue-900 mb-2">Voltage Drop vs Equipment Type</h4>
-                    <ul className="text-sm space-y-1 text-blue-800">
-                      <li>• <strong>Resistive loads (heaters):</strong> Tolerate up to 10%</li>
-                      <li>• <strong>Incandescent lights:</strong> 5% causes noticeable dimming</li>
-                      <li>• <strong>Motors:</strong> 5% maximum, 3% recommended</li>
-                      <li>• <strong>Electronic equipment:</strong> 3% maximum</li>
-                      <li>• <strong>LED drivers:</strong> 2-3% for stable operation</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Voltage Drop Effects Table */}
-            <div className="mt-8">
-              <h3 className="text-xl font-semibold mb-4">Voltage Drop Impact Analysis</h3>
-              <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-neutral-50 border-b border-neutral-200">
-                        <th className="px-4 py-3 text-left font-medium text-neutral-700">Voltage Drop %</th>
-                        <th className="px-4 py-3 text-left font-medium text-neutral-700">Performance Level</th>
-                        <th className="px-4 py-3 text-left font-medium text-neutral-700">Equipment Impact</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-neutral-100">
-                      {VOLTAGE_DROP_EFFECTS.map((effect, idx) => (
-                        <tr key={idx} className="hover:bg-neutral-50">
-                          <td className="px-4 py-3 font-mono font-semibold">
-                            <span className={
-                              parseFloat(effect.percentage) <= 3 ? 'text-green-600' :
-                              parseFloat(effect.percentage) <= 5 ? 'text-amber-600' :
-                              'text-red-600'
-                            }>
-                              {effect.percentage}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 font-medium">{effect.effect}</td>
-                          <td className="px-4 py-3 text-neutral-600">{effect.impact}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Expanded Common Scenarios Table */}
-      <section className="py-8">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <Calculator className="w-6 h-6 text-blue-600" />
-              Real-World Voltage Drop Scenarios
-            </h2>
-            
-            <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-neutral-50 border-b border-neutral-200">
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Application</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Distance</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Current</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Voltage</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Copper Drop</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Aluminum Drop</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Recommendation</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Notes</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100">
-                    {COMMON_SCENARIOS.map((scenario, idx) => (
-                      <tr key={idx} className="hover:bg-neutral-50">
-                        <td className="px-4 py-3 font-medium">{scenario.application}</td>
-                        <td className="px-4 py-3">{scenario.distance} ft</td>
-                        <td className="px-4 py-3">{scenario.current}A</td>
-                        <td className="px-4 py-3">{scenario.voltage}V</td>
-                        <td className="px-4 py-3">
-                          <span className={`font-mono font-semibold ${parseFloat(scenario.copperDrop) <= 3 ? 'text-green-600' : 'text-amber-600'}`}>
-                            {scenario.copperDrop}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3">
-                          <span className={`font-mono font-semibold ${parseFloat(scenario.aluminumDrop) <= 3 ? 'text-green-600' : parseFloat(scenario.aluminumDrop) <= 5 ? 'text-amber-600' : 'text-red-600'}`}>
-                            {scenario.aluminumDrop}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-sm text-neutral-600">{scenario.recommendation}</td>
-                        <td className="px-4 py-3 text-xs text-neutral-500">{scenario.notes}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            
-            <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <p className="text-sm text-blue-800">
-                <strong>Note:</strong> These calculations assume 75°C rated conductors at 30°C ambient temperature. 
-                Actual voltage drop may vary based on installation conditions, conductor temperature, and power factor.
-                Always verify with actual measurements after installation.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* NEC Code Requirements - Expanded */}
-      <section className="py-8 bg-neutral-50 border-y">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <BookOpen className="w-6 h-6 text-blue-600" />
-              Complete NEC Voltage Drop Requirements & References
-            </h2>
-            
-            <div className="grid lg:grid-cols-2 gap-6 mb-8">
-              <div className="space-y-4">
-                <div className="bg-white p-4 rounded-lg border border-neutral-200">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-semibold text-neutral-900">Branch Circuits</h3>
-                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-mono">
-                      Max: 3%
-                    </span>
-                  </div>
-                  <p className="text-sm text-neutral-600 mb-2">
-                    Recommended maximum for branch circuits to ensure reasonable efficiency of operation.
-                  </p>
-                  <div className="flex items-center gap-2 text-xs text-neutral-500">
-                    <BookOpen className="w-3 h-3" />
-                    <span className="font-mono">NEC 210.19(A) Informational Note No. 4</span>
-                  </div>
-                </div>
-
-                <div className="bg-white p-4 rounded-lg border border-neutral-200">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-semibold text-neutral-900">Feeders</h3>
-                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-mono">
-                      Max: 3%
-                    </span>
-                  </div>
-                  <p className="text-sm text-neutral-600 mb-2">
-                    Recommended maximum for feeders where maximum total drop is 5%.
-                  </p>
-                  <div className="flex items-center gap-2 text-xs text-neutral-500">
-                    <BookOpen className="w-3 h-3" />
-                    <span className="font-mono">NEC 215.2(A) Informational Note No. 2</span>
-                  </div>
-                </div>
-
-                <div className="bg-white p-4 rounded-lg border border-neutral-200">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-semibold text-neutral-900">Combined Total</h3>
-                    <span className="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-sm font-mono">
-                      Max: 5%
-                    </span>
-                  </div>
-                  <p className="text-sm text-neutral-600 mb-2">
-                    Total voltage drop from service point to furthest outlet for feeders and branch circuits combined.
-                  </p>
-                  <div className="flex items-center gap-2 text-xs text-neutral-500">
-                    <BookOpen className="w-3 h-3" />
-                    <span className="font-mono">NEC 210.19(A) & 215.2(A)</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="bg-white p-4 rounded-lg border border-orange-200">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-semibold text-orange-900">Fire Pumps</h3>
-                    <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-mono">
-                      Max: 15%
-                    </span>
-                  </div>
-                  <p className="text-sm text-neutral-600 mb-2">
-                    Maximum allowed voltage drop during motor starting conditions.
-                  </p>
-                  <div className="flex items-center gap-2 text-xs text-neutral-500">
-                    <BookOpen className="w-3 h-3" />
-                    <span className="font-mono">NEC 695.7</span>
-                  </div>
-                </div>
-
-                <div className="bg-white p-4 rounded-lg border border-red-200">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-semibold text-red-900">Emergency Systems</h3>
-                    <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-mono">
-                      Max: 5%
-                    </span>
-                  </div>
-                  <p className="text-sm text-neutral-600 mb-2">
-                    Mandatory maximum for emergency system feeders.
-                  </p>
-                  <div className="flex items-center gap-2 text-xs text-neutral-500">
-                    <BookOpen className="w-3 h-3" />
-                    <span className="font-mono">NEC 700.31</span>
-                  </div>
-                </div>
-
-                <div className="bg-white p-4 rounded-lg border border-purple-200">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-semibold text-purple-900">Sensitive Equipment</h3>
-                    <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-mono">
-                      Max: 2%
-                    </span>
-                  </div>
-                  <p className="text-sm text-neutral-600 mb-2">
-                    Recommended for sensitive electronic equipment and data centers.
-                  </p>
-                  <div className="flex items-center gap-2 text-xs text-neutral-500">
-                    <BookOpen className="w-3 h-3" />
-                    <span className="font-mono">IEEE Std 1100 (Emerald Book)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
-              <div className="flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                <div className="text-sm text-amber-800">
-                  <strong>Important Distinction:</strong> NEC voltage drop values are <em>recommendations</em> (Informational Notes) 
-                  except for specific applications like emergency systems (700.31) and fire pumps (695.7) where they are <em>mandatory requirements</em>. 
-                  However, many local jurisdictions and engineering specifications enforce the 3%/5% limits as mandatory. 
-                  Always verify with your Authority Having Jurisdiction (AHJ) and project specifications.
                 </div>
               </div>
             </div>
@@ -758,7 +311,7 @@ export default function VoltageDropCalculatorPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-neutral-50 border-b border-neutral-200">
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">AWG/MCM</th>
+                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Size</th>
                       <th className="px-4 py-3 text-left font-medium text-neutral-700">Copper (Ω/1000ft)</th>
                       <th className="px-4 py-3 text-left font-medium text-neutral-700">Aluminum (Ω/1000ft)</th>
                       <th className="px-4 py-3 text-left font-medium text-neutral-700">Diameter (mm)</th>
@@ -769,7 +322,7 @@ export default function VoltageDropCalculatorPage() {
                     {WIRE_RESISTANCE_DATA_EXTENDED.map((wire) => (
                       <tr key={wire.awg} className="hover:bg-neutral-50">
                         <td className="px-4 py-3 font-mono font-medium">
-                          {wire.awg.includes('/') || parseInt(wire.awg) >= 250 ? wire.awg : `#${wire.awg}`}
+                          {formatSize(wire.awg)}
                         </td>
                         <td className="px-4 py-3 font-mono text-copper-600">{wire.copperOhms}</td>
                         <td className="px-4 py-3 font-mono text-aluminum-600">{wire.aluminumOhms}</td>
@@ -779,195 +332,6 @@ export default function VoltageDropCalculatorPage() {
                     ))}
                   </tbody>
                 </table>
-              </div>
-            </div>
-            
-            {/* Temperature and Power Factor Effects */}
-            <div className="grid md:grid-cols-2 gap-6 mt-6">
-              <div>
-                <h3 className="font-semibold text-neutral-900 mb-3">Temperature Correction Factors</h3>
-                <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-xs">
-                      <thead>
-                        <tr className="bg-neutral-50 border-b border-neutral-200">
-                          <th className="px-3 py-2 text-left">Temp °C</th>
-                          <th className="px-3 py-2 text-left">Temp °F</th>
-                          <th className="px-3 py-2 text-left">Copper</th>
-                          <th className="px-3 py-2 text-left">Aluminum</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-neutral-100">
-                        {TEMPERATURE_CORRECTIONS.map((temp) => (
-                          <tr key={temp.tempC} className="hover:bg-neutral-50">
-                            <td className="px-3 py-2">{temp.tempC}°C</td>
-                            <td className="px-3 py-2">{temp.tempF}°F</td>
-                            <td className="px-3 py-2 font-mono">{temp.copperFactor}</td>
-                            <td className="px-3 py-2 font-mono">{temp.aluminumFactor}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="font-semibold text-neutral-900 mb-3">Power Factor Impact</h3>
-                <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-xs">
-                      <thead>
-                        <tr className="bg-neutral-50 border-b border-neutral-200">
-                          <th className="px-3 py-2 text-left">PF</th>
-                          <th className="px-3 py-2 text-left">Load Type</th>
-                          <th className="px-3 py-2 text-left">Multiplier</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-neutral-100">
-                        {POWER_FACTOR_IMPACT.map((pf) => (
-                          <tr key={pf.pf} className="hover:bg-neutral-50">
-                            <td className="px-3 py-2 font-mono">{pf.pf}</td>
-                            <td className="px-3 py-2">{pf.type}</td>
-                            <td className="px-3 py-2 font-mono">{pf.multiplier}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Motor Starting Considerations */}
-      <section className="py-8 bg-neutral-50 border-y">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <Activity className="w-6 h-6 text-blue-600" />
-              Motor Starting & Voltage Drop
-            </h2>
-            
-            <div className="grid lg:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-semibold text-neutral-900 mb-3">Motor Starting Current Impact</h3>
-                <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="bg-neutral-50 border-b border-neutral-200">
-                          <th className="px-3 py-2 text-left">HP</th>
-                          <th className="px-3 py-2 text-left">FLC (240V)</th>
-                          <th className="px-3 py-2 text-left">LRC</th>
-                          <th className="px-3 py-2 text-left">Starting Drop</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-neutral-100">
-                        {MOTOR_STARTING_DATA.map((motor) => (
-                          <tr key={motor.hp} className="hover:bg-neutral-50">
-                            <td className="px-3 py-2 font-mono">{motor.hp}</td>
-                            <td className="px-3 py-2">{motor.flc}A</td>
-                            <td className="px-3 py-2">{motor.lrc}A</td>
-                            <td className="px-3 py-2 text-amber-600">{motor.startingDrop}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <p className="text-sm text-neutral-600 mt-3">
-                  <strong>FLC:</strong> Full Load Current | <strong>LRC:</strong> Locked Rotor Current (starting)
-                </p>
-              </div>
-              
-              <div>
-                <h3 className="font-semibold text-neutral-900 mb-3">Motor Voltage Drop Guidelines</h3>
-                <div className="space-y-3">
-                  <div className="bg-white p-4 rounded-lg border border-neutral-200">
-                    <h4 className="font-semibold text-neutral-800 mb-2">Running Conditions</h4>
-                    <ul className="text-sm space-y-1 text-neutral-600">
-                      <li>• Maximum 3% drop at full load current</li>
-                      <li>• 5% drop reduces torque by 10%</li>
-                      <li>• 10% drop reduces torque by 19%</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
-                    <h4 className="font-semibold text-amber-900 mb-2">Starting Conditions</h4>
-                    <ul className="text-sm space-y-1 text-amber-800">
-                      <li>• 15% drop acceptable during start (NEC 695.7)</li>
-                      <li>• 20% may prevent motor from starting</li>
-                      <li>• Consider soft starters for large motors</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                    <h4 className="font-semibold text-blue-900 mb-2">Wire Sizing for Motors</h4>
-                    <p className="text-sm text-blue-800">
-                      Size conductors for 125% of motor FLC (NEC 430.22), then verify voltage drop 
-                      at both running and starting conditions. May need to upsize for long runs.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Distance-Based Recommendations */}
-      <section className="py-8">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <Gauge className="w-6 h-6 text-blue-600" />
-              Distance-Based Wire Sizing Guidelines
-            </h2>
-            
-            <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="bg-neutral-50 border-b border-neutral-200">
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Distance Range</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">General Recommendation</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Voltage Consideration</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100">
-                    {DISTANCE_RECOMMENDATIONS.map((rec, idx) => (
-                      <tr key={idx} className="hover:bg-neutral-50">
-                        <td className="px-4 py-3 font-semibold">{rec.range}</td>
-                        <td className="px-4 py-3">{rec.recommendation}</td>
-                        <td className="px-4 py-3 text-sm text-neutral-600">{rec.voltageConsideration}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-4 mt-6">
-              <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                <h3 className="font-semibold text-green-900 mb-2">Short Runs (0-50 ft)</h3>
-                <p className="text-sm text-green-800">
-                  Ampacity typically controls wire size. Voltage drop rarely an issue unless high current.
-                </p>
-              </div>
-              <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
-                <h3 className="font-semibold text-amber-900 mb-2">Medium Runs (50-150 ft)</h3>
-                <p className="text-sm text-amber-800">
-                  Always calculate voltage drop. Often need one size larger than ampacity requires.
-                </p>
-              </div>
-              <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-                <h3 className="font-semibold text-red-900 mb-2">Long Runs (150+ ft)</h3>
-                <p className="text-sm text-red-800">
-                  Voltage drop usually controls. Consider 240V circuits or local step-down transformers.
-                </p>
               </div>
             </div>
           </div>
@@ -1051,17 +415,6 @@ export default function VoltageDropCalculatorPage() {
                 </div>
               </div>
             </div>
-            
-            <div className="mt-6 p-4 bg-red-50 rounded-lg border border-red-200">
-              <div className="flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                <div className="text-sm text-red-800">
-                  <strong>Safety Warning:</strong> Voltage drop testing requires working on energized circuits. 
-                  Only qualified electricians should perform these tests. Use appropriate PPE, lockout/tagout procedures, 
-                  and follow NFPA 70E requirements for arc flash protection.
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -1082,27 +435,9 @@ export default function VoltageDropCalculatorPage() {
                   <div className="bg-neutral-100 p-3 rounded font-mono text-sm mb-4">
                     R<sub>parallel</sub> = R<sub>single</sub> ÷ N
                   </div>
-                  <p className="text-sm text-neutral-700 mb-3">
+                  <p className="text-sm text-neutral-700">
                     Where N = number of parallel conductors per phase
                   </p>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span>2 × 1/0 AWG =</span>
-                      <span className="font-mono">3/0 AWG equivalent</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>2 × 2/0 AWG =</span>
-                      <span className="font-mono">4/0 AWG equivalent</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>2 × 4/0 AWG =</span>
-                      <span className="font-mono">350 MCM equivalent</span>
-                    </div>
-                  </div>
-                  <div className="mt-3 p-3 bg-amber-50 rounded text-xs text-amber-800">
-                    <strong>NEC 310.10(G):</strong> Parallel conductors must be same length, material, 
-                    size, and termination method. Minimum 1/0 AWG for parallel runs.
-                  </div>
                 </div>
               </div>
               
@@ -1118,7 +453,6 @@ export default function VoltageDropCalculatorPage() {
                   <div className="bg-blue-50 p-3 rounded border border-blue-200">
                     <h4 className="font-semibold text-blue-900 mb-2">Solar/Battery Systems</h4>
                     <ul className="text-sm space-y-1 text-blue-800">
-                      <li>• Keep DC voltage drop under 2%</li>
                       <li>• MPPT controllers need minimum voltage</li>
                       <li>• Battery charging efficiency critical</li>
                       <li>• Consider 48V systems for long runs</li>
@@ -1131,27 +465,13 @@ export default function VoltageDropCalculatorPage() {
             <div className="mt-6">
               <h3 className="font-semibold text-neutral-900 mb-3">Voltage Drop with Reactive Loads</h3>
               <div className="bg-white p-4 rounded-lg border border-neutral-200">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-semibold text-neutral-800 mb-2">AC Impedance Formula</h4>
-                    <div className="bg-neutral-100 p-3 rounded font-mono text-sm mb-3">
-                      Z = √(R² + X²)
-                    </div>
-                    <p className="text-sm text-neutral-700">
-                      Where X = inductive reactance (ohms)<br/>
-                      For most building wire: X ≈ 0.05 ohms/1000ft
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-neutral-800 mb-2">Power Factor Correction</h4>
-                    <div className="bg-neutral-100 p-3 rounded font-mono text-sm mb-3">
-                      VD = VD<sub>calc</sub> × (0.85 + 0.15/PF)
-                    </div>
-                    <p className="text-sm text-neutral-700">
-                      Approximate correction for power factors 0.7 to 1.0
-                    </p>
-                  </div>
+                <h4 className="font-semibold text-neutral-800 mb-2">AC Impedance Formula</h4>
+                <div className="bg-neutral-100 p-3 rounded font-mono text-sm mb-3">
+                  Z = √(R² + X²)
                 </div>
+                <p className="text-sm text-neutral-700">
+                  Where X = inductive reactance (ohms)
+                </p>
               </div>
             </div>
           </div>
@@ -1185,10 +505,6 @@ export default function VoltageDropCalculatorPage() {
                   <li className="flex items-start gap-2">
                     <ArrowRight className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
                     <span>Consider multiple circuits vs one large feeder</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-                    <span>Plan for 20% future load growth</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <ArrowRight className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
@@ -1243,10 +559,6 @@ export default function VoltageDropCalculatorPage() {
                   <li className="flex items-start gap-2">
                     <ArrowRight className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" />
                     <span>Document readings for future reference</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" />
-                    <span>IR scan connections after 30 days</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <ArrowRight className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" />
@@ -1305,7 +617,7 @@ export default function VoltageDropCalculatorPage() {
               </a>
               <a href="/calculators/three-phase-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
                 <h3 className="font-semibold text-neutral-900 mb-1">Three Phase Calculator</h3>
-                <p className="text-sm text-neutral-600">Calculate three-phase power, current, and voltage drop</p>
+                <p className="text-sm text-neutral-600">Calculate three-phase power and current</p>
               </a>
             </div>
             

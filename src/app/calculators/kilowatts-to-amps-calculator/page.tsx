@@ -7,8 +7,8 @@ import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Kilowatts to Amps Calculator — kW → A',
-  description: 'Convert kilowatts to amps for single-phase, three-phase, and DC circuits. Includes power-factor input for motors and inductive loads.',
-  keywords: 'kilowatts to amps, kw to amperage calculator, power to current converter, electrical load calculator, three phase kw to amps, power factor calculator, electrical power conversion',
+  description: 'Convert kilowatts to amps for single-phase and three-phase circuits. Includes power-factor input for motors and inductive loads.',
+  keywords: 'kilowatts to amps, kw to amperage calculator, power to current converter, three phase kw to amps, power factor calculator, electrical power conversion',
   openGraph: {
     title: 'Kilowatts to Amps Calculator - Convert kW to Amperage',
     description: 'Convert kilowatts to amps for electrical load calculations. Single and three-phase kW to amperage calculator with power factor.',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 const webAppData = {
   name: "Kilowatts to Amps Calculator",
   url: "https://wiresizes.com/calculators/kilowatts-to-amps-calculator",
-  description: "Professional kilowatts to amps calculator for electrical contractors and engineers. Convert kW to amperage for single-phase and three-phase systems. Includes power factor calculations."
+  description: "Kilowatts to amps calculator for electrical contractors and engineers. Convert kW to amperage for single-phase and three-phase systems. Includes power factor calculations."
 };
 
 const kilowattsToAmpsFAQs = [
@@ -34,7 +34,7 @@ const kilowattsToAmpsFAQs = [
   },
   {
     question: "What is power factor and why does it matter?",
-    answer: "Power factor is the ratio of real power (kW) to apparent power (kVA). It represents how efficiently electrical power is being used. A power factor of 1.0 means all power is useful (resistive loads), while lower values indicate reactive components. Poor power factor increases current requirements - a 10kW load at 0.8 PF requires 25% more current than at 1.0 PF."
+    answer: "Power factor is the ratio of real power (kW) to apparent power (kVA). A power factor of 1.0 means all power is useful (resistive loads), while lower values indicate reactive components. Poor power factor increases current requirements - a 10kW load at 0.8 PF requires 25% more current than at 1.0 PF."
   },
   {
     question: "How do I calculate amps for three-phase equipment?",
@@ -44,10 +44,6 @@ const kilowattsToAmpsFAQs = [
     question: "Why do I get different current values for line and phase currents?",
     answer: "In three-phase systems, line current equals phase current in wye connections, but differs in delta connections. For wye: Line current = Phase current. For delta: Line current = Phase current × 1.732. Most three-phase equipment ratings refer to line current, which is what you measure on the conductors feeding the equipment."
   },
-  {
-    question: "What power factor should I use for different types of loads?",
-    answer: "Typical power factors: Incandescent lighting (1.0), Fluorescent lighting (0.9), Motors at full load (0.8-0.9), Motors at partial load (0.5-0.8), Welders (0.5-0.8), Electronic equipment (0.7-0.95), Power supplies (0.6-0.95). When unknown, use 0.8 for motor loads and 0.9 for mixed commercial loads as conservative estimates."
-  }
 ];
 
 export default function KilowattsToAmpsCalculatorPage() {
@@ -66,8 +62,7 @@ export default function KilowattsToAmpsCalculatorPage() {
               Kilowatts to Amps Calculator
             </h1>
             <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-              Convert kilowatts to amperage for electrical load calculations. Professional tool for sizing 
-              conductors, breakers, and electrical equipment with power factor considerations.
+              Convert kilowatts to amperage for electrical load calculations.
             </p>
           </div>
           
@@ -181,7 +176,7 @@ export default function KilowattsToAmpsCalculatorPage() {
               </div>
               
               <div className="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-lg">
-                <h4 className="text-lg font-semibold text-orange-800 dark:text-orange-300 mb-3">Leading Power Factor (PF &gt; 1.0)</h4>
+                <h4 className="text-lg font-semibold text-orange-800 dark:text-orange-300 mb-3">Leading Power Factor</h4>
                 <ul className="list-disc pl-4 space-y-1 text-orange-700 dark:text-orange-300 text-sm">
                   <li>Current leads voltage</li>
                   <li>Capacitive reactive power</li>
@@ -234,156 +229,6 @@ export default function KilowattsToAmpsCalculatorPage() {
           </h2>
           
           <div className="grid lg:grid-cols-2 gap-8">
-            {/* Example 1: Commercial HVAC System */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
-                  <Settings className="h-6 w-6 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Commercial HVAC System
-                </h3>
-              </div>
-              <div className="space-y-3">
-                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                  <p className="font-medium text-gray-900 dark:text-white mb-2">System Specifications:</p>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    50kW three-phase chiller unit, 480V supply, 0.85 power factor
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Power:</span> 50kW (50,000 watts)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Voltage:</span> 480V three-phase
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Power Factor:</span> 0.85 (typical for large motors)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Formula:</span> I = kW × 1000 ÷ (V × √3 × PF)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Calculation:</span> I = 50,000 ÷ (480 × 1.732 × 0.85)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Current:</span> 70.7 amps per phase
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">125% for Sizing:</span> 70.7 × 1.25 = 88.4A
-                  </p>
-                </div>
-                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: Use 100A breaker and #3 AWG conductors minimum
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Example 2: Residential Electric Range */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-lg">
-                  <Zap className="h-6 w-6 text-green-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Residential Electric Range
-                </h3>
-              </div>
-              <div className="space-y-3">
-                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                  <p className="font-medium text-gray-900 dark:text-white mb-2">Appliance Rating:</p>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    12kW electric range, 240V single-phase, resistive load
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Power:</span> 12kW (12,000 watts)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Voltage:</span> 240V single-phase
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Power Factor:</span> 1.0 (resistive heating elements)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Formula:</span> I = kW × 1000 ÷ (V × PF)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Calculation:</span> I = 12,000 ÷ (240 × 1.0)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Current:</span> 50.0 amps
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">NEC Demand:</span> 8kW + 40% of remainder = 9.6kW
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Demand Current:</span> 40.0 amps
-                  </p>
-                </div>
-                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: 50A breaker required, #6 AWG conductors adequate
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Example 3: Industrial Motor */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-lg">
-                  <TrendingUp className="h-6 w-6 text-purple-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Industrial Motor Load
-                </h3>
-              </div>
-              <div className="space-y-3">
-                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                  <p className="font-medium text-gray-900 dark:text-white mb-2">Motor Specifications:</p>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    75kW (100 HP) motor, 460V three-phase, 0.88 power factor at full load
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Power:</span> 75kW output (input power higher due to efficiency)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Efficiency:</span> 95% (0.95)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Input Power:</span> 75kW ÷ 0.95 = 78.9kW
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Voltage:</span> 460V three-phase
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Power Factor:</span> 0.88 at full load
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Calculation:</span> I = 78,900 ÷ (460 × 1.732 × 0.88)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Full Load Current:</span> 112.4 amps
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">NEC Table Value:</span> 124A (from Table 430.250)
-                  </p>
-                </div>
-                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: Use NEC table value (124A) for conductor and overload sizing
-                  </p>
-                </div>
-              </div>
-            </div>
-
             {/* Example 4: LED Lighting System */}
             <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
               <div className="flex items-center gap-3 mb-4">
@@ -420,76 +265,10 @@ export default function KilowattsToAmpsCalculatorPage() {
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     <span className="font-medium">Current:</span> 95.0 amps
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Continuous Load:</span> 95.0 ÷ 0.8 = 118.8A capacity needed
-                  </p>
-                </div>
-                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: 125A breaker and #1 AWG conductors for continuous operation
-                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Example 5: Data Center UPS */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg lg:col-span-2">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-indigo-100 dark:bg-indigo-900/30 p-2 rounded-lg">
-                  <AlertCircle className="h-6 w-6 text-indigo-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Data Center UPS System
-                </h3>
-              </div>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                  <p className="font-medium text-gray-900 dark:text-white mb-2">System Configuration:</p>
-                  <p className="text-gray-700 dark:text-gray-300 mb-4">
-                    500kVA UPS system with 400kW load, 480V three-phase output
-                  </p>
-                  <div className="space-y-2">
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Apparent Power:</span> 500kVA
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Real Power:</span> 400kW
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Power Factor:</span> 400kW ÷ 500kVA = 0.8
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Output Voltage:</span> 480V three-phase
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">UPS Efficiency:</span> 96% at full load
-                    </p>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                    <h4 className="font-medium text-blue-800 dark:text-blue-300 mb-2">Output Current:</h4>
-                    <p className="text-sm text-blue-700 dark:text-blue-300">
-                      I = 400,000W ÷ (480V × 1.732 × 0.8) = 601A
-                    </p>
-                  </div>
-                  <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-                    <h4 className="font-medium text-green-800 dark:text-green-300 mb-2">Input Current:</h4>
-                    <p className="text-sm text-green-700 dark:text-green-300">
-                      Input Power = 400kW ÷ 0.96 = 417kW<br/>
-                      I = 417,000W ÷ (480V × 1.732 × 0.95) = 527A
-                    </p>
-                  </div>
-                  <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
-                    <h4 className="font-medium text-yellow-800 dark:text-yellow-300 mb-2">Bypass Requirements:</h4>
-                    <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                      Bypass current = Output current = 601A<br/>
-                      Size for 125% = 751A minimum
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -502,39 +281,6 @@ export default function KilowattsToAmpsCalculatorPage() {
           </h2>
           
           <div className="grid lg:grid-cols-2 gap-8">
-            {/* Common Equipment Power Factors */}
-            <div className="space-y-6">
-              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                Typical Power Factors by Equipment Type
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full border border-gray-300 dark:border-gray-600 rounded-lg">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Equipment Type
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Power Factor
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Incandescent Lighting</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.00</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Electric Heating</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.00</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">LED Lighting (with PFC)</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.95-0.98</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Fluorescent Lighting</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.90-0.95</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Motors (Full Load)</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.80-0.90</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Motors (Partial Load)</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.50-0.80</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Welding Equipment</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.50-0.80</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Transformers</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.95-0.99</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Power Supplies (SMPS)</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.60-0.95</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Computer Equipment</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.70-0.95</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
             {/* Power Factor Impact on Current */}
             <div className="space-y-6">
               <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
@@ -599,14 +345,12 @@ export default function KilowattsToAmpsCalculatorPage() {
                     <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
                       <li>• Use NEC Table 430.250 for motor full load current</li>
                       <li>• Don't use nameplate current for conductor sizing</li>
-                      <li>• Size conductors at 125% of motor FLC</li>
                       <li>• Consider motor starting current for voltage drop</li>
                     </ul>
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900 dark:text-white mb-2">Power Factor Considerations:</h4>
                     <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Full load: 0.8-0.9 power factor typical</li>
                       <li>• Partial load: Power factor decreases significantly</li>
                       <li>• Variable frequency drives improve power factor</li>
                       <li>• Consider power factor correction for large motors</li>
@@ -624,19 +368,9 @@ export default function KilowattsToAmpsCalculatorPage() {
                   <div>
                     <h4 className="font-medium text-gray-900 dark:text-white mb-2">LED Considerations:</h4>
                     <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Modern LEDs typically have 0.9+ power factor</li>
                       <li>• Check driver specifications for actual values</li>
                       <li>• Some dimming systems affect power factor</li>
                       <li>• Consider harmonic distortion with large LED loads</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Continuous Load Requirements:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Size circuits at 125% for continuous operation</li>
-                      <li>• Applies to lighting operating &gt;3 hours continuously</li>
-                      <li>• Critical for commercial and industrial lighting</li>
-                      <li>• Affects both conductor and breaker sizing</li>
                     </ul>
                   </div>
                 </div>
@@ -720,50 +454,11 @@ export default function KilowattsToAmpsCalculatorPage() {
                 <ul className="space-y-3 text-gray-700 dark:text-gray-300">
                   <li className="flex items-start gap-2">
                     <span className="text-red-500 mt-1">•</span>
-                    <span>Use actual connected load, not demand factors, for conductor sizing</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Size conductors at 125% for continuous loads (&gt;3 hours operation)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Consider voltage drop limitations (5% for feeders, 3% for branch circuits)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Use NEC motor tables, not nameplate current, for motor circuits</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
                     <span>Account for temperature derating factors</span>
                   </li>
                 </ul>
               </div>
 
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Design Safety Factors
-                </h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Continuous Loads:</span>
-                    <span className="text-gray-800 dark:text-gray-200">125% minimum sizing</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Motor Loads:</span>
-                    <span className="text-gray-800 dark:text-gray-200">Use NEC table values</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Future Growth:</span>
-                    <span className="text-gray-800 dark:text-gray-200">Consider 20-25% spare capacity</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Power Factor:</span>
-                    <span className="text-gray-800 dark:text-gray-200">Use conservative estimates</span>
-                  </div>
-                </div>
-              </div>
             </div>
 
             <div className="space-y-6">
@@ -848,7 +543,7 @@ export default function KilowattsToAmpsCalculatorPage() {
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">kVA to Amps Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Convert apparent power (kVA) to current for transformer sizing
+                Convert apparent power (kVA) to current
               </p>
             </Link>
             
@@ -887,9 +582,6 @@ export default function KilowattsToAmpsCalculatorPage() {
                 <AlertCircle className="h-6 w-6 text-red-600" />
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Wire Size Calculator</h3>
               </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Size conductors based on calculated current loads
-              </p>
             </Link>
 
           </div>

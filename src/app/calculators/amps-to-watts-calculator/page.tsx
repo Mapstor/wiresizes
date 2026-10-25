@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { AmpsToWattsCalculator } from '@/components/calculators';
-import { Zap, Calculator, AlertTriangle, CheckCircle, Settings, Target, BookOpen, Users, Wrench, TrendingUp, Power } from 'lucide-react';
+import { Zap, Calculator, AlertTriangle, Settings, Target, BookOpen, Users, Wrench, TrendingUp, Power } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
@@ -23,31 +23,15 @@ const AMPS_TO_WATTS_EXAMPLES = [
   {
     title: 'Residential Circuit Analysis',
     scenario: '15A circuit at 120V, PF=1.0 (resistive)',
-    calculation: 'Single-Phase: P = V × I × PF\nPower = 120V × 15A × 1.0 = 1800W\nCapacity utilization: Safe to load to 80% = 1440W\nTypical loads: Lighting, general receptacles',
+    calculation: 'Single-Phase: P = V × I × PF\nPower = 120V × 15A × 1.0 = 1800W\nTypical loads: Lighting, general receptacles',
     result: '1800W maximum',
-    usableCapacity: '1440W continuous',
+    usableCapacity: '',
     application: 'General lighting and receptacle circuits'
-  },
-  {
-    title: 'Motor Load Calculation',
-    scenario: '25A motor at 240V, PF=0.85',
-    calculation: 'Motor Power: P = V × I × PF\nPower = 240V × 25A × 0.85 = 5100W = 5.1kW\nMotor HP equivalent: 5.1kW ÷ 746W/HP = 6.84HP\nNote: Motor nameplate should specify actual HP',
-    result: '5100W (5.1kW)',
-    usableCapacity: '~7HP equivalent',
-    application: 'Industrial motors, compressors'
-  },
-  {
-    title: 'Three-Phase Load',
-    scenario: '50A at 480V 3-phase, PF=0.92',
-    calculation: '3-Phase Power: P = √3 × V × I × PF\nPower = 1.732 × 480V × 50A × 0.92\nPower = 38,323W = 38.3kW\nEquivalent HP: 38.3kW ÷ 746W/HP = 51.3HP',
-    result: '38.3kW',
-    usableCapacity: '~51HP motor equivalent',
-    application: 'Large industrial equipment, commercial HVAC'
   },
   {
     title: 'Electric Range Circuit',
     scenario: '40A at 240V, PF=1.0 (heating elements)',
-    calculation: 'Resistive Load: P = V × I\nPower = 240V × 40A = 9600W = 9.6kW\nHeat output: ~32,760 BTU/hr\nTypical for large electric ranges',
+    calculation: 'Resistive Load: P = V × I\nPower = 240V × 40A = 9600W = 9.6kW\nHeat output: ~32,760 BTU/hr',
     result: '9600W (9.6kW)',
     usableCapacity: '32,760 BTU/hr heating',
     application: 'Electric ranges, cooktops, ovens'
@@ -55,17 +39,17 @@ const AMPS_TO_WATTS_EXAMPLES = [
   {
     title: 'EV Charger Load',
     scenario: '32A at 240V, PF=1.0 (continuous)',
-    calculation: 'EVSE Power: P = V × I\nPower = 240V × 32A = 7680W = 7.68kW\nCharging rate: ~25-30 miles per hour\nCircuit must be sized for 40A (125% of load)',
+    calculation: 'EVSE Power: P = V × I\nPower = 240V × 32A = 7680W = 7.68kW',
     result: '7680W (7.68kW)',
-    usableCapacity: '25-30 miles/hour charging',
+    usableCapacity: '',
     application: 'Level 2 EV charging stations'
   },
   {
     title: 'LED Lighting System',
     scenario: '8A at 120V, PF=0.95',
-    calculation: 'LED Power: P = V × I × PF\nPower = 120V × 8A × 0.95 = 912W\nLight output: ~100-120 lumens per watt\nTotal output: ~91,200-109,440 lumens',
+    calculation: 'LED Power: P = V × I × PF\nPower = 120V × 8A × 0.95 = 912W',
     result: '912W',
-    usableCapacity: '~100,000 lumens',
+    usableCapacity: '',
     application: 'Commercial LED lighting systems'
   }
 ];
@@ -88,7 +72,7 @@ const POWER_CALCULATION_FORMULAS = [
   {
     system: 'Three-Phase Balanced',
     formula: 'P = √3 × V × I × PF',
-    example: '1.732 × 480V × 20A × 0.9 = 15,000W',
+    example: '',
     when: 'Industrial/commercial loads',
     notes: 'V = line-to-line voltage'
   },
@@ -98,71 +82,6 @@ const POWER_CALCULATION_FORMULAS = [
     example: '240V × 15A = 3600VA',
     when: 'Transformer sizing',
     notes: 'Includes reactive power'
-  }
-];
-
-const TYPICAL_POWER_FACTORS = [
-  { loadType: 'Incandescent Lighting', pf: '1.00', characteristics: 'Purely resistive, in-phase current' },
-  { loadType: 'Electric Heating', pf: '1.00', characteristics: 'Resistive elements, unity power factor' },
-  { loadType: 'LED Lighting (quality)', pf: '0.90-0.98', characteristics: 'Electronic drivers with PFC' },
-  { loadType: 'Fluorescent Lighting', pf: '0.85-0.95', characteristics: 'Depends on ballast type' },
-  { loadType: 'Induction Motors (loaded)', pf: '0.80-0.90', characteristics: 'Good power factor when loaded' },
-  { loadType: 'Induction Motors (unloaded)', pf: '0.15-0.30', characteristics: 'Poor PF at light loads' },
-  { loadType: 'Welding Equipment', pf: '0.50-0.80', characteristics: 'Inductive, poor power factor' },
-  { loadType: 'Computer Equipment', pf: '0.65-0.95', characteristics: 'Varies by power supply quality' }
-];
-
-const CIRCUIT_CAPACITY_GUIDE = [
-  { circuitAmps: '15A', voltage: '120V', maxWatts: '1800W', continuousWatts: '1440W', typicalUse: 'General lighting, receptacles' },
-  { circuitAmps: '20A', voltage: '120V', maxWatts: '2400W', continuousWatts: '1920W', typicalUse: 'Kitchen, bathroom, laundry' },
-  { circuitAmps: '30A', voltage: '240V', maxWatts: '7200W', continuousWatts: '5760W', typicalUse: 'Clothes dryer, small AC' },
-  { circuitAmps: '40A', voltage: '240V', maxWatts: '9600W', continuousWatts: '7680W', typicalUse: 'Electric range, large appliances' },
-  { circuitAmps: '50A', voltage: '240V', maxWatts: '12000W', continuousWatts: '9600W', typicalUse: 'Electric range, large welders' },
-  { circuitAmps: '60A', voltage: '240V', maxWatts: '14400W', continuousWatts: '11520W', typicalUse: 'Subpanels, large HVAC' }
-];
-
-const NEC_COMPLIANCE_INFO = [
-  {
-    code: 'NEC 210.19(A)(1)',
-    requirement: 'Continuous Load Derating',
-    description: 'Branch circuits must be sized at 125% of continuous loads (3+ hours operation)',
-    application: 'Lighting, HVAC, commercial equipment',
-    calculation: 'Circuit capacity = Load × 1.25 for continuous operation'
-  },
-  {
-    code: 'NEC 220.82',
-    requirement: 'Dwelling Load Calculation',
-    description: 'Standard method for residential service sizing using demand factors',
-    application: 'Whole house electrical service calculations',
-    calculation: 'Applies demand factors to different load types'
-  },
-  {
-    code: 'NEC 430.6(A)',
-    requirement: 'Motor Full-Load Current',
-    description: 'Use NEC tables for motor current, not nameplate values',
-    application: 'Motor circuit sizing and protection',
-    calculation: 'Reference Tables 430.247-430.250 for FLC values'
-  },
-  {
-    code: 'NEC 625.41',
-    requirement: 'EV Charging Load',
-    description: 'Electric vehicle supply equipment load calculations',
-    application: 'EV charger installations',
-    calculation: 'Continuous load requiring 125% sizing'
-  },
-  {
-    code: 'NEC 220.54',
-    requirement: 'Cooking Equipment Demand',
-    description: 'Demand factors for electric ranges and cooking units',
-    application: 'Kitchen electrical load calculations',
-    calculation: 'Column B demand factors for household cooking equipment'
-  },
-  {
-    code: 'NEC 424.3(B)',
-    requirement: 'Fixed Electric Space Heating',
-    description: 'Sizing requirements for electric heating equipment',
-    application: 'Electric baseboard, furnaces, heat pumps',
-    calculation: 'No diversity factor - 100% demand for heating loads'
   }
 ];
 
@@ -178,36 +97,9 @@ const TROUBLESHOOTING_GUIDE = [
     ],
     prevention: 'Use measured values when possible, account for real-world conditions'
   },
-  {
-    problem: 'Circuit breaker trips despite correct calculations',
-    causes: ['Starting currents not considered', '80% derating rule violated', 'Harmonic currents', 'Ambient temperature effects'],
-    solutions: [
-      'Size breaker for starting current (3-8x FLA for motors)',
-      'Derate continuous loads to 80%',
-      'Consider harmonic-rated breakers for non-linear loads',
-      'Account for high ambient temperatures'
-    ],
-    prevention: 'Follow NEC sizing rules, consider all operating conditions'
-  },
 ];
 
 const ADVANCED_CALCULATIONS = [
-  {
-    title: 'Harmonic Distortion Effects on Power',
-    description: 'Non-linear loads create harmonics that affect power calculations',
-    formula: 'P_total = P_fundamental × √(1 + THD²)',
-    example: 'Load with 20% THD: P_actual = 1000W × √(1 + 0.2²) = 1020W',
-    applications: ['Variable frequency drives', 'Switch-mode power supplies', 'LED drivers', 'Computer equipment'],
-    considerations: 'Harmonics increase heating, reduce power factor, affect neutral currents'
-  },
-  {
-    title: 'Demand Factor Calculations',
-    description: 'Not all connected loads operate simultaneously - apply demand factors',
-    formula: 'Demand Load = Connected Load × Demand Factor',
-    example: '10 apartments × 8kW each × 0.43 demand factor = 34.4kW demand',
-    applications: ['Multi-unit residential', 'Commercial buildings', 'Industrial facilities'],
-    considerations: 'NEC Article 220 provides standard demand factors for various load types'
-  },
   {
     title: 'Power Factor Correction Sizing',
     description: 'Calculate capacitor size needed to improve power factor',
@@ -229,19 +121,15 @@ const ADVANCED_CALCULATIONS = [
 const COMPREHENSIVE_FAQS = [
   {
     question: 'How do I convert 20 amps to watts?',
-    answer: 'For single-phase: Watts = Voltage × Amps × Power Factor. At 120V: 20A × 120V × 1.0 = 2400W. At 240V: 20A × 240V × 1.0 = 4800W. For motors or reactive loads, include the appropriate power factor (typically 0.8-0.9 for motors).'
-  },
-  {
-    question: 'What is the maximum watts on a 15 amp circuit?',
-    answer: 'A 15A circuit at 120V can handle 1800W maximum (15A × 120V). However, NEC requires 80% derating for continuous loads, so practical limit is 1440W for loads operating 3+ hours continuously. This includes most appliances and lighting.'
+    answer: 'For single-phase: Watts = Voltage × Amps × Power Factor. At 120V: 20A × 120V × 1.0 = 2400W. At 240V: 20A × 240V × 1.0 = 4800W. For motors or reactive loads, include the appropriate power factor.'
   },
   {
     question: 'How many watts can a 30 amp breaker handle?',
-    answer: 'At 240V: 30A × 240V = 7200W maximum. For continuous loads: 7200W × 0.8 = 5760W. At 120V: 30A × 120V = 3600W maximum, 2880W continuous. The voltage depends on whether it\'s a single or double-pole breaker.'
+    answer: 'At 240V: 30A × 240V = 7200W maximum. At 120V: 30A × 120V = 3600W maximum. The voltage depends on whether it\'s a single or double-pole breaker.'
   },
   {
     question: 'Do I need to consider power factor?',
-    answer: 'Yes, for inductive loads like motors, transformers, and some lighting. Resistive loads (heaters, incandescent bulbs) have power factor = 1.0. Motors typically have PF = 0.8-0.9. Poor power factor increases current draw and reduces circuit capacity.'
+    answer: 'Yes, for inductive loads like motors, transformers, and some lighting. Resistive loads (heaters, incandescent bulbs) have power factor = 1.0. Poor power factor increases current draw and reduces circuit capacity.'
   },
   {
     question: 'What\'s the difference between watts and VA?',
@@ -249,7 +137,7 @@ const COMPREHENSIVE_FAQS = [
   },
   {
     question: 'How do I calculate three-phase power?',
-    answer: 'Three-phase power: P = √3 × V × I × PF. √3 = 1.732. Use line-to-line voltage. Example: 20A at 480V with 0.9 PF: P = 1.732 × 480 × 20 × 0.9 = 15,000W (15kW). This is total three-phase power.'
+    answer: 'Three-phase power: P = √3 × V × I × PF. √3 = 1.732. Use line-to-line voltage. This is total three-phase power.'
   },
   {
     question: 'Can I add watts from multiple circuits?',
@@ -257,20 +145,8 @@ const COMPREHENSIVE_FAQS = [
   },
   {
     question: 'Why does my motor draw more amps than calculated?',
-    answer: 'Starting current can be 3-8 times running current. Also, motor efficiency varies with load. A motor drawing rated current might be producing less than rated power due to low power factor or reduced efficiency at light loads.'
+    answer: 'Motor efficiency varies with load. A motor drawing rated current might be producing less than rated power due to low power factor or reduced efficiency at light loads.'
   },
-  {
-    question: 'How do harmonics affect power calculations?',
-    answer: 'Harmonics from non-linear loads increase total power consumption. While fundamental power remains the same, harmonic distortion creates additional heating and losses. Total power = fundamental power × √(1 + THD²). This affects wire sizing and transformer capacity.'
-  },
-  {
-    question: 'How do I size a generator for my calculated load?',
-    answer: 'Size generator 25-30% larger than calculated running load to handle starting currents and future expansion. For motor loads, consider starting kVA = 6× running kW. Account for altitude derating (3% per 1000ft above sea level) and temperature derating.'
-  },
-  {
-    question: 'Why is my UPS capacity different from my power calculation?',
-    answer: 'UPS systems are rated in VA, not just watts. For IT equipment with power factor ~0.9, a 1000W load requires 1000W ÷ 0.9 = 1111VA capacity. Also consider battery runtime, efficiency losses, and startup surge currents.'
-  }
 ];
 
 export default function AmpsToWattsCalculatorPage() {
@@ -289,24 +165,12 @@ export default function AmpsToWattsCalculatorPage() {
                 <h1 className="text-4xl font-bold">Amps to Watts Calculator</h1>
               </div>
               <p className="text-xl mb-6 text-green-50">
-                Convert electrical current (amperage) to power (watts) for single-phase and three-phase systems. 
-                Professional calculations with power factor correction for accurate power analysis.
+                Convert electrical current (amperage) to power (watts) for single-phase and three-phase systems.
               </p>
               <div className="flex flex-wrap gap-4">
                 <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
                   <div className="text-sm text-green-100">Power Analysis</div>
                   <div className="font-semibold">Real & Apparent Power</div>
-                </div>
-                <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
-                  <div className="text-sm text-green-100">Circuit Capacity</div>
-                  <div className="font-semibold">Load Assessment</div>
-                </div>
-                <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
-                  <div className="text-sm text-green-100">Power Factor</div>
-                  <div className="font-semibold">Reactive Load Correction</div>
-                </div>
-                <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
-                  <div className="text-sm text-green-100">Energy Planning</div>
                 </div>
               </div>
             </div>
@@ -319,9 +183,7 @@ export default function AmpsToWattsCalculatorPage() {
               <div>
                 <h2 className="text-lg font-semibold text-teal-900 mb-2">Power Calculation Critical Factors</h2>
                 <ul className="text-teal-800 space-y-1 text-sm">
-                  <li>• Power factor significantly affects real power - motors and inductive loads require PF correction</li>
-                  <li>• Circuit capacity limited to 80% for continuous loads (3+ hours operation)</li>
-                  <li>• Starting current for motors can be 3-8x running current but doesn\'t affect power calculation</li>
+                  <li>• Power factor significantly affects real power</li>
                   <li>• Apparent power (VA) differs from real power (W) for reactive loads</li>
                   <li>• Three-phase power requires √3 multiplier and line-to-line voltage</li>
                 </ul>
@@ -377,132 +239,13 @@ export default function AmpsToWattsCalculatorPage() {
                 <div key={idx} className="border rounded-lg p-6 bg-blue-50">
                   <h3 className="font-semibold text-gray-900 mb-2">{formula.system}</h3>
                   <div className="font-mono text-lg text-blue-600 mb-2">{formula.formula}</div>
-                  <div className="text-sm text-green-600 font-medium mb-2">Example: {formula.example}</div>
+                  {formula.example && (
+                    <div className="text-sm text-green-600 font-medium mb-2">Example: {formula.example}</div>
+                  )}
                   <div className="text-sm text-gray-600 mb-1">Use when: {formula.when}</div>
                   <div className="text-sm text-gray-500">{formula.notes}</div>
                 </div>
               ))}
-            </div>
-          </div>
-
-          {/* Power Factors */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Settings className="w-6 h-6 text-red-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Power Factor Reference</h2>
-            </div>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-red-50">
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Load Type</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Power Factor</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Characteristics</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {TYPICAL_POWER_FACTORS.map((pf, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50">
-                      <td className="border border-gray-300 px-4 py-3 font-medium">{pf.loadType}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center font-bold text-red-600">{pf.pf}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-sm text-gray-600">{pf.characteristics}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Circuit Capacity */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Zap className="w-6 h-6 text-yellow-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Circuit Capacity Reference</h2>
-            </div>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-yellow-50">
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Circuit Size</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Voltage</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Max Watts</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold">Continuous Watts</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold">Typical Applications</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {CIRCUIT_CAPACITY_GUIDE.map((circuit, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50">
-                      <td className="border border-gray-300 px-4 py-3 text-center font-bold">{circuit.circuitAmps}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center">{circuit.voltage}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center font-semibold text-orange-600">{circuit.maxWatts}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center font-semibold text-green-600">{circuit.continuousWatts}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-sm">{circuit.typicalUse}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* NEC Compliance */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <CheckCircle className="w-6 h-6 text-indigo-600" />
-              <h2 className="text-2xl font-bold text-gray-900">NEC Code Compliance for Power Calculations</h2>
-            </div>
-            
-            <div className="grid gap-6">
-              {NEC_COMPLIANCE_INFO.map((nec, idx) => (
-                <div key={idx} className="border-l-4 border-indigo-500 bg-indigo-50 rounded-lg p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h3 className="font-semibold text-gray-900 text-lg">{nec.code}</h3>
-                      <p className="text-indigo-700 font-medium">{nec.requirement}</p>
-                    </div>
-                    <span className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">
-                      NEC Code
-                    </span>
-                  </div>
-                  
-                  <p className="text-gray-700 mb-3">{nec.description}</p>
-                  
-                  <div className="bg-white rounded-lg p-4 mb-3">
-                    <div className="text-sm text-gray-600 mb-1">
-                      <span className="font-medium">Application: </span>{nec.application}
-                    </div>
-                    <div className="text-sm text-gray-700 font-mono bg-gray-50 p-2 rounded">
-                      {nec.calculation}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-8 bg-indigo-100 rounded-lg p-6">
-              <h3 className="font-semibold text-gray-900 mb-3">Key NEC Articles for Power Calculations</h3>
-              <div className="grid md:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <h4 className="font-medium text-indigo-800">Residential Load Calculations</h4>
-                  <ul className="text-gray-700 space-y-1 mt-1">
-                    <li>• NEC 220.82 - Standard Method</li>
-                    <li>• NEC 220.83 - Optional Method</li>
-                    <li>• NEC 220.54 - Cooking Equipment</li>
-                    <li>• NEC 220.60 - Non-linear Loads</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-medium text-indigo-800">Motor & Equipment Loads</h4>
-                  <ul className="text-gray-700 space-y-1 mt-1">
-                    <li>• NEC 430.6 - Motor Full-Load Current</li>
-                    <li>• NEC 430.24 - Feeder Sizing</li>
-                    <li>• NEC 625.41 - EV Charging Equipment</li>
-                    <li>• NEC 424.3 - Fixed Electric Heating</li>
-                  </ul>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -617,34 +360,6 @@ export default function AmpsToWattsCalculatorPage() {
               ))}
             </div>
 
-            <div className="mt-8 bg-red-50 border border-red-200 rounded-lg p-6">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-red-600" />
-                Safety Considerations for Power Measurements
-              </h3>
-              <div className="grid md:grid-cols-2 gap-6 text-sm">
-                <div>
-                  <h4 className="font-medium text-red-800 mb-2">Electrical Safety</h4>
-                  <ul className="text-gray-700 space-y-1">
-                    <li>• Always use properly rated test equipment</li>
-                    <li>• Verify equipment is in good working condition</li>
-                    <li>• Use appropriate PPE (arc-rated clothing, safety glasses)</li>
-                    <li>• Follow NFPA 70E electrical safety standards</li>
-                    <li>• De-energize circuits when possible for connections</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-medium text-red-800 mb-2">Measurement Accuracy</h4>
-                  <ul className="text-gray-700 space-y-1">
-                    <li>• Account for measurement equipment accuracy (±0.5-2%)</li>
-                    <li>• Consider temperature effects on measurements</li>
-                    <li>• Ensure proper grounding of measurement equipment</li>
-                    <li>• Allow equipment warm-up time for stable readings</li>
-                    <li>• Document measurement conditions and methodology</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* FAQs */}

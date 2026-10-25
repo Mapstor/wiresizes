@@ -1,80 +1,59 @@
 import { Metadata } from 'next';
-import { Zap, Calculator, AlertTriangle, CheckCircle, TrendingUp, Home, Wrench, Thermometer, MapPin, ArrowRight } from 'lucide-react';
+import { Zap, Calculator, AlertTriangle, CheckCircle, TrendingUp, Home, Wrench, Thermometer, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { getArticleDates } from '@/lib/article-dates';
+import { formatSize } from '@/lib/calculations/sizes';
+import { gecForServiceConductor, serviceConductors } from '@/lib/calculations/service-lookup';
+import { egcForOcpd } from '@/lib/calculations/grounding';
+import { AMBIENT_ROWS } from '@/lib/calculations/ampacity';
 
-
+// 100 A dwelling service: conductors from NEC Table 310.12 (data/verified/nec-310-12.json), grounding electrode
+// conductor from Table 250.66, equipment grounding conductor from Table 250.122 for 100 A overcurrent protection
+const SERVICE_100A = serviceConductors(100);
+const CU_100A = formatSize(SERVICE_100A ? SERVICE_100A.cu : '4');
+const AL_100A = formatSize(SERVICE_100A ? SERVICE_100A.alCca : '2');
+const GEC_100A = gecForServiceConductor(SERVICE_100A ? SERVICE_100A.cu : '4', 'Cu');
+const GEC_CU_100A = formatSize(GEC_100A ? GEC_100A.cu : '8');
+const EGC_100A = egcForOcpd(100);
+const EGC_CU_100A = formatSize(EGC_100A ? EGC_100A.cu : '8');
+const EGC_AL_100A = formatSize(EGC_100A ? EGC_100A.alCca : '6');
+// Table 310.15(B)(1)(1), 41–45 °C row, 75 °C column (data/verified/nec-310-15-B-1-1.json)
+const ATTIC_ROW = AMBIENT_ROWS.find((row) => row.key === '41–45');
 
 export const metadata: Metadata = {
-  title: 'Wire Size for 100 Amp Service / Subpanel',
+  title: 'Wire Size for 100 Amp Service',
   description: 'Wire size for a 100 A dwelling service: 4 AWG copper or 2 AWG aluminum (2023 NEC Table 310.12).',
-  keywords: '100 amp wire size, wire for 100 amp service, 100 amp subpanel wire, 100A electrical service, NEC 100 amp requirements',
+  keywords: '100 amp wire size, wire for 100 amp service, 100A electrical service, NEC 100 amp requirements',
   alternates: { canonical: '/guides/wire-size-for-100-amp' },
 };
 
 // Article data for schema
 const articleData = {
   headline: '100 Amp Wire Size Guide',
-  description: 'Complete guide for 100 amp wire sizing. Learn correct wire sizes for 100A service entrance, subpanels, copper vs aluminum, distance considerations, and NEC code requirements.',
+  description: 'Complete guide for 100 amp wire sizing. Learn correct wire sizes for 100A service entrance, copper vs aluminum, and NEC code requirements.',
   url: 'https://wiresizes.com/guides/wire-size-for-100-amp',
   ...getArticleDates('src/app/guides/wire-size-for-100-amp/page.tsx'),
 };
 
-// Distance-based wire sizing for 100A
-const WIRE_SIZE_BY_DISTANCE = [
-  { distance: '0-50 ft', copper: '3 AWG', aluminum: '1 AWG', voltageDrop: '<1%' },
-  { distance: '50-100 ft', copper: '2 AWG', aluminum: '1/0 AWG', voltageDrop: '1-2%' },
-  { distance: '100-150 ft', copper: '1 AWG', aluminum: '2/0 AWG', voltageDrop: '2-3%' },
-  { distance: '150-200 ft', copper: '1/0 AWG', aluminum: '3/0 AWG', voltageDrop: '2.5-3.5%' },
-  { distance: '200-250 ft', copper: '2/0 AWG', aluminum: '4/0 AWG', voltageDrop: '3-4%' },
-  { distance: '250-300 ft', copper: '3/0 AWG', aluminum: '250 kcmil', voltageDrop: '3.5-4.5%' },
-];
-
 // Common 100A applications
 const APPLICATIONS_100A = [
-  { 
-    type: 'Main Service', 
-    description: 'Small home main panel', 
-    copper: '3 AWG THHN', 
-    aluminum: '1 AWG XHHW',
-    conduit: '1¼" EMT',
-    ground: '8 AWG copper'
-  },
-  { 
-    type: 'Garage Subpanel', 
-    description: 'Detached garage workshop', 
-    copper: '3 AWG THHN', 
-    aluminum: '1 AWG USE-2',
-    conduit: '1¼" PVC',
-    ground: '8 AWG copper'
-  },
-  { 
-    type: 'Mobile Home', 
-    description: 'Manufactured home feeder', 
-    copper: '2 AWG SE cable', 
-    aluminum: '1/0 AWG SE cable',
-    conduit: 'Not required',
-    ground: 'Included in cable'
-  },
-  { 
-    type: 'Pool House', 
-    description: 'Pool equipment subpanel', 
-    copper: '3 AWG THWN', 
-    aluminum: '1 AWG XHHW',
-    conduit: '1¼" PVC',
-    ground: '8 AWG copper'
+  {
+    type: 'Main Service',
+    description: 'Small home main panel',
+    copper: CU_100A,
+    aluminum: AL_100A,
+    ground: `${EGC_CU_100A} copper`,
   },
 ];
 
 // Installation requirements
 const INSTALLATION_REQUIREMENTS = [
   { item: 'Main Breaker', spec: '100A 2-pole breaker', code: 'NEC 230.79' },
-  { item: 'Wire Size (Copper)', spec: '#3 AWG minimum', code: 'NEC Table 310.16' },
-  { item: 'Wire Size (Aluminum)', spec: '#1 AWG minimum', code: 'NEC Table 310.16' },
-  { item: 'Ground Wire', spec: '#8 AWG copper', code: 'NEC Table 250.122' },
-  { item: 'Conduit Size', spec: '1¼" minimum for 4 wires', code: 'NEC Chapter 9' },
-  { item: 'Grounding Electrode', spec: '#6 AWG copper GEC', code: 'NEC 250.66' },
+  { item: 'Wire Size (Copper)', spec: `${CU_100A} (100 A dwelling service)`, code: 'NEC Table 310.12' },
+  { item: 'Wire Size (Aluminum)', spec: `${AL_100A} (100 A dwelling service)`, code: 'NEC Table 310.12' },
+  { item: 'Ground Wire', spec: `${EGC_CU_100A} copper`, code: 'NEC Table 250.122' },
+  { item: 'Grounding Electrode', spec: `${GEC_CU_100A} copper GEC`, code: 'NEC Table 250.66' },
 ];
 
 export default function WireSizeFor100AmpPage() {
@@ -88,24 +67,20 @@ export default function WireSizeFor100AmpPage() {
             <h1 className="text-4xl font-bold">100 Amp Wire Size Guide</h1>
           </div>
           <p className="text-xl text-blue-100">
-            Complete specifications for 100A service entrance and subpanel installations
+            Complete specifications for 100A service entrance
           </p>
           <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-              <div className="text-3xl font-bold text-yellow-400">#3 AWG</div>
+              <div className="text-3xl font-bold text-yellow-400">{CU_100A}</div>
               <div className="text-sm text-blue-100">Copper Wire</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-              <div className="text-3xl font-bold text-gray-300">#1 AWG</div>
+              <div className="text-3xl font-bold text-gray-300">{AL_100A}</div>
               <div className="text-sm text-blue-100">Aluminum Wire</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-              <div className="text-3xl font-bold text-green-400">#8 AWG</div>
+              <div className="text-3xl font-bold text-green-400">{EGC_CU_100A}</div>
               <div className="text-sm text-blue-100">Ground Wire</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-              <div className="text-3xl font-bold text-orange-400">1¼"</div>
-              <div className="text-sm text-blue-100">Conduit Size</div>
             </div>
           </div>
         </div>
@@ -119,9 +94,8 @@ export default function WireSizeFor100AmpPage() {
             <div>
               <h2 className="font-bold text-green-900 mb-2">Quick Answer: Wire Size for 100 Amp Service</h2>
               <p className="text-green-800">
-                <strong>For 100 amp service, use #3 AWG copper wire or #1 AWG aluminum wire.</strong> For runs over 100 feet, 
-                increase to #2 AWG copper or #1/0 AWG aluminum to compensate for voltage drop. Always use #8 AWG copper for 
-                the equipment grounding conductor per NEC Table 250.122.
+                <strong>For a 100 A dwelling service, use {CU_100A} copper or {AL_100A} aluminum (2023 NEC Table 310.12).</strong>{' '}
+                Use {EGC_CU_100A} copper or {EGC_AL_100A} aluminum for the equipment grounding conductor per NEC Table 250.122.
               </p>
             </div>
           </div>
@@ -131,53 +105,6 @@ export default function WireSizeFor100AmpPage() {
       {/* Main Content */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          {/* Wire Size by Distance Table */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <MapPin className="w-6 h-6 text-blue-600" />
-              Wire Size by Distance - 100 Amp Service
-            </h2>
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="bg-gradient-to-r from-blue-600 to-blue-500 text-white">
-                      <th className="px-4 py-3 text-left">Distance</th>
-                      <th className="px-4 py-3 text-center">Copper Wire</th>
-                      <th className="px-4 py-3 text-center">Aluminum Wire</th>
-                      <th className="px-4 py-3 text-center">Voltage Drop</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {WIRE_SIZE_BY_DISTANCE.map((row, index) => (
-                      <tr key={index} className={index === 0 ? 'bg-green-50' : index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                        <td className="px-4 py-3 font-semibold">{row.distance}</td>
-                        <td className="px-4 py-3 text-center">
-                          <span className="font-mono font-bold text-orange-600">{row.copper}</span>
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <span className="font-mono font-bold text-gray-600">{row.aluminum}</span>
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <span className={`font-mono ${
-                            parseFloat(row.voltageDrop) <= 3 ? 'text-green-600' : 'text-amber-600'
-                          }`}>
-                            {row.voltageDrop}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="p-4 bg-blue-50 border-t border-blue-200">
-                <p className="text-sm text-blue-800">
-                  <strong>Note:</strong> NEC recommends maximum 3% voltage drop for branch circuits, 5% total for feeders and branch circuits combined.
-                </p>
-              </div>
-            </div>
-          </div>
-
           {/* Common Applications */}
           <div className="mb-12">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
@@ -197,10 +124,6 @@ export default function WireSizeFor100AmpPage() {
                     <div className="flex justify-between">
                       <span className="text-gray-500">Aluminum:</span>
                       <span className="font-mono font-semibold text-gray-600">{app.aluminum}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Conduit:</span>
-                      <span className="font-mono">{app.conduit}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">Ground:</span>
@@ -268,14 +191,14 @@ export default function WireSizeFor100AmpPage() {
                   <div className="flex-shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">3</div>
                   <div>
                     <h3 className="font-semibold mb-1">Select Wire Size</h3>
-                    <p className="text-gray-600">Choose wire based on distance: #3 AWG copper for short runs, upsize for longer distances.</p>
+                    <p className="text-gray-600">Choose wire based on distance: {CU_100A} copper or {AL_100A} aluminum for a 100 A dwelling service (Table 310.12), upsize for longer distances.</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
                   <div className="flex-shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">4</div>
                   <div>
                     <h3 className="font-semibold mb-1">Install Conduit</h3>
-                    <p className="text-gray-600">Run 1¼" conduit for 4 conductors (2 hots, 1 neutral, 1 ground).</p>
+                    <p className="text-gray-600">Run conduit for 4 conductors (2 hots, 1 neutral, 1 ground).</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
@@ -296,7 +219,7 @@ export default function WireSizeFor100AmpPage() {
                   <div className="flex-shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">7</div>
                   <div>
                     <h3 className="font-semibold mb-1">Install Grounding System</h3>
-                    <p className="text-gray-600">Connect #8 AWG equipment ground and #6 AWG grounding electrode conductor.</p>
+                    <p className="text-gray-600">Connect {EGC_CU_100A} equipment ground and {GEC_CU_100A} grounding electrode conductor.</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
@@ -322,7 +245,7 @@ export default function WireSizeFor100AmpPage() {
                 <ul className="space-y-2 text-sm">
                   <li className="flex gap-2">
                     <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                    <span>Attics over 40°C (104°F): Derate to 88% capacity</span>
+                    <span>Attics at {ATTIC_ROW?.key}°C ({ATTIC_ROW?.ambientF}°F): {ATTIC_ROW?.f_75} in the 75°C column (Table 310.15(B)(1)(1))</span>
                   </li>
                   <li className="flex gap-2">
                     <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
@@ -379,7 +302,6 @@ export default function WireSizeFor100AmpPage() {
                 className="bg-white rounded-lg p-6 shadow-md hover:shadow-xl transition-shadow border-2 border-transparent hover:border-purple-500">
                 <Home className="w-8 h-8 text-purple-600 mb-3" />
                 <h3 className="font-semibold text-lg mb-2">Service Calculator</h3>
-                <p className="text-sm text-gray-600 mb-4">Size complete service entrance</p>
                 <span className="text-purple-600 font-semibold flex items-center gap-1">
                   Size Service <ArrowRight className="w-4 h-4" />
                 </span>
@@ -398,10 +320,7 @@ export default function WireSizeFor100AmpPage() {
                 <div>
                   <h3 className="font-semibold text-amber-900 mb-3">Sizing Errors</h3>
                   <ul className="space-y-2 text-sm text-amber-800">
-                    <li>❌ Using #4 AWG copper (only rated for 85A at 75°C)</li>
                     <li>❌ Forgetting voltage drop for long runs</li>
-                    <li>❌ Not accounting for continuous loads (125% rule)</li>
-                    <li>❌ Using 60°C column instead of 75°C</li>
                   </ul>
                 </div>
                 <div>
@@ -410,7 +329,7 @@ export default function WireSizeFor100AmpPage() {
                     <li>❌ Undersized conduit causing difficult pulls</li>
                     <li>❌ Missing anti-oxidant on aluminum connections</li>
                     <li>❌ Incorrect torque on terminals</li>
-                    <li>❌ Wrong ground wire size (#10 instead of #8)</li>
+                    <li>❌ Wrong ground wire size (10 AWG instead of 8 AWG)</li>
                   </ul>
                 </div>
               </div>
