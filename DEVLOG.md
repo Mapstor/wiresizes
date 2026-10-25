@@ -6,6 +6,7 @@ _last update: 2026-10-24 · WSZ-013_
 - Phase: audit done 2026-10-19 (research/AUDIT-2026-10.md); research pack installed and code inventoried; WSZ-002 draft checked against the code; rebuild not started.
 - Last confirmed: WSZ-013 DRAFTCHECK — WSZ-002 draft checked against the code → research/wsz002-draft-review.md — done (commit "docs(wsz-013): WSZ-002 draft checked against the code", parent 506a451). Before it: WSZ-001 BOOTSTRAP — done (506a451).
 - In flight (handed, NOT confirmed): none
+- impeccable not installed: `npx --yes impeccable@4.7.0 install -y --no-hooks --providers=claude --scope=project` (2026-10-25, WSZ-002 step 1) → "Download failed: Could not verify skill bundle: https://impeccable.style/api/download/bundle/universal: Connection Failed: Connect error: Network unreachable (os error 101). Nothing was installed". impeccable.style is not on the box firewall allowlist; before/after `git status --short --ignored` identical.
 - Next action: chat revises WSZ-002 STOP-THE-BLEED from research/wsz002-draft-review.md (§1 must-fix list, §2 owner pre-steps) and research/inventory-2026-10.md, then hands it. Draft: research/prompts/WSZ-002.txt, which says "do not run".
 - Waiting on owner: push the WSZ-001 and WSZ-013 commits (origin/main is still a99da4e on 2026-10-24). Before WSZ-002 is pushed: create the contact@ alias; decide the host and, if www, flip the Vercel primary domain in the same sitting as that push; answer the open questions below.
 - Open questions:
@@ -49,6 +50,7 @@ _last update: 2026-10-24 · WSZ-013_
 - node_modules was installed on the Mac (only @next/swc-darwin-arm64); the first `next dev`/`next build` in the box downloads @next/swc-linux-arm64-* into ~/.cache/next-swc. node_modules is shared with the Mac: no `npm install` in the box without the owner.
 - `.claude/` is gitignored (.gitignore:47). The skills are tracked through `git add -f`, and new files under .claude/skills/ need `git add -f` too. Never commit .claude/settings.local.json.
 - The build skips type checking (next.config.ts `typescript.ignoreBuildErrors: true`). Run `node_modules/.bin/tsc --noEmit`: 3 errors on 2026-10-20 and 2026-10-24 (WellPumpCalculator.tsx:129, WireSizeCalculator.tsx:34 and :104).
+  - WSZ-002 TypeScript baseline, 2026-10-25 at ee3a82b, before the first change: `rm -rf .next && npm run build` (pass), then `npx tsc --noEmit 2>&1 | grep -c "error TS"` → 3. WSZ-002 step 9 must not end above it.
   - Run tsc only after `rm -rf .next && npm run build`. tsconfig includes every .tsx, unused components too, plus `.next/(dev/)types/validator.ts`, which imports every page file. A stale .next therefore breaks tsc once route folders are deleted.
 - Node v22.23.3 in the box strips TypeScript types with no flag: `node x.ts` runs, and so does an .mjs that imports a .ts file (checked 2026-10-24). Logic that a node script must test goes in a plain .ts module (no JSX, no `@/` imports, no enums), not inside a component.
 - Text gates that scan only the built HTML miss three things:

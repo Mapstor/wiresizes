@@ -44,4 +44,5 @@ next-env.d.ts
 *.bak
 
 # claude code local settings
-.claude/
+.claude/*
+!.claude/skills/
