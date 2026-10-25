@@ -2,6 +2,9 @@ WSZ-005 FLAGSHIPS — wiresizes.com: rebuild the AWG chart, NEC Table 310.16, ho
 
 REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
 PRECONDITION: DEVLOG §6 has WSZ-004 TRUSTFRAME as done. If not, stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`; if origin/main has commits main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
 Read first:
 - DEVLOG §0–§5 + last 10 §6 entries
 - research/page-specs.md, section "WSZ-005" (the approved page specs, built from 12 months of Bing queries)
@@ -25,8 +28,8 @@ Hard rules:
 - Every source line comes from <Sources>.
 - The two table pages are the most valuable URLs on the site. Keep their slugs.
 - Keep each H1's primary keyword and the existing title wording where it already matches the query. Rewrite the meta for the primary query.
-- No content that needs a GAP domain:
-  · which temperature column a circuit may use (110.14(C));
+- No content that needs a GAP domain, and nothing yet on terminal temperature columns:
+  · which temperature column a circuit may use (110.14(C) is verified in pack v3, but check-structure bans it until WSZ-008 lifts the ban);
   · NM cable at 60 °C (334.80);
   · Table 310.17;
   · voltage-drop recommendations.
@@ -48,14 +51,14 @@ Hard rules:
    - the NFPA trademark notice on the page.
 3. The edition panel (310.16 page) and the editions page:
    - read data/verified/nec-adoption.json and the nec-2026-edition registry row;
-   - render only verified rows; list the other states as not yet checked;
-   - never show counts from anywhere else;
-   - show "Verified {Mon YYYY}" from the data.
+   - follow every entry in the file's rules array: verified rows only, per-jurisdiction counts, "Local adoption" for edition "local", each row's scope text, the next_change wording, the TN qualifier, and HI and MS as "not verified";
+   - never show counts from anywhere else; any count on the page is derived from the file's rows;
+   - show "Verified {Mon YYYY}" from the file's as_of.
 4. Homepage and hubs:
    - cards for live, non-withdrawn routes only, derived from the route list (one source of truth; withdrawn and redirected routes drop out automatically);
    - no counts unless derived;
    - two plain lines under the H1 naming what the site covers and who keeps it.
-5. Add the six routes to scripts/gates.config.json enforce. Run anti-slop-prose on all new copy (report the fix count). If .claude/skills/impeccable exists, run its audit on the two table-page templates and the homepage at 390 px, fix what it finds and report. If it doesn't exist, write "impeccable not installed" in DEVLOG.
+5. Add the six routes to scripts/gates.config.json enforce. Run anti-slop-prose on all new copy (report the fix count). Run Impeccable (/impeccable audit; installed in WSZ-002) on the two table-page templates and the homepage at 390 px, fix what it finds and report. If .claude/skills/impeccable is missing, write "impeccable not installed" in DEVLOG and continue.
 6. Run the content-page prepublish checklist (references/prepublish-checklist.md plus the v2.1 lines in SKILL.md) for each page. Report each line as pass, fail or n/a. Fix every fail before committing.
 7. Append one line to src/data/corrections.json: "{date}: rebuilt the AWG chart and NEC Table 310.16 pages from NIST and NFPA sources; added the full 0000–40 AWG and 250–2000 kcmil range and all Table 310.16 rows."
 8. Verify:
@@ -74,4 +77,4 @@ Definition of done (paste each output):
 - anti-slop fix count
 - impeccable result or "not installed"
 
-DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-005 FLAGSHIPS. Status done only if the verification ran and passed; skipped tests and UI behaviour count as unverified (layout at 390 px is unverified unless the overflow script ran). Also record these chat notes: §5: "When G14 (110.14(C)) is sourced, add a 'which column applies' section to the 310.16 page and the AWG chart (small follow-up prompt)." Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-005 FLAGSHIPS. Status done only if the verification ran and passed; skipped tests and UI behaviour count as unverified (layout at 390 px is unverified unless the overflow script ran). Also record these chat notes: §5: "110.14(C) is verified (pack v3). After WSZ-008 lifts the check-structure ban, add a 'which column applies' section to the 310.16 page and the AWG chart (small follow-up prompt)." Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.

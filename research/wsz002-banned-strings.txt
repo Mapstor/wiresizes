@@ -1,26 +1,54 @@
-# WSZ-002 definition of done: none of these may appear (case-insensitive) in any prerendered HTML page,
-# in sitemap.xml, robots.txt, llms.txt, OG/Twitter tags or JSON-LD after `rm -rf .next && npm run build`.
-# One phrase per line; lines starting with # are comments. Source: research/AUDIT-2026-10.md §4–§5 and research/sources/verification.md.
+# WSZ-002 definition of done: none of these may appear (case-insensitive substring match) in any prerendered HTML page
+# (visible text, attributes, <title>/<meta>, JSON-LD), in sitemap.xml, robots.txt, llms.txt, manifest.json,
+# or in the text of src/app/opengraph-image.tsx, after `rm -rf .next && npm run build`.
+# One phrase per line; lines starting with # are comments. Sources: research/AUDIT-2026-10.md §4–§5,
+# research/code-audit-2026-10.md, and a grep of the a99da4e source (2026-10-20).
 # Withdrawn pages are included in the scan (their old content must be gone too).
+# Revised 2026-10-20: "100,000" → "100,000+" (a BTU preset is legitimate); added the compliance, team,
+# authority-block, process-promise and builder-talk phrases found in the source.
+# Revised again 2026-10-20 after the WSZ-002 review: wrong sizes that survived the first list, old calculator
+# titles and outputs, and homepage claims. check-banned also scans string literals and JSX text in the source
+# of every module a live route imports, so print payloads and result titles are covered.
 
 # fabricated social proof and badges
 Trusted by
 50,000+
-100,000
+100,000+
 50+ Countries
 30+ Professional Tools
 Professional Grade
-NEC Code Compliant
-NEC 2023 Compliant
+Professional-grade
+Professional Tools
+Professional Electrical
+Professional Disclaimer
+Professional Tip
+professional documentation
 FREE Always
 used by licensed electricians
 Trusted worldwide
 engineers educated
 Used by over
+Countries Served
+Countries Supported
+Calculate with confidence
+eliminate guesswork
 
-# fabricated authority and service promises (/about, /contact, /disclaimer)
+# compliance claims (a reference site cannot certify compliance; covers "NEC compliant", "NEC-compliant",
+# "code-compliant", "NEC 2023 compliant", "Article 625 compliant", "OSHA-compliant")
+compliant
+NEC Code Compliant
+NEC 2023 Compliant
+Industry Standard
+
+# homepage-link "authority" blocks (they list organizations whose numbers the page does not use)
+Authority Links
+Authority Resources
+Authority References
+
+# fabricated people, authority and service promises (/about, /contact, /disclaimer, /terms, error page)
 reviewed by licensed
 master electricians
+licensed electrical engineers
 Industry Recognition
 Recommended tool for field calculations
 Valuable reference for code compliance
@@ -36,6 +64,15 @@ Calculations Per Month
 24/7
 2-hour response
 Critical Support
+Our team
+Support Team
+technical team
+services team
+Education Team
+Contact Team
+within 90 days
+within 30 days
+spot-check
 emergency@
 support@wiresizes
 consulting@
@@ -50,12 +87,15 @@ Backyard Oasis
 JuiceBox
 through 2032
 Download NEC Table
+Download PDF
 PE stamp
+(PE) stamp
 60% of electrical
 NEC 2024
 4/0 copper or 250 kcmil aluminum
 1 AWG copper or 1/0 aluminum
 2/0 aluminum per
+2/0 aluminum for dwelling
 6-25R
 408 V
 408V
@@ -64,10 +104,52 @@ Generally not required for ranges
 remainder @ 80%
 THHN-2
 NEC 2026 publishes
+edition publishes
 most recent edition
+most recent published edition
 3.5 VA per sq ft
+0.12/kWh
 
 # builder/AI talk on reader pages
 Do AI assistants
 llms.txt
 git-derived
+src/lib
+nec-tables
+
+# wrong sizes and 75 °C-column sizing that survived the first list (review finding 6 and 11)
+copper or 250 kcmil aluminum
+1 AWG copper or 1/0 AWG aluminum
+100A subpanel: 3 AWG copper, 1 AWG aluminum at 75°C
+May use 50A breaker
+8 AWG copper, 50A breaker
+making it suitable for 30A breakers
+assumes 75°C rated conductors and terminations
+Multiply by 1.25
+
+# old calculator titles, limits and outputs (review findings 3, 4, 12)
+NEC 3% recommendation
+within 5% limit
+NEC recommendation of 3%
+Not Recommended
+With Caution
+N/A AWG
+Circuit Current (125%)
+125% continuous load
+Annual Operating Cost
+Turns Ratio
+DC Efficiency
+Wire Size from Voltage Drop
+Ohm\'s
+
+# homepage claims (review finding 5)
+Professional Calculation Tools
+Professional Guides
+comprehensive suite
+Code Compliance Checklist
+Inspector's Focus Areas
+
+# added 2026-10-25 (WSZ-013 review and owner decisions): retired addresses and the old publisher line
+privacy@wiresizes.com
+dpo@wiresizes.com
+Moving Data Systems d.o.o., Maribor

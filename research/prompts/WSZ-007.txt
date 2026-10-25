@@ -2,6 +2,9 @@ WSZ-007 CONVERTERS — wiresizes.com: rebuild the 7 unit converters and 3 power 
 
 REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
 PRECONDITION: DEVLOG §6 has WSZ-006 PHYSICS as done. If not, stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`; if origin/main has commits main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
 Read first: DEVLOG §0–§5 + last 10 §6 entries; research/page-specs.md section "WSZ-007"; .claude/skills/content-page (tool-pages.md for the converters, intro-and-hooks.md for the guides); .claude/skills/anti-slop-prose/SKILL.md; research/golden-cases.json.
 
 Pages:
@@ -26,7 +29,7 @@ Rules: same as WSZ-006 (tool-first anatomy for the converters, article anatomy f
    - single-vs-three-phase: write a title and meta that answer the question directly (446 impressions at position 7.9 with 0 clicks), and include the engine-computed comparison of one 10 kW load at 240 V single-phase, 208 V three-phase and 480 V three-phase.
    - power-factor-explained: use the DOE example as DOE states it (about 26% less current) next to the engine's exact numbers. Never copy DOE's "67-kW" misprint.
    - electrical-power-calculations: the formula table plus engine examples only.
-3. Add the ten routes to scripts/gates.config.json enforce. Run anti-slop-prose (report the count). If impeccable is installed, run its audit on the converter template and the guide template at 390 px.
+3. Add the ten routes to scripts/gates.config.json enforce. Run anti-slop-prose (report the count). Run Impeccable (/impeccable audit; installed in WSZ-002) on the converter template and the guide template at 390 px.
 4. Run the prepublish checklist per page and fix every fail. Append a corrections line: "{date}: rebuilt the power converters and guides; removed unsourced equipment tables."
 5. Verify:
    - `npm run dates`

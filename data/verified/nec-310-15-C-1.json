@@ -1,42 +1,43 @@
 {
- "id": "nec-310-15-C-1",
- "title": "Adjustment factors for more than three current-carrying conductors",
- "edition": "NFPA 70-2023 Table 310.15(C)(1) (as base text in NFPA 2026 First Draft)",
- "source": {
-  "publisher": "NFPA",
-  "document": "CMP-6 First Draft final ballot results, A2025 (FR-8033/8034)",
-  "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_FD_BallotFinal.pdf",
-  "retrieved": "2026-10-19",
-  "attribution": "Source: NFPA 70 (NEC) 2023, Table 310.15(C)(1) — retrieved Oct 2026"
- },
- "notes": [
-  "Percent of Table 310.16 values, after ambient correction if needed.",
-  "Which conductors count as current-carrying (neutral/EGC rules, 310.15(E)/(F)) not re-verified in Oct 2026."
- ],
- "rows": [
-  {
-   "conductors": "4–6",
-   "percent": 80.0
+  "id": "nec-310-15-C-1",
+  "title": "Adjustment factors for more than three current-carrying conductors",
+  "edition": "NFPA 70-2023 Table 310.15(C)(1) (as base text in NFPA 2026 First Draft)",
+  "source": {
+    "publisher": "NFPA",
+    "document": "CMP-6 First Draft final ballot results, A2025 (FR-8033/8034)",
+    "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_FD_BallotFinal.pdf",
+    "retrieved": "2026-10-19",
+    "attribution": "Source: NFPA 70 (NEC) 2023, Table 310.15(C)(1) — retrieved Oct 2026"
   },
-  {
-   "conductors": "7–9",
-   "percent": 70.0
-  },
-  {
-   "conductors": "10–20",
-   "percent": 50.0
-  },
-  {
-   "conductors": "21–30",
-   "percent": 45.0
-  },
-  {
-   "conductors": "31–40",
-   "percent": 40.0
-  },
-  {
-   "conductors": "41 and above",
-   "percent": 35.0
-  }
- ]
+  "notes": [
+    "Percent of Table 310.16 values, after ambient correction if needed.",
+    "Which conductors count as current-carrying (neutral/EGC rules, 310.15(E)/(F)) not re-verified in Oct 2026.",
+    "Re-checked 2026-10-20 against NFPA's 2026 First Draft (FR-8033) and Schneider (2017): 6/6 match."
+  ],
+  "rows": [
+    {
+      "conductors": "4–6",
+      "percent": 80.0
+    },
+    {
+      "conductors": "7–9",
+      "percent": 70.0
+    },
+    {
+      "conductors": "10–20",
+      "percent": 50.0
+    },
+    {
+      "conductors": "21–30",
+      "percent": 45.0
+    },
+    {
+      "conductors": "31–40",
+      "percent": 40.0
+    },
+    {
+      "conductors": "41 and above",
+      "percent": 35.0
+    }
+  ]
 }

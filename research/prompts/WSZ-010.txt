@@ -1,0 +1,26 @@
+WSZ-010 LOADCALC — wiresizes.com: residential load, range and dryer calculators on NEC 2023 Article 220 (pages whose sources are verified)
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 has WSZ-009 CODETOOLS as done (HOLD pages allowed). If not, stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`; if origin/main has commits main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
+Read first: DEVLOG §0–§5 + last 10 §6 entries; research/held-waves-rules.md (the rules for this wave — follow every section); research/held-pages-domains.csv; research/page-specs-held.md section "WSZ-010"; research/data-sources.csv; the data/verified files named below; .claude/skills/content-page/SKILL.md and its references; .claude/skills/anti-slop-prose/SKILL.md; research/golden-cases.json.
+
+Pages (gate decides BUILD/HOLD): /calculators/residential-load-calculator, /calculators/range-calculator, /calculators/dryer-calculator.
+
+Data files: nec-220-2023.json, nec-310-12.json, nec-310-16.json, mfr-equipment.json (dryers, ranges), nema-receptacle-configs.json, nec-2023-rules-round2.json; 210.8(D) from the nec-2023-rule-excerpts registry row.
+
+Wave specifics:
+1. Engine load-calc-2023 (src/lib/engine): standard method (220.41 3 VA/ft² and the 220.52 small-appliance and laundry loads of 1500 VA each, added together before the Table 220.45 demand factors; 220.51 fixed space heating at 100 %; 220.53 75 % for four or more fastened appliances; 220.54 dryers; Table 220.55 ranges with Notes 1–4; 220.57 EVSE; 220.60 noncoincident loads with the method stated in nec-220-2023.json notes; 220.61 neutral; motor loads only after the Article 430 tables are verified — until then the tool asks for no motor inputs) and optional method (220.82: first 10 kVA at 100 %, remainder at 40 %, heating/AC largest of the six items in 220.82(C)); 220.83 for existing dwellings. Golden groups "load-calc-2023" and "load-calc-2023-standard" must exist (chat generates them); otherwise HOLD.
+2. Residential load: both methods side by side for the same inputs, each step visible, result in VA and in amperes at 240 V, then service conductors from Table 310.12 for the result rounded up to a table row. The page says the results use the 2023 NEC and that the 2026 NEC moved these rules to Article 120 with changed values (state only the changes verified in nec-220-2023.json edition_2026; everything else "not yet verified").
+3. Range: nameplate kW (one range, or cooktop + up to two ovens per Note 4) → Table 220.55 demand → amperes; the manufacturer's stated circuit (Whirlpool kW table, Frigidaire 40 A cord) cited per model; GFCI per 210.8(D) (verified). Conductor size only from the WSZ-002 engine, with the same termination inputs and defaults as the WSZ-009 wire size calculator (nec-110-14c engine_rules; the default "Not sure" gives 60 °C at 100 A or less).
+4. Dryer: 220.54 load-calculation value (5000 W or nameplate, whichever is larger) kept clearly separate from the branch circuit the manufacturer specifies (30 A, 10 AWG Cu, 14-30R/10-30R per Whirlpool); GFCI per 210.8(D).
+
+Run held-waves-rules.md §1 (data gate) first and paste its output. Then §2–§5 for the BUILD pages.
+
+Commit "feat(wsz-010): load calculations on NEC 2023 Article 220". Don't push.
+
+Definition of done (paste each output): the data-gate output (BUILD/HOLD per page with blocking domains); the golden reproduction output for the wave's engine groups; gate output for the rebuilt routes (0 hits); build/test/tsc lines; per rebuilt page: word count, H2 list, FAQ count, SVG titles; the prepublish checklist table; anti-slop fix count; Impeccable result.
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-010. Status done only if every BUILD page passed verification; HOLD pages are listed in §0 as "waiting on chat sourcing: <domains>". Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.

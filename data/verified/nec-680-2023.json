@@ -1,0 +1,218 @@
+{
+ "id": "nec-680-2023",
+ "title": "Spas and hot tubs, NEC Article 680 (2023): maintenance disconnect, indoor spa distances",
+ "status": "partial (per rule)",
+ "retrieved": "2026-10-20",
+ "source": {
+  "publisher": "City and County of Broomfield (CO), Building Division, 'Residential Swimming Pool, Spa, and Hot Tub Requirements' (May 2024, 2023 NEC); NFPA 2023-cycle Second Draft (680.44)",
+  "url": "https://broomfield.org/DocumentCenter/View/2525/Swimming-Pools-Hot-tubs-or-Spas",
+  "attribution": "Source: NFPA 70 (NEC) 2023, 680.13 and 680.43 (government summary, City and County of Broomfield, 2024) — retrieved Oct 2026",
+  "evidence": "research/sources/round4/R4-5-outbuilding-pool-rv.md"
+ },
+ "rules": [
+  {
+   "ref": "680.13",
+   "edition": "2023",
+   "status": "VERIFIED-2023 (government paraphrase; two pulls agree; canaries rejected). Verbatim 2023 wording, the metric value and the permanent-barrier exception UNVERIFIED for 2023",
+   "rule_summary": "Maintenance disconnecting means for spa/hot tub (and pool) equipment other than lighting: simultaneously disconnects all ungrounded conductors; readily accessible; within sight of the equipment; at least 5 ft from the inside walls.",
+   "values": {
+    "min_distance_ft": 5,
+    "readily_accessible": true,
+    "within_sight": true,
+    "disconnects": "all ungrounded conductors simultaneously",
+    "applies_to": "utilization equipment other than lighting"
+   },
+   "quote_segments": [
+    "For hard wired spas or hot tubs, there shall be a disconnecting means that is readily accessible and within",
+    "sight of the spa or hot tub, and located at least 5 feet from the inside walls of the spa or hot tub. This shall be",
+    "able to simultaneously disconnect all ungrounded conductors for the spa or hot tub or spa or hot tub equipment other",
+    "than lighting per NEC 680.13 and 430.102."
+   ],
+   "two_pull_check": "pull 1 and pull 2 identical (the bullet is printed in both the outdoor and indoor sections)",
+   "canaries": [
+    {
+     "planted": "disconnect at least 10 feet from the inside walls",
+     "result": "rejected"
+    },
+    {
+     "true_check": "at least 5 feet",
+     "result": "confirmed"
+    }
+   ],
+   "corroboration_other_editions": [
+    {
+     "source": "New York State Residential Code 2020 (IRC-2018 basis) via UpCodes page served at townofroyaltonny.gov, E4203.3 citing [680.13] (not NEC text)",
+     "url": "https://www.townofroyaltonny.gov/sites/g/files/vyhlif5591/f/pages/pool_wiring_codes.pdf",
+     "quote_segments": [
+      "and shall be located at least 5 feet (1524 mm) horizontally from the inside walls of a pool, spa, or hot tub",
+      "unless separated from the open water by a permanently installed barrier",
+      "that provides a 5-foot (1524 mm) or greater reach path."
+     ]
+    },
+    {
+     "source": "Round 3: West Bend WI (2017 basis), Elburn IL (undated), Anchorage (undated) - all 5 ft, within sight"
+    }
+   ],
+   "source_url": "https://broomfield.org/DocumentCenter/View/2525/Swimming-Pools-Hot-tubs-or-Spas",
+   "source_title": "City and County of Broomfield (CO), Community Development: Building Department, 'Residential Swimming Pool, Spa, and Hot Tub Requirements', Building Division, May 2024, '2023 NEC'",
+   "permission_notice": "none",
+   "retrieved": "2026-10-20",
+   "notes": "Segments as given by the extractor in pull 2; it moved the word 'able' from printed line 2 to line 3 to keep lines under 120 characters."
+  },
+  {
+   "ref": "680.42",
+   "edition": "2023",
+   "status": "UNVERIFIED (no 2023 text seen). Two independent T4 sources say 680.42(C) in 2023 is 'Underwater Luminaires' and no longer holds the interior-wiring (Chapter 3 / NM cable) permission",
+   "rule_summary": null,
+   "values": {
+    "680_42_C_title_2023_per_T4": "Underwater Luminaires",
+    "680_42_C_title_2020": "Interior Wiring to Outdoor Installations",
+    "interior_wiring_language_2023_per_T4": "deleted",
+    "no_SR_in_A2022_SD": "per round 3 (SR list for CMP-17)",
+    "cord_length_15_ft": "older-edition only (NY 2020 residential code citing [680.42(A)(2)]); 2023 UNVERIFIED"
+   },
+   "quote_segments": [],
+   "t4_leads": [
+    {
+     "source": "IAEI Magazine, Vince Della Croce, 'NEC Article 680 — Diving Into 2023 NEC Proposed Changes', 1 Jul 2022 (describes First Draft changes; no NFPA notice)",
+     "url": "https://iaeimagazine.org/electrical-fundamentals/nec-article-680-diving-into-2023-nec-proposed-changes/",
+     "quote_segments": [
+      "Section 680.42(C), previously titled “Interior Wiring to Outdoor Installations,” has been retitled",
+      "“Underwater Luminaires” to more accurately reflect its content.",
+      "Again, redundant language which referenced Chapter 3 has been deleted.",
+      "After all of that, we are left with a reference back to Sections 680.23 or 680.33"
+     ]
+    },
+    {
+     "source": "EC&M, 'NFPA reveals final CMP ballot results for TIA 1800', 10 Sep 2024 (T4)",
+     "url": "https://ecmweb.com/national-electrical-code/article/55138922/nfpa-reveals-final-cmp-ballot-results-for-tia-1800",
+     "quote_segments": [
+      "references 680.42(C) language from the 2020 edition",
+      "was removed in 680.42(C) in the 2023 edition"
+     ]
+    }
+   ],
+   "older_edition_corroboration": {
+    "source": "New York State Residential Code 2020 via UpCodes (IRC-derived text citing [680.42(A)(2)], not NEC text)",
+    "url": "https://www.townofroyaltonny.gov/sites/g/files/vyhlif5591/f/pages/pool_wiring_codes.pdf",
+    "quote_segments": [
+     "A listed packaged spa or hot tub installed outdoors that is GFCI protected shall be permitted to be cord-and-plug-",
+     "connected provided that such cord does not exceed 15 feet (4572 mm) in length."
+    ]
+   },
+   "contradicts": [
+    "SD Electrical Commission tool box item (undated): '680.42 (C) The NEC now allows NM cable...' - describes pre-2023 text",
+    "Site hot-tub calculator: 'NEC 680.42 Requirements' and 680.42 as the wiring authority"
+   ],
+   "source_url": null,
+   "permission_notice": null,
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "680.43 (A), (A)(1), (A)(2), (B)(1), (C), (D)(3)",
+   "edition": "2023",
+   "status": "VERIFIED-2023 (government paraphrase; two pulls agree; canaries rejected) for the values below; (A)(2) also VERIFIED-draft from A2022 SD SR-8416 (round 3). Verbatim wording, the 680.43 exceptions and the other subdivisions UNVERIFIED",
+   "rule_summary": "Indoor spa/hot tub: at least one receptacle not less than 6 ft and not more than 10 ft from the inside walls; all receptacles not less than 6 ft; receptacles within 10 ft GFCI protected; luminaires over or within 5 ft: not less than 12 ft above maximum water level without GFCI, not less than 7 1/2 ft with GFCI, lower only if recessed or fully enclosed, listed for damp locations and GFCI protected; switches at least 5 ft horizontally; metal surfaces within 5 ft or within 12 ft vertically bonded with 8 AWG copper.",
+   "values": {
+    "A_one_receptacle_min_ft": 6,
+    "A_one_receptacle_max_ft": 10,
+    "A1_all_receptacles_min_ft": 6,
+    "A2_gfci_within_ft": 10,
+    "B1_luminaire_zone_ft": 5,
+    "B1_min_height_without_gfci_ft": 12,
+    "B1_min_height_with_gfci_ft": 7.5,
+    "C_switch_min_ft": 5,
+    "D3_bonding_zone_horizontal_ft": 5,
+    "D3_bonding_zone_vertical_ft": 12,
+    "D3_bonding_conductor": "#8 copper"
+   },
+   "quote_segments": [
+    "At least one receptacle shall be located not less than 6 feet measured horizontally and not more than 10",
+    "feet from the inside walls and all receptacles must be located not less than 6 feet of the spa or hot tub per NEC",
+    "680.43 (A) and 680.43 (A)(1). Receptacles located within 10 feet of the inside walls of indoor spas or hot tubs",
+    "shall be GFCI protected per NEC 680.43 (A)(2).",
+    "New light fixtures over and within 5 feet of indoor spas and hot tubs:",
+    "Shall be not less than 12 feet above the maximum water level without GFCI protection;",
+    "Shall be not less than 7-½ feet above the maximum water level with GFCI protection;",
+    "Switches shall be at least 5 feet from the inside wall of the spa or hot tub measured horizontally per NEC",
+    "680.43(C).",
+    "Metal surfaces and metal raceways within 5 feet of the inside walls of the spa or hot tub or within 12 feet",
+    "vertically from the maximum water level shall be bonded with #8 copper per NEC 680.43 (D)(3)."
+   ],
+   "two_pull_check": "pull 1 (quotes) and pull 2 (raw lines) agree",
+   "canaries": [
+    {
+     "planted": "indoor receptacles at least 4 feet from the inside walls",
+     "result": "rejected"
+    },
+    {
+     "planted": "switches at least 3 feet from the inside wall",
+     "result": "rejected"
+    },
+    {
+     "planted": "spa cord may not exceed 15 feet",
+     "result": "rejected (absent from this handout)"
+    },
+    {
+     "true_check": "6-10 ft receptacle; 12 ft without GFCI; 7-1/2 ft with GFCI",
+     "result": "confirmed"
+    }
+   ],
+   "corroboration_other_editions": [
+    "NY State Residential Code 2020 via UpCodes (IRC-derived): receptacles not less than 6 feet (1829 mm); 7 feet, 6 inches (2286 mm) with GFCI; its 680.43(A)(2) line reads '125-volt receptacles rated 30 amperes or less' (older wording)",
+    "A2022 SD SR-8416 (round 3, VERIFIED-draft): (A)(2) covers receptacles rated 125 V through 250 V, 60 A or less, within 3.0 m (10 ft)",
+    "Anchorage E.07 (undated, round 2): 6 ft; 12 ft / 7 1/2 ft; #8 AWG solid"
+   ],
+   "source_url": "https://broomfield.org/DocumentCenter/View/2525/Swimming-Pools-Hot-tubs-or-Spas",
+   "source_title": "City and County of Broomfield (CO), 'Residential Swimming Pool, Spa, and Hot Tub Requirements', Building Division, May 2024, '2023 NEC'",
+   "permission_notice": "none",
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "680.44",
+   "edition": "2023 (A2022 Second Draft)",
+   "status": "VERIFIED-draft (unchanged from round 3: SR-8614, single pull). No 2023 reproduction found; no upgrade",
+   "rule_summary": "(A) Outlet(s) supplying a self-contained spa/hot tub, packaged equipment assembly, or field-assembled spa/hot tub: GFCI per 680.5(B) or SPGFCI per 680.5(C), as applicable. (B) Listed units with integral GFCI, if so marked: no additional ground-fault protection. (C) Gas-fired spa water heaters operating separately and above the low-voltage contact limit: GFCI.",
+   "values": {
+    "sr": "SR-8614"
+   },
+   "quote_segments": [],
+   "searched_this_round": [
+    "Broomfield CO 2023 handout: does not cite 680.44",
+    "City of Springboro OH 'Spa & Hot Tub Installation Guideline' (2/24, 2023 NEC): no code text, only 'Indoor installations shall meet Article 680.43 NEC.'",
+    "Leviton Captain Code 2023: no 680.44 node (round 3)"
+   ],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P17_SD_SRStatements.pdf",
+   "permission_notice": "none in extracted text (NFPA committee report)",
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "TIA Log No. 1800 (NFPA 70-2023, 680.43 Exception No. 3)",
+   "edition": "2023",
+   "status": "UNVERIFIED (T4 report of an NFPA ballot memo). TIA number and issuance not seen; probably one of TIA 23-14 to 23-16 (SD rules adopt 2023 NEC 'including tentative interim amendments 23-1 through 23-15')",
+   "rule_summary": "Deletes 680.43 Exception No. 3, which applied the 2020-era 680.42(C) wiring-method permission to listed spas and hot tubs installed indoors at dwelling units; per the substantiation that language was removed from 680.42(C) in 2023.",
+   "values": {
+    "section": "680.43 Exception No. 3",
+    "action": "delete",
+    "cmp17_ballot": "achieved 3/4 on technical merit and emergency nature (per memo quoted by EC&M)",
+    "article_date": "2024-09-10"
+   },
+   "quote_segments": [
+    "references 680.42(C) language from the 2020 edition",
+    "was removed in 680.42(C) in the 2023 edition",
+    "the final results show this TIA HAS achieved the ¾ majority vote needed on both Ballot Item No. 1 (Technical Merit)",
+    "and Ballot Item No. 2 (Emergency Nature)."
+   ],
+   "source_url": "https://ecmweb.com/national-electrical-code/article/55138922/nfpa-reveals-final-cmp-ballot-results-for-tia-1800",
+   "permission_notice": "none (T4 trade press)",
+   "retrieved": "2026-10-20",
+   "notes": "Handoff to R4-7 (TIA sweep): read TIA_70_23_14.pdf to TIA_70_23_16.pdf for the issued text."
+  }
+ ],
+ "render": [
+  "680.13 and 680.43 values only, in plain words; never verbatim.",
+  "Never cite 680.42 as the wiring authority for 2023 (its 2023 text is unverified; trade press says 680.42(C) changed).",
+  "680.44: draft only; don't render."
+ ],
+ "see_also": "nec-2023-rules-round2.json holds 680.5, 680.10, 680.12, 680.21(C), 680.26(B)(2) and the A2022 Second Draft items from round 3."
+}

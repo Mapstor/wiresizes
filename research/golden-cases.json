@@ -1,1461 +1,4370 @@
 {
-  "generated_from": "data/verified/*.json (pack 2026-10-19)",
-  "count": 85,
-  "rules": [
-    "Every engine function must reproduce these within tolerance.",
-    "Golden values are computed from the verified JSON; if a JSON value changes, regenerate this file, never hand-edit expected values.",
-    "'exact' means string/number equality with the JSON value."
-  ],
-  "cases": [
-    {
-      "group": "awg-geometry",
-      "name": "0000 AWG diameter and area (formula)",
-      "inputs": {
-        "awg": "0000"
-      },
-      "expected": {
-        "diameter_in": 0.46,
-        "diameter_mm": 11.684,
-        "area_cmil": 211600.0,
-        "area_mm2": 107.2193
-      },
-      "tolerance": {
-        "diameter_in": 5e-05,
-        "diameter_mm": 0.001,
-        "area_cmil": 0.5,
-        "area_mm2": 0.0005
-      },
-      "basis": "d = 0.005 in × 92^((36−n)/39); cmil = (d in mils)^2; mm2 = cmil × 0.000506707 (awg.json definition/constants)"
-    },
-    {
-      "group": "awg-geometry",
-      "name": "0 AWG diameter and area (formula)",
-      "inputs": {
-        "awg": "0"
-      },
-      "expected": {
-        "diameter_in": 0.32486,
-        "diameter_mm": 8.2515,
-        "area_cmil": 105534.5,
-        "area_mm2": 53.4751
-      },
-      "tolerance": {
-        "diameter_in": 5e-05,
-        "diameter_mm": 0.001,
-        "area_cmil": 0.5,
-        "area_mm2": 0.0005
-      },
-      "basis": "d = 0.005 in × 92^((36−n)/39); cmil = (d in mils)^2; mm2 = cmil × 0.000506707 (awg.json definition/constants)"
-    },
-    {
-      "group": "awg-geometry",
-      "name": "4 AWG diameter and area (formula)",
-      "inputs": {
-        "awg": "4"
-      },
-      "expected": {
-        "diameter_in": 0.20431,
-        "diameter_mm": 5.1894,
-        "area_cmil": 41741.3,
-        "area_mm2": 21.1506
-      },
-      "tolerance": {
-        "diameter_in": 5e-05,
-        "diameter_mm": 0.001,
-        "area_cmil": 0.5,
-        "area_mm2": 0.0005
-      },
-      "basis": "d = 0.005 in × 92^((36−n)/39); cmil = (d in mils)^2; mm2 = cmil × 0.000506707 (awg.json definition/constants)"
-    },
-    {
-      "group": "awg-geometry",
-      "name": "10 AWG diameter and area (formula)",
-      "inputs": {
-        "awg": "10"
-      },
-      "expected": {
-        "diameter_in": 0.1019,
-        "diameter_mm": 2.5882,
-        "area_cmil": 10383.0,
-        "area_mm2": 5.2612
-      },
-      "tolerance": {
-        "diameter_in": 5e-05,
-        "diameter_mm": 0.001,
-        "area_cmil": 0.5,
-        "area_mm2": 0.0005
-      },
-      "basis": "d = 0.005 in × 92^((36−n)/39); cmil = (d in mils)^2; mm2 = cmil × 0.000506707 (awg.json definition/constants)"
-    },
-    {
-      "group": "awg-geometry",
-      "name": "12 AWG diameter and area (formula)",
-      "inputs": {
-        "awg": "12"
-      },
-      "expected": {
-        "diameter_in": 0.08081,
-        "diameter_mm": 2.0525,
-        "area_cmil": 6529.9,
-        "area_mm2": 3.3088
-      },
-      "tolerance": {
-        "diameter_in": 5e-05,
-        "diameter_mm": 0.001,
-        "area_cmil": 0.5,
-        "area_mm2": 0.0005
-      },
-      "basis": "d = 0.005 in × 92^((36−n)/39); cmil = (d in mils)^2; mm2 = cmil × 0.000506707 (awg.json definition/constants)"
-    },
-    {
-      "group": "awg-geometry",
-      "name": "14 AWG diameter and area (formula)",
-      "inputs": {
-        "awg": "14"
-      },
-      "expected": {
-        "diameter_in": 0.06408,
-        "diameter_mm": 1.6277,
-        "area_cmil": 4106.7,
-        "area_mm2": 2.0809
-      },
-      "tolerance": {
-        "diameter_in": 5e-05,
-        "diameter_mm": 0.001,
-        "area_cmil": 0.5,
-        "area_mm2": 0.0005
-      },
-      "basis": "d = 0.005 in × 92^((36−n)/39); cmil = (d in mils)^2; mm2 = cmil × 0.000506707 (awg.json definition/constants)"
-    },
-    {
-      "group": "awg-geometry",
-      "name": "24 AWG diameter and area (formula)",
-      "inputs": {
-        "awg": "24"
-      },
-      "expected": {
-        "diameter_in": 0.0201,
-        "diameter_mm": 0.5106,
-        "area_cmil": 404.0,
-        "area_mm2": 0.2047
-      },
-      "tolerance": {
-        "diameter_in": 5e-05,
-        "diameter_mm": 0.001,
-        "area_cmil": 0.5,
-        "area_mm2": 0.0005
-      },
-      "basis": "d = 0.005 in × 92^((36−n)/39); cmil = (d in mils)^2; mm2 = cmil × 0.000506707 (awg.json definition/constants)"
-    },
-    {
-      "group": "awg-geometry",
-      "name": "40 AWG diameter and area (formula)",
-      "inputs": {
-        "awg": "40"
-      },
-      "expected": {
-        "diameter_in": 0.00314,
-        "diameter_mm": 0.0799,
-        "area_cmil": 9.9,
-        "area_mm2": 0.005
-      },
-      "tolerance": {
-        "diameter_in": 5e-05,
-        "diameter_mm": 0.001,
-        "area_cmil": 0.5,
-        "area_mm2": 0.0005
-      },
-      "basis": "d = 0.005 in × 92^((36−n)/39); cmil = (d in mils)^2; mm2 = cmil × 0.000506707 (awg.json definition/constants)"
-    },
-    {
-      "group": "awg-table",
-      "name": "0000 AWG HB100 Table 5 values",
-      "inputs": {
-        "awg": "0000"
-      },
-      "expected": {
-        "diameter_mils": 460.0,
-        "area_cmil": 211600.0,
-        "r20_cu_ohm_per_1000ft": 0.04901,
-        "weight_cu_lb_per_1000ft": 640.5
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
-    },
-    {
-      "group": "awg-table",
-      "name": "4 AWG HB100 Table 5 values",
-      "inputs": {
-        "awg": "4"
-      },
-      "expected": {
-        "diameter_mils": 204.3,
-        "area_cmil": 41740.0,
-        "r20_cu_ohm_per_1000ft": 0.2485,
-        "weight_cu_lb_per_1000ft": 126.3
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
-    },
-    {
-      "group": "awg-table",
-      "name": "8 AWG HB100 Table 5 values",
-      "inputs": {
-        "awg": "8"
-      },
-      "expected": {
-        "diameter_mils": 128.5,
-        "area_cmil": 16510.0,
-        "r20_cu_ohm_per_1000ft": 0.6281,
-        "weight_cu_lb_per_1000ft": 49.98
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
-    },
-    {
-      "group": "awg-table",
-      "name": "10 AWG HB100 Table 5 values",
-      "inputs": {
-        "awg": "10"
-      },
-      "expected": {
-        "diameter_mils": 101.9,
-        "area_cmil": 10380.0,
-        "r20_cu_ohm_per_1000ft": 0.9988,
-        "weight_cu_lb_per_1000ft": 31.43
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
-    },
-    {
-      "group": "awg-table",
-      "name": "12 AWG HB100 Table 5 values",
-      "inputs": {
-        "awg": "12"
-      },
-      "expected": {
-        "diameter_mils": 80.8,
-        "area_cmil": 6530.0,
-        "r20_cu_ohm_per_1000ft": 1.59,
-        "weight_cu_lb_per_1000ft": 19.8
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
-    },
-    {
-      "group": "awg-table",
-      "name": "14 AWG HB100 Table 5 values",
-      "inputs": {
-        "awg": "14"
-      },
-      "expected": {
-        "diameter_mils": 64.1,
-        "area_cmil": 4110.0,
-        "r20_cu_ohm_per_1000ft": 2.52,
-        "weight_cu_lb_per_1000ft": 12.4
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
-    },
-    {
-      "group": "awg-table",
-      "name": "18 AWG HB100 Table 5 values",
-      "inputs": {
-        "awg": "18"
-      },
-      "expected": {
-        "diameter_mils": 40.3,
-        "area_cmil": 1620.0,
-        "r20_cu_ohm_per_1000ft": 6.39,
-        "weight_cu_lb_per_1000ft": 4.92
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
-    },
-    {
-      "group": "awg-table",
-      "name": "22 AWG HB100 Table 5 values",
-      "inputs": {
-        "awg": "22"
-      },
-      "expected": {
-        "diameter_mils": 25.3,
-        "area_cmil": 640.0,
-        "r20_cu_ohm_per_1000ft": 16.2,
-        "weight_cu_lb_per_1000ft": 1.94
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
-    },
-    {
-      "group": "awg-table",
-      "name": "24 AWG HB100 Table 5 values",
-      "inputs": {
-        "awg": "24"
-      },
-      "expected": {
-        "diameter_mils": 20.1,
-        "area_cmil": 404.0,
-        "r20_cu_ohm_per_1000ft": 25.7,
-        "weight_cu_lb_per_1000ft": 1.22
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
-    },
-    {
-      "group": "awg-table",
-      "name": "30 AWG HB100 Table 5 values",
-      "inputs": {
-        "awg": "30"
-      },
-      "expected": {
-        "diameter_mils": 10.0,
-        "area_cmil": 100.0,
-        "r20_cu_ohm_per_1000ft": 104.0,
-        "weight_cu_lb_per_1000ft": 0.303
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
-    },
-    {
-      "group": "awg-table",
-      "name": "40 AWG HB100 Table 5 values",
-      "inputs": {
-        "awg": "40"
-      },
-      "expected": {
-        "diameter_mils": 3.1,
-        "area_cmil": 9.61,
-        "r20_cu_ohm_per_1000ft": 1080.0,
-        "weight_cu_lb_per_1000ft": 0.0291
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
-    },
-    {
-      "group": "resistance",
-      "name": "14 AWG copper at 75 °C (calculated)",
-      "inputs": {
-        "size": "14",
-        "material": "Cu",
-        "temp_c": 75
-      },
-      "expected": {
-        "ohm_per_1000ft": 3.0647
-      },
-      "tolerance": {
-        "ohm_per_1000ft": 0.0005
-      },
-      "basis": "R75 = R20(HB100) × (1 + 0.00393 × 55)"
-    },
-    {
-      "group": "resistance",
-      "name": "12 AWG copper at 75 °C (calculated)",
-      "inputs": {
-        "size": "12",
-        "material": "Cu",
-        "temp_c": 75
-      },
-      "expected": {
-        "ohm_per_1000ft": 1.93368
-      },
-      "tolerance": {
-        "ohm_per_1000ft": 0.0005
-      },
-      "basis": "R75 = R20(HB100) × (1 + 0.00393 × 55)"
-    },
-    {
-      "group": "resistance",
-      "name": "10 AWG copper at 75 °C (calculated)",
-      "inputs": {
-        "size": "10",
-        "material": "Cu",
-        "temp_c": 75
-      },
-      "expected": {
-        "ohm_per_1000ft": 1.21469
-      },
-      "tolerance": {
-        "ohm_per_1000ft": 0.0005
-      },
-      "basis": "R75 = R20(HB100) × (1 + 0.00393 × 55)"
-    },
-    {
-      "group": "resistance",
-      "name": "6 AWG copper at 75 °C (calculated)",
-      "inputs": {
-        "size": "6",
-        "material": "Cu",
-        "temp_c": 75
-      },
-      "expected": {
-        "ohm_per_1000ft": 0.48062
-      },
-      "tolerance": {
-        "ohm_per_1000ft": 0.0005
-      },
-      "basis": "R75 = R20(HB100) × (1 + 0.00393 × 55)"
-    },
-    {
-      "group": "resistance",
-      "name": "000 AWG copper at 75 °C (calculated)",
-      "inputs": {
-        "size": "000",
-        "material": "Cu",
-        "temp_c": 75
-      },
-      "expected": {
-        "ohm_per_1000ft": 0.07518
-      },
-      "tolerance": {
-        "ohm_per_1000ft": 0.0005
-      },
-      "basis": "R75 = R20(HB100) × (1 + 0.00393 × 55)"
-    },
-    {
-      "group": "resistance",
-      "name": "4/0 aluminum EC-H19 at 20 °C (calculated)",
-      "inputs": {
-        "size": "0000",
-        "material": "Al",
-        "temp_c": 20
-      },
-      "expected": {
-        "ohm_per_1000ft": 0.08035
-      },
-      "tolerance": {
-        "ohm_per_1000ft": 1e-05
-      },
-      "basis": "R = 17.002 / cmil × 1000 (HB109 constant)"
-    },
-    {
-      "group": "resistance",
-      "name": "500 kcmil aluminum EC-H19 at 20 °C (calculated)",
-      "inputs": {
-        "size": "500",
-        "material": "Al",
-        "temp_c": 20
-      },
-      "expected": {
-        "ohm_per_1000ft": 0.034004
-      },
-      "tolerance": {
-        "ohm_per_1000ft": 1e-05
-      },
-      "basis": "R = 17.002 / 500000 × 1000; the live site showed 0.206"
-    },
-    {
-      "group": "resistance",
-      "name": "4/0 aluminum EC-H19 at 75 °C (calculated)",
-      "inputs": {
-        "size": "0000",
-        "material": "Al",
-        "temp_c": 75
-      },
-      "expected": {
-        "ohm_per_1000ft": 0.09816
-      },
-      "tolerance": {
-        "ohm_per_1000ft": 0.0001
-      },
-      "basis": "R20 × (1 + 0.00403 × 55)"
-    },
-    {
-      "group": "voltage-drop",
-      "name": "000 AWG Cu, 200 A, 100 ft one way, 240 V, single-phase, 75 °C",
-      "inputs": {
-        "size": "000",
-        "material": "Cu",
-        "amps": 200,
-        "length_ft_one_way": 100,
-        "volts": 240,
-        "phase": 1,
-        "conductor_temp_c": 75
-      },
-      "expected": {
-        "vd_volts": 3.007,
-        "vd_percent": 1.253
-      },
-      "tolerance": {
-        "vd_volts": 0.005,
-        "vd_percent": 0.005
-      },
-      "basis": "1φ: VD = 2·L·I·R/1000; 3φ: VD = √3·L·I·R/1000; R from awg.json at 75 °C (solid conductor, resistive load)"
-    },
-    {
-      "group": "voltage-drop",
-      "name": "0000 AWG Al, 200 A, 100 ft one way, 240 V, single-phase, 75 °C",
-      "inputs": {
-        "size": "0000",
-        "material": "Al",
-        "amps": 200,
-        "length_ft_one_way": 100,
-        "volts": 240,
-        "phase": 1,
-        "conductor_temp_c": 75
-      },
-      "expected": {
-        "vd_volts": 3.926,
-        "vd_percent": 1.636
-      },
-      "tolerance": {
-        "vd_volts": 0.005,
-        "vd_percent": 0.005
-      },
-      "basis": "1φ: VD = 2·L·I·R/1000; 3φ: VD = √3·L·I·R/1000; R from awg.json at 75 °C (solid conductor, resistive load)"
-    },
-    {
-      "group": "voltage-drop",
-      "name": "12 AWG Cu, 16 A, 50 ft one way, 120 V, single-phase, 75 °C",
-      "inputs": {
-        "size": "12",
-        "material": "Cu",
-        "amps": 16,
-        "length_ft_one_way": 50,
-        "volts": 120,
-        "phase": 1,
-        "conductor_temp_c": 75
-      },
-      "expected": {
-        "vd_volts": 3.094,
-        "vd_percent": 2.578
-      },
-      "tolerance": {
-        "vd_volts": 0.005,
-        "vd_percent": 0.005
-      },
-      "basis": "1φ: VD = 2·L·I·R/1000; 3φ: VD = √3·L·I·R/1000; R from awg.json at 75 °C (solid conductor, resistive load)"
-    },
-    {
-      "group": "voltage-drop",
-      "name": "6 AWG Cu, 48 A, 50 ft one way, 240 V, single-phase, 75 °C",
-      "inputs": {
-        "size": "6",
-        "material": "Cu",
-        "amps": 48,
-        "length_ft_one_way": 50,
-        "volts": 240,
-        "phase": 1,
-        "conductor_temp_c": 75
-      },
-      "expected": {
-        "vd_volts": 2.307,
-        "vd_percent": 0.961
-      },
-      "tolerance": {
-        "vd_volts": 0.005,
-        "vd_percent": 0.005
-      },
-      "basis": "1φ: VD = 2·L·I·R/1000; 3φ: VD = √3·L·I·R/1000; R from awg.json at 75 °C (solid conductor, resistive load)"
-    },
-    {
-      "group": "voltage-drop",
-      "name": "8 AWG Cu, 40 A, 100 ft one way, 240 V, single-phase, 75 °C",
-      "inputs": {
-        "size": "8",
-        "material": "Cu",
-        "amps": 40,
-        "length_ft_one_way": 100,
-        "volts": 240,
-        "phase": 1,
-        "conductor_temp_c": 75
-      },
-      "expected": {
-        "vd_volts": 6.111,
-        "vd_percent": 2.546
-      },
-      "tolerance": {
-        "vd_volts": 0.005,
-        "vd_percent": 0.005
-      },
-      "basis": "1φ: VD = 2·L·I·R/1000; 3φ: VD = √3·L·I·R/1000; R from awg.json at 75 °C (solid conductor, resistive load)"
-    },
-    {
-      "group": "voltage-drop",
-      "name": "4 AWG Cu, 60 A, 150 ft one way, 480 V, three-phase, 75 °C",
-      "inputs": {
-        "size": "4",
-        "material": "Cu",
-        "amps": 60,
-        "length_ft_one_way": 150,
-        "volts": 480,
-        "phase": 3,
-        "conductor_temp_c": 75
-      },
-      "expected": {
-        "vd_volts": 4.711,
-        "vd_percent": 0.981
-      },
-      "tolerance": {
-        "vd_volts": 0.005,
-        "vd_percent": 0.005
-      },
-      "basis": "1φ: VD = 2·L·I·R/1000; 3φ: VD = √3·L·I·R/1000; R from awg.json at 75 °C (solid conductor, resistive load)"
-    },
-    {
-      "group": "dc-sizing",
-      "name": "12 V, 400 W, 40 ft one way, 2% drop, copper at 75 °C",
-      "inputs": {
-        "volts": 12,
-        "watts": 400,
-        "length_ft_one_way": 40,
-        "max_drop_pct": 2,
-        "conductor_temp_c": 75
-      },
-      "expected": {
-        "amps": 33.333,
-        "required_cmil": 140141,
-        "smallest_awg_meeting": "000",
-        "its_cmil": 167800.0
-      },
-      "tolerance": {
-        "required_cmil": 50
-      },
-      "basis": "CM = 2·K·I·L/VD, K = 10.371 × (1 + 0.00393 × (T − 20)) Ω·cmil/ft; the live site omitted K"
-    },
-    {
-      "group": "dc-sizing",
-      "name": "12 V, 400 W, 40 ft one way, 2% drop, copper at 20 °C",
-      "inputs": {
-        "volts": 12,
-        "watts": 400,
-        "length_ft_one_way": 40,
-        "max_drop_pct": 2,
-        "conductor_temp_c": 20
-      },
-      "expected": {
-        "amps": 33.333,
-        "required_cmil": 115233,
-        "smallest_awg_meeting": "00",
-        "its_cmil": 133100.0
-      },
-      "tolerance": {
-        "required_cmil": 50
-      },
-      "basis": "CM = 2·K·I·L/VD, K = 10.371 × (1 + 0.00393 × (T − 20)) Ω·cmil/ft; the live site omitted K"
-    },
-    {
-      "group": "ampacity-arithmetic",
-      "name": "6 AWG cu_90 at 41–45 °C, 4–6 current-carrying",
-      "inputs": {
-        "size": "6",
-        "column": "cu_90",
-        "ambient_c_row": "41–45",
-        "ccc_band": "4–6"
-      },
-      "expected": {
-        "table_a": 75.0,
-        "correction": 0.87,
-        "adjustment_pct": 80,
-        "result_a": 52.2
-      },
-      "tolerance": {
-        "result_a": 0.01
-      },
-      "basis": "Table 310.16 × Table 310.15(B)(1)(1) × Table 310.15(C)(1); termination-temperature limit not applied until 110.14(C) is sourced"
-    },
-    {
-      "group": "ampacity-arithmetic",
-      "name": "12 AWG cu_90 at 36–40 °C, 7–9 current-carrying",
-      "inputs": {
-        "size": "12",
-        "column": "cu_90",
-        "ambient_c_row": "36–40",
-        "ccc_band": "7–9"
-      },
-      "expected": {
-        "table_a": 30.0,
-        "correction": 0.91,
-        "adjustment_pct": 70,
-        "result_a": 19.11
-      },
-      "tolerance": {
-        "result_a": 0.01
-      },
-      "basis": "Table 310.16 × Table 310.15(B)(1)(1) × Table 310.15(C)(1); termination-temperature limit not applied until 110.14(C) is sourced"
-    },
-    {
-      "group": "ampacity-arithmetic",
-      "name": "3/0 AWG cu_75 at 31–35 °C, ≤3 current-carrying",
-      "inputs": {
-        "size": "3/0",
-        "column": "cu_75",
-        "ambient_c_row": "31–35",
-        "ccc_band": null
-      },
-      "expected": {
-        "table_a": 200.0,
-        "correction": 0.94,
-        "adjustment_pct": 100,
-        "result_a": 188.0
-      },
-      "tolerance": {
-        "result_a": 0.01
-      },
-      "basis": "Table 310.16 × Table 310.15(B)(1)(1) × Table 310.15(C)(1); termination-temperature limit not applied until 110.14(C) is sourced"
-    },
-    {
-      "group": "ampacity-arithmetic",
-      "name": "4 AWG al_75 at 26–30 °C, 10–20 current-carrying",
-      "inputs": {
-        "size": "4",
-        "column": "al_75",
-        "ambient_c_row": "26–30",
-        "ccc_band": "10–20"
-      },
-      "expected": {
-        "table_a": 65.0,
-        "correction": 1.0,
-        "adjustment_pct": 50,
-        "result_a": 32.5
-      },
-      "tolerance": {
-        "result_a": 0.01
-      },
-      "basis": "Table 310.16 × Table 310.15(B)(1)(1) × Table 310.15(C)(1); termination-temperature limit not applied until 110.14(C) is sourced"
-    },
-    {
-      "group": "table-310-12",
-      "name": "100 A dwelling service",
-      "inputs": {
-        "rating_a": 100
-      },
-      "expected": {
-        "cu": "4",
-        "al_cca": "2"
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Table 310.12 row"
-    },
-    {
-      "group": "table-310-12",
-      "name": "150 A dwelling service",
-      "inputs": {
-        "rating_a": 150
-      },
-      "expected": {
-        "cu": "1",
-        "al_cca": "2/0"
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Table 310.12 row"
-    },
-    {
-      "group": "table-310-12",
-      "name": "200 A dwelling service",
-      "inputs": {
-        "rating_a": 200
-      },
-      "expected": {
-        "cu": "2/0",
-        "al_cca": "4/0"
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Table 310.12 row"
-    },
-    {
-      "group": "table-310-12",
-      "name": "400 A dwelling service",
-      "inputs": {
-        "rating_a": 400
-      },
-      "expected": {
-        "cu": "400",
-        "al_cca": "600"
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Table 310.12 row"
-    },
-    {
-      "group": "table-310-12",
-      "name": "120 A (not a table row)",
-      "inputs": {
-        "rating_a": 120
-      },
-      "expected": {
-        "result": null
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Engine returns no row; never interpolate"
-    },
-    {
-      "group": "table-250-122",
-      "name": "OCPD 15 A",
-      "inputs": {
-        "ocpd_a": 15
-      },
-      "expected": {
-        "cu": "14",
-        "al_cca": "12",
-        "row_a": 15.0
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "First row whose rating is not exceeded"
-    },
-    {
-      "group": "table-250-122",
-      "name": "OCPD 20 A",
-      "inputs": {
-        "ocpd_a": 20
-      },
-      "expected": {
-        "cu": "12",
-        "al_cca": "10",
-        "row_a": 20.0
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "First row whose rating is not exceeded"
-    },
-    {
-      "group": "table-250-122",
-      "name": "OCPD 30 A",
-      "inputs": {
-        "ocpd_a": 30
-      },
-      "expected": {
-        "cu": "10",
-        "al_cca": "8",
-        "row_a": 60.0
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "First row whose rating is not exceeded"
-    },
-    {
-      "group": "table-250-122",
-      "name": "OCPD 60 A",
-      "inputs": {
-        "ocpd_a": 60
-      },
-      "expected": {
-        "cu": "10",
-        "al_cca": "8",
-        "row_a": 60.0
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "First row whose rating is not exceeded"
-    },
-    {
-      "group": "table-250-122",
-      "name": "OCPD 61 A",
-      "inputs": {
-        "ocpd_a": 61
-      },
-      "expected": {
-        "cu": "8",
-        "al_cca": "6",
-        "row_a": 100.0
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "First row whose rating is not exceeded"
-    },
-    {
-      "group": "table-250-122",
-      "name": "OCPD 100 A",
-      "inputs": {
-        "ocpd_a": 100
-      },
-      "expected": {
-        "cu": "8",
-        "al_cca": "6",
-        "row_a": 100.0
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "First row whose rating is not exceeded"
-    },
-    {
-      "group": "table-250-122",
-      "name": "OCPD 125 A",
-      "inputs": {
-        "ocpd_a": 125
-      },
-      "expected": {
-        "cu": "6",
-        "al_cca": "4",
-        "row_a": 200.0
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "First row whose rating is not exceeded"
-    },
-    {
-      "group": "table-250-122",
-      "name": "OCPD 200 A",
-      "inputs": {
-        "ocpd_a": 200
-      },
-      "expected": {
-        "cu": "6",
-        "al_cca": "4",
-        "row_a": 200.0
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "First row whose rating is not exceeded"
-    },
-    {
-      "group": "table-250-122",
-      "name": "OCPD 400 A",
-      "inputs": {
-        "ocpd_a": 400
-      },
-      "expected": {
-        "cu": "3",
-        "al_cca": "1",
-        "row_a": 400.0
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "First row whose rating is not exceeded"
-    },
-    {
-      "group": "table-250-122",
-      "name": "OCPD 6000 A",
-      "inputs": {
-        "ocpd_a": 6000
-      },
-      "expected": {
-        "cu": "800",
-        "al_cca": "1250",
-        "row_a": 6000.0
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "First row whose rating is not exceeded"
-    },
-    {
-      "group": "table-250-122",
-      "name": "OCPD 6001 A",
-      "inputs": {
-        "ocpd_a": 6001
-      },
-      "expected": {
-        "result": null
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "First row whose rating is not exceeded"
-    },
-    {
-      "group": "table-250-66",
-      "name": "3 AWG copper service conductors",
-      "inputs": {
-        "service_cu": "3"
-      },
-      "expected": {
-        "gec_cu": "8",
-        "gec_al_cca": "6"
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Row '2 or smaller'"
-    },
-    {
-      "group": "table-250-66",
-      "name": "1/0 copper service conductors",
-      "inputs": {
-        "service_cu": "1/0"
-      },
-      "expected": {
-        "gec_cu": "6",
-        "gec_al_cca": "4"
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Row '1 or 1/0'"
-    },
-    {
-      "group": "table-250-66",
-      "name": "2/0 copper service conductors",
-      "inputs": {
-        "service_cu": "2/0"
-      },
-      "expected": {
-        "gec_cu": "4",
-        "gec_al_cca": "2"
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Row '2/0 or 3/0'"
-    },
-    {
-      "group": "table-250-66",
-      "name": "4/0 aluminum service conductors",
-      "inputs": {
-        "service_al": "4/0"
-      },
-      "expected": {
-        "gec_cu": "4",
-        "gec_al_cca": "2"
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Row '4/0 or 250' (Al)"
-    },
-    {
-      "group": "table-250-66",
-      "name": "500 kcmil copper service conductors",
-      "inputs": {
-        "service_cu": "500"
-      },
-      "expected": {
-        "gec_cu": "1/0",
-        "gec_al_cca": "3/0"
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "Row 'Over 350 through 600'"
-    },
-    {
-      "group": "power",
-      "name": "7.2 kW single-phase 240 V, PF 1",
-      "inputs": {
-        "kw": 7.2,
-        "volts": 240,
-        "phase": 1,
-        "pf": 1
-      },
-      "expected": {
-        "amps": 30.0
-      },
-      "tolerance": {
-        "amps": 1e-06
-      },
-      "basis": "I = P/(V·PF)"
-    },
-    {
-      "group": "power",
-      "name": "50 kW three-phase 480 V, PF 0.9",
-      "inputs": {
-        "kw": 50,
-        "volts": 480,
-        "phase": 3,
-        "pf": 0.9
-      },
-      "expected": {
-        "amps": 66.823
-      },
-      "tolerance": {
-        "amps": 0.001
-      },
-      "basis": "I = P/(√3·V·PF)"
-    },
-    {
-      "group": "power",
-      "name": "75 kVA three-phase 208 V",
-      "inputs": {
-        "kva": 75,
-        "volts": 208,
-        "phase": 3
-      },
-      "expected": {
-        "amps": 208.179
-      },
-      "tolerance": {
-        "amps": 0.001
-      },
-      "basis": "I = S/(√3·V) or S/V"
-    },
-    {
-      "group": "power",
-      "name": "75 kVA three-phase 480 V",
-      "inputs": {
-        "kva": 75,
-        "volts": 480,
-        "phase": 3
-      },
-      "expected": {
-        "amps": 90.211
-      },
-      "tolerance": {
-        "amps": 0.001
-      },
-      "basis": "I = S/(√3·V) or S/V"
-    },
-    {
-      "group": "power",
-      "name": "25 kVA single-phase 240 V",
-      "inputs": {
-        "kva": 25,
-        "volts": 240,
-        "phase": 1
-      },
-      "expected": {
-        "amps": 104.167
-      },
-      "tolerance": {
-        "amps": 0.001
-      },
-      "basis": "I = S/(√3·V) or S/V"
-    },
-    {
-      "group": "power",
-      "name": "10 kW at 240 V single-phase, PF 1 (comparison)",
-      "inputs": {
-        "kw": 10,
-        "volts": 240,
-        "phase": 1,
-        "pf": 1
-      },
-      "expected": {
-        "amps": 41.667
-      },
-      "tolerance": {
-        "amps": 0.001
-      },
-      "basis": "I = P/(√3·V·PF) or P/(V·PF); used on the single- vs three-phase guide"
-    },
-    {
-      "group": "power",
-      "name": "10 kW at 208 V three-phase, PF 1 (comparison)",
-      "inputs": {
-        "kw": 10,
-        "volts": 208,
-        "phase": 3,
-        "pf": 1
-      },
-      "expected": {
-        "amps": 27.757
-      },
-      "tolerance": {
-        "amps": 0.001
-      },
-      "basis": "I = P/(√3·V·PF) or P/(V·PF); used on the single- vs three-phase guide"
-    },
-    {
-      "group": "power",
-      "name": "10 kW at 480 V three-phase, PF 1 (comparison)",
-      "inputs": {
-        "kw": 10,
-        "volts": 480,
-        "phase": 3,
-        "pf": 1
-      },
-      "expected": {
-        "amps": 12.028
-      },
-      "tolerance": {
-        "amps": 0.001
-      },
-      "basis": "I = P/(√3·V·PF) or P/(V·PF); used on the single- vs three-phase guide"
-    },
-    {
-      "group": "power",
-      "name": "4500 W at 240 V",
-      "inputs": {
-        "watts": 4500,
-        "volts": 240,
-        "phase": 1,
-        "pf": 1
-      },
-      "expected": {
-        "amps": 18.75
-      },
-      "tolerance": {
-        "amps": 1e-09
-      },
-      "basis": "I = P/V (one 4500 W element on at a time per Rheem/A.O. Smith)"
-    },
-    {
-      "group": "power",
-      "name": "50 A three-phase 480 V PF 0.92 to watts",
-      "inputs": {
-        "amps": 50,
-        "volts": 480,
-        "phase": 3,
-        "pf": 0.92
-      },
-      "expected": {
-        "watts": 38243.7
-      },
-      "tolerance": {
-        "watts": 0.1
-      },
-      "basis": "P = √3·V·I·PF (the live site printed 38,323)"
-    },
-    {
-      "group": "conversion",
-      "name": "12,000 Btu/h to watts",
-      "inputs": {
-        "btu_per_h": 12000
-      },
-      "expected": {
-        "watts": 3516.853
-      },
-      "tolerance": {
-        "watts": 0.001
-      },
-      "basis": "NIST SP 811: 1 Btu_IT/h = 0.2930711 W"
-    },
-    {
-      "group": "conversion",
-      "name": "1000 W to Btu/h",
-      "inputs": {
-        "watts": 1000
-      },
-      "expected": {
-        "btu_per_h": 3412.14
-      },
-      "tolerance": {
-        "btu_per_h": 0.01
-      },
-      "basis": "1/0.2930711"
-    },
-    {
-      "group": "conversion",
-      "name": "1 ton of refrigeration to watts",
-      "inputs": {
-        "tons": 1
-      },
-      "expected": {
-        "watts": 3516.853
-      },
-      "tolerance": {
-        "watts": 0.001
-      },
-      "basis": "NIST SP 811"
-    },
-    {
-      "group": "conversion",
-      "name": "5 hp (electric) to watts",
-      "inputs": {
-        "hp": 5,
-        "kind": "electric"
-      },
-      "expected": {
-        "watts": 3730.0
-      },
-      "tolerance": {
-        "watts": 1e-09
-      },
-      "basis": "NIST SP 811: hp (electric) = 746 W exactly"
-    },
-    {
-      "group": "conversion",
-      "name": "1 hp (550 ft·lbf/s) to watts",
-      "inputs": {
-        "hp": 1,
-        "kind": "mechanical"
-      },
-      "expected": {
-        "watts": 745.6999
-      },
-      "tolerance": {
-        "watts": 0.0001
-      },
-      "basis": "NIST SP 811"
-    },
-    {
-      "group": "pf-correction",
-      "name": "100 kW from PF 0.80 to 0.95",
-      "inputs": {
-        "kw": 100,
-        "pf_from": 0.8,
-        "pf_to": 0.95
-      },
-      "expected": {
-        "kvar": 42.13,
-        "current_reduction_pct": 15.79
-      },
-      "tolerance": {
-        "kvar": 0.01,
-        "current_reduction_pct": 0.01
-      },
-      "basis": "Qc = P·(tan φ1 − tan φ2); ΔI = 1 − PF1/PF2 (the live site printed 32.9 kVAR / 18.8%)"
-    },
-    {
-      "group": "pf-correction",
-      "name": "DOE fact-sheet example: 100 kW at 142 kVA to PF 0.95",
-      "inputs": {
-        "kw": 100,
-        "kva": 142,
-        "pf_to": 0.95
-      },
-      "expected": {
-        "pf_from": 0.7042,
-        "kvar": 67.9,
-        "current_reduction_pct": 25.9
-      },
-      "tolerance": {
-        "kvar": 0.1,
-        "current_reduction_pct": 0.1
-      },
-      "basis": "DOE/GO-10096-286 says about 26% less current; its '67-kW' is a misprint for kVAR"
-    },
-    {
-      "group": "parallel",
-      "name": "2 × 0 AWG in parallel: equivalent area",
-      "inputs": {
-        "size": "0",
-        "sets": 2
-      },
-      "expected": {
-        "total_cmil": 211200.0,
-        "smallest_single_size_at_least": "0000"
-      },
-      "tolerance": {
-        "total_cmil": 0.5
-      },
-      "basis": "Sum of HB100 areas; the live site said 2×1/0 = 3/0"
-    },
-    {
-      "group": "parallel",
-      "name": "2 × 00 AWG in parallel: equivalent area",
-      "inputs": {
-        "size": "00",
-        "sets": 2
-      },
-      "expected": {
-        "total_cmil": 266200.0,
-        "smallest_single_size_at_least": "300"
-      },
-      "tolerance": {
-        "total_cmil": 0.5
-      },
-      "basis": "Sum of HB100 areas; the live site said 2×1/0 = 3/0"
-    },
-    {
-      "group": "parallel",
-      "name": "2 × 0000 AWG in parallel: equivalent area",
-      "inputs": {
-        "size": "0000",
-        "sets": 2
-      },
-      "expected": {
-        "total_cmil": 423200.0,
-        "smallest_single_size_at_least": "500"
-      },
-      "tolerance": {
-        "total_cmil": 0.5
-      },
-      "basis": "Sum of HB100 areas; the live site said 2×1/0 = 3/0"
-    },
-    {
-      "group": "240-4-D",
-      "name": "14 AWG Cu maximum overcurrent protection",
-      "inputs": {
-        "size": "14",
-        "material": "Cu"
-      },
-      "expected": {
-        "max_ocpd_a": 15
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "nec-240-4-d.json"
-    },
-    {
-      "group": "240-4-D",
-      "name": "12 AWG Cu maximum overcurrent protection",
-      "inputs": {
-        "size": "12",
-        "material": "Cu"
-      },
-      "expected": {
-        "max_ocpd_a": 20
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "nec-240-4-d.json"
-    },
-    {
-      "group": "240-4-D",
-      "name": "10 AWG Cu maximum overcurrent protection",
-      "inputs": {
-        "size": "10",
-        "material": "Cu"
-      },
-      "expected": {
-        "max_ocpd_a": 30
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "nec-240-4-d.json"
-    },
-    {
-      "group": "240-4-D",
-      "name": "14 AWG CCA maximum overcurrent protection",
-      "inputs": {
-        "size": "14",
-        "material": "CCA"
-      },
-      "expected": {
-        "max_ocpd_a": 10
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "nec-240-4-d.json"
-    },
-    {
-      "group": "weight",
-      "name": "4/0 copper weight per foot",
-      "inputs": {
-        "awg": "0000"
-      },
-      "expected": {
-        "lb_per_ft": 0.6405
-      },
-      "tolerance": {
-        "exact": true
-      },
-      "basis": "HB100: 640.5 lb/1000 ft (the live site printed 0.609 lb/ft)"
+ "generated_from": "data/verified/*.json (pack v3, revised 2026-10-24 after the third review)",
+ "count": 214,
+ "rules": [
+  "Every engine function must reproduce these within tolerance.",
+  "Golden values are computed from the verified JSON; if a JSON value changes, regenerate this file, never hand-edit expected values.",
+  "'exact' means string/number equality with the JSON value.",
+  "Size keys: groups wire-size-60c, wire-size-errors, wire-size-termination, wire-size-derated, service-lookup, table-*, 240-4-D, ampacity-*, breaker-sizing, voltage-drop, dc-sizing, resistance and parallel use nec-310-16.json keys ('1/0', '4/0', '250'); groups awg-table, awg-geometry and weight use awg.json names ('0', '0000').",
+  "Group wire-size-termination: termination is 'unknown', '60' or '75' ('75' means the reader confirmed that every termination is listed and identified for 75 °C conductors); wiring_method is 'cable' (NM, UF or not sure: always 60 °C) or 'conductors' (individual conductors: termination rules apply).",
+  "EGC cap: until the NEC 250.122(A) sentence is verified, the EGC is not capped at the conductor size. Only 25 A aluminum gets a Table 250.122 EGC (8 AWG) larger than its conductor (10 AWG). egc null means no Table 310.16 size reaches the required area. wire-size-60c and wire-size-derated cases carry egc_larger_than_conductor.",
+  "Group wire-size-derated (WSZ-009): ambient_c_row is a Table 310.15(B)(1)(1) row key, ccc_band a Table 310.15(C)(1) row key or null for 1–3 conductors; termination and wiring_method as in wire-size-termination; start_column_c is 90 for individual conductors and 60 for cable; derated_ampacity is the baseline size's derated ampacity capped at its termination-column ampacity."
+ ],
+ "cases": [
+  {
+   "group": "awg-geometry",
+   "name": "0000 AWG diameter and area (formula)",
+   "inputs": {
+    "awg": "0000"
+   },
+   "expected": {
+    "diameter_in": 0.46,
+    "diameter_mm": 11.684,
+    "area_cmil": 211600.0,
+    "area_mm2": 107.2193
+   },
+   "tolerance": {
+    "diameter_in": 5e-05,
+    "diameter_mm": 0.001,
+    "area_cmil": 0.5,
+    "area_mm2": 0.0005
+   },
+   "basis": "d = 0.005 in × 92^((36−n)/39); cmil = (d in mils)^2; mm2 = cmil × 0.000506707 (awg.json definition/constants)"
+  },
+  {
+   "group": "awg-geometry",
+   "name": "0 AWG diameter and area (formula)",
+   "inputs": {
+    "awg": "0"
+   },
+   "expected": {
+    "diameter_in": 0.32486,
+    "diameter_mm": 8.2515,
+    "area_cmil": 105534.5,
+    "area_mm2": 53.4751
+   },
+   "tolerance": {
+    "diameter_in": 5e-05,
+    "diameter_mm": 0.001,
+    "area_cmil": 0.5,
+    "area_mm2": 0.0005
+   },
+   "basis": "d = 0.005 in × 92^((36−n)/39); cmil = (d in mils)^2; mm2 = cmil × 0.000506707 (awg.json definition/constants)"
+  },
+  {
+   "group": "awg-geometry",
+   "name": "4 AWG diameter and area (formula)",
+   "inputs": {
+    "awg": "4"
+   },
+   "expected": {
+    "diameter_in": 0.20431,
+    "diameter_mm": 5.1894,
+    "area_cmil": 41741.3,
+    "area_mm2": 21.1506
+   },
+   "tolerance": {
+    "diameter_in": 5e-05,
+    "diameter_mm": 0.001,
+    "area_cmil": 0.5,
+    "area_mm2": 0.0005
+   },
+   "basis": "d = 0.005 in × 92^((36−n)/39); cmil = (d in mils)^2; mm2 = cmil × 0.000506707 (awg.json definition/constants)"
+  },
+  {
+   "group": "awg-geometry",
+   "name": "10 AWG diameter and area (formula)",
+   "inputs": {
+    "awg": "10"
+   },
+   "expected": {
+    "diameter_in": 0.1019,
+    "diameter_mm": 2.5882,
+    "area_cmil": 10383.0,
+    "area_mm2": 5.2612
+   },
+   "tolerance": {
+    "diameter_in": 5e-05,
+    "diameter_mm": 0.001,
+    "area_cmil": 0.5,
+    "area_mm2": 0.0005
+   },
+   "basis": "d = 0.005 in × 92^((36−n)/39); cmil = (d in mils)^2; mm2 = cmil × 0.000506707 (awg.json definition/constants)"
+  },
+  {
+   "group": "awg-geometry",
+   "name": "12 AWG diameter and area (formula)",
+   "inputs": {
+    "awg": "12"
+   },
+   "expected": {
+    "diameter_in": 0.08081,
+    "diameter_mm": 2.0525,
+    "area_cmil": 6529.9,
+    "area_mm2": 3.3088
+   },
+   "tolerance": {
+    "diameter_in": 5e-05,
+    "diameter_mm": 0.001,
+    "area_cmil": 0.5,
+    "area_mm2": 0.0005
+   },
+   "basis": "d = 0.005 in × 92^((36−n)/39); cmil = (d in mils)^2; mm2 = cmil × 0.000506707 (awg.json definition/constants)"
+  },
+  {
+   "group": "awg-geometry",
+   "name": "14 AWG diameter and area (formula)",
+   "inputs": {
+    "awg": "14"
+   },
+   "expected": {
+    "diameter_in": 0.06408,
+    "diameter_mm": 1.6277,
+    "area_cmil": 4106.7,
+    "area_mm2": 2.0809
+   },
+   "tolerance": {
+    "diameter_in": 5e-05,
+    "diameter_mm": 0.001,
+    "area_cmil": 0.5,
+    "area_mm2": 0.0005
+   },
+   "basis": "d = 0.005 in × 92^((36−n)/39); cmil = (d in mils)^2; mm2 = cmil × 0.000506707 (awg.json definition/constants)"
+  },
+  {
+   "group": "awg-geometry",
+   "name": "24 AWG diameter and area (formula)",
+   "inputs": {
+    "awg": "24"
+   },
+   "expected": {
+    "diameter_in": 0.0201,
+    "diameter_mm": 0.5106,
+    "area_cmil": 404.0,
+    "area_mm2": 0.2047
+   },
+   "tolerance": {
+    "diameter_in": 5e-05,
+    "diameter_mm": 0.001,
+    "area_cmil": 0.5,
+    "area_mm2": 0.0005
+   },
+   "basis": "d = 0.005 in × 92^((36−n)/39); cmil = (d in mils)^2; mm2 = cmil × 0.000506707 (awg.json definition/constants)"
+  },
+  {
+   "group": "awg-geometry",
+   "name": "40 AWG diameter and area (formula)",
+   "inputs": {
+    "awg": "40"
+   },
+   "expected": {
+    "diameter_in": 0.00314,
+    "diameter_mm": 0.0799,
+    "area_cmil": 9.9,
+    "area_mm2": 0.005
+   },
+   "tolerance": {
+    "diameter_in": 5e-05,
+    "diameter_mm": 0.001,
+    "area_cmil": 0.5,
+    "area_mm2": 0.0005
+   },
+   "basis": "d = 0.005 in × 92^((36−n)/39); cmil = (d in mils)^2; mm2 = cmil × 0.000506707 (awg.json definition/constants)"
+  },
+  {
+   "group": "awg-table",
+   "name": "0000 AWG HB100 Table 5 values",
+   "inputs": {
+    "awg": "0000"
+   },
+   "expected": {
+    "diameter_mils": 460.0,
+    "area_cmil": 211600.0,
+    "r20_cu_ohm_per_1000ft": 0.04901,
+    "weight_cu_lb_per_1000ft": 640.5
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
+  },
+  {
+   "group": "awg-table",
+   "name": "4 AWG HB100 Table 5 values",
+   "inputs": {
+    "awg": "4"
+   },
+   "expected": {
+    "diameter_mils": 204.3,
+    "area_cmil": 41740.0,
+    "r20_cu_ohm_per_1000ft": 0.2485,
+    "weight_cu_lb_per_1000ft": 126.3
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
+  },
+  {
+   "group": "awg-table",
+   "name": "8 AWG HB100 Table 5 values",
+   "inputs": {
+    "awg": "8"
+   },
+   "expected": {
+    "diameter_mils": 128.5,
+    "area_cmil": 16510.0,
+    "r20_cu_ohm_per_1000ft": 0.6281,
+    "weight_cu_lb_per_1000ft": 49.98
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
+  },
+  {
+   "group": "awg-table",
+   "name": "10 AWG HB100 Table 5 values",
+   "inputs": {
+    "awg": "10"
+   },
+   "expected": {
+    "diameter_mils": 101.9,
+    "area_cmil": 10380.0,
+    "r20_cu_ohm_per_1000ft": 0.9988,
+    "weight_cu_lb_per_1000ft": 31.43
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
+  },
+  {
+   "group": "awg-table",
+   "name": "12 AWG HB100 Table 5 values",
+   "inputs": {
+    "awg": "12"
+   },
+   "expected": {
+    "diameter_mils": 80.8,
+    "area_cmil": 6530.0,
+    "r20_cu_ohm_per_1000ft": 1.59,
+    "weight_cu_lb_per_1000ft": 19.8
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
+  },
+  {
+   "group": "awg-table",
+   "name": "14 AWG HB100 Table 5 values",
+   "inputs": {
+    "awg": "14"
+   },
+   "expected": {
+    "diameter_mils": 64.1,
+    "area_cmil": 4110.0,
+    "r20_cu_ohm_per_1000ft": 2.52,
+    "weight_cu_lb_per_1000ft": 12.4
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
+  },
+  {
+   "group": "awg-table",
+   "name": "18 AWG HB100 Table 5 values",
+   "inputs": {
+    "awg": "18"
+   },
+   "expected": {
+    "diameter_mils": 40.3,
+    "area_cmil": 1620.0,
+    "r20_cu_ohm_per_1000ft": 6.39,
+    "weight_cu_lb_per_1000ft": 4.92
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
+  },
+  {
+   "group": "awg-table",
+   "name": "22 AWG HB100 Table 5 values",
+   "inputs": {
+    "awg": "22"
+   },
+   "expected": {
+    "diameter_mils": 25.3,
+    "area_cmil": 640.0,
+    "r20_cu_ohm_per_1000ft": 16.2,
+    "weight_cu_lb_per_1000ft": 1.94
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
+  },
+  {
+   "group": "awg-table",
+   "name": "24 AWG HB100 Table 5 values",
+   "inputs": {
+    "awg": "24"
+   },
+   "expected": {
+    "diameter_mils": 20.1,
+    "area_cmil": 404.0,
+    "r20_cu_ohm_per_1000ft": 25.7,
+    "weight_cu_lb_per_1000ft": 1.22
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
+  },
+  {
+   "group": "awg-table",
+   "name": "30 AWG HB100 Table 5 values",
+   "inputs": {
+    "awg": "30"
+   },
+   "expected": {
+    "diameter_mils": 10.0,
+    "area_cmil": 100.0,
+    "r20_cu_ohm_per_1000ft": 104.0,
+    "weight_cu_lb_per_1000ft": 0.303
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
+  },
+  {
+   "group": "awg-table",
+   "name": "40 AWG HB100 Table 5 values",
+   "inputs": {
+    "awg": "40"
+   },
+   "expected": {
+    "diameter_mils": 3.1,
+    "area_cmil": 9.61,
+    "r20_cu_ohm_per_1000ft": 1080.0,
+    "weight_cu_lb_per_1000ft": 0.0291
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Rendered chart values must equal awg.json (HB100 Table 5) exactly"
+  },
+  {
+   "group": "resistance",
+   "name": "14 AWG copper at 75 °C (calculated)",
+   "inputs": {
+    "size": "14",
+    "material": "Cu",
+    "temp_c": 75
+   },
+   "expected": {
+    "ohm_per_1000ft": 3.0647
+   },
+   "tolerance": {
+    "ohm_per_1000ft": 0.0005
+   },
+   "basis": "R75 = R20(HB100) × (1 + 0.00393 × 55)"
+  },
+  {
+   "group": "resistance",
+   "name": "12 AWG copper at 75 °C (calculated)",
+   "inputs": {
+    "size": "12",
+    "material": "Cu",
+    "temp_c": 75
+   },
+   "expected": {
+    "ohm_per_1000ft": 1.93368
+   },
+   "tolerance": {
+    "ohm_per_1000ft": 0.0005
+   },
+   "basis": "R75 = R20(HB100) × (1 + 0.00393 × 55)"
+  },
+  {
+   "group": "resistance",
+   "name": "10 AWG copper at 75 °C (calculated)",
+   "inputs": {
+    "size": "10",
+    "material": "Cu",
+    "temp_c": 75
+   },
+   "expected": {
+    "ohm_per_1000ft": 1.21469
+   },
+   "tolerance": {
+    "ohm_per_1000ft": 0.0005
+   },
+   "basis": "R75 = R20(HB100) × (1 + 0.00393 × 55)"
+  },
+  {
+   "group": "resistance",
+   "name": "6 AWG copper at 75 °C (calculated)",
+   "inputs": {
+    "size": "6",
+    "material": "Cu",
+    "temp_c": 75
+   },
+   "expected": {
+    "ohm_per_1000ft": 0.48062
+   },
+   "tolerance": {
+    "ohm_per_1000ft": 0.0005
+   },
+   "basis": "R75 = R20(HB100) × (1 + 0.00393 × 55)"
+  },
+  {
+   "group": "resistance",
+   "name": "3/0 AWG copper at 75 °C (calculated)",
+   "inputs": {
+    "size": "3/0",
+    "material": "Cu",
+    "temp_c": 75
+   },
+   "expected": {
+    "ohm_per_1000ft": 0.07518
+   },
+   "tolerance": {
+    "ohm_per_1000ft": 0.0005
+   },
+   "basis": "R75 = R20(HB100) × (1 + 0.00393 × 55)"
+  },
+  {
+   "group": "resistance",
+   "name": "4/0 aluminum EC-H19 at 20 °C (calculated)",
+   "inputs": {
+    "size": "4/0",
+    "material": "Al",
+    "temp_c": 20
+   },
+   "expected": {
+    "ohm_per_1000ft": 0.08035
+   },
+   "tolerance": {
+    "ohm_per_1000ft": 1e-05
+   },
+   "basis": "R = 17.002 / cmil × 1000 (HB109 constant)"
+  },
+  {
+   "group": "resistance",
+   "name": "500 kcmil aluminum EC-H19 at 20 °C (calculated)",
+   "inputs": {
+    "size": "500",
+    "material": "Al",
+    "temp_c": 20
+   },
+   "expected": {
+    "ohm_per_1000ft": 0.034004
+   },
+   "tolerance": {
+    "ohm_per_1000ft": 1e-05
+   },
+   "basis": "R = 17.002 / 500000 × 1000; the live site showed 0.206"
+  },
+  {
+   "group": "resistance",
+   "name": "4/0 aluminum EC-H19 at 75 °C (calculated)",
+   "inputs": {
+    "size": "4/0",
+    "material": "Al",
+    "temp_c": 75
+   },
+   "expected": {
+    "ohm_per_1000ft": 0.09816
+   },
+   "tolerance": {
+    "ohm_per_1000ft": 0.0001
+   },
+   "basis": "R20 × (1 + 0.00403 × 55)"
+  },
+  {
+   "group": "voltage-drop",
+   "name": "3/0 AWG Cu, 200 A, 100 ft one way, 240 V, single-phase, 75 °C",
+   "inputs": {
+    "size": "3/0",
+    "material": "Cu",
+    "amps": 200,
+    "length_ft_one_way": 100,
+    "volts": 240,
+    "phase": 1,
+    "conductor_temp_c": 75
+   },
+   "expected": {
+    "vd_volts": 3.007,
+    "vd_percent": 1.253
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005
+   },
+   "basis": "1φ: VD = 2·L·I·R/1000; 3φ: VD = √3·L·I·R/1000; R from awg.json at 75 °C (solid conductor, resistive load)"
+  },
+  {
+   "group": "voltage-drop",
+   "name": "4/0 AWG Al, 200 A, 100 ft one way, 240 V, single-phase, 75 °C",
+   "inputs": {
+    "size": "4/0",
+    "material": "Al",
+    "amps": 200,
+    "length_ft_one_way": 100,
+    "volts": 240,
+    "phase": 1,
+    "conductor_temp_c": 75
+   },
+   "expected": {
+    "vd_volts": 3.926,
+    "vd_percent": 1.636
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005
+   },
+   "basis": "1φ: VD = 2·L·I·R/1000; 3φ: VD = √3·L·I·R/1000; R from awg.json at 75 °C (solid conductor, resistive load)"
+  },
+  {
+   "group": "voltage-drop",
+   "name": "12 AWG Cu, 16 A, 50 ft one way, 120 V, single-phase, 75 °C",
+   "inputs": {
+    "size": "12",
+    "material": "Cu",
+    "amps": 16,
+    "length_ft_one_way": 50,
+    "volts": 120,
+    "phase": 1,
+    "conductor_temp_c": 75
+   },
+   "expected": {
+    "vd_volts": 3.094,
+    "vd_percent": 2.578
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005
+   },
+   "basis": "1φ: VD = 2·L·I·R/1000; 3φ: VD = √3·L·I·R/1000; R from awg.json at 75 °C (solid conductor, resistive load)"
+  },
+  {
+   "group": "voltage-drop",
+   "name": "6 AWG Cu, 48 A, 50 ft one way, 240 V, single-phase, 75 °C",
+   "inputs": {
+    "size": "6",
+    "material": "Cu",
+    "amps": 48,
+    "length_ft_one_way": 50,
+    "volts": 240,
+    "phase": 1,
+    "conductor_temp_c": 75
+   },
+   "expected": {
+    "vd_volts": 2.307,
+    "vd_percent": 0.961
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005
+   },
+   "basis": "1φ: VD = 2·L·I·R/1000; 3φ: VD = √3·L·I·R/1000; R from awg.json at 75 °C (solid conductor, resistive load)"
+  },
+  {
+   "group": "voltage-drop",
+   "name": "8 AWG Cu, 40 A, 100 ft one way, 240 V, single-phase, 75 °C",
+   "inputs": {
+    "size": "8",
+    "material": "Cu",
+    "amps": 40,
+    "length_ft_one_way": 100,
+    "volts": 240,
+    "phase": 1,
+    "conductor_temp_c": 75
+   },
+   "expected": {
+    "vd_volts": 6.111,
+    "vd_percent": 2.546
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005
+   },
+   "basis": "1φ: VD = 2·L·I·R/1000; 3φ: VD = √3·L·I·R/1000; R from awg.json at 75 °C (solid conductor, resistive load)"
+  },
+  {
+   "group": "voltage-drop",
+   "name": "4 AWG Cu, 60 A, 150 ft one way, 480 V, three-phase, 75 °C",
+   "inputs": {
+    "size": "4",
+    "material": "Cu",
+    "amps": 60,
+    "length_ft_one_way": 150,
+    "volts": 480,
+    "phase": 3,
+    "conductor_temp_c": 75
+   },
+   "expected": {
+    "vd_volts": 4.711,
+    "vd_percent": 0.981
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005
+   },
+   "basis": "1φ: VD = 2·L·I·R/1000; 3φ: VD = √3·L·I·R/1000; R from awg.json at 75 °C (solid conductor, resistive load)"
+  },
+  {
+   "group": "ampacity-arithmetic",
+   "name": "6 AWG cu_90 at 41–45 °C, 4–6 current-carrying",
+   "inputs": {
+    "size": "6",
+    "column": "cu_90",
+    "ambient_c_row": "41–45",
+    "ccc_band": "4–6"
+   },
+   "expected": {
+    "table_a": 75.0,
+    "correction": 0.87,
+    "adjustment_pct": 80,
+    "result_a": 52.2
+   },
+   "tolerance": {
+    "result_a": 0.01
+   },
+   "basis": "Table 310.16 × Table 310.15(B)(1)(1) × Table 310.15(C)(1); pure table arithmetic. The termination-temperature cap (nec-110-14c.json) is a separate output, not part of result_a."
+  },
+  {
+   "group": "ampacity-arithmetic",
+   "name": "12 AWG cu_90 at 36–40 °C, 7–9 current-carrying",
+   "inputs": {
+    "size": "12",
+    "column": "cu_90",
+    "ambient_c_row": "36–40",
+    "ccc_band": "7–9"
+   },
+   "expected": {
+    "table_a": 30.0,
+    "correction": 0.91,
+    "adjustment_pct": 70,
+    "result_a": 19.11
+   },
+   "tolerance": {
+    "result_a": 0.01
+   },
+   "basis": "Table 310.16 × Table 310.15(B)(1)(1) × Table 310.15(C)(1); pure table arithmetic. The termination-temperature cap (nec-110-14c.json) is a separate output, not part of result_a."
+  },
+  {
+   "group": "ampacity-arithmetic",
+   "name": "3/0 AWG cu_75 at 31–35 °C, ≤3 current-carrying",
+   "inputs": {
+    "size": "3/0",
+    "column": "cu_75",
+    "ambient_c_row": "31–35",
+    "ccc_band": null
+   },
+   "expected": {
+    "table_a": 200.0,
+    "correction": 0.94,
+    "adjustment_pct": 100,
+    "result_a": 188.0
+   },
+   "tolerance": {
+    "result_a": 0.01
+   },
+   "basis": "Table 310.16 × Table 310.15(B)(1)(1) × Table 310.15(C)(1); pure table arithmetic. The termination-temperature cap (nec-110-14c.json) is a separate output, not part of result_a."
+  },
+  {
+   "group": "ampacity-arithmetic",
+   "name": "4 AWG al_75 at 26–30 °C, 10–20 current-carrying",
+   "inputs": {
+    "size": "4",
+    "column": "al_75",
+    "ambient_c_row": "26–30",
+    "ccc_band": "10–20"
+   },
+   "expected": {
+    "table_a": 65.0,
+    "correction": 1.0,
+    "adjustment_pct": 50,
+    "result_a": 32.5
+   },
+   "tolerance": {
+    "result_a": 0.01
+   },
+   "basis": "Table 310.16 × Table 310.15(B)(1)(1) × Table 310.15(C)(1); pure table arithmetic. The termination-temperature cap (nec-110-14c.json) is a separate output, not part of result_a."
+  },
+  {
+   "group": "table-310-12",
+   "name": "100 A dwelling service",
+   "inputs": {
+    "rating_a": 100
+   },
+   "expected": {
+    "cu": "4",
+    "al_cca": "2"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.12 row"
+  },
+  {
+   "group": "table-310-12",
+   "name": "150 A dwelling service",
+   "inputs": {
+    "rating_a": 150
+   },
+   "expected": {
+    "cu": "1",
+    "al_cca": "2/0"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.12 row"
+  },
+  {
+   "group": "table-310-12",
+   "name": "200 A dwelling service",
+   "inputs": {
+    "rating_a": 200
+   },
+   "expected": {
+    "cu": "2/0",
+    "al_cca": "4/0"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.12 row"
+  },
+  {
+   "group": "table-310-12",
+   "name": "400 A dwelling service",
+   "inputs": {
+    "rating_a": 400
+   },
+   "expected": {
+    "cu": "400",
+    "al_cca": "600"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.12 row"
+  },
+  {
+   "group": "table-310-12",
+   "name": "120 A (not a table row)",
+   "inputs": {
+    "rating_a": 120
+   },
+   "expected": {
+    "result": null
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Engine returns no row; never interpolate"
+  },
+  {
+   "group": "table-250-122",
+   "name": "OCPD 15 A",
+   "inputs": {
+    "ocpd_a": 15
+   },
+   "expected": {
+    "cu": "14",
+    "al_cca": "12",
+    "row_a": 15.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "First row whose rating is not exceeded"
+  },
+  {
+   "group": "table-250-122",
+   "name": "OCPD 20 A",
+   "inputs": {
+    "ocpd_a": 20
+   },
+   "expected": {
+    "cu": "12",
+    "al_cca": "10",
+    "row_a": 20.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "First row whose rating is not exceeded"
+  },
+  {
+   "group": "table-250-122",
+   "name": "OCPD 30 A",
+   "inputs": {
+    "ocpd_a": 30
+   },
+   "expected": {
+    "cu": "10",
+    "al_cca": "8",
+    "row_a": 60.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "First row whose rating is not exceeded"
+  },
+  {
+   "group": "table-250-122",
+   "name": "OCPD 60 A",
+   "inputs": {
+    "ocpd_a": 60
+   },
+   "expected": {
+    "cu": "10",
+    "al_cca": "8",
+    "row_a": 60.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "First row whose rating is not exceeded"
+  },
+  {
+   "group": "table-250-122",
+   "name": "OCPD 61 A",
+   "inputs": {
+    "ocpd_a": 61
+   },
+   "expected": {
+    "cu": "8",
+    "al_cca": "6",
+    "row_a": 100.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "First row whose rating is not exceeded"
+  },
+  {
+   "group": "table-250-122",
+   "name": "OCPD 100 A",
+   "inputs": {
+    "ocpd_a": 100
+   },
+   "expected": {
+    "cu": "8",
+    "al_cca": "6",
+    "row_a": 100.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "First row whose rating is not exceeded"
+  },
+  {
+   "group": "table-250-122",
+   "name": "OCPD 125 A",
+   "inputs": {
+    "ocpd_a": 125
+   },
+   "expected": {
+    "cu": "6",
+    "al_cca": "4",
+    "row_a": 200.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "First row whose rating is not exceeded"
+  },
+  {
+   "group": "table-250-122",
+   "name": "OCPD 200 A",
+   "inputs": {
+    "ocpd_a": 200
+   },
+   "expected": {
+    "cu": "6",
+    "al_cca": "4",
+    "row_a": 200.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "First row whose rating is not exceeded"
+  },
+  {
+   "group": "table-250-122",
+   "name": "OCPD 400 A",
+   "inputs": {
+    "ocpd_a": 400
+   },
+   "expected": {
+    "cu": "3",
+    "al_cca": "1",
+    "row_a": 400.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "First row whose rating is not exceeded"
+  },
+  {
+   "group": "table-250-122",
+   "name": "OCPD 6000 A",
+   "inputs": {
+    "ocpd_a": 6000
+   },
+   "expected": {
+    "cu": "800",
+    "al_cca": "1250",
+    "row_a": 6000.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "First row whose rating is not exceeded"
+  },
+  {
+   "group": "table-250-122",
+   "name": "OCPD 6001 A",
+   "inputs": {
+    "ocpd_a": 6001
+   },
+   "expected": {
+    "result": null
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "First row whose rating is not exceeded"
+  },
+  {
+   "group": "table-250-66",
+   "name": "3 AWG copper service conductors",
+   "inputs": {
+    "service_cu": "3"
+   },
+   "expected": {
+    "gec_cu": "8",
+    "gec_al_cca": "6"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Row '2 or smaller'"
+  },
+  {
+   "group": "table-250-66",
+   "name": "1/0 copper service conductors",
+   "inputs": {
+    "service_cu": "1/0"
+   },
+   "expected": {
+    "gec_cu": "6",
+    "gec_al_cca": "4"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Row '1 or 1/0'"
+  },
+  {
+   "group": "table-250-66",
+   "name": "2/0 copper service conductors",
+   "inputs": {
+    "service_cu": "2/0"
+   },
+   "expected": {
+    "gec_cu": "4",
+    "gec_al_cca": "2"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Row '2/0 or 3/0'"
+  },
+  {
+   "group": "table-250-66",
+   "name": "4/0 aluminum service conductors",
+   "inputs": {
+    "service_al": "4/0"
+   },
+   "expected": {
+    "gec_cu": "4",
+    "gec_al_cca": "2"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Row '4/0 or 250' (Al)"
+  },
+  {
+   "group": "table-250-66",
+   "name": "500 kcmil copper service conductors",
+   "inputs": {
+    "service_cu": "500"
+   },
+   "expected": {
+    "gec_cu": "1/0",
+    "gec_al_cca": "3/0"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Row 'Over 350 through 600'"
+  },
+  {
+   "group": "power",
+   "name": "7.2 kW single-phase 240 V, PF 1",
+   "inputs": {
+    "kw": 7.2,
+    "volts": 240,
+    "phase": 1,
+    "pf": 1
+   },
+   "expected": {
+    "amps": 30.0
+   },
+   "tolerance": {
+    "amps": 1e-06
+   },
+   "basis": "I = P/(V·PF)"
+  },
+  {
+   "group": "power",
+   "name": "50 kW three-phase 480 V, PF 0.9",
+   "inputs": {
+    "kw": 50,
+    "volts": 480,
+    "phase": 3,
+    "pf": 0.9
+   },
+   "expected": {
+    "amps": 66.823
+   },
+   "tolerance": {
+    "amps": 0.001
+   },
+   "basis": "I = P/(√3·V·PF)"
+  },
+  {
+   "group": "power",
+   "name": "75 kVA three-phase 208 V",
+   "inputs": {
+    "kva": 75,
+    "volts": 208,
+    "phase": 3
+   },
+   "expected": {
+    "amps": 208.179
+   },
+   "tolerance": {
+    "amps": 0.001
+   },
+   "basis": "I = S/(√3·V) or S/V"
+  },
+  {
+   "group": "power",
+   "name": "75 kVA three-phase 480 V",
+   "inputs": {
+    "kva": 75,
+    "volts": 480,
+    "phase": 3
+   },
+   "expected": {
+    "amps": 90.211
+   },
+   "tolerance": {
+    "amps": 0.001
+   },
+   "basis": "I = S/(√3·V) or S/V"
+  },
+  {
+   "group": "power",
+   "name": "25 kVA single-phase 240 V",
+   "inputs": {
+    "kva": 25,
+    "volts": 240,
+    "phase": 1
+   },
+   "expected": {
+    "amps": 104.167
+   },
+   "tolerance": {
+    "amps": 0.001
+   },
+   "basis": "I = S/(√3·V) or S/V"
+  },
+  {
+   "group": "power",
+   "name": "10 kW at 240 V single-phase, PF 1 (comparison)",
+   "inputs": {
+    "kw": 10,
+    "volts": 240,
+    "phase": 1,
+    "pf": 1
+   },
+   "expected": {
+    "amps": 41.667
+   },
+   "tolerance": {
+    "amps": 0.001
+   },
+   "basis": "I = P/(√3·V·PF) or P/(V·PF); used on the single- vs three-phase guide"
+  },
+  {
+   "group": "power",
+   "name": "10 kW at 208 V three-phase, PF 1 (comparison)",
+   "inputs": {
+    "kw": 10,
+    "volts": 208,
+    "phase": 3,
+    "pf": 1
+   },
+   "expected": {
+    "amps": 27.757
+   },
+   "tolerance": {
+    "amps": 0.001
+   },
+   "basis": "I = P/(√3·V·PF) or P/(V·PF); used on the single- vs three-phase guide"
+  },
+  {
+   "group": "power",
+   "name": "10 kW at 480 V three-phase, PF 1 (comparison)",
+   "inputs": {
+    "kw": 10,
+    "volts": 480,
+    "phase": 3,
+    "pf": 1
+   },
+   "expected": {
+    "amps": 12.028
+   },
+   "tolerance": {
+    "amps": 0.001
+   },
+   "basis": "I = P/(√3·V·PF) or P/(V·PF); used on the single- vs three-phase guide"
+  },
+  {
+   "group": "power",
+   "name": "4500 W at 240 V",
+   "inputs": {
+    "watts": 4500,
+    "volts": 240,
+    "phase": 1,
+    "pf": 1
+   },
+   "expected": {
+    "amps": 18.75
+   },
+   "tolerance": {
+    "amps": 1e-09
+   },
+   "basis": "I = P/V (one 4500 W element on at a time per Rheem/A.O. Smith)"
+  },
+  {
+   "group": "power",
+   "name": "50 A three-phase 480 V PF 0.92 to watts",
+   "inputs": {
+    "amps": 50,
+    "volts": 480,
+    "phase": 3,
+    "pf": 0.92
+   },
+   "expected": {
+    "watts": 38243.7
+   },
+   "tolerance": {
+    "watts": 0.1
+   },
+   "basis": "P = √3·V·I·PF (the live site printed 38,323)"
+  },
+  {
+   "group": "conversion",
+   "name": "12,000 Btu/h to watts",
+   "inputs": {
+    "btu_per_h": 12000
+   },
+   "expected": {
+    "watts": 3516.853
+   },
+   "tolerance": {
+    "watts": 0.001
+   },
+   "basis": "NIST SP 811: 1 Btu_IT/h = 0.2930711 W"
+  },
+  {
+   "group": "conversion",
+   "name": "1000 W to Btu/h",
+   "inputs": {
+    "watts": 1000
+   },
+   "expected": {
+    "btu_per_h": 3412.14
+   },
+   "tolerance": {
+    "btu_per_h": 0.01
+   },
+   "basis": "1/0.2930711"
+  },
+  {
+   "group": "conversion",
+   "name": "1 ton of refrigeration to watts",
+   "inputs": {
+    "tons": 1
+   },
+   "expected": {
+    "watts": 3516.853
+   },
+   "tolerance": {
+    "watts": 0.001
+   },
+   "basis": "NIST SP 811"
+  },
+  {
+   "group": "conversion",
+   "name": "5 hp (electric) to watts",
+   "inputs": {
+    "hp": 5,
+    "kind": "electric"
+   },
+   "expected": {
+    "watts": 3730.0
+   },
+   "tolerance": {
+    "watts": 1e-09
+   },
+   "basis": "NIST SP 811: hp (electric) = 746 W exactly"
+  },
+  {
+   "group": "conversion",
+   "name": "1 hp (550 ft·lbf/s) to watts",
+   "inputs": {
+    "hp": 1,
+    "kind": "mechanical"
+   },
+   "expected": {
+    "watts": 745.6999
+   },
+   "tolerance": {
+    "watts": 0.0001
+   },
+   "basis": "NIST SP 811"
+  },
+  {
+   "group": "pf-correction",
+   "name": "100 kW from PF 0.80 to 0.95",
+   "inputs": {
+    "kw": 100,
+    "pf_from": 0.8,
+    "pf_to": 0.95
+   },
+   "expected": {
+    "kvar": 42.13,
+    "current_reduction_pct": 15.79
+   },
+   "tolerance": {
+    "kvar": 0.01,
+    "current_reduction_pct": 0.01
+   },
+   "basis": "Qc = P·(tan φ1 − tan φ2); ΔI = 1 − PF1/PF2 (the live site printed 32.9 kVAR / 18.8%)"
+  },
+  {
+   "group": "pf-correction",
+   "name": "DOE fact-sheet example: 100 kW at 142 kVA to PF 0.95",
+   "inputs": {
+    "kw": 100,
+    "kva": 142,
+    "pf_to": 0.95
+   },
+   "expected": {
+    "pf_from": 0.7042,
+    "kvar": 67.9,
+    "current_reduction_pct": 25.9
+   },
+   "tolerance": {
+    "kvar": 0.1,
+    "current_reduction_pct": 0.1
+   },
+   "basis": "DOE/GO-10096-286 says about 26% less current; its '67-kW' is a misprint for kVAR"
+  },
+  {
+   "group": "parallel",
+   "name": "2 × 1/0 AWG in parallel: equivalent area",
+   "inputs": {
+    "size": "1/0",
+    "sets": 2
+   },
+   "expected": {
+    "total_cmil": 211200.0,
+    "smallest_single_size_at_least": "4/0"
+   },
+   "tolerance": {
+    "total_cmil": 0.5
+   },
+   "basis": "Sum of HB100 areas; the live site said 2×1/0 = 3/0"
+  },
+  {
+   "group": "parallel",
+   "name": "2 × 2/0 AWG in parallel: equivalent area",
+   "inputs": {
+    "size": "2/0",
+    "sets": 2
+   },
+   "expected": {
+    "total_cmil": 266200.0,
+    "smallest_single_size_at_least": "300"
+   },
+   "tolerance": {
+    "total_cmil": 0.5
+   },
+   "basis": "Sum of HB100 areas; the live site said 2×1/0 = 3/0"
+  },
+  {
+   "group": "parallel",
+   "name": "2 × 4/0 AWG in parallel: equivalent area",
+   "inputs": {
+    "size": "4/0",
+    "sets": 2
+   },
+   "expected": {
+    "total_cmil": 423200.0,
+    "smallest_single_size_at_least": "500"
+   },
+   "tolerance": {
+    "total_cmil": 0.5
+   },
+   "basis": "Sum of HB100 areas; the live site said 2×1/0 = 3/0"
+  },
+  {
+   "group": "240-4-D",
+   "name": "14 AWG Cu maximum overcurrent protection",
+   "inputs": {
+    "size": "14",
+    "material": "Cu"
+   },
+   "expected": {
+    "max_ocpd_a": 15
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "nec-240-4-d.json"
+  },
+  {
+   "group": "240-4-D",
+   "name": "12 AWG Cu maximum overcurrent protection",
+   "inputs": {
+    "size": "12",
+    "material": "Cu"
+   },
+   "expected": {
+    "max_ocpd_a": 20
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "nec-240-4-d.json"
+  },
+  {
+   "group": "240-4-D",
+   "name": "10 AWG Cu maximum overcurrent protection",
+   "inputs": {
+    "size": "10",
+    "material": "Cu"
+   },
+   "expected": {
+    "max_ocpd_a": 30
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "nec-240-4-d.json"
+  },
+  {
+   "group": "240-4-D",
+   "name": "14 AWG CCA maximum overcurrent protection",
+   "inputs": {
+    "size": "14",
+    "material": "CCA"
+   },
+   "expected": {
+    "max_ocpd_a": 10
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "nec-240-4-d.json"
+  },
+  {
+   "group": "weight",
+   "name": "4/0 copper weight per foot",
+   "inputs": {
+    "awg": "0000"
+   },
+   "expected": {
+    "lb_per_ft": 0.6405
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "HB100: 640.5 lb/1000 ft (the live site printed 0.609 lb/ft)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "15 A OCPD, 15 A load, 0 ft, 240 V, single-phase, Cu",
+   "inputs": {
+    "ocpd_a": 15,
+    "load_a": 15,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "14",
+    "ampacity_60c": 15.0,
+    "min_size_by_ampacity": "14",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "14",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "15 A OCPD, 15 A load, 0 ft, 240 V, single-phase, Al",
+   "inputs": {
+    "ocpd_a": 15,
+    "load_a": 15,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "12",
+    "ampacity_60c": 15.0,
+    "min_size_by_ampacity": "12",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "12",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "20 A OCPD, 20 A load, 0 ft, 240 V, single-phase, Cu",
+   "inputs": {
+    "ocpd_a": 20,
+    "load_a": 20,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "12",
+    "ampacity_60c": 20.0,
+    "min_size_by_ampacity": "12",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "12",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "20 A OCPD, 20 A load, 0 ft, 240 V, single-phase, Al",
+   "inputs": {
+    "ocpd_a": 20,
+    "load_a": 20,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "10",
+    "ampacity_60c": 25.0,
+    "min_size_by_ampacity": "10",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "10",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "30 A OCPD, 30 A load, 0 ft, 240 V, single-phase, Cu",
+   "inputs": {
+    "ocpd_a": 30,
+    "load_a": 30,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "10",
+    "ampacity_60c": 30.0,
+    "min_size_by_ampacity": "10",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "10",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "30 A OCPD, 30 A load, 0 ft, 240 V, single-phase, Al",
+   "inputs": {
+    "ocpd_a": 30,
+    "load_a": 30,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "8",
+    "ampacity_60c": 35.0,
+    "min_size_by_ampacity": "8",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "8",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "40 A OCPD, 40 A load, 0 ft, 240 V, single-phase, Cu",
+   "inputs": {
+    "ocpd_a": 40,
+    "load_a": 40,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "8",
+    "ampacity_60c": 40.0,
+    "min_size_by_ampacity": "8",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "10",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "40 A OCPD, 40 A load, 0 ft, 240 V, single-phase, Al",
+   "inputs": {
+    "ocpd_a": 40,
+    "load_a": 40,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "6",
+    "ampacity_60c": 40.0,
+    "min_size_by_ampacity": "6",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "8",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "50 A OCPD, 50 A load, 0 ft, 240 V, single-phase, Cu",
+   "inputs": {
+    "ocpd_a": 50,
+    "load_a": 50,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "6",
+    "ampacity_60c": 55.0,
+    "min_size_by_ampacity": "6",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "10",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "50 A OCPD, 50 A load, 0 ft, 240 V, single-phase, Al",
+   "inputs": {
+    "ocpd_a": 50,
+    "load_a": 50,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "4",
+    "ampacity_60c": 55.0,
+    "min_size_by_ampacity": "4",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "8",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "60 A OCPD, 60 A load, 0 ft, 240 V, single-phase, Cu",
+   "inputs": {
+    "ocpd_a": 60,
+    "load_a": 60,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "4",
+    "ampacity_60c": 70.0,
+    "min_size_by_ampacity": "4",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "10",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "60 A OCPD, 60 A load, 0 ft, 240 V, single-phase, Al",
+   "inputs": {
+    "ocpd_a": 60,
+    "load_a": 60,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "3",
+    "ampacity_60c": 65.0,
+    "min_size_by_ampacity": "3",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "8",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "100 A OCPD, 100 A load, 0 ft, 240 V, single-phase, Cu",
+   "inputs": {
+    "ocpd_a": 100,
+    "load_a": 100,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "1",
+    "ampacity_60c": 110.0,
+    "min_size_by_ampacity": "1",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "8",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "100 A OCPD, 100 A load, 0 ft, 240 V, single-phase, Al",
+   "inputs": {
+    "ocpd_a": 100,
+    "load_a": 100,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "1/0",
+    "ampacity_60c": 100.0,
+    "min_size_by_ampacity": "1/0",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "6",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "200 A OCPD, 200 A load, 0 ft, 240 V, single-phase, Cu",
+   "inputs": {
+    "ocpd_a": 200,
+    "load_a": 200,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "250",
+    "ampacity_60c": 215.0,
+    "min_size_by_ampacity": "250",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "6",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "200 A OCPD, 200 A load, 0 ft, 240 V, single-phase, Al",
+   "inputs": {
+    "ocpd_a": 200,
+    "load_a": 200,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "350",
+    "ampacity_60c": 210.0,
+    "min_size_by_ampacity": "350",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "4",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "400 A OCPD, 400 A load, 0 ft, 240 V, single-phase, Cu",
+   "inputs": {
+    "ocpd_a": 400,
+    "load_a": 400,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "750",
+    "ampacity_60c": 400.0,
+    "min_size_by_ampacity": "750",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "3",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "400 A OCPD, 400 A load, 0 ft, 240 V, single-phase, Al",
+   "inputs": {
+    "ocpd_a": 400,
+    "load_a": 400,
+    "length_ft_one_way": 0,
+    "volts": 240,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "1250",
+    "ampacity_60c": 405.0,
+    "min_size_by_ampacity": "1250",
+    "vd_volts": 0.0,
+    "vd_percent": 0.0,
+    "meets_target": true,
+    "egc": "1",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "20 A OCPD, 16 A load, 150 ft, 120 V, single-phase, Cu",
+   "inputs": {
+    "ocpd_a": 20,
+    "load_a": 16,
+    "length_ft_one_way": 150,
+    "volts": 120,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "6",
+    "ampacity_60c": 55.0,
+    "min_size_by_ampacity": "12",
+    "vd_volts": 2.307,
+    "vd_percent": 1.922,
+    "meets_target": true,
+    "egc": "6",
+    "egc_upsized": true,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "20 A OCPD, 16 A load, 150 ft, 120 V, single-phase, Al",
+   "inputs": {
+    "ocpd_a": 20,
+    "load_a": 16,
+    "length_ft_one_way": 150,
+    "volts": 120,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "4",
+    "ampacity_60c": 55.0,
+    "min_size_by_ampacity": "10",
+    "vd_volts": 2.388,
+    "vd_percent": 1.99,
+    "meets_target": true,
+    "egc": "4",
+    "egc_upsized": true,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "100 A OCPD, 80 A load, 300 ft, 480 V, three-phase, Cu",
+   "inputs": {
+    "ocpd_a": 100,
+    "load_a": 80,
+    "length_ft_one_way": 300,
+    "volts": 480,
+    "phase": 3,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "1",
+    "ampacity_60c": 110.0,
+    "min_size_by_ampacity": "1",
+    "vd_volts": 6.264,
+    "vd_percent": 1.305,
+    "meets_target": true,
+    "egc": "8",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "100 A OCPD, 80 A load, 300 ft, 480 V, three-phase, Al",
+   "inputs": {
+    "ocpd_a": 100,
+    "load_a": 80,
+    "length_ft_one_way": 300,
+    "volts": 480,
+    "phase": 3,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "1/0",
+    "ampacity_60c": 100.0,
+    "min_size_by_ampacity": "1/0",
+    "vd_volts": 8.177,
+    "vd_percent": 1.703,
+    "meets_target": true,
+    "egc": "6",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "60 A OCPD, 48 A load, 200 ft, 240 V, single-phase, Cu",
+   "inputs": {
+    "ocpd_a": 60,
+    "load_a": 48,
+    "length_ft_one_way": 200,
+    "volts": 240,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "4",
+    "ampacity_60c": 70.0,
+    "min_size_by_ampacity": "4",
+    "vd_volts": 5.802,
+    "vd_percent": 2.418,
+    "meets_target": true,
+    "egc": "10",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "60 A OCPD, 48 A load, 200 ft, 240 V, single-phase, Al",
+   "inputs": {
+    "ocpd_a": 60,
+    "load_a": 48,
+    "length_ft_one_way": 200,
+    "volts": 240,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "2",
+    "ampacity_60c": 75.0,
+    "min_size_by_ampacity": "3",
+    "vd_volts": 6.01,
+    "vd_percent": 2.504,
+    "meets_target": true,
+    "egc": "6",
+    "egc_upsized": true,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "400 A OCPD, 400 A load, 2000 ft, 240 V, single-phase, Cu",
+   "inputs": {
+    "ocpd_a": 400,
+    "load_a": 400,
+    "length_ft_one_way": 2000,
+    "volts": 240,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "2000",
+    "ampacity_60c": 555.0,
+    "min_size_by_ampacity": "750",
+    "vd_volts": 10.09,
+    "vd_percent": 4.204,
+    "meets_target": false,
+    "egc": "3/0",
+    "egc_upsized": true,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "400 A OCPD, 400 A load, 2000 ft, 240 V, single-phase, Al",
+   "inputs": {
+    "ocpd_a": 400,
+    "load_a": 400,
+    "length_ft_one_way": 2000,
+    "volts": 240,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "2000",
+    "ampacity_60c": 470.0,
+    "min_size_by_ampacity": "1250",
+    "vd_volts": 16.624,
+    "vd_percent": 6.927,
+    "meets_target": false,
+    "egc": "3/0",
+    "egc_upsized": true,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "30 A OCPD, 24 A load, 100 ft, 240 V, single-phase, Cu",
+   "inputs": {
+    "ocpd_a": 30,
+    "load_a": 24,
+    "length_ft_one_way": 100,
+    "volts": 240,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "10",
+    "ampacity_60c": 30.0,
+    "min_size_by_ampacity": "10",
+    "vd_volts": 5.832,
+    "vd_percent": 2.43,
+    "meets_target": true,
+    "egc": "10",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "30 A OCPD, 24 A load, 100 ft, 240 V, single-phase, Al",
+   "inputs": {
+    "ocpd_a": 30,
+    "load_a": 24,
+    "length_ft_one_way": 100,
+    "volts": 240,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "8",
+    "ampacity_60c": 35.0,
+    "min_size_by_ampacity": "8",
+    "vd_volts": 6.038,
+    "vd_percent": 2.516,
+    "meets_target": true,
+    "egc": "8",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "60 °C column of Table 310.16 ≥ OCPD rating; 240.4(D) limits; EGC Table 250.122 by OCPD; VD at load current with 75 °C solid-conductor R from awg.json; upsize for VD; EGC × (installed ÷ minimum area) per 250.122(B)"
+  },
+  {
+   "group": "ampacity-correction",
+   "name": "60 °C column, ambient 46–50 °C",
+   "inputs": {
+    "column": "f_60",
+    "ambient_c_row": "46–50"
+   },
+   "expected": {
+    "factor": 0.58
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.15(B)(1)(1) row; null means the insulation may not be used at that ambient"
+  },
+  {
+   "group": "ampacity-correction",
+   "name": "60 °C column, ambient 56–60 °C",
+   "inputs": {
+    "column": "f_60",
+    "ambient_c_row": "56–60"
+   },
+   "expected": {
+    "factor": null
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.15(B)(1)(1) row; null means the insulation may not be used at that ambient"
+  },
+  {
+   "group": "ampacity-correction",
+   "name": "75 °C column, ambient 41–45 °C",
+   "inputs": {
+    "column": "f_75",
+    "ambient_c_row": "41–45"
+   },
+   "expected": {
+    "factor": 0.82
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.15(B)(1)(1) row; null means the insulation may not be used at that ambient"
+  },
+  {
+   "group": "ampacity-correction",
+   "name": "90 °C column, ambient 56–60 °C",
+   "inputs": {
+    "column": "f_90",
+    "ambient_c_row": "56–60"
+   },
+   "expected": {
+    "factor": 0.71
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.15(B)(1)(1) row; null means the insulation may not be used at that ambient"
+  },
+  {
+   "group": "ampacity-correction",
+   "name": "90 °C column, ambient 81–85 °C",
+   "inputs": {
+    "column": "f_90",
+    "ambient_c_row": "81–85"
+   },
+   "expected": {
+    "factor": 0.29
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.15(B)(1)(1) row; null means the insulation may not be used at that ambient"
+  },
+  {
+   "group": "ampacity-correction",
+   "name": "75 °C column, ambient 21–25 °C",
+   "inputs": {
+    "column": "f_75",
+    "ambient_c_row": "21–25"
+   },
+   "expected": {
+    "factor": 1.05
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.15(B)(1)(1) row; null means the insulation may not be used at that ambient"
+  },
+  {
+   "group": "ampacity-correction",
+   "name": "60 °C column, ambient 10 or less °C",
+   "inputs": {
+    "column": "f_60",
+    "ambient_c_row": "10 or less"
+   },
+   "expected": {
+    "factor": 1.29
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.15(B)(1)(1) row; null means the insulation may not be used at that ambient"
+  },
+  {
+   "group": "ampacity-correction",
+   "name": "90 °C column, ambient 11–15 °C",
+   "inputs": {
+    "column": "f_90",
+    "ambient_c_row": "11–15"
+   },
+   "expected": {
+    "factor": 1.12
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.15(B)(1)(1) row; null means the insulation may not be used at that ambient"
+  },
+  {
+   "group": "service-lookup",
+   "name": "100 A 120/240 V dwelling service",
+   "inputs": {
+    "rating_a": 100
+   },
+   "expected": {
+    "cu": "4",
+    "al_cca": "2",
+    "gec_for_cu_service": {
+     "cu": "8",
+     "al_cca": "6"
+    },
+    "gec_for_al_service": {
+     "cu": "8",
+     "al_cca": "6"
     }
-  ]
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.12 row, then Table 250.66 row for that conductor (area thresholds from awg.json)"
+  },
+  {
+   "group": "service-lookup",
+   "name": "125 A 120/240 V dwelling service",
+   "inputs": {
+    "rating_a": 125
+   },
+   "expected": {
+    "cu": "2",
+    "al_cca": "1/0",
+    "gec_for_cu_service": {
+     "cu": "8",
+     "al_cca": "6"
+    },
+    "gec_for_al_service": {
+     "cu": "8",
+     "al_cca": "6"
+    }
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.12 row, then Table 250.66 row for that conductor (area thresholds from awg.json)"
+  },
+  {
+   "group": "service-lookup",
+   "name": "150 A 120/240 V dwelling service",
+   "inputs": {
+    "rating_a": 150
+   },
+   "expected": {
+    "cu": "1",
+    "al_cca": "2/0",
+    "gec_for_cu_service": {
+     "cu": "6",
+     "al_cca": "4"
+    },
+    "gec_for_al_service": {
+     "cu": "6",
+     "al_cca": "4"
+    }
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.12 row, then Table 250.66 row for that conductor (area thresholds from awg.json)"
+  },
+  {
+   "group": "service-lookup",
+   "name": "200 A 120/240 V dwelling service",
+   "inputs": {
+    "rating_a": 200
+   },
+   "expected": {
+    "cu": "2/0",
+    "al_cca": "4/0",
+    "gec_for_cu_service": {
+     "cu": "4",
+     "al_cca": "2"
+    },
+    "gec_for_al_service": {
+     "cu": "4",
+     "al_cca": "2"
+    }
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.12 row, then Table 250.66 row for that conductor (area thresholds from awg.json)"
+  },
+  {
+   "group": "service-lookup",
+   "name": "225 A 120/240 V dwelling service",
+   "inputs": {
+    "rating_a": 225
+   },
+   "expected": {
+    "cu": "3/0",
+    "al_cca": "250",
+    "gec_for_cu_service": {
+     "cu": "4",
+     "al_cca": "2"
+    },
+    "gec_for_al_service": {
+     "cu": "4",
+     "al_cca": "2"
+    }
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.12 row, then Table 250.66 row for that conductor (area thresholds from awg.json)"
+  },
+  {
+   "group": "service-lookup",
+   "name": "300 A 120/240 V dwelling service",
+   "inputs": {
+    "rating_a": 300
+   },
+   "expected": {
+    "cu": "250",
+    "al_cca": "350",
+    "gec_for_cu_service": {
+     "cu": "2",
+     "al_cca": "1/0"
+    },
+    "gec_for_al_service": {
+     "cu": "2",
+     "al_cca": "1/0"
+    }
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.12 row, then Table 250.66 row for that conductor (area thresholds from awg.json)"
+  },
+  {
+   "group": "service-lookup",
+   "name": "400 A 120/240 V dwelling service",
+   "inputs": {
+    "rating_a": 400
+   },
+   "expected": {
+    "cu": "400",
+    "al_cca": "600",
+    "gec_for_cu_service": {
+     "cu": "1/0",
+     "al_cca": "3/0"
+    },
+    "gec_for_al_service": {
+     "cu": "1/0",
+     "al_cca": "3/0"
+    }
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 310.12 row, then Table 250.66 row for that conductor (area thresholds from awg.json)"
+  },
+  {
+   "group": "240-4-D",
+   "name": "12 AWG Al maximum overcurrent protection",
+   "inputs": {
+    "size": "12",
+    "material": "Al"
+   },
+   "expected": {
+    "max_ocpd_a": 15
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "nec-240-4-d.json (2026 Second Draft SR-8377)"
+  },
+  {
+   "group": "240-4-D",
+   "name": "10 AWG Al maximum overcurrent protection",
+   "inputs": {
+    "size": "10",
+    "material": "Al"
+   },
+   "expected": {
+    "max_ocpd_a": 25
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "nec-240-4-d.json (2026 Second Draft SR-8377)"
+  },
+  {
+   "group": "240-4-D",
+   "name": "12 AWG CCA maximum overcurrent protection",
+   "inputs": {
+    "size": "12",
+    "material": "CCA"
+   },
+   "expected": {
+    "max_ocpd_a": 15
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "nec-240-4-d.json (2026 Second Draft SR-8377)"
+  },
+  {
+   "group": "240-4-D",
+   "name": "10 AWG CCA maximum overcurrent protection",
+   "inputs": {
+    "size": "10",
+    "material": "CCA"
+   },
+   "expected": {
+    "max_ocpd_a": 25
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "nec-240-4-d.json (2026 Second Draft SR-8377)"
+  },
+  {
+   "group": "load-calc-2023",
+   "name": "Table 220.55 Column C, one range 12 kW",
+   "inputs": {
+    "ranges": 1,
+    "rating_kw": 12
+   },
+   "expected": {
+    "demand_kw": 8
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 220.55 Column C row 1"
+  },
+  {
+   "group": "load-calc-2023",
+   "name": "Table 220.55 Column C, two ranges 12 kW",
+   "inputs": {
+    "ranges": 2,
+    "rating_kw": 12
+   },
+   "expected": {
+    "demand_kw": 11
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 220.55 Column C row 2"
+  },
+  {
+   "group": "load-calc-2023",
+   "name": "Table 220.55 Column C, five ranges 12 kW",
+   "inputs": {
+    "ranges": 5,
+    "rating_kw": 12
+   },
+   "expected": {
+    "demand_kw": 20
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 220.55 Column C row 5"
+  },
+  {
+   "group": "load-calc-2023",
+   "name": "Note 1, one range 14 kW",
+   "inputs": {
+    "ranges": 1,
+    "rating_kw": 14
+   },
+   "expected": {
+    "demand_kw": 8.8
+   },
+   "tolerance": {
+    "demand_kw": 1e-06
+   },
+   "basis": "Column C + 5 % per kW or major fraction (> 0.5) over 12 kW"
+  },
+  {
+   "group": "load-calc-2023",
+   "name": "Note 1, one range 16.6 kW",
+   "inputs": {
+    "ranges": 1,
+    "rating_kw": 16.6
+   },
+   "expected": {
+    "demand_kw": 10.0
+   },
+   "tolerance": {
+    "demand_kw": 1e-06
+   },
+   "basis": "Column C + 5 % per kW or major fraction (> 0.5) over 12 kW"
+  },
+  {
+   "group": "load-calc-2023",
+   "name": "Note 1, one range 13.4 kW",
+   "inputs": {
+    "ranges": 1,
+    "rating_kw": 13.4
+   },
+   "expected": {
+    "demand_kw": 8.4
+   },
+   "tolerance": {
+    "demand_kw": 1e-06
+   },
+   "basis": "Column C + 5 % per kW or major fraction (> 0.5) over 12 kW"
+  },
+  {
+   "group": "load-calc-2023",
+   "name": "Note 4, one wall oven 5 kW",
+   "inputs": {
+    "wall_oven_kw": 5
+   },
+   "expected": {
+    "branch_load_kw": 5
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Note 4: one wall-mounted oven = nameplate"
+  },
+  {
+   "group": "load-calc-2023",
+   "name": "Note 4, cooktop 7 kW + two ovens 4 kW (same room, one circuit)",
+   "inputs": {
+    "cooktop_kw": 7,
+    "ovens_kw": [
+     4,
+     4
+    ]
+   },
+   "expected": {
+    "equivalent_range_kw": 15,
+    "demand_kw": 9.2
+   },
+   "tolerance": {
+    "demand_kw": 1e-06
+   },
+   "basis": "Note 4: add nameplates, treat as one range; then Note 1"
+  },
+  {
+   "group": "load-calc-2023",
+   "name": "Note 3, one cooktop 7 kW by Column B",
+   "inputs": {
+    "appliances_kw": [
+     7
+    ]
+   },
+   "expected": {
+    "demand_kw": 5.6,
+    "column": "B",
+    "pct": 80
+   },
+   "tolerance": {
+    "demand_kw": 1e-06
+   },
+   "basis": "Note 3: 3.5–8.75 kW appliances × Column B factor for the count"
+  },
+  {
+   "group": "load-calc-2023",
+   "name": "220.54 dryer 4500 W nameplate",
+   "inputs": {
+    "dryer_w": 4500
+   },
+   "expected": {
+    "load_w": 5000
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "larger of 5000 W or nameplate"
+  },
+  {
+   "group": "load-calc-2023",
+   "name": "220.54 dryer 5600 W nameplate",
+   "inputs": {
+    "dryer_w": 5600
+   },
+   "expected": {
+    "load_w": 5600
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "larger of 5000 W or nameplate"
+  },
+  {
+   "group": "load-calc-2023",
+   "name": "Table 220.54, five dryers",
+   "inputs": {
+    "dryers": 5
+   },
+   "expected": {
+    "pct": 85
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 220.54 row 5"
+  },
+  {
+   "group": "load-calc-2023",
+   "name": "220.57 EVSE 9.6 kW nameplate",
+   "inputs": {
+    "evse_w": 9600
+   },
+   "expected": {
+    "load_w": 9600
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "larger of 7200 W or nameplate"
+  },
+  {
+   "group": "load-calc-2023",
+   "name": "220.57 EVSE 3.8 kW nameplate",
+   "inputs": {
+    "evse_w": 3800
+   },
+   "expected": {
+    "load_w": 7200
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "larger of 7200 W or nameplate"
+  },
+  {
+   "group": "load-calc-2023-standard",
+   "name": "Standard method, 2000 ft² house, electric heat, no AC or motor loads",
+   "inputs": {
+    "ft2": 2000,
+    "small_appliance_circuits": 2,
+    "laundry_circuits": 1,
+    "fastened_appliances_w": [
+     4500,
+     1500,
+     1500,
+     500
+    ],
+    "dryer_w": 5000,
+    "range_kw": 12,
+    "space_heat_w": 10000,
+    "ac_va": 0,
+    "volts": 240
+   },
+   "expected": {
+    "general_lighting_va": 10500,
+    "lighting_after_demand_va": 5625.0,
+    "appliances_after_220_53_va": 6000.0,
+    "dryer_va": 5000,
+    "range_va": 8000,
+    "heat_or_ac_va": 10000,
+    "total_va": 34625.0,
+    "amps_at_240": 144.271,
+    "service_310_12_row_a": 150.0,
+    "cu": "1",
+    "al_cca": "2/0"
+   },
+   "tolerance": {
+    "amps_at_240": 0.001,
+    "other": "exact"
+   },
+   "basis": "220.41 + 220.52(A)/(B) included with general lighting → Table 220.45; 220.53; 220.54; Table 220.55 Col C; 220.51 heat at 100 % (no AC); ÷ 240 V; smallest Table 310.12 row ≥ amps (min 100 A)"
+  },
+  {
+   "group": "load-calc-2023",
+   "name": "Optional method 220.82, same 2000 ft² house",
+   "inputs": {
+    "ft2": 2000,
+    "small_appliance_and_laundry_circuits": 3,
+    "nameplate_items_w": [
+     4500,
+     1500,
+     1500,
+     500,
+     5000,
+     12000
+    ],
+    "space_heat_w_central_1_unit": 10000,
+    "ac_va": 5000,
+    "volts": 240
+   },
+   "expected": {
+    "general_load_va": 35500,
+    "general_after_220_82_b_va": 20200.0,
+    "heating_ac_selection": "(C)(4) heat 65 % (<4 units)",
+    "heating_ac_va": 6500.0,
+    "total_va": 26700.0,
+    "amps_at_240": 111.25,
+    "service_310_12_row_a": 125.0,
+    "cu": "2",
+    "al_cca": "1/0"
+   },
+   "tolerance": {
+    "amps_at_240": 0.001,
+    "other": "exact"
+   },
+   "basis": "220.82(B): first 10 kVA at 100 %, remainder at 40 %; 220.82(C) largest selection; ÷ 240 V; smallest Table 310.12 row ≥ amps"
+  },
+  {
+   "group": "load-calc-2023",
+   "name": "220.83(A) existing dwelling, 30 kVA, no added AC or heat",
+   "inputs": {
+    "total_va": 30000
+   },
+   "expected": {
+    "demand_va": 16800.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "first 8 kVA at 100 %, remainder at 40 %"
+  },
+  {
+   "group": "motor-flc",
+   "name": "Single-phase 1 hp at 230 V",
+   "inputs": {
+    "phase": 1,
+    "hp": "1",
+    "system_volts": 230
+   },
+   "expected": {
+    "column": "230",
+    "flc_a": 8.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 430.248; column by rated voltage per the table note"
+  },
+  {
+   "group": "motor-flc",
+   "name": "Single-phase 1 hp at 115 V",
+   "inputs": {
+    "phase": 1,
+    "hp": "1",
+    "system_volts": 115
+   },
+   "expected": {
+    "column": "115",
+    "flc_a": 16.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 430.248; column by rated voltage per the table note"
+  },
+  {
+   "group": "motor-flc",
+   "name": "Single-phase 1/2 hp at 115 V",
+   "inputs": {
+    "phase": 1,
+    "hp": "1/2",
+    "system_volts": 115
+   },
+   "expected": {
+    "column": "115",
+    "flc_a": 9.8
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 430.248; column by rated voltage per the table note"
+  },
+  {
+   "group": "motor-flc",
+   "name": "Single-phase 5 hp at 230 V",
+   "inputs": {
+    "phase": 1,
+    "hp": "5",
+    "system_volts": 230
+   },
+   "expected": {
+    "column": "230",
+    "flc_a": 28.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 430.248; column by rated voltage per the table note"
+  },
+  {
+   "group": "motor-flc",
+   "name": "Single-phase 10 hp at 208 V",
+   "inputs": {
+    "phase": 1,
+    "hp": "10",
+    "system_volts": 208
+   },
+   "expected": {
+    "column": "208",
+    "flc_a": 55.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 430.248; column by rated voltage per the table note"
+  },
+  {
+   "group": "motor-flc",
+   "name": "Single-phase 2 hp at 240 V",
+   "inputs": {
+    "phase": 1,
+    "hp": "2",
+    "system_volts": 240
+   },
+   "expected": {
+    "column": "230",
+    "flc_a": 12.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 430.248; column by rated voltage per the table note"
+  },
+  {
+   "group": "motor-flc",
+   "name": "Three-phase 5 hp at 480 V",
+   "inputs": {
+    "phase": 3,
+    "hp": "5",
+    "system_volts": 480
+   },
+   "expected": {
+    "column": "460",
+    "flc_a": 7.6
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 430.250 induction; column by rated voltage per the table note"
+  },
+  {
+   "group": "motor-flc",
+   "name": "Three-phase 5 hp at 460 V",
+   "inputs": {
+    "phase": 3,
+    "hp": "5",
+    "system_volts": 460
+   },
+   "expected": {
+    "column": "460",
+    "flc_a": 7.6
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 430.250 induction; column by rated voltage per the table note"
+  },
+  {
+   "group": "motor-flc",
+   "name": "Three-phase 10 hp at 208 V",
+   "inputs": {
+    "phase": 3,
+    "hp": "10",
+    "system_volts": 208
+   },
+   "expected": {
+    "column": "208",
+    "flc_a": 30.8
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 430.250 induction; column by rated voltage per the table note"
+  },
+  {
+   "group": "motor-flc",
+   "name": "Three-phase 25 hp at 230 V",
+   "inputs": {
+    "phase": 3,
+    "hp": "25",
+    "system_volts": 230
+   },
+   "expected": {
+    "column": "230",
+    "flc_a": 68
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 430.250 induction; column by rated voltage per the table note"
+  },
+  {
+   "group": "motor-flc",
+   "name": "Three-phase 100 hp at 460 V",
+   "inputs": {
+    "phase": 3,
+    "hp": "100",
+    "system_volts": 460
+   },
+   "expected": {
+    "column": "460",
+    "flc_a": 124
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 430.250 induction; column by rated voltage per the table note"
+  },
+  {
+   "group": "motor-flc",
+   "name": "Three-phase 7-1/2 hp at 575 V",
+   "inputs": {
+    "phase": 3,
+    "hp": "7-1/2",
+    "system_volts": 575
+   },
+   "expected": {
+    "column": "575",
+    "flc_a": 9
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 430.250 induction; column by rated voltage per the table note"
+  },
+  {
+   "group": "motor-flc",
+   "name": "Three-phase 200 hp at 2400 V",
+   "inputs": {
+    "phase": 3,
+    "hp": "200",
+    "system_volts": 2400
+   },
+   "expected": {
+    "column": "2300",
+    "flc_a": 49
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 430.250 induction; column by rated voltage per the table note"
+  },
+  {
+   "group": "motor-flc",
+   "name": "Three-phase 500 hp at 480 V",
+   "inputs": {
+    "phase": 3,
+    "hp": "500",
+    "system_volts": 480
+   },
+   "expected": {
+    "column": "460",
+    "flc_a": 590
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 430.250 induction; column by rated voltage per the table note"
+  },
+  {
+   "group": "motor-flc",
+   "name": "DC 10 hp at 240 V",
+   "inputs": {
+    "phase": "dc",
+    "hp": "10",
+    "volts": 240
+   },
+   "expected": {
+    "flc_a": 38.0
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 430.247"
+  },
+  {
+   "group": "motor-flc",
+   "name": "Two-phase 20 hp at 230 V",
+   "inputs": {
+    "phase": 2,
+    "hp": "20",
+    "volts": 230
+   },
+   "expected": {
+    "flc_a": 47
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "Table 430.249"
+  },
+  {
+   "group": "breaker-sizing",
+   "name": "16 A continuous + 0 A noncontinuous",
+   "inputs": {
+    "continuous_a": 16,
+    "noncontinuous_a": 0
+   },
+   "expected": {
+    "min_ocpd_a": 20.0,
+    "breaker_a": 20,
+    "cu": "12",
+    "al": "10",
+    "egc_cu": "12",
+    "egc_al": "10"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "210.20(A)/215.3: OCPD ≥ noncontinuous + 125 % continuous; next standard rating from Table 240.6(A) (15 A minimum offered); conductor by the WSZ-002 60 °C engine (ampacity ≥ rating, 240.4(D)); EGC Table 250.122"
+  },
+  {
+   "group": "breaker-sizing",
+   "name": "24 A continuous + 0 A noncontinuous",
+   "inputs": {
+    "continuous_a": 24,
+    "noncontinuous_a": 0
+   },
+   "expected": {
+    "min_ocpd_a": 30.0,
+    "breaker_a": 30,
+    "cu": "10",
+    "al": "8",
+    "egc_cu": "10",
+    "egc_al": "8"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "210.20(A)/215.3: OCPD ≥ noncontinuous + 125 % continuous; next standard rating from Table 240.6(A) (15 A minimum offered); conductor by the WSZ-002 60 °C engine (ampacity ≥ rating, 240.4(D)); EGC Table 250.122"
+  },
+  {
+   "group": "breaker-sizing",
+   "name": "40 A continuous + 0 A noncontinuous",
+   "inputs": {
+    "continuous_a": 40,
+    "noncontinuous_a": 0
+   },
+   "expected": {
+    "min_ocpd_a": 50.0,
+    "breaker_a": 50,
+    "cu": "6",
+    "al": "4",
+    "egc_cu": "10",
+    "egc_al": "8"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "210.20(A)/215.3: OCPD ≥ noncontinuous + 125 % continuous; next standard rating from Table 240.6(A) (15 A minimum offered); conductor by the WSZ-002 60 °C engine (ampacity ≥ rating, 240.4(D)); EGC Table 250.122"
+  },
+  {
+   "group": "breaker-sizing",
+   "name": "10 A continuous + 8 A noncontinuous",
+   "inputs": {
+    "continuous_a": 10,
+    "noncontinuous_a": 8
+   },
+   "expected": {
+    "min_ocpd_a": 20.5,
+    "breaker_a": 25,
+    "cu": "10",
+    "al": "10",
+    "egc_cu": "10",
+    "egc_al": "8"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "210.20(A)/215.3: OCPD ≥ noncontinuous + 125 % continuous; next standard rating from Table 240.6(A) (15 A minimum offered); conductor by the WSZ-002 60 °C engine (ampacity ≥ rating, 240.4(D)); EGC Table 250.122"
+  },
+  {
+   "group": "breaker-sizing",
+   "name": "48 A continuous + 0 A noncontinuous",
+   "inputs": {
+    "continuous_a": 48,
+    "noncontinuous_a": 0
+   },
+   "expected": {
+    "min_ocpd_a": 60.0,
+    "breaker_a": 60,
+    "cu": "4",
+    "al": "3",
+    "egc_cu": "10",
+    "egc_al": "8"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "210.20(A)/215.3: OCPD ≥ noncontinuous + 125 % continuous; next standard rating from Table 240.6(A) (15 A minimum offered); conductor by the WSZ-002 60 °C engine (ampacity ≥ rating, 240.4(D)); EGC Table 250.122"
+  },
+  {
+   "group": "breaker-sizing",
+   "name": "0 A continuous + 100 A noncontinuous",
+   "inputs": {
+    "continuous_a": 0,
+    "noncontinuous_a": 100
+   },
+   "expected": {
+    "min_ocpd_a": 100.0,
+    "breaker_a": 100,
+    "cu": "1",
+    "al": "1/0",
+    "egc_cu": "8",
+    "egc_al": "6"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "210.20(A)/215.3: OCPD ≥ noncontinuous + 125 % continuous; next standard rating from Table 240.6(A) (15 A minimum offered); conductor by the WSZ-002 60 °C engine (ampacity ≥ rating, 240.4(D)); EGC Table 250.122"
+  },
+  {
+   "group": "breaker-sizing",
+   "name": "32 A continuous + 0 A noncontinuous",
+   "inputs": {
+    "continuous_a": 32,
+    "noncontinuous_a": 0
+   },
+   "expected": {
+    "min_ocpd_a": 40.0,
+    "breaker_a": 40,
+    "cu": "8",
+    "al": "6",
+    "egc_cu": "10",
+    "egc_al": "8"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "210.20(A)/215.3: OCPD ≥ noncontinuous + 125 % continuous; next standard rating from Table 240.6(A) (15 A minimum offered); conductor by the WSZ-002 60 °C engine (ampacity ≥ rating, 240.4(D)); EGC Table 250.122"
+  },
+  {
+   "group": "breaker-sizing",
+   "name": "0 A continuous + 15 A noncontinuous",
+   "inputs": {
+    "continuous_a": 0,
+    "noncontinuous_a": 15
+   },
+   "expected": {
+    "min_ocpd_a": 15.0,
+    "breaker_a": 15,
+    "cu": "14",
+    "al": "12",
+    "egc_cu": "14",
+    "egc_al": "12"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "210.20(A)/215.3: OCPD ≥ noncontinuous + 125 % continuous; next standard rating from Table 240.6(A) (15 A minimum offered); conductor by the WSZ-002 60 °C engine (ampacity ≥ rating, 240.4(D)); EGC Table 250.122"
+  },
+  {
+   "group": "dc-sizing",
+   "name": "12 V, 400 W, 40 ft one way, 2% drop, copper at 75 °C",
+   "inputs": {
+    "volts": 12,
+    "watts": 400,
+    "length_ft_one_way": 40,
+    "max_drop_pct": 2,
+    "conductor_temp_c": 75
+   },
+   "expected": {
+    "amps": 33.333,
+    "required_cmil": 140141,
+    "vd_size": "3/0",
+    "current_size": "8",
+    "result_size": "3/0",
+    "governs": "voltage drop"
+   },
+   "tolerance": {
+    "required_cmil": 50,
+    "amps": 0.001,
+    "other": "exact"
+   },
+   "basis": "CM = 2·K·I·L/VD with K = 10.371 × (1 + 0.00393 × (T − 20)) Ω·cmil/ft (awg.json constants); vd_size = smallest nec-310-16.json size whose awg.json area ≥ CM; current_size = smallest nec-310-16.json size whose cu_60 ≥ I; result = the larger; null when none fits"
+  },
+  {
+   "group": "dc-sizing",
+   "name": "12 V, 400 W, 40 ft one way, 2% drop, copper at 20 °C",
+   "inputs": {
+    "volts": 12,
+    "watts": 400,
+    "length_ft_one_way": 40,
+    "max_drop_pct": 2,
+    "conductor_temp_c": 20
+   },
+   "expected": {
+    "amps": 33.333,
+    "required_cmil": 115233,
+    "vd_size": "2/0",
+    "current_size": "8",
+    "result_size": "2/0",
+    "governs": "voltage drop"
+   },
+   "tolerance": {
+    "required_cmil": 50,
+    "amps": 0.001,
+    "other": "exact"
+   },
+   "basis": "CM = 2·K·I·L/VD with K = 10.371 × (1 + 0.00393 × (T − 20)) Ω·cmil/ft (awg.json constants); vd_size = smallest nec-310-16.json size whose awg.json area ≥ CM; current_size = smallest nec-310-16.json size whose cu_60 ≥ I; result = the larger; null when none fits"
+  },
+  {
+   "group": "dc-sizing",
+   "name": "12 V, 360 W, 1 ft one way, 3% drop, copper at 75 °C",
+   "inputs": {
+    "volts": 12,
+    "watts": 360,
+    "length_ft_one_way": 1,
+    "max_drop_pct": 3,
+    "conductor_temp_c": 75
+   },
+   "expected": {
+    "amps": 30.0,
+    "required_cmil": 2102,
+    "vd_size": "16",
+    "current_size": "10",
+    "result_size": "10",
+    "governs": "current"
+   },
+   "tolerance": {
+    "required_cmil": 50,
+    "amps": 0.001,
+    "other": "exact"
+   },
+   "basis": "CM = 2·K·I·L/VD with K = 10.371 × (1 + 0.00393 × (T − 20)) Ω·cmil/ft (awg.json constants); vd_size = smallest nec-310-16.json size whose awg.json area ≥ CM; current_size = smallest nec-310-16.json size whose cu_60 ≥ I; result = the larger; null when none fits"
+  },
+  {
+   "group": "dc-sizing",
+   "name": "24 V, 120 W, 10 ft one way, 3% drop, copper at 75 °C",
+   "inputs": {
+    "volts": 24,
+    "watts": 120,
+    "length_ft_one_way": 10,
+    "max_drop_pct": 3,
+    "conductor_temp_c": 75
+   },
+   "expected": {
+    "amps": 5.0,
+    "required_cmil": 1752,
+    "vd_size": "16",
+    "current_size": "14",
+    "result_size": "14",
+    "governs": "current"
+   },
+   "tolerance": {
+    "required_cmil": 50,
+    "amps": 0.001,
+    "other": "exact"
+   },
+   "basis": "CM = 2·K·I·L/VD with K = 10.371 × (1 + 0.00393 × (T − 20)) Ω·cmil/ft (awg.json constants); vd_size = smallest nec-310-16.json size whose awg.json area ≥ CM; current_size = smallest nec-310-16.json size whose cu_60 ≥ I; result = the larger; null when none fits"
+  },
+  {
+   "group": "dc-sizing",
+   "name": "12 V, 600 W, 2 ft one way, 3% drop, copper at 75 °C",
+   "inputs": {
+    "volts": 12,
+    "watts": 600,
+    "length_ft_one_way": 2,
+    "max_drop_pct": 3,
+    "conductor_temp_c": 75
+   },
+   "expected": {
+    "amps": 50.0,
+    "required_cmil": 7007,
+    "vd_size": "10",
+    "current_size": "6",
+    "result_size": "6",
+    "governs": "current"
+   },
+   "tolerance": {
+    "required_cmil": 50,
+    "amps": 0.001,
+    "other": "exact"
+   },
+   "basis": "CM = 2·K·I·L/VD with K = 10.371 × (1 + 0.00393 × (T − 20)) Ω·cmil/ft (awg.json constants); vd_size = smallest nec-310-16.json size whose awg.json area ≥ CM; current_size = smallest nec-310-16.json size whose cu_60 ≥ I; result = the larger; null when none fits"
+  },
+  {
+   "group": "dc-sizing",
+   "name": "12 V, 3000 W, 100 ft one way, 1% drop, copper at 75 °C",
+   "inputs": {
+    "volts": 12,
+    "watts": 3000,
+    "length_ft_one_way": 100,
+    "max_drop_pct": 1,
+    "conductor_temp_c": 75
+   },
+   "expected": {
+    "amps": 250.0,
+    "required_cmil": 5255288,
+    "vd_size": null,
+    "current_size": "350",
+    "result_size": null,
+    "governs": null
+   },
+   "tolerance": {
+    "required_cmil": 50,
+    "amps": 0.001,
+    "other": "exact"
+   },
+   "basis": "CM = 2·K·I·L/VD with K = 10.371 × (1 + 0.00393 × (T − 20)) Ω·cmil/ft (awg.json constants); vd_size = smallest nec-310-16.json size whose awg.json area ≥ CM; current_size = smallest nec-310-16.json size whose cu_60 ≥ I; result = the larger; null when none fits"
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "30 A OCPD, 30 A load, 800 ft, 120 V, single-phase, Cu (EGC area trap: multiply before dividing)",
+   "inputs": {
+    "ocpd_a": 30,
+    "load_a": 30,
+    "length_ft_one_way": 800,
+    "volts": 120,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "4/0",
+    "ampacity_60c": 195.0,
+    "min_size_by_ampacity": "10",
+    "vd_volts": 2.861,
+    "vd_percent": 2.384,
+    "meets_target": true,
+    "egc": "4/0",
+    "egc_upsized": true,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "As the other wire-size-60c cases. The 250.122(B) area is table EGC area × chosen area ÷ step-2 area, multiplied first; computing the ratio first gives 211600.00000000003 cmil and a 250 kcmil EGC on a 4/0 circuit."
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "25 A OCPD, 25 A load, 960 ft, 120 V, single-phase, Cu (EGC area trap: multiply before dividing)",
+   "inputs": {
+    "ocpd_a": 25,
+    "load_a": 25,
+    "length_ft_one_way": 960,
+    "volts": 120,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "4/0",
+    "ampacity_60c": 195.0,
+    "min_size_by_ampacity": "10",
+    "vd_volts": 2.861,
+    "vd_percent": 2.384,
+    "meets_target": true,
+    "egc": "4/0",
+    "egc_upsized": true,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "As the other wire-size-60c cases. The 250.122(B) area is table EGC area × chosen area ÷ step-2 area, multiplied first; computing the ratio first gives 211600.00000000003 cmil and a 250 kcmil EGC on a 4/0 circuit."
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "20 A OCPD, 20 A load, 730 ft, 120 V, single-phase, Al (EGC area trap: multiply before dividing)",
+   "inputs": {
+    "ocpd_a": 20,
+    "load_a": 20,
+    "length_ft_one_way": 730,
+    "volts": 120,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "4/0",
+    "ampacity_60c": 150.0,
+    "min_size_by_ampacity": "10",
+    "vd_volts": 2.866,
+    "vd_percent": 2.389,
+    "meets_target": true,
+    "egc": "4/0",
+    "egc_upsized": true,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "As the other wire-size-60c cases. The 250.122(B) area is table EGC area × chosen area ÷ step-2 area, multiplied first; computing the ratio first gives 211600.00000000003 cmil and a 250 kcmil EGC on a 4/0 circuit."
+  },
+  {
+   "group": "wire-size-errors",
+   "name": "120 A is not a standard rating in Table 240.6(A)",
+   "inputs": {
+    "ocpd_a": 120,
+    "load_a": null,
+    "length_ft_one_way": 50,
+    "volts": 240,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "error": "rating-not-standard"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "sizeConductor returns a typed error result, never a size"
+  },
+  {
+   "group": "wire-size-errors",
+   "name": "10 A is a standard rating but below the tool's 15 A minimum",
+   "inputs": {
+    "ocpd_a": 10,
+    "load_a": null,
+    "length_ft_one_way": 50,
+    "volts": 120,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "error": "rating-out-of-range"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "sizeConductor returns a typed error result, never a size"
+  },
+  {
+   "group": "wire-size-errors",
+   "name": "Load current above the rating",
+   "inputs": {
+    "ocpd_a": 20,
+    "load_a": 25,
+    "length_ft_one_way": 50,
+    "volts": 120,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "error": "load-above-rating"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "sizeConductor returns a typed error result, never a size"
+  },
+  {
+   "group": "wire-size-errors",
+   "name": "Length above 2000 ft",
+   "inputs": {
+    "ocpd_a": 20,
+    "load_a": null,
+    "length_ft_one_way": 2500,
+    "volts": 120,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "error": "length-out-of-range"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "sizeConductor returns a typed error result, never a size"
+  },
+  {
+   "group": "wire-size-errors",
+   "name": "Zero volts",
+   "inputs": {
+    "ocpd_a": 20,
+    "load_a": null,
+    "length_ft_one_way": 50,
+    "volts": 0,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "error": "voltage-invalid"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "sizeConductor returns a typed error result, never a size"
+  },
+  {
+   "group": "wire-size-errors",
+   "name": "Three-phase at 120 V (not a line-to-line voltage)",
+   "inputs": {
+    "ocpd_a": 20,
+    "load_a": null,
+    "length_ft_one_way": 50,
+    "volts": 120,
+    "phase": 3,
+    "material": "Cu",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "error": "voltage-invalid"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "sizeConductor returns a typed error result, never a size"
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "100 A, Cu, terminations not known",
+   "inputs": {
+    "ocpd_a": 100,
+    "material": "Cu",
+    "termination": "unknown",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 60,
+    "size": "1",
+    "ampacity": 110.0,
+    "limited_by_240_4_D": false,
+    "egc": "8"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "100 A, Cu, reader confirms every termination is listed and identified for 75 °C conductors",
+   "inputs": {
+    "ocpd_a": 100,
+    "material": "Cu",
+    "termination": "75",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 75,
+    "size": "3",
+    "ampacity": 100.0,
+    "limited_by_240_4_D": false,
+    "egc": "8"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "100 A, Al, terminations not known",
+   "inputs": {
+    "ocpd_a": 100,
+    "material": "Al",
+    "termination": "unknown",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 60,
+    "size": "1/0",
+    "ampacity": 100.0,
+    "limited_by_240_4_D": false,
+    "egc": "6"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "100 A, Al, reader confirms every termination is listed and identified for 75 °C conductors",
+   "inputs": {
+    "ocpd_a": 100,
+    "material": "Al",
+    "termination": "75",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 75,
+    "size": "1",
+    "ampacity": 100.0,
+    "limited_by_240_4_D": false,
+    "egc": "6"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "125 A, Cu, terminations not known",
+   "inputs": {
+    "ocpd_a": 125,
+    "material": "Cu",
+    "termination": "unknown",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 75,
+    "size": "1",
+    "ampacity": 130.0,
+    "limited_by_240_4_D": false,
+    "egc": "6"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "125 A, Al, terminations not known",
+   "inputs": {
+    "ocpd_a": 125,
+    "material": "Al",
+    "termination": "unknown",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 75,
+    "size": "2/0",
+    "ampacity": 135.0,
+    "limited_by_240_4_D": false,
+    "egc": "4"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "125 A, Cu, terminations marked 60 °C",
+   "inputs": {
+    "ocpd_a": 125,
+    "material": "Cu",
+    "termination": "60",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 60,
+    "size": "1/0",
+    "ampacity": 125.0,
+    "limited_by_240_4_D": false,
+    "egc": "6"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "200 A, Cu, terminations not known",
+   "inputs": {
+    "ocpd_a": 200,
+    "material": "Cu",
+    "termination": "unknown",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 75,
+    "size": "3/0",
+    "ampacity": 200.0,
+    "limited_by_240_4_D": false,
+    "egc": "6"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "200 A, Al, terminations not known",
+   "inputs": {
+    "ocpd_a": 200,
+    "material": "Al",
+    "termination": "unknown",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 75,
+    "size": "250",
+    "ampacity": 205.0,
+    "limited_by_240_4_D": false,
+    "egc": "4"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "20 A, Cu, reader confirms every termination is listed and identified for 75 °C conductors",
+   "inputs": {
+    "ocpd_a": 20,
+    "material": "Cu",
+    "termination": "75",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 75,
+    "size": "12",
+    "ampacity": 25.0,
+    "limited_by_240_4_D": true,
+    "egc": "12"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "30 A, Cu, reader confirms every termination is listed and identified for 75 °C conductors",
+   "inputs": {
+    "ocpd_a": 30,
+    "material": "Cu",
+    "termination": "75",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 75,
+    "size": "10",
+    "ampacity": 35.0,
+    "limited_by_240_4_D": false,
+    "egc": "10"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "50 A, Cu, reader confirms every termination is listed and identified for 75 °C conductors",
+   "inputs": {
+    "ocpd_a": 50,
+    "material": "Cu",
+    "termination": "75",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 75,
+    "size": "8",
+    "ampacity": 50.0,
+    "limited_by_240_4_D": false,
+    "egc": "10"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "50 A, Cu, terminations not known",
+   "inputs": {
+    "ocpd_a": 50,
+    "material": "Cu",
+    "termination": "unknown",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 60,
+    "size": "6",
+    "ampacity": 55.0,
+    "limited_by_240_4_D": false,
+    "egc": "10"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "60 A, Cu, reader confirms every termination is listed and identified for 75 °C conductors",
+   "inputs": {
+    "ocpd_a": 60,
+    "material": "Cu",
+    "termination": "75",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 75,
+    "size": "6",
+    "ampacity": 65.0,
+    "limited_by_240_4_D": false,
+    "egc": "10"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "15 A, Al, reader confirms every termination is listed and identified for 75 °C conductors",
+   "inputs": {
+    "ocpd_a": 15,
+    "material": "Al",
+    "termination": "75",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 75,
+    "size": "12",
+    "ampacity": 20.0,
+    "limited_by_240_4_D": false,
+    "egc": "12"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "20 A, Al, reader confirms every termination is listed and identified for 75 °C conductors",
+   "inputs": {
+    "ocpd_a": 20,
+    "material": "Al",
+    "termination": "75",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 75,
+    "size": "10",
+    "ampacity": 30.0,
+    "limited_by_240_4_D": true,
+    "egc": "10"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "30 A, Al, reader confirms every termination is listed and identified for 75 °C conductors",
+   "inputs": {
+    "ocpd_a": 30,
+    "material": "Al",
+    "termination": "75",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 75,
+    "size": "8",
+    "ampacity": 40.0,
+    "limited_by_240_4_D": true,
+    "egc": "8"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "40 A, Cu, reader confirms every termination is listed and identified for 75 °C conductors, cable (NM or UF)",
+   "inputs": {
+    "ocpd_a": 40,
+    "material": "Cu",
+    "termination": "75",
+    "wiring_method": "cable"
+   },
+   "expected": {
+    "column_c": 60,
+    "size": "8",
+    "ampacity": 40.0,
+    "limited_by_240_4_D": false,
+    "egc": "10"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "30 A, Cu, terminations not known, cable (NM or UF)",
+   "inputs": {
+    "ocpd_a": 30,
+    "material": "Cu",
+    "termination": "unknown",
+    "wiring_method": "cable"
+   },
+   "expected": {
+    "column_c": 60,
+    "size": "10",
+    "ampacity": 30.0,
+    "limited_by_240_4_D": false,
+    "egc": "10"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "110.14(C)(1)(a)/(b) column choice (nec-110-14c.json engine_rules); smallest Table 310.16 size in that column with ampacity >= the OCPD rating; 240.4(D) rows without conditions; EGC Table 250.122. NM/UF stays 60 °C while 334.80/340.80 are unverified."
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "25 A OCPD, 25 A load, 50 ft, 240 V, single-phase, Al (Table 250.122 EGC larger than the conductor)",
+   "inputs": {
+    "ocpd_a": 25,
+    "load_a": 25,
+    "length_ft_one_way": 50,
+    "volts": 240,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "10",
+    "ampacity_60c": 25.0,
+    "min_size_by_ampacity": "10",
+    "vd_volts": 5.003,
+    "vd_percent": 2.084,
+    "meets_target": true,
+    "egc": "8",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": true
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "As the other wire-size-60c cases. Table 250.122's 60 A row gives an 8 AWG aluminum EGC for a 10 AWG aluminum circuit. Shown uncapped until the 250.122(A) sentence is verified."
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "25 A OCPD, 25 A load, 400 ft, 120 V, single-phase, Al (oversize table EGC scaled by 250.122(B))",
+   "inputs": {
+    "ocpd_a": 25,
+    "load_a": 25,
+    "length_ft_one_way": 400,
+    "volts": 120,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0
+   },
+   "expected": {
+    "size": "2/0",
+    "ampacity_60c": 115.0,
+    "min_size_by_ampacity": "10",
+    "vd_volts": 3.122,
+    "vd_percent": 2.602,
+    "meets_target": true,
+    "egc": "250",
+    "egc_upsized": true,
+    "egc_larger_than_conductor": true
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "Step 6 scales from the Table 250.122 EGC (8 AWG Al, 16,510 cmil): 16,510 × 133,100 ÷ 10,380 = 211,703 cmil, so 250 kcmil on a 2/0 circuit. Shown uncapped until the 250.122(A) sentence is verified."
+  },
+  {
+   "group": "wire-size-termination",
+   "name": "25 A, Al, reader confirms every termination is listed and identified for 75 °C conductors",
+   "inputs": {
+    "ocpd_a": 25,
+    "material": "Al",
+    "termination": "75",
+    "wiring_method": "conductors"
+   },
+   "expected": {
+    "column_c": 75,
+    "size": "10",
+    "ampacity": 30.0,
+    "limited_by_240_4_D": false,
+    "egc": "8"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "As the other wire-size-termination cases. The Table 250.122 EGC (8 AWG Al) is larger than the 10 AWG conductor; shown uncapped until the 250.122(A) sentence is verified."
+  },
+  {
+   "group": "wire-size-60c",
+   "name": "25 A OCPD, 25 A load, 1500 ft, 120 V, single-phase, Al, 1 % target (no Table 310.16 size is large enough for the EGC)",
+   "inputs": {
+    "ocpd_a": 25,
+    "load_a": 25,
+    "length_ft_one_way": 1500,
+    "volts": 120,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 1.0
+   },
+   "expected": {
+    "size": "1500",
+    "ampacity_60c": 435.0,
+    "min_size_by_ampacity": "10",
+    "vd_volts": 1.039,
+    "vd_percent": 0.866,
+    "meets_target": true,
+    "egc": null,
+    "egc_upsized": true,
+    "egc_larger_than_conductor": true
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "other": "exact"
+   },
+   "basis": "Step 6 scales the Table 250.122 EGC (8 AWG Al, 16,510 cmil) by the chosen ÷ step-2 areas; the required area is larger than 2000 kcmil, so egc is null and the result says no Table 310.16 size is large enough."
+  },
+  {
+   "group": "wire-size-errors",
+   "name": "Voltage-drop target below 1 %",
+   "inputs": {
+    "ocpd_a": 20,
+    "load_a": null,
+    "length_ft_one_way": 50,
+    "volts": 120,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 0.5
+   },
+   "expected": {
+    "error": "vd-target-out-of-range"
+   },
+   "tolerance": {
+    "exact": true
+   },
+   "basis": "sizeConductor returns a typed error result, never a size; vdTargetPct must be 1 to 10"
+  },
+  {
+   "group": "wire-size-derated",
+   "name": "40 A OCPD, 25 A load, 250 ft, 240 V, Cu, conductors, terminations unknown, 36–40 °C, 4–6 current-carrying",
+   "inputs": {
+    "ocpd_a": 40,
+    "load_a": 25,
+    "length_ft_one_way": 250,
+    "volts": 240,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0,
+    "wiring_method": "conductors",
+    "termination": "unknown",
+    "ambient_c_row": "36–40",
+    "ccc_band": "4–6"
+   },
+   "expected": {
+    "column_c": 60,
+    "start_column_c": 90,
+    "min_size_by_ampacity": "8",
+    "derated_ampacity": 40.0,
+    "size": "6",
+    "vd_volts": 6.008,
+    "vd_percent": 2.503,
+    "meets_target": true,
+    "egc": "8",
+    "egc_upsized": true,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "derated_ampacity": 0.01,
+    "other": "exact"
+   },
+   "basis": "WSZ-009 derating mode: load below the rating plus voltage-drop upsizing: the EGC scales from the derated size sized to the 40 A rating, not to the 25 A load. Termination column per nec-110-14c.json; start column 90 °C for individual conductors, 60 °C for cable; derated ampacity = start-column ampacity × Table 310.15(B)(1)(1) factor (start column) × Table 310.15(C)(1) percent, capped at the termination-column ampacity; baseline = smallest size whose derated ampacity is at least the OCPD rating, then 240.4(D); voltage drop at load current with 75 °C resistance; 250.122(B) scaling from the baseline, multiply-first, uncapped."
+  },
+  {
+   "group": "wire-size-derated",
+   "name": "40 A OCPD, 25 A load, 30 ft, 240 V, Cu, conductors, terminations unknown, 36–40 °C, 4–6 current-carrying",
+   "inputs": {
+    "ocpd_a": 40,
+    "load_a": 25,
+    "length_ft_one_way": 30,
+    "volts": 240,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0,
+    "wiring_method": "conductors",
+    "termination": "unknown",
+    "ambient_c_row": "36–40",
+    "ccc_band": "4–6"
+   },
+   "expected": {
+    "column_c": 60,
+    "start_column_c": 90,
+    "min_size_by_ampacity": "8",
+    "derated_ampacity": 40.0,
+    "size": "8",
+    "vd_volts": 1.146,
+    "vd_percent": 0.477,
+    "meets_target": true,
+    "egc": "10",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "derated_ampacity": 0.01,
+    "other": "exact"
+   },
+   "basis": "WSZ-009 derating mode: same circuit on a short run: no voltage-drop upsizing, so the EGC stays at the Table 250.122 size. Termination column per nec-110-14c.json; start column 90 °C for individual conductors, 60 °C for cable; derated ampacity = start-column ampacity × Table 310.15(B)(1)(1) factor (start column) × Table 310.15(C)(1) percent, capped at the termination-column ampacity; baseline = smallest size whose derated ampacity is at least the OCPD rating, then 240.4(D); voltage drop at load current with 75 °C resistance; 250.122(B) scaling from the baseline, multiply-first, uncapped."
+  },
+  {
+   "group": "wire-size-derated",
+   "name": "20 A OCPD, 16 A load, 50 ft, 120 V, Cu, cable, terminations unknown, 31–35 °C, 4–6 current-carrying",
+   "inputs": {
+    "ocpd_a": 20,
+    "load_a": 16,
+    "length_ft_one_way": 50,
+    "volts": 120,
+    "phase": 1,
+    "material": "Cu",
+    "vd_target_pct": 3.0,
+    "wiring_method": "cable",
+    "termination": "unknown",
+    "ambient_c_row": "31–35",
+    "ccc_band": "4–6"
+   },
+   "expected": {
+    "column_c": 60,
+    "start_column_c": 60,
+    "min_size_by_ampacity": "10",
+    "derated_ampacity": 21.84,
+    "size": "10",
+    "vd_volts": 1.944,
+    "vd_percent": 1.62,
+    "meets_target": true,
+    "egc": "12",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "derated_ampacity": 0.01,
+    "other": "exact"
+   },
+   "basis": "WSZ-009 derating mode: NM cable: correction and adjustment start from the 60 °C column. Termination column per nec-110-14c.json; start column 90 °C for individual conductors, 60 °C for cable; derated ampacity = start-column ampacity × Table 310.15(B)(1)(1) factor (start column) × Table 310.15(C)(1) percent, capped at the termination-column ampacity; baseline = smallest size whose derated ampacity is at least the OCPD rating, then 240.4(D); voltage drop at load current with 75 °C resistance; 250.122(B) scaling from the baseline, multiply-first, uncapped."
+  },
+  {
+   "group": "wire-size-derated",
+   "name": "60 A OCPD, 45 A load, 200 ft, 240 V, Al, conductors, terminations 75, 41–45 °C, 4–6 current-carrying",
+   "inputs": {
+    "ocpd_a": 60,
+    "load_a": 45,
+    "length_ft_one_way": 200,
+    "volts": 240,
+    "phase": 1,
+    "material": "Al",
+    "vd_target_pct": 3.0,
+    "wiring_method": "conductors",
+    "termination": "75",
+    "ambient_c_row": "41–45",
+    "ccc_band": "4–6"
+   },
+   "expected": {
+    "column_c": 75,
+    "start_column_c": 90,
+    "min_size_by_ampacity": "2",
+    "derated_ampacity": 69.6,
+    "size": "2",
+    "vd_volts": 5.634,
+    "vd_percent": 2.348,
+    "meets_target": true,
+    "egc": "8",
+    "egc_upsized": false,
+    "egc_larger_than_conductor": false
+   },
+   "tolerance": {
+    "vd_volts": 0.005,
+    "vd_percent": 0.005,
+    "derated_ampacity": 0.01,
+    "other": "exact"
+   },
+   "basis": "WSZ-009 derating mode: aluminum with confirmed 75 °C terminations: 90 °C start column capped at the 75 °C ampacity. Termination column per nec-110-14c.json; start column 90 °C for individual conductors, 60 °C for cable; derated ampacity = start-column ampacity × Table 310.15(B)(1)(1) factor (start column) × Table 310.15(C)(1) percent, capped at the termination-column ampacity; baseline = smallest size whose derated ampacity is at least the OCPD rating, then 240.4(D); voltage drop at load current with 75 °C resistance; 250.122(B) scaling from the baseline, multiply-first, uncapped."
+  }
+ ]
 }

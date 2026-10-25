@@ -1,0 +1,112 @@
+{
+ "id": "nema-receptacle-configs",
+ "title": "NEMA receptacle configurations (ratings, poles, wires)",
+ "status": "verified (10 of 10 configurations)",
+ "retrieved": "2026-10-20",
+ "rows": [
+  {
+   "config": "TT-30R",
+   "amps": 30,
+   "volts": "125",
+   "poles": 2,
+   "wires": 3,
+   "grounding": true,
+   "source": "Hubbell HBLTT30R spec sheet WDK_CA-HBLTT30R-SPEC-EN REV 6/2026 + product page p/2624140",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "config": "5-15R",
+   "amps": 15,
+   "volts": "125",
+   "poles": 2,
+   "wires": 3,
+   "grounding": true,
+   "source": "Hubbell HBL5262 (p/4619282), HBL5261I (p/161192); 'NEMA WD-6 Compliant'",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "config": "5-20R",
+   "amps": 20,
+   "volts": "125",
+   "poles": 2,
+   "wires": 3,
+   "grounding": true,
+   "source": "Hubbell HBL5362R spec WDK_MX-HBL5362R-SPEC-EN REV 5/2026; HBL5362W (p/160684)",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "config": "6-20R",
+   "amps": 20,
+   "volts": "250",
+   "poles": 2,
+   "wires": 3,
+   "grounding": true,
+   "source": "Hubbell HBL5461 (p/157392); 'NEMA WD-6 Compliant'",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "config": "6-30R",
+   "amps": 30,
+   "volts": "250",
+   "poles": 2,
+   "wires": 3,
+   "grounding": true,
+   "source": "Hubbell HBL9330 spec sheet WDK_CA-HBL9330-SPEC-EN REV 5/2026; Leviton 5372-IG product page",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "config": "6-50R",
+   "amps": 50,
+   "volts": "250",
+   "poles": 2,
+   "wires": 3,
+   "grounding": true,
+   "source": "Bryant/Hubbell catalog p. A-27: 'NEMA 6-50, 50A 250V 2-Pole 3-Wire G'",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "config": "10-30R",
+   "amps": 30,
+   "volts": "125/250",
+   "poles": 3,
+   "wires": 3,
+   "grounding": false,
+   "source": "Hubbell RR330 (p/2182954, p/177875): '3-Pole 3-Wire Non-Grounding'",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "config": "10-50R",
+   "amps": 50,
+   "volts": "125/250",
+   "poles": 3,
+   "wires": 3,
+   "grounding": false,
+   "source": "Bryant/Hubbell p. A-27: 'NEMA 10-50, 50A 125/250V AC 3-Pole 3-Wire'; '*Device has no provision for a grounding conductor.'",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "config": "14-30R",
+   "amps": 30,
+   "volts": "125/250",
+   "poles": 3,
+   "wires": 4,
+   "grounding": true,
+   "source": "Hubbell RR430 (p/4644088), RR430F (p/2182962), RR430WIPCN (p/177918)",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "config": "14-50R",
+   "amps": 50,
+   "volts": "125/250",
+   "poles": 3,
+   "wires": 4,
+   "grounding": true,
+   "source": "Leviton 1279-S50; Bryant/Hubbell p. A-27",
+   "status": "VERIFIED (mfr)"
+  }
+ ],
+ "evidence": "research/sources/round2/A8-mfr-doe-nema.md",
+ "notes": [
+  "Values from manufacturer spec sheets that state NEMA WD 6 compliance; the NEMA WD 6 standard itself was not read."
+ ]
+}

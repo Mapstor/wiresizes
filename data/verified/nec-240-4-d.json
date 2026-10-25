@@ -1,53 +1,145 @@
 {
-  "id": "nec-240-4-d",
-  "title": "Small-conductor overcurrent protection limits, NEC 240.4(D)",
-  "edition": "Values seen in NFPA's 2026 revision record (CMP-10 Second Draft, SR-8377); 2023 lead-in and item (D)(3) seen in the 2023 text (Leviton Captain Code 2023, reprinted with NFPA permission)",
-  "source": {
-    "publisher": "NFPA",
-    "document": "NFPA 70 A2025 CMP-10 Second Draft working draft (Oct 2024), SR-8377; Leviton Captain Code 2023 node 313",
-    "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P10_SD_PrelimSR.pdf",
-    "url_2023": "https://captaincode2023.leviton.com/node/313",
-    "retrieved": "2026-10-19",
-    "attribution": "Source: NFPA 70 (NEC), 240.4(D) — NFPA revision record SR-8377 and 2023 text (Leviton reprint) — retrieved Oct 2026"
+ "id": "nec-240-4-d",
+ "title": "Small-conductor overcurrent protection limits, NEC 240.4(D)",
+ "edition": "NFPA 70-2023: items (D)(1)–(D)(8) from NFPA's 2023-cycle Second Draft (SR-8285, verified-sd2023); (D)(1)–(D)(3) also in 2023 Eaton and Leviton reprints",
+ "status": "verified",
+ "source": {
+  "publisher": "NFPA; Eaton and Leviton reproductions with NFPA 2023 permission",
+  "document": "NFPA CMP-10 Second Revisions, 2023 cycle (SR-8285, SR-8283); Eaton bus-ele-br-11318 (2023); Leviton Captain Code 2023 node 313; NFPA 2026 Second Draft SR-8377 (same values)",
+  "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P10_SD_SRStatements.pdf",
+  "url_2023": "https://captaincode2023.leviton.com/node/313",
+  "retrieved": "2026-10-20",
+  "attribution": "Source: NFPA 70 (NEC) 2023, 240.4(D) (NFPA 2023-cycle Second Draft SR-8285; Eaton and Leviton 2023 reprints) — retrieved Oct 2026",
+  "evidence": "research/sources/round4/R4-2-ocpd-grounding.md §3.1; research/sources/round2/A2-ocpd-and-tables.md §1",
+  "url_2026_sd": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P10_SD_PrelimSR.pdf"
+ },
+ "rule_2023_leadin": "Unless specifically permitted in 240.4(E) or (G), the overcurrent protection shall not exceed that required by 240.4(D)(1) through (D)(8) after any correction factors for ambient temperature and number of conductors have been applied.",
+ "rows": [
+  {
+   "item": "(D)(1)",
+   "size": "18",
+   "material": "Cu",
+   "max_ocpd_a": 7,
+   "conditions": "(1) Continuous loads do not exceed 5.6 amperes. (2) Overcurrent protection is provided by one of the following: a. Branch-circuit-rated circuit breakers listed and marked for use with 18 AWG copper conductor; b. Branch-circuit-rated fuses listed and marked for use with 18 AWG copper conductor; c. Class CC, Class CF, Class J, or Class T fuses.",
+   "status": "VERIFIED-2023 (Eaton/Leviton reprints) and verified-sd2023 (SR-8285) (the word 'conductor' in the conditions is a single pull: render the conditions in plain words)"
   },
-  "rule_2023_leadin": "Unless specifically permitted in 240.4(E) or (G), the overcurrent protection shall not exceed that required by 240.4(D)(1) through (D)(8) after any correction factors for ambient temperature and number of conductors have been applied.",
-  "rows": [
-    {
-      "size": "14",
-      "material": "Cu",
-      "max_ocpd_a": 15,
-      "status": "verified (2026 revision record)"
-    },
-    {
-      "size": "12",
-      "material": "Cu",
-      "max_ocpd_a": 20,
-      "status": "verified (2026 revision record)"
-    },
-    {
-      "size": "10",
-      "material": "Cu",
-      "max_ocpd_a": 30,
-      "status": "verified (2026 revision record)"
-    },
-    {
-      "size": "14",
-      "material": "CCA",
-      "max_ocpd_a": 10,
-      "status": "verified (2023 item (D)(3); conditions apply: continuous load not over 8 A, OCPD listed and marked for 14 AWG CCA)"
-    }
+  {
+   "item": "(D)(2)",
+   "size": "16",
+   "material": "Cu",
+   "max_ocpd_a": 10,
+   "conditions": "(1) Continuous loads do not exceed 8 amperes. (2) Overcurrent protection is provided by one of the following: a. Branch-circuit-rated circuit breakers listed and marked for use with 16 AWG copper conductor; b. Branch-circuit-rated fuses listed and marked for use with 16 AWG copper conductor; c. Class CC, Class CF, Class J, or Class T fuses.",
+   "status": "VERIFIED-2023 (Eaton/Leviton reprints) and verified-sd2023 (SR-8285) (the word 'conductor' in the conditions is a single pull: render the conditions in plain words)"
+  },
+  {
+   "item": "(D)(3)",
+   "size": "14",
+   "material": "CCA",
+   "max_ocpd_a": 10,
+   "conditions": "(1) Continuous loads do not exceed 8 amperes. (2) Overcurrent protection is provided by one of the following: a. Branch-circuit-rated circuit breakers are listed and marked for use with 14 AWG copper-clad aluminum conductor. b. Branch-circuit-rated fuses are listed and marked for use with 14 AWG copper-clad aluminum conductor.",
+   "status": "VERIFIED-2023 (Eaton/Leviton reprints) and verified-sd2023 (SR-8285)"
+  },
+  {
+   "item": "(D)(4)",
+   "size": "14",
+   "material": "Cu",
+   "max_ocpd_a": 15,
+   "conditions": null,
+   "status": "verified-sd2023 (SR-8285: 2 pulls, 6/6 canaries rejected). Condition 3 open: TM/SC record not seen; CCA was a 2022 appeal topic; a post-issuance government review (Minnesota, Sept. 22, 2022) lists (D)(3) 14 AWG CCA. Rendered as 2023 NEC under decision D-09."
+  },
+  {
+   "item": "(D)(5)",
+   "size": "12",
+   "material": "Al",
+   "max_ocpd_a": 15,
+   "conditions": null,
+   "status": "verified-sd2023 (SR-8285: 2 pulls, 6/6 canaries rejected). Condition 3 open: TM/SC record not seen; CCA was a 2022 appeal topic; a post-issuance government review (Minnesota, Sept. 22, 2022) lists (D)(3) 14 AWG CCA. Rendered as 2023 NEC under decision D-09."
+  },
+  {
+   "item": "(D)(5)",
+   "size": "12",
+   "material": "CCA",
+   "max_ocpd_a": 15,
+   "conditions": null,
+   "status": "verified-sd2023 (SR-8285: 2 pulls, 6/6 canaries rejected). Condition 3 open: TM/SC record not seen; CCA was a 2022 appeal topic; a post-issuance government review (Minnesota, Sept. 22, 2022) lists (D)(3) 14 AWG CCA. Rendered as 2023 NEC under decision D-09."
+  },
+  {
+   "item": "(D)(6)",
+   "size": "12",
+   "material": "Cu",
+   "max_ocpd_a": 20,
+   "conditions": null,
+   "status": "verified-sd2023 (SR-8285: 2 pulls, 6/6 canaries rejected). Condition 3 open: TM/SC record not seen; CCA was a 2022 appeal topic; a post-issuance government review (Minnesota, Sept. 22, 2022) lists (D)(3) 14 AWG CCA. Rendered as 2023 NEC under decision D-09."
+  },
+  {
+   "item": "(D)(7)",
+   "size": "10",
+   "material": "Al",
+   "max_ocpd_a": 25,
+   "conditions": null,
+   "status": "verified-sd2023 (SR-8285: 2 pulls, 6/6 canaries rejected). Condition 3 open: TM/SC record not seen; CCA was a 2022 appeal topic; a post-issuance government review (Minnesota, Sept. 22, 2022) lists (D)(3) 14 AWG CCA. Rendered as 2023 NEC under decision D-09."
+  },
+  {
+   "item": "(D)(7)",
+   "size": "10",
+   "material": "CCA",
+   "max_ocpd_a": 25,
+   "conditions": null,
+   "status": "verified-sd2023 (SR-8285: 2 pulls, 6/6 canaries rejected). Condition 3 open: TM/SC record not seen; CCA was a 2022 appeal topic; a post-issuance government review (Minnesota, Sept. 22, 2022) lists (D)(3) 14 AWG CCA. Rendered as 2023 NEC under decision D-09."
+  },
+  {
+   "item": "(D)(8)",
+   "size": "10",
+   "material": "Cu",
+   "max_ocpd_a": 30,
+   "conditions": null,
+   "status": "verified-sd2023 (SR-8285: 2 pulls, 6/6 canaries rejected). Condition 3 open: TM/SC record not seen; CCA was a 2022 appeal topic; a post-issuance government review (Minnesota, Sept. 22, 2022) lists (D)(3) 14 AWG CCA. Rendered as 2023 NEC under decision D-09."
+  }
+ ],
+ "notes": [
+  "Item numbers (D)(1)–(D)(8) are the 2023 numbering (SR-8285 added (D)(3) 14 AWG CCA and renumbered the rest).",
+  "The limit applies to the overcurrent device, not the conductor's ampacity: 14 AWG Cu has 20 A in the 75 °C column of Table 310.16 but may not be protected above 15 A.",
+  "In the 60 °C column of Table 310.16 the ampacities of 14/12/10 AWG Cu (15/20/30 A) and 12/10 AWG Al (15/25 A) equal these limits.",
+  "18 and 16 AWG Cu carry conditions (continuous load limits and listed devices); render the conditions with the value or not at all.",
+  "'conductor', not 'wire', in (D)(1)/(D)(2) items a./b. (one 2023-cycle pull; the 2026 draft agrees).",
+  "240.4(D)(3) 14 AWG CCA: the Minnesota Board of Electricity minutes of Sept. 22, 2022 (after the 2023 edition was issued) list it: '14 AWG copper-clad aluminum was added to the list of permitted small conductors.' (single pull) and 'Has been added to align with other small conductors permitted per 240.4(D).' (two pulls), so the CCA appeal did not remove (D)(3). Evidence research/sources/round4/R4-8-nfpa-leads.md §2.2."
+ ],
+ "rule_240_4_b": {
+  "ref": "240.4(B)",
+  "edition": "2023",
+  "status": "verified-sd2023 (SR-8283; heading, lead-in, condition (3) and closing references; conditions (1)-(2) one 2023-cycle pull equal to two 2026 SD pulls). Condition 3 met for the adjustable-trip provision and conditions (1)-(3) by a post-issuance state-government paraphrase (Minnesota DLI, 2022-09-22). The closing sentence's first word ('If' or 'Where') is still open; don't quote it.",
+  "heading": "(B) Overcurrent Devices Rated 800 Amperes or Less.",
+  "max_next_higher_rating_a": 800,
+  "conditions": [
+   "(1) The conductors being protected are not part of a branch circuit supplying more than one receptacle for cord-and-plug-connected portable loads.",
+   "(2) The ampacity of the conductors does not correspond with the standard ampere rating of a fuse or a circuit breaker without overload trip adjustments above its rating (but that shall be permitted to have other trip or rating adjustments).",
+   "(3) The next higher standard rating selected does not exceed 800 amperes."
   ],
-  "not_verified": [
-    "18 AWG Cu",
-    "16 AWG Cu",
-    "12 AWG Al/CCA",
-    "10 AWG Al/CCA",
-    "240.4(E)/(G) exceptions",
-    "240.4(B) next size up",
-    "240.6(A) standard ratings"
+  "closing_sentence_substance": "an adjustable-trip OCPD installed per 240.4(B)(1)-(B)(3) may be set to a value not exceeding the next higher standard value above the conductor ampacity, as shown in Table 240.6(A), where restricted access per 240.6(C) is provided",
+  "quote_segments": [
+   "(B) Overcurrent Devices Rated 800 Amperes or Less.",
+   "The next higher standard overcurrent device rating (above the ampacity of the conductors being protected)",
+   " shall be permitted to be used, provided all of the following conditions are met:",
+   "The conductors being protected are not part of a branch circuit supplying more than one receptacle",
+   " for cord-and-plug-connected portable loads.",
+   "The ampacity of the conductors does not correspond with the standard ampere rating of a fuse or a circuit breaker",
+   " without overload trip adjustments above its rating",
+   " (but that shall be permitted to have other trip or rating adjustments).",
+   "The next higher standard rating selected does not exceed 800 amperes.",
+   "Where If the overcurrent protective device is an adjustable trip device, installed in accordance with 240.4(B) (1),",
+   " (B)(2), and (B)(3), it shall be permitted to be set to a value that does not exceed the next higher standard value",
+   " above the ampacity of the conductors being protected as shown in Table 240.6(A)",
+   " where restricted access in accordance with 240.6(C) is provided."
   ],
-  "notes": [
-    "Cite as 'NEC 240.4(D)' without an item number for copper (2023 item numbers for copper not seen).",
-    "Applies to the overcurrent device, not to the conductor's ampacity: a 14 AWG Cu conductor has a 20 A ampacity in the 75 °C column of Table 310.16 but may not be protected above 15 A."
-  ]
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P10_SD_SRStatements.pdf",
+  "condition_3": "Met for the substance by the Minnesota Board of Electricity 'NEC 2023 Adoption Review Committee' minutes of Sept. 22, 2022 (tier 3, government paraphrase, retrieved 2026-10-24): 'Requirements of 240.4(B)(1), 240.4(B)(2), and 240.4(B)(3) still apply.' and 'Adjustable trip overcurrent protective device must be provided with restricted access per 240.6(C).' (two pulls on the adjustable-trip lines; canaries '(B)(4)', '240.6(B)' and '65' rejected). The 2022 Standards Council record itself was not seen.",
+  "post_issuance_source": {
+   "publisher": "Minnesota Department of Labor and Industry, Board of Electricity",
+   "document": "Meeting Minutes: NEC 2023 Adoption Review Committee, Sept. 22, 2022 (Item 4A)",
+   "url": "https://dli.mn.gov/sites/default/files/pdf/minutes-NEC23-092222.pdf",
+   "retrieved": "2026-10-24",
+   "evidence": "research/sources/round4/R4-8-nfpa-leads.md §2.2"
+  }
+ },
+ "condition_3_note": "Condition 3 (checked 2026-10-24): 2022 Technical Meeting per-CAM results and Standards Council per-appeal decisions not seen. NFPA (blog, 31 Aug 2022): 55 CAMs; 14 appeals 'resulted in 18 amendments and four concurrently issuing' TIAs (by date, TIAs 23-3 to 23-6); appeal topics optical fiber cable, copper-clad aluminum wiring, surge protection devices, GFCI protection, swimming pool bonding."
 }

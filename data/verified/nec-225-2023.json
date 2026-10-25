@@ -1,0 +1,321 @@
+{
+ "id": "nec-225-2023",
+ "title": "Outside branch circuits and feeders, NEC Article 225 (2023): clearances, supplies, disconnect location and rating",
+ "status": "partial (per rule)",
+ "retrieved": "2026-10-20",
+ "source": {
+  "publisher": "NFPA",
+  "document": "NEC CMP-10 First Draft working draft, 2026 cycle (A2025): 2023 base text inside FR-8928, FR-9289, FR-8933, FR-9076",
+  "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P10_FD_PrelimFR.pdf",
+  "attribution": "Source: NFPA 70 (NEC) 2023, Article 225 (2023 base text in NFPA's 2026-cycle First Draft) — retrieved Oct 2026",
+  "evidence": "research/sources/round4/R4-5-outbuilding-pool-rv.md"
+ },
+ "rules": [
+  {
+   "ref": "225.18",
+   "edition": "2023 (base text reprinted in NFPA A2025 First Draft, FR-8928)",
+   "status": "VERIFIED-2023 (NFPA A2025 FR base text; the FR only deletes the phrase 'of not over 1000 volts, nominal,' per its committee statement); two pulls agree; canaries rejected",
+   "rule_summary": "Overhead spans of open conductors and open multiconductor cables must have at least: (1) 3.0 m (10 ft) above finished grade, sidewalks, or any platform or projection permitting personal contact, where voltage does not exceed 150 V to ground and accessible to pedestrians only; (2) 3.7 m (12 ft) over residential property and driveways, and commercial areas not subject to truck traffic, where voltage does not exceed 300 V to ground; (3) 4.5 m (15 ft) for the 3.7 m (12 ft) areas where voltage exceeds 300 V to ground; (4) 5.5 m (18 ft) over public streets, alleys, roads, parking areas subject to truck traffic, driveways on other than residential property, and other land traversed by vehicles (cultivated, grazing, forest, orchard); (5) 7.5 m (24 1/2 ft) over track rails of railroads.",
+   "values": {
+    "fr": "FR-8928-NFPA 70-2024",
+    "heading_2023": "225.18 Clearance for Overhead Conductors and Cables.",
+    "items": [
+     {
+      "item": 1,
+      "m": 3.0,
+      "ft": 10,
+      "where": "above finished grade, sidewalks, or from any platform or projection that will permit personal contact",
+      "condition": "voltage does not exceed 150 volts to ground and accessible to pedestrians only"
+     },
+     {
+      "item": 2,
+      "m": 3.7,
+      "ft": 12,
+      "where": "over residential property and driveways, and those commercial areas not subject to truck traffic",
+      "condition": "voltage does not exceed 300 volts to ground"
+     },
+     {
+      "item": 3,
+      "m": 4.5,
+      "ft": 15,
+      "where": "areas listed in the 3.7 m (12 ft) classification",
+      "condition": "voltage exceeds 300 volts to ground"
+     },
+     {
+      "item": 4,
+      "m": 5.5,
+      "ft": 18,
+      "where": "public streets, alleys, roads, parking areas subject to truck traffic, driveways on other than residential property, and other land traversed by vehicles, such as cultivated, grazing, forest, and orchard",
+      "condition": null
+     },
+     {
+      "item": 5,
+      "m": 7.5,
+      "ft": "24 1/2",
+      "where": "over track rails of railroads",
+      "condition": null
+     }
+    ],
+    "scope_phrase_2023": "of not over 1000 volts, nominal (deleted in the 2026 First Draft)"
+   },
+   "quote_segments": [
+    "First Revision No. 8928-NFPA 70-2024 [ Section No. 225.18 ]",
+    "225.18 Clearance for Overhead Conductors and Cables.",
+    "Overhead spans of open conductors and open multiconductor cables of not over 1000 volts,",
+    "nominal, shall have a clearance of not less than the following:",
+    "(1) 3.0 m (10 ft) — above finished grade, sidewalks, or from any platform or projection that will",
+    "permit personal contact where the voltage does not exceed 150 volts to ground and",
+    "accessible to pedestrians only",
+    "(2) 3.7 m (12 ft) — over residential property and driveways, and those commercial areas not",
+    "subject to truck traffic where the voltage does not exceed 300 volts to ground",
+    "(3) 4.5 m (15 ft) — for those areas listed in the 3.7 m (12 ft) classification where the voltage",
+    "exceeds 300 volts to ground",
+    "(4) 5.5 m (18 ft) — over public streets, alleys, roads, parking areas subject to truck traffic,",
+    "driveways on other than residential property, and other land traversed by vehicles, such as",
+    "cultivated, grazing, forest, and orchard",
+    "(5) 7.5 m (241⁄2 ft) — over track rails of railroads"
+   ],
+   "committee_statement_quote_segments": [
+    "Duplicate language regarding circuits 1000V ac and 1500V dc found in Articles were removed since the",
+    "scope of each Article explains the voltages that are applicable."
+   ],
+   "two_pull_check": "pull 1 (data) and pull 2 (raw lines) give identical items, distances and conditions",
+   "canaries": [
+    {
+     "planted": "item (2) is 3.5 m (11.5 ft)",
+     "result": "rejected"
+    },
+    {
+     "planted": "item (3) is 4.6 m (15.5 ft)",
+     "result": "rejected"
+    },
+    {
+     "planted": "item (4) is 6.0 m (20 ft)",
+     "result": "rejected"
+    },
+    {
+     "planted": "item (5) is 7.0 m (23 ft)",
+     "result": "rejected"
+    },
+    {
+     "planted": "item (1) applies up to 250 volts to ground",
+     "result": "rejected"
+    },
+    {
+     "true_check": "items (1)-(5) at 3.0/3.7/4.5/5.5/7.5 m",
+     "result": "confirmed"
+    }
+   ],
+   "cross_check": "EC&M, Mike Holt, 'NEC Requirements for Outside Circuits', 13 Jan 2026 (T4, edition not stated, no NFPA notice): 18 ft for item (4) wording matches. No other 2023 source printed 225.18.",
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P10_FD_PrelimFR.pdf",
+   "source_title": "NFPA, NEC CMP-10 First Draft working draft (A2025 cycle; R3-1 recorded the header 'Working Draft of NEC Code-Making Panel 10 Meeting Output', printed 2/12/24, 113 pp.); FR-8928 on p. 28 per extractor",
+   "permission_notice": "none (NFPA's own committee document)",
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "225.31(A), 225.31(B)",
+   "edition": "2023 (base text reprinted in NFPA A2025 First Draft, FR-9289)",
+   "status": "VERIFIED-2023 (NFPA A2025 FR base text) for the 2023 sentences identified below and Exceptions No. 1-4; the 2026 insertions are identified from the committee statement and run-together residue. Body text: single full pull; exception count and openings confirmed in pull 2",
+   "rule_summary": "2023: (A) Means shall be provided for disconnecting all ungrounded conductors that supply or pass through the building or structure. (B) Location: inside or outside the building or structure served, or where the conductors pass through it; at a readily accessible location nearest the point of entrance of the conductors; 230.6 applies. Exceptions: No. 1 single management with documented safe switching procedures and qualified monitoring; No. 2 buildings or structures qualifying under 685.1; No. 3 towers or poles used as lighting standards; No. 4 poles or similar structures used only to support signs per 600.1 (each: disconnect permitted elsewhere on the premises).",
+   "values": {
+    "fr": "FR-9289-NFPA 70-2024",
+    "location_rule_2023": "225.31(B)",
+    "exceptions_in_2023_base": 4,
+    "text_2023_reconstructed": {
+     "A": "Means shall be provided for disconnecting all ungrounded conductors that supply or pass through the building or structure.",
+     "B": [
+      "The disconnecting means shall be installed either inside or outside of the building or structure served or where the conductors pass through the building or structure.",
+      "The disconnecting means shall be at a readily accessible location nearest the point of entrance of the conductors.",
+      "For the purposes of this section, the requirements in 230.6 shall apply."
+     ]
+    },
+    "insertions_2026_not_2023": [
+     "(A): 'If this disconnecting means is used as the emergency disconnect, it shall be in accordance with 225.41.'",
+     "(B): 'If located inside the building, the' (replaces 'The')",
+     "(B): 'If the disconnecting means is located outside of the building, ... on or within sight of the building in accordance with 110.29.'"
+    ]
+   },
+   "quote_segments": [
+    "(A) General.",
+    "Means shall be provided for disconnecting all ungrounded conductors that supply or pass through the",
+    "building or structure.",
+    "If this disconnecting means is used as the emergency disconnect, it shall be in accordance with 225.41.",
+    "(B) Location.",
+    "The disconnecting means shall be installed either inside or outside of the building or structure served",
+    "or where the conductors pass through the building or structure.",
+    "The If located inside the building, the disconnecting means shall be at a readily accessible location",
+    "nearest the point of entrance of the conductors.",
+    "If the disconnecting means is located outside of the building, the disconnecting means shall be located",
+    "at a readily accessible location on or within sight of the building in accordance with 110.29.",
+    "For the purposes of this section, the requirements in 230.6 shall apply.",
+    "Exception No. 1: For installations under single management, where documented safe switching procedures are",
+    "established and maintained, and where the installation is monitored by qualified individuals, the",
+    "disconnecting means shall be permitted to be located elsewhere on the premises.",
+    "Exception No. 2: For buildings or other structures qualifying under 685.1, the disconnecting means shall be",
+    "permitted to be located elsewhere on the premises.",
+    "Exception No. 3: For towers or poles used as lighting standards, the disconnecting means shall be",
+    "permitted to be located elsewhere on the premises.",
+    "Exception No. 4: For poles or similar structures used only for support of signs installed in accordance",
+    "with 600.1, the disconnecting means shall be permitted to be located elsewhere on the premises."
+   ],
+   "committee_statement_quote_segments": [
+    "The revision to 225.31(A) permits this disconnect to act as the emergency disconnecting means for the outside",
+    "feeder or branch circuit. The revision to 225.31(B) adds clarity for the requirements regarding the disconnecting",
+    "means depending on if it is located inside or outside of the building."
+   ],
+   "two_pull_check": "pull 2 confirms four exceptions under (B) with the same openings; body text from pull 1 only",
+   "cross_check": [
+    "Southern Nevada amendments to the 2023 NEC (T3): 'For the purposes of this section, the requirements in 230.6 shall apply.' (same sentence); its 'Revise Section 225.31(B)' replaces Exception No. 4 with a local accessory-building exception",
+    "WAC 296-46B-225 (WSR 24-05-085, eff. 4/1/24) (T3): amends 'NEC 225.31(B)' as the outside feeder disconnect location rule",
+    "St. Paul DSI 2023 garage checklist (T3 paraphrase): 'readily accessible location either outside or immediately inside the building served'",
+    "EC&M 2026 (T4): 'at a readily accessible location, either outside or inside the building nearest the point of entrance'"
+   ],
+   "contradicts": "data/verified/nec-2023-rules-round2.json item 225.31(B) has \"exceptions_in_base\": 3; the NFPA base text prints four (No. 4 = sign poles, 600.1)",
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P10_FD_PrelimFR.pdf",
+   "permission_notice": "none (NFPA's own committee document)",
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "225.30",
+   "edition": "2023",
+   "status": "(D) VERIFIED-2023 (NFPA A2025 FR-8933 base text; single pull). Main rule: VERIFIED-2023 (government paraphrase, St. Paul 2023). Lettering (A)-(F) for 2023: UNVERIFIED (2020-based gov-hosted deck and T4 2026 article say (A) through (F))",
+   "rule_summary": "A building or structure served by a branch circuit or feeder on the load side of a service disconnect is supplied by only one feeder or branch circuit unless a listed condition applies; (D) Capacity Requirements permits additional feeders or branch circuits where capacity requirements exceed 2000 A at 1000 V or less (the voltage phrase is deleted in the 2026 First Draft).",
+   "values": {
+    "fr": "FR-8933-NFPA 70-2024",
+    "D_heading": "Capacity Requirements",
+    "D_threshold_amperes": 2000,
+    "D_voltage_phrase_2023": "at a supply voltage of 1000 volts or less",
+    "main_rule_paraphrase": "one branch circuit or feeder per building; a multiwire branch circuit counts as one circuit (St. Paul)",
+    "subdivisions_reported": "(A) through (F) (MT DLI-hosted WC3 deck, 2020-based; EC&M 2026, T4)"
+   },
+   "quote_segments": [
+    "(D) Capacity Requirements.",
+    "Additional feeders or branch circuits shall be permitted where the capacity requirements are in excess of 2000 amperes",
+    "at a supply voltage of 1000 volts or less ."
+   ],
+   "committee_statement_quote_segments": [
+    "Duplicate language regarding circuits 1000V ac and 1500V dc found in Articles were removed since the",
+    "scope of each Article explains the voltages that are applicable."
+   ],
+   "corroboration": [
+    {
+     "source": "St. Paul DSI, Residential Checklist 2023 NEC (Garage), rev 07/2023 (T3)",
+     "url": "https://stpaul.gov/sites/default/files/2024-10/DSI.Bldg_Electrical_Checklist%20Garage.pdf",
+     "quote_segments": [
+      "A detached garage shall only be served by one branch circuit or feeder.",
+      "A multi-wire branch circuit is considered one circuit."
+     ]
+    },
+    {
+     "source": "Montana DLI-hosted deck 'Key Requirements of NEC Articles 225, 230, 240, & 250', Doug Smith, WC3, 3/6/2024, 'Based on the 2020 NEC' (T3 host, paraphrase)",
+     "url": "https://bsd.dli.mt.gov/_docs/Training/Key-Requirements-of-NEC-Articles-225-250-Friday.pdf",
+     "quote_segments": [
+      "there must only be one feeder or branch circuit that supplies such building or structure,",
+      "unless permitted per (A) through (F):"
+     ]
+    },
+    {
+     "source": "EC&M, Mike Holt, NEC Requirements for Outside Circuits, 13 Jan 2026 (T4)",
+     "url": "https://ecmweb.com/national-electrical-code/code-basics/article/55340057/nec-requirements-for-outside-circuits",
+     "quote_segments": [
+      "A building can be supplied by only one feeder, except as permitted in Sec. 225.30(A) through (F)."
+     ]
+    }
+   ],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P10_FD_PrelimFR.pdf",
+   "permission_notice": "none (NFPA's own committee document)",
+   "retrieved": "2026-10-20",
+   "notes": "Segments exactly as extracted; the space before the final period is flattened-markup residue around the deleted voltage phrase."
+  },
+  {
+   "ref": "225.32",
+   "edition": "2023",
+   "status": "UNVERIFIED (existence and content). The 2023 disconnect-location rule is 225.31(B) (see 225.31 block)",
+   "rule_summary": null,
+   "values": {
+    "seen_in_2026_FD": "no 225.32 heading in the visible text (FR list jumps from 225.31 to 225.39); absence of an FR does not prove the section is absent",
+    "seen_in_SNBO_2023_amendments": "no 225.32"
+   },
+   "quote_segments": [],
+   "corroboration": [
+    {
+     "source": "St. Paul DSI 2023 garage checklist (T3) cites 'NEC 225.31 & 32' for the location rule",
+     "url": "https://stpaul.gov/sites/default/files/2024-10/DSI.Bldg_Electrical_Checklist%20Garage.pdf",
+     "quote_segments": [
+      "either outside or immediately inside the building served."
+     ]
+    }
+   ],
+   "source_url": null,
+   "permission_notice": null,
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "225.39",
+   "edition": "2023 (lead-in) / 2020 (subdivision values)",
+   "status": "Lead-in: VERIFIED-2023 (NFPA A2025 FR-9076 base text; single pull; pull 2 confirms the FR prints no (A)-(D) values). (A)-(D) ampere values: VERIFIED-other-edition (2020; government-hosted training deck, paraphrase, single pull) with a T4 2026 match; 2023 values UNVERIFIED",
+   "rule_summary": "The feeder or branch-circuit disconnecting means must be rated not less than the calculated load per Article 220; ratings of multiple switches or circuit breakers permitted by 225.33 may be combined; the rating may not be lower than 225.39(A)-(D). 2020-based values: (A) one circuit 15 A; (B) not more than two 2-wire branch circuits 30 A; (C) one-family dwelling 100 A, 3-wire; (D) all others 60 A.",
+   "values": {
+    "fr": "FR-9076-NFPA 70-2024",
+    "subdivisions_exist_2023": [
+     "(A)",
+     "(B)",
+     "(C)",
+     "(D)"
+    ],
+    "combining_ratings_permitted": "where more than one switch or circuit breaker as permitted by 225.33",
+    "other_edition_2020_values": {
+     "A_one_circuit_A": 15,
+     "B_two_2wire_circuits_A": 30,
+     "C_one_family_dwelling_A": 100,
+     "C_wires": 3,
+     "D_all_others_A": 60
+    },
+    "values_2023": "UNVERIFIED"
+   },
+   "quote_segments": [
+    "The feeder or branch-circuit disconnecting means specified in 225.31 shall have a rating of not less than the",
+    "calculated load to be supplied, determined in accordance with Article 220, Parts I and II of Article 220 ,",
+    "for branch circuits, Article 220, Part III or IV of Article 220 , for feeders, or Part V of Article 220 ,",
+    "Part V, for farm loads. Where If the branch circuit or feeder disconnecting means consists of more than one",
+    "switch or circuit breaker, as permitted by 225.33, combining the ratings of all the switches or circuit breakers",
+    "for determining the rating of the disconnecting means shall be permitted. In no case shall the rating be lower",
+    "than specified in 225.39(A), (B), (C), or (D)."
+   ],
+   "committee_statement_quote_segments": [
+    "The revision clarifies which disconnecting means that this requirement applies to.",
+    "The text is also revised to comply with the NEC Style Manual section 4.1.4."
+   ],
+   "flattened_markup": "'specified in 225.31' is probably 2026 inserted text (statement); the Article 220 part references are run together (old and new order); 'Where If' = old/new word",
+   "other_edition_source": {
+    "source": "Montana DLI-hosted deck 'Key Requirements of NEC Articles 225, 230, 240, & 250', Doug Smith, MCP, CBO; 'Presentation - Copyright© WC3 2024'; dated 3/6/2024; 'Based on the 2020 NEC' (extractor: presenter's summary, not code text)",
+    "url": "https://bsd.dli.mt.gov/_docs/Training/Key-Requirements-of-NEC-Articles-225-250-Friday.pdf",
+    "quote_segments": [
+     "Limited loads of a single branch circuit shall have not less than 15 amp.",
+     "For not more than two 2-wire branch circuits, not less than 30 amp.",
+     "Not less than 100 amp, three wire.",
+     "All others shall have at least a 60 amp."
+    ]
+   },
+   "t4_match": {
+    "source": "EC&M, Mike Holt, 'NEC Requirements for Outside Circuits', 13 Jan 2026, edition not stated, no NFPA notice",
+    "url": "https://ecmweb.com/national-electrical-code/code-basics/article/55340057/nec-requirements-for-outside-circuits",
+    "quote_segments": [
+     "Single branch circuit: 15A",
+     "Two 2-wire branch circuits: 30A",
+     "One-family dwelling: 100A",
+     "Other installations: 60A"
+    ]
+   },
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P10_FD_PrelimFR.pdf",
+   "permission_notice": "none (NFPA's own committee document); WC3 deck: 'Presentation - Copyright© WC3 2024'",
+   "retrieved": "2026-10-20"
+  }
+ ],
+ "render": [
+  "225.18 all five clearances (VERIFIED-2023).",
+  "225.31(A)/(B) with Exceptions No. 1–4 (VERIFIED-2023; the 2026 insertions are not 2023 text).",
+  "225.30(D) 2000 A only; the (A)–(F) lettering is unverified.",
+  "Never 225.32 (existence unverified) or 225.39(A)–(D) amperes (2020 basis only)."
+ ]
+}

@@ -1,15 +1,16 @@
 slug,what_was_wrong,links
 /calculators/range-calculator,"its demand-factor rule did not match NEC Table 220.55, it put a wall oven on a breaker larger than its wire allows, and it said ranges generally don't need GFCI protection, which the 2023 NEC requires",/guides/nec-table-310-16;/guides/awg-wire-size-chart
-/calculators/welder-calculator,"it sized the circuit from estimated arc power instead of the welder's rated input current and duty cycle",/guides/nec-table-310-16;/guides/awg-wire-size-chart
-/calculators/box-fill-calculator,"some of its box volumes and conductor-counting rules did not match the NEC",/guides/awg-wire-size-chart
-/calculators/well-pump-calculator,"it used invented current multipliers and motor currents that disagree with the NEC motor tables",/guides/awg-wire-size-chart;/calculators/voltage-drop-calculator
+/calculators/welder-calculator,it sized the circuit from estimated arc power instead of the welder's rated input current and duty cycle,/guides/nec-table-310-16;/guides/awg-wire-size-chart
+/calculators/box-fill-calculator,some of its box volumes and conductor-counting rules did not match the NEC,/guides/awg-wire-size-chart
+/calculators/well-pump-calculator,it used invented current multipliers and motor currents that disagree with the NEC motor tables,/guides/awg-wire-size-chart;/calculators/voltage-drop-calculator
 /calculators/hot-tub-calculator,"it estimated the circuit from the number of seats instead of the spa's rated load, and its voltage-drop examples used wrong resistance values",/guides/nec-table-310-16;/calculators/voltage-drop-calculator
-/calculators/pool-pump-calculator,"its motor currents did not match the NEC motor tables and it cited the wrong pool sections",/guides/nec-table-310-16
-/calculators/air-conditioner-calculator,"it estimated amps from tonnage instead of using the unit's nameplate minimum circuit ampacity and maximum overcurrent protection",/guides/nec-table-310-16
-/calculators/dryer-calculator,"it cited the wrong NEC sections and left out the 2023 GFCI requirement for dryer circuits",/guides/nec-table-310-16
-/calculators/motor-circuit,"it rounded feeder protection up and stated overload settings incorrectly",/guides/nec-table-310-16
-/calculators/horsepower-to-amps-calculator,"it listed 115 V motor currents under a 230 V heading and mislabeled the NEC motor tables",/calculators/kilowatts-to-amps-calculator
-/calculators/circuit-breaker-calculator,"its default example contradicted itself and one of its NEC table rows does not exist",/guides/nec-table-310-16
+/calculators/pool-pump-calculator,its motor currents did not match the NEC motor tables and it cited the wrong pool sections,/guides/nec-table-310-16
+/calculators/air-conditioner-calculator,it estimated amps from tonnage instead of using the unit's nameplate minimum circuit ampacity and maximum overcurrent protection,/guides/nec-table-310-16
+/calculators/dryer-calculator,it cited the wrong NEC sections and left out the 2023 GFCI requirement for dryer circuits,/guides/nec-table-310-16
+/calculators/motor-circuit,it rounded feeder protection up and stated overload settings incorrectly,/guides/nec-table-310-16
+/calculators/horsepower-to-amps-calculator,it listed 115 V motor currents under a 230 V heading and mislabeled the NEC motor tables,/calculators/kilowatts-to-amps-calculator
+/calculators/circuit-breaker-calculator,its default example contradicted itself and one of its NEC table rows does not exist,/guides/nec-table-310-16
 /calculators/conduit-fill-calculator,"it said equipment grounding conductors are not counted in conduit fill, and several conduit and wire areas were wrong",/guides/awg-wire-size-chart
-/calculators/residential-load-calculator,"it mixed the NEC's standard and optional dwelling methods and put air conditioning in the wrong load group",/guides/nec-table-310-16
-/calculators/rv-hookup-calculator,"it overstated where GFCI protection is required and misapplied the RV-park demand factors",/guides/nec-table-310-16;/guides/awg-wire-size-chart
+/calculators/residential-load-calculator,it mixed the NEC's standard and optional dwelling methods and put air conditioning in the wrong load group,/guides/nec-table-310-16
+/calculators/rv-hookup-calculator,it overstated where GFCI protection is required and misapplied the RV-park demand factors,/guides/nec-table-310-16;/guides/awg-wire-size-chart
+/calculators/garage-subpanel-calculator,"it estimated the garage's load with invented demand factors credited to NEC sections that say something else, could recommend a panel smaller than the load it had just calculated, and showed the copper ground wire size on its aluminum results",/guides/wire-size-for-100-amp;/calculators/ground-wire-calculator

@@ -1,7 +1,7 @@
 {
  "id": "nec-250-122",
  "title": "Minimum size equipment grounding conductors",
- "edition": "NFPA 70 Table 250.122 (2020 fact sheet = 2026 Second Draft; 2023 not seen directly; 2026 label 250.122(A))",
+ "edition": "NFPA 70 Table 250.122 (2020 NFPA fact sheet = 2026 Second Draft SR-8360, 'No technical changes'; 2023 printing not seen). Render the caption as 'Table 250.122'; whether a suffix '(A)' belonged to the 2023 or the 2026 draft caption is unresolved.",
  "source": {
   "publisher": "NFPA",
   "document": "\"Using the Tables in Article 250 of the NEC®\" fact sheet (© 2020 NFPA, June 2020); Table 250.122 also identical in CMP-5 2026 Second Draft SR-8360 (\"No technical changes\")",
@@ -12,7 +12,8 @@
  },
  "notes": [
   "Size by the rating of the overcurrent device ahead of the circuit, \"not exceeding\".",
-  "Where ungrounded conductors are increased in size for voltage drop, 250.122(B) proportional increase applies (text not re-verified Oct 2026)."
+  "250.122(B) (2023): wire-type EGCs grow in proportion to the increase in circular mil area of the ungrounded conductors when those are increased for any reason other than as required in 310.15(B) or 310.15(C). The 2026 draft relabels it 250.122(D).",
+  "250.122(A) cap ('not required to be larger than the circuit conductors'): seen only in the 2026 Second Draft (SR-8360, single pull, VERIFIED-draft), whose statement implies the sentence was already in the 2023 base text; the 2023 wording has not been seen. Don't render it and don't apply it until it is verified. Until then the tools show the Table 250.122 EGC uncapped: only 25 A aluminum gets an EGC (8 AWG) larger than its conductor (10 AWG)."
  ],
  "rows": [
   {
@@ -110,5 +111,22 @@
    "cu": "800",
    "al_cca": "1250"
   }
- ]
+ ],
+ "rule_250_122_b": {
+  "status": "verified-sd2023 (main sentence; SR-8071, two pulls, 4/4 canaries rejected; the same sentence is the 2026 SD base text, so condition 3 is met)",
+  "trigger": "ungrounded conductors increased in size for any reason other than as required in 310.15(B) or 310.15(C)",
+  "rule": "increased in size proportionately to the increase in circular mil area of the ungrounded conductors",
+  "method": "EGC_required_cmil = EGC_table_cmil × installed ungrounded cmil ÷ minimum ungrounded cmil; the minimum is the smallest size whose ampacity in the termination column, after any 310.15(B)/(C) correction and adjustment, is at least the OCPD rating and that 240.4(D) allows (WSZ-002's step-2 size). Upsizing required by 310.15(B)/(C) itself does not trigger the increase. Multiply before dividing. Pick the smallest size at or above the result, never smaller than the table EGC; don't cap the result at the installed conductor until the 250.122(A) cap is verified (25 A aluminum starts from an 8 AWG table EGC on a 10 AWG conductor). If no Table 310.16 size reaches the required area, say that none is large enough.",
+  "quote_segments": [
+   "(B) Increased in Size.",
+   "If ungrounded conductors are increased in size for any reason other than as required in 310.15(B) or",
+   "310.15(B) or 310.15(C) (C) ,",
+   "wire-type equipment grounding conductors, if installed, shall be increased in size proportionately",
+   "to the increase in circular mil area of the ungrounded conductors."
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P05_SD_SRStatements.pdf",
+  "condition_3": "met: the same main sentence is the base text of the 2026 Second Draft (SR-8360, relettered (D)), so it reached the 2023 edition. The 2022 Technical Meeting / Standards Council record itself was not seen (IAEI NFPA Code Talk, 31 Aug 2022, gives totals only).",
+  "evidence": "research/sources/round4/R4-2-ocpd-grounding.md §3.3",
+  "exception_status": "CONFLICTING: the exception and informational note differ between SR-8071 (long exception plus GEMI note) and the 2026 SD's short exception (SR-8360); a 2022 CAM or Standards Council amendment is one possible cause, a 2026 First Revision the other; neither record seen. Never render them."
+ }
 }

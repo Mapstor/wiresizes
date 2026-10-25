@@ -1,0 +1,29 @@
+WSZ-011 EQUIPMENT — wiresizes.com: motor, well pump, pool pump, hot tub, welder, air conditioner and RV calculators (pages whose sources are verified)
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 has WSZ-010 LOADCALC as done (HOLD pages allowed). If not, stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`; if origin/main has commits main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
+Read first: DEVLOG §0–§5 + last 10 §6 entries; research/held-waves-rules.md (the rules for this wave — follow every section); research/held-pages-domains.csv; research/page-specs-held.md section "WSZ-011"; research/data-sources.csv; the data/verified files named below; .claude/skills/content-page/SKILL.md and its references; .claude/skills/anti-slop-prose/SKILL.md; research/golden-cases.json.
+
+Pages (gate decides BUILD/HOLD): /calculators/horsepower-to-amps-calculator, /calculators/motor-circuit, /calculators/well-pump-calculator, /calculators/pool-pump-calculator, /calculators/hot-tub-calculator, /calculators/welder-calculator, /calculators/air-conditioner-calculator, /calculators/rv-hookup-calculator.
+
+Data files: nec-430-440-2023.json, mfr-equipment.json, doe-efficiency-standards.json, nema-receptacle-configs.json, nec-2023-rules-round2.json, plus any file chat adds for nec-430-motors (Tables 430.247/430.248 and the rest of 430.250), nec-440-hvac, nec-630-welders, nec-680-pools-spas, nec-551-rv-demand, mfr-well-pump.
+
+Wave specifics:
+1. Motor currents come only from the verified FLC tables (430.6(A)): never from a formula. A row the data file marks unverified is "not available" on the page, not estimated. Table 430.250 columns are rated motor voltages; map system voltages with the verified note.
+2. Motor circuit: conductor 125 % (430.22, only when verified), several motors 430.24 (verified), branch SC/GF device per Table 430.52(C)(1) (verified 2023) with the (C)(1)(a)/(b) rules only when their wording is verified, feeder 430.62, disconnect 430.110.
+3. Air conditioner: inputs are the nameplate MCA and MOCP; worked examples are the verified manufacturer rows (Carrier 26SCA5, Amana) cited per model; 440.22(A) values (verified 2023) explain MOCP; DOE SEER2 minimums from doe-efficiency-standards.json with the CFR citation.
+4. Hot tub and pool pump: manufacturer requirements first (mfr-spas, mfr-pool-pumps), then the verified 680 rules; never 680.10/680.12 for disconnects or wiring (2023 numbering differs).
+5. Welder: 630.11 sizing only when verified; manufacturer input current and fuse data (mfr-welders) shown per model either way.
+6. RV hookup: single RV outlet at a house (TT-30R 30 A 125 V; 14-50R 50 A 125/250 V from nema-receptacle-configs.json; GFCI rule per the verified section) and the RV-park feeder with Table 551.73(A) only when verified.
+7. Well pump: Franklin AIM cable-length tables only from a verified 2026 edition (mfr-well-pump must be verified; the 2015 edition is candidate only).
+
+Run held-waves-rules.md §1 (data gate) first and paste its output. Then §2–§5 for the BUILD pages.
+
+Commit "feat(wsz-011): equipment calculators on verified sources". Don't push.
+
+Definition of done (paste each output): the data-gate output (BUILD/HOLD per page with blocking domains); the golden reproduction output for the wave's engine groups; gate output for the rebuilt routes (0 hits); build/test/tsc lines; per rebuilt page: word count, H2 list, FAQ count, SVG titles; the prepublish checklist table; anti-slop fix count; Impeccable result.
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-011. Status done only if every BUILD page passed verification; HOLD pages are listed in §0 as "waiting on chat sourcing: <domains>". Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.

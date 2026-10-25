@@ -1,0 +1,319 @@
+{
+ "id": "nec-110-14c",
+ "title": "Temperature limitations of terminations, NEC 110.14(C) (2023)",
+ "status": "verified-sd2023 (per rule; see each status)",
+ "retrieved": "2026-10-20",
+ "source": {
+  "publisher": "NFPA",
+  "document": "NEC Code-Making Panel 1 Second Revisions, 2023 revision cycle (A2022), SR-7793 [Sections 110.14(C), 110.14(D)]; printed 12/6/2021",
+  "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P01_SD_SRStatements.pdf",
+  "attribution": "Source: NFPA 70 (NEC) 2023, 110.14(C) (NFPA 2023-cycle Second Draft, SR-7793) — retrieved Oct 2026",
+  "evidence": "research/sources/round4/R4-1-terminations-cables.md"
+ },
+ "verified_sd2023_conditions": {
+  "1_passage": "SR-7793's statement confines the revision to the Informational Notes, so the body is First Draft text carried unchanged into the Second Draft",
+  "2_pulls_and_canaries": "two pulls agree (14 of 14 pull-B strings occur verbatim in pull A); 6 of 6 planted wrong values rejected",
+  "3_tech_meeting_sc": "open. Condition 3 (checked 2026-10-24): 2022 Technical Meeting per-CAM results and Standards Council per-appeal decisions not seen. NFPA (blog, 31 Aug 2022): 55 CAMs; 14 appeals 'resulted in 18 amendments and four concurrently issuing' TIAs (by date, TIAs 23-3 to 23-6); appeal topics optical fiber cable, copper-clad aluminum wiring, surge protection devices, GFCI protection, swimming pool bonding. Overlap with the appeal topics: none. TIAs 23-1 to 23-20 and errata 70-23-1 to -5 and -9 read: none touches 110.14 (R4-7, R5-2); errata 6-8 unread. No CMP-1 CAM amendment ballot surfaced (only CMP-3 70-53, CMP-9 70-115 and CMP-16 70-48). Rendered as 2023 NEC under decision D-09."
+ },
+ "rules": [
+  {
+   "ref": "110.14(C) lead-in (Temperature Limitations)",
+   "edition": "NFPA 70-2023 (text as set by the 2023-cycle Second Draft)",
+   "status": "verified-sd2023",
+   "sd2023_conditions": {
+    "1_passage": "text of Second Revision SR-7793 [Sections 110.14(C), 110.14(D)] in the 2023-cycle Second Draft. The SR statement confines the revision to the Informational Notes, so the body is First Draft text carried unchanged into the Second Draft",
+    "2_pulls_and_canaries": "two pulls of the same NFPA file agree (14 of 14 pull-B strings occur verbatim in pull A); pull B rejected 6 of 6 canaries",
+    "3_tech_meeting_sc": "not checked (partial): TIAs 23-1 to 23-13 checked, none touches 110.14; no CMP-1 or CMP-6 CAM amendment ballot found in two targeted searches (only CMP-3 70-53, CMP-9 70-115, CMP-16 70-48 surfaced); the 2022 CAM list, Standards Council decisions, Correlating Committee SCR report (70_A2022_NEC_AAC_SD_SCRreport.pdf) and errata 70-23-1 to 70-23-6 were not read"
+   },
+   "values": {
+    "governing_rating": "lowest temperature rating of any connected termination, conductor, or device",
+    "higher_rated_conductors": "permitted to be used for ampacity adjustment, correction, or both"
+   },
+   "quote_segments": [
+    "(C) Temperature Limitations.",
+    "The temperature rating associated with the ampacity of a conductor shall be selected and coordinated",
+    "so as not to exceed the lowest temperature rating of any connected termination, conductor, or device.",
+    "Conductors with temperature ratings higher than specified for terminations shall be permitted",
+    "to be used for ampacity adjustment, correction, or both."
+   ],
+   "single_pull_segments": [
+    "(C) Temperature Limitations."
+   ],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P01_SD_SRStatements.pdf",
+   "source_title": "NFPA Second Revision compilation, NEC Code-Making Panel 1, 2023 revision cycle (A2022; items labelled 'Second Revision No. ...-NFPA 70-2021'); running header 'National Fire Protection Association Report'; printed 12/6/2021 12:09 PM; 98 pages, text visible to p. 54",
+   "permission_notice": null,
+   "retrieved": "2026-10-20",
+   "canaries": [
+    {
+     "planted": "Conductors with temperature ratings higher than specified for terminations shall not be used for ampacity adjustment or correction.",
+     "rejected": true,
+     "printed": "Conductors with temperature ratings higher than specified for terminations shall be permitted to be used for ampacity adjustment, correction, or both."
+    }
+   ]
+  },
+  {
+   "ref": "110.14(C)(1) Equipment Provisions (lead-in)",
+   "edition": "NFPA 70-2023 (text as set by the 2023-cycle Second Draft)",
+   "status": "verified-sd2023 (first sentence and heading: single pull)",
+   "sd2023_conditions": {
+    "1_passage": "text of Second Revision SR-7793 [Sections 110.14(C), 110.14(D)] in the 2023-cycle Second Draft. The SR statement confines the revision to the Informational Notes, so the body is First Draft text carried unchanged into the Second Draft",
+    "2_pulls_and_canaries": "two pulls of the same NFPA file agree (14 of 14 pull-B strings occur verbatim in pull A); pull B rejected 6 of 6 canaries",
+    "3_tech_meeting_sc": "not checked (partial): TIAs 23-1 to 23-13 checked, none touches 110.14; no CMP-1 or CMP-6 CAM amendment ballot found in two targeted searches (only CMP-3 70-53, CMP-9 70-115, CMP-16 70-48 surfaced); the 2022 CAM list, Standards Council decisions, Correlating Committee SCR report (70_A2022_NEC_AAC_SD_SCRreport.pdf) and errata 70-23-1 to 70-23-6 were not read"
+   },
+   "values": {
+    "basis": "110.14(C)(1)(a) or (C)(1)(b)",
+    "ampacity_table": "Table 310.16 as appropriately modified by 310.12",
+    "override": "unless the equipment is listed and marked otherwise"
+   },
+   "quote_segments": [
+    "(1) Equipment Provisions.",
+    "The determination of termination provisions of equipment shall be based on 110.14(C)(1)(a) or",
+    "(C)(1)(b). Unless the equipment is listed and marked otherwise, conductor ampacities used in",
+    "determining equipment termination provisions shall be based on Table 310.16 as appropriately",
+    "modified by 310.12."
+   ],
+   "single_pull_segments": [
+    "(1) Equipment Provisions.",
+    "The determination of termination provisions of equipment shall be based on 110.14(C)(1)(a) or (C)(1)(b)."
+   ],
+   "notes": "The second sentence was confirmed in pull B as the unflagged words of canaries S4 and S10.",
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P01_SD_SRStatements.pdf",
+   "source_title": "NFPA Second Revision compilation, NEC Code-Making Panel 1, 2023 revision cycle (A2022; items labelled 'Second Revision No. ...-NFPA 70-2021'); running header 'National Fire Protection Association Report'; printed 12/6/2021 12:09 PM; 98 pages, text visible to p. 54",
+   "permission_notice": null,
+   "retrieved": "2026-10-20",
+   "canaries": [
+    {
+     "planted": "shall be based on Table 310.17",
+     "rejected": true,
+     "printed": "shall be based on Table 310.16"
+    },
+    {
+     "planted": "as appropriately modified by 310.15(B)(7).",
+     "rejected": true,
+     "printed": "as appropriately modified by 310.12."
+    }
+   ]
+  },
+  {
+   "ref": "110.14(C)(1)(a) (circuits rated 100 A or less, or marked 14 AWG through 1 AWG)",
+   "edition": "NFPA 70-2023 (text as set by the 2023-cycle Second Draft)",
+   "status": "verified-sd2023 (item (1) wording and the lead-in tail: single pull)",
+   "sd2023_conditions": {
+    "1_passage": "text of Second Revision SR-7793 [Sections 110.14(C), 110.14(D)] in the 2023-cycle Second Draft. The SR statement confines the revision to the Informational Notes, so the body is First Draft text carried unchanged into the Second Draft",
+    "2_pulls_and_canaries": "two pulls of the same NFPA file agree (14 of 14 pull-B strings occur verbatim in pull A); pull B rejected 6 of 6 canaries",
+    "3_tech_meeting_sc": "not checked (partial): TIAs 23-1 to 23-13 checked, none touches 110.14; no CMP-1 or CMP-6 CAM amendment ballot found in two targeted searches (only CMP-3 70-53, CMP-9 70-115, CMP-16 70-48 surfaced); the 2022 CAM list, Standards Council decisions, Correlating Committee SCR report (70_A2022_NEC_AAC_SD_SCRreport.pdf) and errata 70-23-1 to 70-23-6 were not read"
+   },
+   "values": {
+    "applies_to": "termination provisions of equipment for circuits rated 100 amperes or less, or marked for 14 AWG through 1 AWG conductors",
+    "item_1": "conductors rated 60°C (140°F)",
+    "item_2": "higher-rated conductors, ampacity determined from the 60°C (140°F) ampacity of the conductor size used",
+    "item_3": "higher-rated conductors if the equipment is listed and identified for use with such conductors",
+    "item_4_motor_design_letters": [
+     "B",
+     "C",
+     "D"
+    ],
+    "item_4": "motors marked design B, C or D: conductors insulated 75°C (167°F) or higher permitted, ampacity not exceeding the 75°C (167°F) ampacity"
+   },
+   "quote_segments": [
+    "(a) Termination provisions of equipment for circuits rated 100 amperes or less, or marked",
+    "for 14 AWG through 1 AWG conductors, shall be used only for one of the following:",
+    "(1) Conductors rated 60°C (140°F).",
+    "(2) Conductors with higher temperature ratings, provided the ampacity of such conductors is",
+    "determined based on the 60°C (140°F) ampacity of the conductor size used.",
+    "(3) Conductors with higher temperature ratings if the equipment is listed and identified for use",
+    "with such conductors.",
+    "(4) For motors marked with design letters B, C, or D, conductors having an insulation rating of",
+    "75°C (167°F) or higher shall be permitted to be used, provided the ampacity of such",
+    "conductors does not exceed the 75°C (167°F) ampacity."
+   ],
+   "single_pull_segments": [
+    "shall be used only for one of the following:",
+    "(1) Conductors rated 60°C (140°F)."
+   ],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P01_SD_SRStatements.pdf",
+   "source_title": "NFPA Second Revision compilation, NEC Code-Making Panel 1, 2023 revision cycle (A2022; items labelled 'Second Revision No. ...-NFPA 70-2021'); running header 'National Fire Protection Association Report'; printed 12/6/2021 12:09 PM; 98 pages, text visible to p. 54",
+   "permission_notice": null,
+   "retrieved": "2026-10-20",
+   "canaries": [
+    {
+     "planted": "circuits rated 125 amperes or less, or marked for 14 AWG through 1/0 AWG conductors",
+     "rejected": true,
+     "printed": "rated 100 amperes or less, or marked for 14 AWG through 1 AWG conductors,"
+    },
+    {
+     "planted": "For motors marked with design letters B, C, D, or E",
+     "rejected": true,
+     "printed": "For motors marked with design letters B, C, or D, conductors having an insulation rating of 75°C (167°F) or higher"
+    }
+   ],
+   "confirmed_exact_in_pull_b": [
+    "item (2) full sentence",
+    "item (3) full sentence",
+    "item (4) full sentence (re-quoted)"
+   ]
+  },
+  {
+   "ref": "110.14(C)(1)(b) (circuits rated over 100 A, or marked for conductors larger than 1 AWG)",
+   "edition": "NFPA 70-2023 (text as set by the 2023-cycle Second Draft)",
+   "status": "verified-sd2023",
+   "sd2023_conditions": {
+    "1_passage": "text of Second Revision SR-7793 [Sections 110.14(C), 110.14(D)] in the 2023-cycle Second Draft. The SR statement confines the revision to the Informational Notes, so the body is First Draft text carried unchanged into the Second Draft",
+    "2_pulls_and_canaries": "two pulls of the same NFPA file agree (14 of 14 pull-B strings occur verbatim in pull A); pull B rejected 6 of 6 canaries",
+    "3_tech_meeting_sc": "not checked (partial): TIAs 23-1 to 23-13 checked, none touches 110.14; no CMP-1 or CMP-6 CAM amendment ballot found in two targeted searches (only CMP-3 70-53, CMP-9 70-115, CMP-16 70-48 surfaced); the 2022 CAM list, Standards Council decisions, Correlating Committee SCR report (70_A2022_NEC_AAC_SD_SCRreport.pdf) and errata 70-23-1 to 70-23-6 were not read"
+   },
+   "values": {
+    "applies_to": "termination provisions of equipment for circuits rated over 100 amperes, or marked for conductors larger than 1 AWG",
+    "item_1": "conductors rated 75°C (167°F)",
+    "item_2": "higher-rated conductors not exceeding the 75°C (167°F) ampacity of the conductor size used, or up to their ampacity if the equipment is listed and identified for use with such conductors"
+   },
+   "quote_segments": [
+    "(b) Termination provisions of equipment for circuits rated over 100 amperes, or marked",
+    "for conductors larger than 1 AWG, shall be used only for one of the following:",
+    "(1) Conductors rated 75°C (167°F)",
+    "(2) Conductors with higher temperature ratings, provided the ampacity of such conductors",
+    "does not exceed the 75°C (167°F) ampacity of the conductor size used, or up to their ampacity",
+    "if the equipment is listed and identified for use with such conductors"
+   ],
+   "single_pull_segments": [],
+   "notes": "Items (1) and (2) are printed without a final period in SR-7793 (both pulls). The printed 2023 edition's punctuation is not verified.",
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P01_SD_SRStatements.pdf",
+   "source_title": "NFPA Second Revision compilation, NEC Code-Making Panel 1, 2023 revision cycle (A2022; items labelled 'Second Revision No. ...-NFPA 70-2021'); running header 'National Fire Protection Association Report'; printed 12/6/2021 12:09 PM; 98 pages, text visible to p. 54",
+   "permission_notice": null,
+   "retrieved": "2026-10-20",
+   "canaries": [
+    {
+     "planted": "(1) Conductors rated 90°C (194°F).",
+     "rejected": true,
+     "printed": "Conductors rated 75°C (167°F)"
+    }
+   ],
+   "confirmed_exact_in_pull_b": [
+    "(b) lead-in",
+    "item (2) (re-quoted)"
+   ]
+  },
+  {
+   "ref": "110.14(C)(2) Separate Connector Provisions",
+   "edition": "NFPA 70-2023 (text as set by the 2023-cycle Second Draft)",
+   "status": "verified-sd2023",
+   "sd2023_conditions": {
+    "1_passage": "text of Second Revision SR-7793 [Sections 110.14(C), 110.14(D)] in the 2023-cycle Second Draft. The SR statement confines the revision to the Informational Notes, so the body is First Draft text carried unchanged into the Second Draft",
+    "2_pulls_and_canaries": "two pulls of the same NFPA file agree (14 of 14 pull-B strings occur verbatim in pull A); pull B rejected 6 of 6 canaries",
+    "3_tech_meeting_sc": "not checked (partial): TIAs 23-1 to 23-13 checked, none touches 110.14; no CMP-1 or CMP-6 CAM amendment ballot found in two targeted searches (only CMP-3 70-53, CMP-9 70-115, CMP-16 70-48 surfaced); the 2022 CAM list, Standards Council decisions, Correlating Committee SCR report (70_A2022_NEC_AAC_SD_SCRreport.pdf) and errata 70-23-1 to 70-23-6 were not read"
+   },
+   "values": {
+    "rule": "separately installed pressure connectors are used at ampacities not exceeding the ampacity at the connector's listed and identified temperature rating"
+   },
+   "quote_segments": [
+    "(2) Separate Connector Provisions.",
+    "Separately installed pressure connectors shall be used with conductors at the ampacities not",
+    "exceeding the ampacity at the listed and identified temperature rating of the connector."
+   ],
+   "single_pull_segments": [],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P01_SD_SRStatements.pdf",
+   "source_title": "NFPA Second Revision compilation, NEC Code-Making Panel 1, 2023 revision cycle (A2022; items labelled 'Second Revision No. ...-NFPA 70-2021'); running header 'National Fire Protection Association Report'; printed 12/6/2021 12:09 PM; 98 pages, text visible to p. 54",
+   "permission_notice": null,
+   "retrieved": "2026-10-20",
+   "canaries": [],
+   "confirmed_exact_in_pull_b": [
+    "heading and full sentence (statement S6)"
+   ]
+  },
+  {
+   "ref": "110.14(C) Informational Note (after (C)(2))",
+   "edition": "NFPA 70-2023 (2023-cycle Second Draft; revised by SR-7793)",
+   "status": "content verified-sd2023; exact wording VERIFIED-draft (strike/underline flattened)",
+   "values": {
+    "content": "equipment markings or listing information may additionally restrict the sizing and temperature ratings of connected conductors",
+    "probable_2023_wording_unverified": "Informational Note: Equipment markings or listing information may additionally restrict the sizing and temperature ratings of connected conductors.",
+    "sr_statement": "The Informational Notes to 110.14(C)(2) and 110.14(D) have been revised to comply with the NEC Style Manual."
+   },
+   "quote_segments": [
+    "Informational Note: With respect to 110.14(C)(1) and (C)(2), equipment Equipment",
+    "markings or listing information may additionally restrict the sizing and temperature",
+    "ratings of connected conductors."
+   ],
+   "notes": "'equipment Equipment' is a flattened redline. Which words were struck is not shown, so do not quote the note verbatim.",
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P01_SD_SRStatements.pdf",
+   "source_title": "NFPA Second Revision compilation, NEC Code-Making Panel 1, 2023 revision cycle (A2022; items labelled 'Second Revision No. ...-NFPA 70-2021'); running header 'National Fire Protection Association Report'; printed 12/6/2021 12:09 PM; 98 pages, text visible to p. 54",
+   "permission_notice": null,
+   "retrieved": "2026-10-20",
+   "canaries": []
+  },
+  {
+   "ref": "110.14(C) in NFPA 70-2026",
+   "edition": "2026 cycle (A2025)",
+   "status": "UNVERIFIED (no change seen; First Draft stage not established)",
+   "values": {
+    "2026_second_revisions": "none on 110.14(C) (R3-1, CMP-1 SD working draft; SR-7644 = 110.14 intro, SR-7618 = 110.14(D))",
+    "2026_global_first_revisions": "FR-9168 (new 110.39 'In Sight From') and FR-9213 (voltage-rating wording in 110.26(A), (A)(4), 110.27(A), 110.28, 110.30, 110.33(A)(2), 110.34(B), (C), 110.73, 110.74(A), (B)) do not touch 110.14",
+    "2026_section_level_first_revisions": "not visible: the CMP-1 FD working draft (70_A2025_NEC_P01_FD_PrelimFR.pdf) holds only global and detail FRs (FR-9168, FR-9213, FR-9025 Annex A, marker 'Revised by FR-8939'), so round 2's 'no 110.14 FR seen' carries no weight",
+    "tier4": "EC Magazine (Kyle Krueger, 15 Jan 2026) lists 2026 Article 110 changes as 110.3(B), 110.16, 110.26, 110.26(C)(2); 110.14 is not mentioned"
+   },
+   "quote_segments": [],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P01_FD_PrelimFR.pdf",
+   "permission_notice": null,
+   "retrieved": "2026-10-20",
+   "canaries": []
+  }
+ ],
+ "engine_rules": [
+  {
+   "id": "column-cap",
+   "rule": "The ampacity column used may not exceed the lowest temperature rating of any connected termination (both ends), the conductor, or any device.",
+   "basis": "110.14(C) lead-in"
+  },
+  {
+   "id": "default-100A-or-less",
+   "rule": "Circuits rated 100 A or less, or terminals marked for 14–1 AWG: 60 °C column by default.",
+   "basis": "110.14(C)(1)(a)(1)-(2)"
+  },
+  {
+   "id": "default-over-100A",
+   "rule": "Circuits rated over 100 A, or terminals marked for conductors larger than 1 AWG: 75 °C column by default.",
+   "basis": "110.14(C)(1)(b)(1)-(2)"
+  },
+  {
+   "id": "75C-at-100A-or-less",
+   "rule": "The 75 °C column for a circuit of 100 A or less only when the reader confirms that the equipment at every termination is listed and identified for use with 75 °C conductors. Never a silent default.",
+   "basis": "110.14(C)(1)(a)(3)"
+  },
+  {
+   "id": "90C-final",
+   "rule": "Never offer the 90 °C column as the final ampacity: it needs equipment listed and identified for 90 °C conductors at every termination.",
+   "basis": "110.14(C)(1)(a)(3), (b)(2)"
+  },
+  {
+   "id": "motor-design-letters",
+   "rule": "Motors marked design B, C or D: conductors insulated 75 °C or higher may be used at the 75 °C ampacity, even at 100 A or less.",
+   "basis": "110.14(C)(1)(a)(4)"
+  },
+  {
+   "id": "derating-start",
+   "rule": "A higher-rated conductor (for example 90 °C) may start from its own column for correction and adjustment; the final ampacity may not exceed the termination column's ampacity for that size. Individual conductors only (not NM or UF cable).",
+   "basis": "110.14(C) lead-in sentence 2; (a)(2); (b)(2)"
+  },
+  {
+   "id": "ampacity-basis",
+   "rule": "Termination ampacities come from Table 310.16, as modified by 310.12, unless the equipment is listed and marked otherwise.",
+   "basis": "110.14(C)(1) lead-in"
+  },
+  {
+   "id": "separate-connectors",
+   "rule": "Separately installed pressure connectors are limited to their own listed and identified temperature rating.",
+   "basis": "110.14(C)(2)"
+  },
+  {
+   "id": "nm-cable",
+   "rule": "Wiring method NM or UF: 60 °C only, whatever the terminations, until 334.80 and 340.80 are verified. Cite 110.14(C)(1)(a) for circuits of 100 A or less; never cite 334.80. For cable, correction and adjustment start from the 60 °C column; derating-start applies to individual conductors only.",
+   "basis": "nec-cable-rules is GAP"
+  }
+ ],
+ "notes": [
+  "Render values and rules, not long quotes. Do not quote the Informational Note: its wording is a flattened redline in the source; its content (equipment markings or listing may further restrict conductor size and temperature) may be stated in plain words.",
+  "(C)(1)(b)(1) and (b)(2) are printed without a final period in SR-7793; the printed edition's punctuation is not verified.",
+  "Single-pull pieces: the headings, the (C)(1) first sentence and the (a)(1) wording. Every rule value is confirmed by both pulls.",
+  "2026: no Second Revision on 110.14(C); First Draft stage not established. Say '2023 NEC' on pages."
+ ]
+}

@@ -4,7 +4,7 @@
  "sources": [
   {
    "publisher": "National Bureau of Standards (now NIST)",
-   "document": "Copper Wire Tables, NBS Handbook 100 (1966), Table 5 (p. 16) and section 1.1 (a), (b), (d) for the copper constants",
+   "document": "Copper Wire Tables, NBS Handbook 100 (1966), Table 5 (p. 16) and section 1.1 (a), (b), (d) for the copper constants; Table 6 (p. 17) for the 19 AWG area",
    "url": "https://nvlpubs.nist.gov/nistpubs/Legacy/hb/nbshandbook100.pdf",
    "retrieved": "2026-10-19",
    "attribution": "Source: NIST (NBS) Handbook 100, Copper Wire Tables, Table 5 — retrieved Oct 2026"
@@ -472,7 +472,7 @@
    "weight_cu_lb_per_1000ft": 3.9,
    "weight_cu_kg_per_km": 5.804,
    "r75_cu_solid_ohm_per_1000ft_derived": 9.79,
-   "note": "HB100 Table 5 OCR reads 1200; 1290 follows from the printed 35.9 mil diameter (35.9^2 = 1288.8, 3 s.f.), the printed 0.00101 in2 and 8.05 ohm/1000 ft. Confirm against the scan.",
+   "note": "Area 1290 cmil as printed in NBS Handbook 100 Table 6 (p. 17), OCR line '19 35.9 1290 .001 01 7.41 8.05 8.21 9.00 9.79 10.6 13.7' (read twice, 2026-10-20). The Table 5 row's text layer reads '1200' in both available PDFs (the same scan); the printed Table 5 glyph has not been seen. Cite Table 6 for this cell.",
    "iec60228_nearest_mm2": 0.75,
    "iec60228_next_larger_mm2": 0.75
   },

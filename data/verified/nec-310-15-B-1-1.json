@@ -1,130 +1,131 @@
 {
- "id": "nec-310-15-B-1-1",
- "title": "Ambient temperature correction factors based on 30 °C (86 °F)",
- "edition": "NFPA 70-2023 Table 310.15(B)(1)(1) (as base text in NFPA 2026 First Draft; no revision changed values)",
- "source": {
-  "publisher": "NFPA",
-  "document": "CMP-6 First Draft final ballot results, A2025 cycle (29 Apr 2024), FR-7961 context",
-  "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_FD_BallotFinal.pdf",
-  "retrieved": "2026-10-19",
-  "attribution": "Source: NFPA 70 (NEC) 2023, Table 310.15(B)(1)(1) — retrieved Oct 2026"
- },
- "notes": [
-  "Multiply table ampacity by the factor for the conductor temperature rating column.",
-  "Formula 310.15(B) alternative and Table 310.15(B)(1)(2) (40 °C basis) not captured."
- ],
- "rows": [
-  {
-   "ambient_c": "10 or less",
-   "f_60": 1.29,
-   "f_75": 1.2,
-   "f_90": 1.15,
-   "ambient_f": "50 or less"
+  "id": "nec-310-15-B-1-1",
+  "title": "Ambient temperature correction factors based on 30 °C (86 °F)",
+  "edition": "NFPA 70-2023 Table 310.15(B)(1)(1) (as base text in NFPA 2026 First Draft; no revision changed values)",
+  "source": {
+    "publisher": "NFPA",
+    "document": "CMP-6 First Draft final ballot results, A2025 cycle (29 Apr 2024), FR-7961 context",
+    "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_FD_BallotFinal.pdf",
+    "retrieved": "2026-10-19",
+    "attribution": "Source: NFPA 70 (NEC) 2023, Table 310.15(B)(1)(1) — retrieved Oct 2026"
   },
-  {
-   "ambient_c": "11–15",
-   "f_60": 1.22,
-   "f_75": 1.15,
-   "f_90": 1.12,
-   "ambient_f": "51–59"
-  },
-  {
-   "ambient_c": "16–20",
-   "f_60": 1.15,
-   "f_75": 1.11,
-   "f_90": 1.08,
-   "ambient_f": "60–68"
-  },
-  {
-   "ambient_c": "21–25",
-   "f_60": 1.08,
-   "f_75": 1.05,
-   "f_90": 1.04,
-   "ambient_f": "69–77"
-  },
-  {
-   "ambient_c": "26–30",
-   "f_60": 1.0,
-   "f_75": 1.0,
-   "f_90": 1.0,
-   "ambient_f": "78–86"
-  },
-  {
-   "ambient_c": "31–35",
-   "f_60": 0.91,
-   "f_75": 0.94,
-   "f_90": 0.96,
-   "ambient_f": "87–95"
-  },
-  {
-   "ambient_c": "36–40",
-   "f_60": 0.82,
-   "f_75": 0.88,
-   "f_90": 0.91,
-   "ambient_f": "96–104"
-  },
-  {
-   "ambient_c": "41–45",
-   "f_60": 0.71,
-   "f_75": 0.82,
-   "f_90": 0.87,
-   "ambient_f": "105–113"
-  },
-  {
-   "ambient_c": "46–50",
-   "f_60": 0.58,
-   "f_75": 0.75,
-   "f_90": 0.82,
-   "ambient_f": "114–122"
-  },
-  {
-   "ambient_c": "51–55",
-   "f_60": 0.41,
-   "f_75": 0.67,
-   "f_90": 0.76,
-   "ambient_f": "123–131"
-  },
-  {
-   "ambient_c": "56–60",
-   "f_60": null,
-   "f_75": 0.58,
-   "f_90": 0.71,
-   "ambient_f": "132–140"
-  },
-  {
-   "ambient_c": "61–65",
-   "f_60": null,
-   "f_75": 0.47,
-   "f_90": 0.65,
-   "ambient_f": "141–149"
-  },
-  {
-   "ambient_c": "66–70",
-   "f_60": null,
-   "f_75": 0.33,
-   "f_90": 0.58,
-   "ambient_f": "150–158"
-  },
-  {
-   "ambient_c": "71–75",
-   "f_60": null,
-   "f_75": null,
-   "f_90": 0.5,
-   "ambient_f": "159–167"
-  },
-  {
-   "ambient_c": "76–80",
-   "f_60": null,
-   "f_75": null,
-   "f_90": 0.41,
-   "ambient_f": "168–176"
-  },
-  {
-   "ambient_c": "81–85",
-   "f_60": null,
-   "f_75": null,
-   "f_90": 0.29,
-   "ambient_f": "177–185"
-  }
- ]
+  "notes": [
+    "Multiply table ampacity by the factor for the conductor temperature rating column.",
+    "Formula 310.15(B) alternative and Table 310.15(B)(1)(2) (40 °C basis) not captured.",
+    "Re-checked 2026-10-20: 48/48 factors also match Elliott Electric (2020 NEC) and Schneider (2017) reproductions (corroboration). No 2023-labelled document seen; values unchanged across 2017, 2020 and the 2026 First Draft."
+  ],
+  "rows": [
+    {
+      "ambient_c": "10 or less",
+      "f_60": 1.29,
+      "f_75": 1.2,
+      "f_90": 1.15,
+      "ambient_f": "50 or less"
+    },
+    {
+      "ambient_c": "11–15",
+      "f_60": 1.22,
+      "f_75": 1.15,
+      "f_90": 1.12,
+      "ambient_f": "51–59"
+    },
+    {
+      "ambient_c": "16–20",
+      "f_60": 1.15,
+      "f_75": 1.11,
+      "f_90": 1.08,
+      "ambient_f": "60–68"
+    },
+    {
+      "ambient_c": "21–25",
+      "f_60": 1.08,
+      "f_75": 1.05,
+      "f_90": 1.04,
+      "ambient_f": "69–77"
+    },
+    {
+      "ambient_c": "26–30",
+      "f_60": 1.0,
+      "f_75": 1.0,
+      "f_90": 1.0,
+      "ambient_f": "78–86"
+    },
+    {
+      "ambient_c": "31–35",
+      "f_60": 0.91,
+      "f_75": 0.94,
+      "f_90": 0.96,
+      "ambient_f": "87–95"
+    },
+    {
+      "ambient_c": "36–40",
+      "f_60": 0.82,
+      "f_75": 0.88,
+      "f_90": 0.91,
+      "ambient_f": "96–104"
+    },
+    {
+      "ambient_c": "41–45",
+      "f_60": 0.71,
+      "f_75": 0.82,
+      "f_90": 0.87,
+      "ambient_f": "105–113"
+    },
+    {
+      "ambient_c": "46–50",
+      "f_60": 0.58,
+      "f_75": 0.75,
+      "f_90": 0.82,
+      "ambient_f": "114–122"
+    },
+    {
+      "ambient_c": "51–55",
+      "f_60": 0.41,
+      "f_75": 0.67,
+      "f_90": 0.76,
+      "ambient_f": "123–131"
+    },
+    {
+      "ambient_c": "56–60",
+      "f_60": null,
+      "f_75": 0.58,
+      "f_90": 0.71,
+      "ambient_f": "132–140"
+    },
+    {
+      "ambient_c": "61–65",
+      "f_60": null,
+      "f_75": 0.47,
+      "f_90": 0.65,
+      "ambient_f": "141–149"
+    },
+    {
+      "ambient_c": "66–70",
+      "f_60": null,
+      "f_75": 0.33,
+      "f_90": 0.58,
+      "ambient_f": "150–158"
+    },
+    {
+      "ambient_c": "71–75",
+      "f_60": null,
+      "f_75": null,
+      "f_90": 0.5,
+      "ambient_f": "159–167"
+    },
+    {
+      "ambient_c": "76–80",
+      "f_60": null,
+      "f_75": null,
+      "f_90": 0.41,
+      "ambient_f": "168–176"
+    },
+    {
+      "ambient_c": "81–85",
+      "f_60": null,
+      "f_75": null,
+      "f_90": 0.29,
+      "ambient_f": "177–185"
+    }
+  ]
 }

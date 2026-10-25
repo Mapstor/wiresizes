@@ -1,0 +1,818 @@
+[
+ {
+  "ref": "240.4(D)",
+  "edition_note": "2023 = NFPA 70-2023 via Eaton bus-ele-br-11318 and Leviton Captain Code 2023 node 313 (NFPA permission notices); draft = NFPA 70 A2025 CMP-10 Second Draft SR-8377 (Oct 2024), flattened redline",
+  "retrieved": "2026-10-20",
+  "leadin_2023": {
+   "text": "Unless specifically permitted in 240.4(E) or (G), the overcurrent protection shall not exceed that required by 240.4(D)(1) through (D)(8) after any correction factors for ambient temperature and number of conductors have been applied.",
+   "status": "VERIFIED-2023"
+  },
+  "items": [
+   {
+    "item": "(D)(1)",
+    "conductor": "18 AWG",
+    "material": "Cu",
+    "max_a": 7,
+    "conditions": "(1) Continuous loads do not exceed 5.6 amperes. (2) Overcurrent protection is provided by one of the following: a. Branch-circuit-rated circuit breakers listed and marked for use with 18 AWG copper [wire|conductor]; b. Branch-circuit-rated fuses listed and marked for use with 18 AWG copper [wire|conductor]; c. Class CC, Class CF, Class J, or Class T fuses.",
+    "status": "VERIFIED-2023",
+    "caveat": "Eaton text layer reads 'copper wire conductor' (flattened markup); 2023 word choice UNVERIFIED. Class CF new in 2023.",
+    "sources": [
+     "Eaton bus-ele-br-11318",
+     "NFPA SR-8377 (draft, identical values)"
+    ]
+   },
+   {
+    "item": "(D)(2)",
+    "conductor": "16 AWG",
+    "material": "Cu",
+    "max_a": 10,
+    "conditions": "(1) Continuous loads do not exceed 8 amperes. (2) Overcurrent protection is provided by one of the following: a. Branch-circuit-rated circuit breakers listed and marked for use with 16 AWG copper [wire|conductor]; b. Branch-circuit-rated fuses listed and marked for use with 16 AWG copper [wire|conductor]; c. Class CC, Class CF, Class J, or Class T fuses.",
+    "status": "VERIFIED-2023",
+    "caveat": "Eaton prints the heading as '240.4(D)(1) 16 AWG Copper.'; item number (2) seen only in SR-8377 (VERIFIED-draft)",
+    "sources": [
+     "Eaton bus-ele-br-11318",
+     "NFPA SR-8377 (draft)"
+    ]
+   },
+   {
+    "item": "(D)(3)",
+    "conductor": "14 AWG",
+    "material": "CCA",
+    "max_a": 10,
+    "conditions": "(1) Continuous loads do not exceed 8 amperes. (2) Overcurrent protection is provided by one of the following: a. Branch-circuit-rated circuit breakers are listed and marked for use with 14 AWG copper-clad aluminum conductor. b. Branch-circuit-rated fuses are listed and marked for use with 14 AWG copper-clad aluminum conductor.",
+    "status": "VERIFIED-2023",
+    "sources": [
+     "Leviton Captain Code 2023 node 313",
+     "NFPA SR-8377 (draft, consistent)"
+    ]
+   },
+   {
+    "item": "(D)(4)",
+    "conductor": "14 AWG",
+    "material": "Cu",
+    "max_a": 15,
+    "conditions": "none printed",
+    "status": "VERIFIED-draft",
+    "status_2023": "UNVERIFIED",
+    "sources": [
+     "NFPA SR-8377 raw: '(4) 14 AWG copper: Copper.15 amperes'"
+    ]
+   },
+   {
+    "item": "(D)(5)",
+    "conductor": "12 AWG",
+    "material": "Al and CCA",
+    "max_a": 15,
+    "conditions": "none printed",
+    "status": "VERIFIED-draft",
+    "status_2023": "UNVERIFIED",
+    "sources": [
+     "NFPA SR-8377 raw: '(5) 12 AWG aluminum and copper-clad aluminum: Aluminum and Copper-Clad' / 'Aluminum.15 amperes'"
+    ],
+    "corroboration": [
+     "Daily Reporter 2024 (240.4(D)(5), 15 A)",
+     "Encore Wire (older wording)"
+    ]
+   },
+   {
+    "item": "(D)(6)",
+    "conductor": "12 AWG",
+    "material": "Cu",
+    "max_a": 20,
+    "conditions": "none printed",
+    "status": "VERIFIED-draft",
+    "status_2023": "UNVERIFIED",
+    "sources": [
+     "NFPA SR-8377 raw: '(6) 12 AWG copper: Copper.20 amperes'"
+    ]
+   },
+   {
+    "item": "(D)(7)",
+    "conductor": "10 AWG",
+    "material": "Al and CCA",
+    "max_a": 25,
+    "conditions": "none printed",
+    "status": "VERIFIED-draft",
+    "status_2023": "UNVERIFIED",
+    "sources": [
+     "NFPA SR-8377 raw: '(7) 10 AWG aluminum and copper-clad aluminum: Aluminum and CopperClad Aluminum.25 amperes'"
+    ],
+    "corroboration": [
+     "Encore Wire (older wording)"
+    ]
+   },
+   {
+    "item": "(D)(8)",
+    "conductor": "10 AWG",
+    "material": "Cu",
+    "max_a": 30,
+    "conditions": "none printed",
+    "status": "VERIFIED-draft",
+    "status_2023": "UNVERIFIED",
+    "sources": [
+     "NFPA SR-8377 raw: '(8) 10 AWG copper: Copper.30 amperes'"
+    ]
+   }
+  ],
+  "pulls_match": true
+ },
+ {
+  "ref": "240.4(B)",
+  "edition": "NFPA 70 A2025 CMP-10 Second Draft, SR-8377 (2026 draft, flattened redline)",
+  "status": "VERIFIED-draft",
+  "status_2023": "UNVERIFIED",
+  "retrieved": "2026-10-20",
+  "heading_2026_draft": "Overcurrent Protective Devices Rated 800 Amperes or Less.",
+  "heading_2023_as_old_text_in_SR_statement": "Overcurrent Devices Rated 800 Amperes or Less",
+  "leadin_as_extracted": "The next higher standard OCPDovercurrent device rating (above the ampacity of the conductors being protected) shall be permitted to be used, provided all of the following conditions are met:",
+  "conditions": [
+   "(1) The conductors being protected are not part of a branch circuit supplying more than one receptacle for cord-and-plug-connected portable loads.",
+   "(2) The ampacity of the conductors does not correspond with the standard ampere rating of a fuse or a circuit breaker without overload trip adjustments above its rating (but that shall be permitted to have other trip or rating adjustments).",
+   "(3) The next higher standard rating selected does not exceed 800 amperes."
+  ],
+  "unplaced_phrase_pull1_only": "as shown in Table 240.6(A) where restricted access in accordance with 240.6(C) is provided"
+ },
+ {
+  "ref": "240.6(A)",
+  "edition": "NFPA 70-2023 (Eaton bus-ele-br-11318, 'Reproduced with permission of NFPA from NFPA 70®, National Electrical Code®, 2023 edition.')",
+  "retrieved": "2026-10-20",
+  "breaker_and_fuse_a": [
+   10,
+   15,
+   20,
+   25,
+   30,
+   35,
+   40,
+   45,
+   50,
+   60,
+   70,
+   80,
+   90,
+   100,
+   110,
+   125,
+   150,
+   175,
+   200,
+   225,
+   250,
+   300,
+   350,
+   400,
+   450,
+   500,
+   600,
+   700,
+   800,
+   1000,
+   1200,
+   1600,
+   2000,
+   2500,
+   3000,
+   4000,
+   5000,
+   6000
+  ],
+  "breaker_and_fuse_status": "VERIFIED-2023 (2 pulls match, 38 values)",
+  "fuse_additional_a": null,
+  "fuse_additional_status": "CONFLICTING",
+  "fuse_additional_readings": {
+   "code_text_as_extracted": [
+    1,
+    3,
+    6,
+    10,
+    601
+   ],
+   "brochure_explanation": [
+    1,
+    3,
+    6,
+    601
+   ]
+  },
+  "nonstandard_sentence": "The use of fuses and inverse time circuit breakers with nonstandard ampere ratings shall be permitted.",
+  "change_2020_to_2023": {
+   "text": "10 A added to Table 240.6(A) for inverse time circuit breakers; before 2023 the smallest standard breaker rating was 15 A",
+   "status": "VERIFIED-2023 (Eaton explanation)"
+  },
+  "list_2020": "UNVERIFIED",
+  "change_2023_to_2026": "none seen in CMP-10 Second Draft; UNVERIFIED for final 2026"
+ },
+ {
+  "ref": "Table 310.16",
+  "edition": "NFPA 70-2023 as reprinted in NFPA TIA Log 1691 public-comment circulation (14 Feb 2023); TIA failed",
+  "status": "VERIFIED-2023",
+  "pulls_match": true,
+  "retrieved": "2026-10-20",
+  "columns": [
+   "cu60",
+   "cu75",
+   "cu90",
+   "al60",
+   "al75",
+   "al90"
+  ],
+  "rows_confirmed": [
+   {
+    "size": "18",
+    "cu60": null,
+    "cu75": null,
+    "cu90": 14,
+    "al60": null,
+    "al75": null,
+    "al90": null,
+    "note": "column placement inferred from token order"
+   },
+   {
+    "size": "16",
+    "cu60": null,
+    "cu75": null,
+    "cu90": 18,
+    "al60": null,
+    "al75": null,
+    "al90": null,
+    "note": "column placement inferred from token order"
+   },
+   {
+    "size": "14",
+    "cu60": 15,
+    "cu75": 20,
+    "cu90": 25,
+    "al60": null,
+    "al75": null,
+    "al90": null,
+    "note": "reprint shows TIA-proposed al60 '10†'; TIA failed, so 2023 printed cell is blank"
+   },
+   {
+    "size": "12",
+    "cu60": 20,
+    "cu75": 25,
+    "cu90": 30,
+    "al60": 15,
+    "al75": 20,
+    "al90": 25
+   },
+   {
+    "size": "10",
+    "cu60": 30,
+    "cu75": 35,
+    "cu90": 40,
+    "al60": 25,
+    "al75": 30,
+    "al90": 35
+   },
+   {
+    "size": "8",
+    "cu60": 40,
+    "cu75": 50,
+    "cu90": 55,
+    "al60": 35,
+    "al75": 40,
+    "al90": 45
+   },
+   {
+    "size": "6",
+    "cu60": 55,
+    "cu75": 65,
+    "cu90": 75,
+    "al60": 40,
+    "al75": 50,
+    "al90": 55
+   },
+   {
+    "size": "4",
+    "cu60": 70,
+    "cu75": 85,
+    "cu90": 95,
+    "al60": 55,
+    "al75": 65,
+    "al90": 75
+   },
+   {
+    "size": "3",
+    "cu60": 85,
+    "cu75": 100,
+    "cu90": 115,
+    "al60": 65,
+    "al75": 75,
+    "al90": 85
+   },
+   {
+    "size": "2",
+    "cu60": 95,
+    "cu75": 115,
+    "cu90": 130,
+    "al60": 75,
+    "al75": 90,
+    "al90": 100
+   },
+   {
+    "size": "1",
+    "cu60": 110,
+    "cu75": 130,
+    "cu90": 145,
+    "al60": 85,
+    "al75": 100,
+    "al90": 115
+   },
+   {
+    "size": "1/0",
+    "cu60": 125,
+    "cu75": 150,
+    "cu90": 170,
+    "al60": 100,
+    "al75": 120,
+    "al90": 135
+   },
+   {
+    "size": "2/0",
+    "cu60": 145,
+    "cu75": 175,
+    "cu90": 195,
+    "al60": 115,
+    "al75": 135,
+    "al90": 150
+   },
+   {
+    "size": "3/0",
+    "cu60": 165,
+    "cu75": 200,
+    "cu90": 225,
+    "al60": 130,
+    "al75": 155,
+    "al90": 175
+   },
+   {
+    "size": "4/0",
+    "cu60": 195,
+    "cu75": 230,
+    "cu90": 260,
+    "al60": 150,
+    "al75": 180,
+    "al90": 205
+   },
+   {
+    "size": "250",
+    "cu60": 215,
+    "cu75": 255,
+    "cu90": 290,
+    "al60": 170,
+    "al75": 205,
+    "al90": 230
+   },
+   {
+    "size": "300",
+    "cu60": 240,
+    "cu75": 285,
+    "cu90": 320,
+    "al60": 195,
+    "al75": 230,
+    "al90": 260
+   },
+   {
+    "size": "350",
+    "cu60": 260,
+    "cu75": 310,
+    "cu90": 350,
+    "al60": 210,
+    "al75": 250,
+    "al90": 280
+   },
+   {
+    "size": "400",
+    "cu60": 280,
+    "cu75": 335,
+    "cu90": 380,
+    "al60": 225,
+    "al75": 270,
+    "al90": 305
+   },
+   {
+    "size": "500",
+    "cu60": 320,
+    "cu75": 380,
+    "cu90": 430,
+    "al60": 260,
+    "al75": 310,
+    "al90": 350
+   },
+   {
+    "size": "600",
+    "cu60": 350,
+    "cu75": 420,
+    "cu90": 475,
+    "al60": 285,
+    "al75": 340,
+    "al90": 385
+   },
+   {
+    "size": "700",
+    "cu60": 385,
+    "cu75": 460,
+    "cu90": 520,
+    "al60": 315,
+    "al75": 375,
+    "al90": 425
+   },
+   {
+    "size": "750",
+    "cu60": 400,
+    "cu75": 475,
+    "cu90": 535,
+    "al60": 320,
+    "al75": 385,
+    "al90": 435
+   },
+   {
+    "size": "800",
+    "cu60": 410,
+    "cu75": 490,
+    "cu90": 555,
+    "al60": 330,
+    "al75": 395,
+    "al90": 445
+   },
+   {
+    "size": "900",
+    "cu60": 435,
+    "cu75": 520,
+    "cu90": 585,
+    "al60": 355,
+    "al75": 425,
+    "al90": 480
+   },
+   {
+    "size": "1000",
+    "cu60": 455,
+    "cu75": 545,
+    "cu90": 615,
+    "al60": 375,
+    "al75": 445,
+    "al90": 500
+   },
+   {
+    "size": "1250",
+    "cu60": 495,
+    "cu75": 590,
+    "cu90": 665,
+    "al60": 405,
+    "al75": 485,
+    "al90": 545
+   },
+   {
+    "size": "1500",
+    "cu60": 525,
+    "cu75": 625,
+    "cu90": 705,
+    "al60": 435,
+    "al75": 520,
+    "al90": 585
+   },
+   {
+    "size": "1750",
+    "cu60": 545,
+    "cu75": 650,
+    "cu90": 735,
+    "al60": 455,
+    "al75": 545,
+    "al90": 615
+   },
+   {
+    "size": "2000",
+    "cu60": 555,
+    "cu75": 665,
+    "cu90": 750,
+    "al60": 470,
+    "al75": 560,
+    "al90": 630
+   }
+  ],
+  "rows_conflicting": [
+   {
+    "size": "2/0",
+    "cell": "cu90",
+    "source": "Schneider 2017 page (class 4)",
+    "source_value": "145",
+    "pack_value": "195",
+    "nfpa_primary": "195",
+    "judgement": "error on Schneider page"
+   },
+   {
+    "size": "3/0",
+    "cell": "cu90",
+    "source": "Schneider 2017 page (class 4)",
+    "source_value": "165",
+    "pack_value": "225",
+    "nfpa_primary": "225",
+    "judgement": "error on Schneider page"
+   },
+   {
+    "size": "4/0",
+    "cell": "cu90",
+    "source": "Schneider 2017 page (class 4)",
+    "source_value": "195",
+    "pack_value": "260",
+    "nfpa_primary": "260",
+    "judgement": "error on Schneider page"
+   },
+   {
+    "size": "2000",
+    "cell": "cu75",
+    "source": "Schneider 2017 page (class 4)",
+    "source_value": "655",
+    "pack_value": "665",
+    "nfpa_primary": "665",
+    "judgement": "error on Schneider page"
+   }
+  ]
+ },
+ {
+  "ref": "Table 310.15(B)(1)(1)",
+  "edition": "NFPA 70 A2025 CMP-6 First Draft ballot (FR-7961 context; base text 2023)",
+  "status": "VERIFIED-draft",
+  "status_2023": "UNVERIFIED (no 2023 document)",
+  "nfpa_pulls": 1,
+  "retrieved": "2026-10-20",
+  "rows_confirmed": [
+   {
+    "ambient_c": "10 or less",
+    "f60": 1.29,
+    "f75": 1.2,
+    "f90": 1.15,
+    "ambient_f": "50 or less"
+   },
+   {
+    "ambient_c": "11-15",
+    "f60": 1.22,
+    "f75": 1.15,
+    "f90": 1.12,
+    "ambient_f": "51-59"
+   },
+   {
+    "ambient_c": "16-20",
+    "f60": 1.15,
+    "f75": 1.11,
+    "f90": 1.08,
+    "ambient_f": "60-68"
+   },
+   {
+    "ambient_c": "21-25",
+    "f60": 1.08,
+    "f75": 1.05,
+    "f90": 1.04,
+    "ambient_f": "69-77"
+   },
+   {
+    "ambient_c": "26-30",
+    "f60": 1.0,
+    "f75": 1.0,
+    "f90": 1.0,
+    "ambient_f": "78-86"
+   },
+   {
+    "ambient_c": "31-35",
+    "f60": 0.91,
+    "f75": 0.94,
+    "f90": 0.96,
+    "ambient_f": "87-95"
+   },
+   {
+    "ambient_c": "36-40",
+    "f60": 0.82,
+    "f75": 0.88,
+    "f90": 0.91,
+    "ambient_f": "96-104"
+   },
+   {
+    "ambient_c": "41-45",
+    "f60": 0.71,
+    "f75": 0.82,
+    "f90": 0.87,
+    "ambient_f": "105-113"
+   },
+   {
+    "ambient_c": "46-50",
+    "f60": 0.58,
+    "f75": 0.75,
+    "f90": 0.82,
+    "ambient_f": "114-122"
+   },
+   {
+    "ambient_c": "51-55",
+    "f60": 0.41,
+    "f75": 0.67,
+    "f90": 0.76,
+    "ambient_f": "123-131"
+   },
+   {
+    "ambient_c": "56-60",
+    "f60": null,
+    "f75": 0.58,
+    "f90": 0.71,
+    "ambient_f": "132-140"
+   },
+   {
+    "ambient_c": "61-65",
+    "f60": null,
+    "f75": 0.47,
+    "f90": 0.65,
+    "ambient_f": "141-149"
+   },
+   {
+    "ambient_c": "66-70",
+    "f60": null,
+    "f75": 0.33,
+    "f90": 0.58,
+    "ambient_f": "150-158"
+   },
+   {
+    "ambient_c": "71-75",
+    "f60": null,
+    "f75": null,
+    "f90": 0.5,
+    "ambient_f": "159-167"
+   },
+   {
+    "ambient_c": "76-80",
+    "f60": null,
+    "f75": null,
+    "f90": 0.41,
+    "ambient_f": "168-176"
+   },
+   {
+    "ambient_c": "81-85",
+    "f60": null,
+    "f75": null,
+    "f90": 0.29,
+    "ambient_f": "177-185"
+   }
+  ],
+  "rows_conflicting": [],
+  "cross_checks": [
+   {
+    "source": "Elliott Electric (2020 NEC Table 310.15(B)(1)), class 4",
+    "match": "48/48 factors"
+   },
+   {
+    "source": "Schneider (2017 Table 310.15(B)(2)(a)), class 4",
+    "match": "48/48 factors, 16/16 F ranges"
+   }
+  ]
+ },
+ {
+  "ref": "Table 310.15(C)(1)",
+  "edition": "NFPA 70 A2025 CMP-6 First Draft ballot (FR-8033; base text 2023)",
+  "status": "VERIFIED-draft",
+  "status_2023": "UNVERIFIED (no 2023 document)",
+  "nfpa_pulls": 1,
+  "retrieved": "2026-10-20",
+  "rows_confirmed": [
+   {
+    "conductors": "4-6",
+    "percent": 80
+   },
+   {
+    "conductors": "7-9",
+    "percent": 70
+   },
+   {
+    "conductors": "10-20",
+    "percent": 50
+   },
+   {
+    "conductors": "21-30",
+    "percent": 45
+   },
+   {
+    "conductors": "31-40",
+    "percent": 40
+   },
+   {
+    "conductors": "41 and above",
+    "percent": 35
+   }
+  ],
+  "rows_conflicting": [],
+  "cross_checks": [
+   {
+    "source": "Schneider (2017 Table 310.15(B)(3)(a)), class 4",
+    "match": "6/6"
+   }
+  ]
+ },
+ {
+  "ref": "Table 310.12",
+  "edition": "NFPA 70 A2025 CMP-6 First Draft ballot FR-7943 (labelled 'Table 310.12(A)'); 2011 NEC Table 310.15(B)(7) via NC OSFM",
+  "status": "VERIFIED-draft + VERIFIED-other-edition (2011)",
+  "status_2023": "UNVERIFIED (no 2023 document); label 'Table 310.12' vs 'Table 310.12(A)' in 2023 unresolved",
+  "nfpa_pulls": 1,
+  "retrieved": "2026-10-20",
+  "rows_confirmed": [
+   {
+    "rating_a": 100,
+    "cu": "4",
+    "al_cca": "2"
+   },
+   {
+    "rating_a": 110,
+    "cu": "3",
+    "al_cca": "1"
+   },
+   {
+    "rating_a": 125,
+    "cu": "2",
+    "al_cca": "1/0"
+   },
+   {
+    "rating_a": 150,
+    "cu": "1",
+    "al_cca": "2/0"
+   },
+   {
+    "rating_a": 175,
+    "cu": "1/0",
+    "al_cca": "3/0"
+   },
+   {
+    "rating_a": 200,
+    "cu": "2/0",
+    "al_cca": "4/0"
+   },
+   {
+    "rating_a": 225,
+    "cu": "3/0",
+    "al_cca": "250"
+   },
+   {
+    "rating_a": 250,
+    "cu": "4/0",
+    "al_cca": "300"
+   },
+   {
+    "rating_a": 300,
+    "cu": "250",
+    "al_cca": "350"
+   },
+   {
+    "rating_a": 350,
+    "cu": "350",
+    "al_cca": "500"
+   },
+   {
+    "rating_a": 400,
+    "cu": "400",
+    "al_cca": "600"
+   }
+  ],
+  "rows_conflicting": [],
+  "cross_checks": [
+   {
+    "source": "NC OSFM 2018 and 2017 interpretations (2011 NEC Table 310.15(B)(7)), class 3 government",
+    "match": "11/11"
+   },
+   {
+    "source": "Mike Holt 2020 Exam Prep Table 310.12, class 4",
+    "match": "11/11"
+   }
+  ],
+  "text": {
+   "scope": "services/feeders rated 100 through 400 A supplying the entire load of a one-family dwelling or of an individual dwelling unit in a two-family or multifamily dwelling, 120/240 V single-phase",
+   "rule": "ampacity not less than 83 percent of the service (or feeder) rating",
+   "status_scope_and_rule": "VERIFIED-draft",
+   "310_12_C_D_2023": "UNVERIFIED"
+  }
+ },
+ {
+  "ref": "2026 final text",
+  "retrieved": "2026-10-20",
+  "table_310_16_16awg_cu_and_14awg_cca_rows_kept": {
+   "status": "UNVERIFIED",
+   "corroboration": "IAEI Winter 2026 (Mello/Graser): ampacities for 16 AWG Cu and 14 AWG CCA added 'in the 60 °C, 75 °C, and 90 °C temperature columns'",
+   "values": "not seen",
+   "cam_70_105_outcome": "not seen"
+  },
+  "table_310_12A_label_and_values": {
+   "status": "UNVERIFIED",
+   "draft_evidence": "2026 First Draft FR-7943 'Table 310.12(A)', values identical to 2011/2020"
+  },
+  "240_4_D_2026": {
+   "status": "VERIFIED-draft (SR-8377); final UNVERIFIED"
+  },
+  "240_6_A_2026": {
+   "status": "no revision seen; final UNVERIFIED"
+  }
+ },
+ {
+  "ref": "NBS Handbook 100 Table 5, 19 AWG",
+  "url": "https://nvlpubs.nist.gov/nistpubs/Legacy/hb/nbshandbook100.pdf",
+  "raw_text_layer": "19 35.9 1200 .001 01 8.05 124 3.90 256 2.06 .485",
+  "status": "UNVERIFIED",
+  "page_image_seen": false,
+  "consistency": "other columns fit ~1289 cmil (35.9^2 = 1288.81; 0.001012 in^2; 8.047 ohm/1000 ft), not 1200 (0.000942 in^2; 8.643 ohm/1000 ft)",
+  "retrieved": "2026-10-20"
+ }
+]

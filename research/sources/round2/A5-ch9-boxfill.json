@@ -1,0 +1,795 @@
+[
+ {
+  "ref": "Chapter 9 Table 1",
+  "edition": "NFPA 70-2008 text (Wheatland brochure; NFPA notice (c)2007; brochure says it conforms to the 2011 NEC)",
+  "status": "VERIFIED-other-edition",
+  "status_2023": "UNVERIFIED",
+  "source": "P10",
+  "rows": [
+   {
+    "conductors": "1",
+    "percent": 53
+   },
+   {
+    "conductors": "2",
+    "percent": 31
+   },
+   {
+    "conductors": "over 2",
+    "percent": 40
+   }
+  ]
+ },
+ {
+  "ref": "Chapter 9 Notes to Tables 1-9",
+  "edition": "2023",
+  "notes": [
+   {
+    "note": 1,
+    "text": null,
+    "status": "UNVERIFIED"
+   },
+   {
+    "note": 2,
+    "text": null,
+    "status": "UNVERIFIED",
+    "exists": "VERIFIED-draft (N4 task-group reports; N2 SR-8057)"
+   },
+   {
+    "note": 3,
+    "text": null,
+    "status": "UNVERIFIED",
+    "corroboration": "C5, C6, C7 (category 4): EGCs are included in fill"
+   },
+   {
+    "note": 4,
+    "text": null,
+    "status": "UNVERIFIED",
+    "corroboration": "C1 (2011 paraphrase), C5, C7: nipples <= 24 in at 60 %"
+   },
+   {
+    "note": 6,
+    "text": null,
+    "status": "UNVERIFIED"
+   },
+   {
+    "note": 7,
+    "text": null,
+    "status": "UNVERIFIED",
+    "corroboration": "C1 (2011 paraphrase): 0.80 rounding rule"
+   },
+   {
+    "note": 8,
+    "text": null,
+    "status": "UNVERIFIED"
+   },
+   {
+    "note": 9,
+    "text": null,
+    "status": "UNVERIFIED",
+    "corroboration": "C5, C7: multiconductor cable counts as one conductor"
+   }
+  ]
+ },
+ [
+  {
+   "ref": "Chapter 9 Table 4",
+   "type": "EMT",
+   "status": "UNVERIFIED",
+   "rows": []
+  },
+  {
+   "ref": "Chapter 9 Table 4",
+   "type": "ENT",
+   "status": "UNVERIFIED",
+   "rows": []
+  },
+  {
+   "ref": "Chapter 9 Table 4",
+   "type": "FMC",
+   "status": "UNVERIFIED",
+   "rows": []
+  },
+  {
+   "ref": "Chapter 9 Table 4",
+   "type": "IMC",
+   "status": "UNVERIFIED",
+   "rows": []
+  },
+  {
+   "ref": "Chapter 9 Table 4",
+   "type": "LFNC-A",
+   "status": "UNVERIFIED",
+   "rows": []
+  },
+  {
+   "ref": "Chapter 9 Table 4",
+   "type": "LFNC-B",
+   "status": "UNVERIFIED",
+   "rows": []
+  },
+  {
+   "ref": "Chapter 9 Table 4",
+   "type": "LFMC",
+   "status": "UNVERIFIED",
+   "rows": []
+  },
+  {
+   "ref": "Chapter 9 Table 4",
+   "type": "RMC",
+   "status": "UNVERIFIED",
+   "rows": []
+  },
+  {
+   "ref": "Chapter 9 Table 4",
+   "type": "PVC Schedule 80",
+   "status": "UNVERIFIED",
+   "rows": []
+  },
+  {
+   "ref": "Chapter 9 Table 4",
+   "type": "PVC Schedule 40 and HDPE",
+   "status": "UNVERIFIED",
+   "rows": []
+  },
+  {
+   "ref": "Chapter 9 Table 4",
+   "type": "PVC Type A",
+   "status": "UNVERIFIED",
+   "rows": []
+  },
+  {
+   "ref": "Chapter 9 Table 4",
+   "type": "PVC Type EB",
+   "status": "UNVERIFIED",
+   "rows": []
+  }
+ ],
+ [
+  {
+   "ref": "Chapter 9 Table 5",
+   "type": "THHN/THWN/THWN-2",
+   "status": "UNVERIFIED",
+   "rows": [],
+   "note": "category-4 values in section 3 conflict at 2/0 (0.2223 vs 0.2233)"
+  },
+  {
+   "ref": "Chapter 9 Table 5",
+   "type": "XHHW/XHHW-2",
+   "status": "UNVERIFIED",
+   "rows": []
+  },
+  {
+   "ref": "Chapter 9 Table 5",
+   "type": "THW/THW-2",
+   "status": "UNVERIFIED",
+   "rows": []
+  },
+  {
+   "ref": "Chapter 9 Table 5",
+   "type": "TW",
+   "status": "UNVERIFIED",
+   "rows": []
+  },
+  {
+   "ref": "Chapter 9 Table 5",
+   "type": "RHW/RHW-2 with outer covering",
+   "status": "UNVERIFIED",
+   "rows": []
+  },
+  {
+   "ref": "Chapter 9 Table 5",
+   "type": "RHW/RHW-2 without outer covering",
+   "status": "UNVERIFIED",
+   "rows": []
+  },
+  {
+   "ref": "Chapter 9 Table 5",
+   "type": "USE-2",
+   "status": "UNVERIFIED",
+   "rows": []
+  }
+ ],
+ {
+  "ref": "Table 314.16(A)",
+  "title": "Metal Boxes",
+  "footnote_2011": "*Where no volume allowances are required by 314.16(B)(2) through 314.16(B)(5).",
+  "footnote_2023": "UNVERIFIED",
+  "rows": [
+   {
+    "box": "100 x 32 (4 x 1-1/4) round/octagonal",
+    "volume_cm3": 205,
+    "volume_in3": 12.5,
+    "max_18": 8,
+    "max_16": 7,
+    "max_14": 6,
+    "max_12": 5,
+    "max_10": 5,
+    "max_8": 4,
+    "max_6": 2,
+    "edition": "2023",
+    "status": "VERIFIED-2023",
+    "source": "N3 PI 3972",
+    "note": "2008/2011 reproductions print max_8 = 5"
+   },
+   {
+    "box": "100 x 38 (4 x 1-1/2) round/octagonal",
+    "volume_cm3": 254,
+    "volume_in3": 15.5,
+    "max_18": 10,
+    "max_16": 8,
+    "max_14": 7,
+    "max_12": 6,
+    "max_10": 6,
+    "max_8": 5,
+    "max_6": 3,
+    "edition": "2023",
+    "status": "VERIFIED-2023",
+    "source": "N3 PI 3972; same in P1-P4"
+   },
+   {
+    "box": "100 x 54 (4 x 2-1/8) round/octagonal",
+    "volume_cm3": 353,
+    "volume_in3": 21.5,
+    "max_18": 14,
+    "max_16": 12,
+    "max_14": 10,
+    "max_12": 9,
+    "max_10": 8,
+    "max_8": 7,
+    "max_6": 4,
+    "edition": "2023",
+    "status": "VERIFIED-2023",
+    "source": "N3 PI 3972; same in P1-P4"
+   },
+   {
+    "box": "100 x 32 (4 x 1-1/4) square",
+    "volume_cm3": 295,
+    "volume_in3": 18.0,
+    "max_18": 12,
+    "max_16": 10,
+    "max_14": 9,
+    "max_12": 8,
+    "max_10": 7,
+    "max_8": 6,
+    "max_6": 3,
+    "edition": "2023",
+    "status": "VERIFIED-2023",
+    "source": "N3 PI 3972; same in P1-P4"
+   },
+   {
+    "box": "100 x 38 (4 x 1-1/2) square",
+    "volume_cm3": 344,
+    "volume_in3": 21.0,
+    "max_18": 14,
+    "max_16": 12,
+    "max_14": 10,
+    "max_12": 9,
+    "max_10": 8,
+    "max_8": 7,
+    "max_6": 4,
+    "edition": "2023",
+    "status": "VERIFIED-2023",
+    "source": "N3 PI 3972; same in P1-P4"
+   },
+   {
+    "box": "100 x 54 (4 x 2-1/8) square",
+    "volume_cm3": 497,
+    "volume_in3": 30.3,
+    "max_18": 20,
+    "max_16": 17,
+    "max_14": 15,
+    "max_12": 13,
+    "max_10": 12,
+    "max_8": 10,
+    "max_6": 6,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "120 x 32 (4L x 1-1/4 as extracted) square",
+    "volume_cm3": 418,
+    "volume_in3": 25.5,
+    "max_18": 17,
+    "max_16": 14,
+    "max_14": 12,
+    "max_12": 11,
+    "max_10": 10,
+    "max_8": 8,
+    "max_6": 5,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "120 x 38 (4L x 1-1/2 as extracted) square",
+    "volume_cm3": 484,
+    "volume_in3": 29.5,
+    "max_18": 19,
+    "max_16": 16,
+    "max_14": 14,
+    "max_12": 13,
+    "max_10": 11,
+    "max_8": 9,
+    "max_6": 5,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "120 x 54 (4L x 2-1/8 as extracted) square",
+    "volume_cm3": 689,
+    "volume_in3": 42.0,
+    "max_18": 28,
+    "max_16": 24,
+    "max_14": 21,
+    "max_12": 18,
+    "max_10": 16,
+    "max_8": 14,
+    "max_6": 8,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "75 x 50 x 38 (3 x 2 x 1-1/2) device",
+    "volume_cm3": 123,
+    "volume_in3": 7.5,
+    "max_18": 5,
+    "max_16": 4,
+    "max_14": 3,
+    "max_12": 3,
+    "max_10": 3,
+    "max_8": 2,
+    "max_6": 1,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "75 x 50 x 50 (3 x 2 x 2) device",
+    "volume_cm3": 164,
+    "volume_in3": 10.0,
+    "max_18": 6,
+    "max_16": 5,
+    "max_14": 5,
+    "max_12": 4,
+    "max_10": 4,
+    "max_8": 3,
+    "max_6": 2,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "75 x 50 x 57 (3 x 2 x 2-1/4) device",
+    "volume_cm3": 172,
+    "volume_in3": 10.5,
+    "max_18": 7,
+    "max_16": 6,
+    "max_14": 5,
+    "max_12": 4,
+    "max_10": 4,
+    "max_8": 3,
+    "max_6": 2,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "75 x 50 x 65 (3 x 2 x 2-1/2) device",
+    "volume_cm3": 205,
+    "volume_in3": 12.5,
+    "max_18": 8,
+    "max_16": 7,
+    "max_14": 6,
+    "max_12": 5,
+    "max_10": 5,
+    "max_8": 4,
+    "max_6": 2,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "75 x 50 x 70 (3 x 2 x 2-3/4) device",
+    "volume_cm3": 230,
+    "volume_in3": 14.0,
+    "max_18": 9,
+    "max_16": 8,
+    "max_14": 7,
+    "max_12": 6,
+    "max_10": 5,
+    "max_8": 4,
+    "max_6": 2,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "75 x 50 x 90 (3 x 2 x 3-1/2) device",
+    "volume_cm3": 295,
+    "volume_in3": 18.0,
+    "max_18": 12,
+    "max_16": 10,
+    "max_14": 9,
+    "max_12": 8,
+    "max_10": 7,
+    "max_8": 6,
+    "max_6": 3,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "100 x 54 x 38 (4 x 2-1/8 x 1-1/2) device",
+    "volume_cm3": 169,
+    "volume_in3": 10.3,
+    "max_18": 6,
+    "max_16": 5,
+    "max_14": 5,
+    "max_12": 4,
+    "max_10": 4,
+    "max_8": 3,
+    "max_6": 2,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "100 x 54 x 48 (4 x 2-1/8 x 1-7/8) device",
+    "volume_cm3": 213,
+    "volume_in3": 13.0,
+    "max_18": 8,
+    "max_16": 7,
+    "max_14": 6,
+    "max_12": 5,
+    "max_10": 5,
+    "max_8": 4,
+    "max_6": 2,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "100 x 54 x 54 (4 x 2-1/8 x 2-1/8) device",
+    "volume_cm3": 238,
+    "volume_in3": 14.5,
+    "max_18": 9,
+    "max_16": 8,
+    "max_14": 7,
+    "max_12": 6,
+    "max_10": 5,
+    "max_8": 4,
+    "max_6": 2,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "95 x 50 x 65 (3-3/4 x 2 x 2-1/2) masonry box/gang",
+    "volume_cm3": 230,
+    "volume_in3": 14.0,
+    "max_18": 9,
+    "max_16": 8,
+    "max_14": 7,
+    "max_12": 6,
+    "max_10": 5,
+    "max_8": 4,
+    "max_6": 2,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "95 x 50 x 90 (3-3/4 x 2 x 3-1/2) masonry box/gang",
+    "volume_cm3": 344,
+    "volume_in3": 21.0,
+    "max_18": 14,
+    "max_16": 12,
+    "max_14": 10,
+    "max_12": 9,
+    "max_10": 8,
+    "max_8": 7,
+    "max_6": 4,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "min. 44.5 depth FS - single cover/gang (1-3/4)",
+    "volume_cm3": 221,
+    "volume_in3": 13.5,
+    "max_18": 9,
+    "max_16": 7,
+    "max_14": 6,
+    "max_12": 6,
+    "max_10": 5,
+    "max_8": 4,
+    "max_6": 2,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "min. 60.3 depth FD - single cover/gang (2-3/8)",
+    "volume_cm3": 295,
+    "volume_in3": 18.0,
+    "max_18": 12,
+    "max_16": 10,
+    "max_14": 9,
+    "max_12": 8,
+    "max_10": 7,
+    "max_8": 6,
+    "max_6": 3,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "min. 44.5 depth FS - multiple cover/gang (1-3/4)",
+    "volume_cm3": 295,
+    "volume_in3": 18.0,
+    "max_18": 12,
+    "max_16": 10,
+    "max_14": 9,
+    "max_12": 8,
+    "max_10": 7,
+    "max_8": 6,
+    "max_6": 3,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   },
+   {
+    "box": "min. 60.3 depth FD - multiple cover/gang (2-3/8)",
+    "volume_cm3": 395,
+    "volume_in3": 24.0,
+    "max_18": 16,
+    "max_16": 13,
+    "max_14": 12,
+    "max_12": 10,
+    "max_10": 9,
+    "max_8": 8,
+    "max_6": 4,
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1; P2-P4 agree"
+   }
+  ]
+ },
+ {
+  "ref": "Table 314.16(B)",
+  "title_2011_2020": "Table 314.16(B) Volume Allowance Required per Conductor",
+  "title_2023_2026draft": "Table 314.16(B)(1) Volume Allowance Required per Conductor",
+  "status": "VERIFIED-draft (N1, unrevised 2023 base) + VERIFIED-other-edition (P1 2011; P3/P4 2008)",
+  "rows": [
+   {
+    "size": "18",
+    "cm3": 24.6,
+    "in3": 1.5
+   },
+   {
+    "size": "16",
+    "cm3": 28.7,
+    "in3": 1.75
+   },
+   {
+    "size": "14",
+    "cm3": 32.8,
+    "in3": 2.0
+   },
+   {
+    "size": "12",
+    "cm3": 36.9,
+    "in3": 2.25
+   },
+   {
+    "size": "10",
+    "cm3": 41.0,
+    "in3": 2.5
+   },
+   {
+    "size": "8",
+    "cm3": 49.2,
+    "in3": 3.0
+   },
+   {
+    "size": "6",
+    "cm3": 81.9,
+    "in3": 5.0
+   }
+  ]
+ },
+ {
+  "ref": "314.16(B)(1)-(5)",
+  "note": "2023 has (B)(1) through (B)(6). Text joins verbatim segments with ' … ' (words may be missing at a boundary).",
+  "rules": [
+   {
+    "item": "(B) intro",
+    "edition": "2020",
+    "status": "VERIFIED-other-edition",
+    "source": "P8",
+    "text": "The volumes in paragraphs 314.16(B)(1) through (B)(5), as applicable, shall be added together. … No allowance shall be required for small fittings such as locknuts and bushings. … Each space within a box installed with a barrier shall be calculated separately."
+   },
+   {
+    "item": "(B) intro",
+    "edition": "2026 First Draft",
+    "status": "VERIFIED-draft",
+    "source": "N1 FR-7529",
+    "text": "The volumes in 314.16(B)(1) through (B)(6), as applicable, shall be added together.",
+    "change": "adds 'splicing connectors' to small fittings needing no allowance"
+   },
+   {
+    "item": "(1)",
+    "title": "Conductor Fill",
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1",
+    "text": "Each conductor that originates outside the box and terminates or is spliced within the box … each conductor that passes through the box without splice or termination shall be counted once. … Each loop or coil of unbroken conductor not less than twice the minimum length required for free … conductors in 300.14 shall be counted twice. … A conductor, no part of which leaves the box, shall not be counted."
+   },
+   {
+    "item": "(1) exception",
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1",
+    "text": "An equipment grounding conductor or conductors not over four fixture wires smaller than #14 AWG … shall be permitted to be omitted from the calculations where they enter a box from a domed luminaire … and terminate within that box."
+   },
+   {
+    "item": "(2)",
+    "title": "Clamp Fill",
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1",
+    "text": "Where one or more internal cable clamps, whether factory or field supplied, are present in the box, … a single volume allowance in accordance with Table 314.16(B) shall be made … based on the largest conductor present in the box. … No allowance shall be required for a cable connector with its clamping mechanism outside the box."
+   },
+   {
+    "item": "(3)",
+    "title": "Support Fittings Fill",
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1",
+    "text": "Where one or more luminaire studs or hickeys are present in the box, … a single volume allowance in accordance with Table 314.16(B) … shall be made for each type of fitting based on the largest conductor present in the box."
+   },
+   {
+    "item": "(4)",
+    "title": "Device or Equipment Fill",
+    "edition": "2011",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P1",
+    "text": "For each yoke or strap containing one or more devices or equipment, a double volume allowance … in accordance with Table 314.16(B) shall be made for each yoke or strap based on the largest conductor … connected to a device(s) or equipment supported by that yoke or strap. … A device or utilization equipment wider than a single 50mm (2 in.) device box as described in Table 314.16(A) … shall have double volume allowances provided for each gang required for mounting.",
+    "draft_2026": "FR-7525 adds 'Informational Note: See 314.24(B) for additional information on minimum box depth.'"
+   },
+   {
+    "item": "(5)",
+    "title": "Equipment Grounding Conductor Fill",
+    "edition": "2020",
+    "status": "VERIFIED-other-edition",
+    "status_2023": "UNVERIFIED",
+    "source": "P8",
+    "text": "Where up to four equipment grounding conductors or equipment bonding jumpers enter a box, … a single volume allowance in accordance with Table 314.16(B) shall be made based on the largest … A 1/4 volume allowance shall be made for each additional equipment grounding conductor … or equipment bonding jumper that enters the box, based on the largest equipment grounding conductor",
+    "superseded_2011_text": "single allowance for all EGCs/EBJs plus an additional allowance for a 250.146(D) isolated-ground set (P1)"
+   },
+   {
+    "item": "(6)",
+    "title": "Terminal Block Fill",
+    "edition": "2026 First Draft",
+    "status": "VERIFIED-draft",
+    "exists_in_2023": "VERIFIED (N4: PIs 1617, 1785, 325 filed on 2023 314.16(B)(6))",
+    "source": "N1 FR-7527; C2 (category 4, 2023)",
+    "text": "Where a terminal block is present in a box, a single volume allowance in accordance with Table 314.16(B)(1) … shall be made for each terminal block assembly based on the largest conductor(s) terminated to the assembly."
+   }
+  ]
+ },
+ {
+  "ref": "Chapter 9 Table 8",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rows": [],
+  "notes": [
+   "No authorized reproduction found in this run",
+   "2026 First Draft: First Revisions from PI 2158 (calculations only on NEC-recognized AWG/kcmil sizes, 'not square millimeters') and PI 259 ('adds clarity to the data'); final 2026 text not seen (N5)"
+  ]
+ },
+ {
+  "ref": "Chapter 9 Table 9",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rows": [],
+  "notes": [
+   "No reproduction found",
+   "No 2026 First Draft action recorded (N5)"
+  ]
+ },
+ {
+  "ref": "314.16(A)",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "source": "N3 PI 3972 (base text)",
+  "text": "The volume of a wiring enclosure (box) shall be the total volume of the assembled sections and, where used, the space provided by plaster rings, domed covers, extension rings, and so forth, that are marked with their volume or are made from boxes the dimensions of which are listed in Table 314.16(A).",
+  "subsections_2023": [
+   {
+    "item": "(1)",
+    "title": "Standard Boxes",
+    "text": "The volumes of standard boxes that are not marked with their volume shall be as given in Table 314.16(A)."
+   },
+   {
+    "item": "(2)",
+    "title": "Other Boxes",
+    "text": "Boxes 1650 cm3 (100 in.3) or less, other than those described in Table 314.16(A), and nonmetallic boxes shall be durably and legibly marked by the manufacturer with their volume(s). Boxes described in Table 314.16(A) that have a volume larger than is designated in the table shall be permitted to have their volume marked as required by this section."
+   }
+  ],
+  "barrier_sentence": {
+   "text": "Each barrier, if not marked with its volume, shall be considered to take up 8.2 cm3 (1/2 in.3) if metal, and 16.4 cm3 (1.0 in.3) if nonmetallic.",
+   "status": "UNVERIFIED (PI-proposed '(1) Barriers.' numbering; flattened markup)"
+  }
+ },
+ {
+  "ref": "NFPA 70-2026 changes (A2025 drafts)",
+  "items": [
+   {
+    "section": "314.16(C)(2),(C)(3)",
+    "doc": "SR-8088",
+    "status": "VERIFIED-draft",
+    "change": "adds 'wiring' before 'devices' (wiring device definition; PC-504)"
+   },
+   {
+    "section": "314.16(B)",
+    "doc": "FR-7529",
+    "status": "VERIFIED-draft",
+    "change": "'(B)(1) through (B)(6)'; adds 'splicing connectors' to small fittings needing no allowance"
+   },
+   {
+    "section": "314.16(B)(4)",
+    "doc": "FR-7525",
+    "status": "VERIFIED-draft",
+    "change": "Informational Note referencing 314.24(B) minimum box depth"
+   },
+   {
+    "section": "314.16(B)(6)",
+    "doc": "FR-7527",
+    "status": "VERIFIED-draft",
+    "change": "editorial ('tothe' to 'to the')"
+   },
+   {
+    "section": "Table 314.16(A), Table 314.16(B)(1)",
+    "status": "no FR/SR seen (incomplete: truncation)"
+   },
+   {
+    "section": "Chapter 9 Table 8",
+    "doc": "FRs from PI 2158 and PI 259",
+    "status": "VERIFIED-draft (statements only)",
+    "change": "calculations limited to NEC-recognized sizes (AWG/kcmil, not mm2); 'adds clarity to the data'"
+   },
+   {
+    "section": "Chapter 9 Tables 1, 4, 5, 9",
+    "status": "no change seen in readable portions; UNVERIFIED"
+   }
+  ]
+ }
+]

@@ -1,17 +1,17 @@
 ref,kind,edition,topic,domain,status,render_note
-310.16,table,2023,"Allowable ampacities, not more than three current-carrying conductors, 30 °C",nec-310-16,verified,"Render as 'Table 310.16'"
-310.15(B)(1)(1),table,2023,Ambient temperature correction factors (30 °C basis),nec-310-15-corrections,verified,"Render as 'Table 310.15(B)(1)(1)'"
-310.15(C)(1),table,2023,Adjustment factors for more than three current-carrying conductors,nec-310-15-corrections,verified,"Render as 'Table 310.15(C)(1)'"
-310.12,table,2023,Single-phase dwelling services and main power feeders (83% table),nec-310-12,verified,"Section and table; 2026 label Table 310.12(A)"
-250.66,table,2023,Grounding electrode conductor for AC systems,nec-250-grounding,verified,"Render as 'Table 250.66'; do not state 250.66(A)/(B) limits"
-250.122,table,2023,Minimum size equipment grounding conductors,nec-250-grounding,verified,"Render as 'Table 250.122'; 2026 label 250.122(A)"
-240.4(D),section,2023,Small-conductor overcurrent protection limits,nec-240-4-d,verified,"Copper 14/12/10 AWG and 14 AWG CCA only"
-240.4(D)(3),section,2023,14 AWG copper-clad aluminum (10 A),nec-240-4-d,verified,"Only for 14 AWG CCA"
+310.16,table,2023,"Allowable ampacities, not more than three current-carrying conductors, 30 °C",nec-310-16,verified,Render as 'Table 310.16'
+310.15(B)(1)(1),table,2023,Ambient temperature correction factors (30 °C basis),nec-310-15-corrections,verified,Render as 'Table 310.15(B)(1)(1)'
+310.15(C)(1),table,2023,Adjustment factors for more than three current-carrying conductors,nec-310-15-corrections,verified,Render as 'Table 310.15(C)(1)'
+310.12,table,2023,Single-phase dwelling services and main power feeders (83% table),nec-310-12,verified,Section and table; 2026 label Table 310.12(A)
+250.66,table,2023,Grounding electrode conductor for AC systems,nec-250-grounding,verified,Render as 'Table 250.66'; do not state 250.66(A)/(B) limits
+250.122,table,2023,Minimum size equipment grounding conductors,nec-250-grounding,verified,Render as 'Table 250.122'; don't state a 2026 relabel
+240.4(D),section,2023,Small-conductor overcurrent protection limits (2023-cycle SD SR-8285),nec-240-4-d,verified,"All eight items with their 2023 numbers; (D)(1) 18 AWG Cu, (D)(2) 16 AWG Cu and (D)(3) 14 AWG CCA only together with their conditions"
+240.4(D)(3),section,2023,14 AWG copper-clad aluminum (10 A),nec-240-4-d,verified,Only for 14 AWG CCA
 310.3(A),section,2023,Minimum conductor sizes (14 AWG Cu; 12 AWG CCA; 12 AWG Al),nec-2023-rule-excerpts,verified,
-310.3(C),section,2023,Conductors 8 AWG and larger in raceways shall be stranded,nec-310-16,verified,"Source: NFPA CMP-6 Second Draft SR-8425 (existing 2023 text)"
+310.3(C),section,2023,Conductors 8 AWG and larger in raceways shall be stranded,nec-310-16,verified,Source: NFPA CMP-6 Second Draft SR-8425 (existing 2023 text)
 210.8(A)(6),section,2023,Kitchen receptacles 125–250 V need GFCI,nec-2023-rule-excerpts,verified,
 210.8(D),section,2023,"GFCI for ranges, wall ovens, counter-mounted cooking units, clothes dryers, microwaves",nec-2023-rule-excerpts,verified,
-210.8(F),section,2023,Dwelling outdoor outlets up to 50 A (60 A in 2026),nec-2023-rule-excerpts,verified,"Say the 2026 threshold is 60 A (nec-2026-edition)"
+210.8(F),section,2023,Dwelling outdoor outlets up to 50 A (60 A in 2026),nec-2023-rule-excerpts,verified,"Say the 2026 threshold is 60 A (nec-2026-edition). 2023 as amended by TIA 23-3 (effective 2022-09-01): Exception No. 2 for listed HVAC equipment expired 2026-09-01; don't present it as current. Add that an extension to 2028-09-01 (TIA Log 1924) was rejected by Code-Making Panel 2 and appealed to the NFPA Standards Council in September 2026, outcome not seen (nec-2023-rules-round2.json pending_tia_1924). State codes can differ: Ohio's commercial code (OAC 4101:1-35-01) keeps Exception No. 2 without expiry"
 210.23(A),section,2023,Permissible loads on 15/20 A branch circuits,nec-2023-rule-excerpts,verified,
 220.53,section,2023,Appliance load demand factor (four or more appliances),nec-2023-rule-excerpts,verified,
 220.57,section,2023,EVSE load: larger of 7200 W or nameplate,nec-2023-rule-excerpts,verified,
@@ -23,9 +23,46 @@ ref,kind,edition,topic,domain,status,render_note
 625.43,section,2023,"Disconnect for EVSE above 60 A or 150 V to ground: readily accessible, lockable",nec-2023-rule-excerpts,verified,
 680.5,section,2023,GFCI and SPGFCI classes for pools and spas,nec-2023-rule-excerpts,verified,
 680.22(A)(4),section,2023,Receptacles within 20 ft of a pool need GFCI,nec-2023-rule-excerpts,verified,
-Article 220,article,2023,Branch-circuit/feeder/service load calculations (2023 location),nec-2026-edition,verified,"Location only; no values until G7 closes"
-Article 120,article,2026,Load calculations (2026 location),nec-2026-edition,verified,"Location only; no values until G7 closes"
+Article 220,article,2023,Branch-circuit/feeder/service load calculations (2023 location),nec-2026-edition,verified,Location only; no values until G7 closes
+Article 120,article,2026,Load calculations (2026 location),nec-2026-edition,verified,Location only; no values until G7 closes
 310.5,section,2026,"Minimum sizes 16 AWG Cu, 14 AWG CCA, 12 AWG Al (was 310.3)",nec-2026-edition,verified,
 230.70,section,2026,One/two-family dwelling service disconnect outdoors; serves as emergency disconnect,nec-2026-edition,verified,
 230.85,section,2023,Emergency disconnect for one/two-family dwellings (deleted in 2026),nec-2026-edition,verified,
 120.7,section,2026,Power Control System (was 220.70 EMS),nec-2026-edition,verified,
+240.6(A),table,2023,Standard ampere ratings for fuses and inverse time circuit breakers,nec-240-ocpd,verified,Render as 'Table 240.6(A)'
+250.122(B),section,2023,EGC increased in proportion to upsized ungrounded conductors (not for increases required by 310.15(B)/(C)),nec-250-grounding,verified,"2023-cycle SD SR-8071 (verified-sd2023); main rule only, never its exception or informational note; the 2026 draft relabels it 250.122(D)"
+310.15(B)(2),section,2023,Rooftop raceway/cable temperature adder (33 °C within 3/4 in.; XHHW-2 exempt),nec-310-15-corrections,verified,
+310.14(A)(2),section,2023,Two ampacities apply: the lower may be used beyond 10 ft or 10 percent of the circuit,nec-310-15-corrections,verified,Exception only
+220.41,section,2023,"Dwelling general lighting load, 3 VA/ft²",nec-220-load-calcs,verified,
+220.45,table,2023,Lighting load demand factors,nec-220-load-calcs,verified,Render as 'Table 220.45'
+220.52,section,2023,"Small-appliance and laundry circuit loads, 1500 VA each",nec-220-load-calcs,verified,
+220.54,section,2023,"Electric clothes dryers, 5000 W or nameplate; Table 220.54",nec-220-load-calcs,verified,
+220.55,table,2023,Demand factors and loads for household cooking appliances,nec-220-load-calcs,verified,Render as 'Table 220.55'; note numbers 4–5 inferred
+220.56,table,2023,"Demand factors for kitchen equipment, other than dwelling units",nec-220-load-calcs,verified,Render as 'Table 220.56'
+220.60,section,2023,Noncoincident loads,nec-220-load-calcs,verified,
+220.61,section,2023,Feeder or service neutral load,nec-220-load-calcs,verified,
+220.82,section,2023,"Dwelling unit, optional calculation",nec-220-load-calcs,verified,
+220.83,section,2023,Existing dwelling unit,nec-220-load-calcs,verified,
+220.84,section,2023,"Multifamily dwelling, optional calculation; Table 220.84",nec-220-load-calcs,verified,
+220.85,section,2023,Two dwelling units,nec-220-load-calcs,verified,
+220.87,section,2023,Determining existing loads,nec-220-load-calcs,verified,Items (1) and (2) only
+120.54,table,2026,Demand factors for household electric clothes dryers (2026),nec-220-load-calcs,verified-other-edition,Render as 'Table 120.54 (2026)'
+625.44,section,2020,EVSE connection methods,nec-2023-rule-excerpts,verified-other-edition,State the 2020 edition; never present the 2020 receptacle list as 2023 (2023 adds a 60 A 125/250 V option)
+680.26(B)(2),section,2023,"Pool perimeter surface bonding (3 ft, 8 AWG solid copper, 18–24 in, 4–6 in)",nec-680-pools-spas,verified,Values only; wording from TIA 23-9 with flattened markup
+230.67,section,2023,Surge protection for dwelling services (Type 1 or Type 2),nec-misc-installation,verified,
+110.14(C),section,2023,"Termination temperature: the lowest-rated termination, conductor or device governs",nec-110-14c,verified,"2023-cycle Second Draft SR-7793; values and rules only, never quote the Informational Note"
+110.14(C)(1)(a),section,2023,"100 A or less, or 14–1 AWG terminals: 60 °C; higher-rated conductors at the 60 °C ampacity; listed and identified; motors B, C, D at 75 °C",nec-110-14c,verified,
+110.14(C)(1)(b),section,2023,"Over 100 A, or terminals for conductors larger than 1 AWG: 75 °C; higher ampacity only if listed and identified",nec-110-14c,verified,
+110.14(C)(2),section,2023,Separately installed pressure connectors: ampacity at the connector's listed and identified temperature rating,nec-110-14c,verified,
+240.4(B),section,2023,"Next higher standard OCPD rating up to 800 A, three conditions",nec-240-ocpd,verified,2023-cycle SD SR-8283
+625.54,section,2023,GFCI for all receptacles installed for EV charging,nec-2023-rule-excerpts,held,Held (decision D-09): GFCI protection was a 2022 appeal topic and no post-issuance 2023 source prints 625.54. Don't cite it.
+430.247,table,2023,"Full-load current, DC motors",nec-430-flc,verified,Render as 'Table 430.247'
+430.248,table,2023,"Full-load current, single-phase AC motors",nec-430-flc,verified,Render as 'Table 430.248'
+430.249,table,2023,"Full-load current, two-phase AC motors",nec-430-flc,verified,Render as 'Table 430.249'
+430.250,table,2023,"Full-load current, three-phase AC motors",nec-430-flc,verified,Render as 'Table 430.250'; synchronous 460/575/2300 V cells for 50–200 hp never
+225.18,section,2023,Overhead clearances for outside branch circuits and feeders (10/12/15/18/24½ ft),nec-feeders-outbuildings,verified,2023 values (VERIFIED-2023 base text); the nec-feeders-outbuildings domain as a whole is still GAP
+225.31(B),section,2023,"Disconnect location for a building supplied by a feeder: readily accessible, nearest the point of entrance; 4 exceptions",nec-feeders-outbuildings,verified,"2023 sentences only, not the 2026 insertions"
+300.5(A),table,2023,Minimum cover requirements (Table 300.5(A)),nec-300-5-burial,verified,Render as 'Table 300.5(A)'; no EMT depth
+680.13,section,2023,"Maintenance disconnect: at least 5 ft, within sight, readily accessible",nec-680-pools-spas,verified,"Values only, plain words (2023 government summary)"
+680.43,section,2023,"Indoor spa and hot tub distances (receptacles, luminaires, switches, bonding)",nec-680-pools-spas,verified,"Values only, plain words (2023 government summary); not the exceptions"
+430.132,section,2023,No GFCI or SPGFCI between a power conversion (drive) output and the motor (new by TIA 23-20),nec-2023-rule-excerpts,verified,Cite as 2023 NEC as amended by TIA 23-20

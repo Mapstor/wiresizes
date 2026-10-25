@@ -1,0 +1,654 @@
+[
+ {
+  "ref": "Table 551.73(A)",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rows": [],
+  "note": "No authorized reproduction reached in this run. Do not populate from memory. Leads: 70_A2025_NEC_P07_PISubmittals.pdf, 70_A2022_NEC_P07_SD_PCSubmittals.pdf, 70_A2025_NEC_AAC_SD_SCRReport.pdf (docinfofiles; not fetched, cap reached).",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "Table 300.5",
+  "edition": "2023",
+  "status": "PARTIAL: one row VERIFIED-2023 via government paraphrase (MN DLI, SD Electrical Commission, St. Paul agree on 24/6/18). Everything else UNVERIFIED",
+  "columns": [
+   {
+    "col": 1,
+    "label_as_seen": "Direct burial cable",
+    "official_heading": "UNVERIFIED"
+   },
+   {
+    "col": 2,
+    "label_as_seen": "Rigid or intermediate metal conduit",
+    "official_heading": "UNVERIFIED"
+   },
+   {
+    "col": 3,
+    "label_as_seen": "Nonmetallic raceway (PVC)",
+    "official_heading": "UNVERIFIED"
+   },
+   {
+    "col": 4,
+    "label_as_seen": "120-volt residential branch circuit rated 20-amps or less and provided with GFCI protection",
+    "official_heading": "UNVERIFIED"
+   },
+   {
+    "col": 5,
+    "label_as_seen": null,
+    "official_heading": "UNVERIFIED"
+   }
+  ],
+  "rows": [
+   {
+    "location": "general minimum cover (row label not printed in the sources)",
+    "col1_in": 24,
+    "col2_in": 6,
+    "col3_in": 18,
+    "col4_in": 12,
+    "col5_in": null,
+    "metric_mm": "UNVERIFIED",
+    "col4_sources": "MN DLI only"
+   }
+  ],
+  "rows_not_verified": [
+   "under a building",
+   "trench below 2 in concrete",
+   "under 4 in exterior slab",
+   "streets/highways/roads/alleys/driveways/parking lots",
+   "one- and two-family dwelling driveways",
+   "airport runways"
+  ],
+  "notes": "UNVERIFIED",
+  "two_pull_check": "MN DLI (data) vs SD manual (independent, raw one-row table) vs St. Paul: 24/6/18 match; 12 in single-source",
+  "sources": [
+   "https://www.dli.mn.gov/sites/default/files/pdf/eli_inspection_checklist2023NEC.pdf",
+   "https://dlr.sd.gov/electrical/documents/HomeOwnerWiringBooklet.pdf",
+   "https://www.stpaul.gov/sites/default/files/2023-06/DSI.Bldg_Electrical_Residential%20Garage%20Wiring.pdf"
+  ],
+  "permission_notice": "none on these government documents",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "Table 680.9(A)",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rows": [],
+  "corroboration_only": {
+   "source": "Municipality of Anchorage Handout E.07 (no NEC edition stated)",
+   "url": "https://www.muni.org/departments/ocpd/development-services/codes-handouts/handouts/handoute07.pdf",
+   "values_as_extracted": [
+    "22.5 feet (6.9 meters) from the water level or edge of the water surface",
+    "14.5 feet (4.4 meters) from observation stands, towers, or diving platforms"
+   ]
+  },
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "625.41",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": null,
+  "values": {},
+  "quote": null,
+  "source_url": null,
+  "permission_notice": null,
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "625.44",
+  "edition": "2020",
+  "status": "VERIFIED-other-edition",
+  "rule_summary": "Portable EVSE: receptacle 125 V 1-ph 15/20 A; 250 V 1-ph 15/20 A; 250 V 1-ph 30/50 A (2-pole 3-wire or 3-pole 4-wire); 60 V dc 15/20 A. Fastened-in-place: 125/250 V 1-ph up to 50 A; 250 V 3-ph up to 50 A; 250 V 1-ph 30/50 A (3-pole 4-wire); 60 V dc 15/20 A. All other EVSE/WPTE permanently wired.",
+  "values": {
+   "portable": [
+    "125V 1ph 15/20A",
+    "250V 1ph 15/20A",
+    "250V 1ph 30/50A",
+    "60Vdc 15/20A"
+   ],
+   "fastened_in_place": [
+    "125V or 250V 1ph up to 50A",
+    "250V 3ph up to 50A",
+    "250V 1ph 30/50A (3-pole 4-wire)",
+    "60Vdc 15/20A"
+   ]
+  },
+  "quote": "A nonlocking, 2-pole, 3-wire or 3-pole, 4-wire grounding-type receptacle outlet rated at 250 volts, … single phase, 30 or 50 amperes",
+  "source_url": "https://captaincode2020.leviton.com/node/275",
+  "permission_notice": "Material taken from the National Electric Code® is reprinted with permission from NFPA 70®, 2020 edition. National Electrical Code®, Copyright 2019, National Fire Protection Association, Quincy, MA. All rights reserved.",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "625.50",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": null,
+  "values": {},
+  "quote": null,
+  "source_url": null,
+  "permission_notice": null,
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "625.17(A)",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": null,
+  "values": {},
+  "quote": null,
+  "source_url": null,
+  "permission_notice": null,
+  "note": "Only evidence: 2020 struck the 625.44 sentence 'shall be in accordance with 625.17(A)(3)'.",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "625.54",
+  "edition": "2020",
+  "status": "VERIFIED-other-edition",
+  "rule_summary": "All receptacles installed for the connection of EV charging require GFCI protection for personnel, in addition to 210.8.",
+  "values": {},
+  "quote": "In addition to the requirements in 210.8, all receptacles installed for the connection of electric vehicle charging shall have ground-fault circuit-interrupter protection for personnel.",
+  "source_url": "https://captaincode2020.leviton.com/node/276",
+  "permission_notice": "Material taken from the National Electric Code® is reprinted with permission from NFPA 70®, 2020 edition. National Electrical Code®, Copyright 2019, National Fire Protection Association, Quincy, MA. All rights reserved.",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "625.54",
+  "edition": "2026",
+  "status": "UNVERIFIED (exact base wording; markup flattened). TIA 1892 passed the CC ballot per the NFPA memo, but a voter comment says it failed; Standards Council final action UNVERIFIED",
+  "rule_summary": "2026 base appears to require GFCI on all receptacles installed for EV charging; proposed TIA 1892 limits this to receptacles for EVSE and WPTE.",
+  "values": {
+   "cc_ballot": {
+    "eligible": 10,
+    "agree": 8,
+    "disagree": 2,
+    "abstain": 0,
+    "date": "2026-05-29"
+   }
+  },
+  "quote": "Only All receptacles installed for the connection of electric vehicle charging EVSE and WPTE shall be required to have ground-fault circuit-interrupter GFCI protection for personnel.",
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2028_NEC_AAC_Log1892_BallotFinal.pdf",
+  "permission_notice": "none in extracted text",
+  "unread_lead": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/FD_D26_8_SC26_8_44_d_TIA_1892_NFPA_70.pdf",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "680.21(C)",
+  "edition": "2020",
+  "status": "VERIFIED-other-edition",
+  "rule_summary": "Outlets supplying all pool motors on branch circuits rated 150 V or less to ground and 60 A or less, single- or 3-phase, need Class A GFCI; listed low-voltage motor exception; (D) replacement motors need GFCI.",
+  "values": {
+   "max_volts_to_ground": 150,
+   "max_amperes": 60
+  },
+  "quote": "rated 150 volts or less to ground and 60 amperes or less, single- or 3-phase, … shall be provided with Class A ground-fault circuit-interrupter protection",
+  "source_url": "https://captaincode2020.leviton.com/node/278",
+  "permission_notice": "Material taken from the National Electric Code® is reprinted with permission from NFPA 70®, 2020 edition. National Electrical Code®, Copyright 2019, National Fire Protection Association, Quincy, MA. All rights reserved.",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "680.21(C)",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": "Gov paraphrase only: GFCI for outlets supplying 125- or 240-volt pool pump motors.",
+  "values": {},
+  "quote": "All outlets supplying 125- or 240-volt pool pump motors must be provided with GFCI protection.",
+  "source_url": "https://www.dli.mn.gov/sites/default/files/pdf/eli_inspection_checklist2023NEC.pdf",
+  "permission_notice": "none",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "680.21(C)",
+  "edition": "2026 (TIA 26-1)",
+  "status": "VERIFIED-other-edition",
+  "rule_summary": "Outlets serving pool motors need ground-fault protection per 680.5(B) or 680.5(C) as applicable; listed low-voltage motor exception; for variable-speed motors with adjustable-speed drives, no ground-fault protection between drive output and motor.",
+  "values": {
+   "tia": "26-1",
+   "issue_date": "2025-04-10",
+   "effective_date": "2025-04-30"
+  },
+  "quote": "(1) General. Outlets serving pool motors shall have ground-fault protection complying with 680.5(B) or 680.5(C), as applicable.",
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/TIA_70_26_1.pdf",
+  "permission_notice": "Copyright © 2025 All Rights Reserved NATIONAL FIRE PROTECTION ASSOCIATION",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "680.21(D)",
+  "edition": "2026 (draft)",
+  "status": "VERIFIED-draft",
+  "rule_summary": "SR-8367 adds 'reconditioned' to the pool pump motor replacement rule.",
+  "values": {},
+  "quote": "The term \"reconditioned\" was added to clarify the type of equipment that this applies to.",
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P17_SD_PrelimSR.pdf",
+  "permission_notice": "CONTENT NOT FINAL – SUBJECT TO REVISION (working draft)",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "680.13",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": "Undated/2017 sources only: maintenance disconnect readily accessible, within sight, at least 5 ft (1.5 m) from inside walls.",
+  "values": {
+   "min_distance_ft_unverified": 5
+  },
+  "quote": null,
+  "source_url": "https://www.muni.org/departments/ocpd/development-services/codes-handouts/handouts/handoute07.pdf",
+  "permission_notice": "none",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "680.26(B)(2)",
+  "edition": "2023 (with TIA 23-9)",
+  "status": "VERIFIED-2023 (values); exact wording UNVERIFIED (markup flattened)",
+  "rule_summary": "Perimeter surface extends 3 ft horizontally beyond inside pool walls (metric 1 m changed to 900 mm by TIA 23-9); TIA text also bounds it between 3 ft above and 2 ft below max water level; copper grid of 8 AWG solid bare copper; single 8 AWG bare solid copper ring 18-24 in from inside walls, 4-6 in below subgrade, only where swimmers have no direct access; walls/buildings 5 ft high or more limit bonding.",
+  "values": {
+   "horizontal_extent_ft": 3,
+   "horizontal_extent_mm_tia": 900,
+   "vertical_band": "900 mm (3 ft) above to 600 mm (2 ft) below max water level (TIA text, insertion status unconfirmed)",
+   "conductor": "8 AWG solid bare copper",
+   "ring_offset_in": "18-24",
+   "ring_depth_in": "4-6",
+   "barrier_height_ft": 5
+  },
+  "quote": "The perimeter surface to be bonded shall be considered to extend for 1 m 900 mm (3 ft) horizontally beyond the inside walls of the pool and while also at a height between 900 mm (3 ft) above and 600 mm (2 ft) below the maximum water level.",
+  "source_url": "https://www.nj.gov/dca/codes/codreg/pdf_misc_codes/nec_2023_tia_1_13.pdf",
+  "permission_notice": "Copyright © 2023 All Rights Reserved NATIONAL FIRE PROTECTION ASSOCIATION (TIA 23-9, issued 2023-03-21, effective 2023-04-10)",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "680.26",
+  "edition": "2026 (draft)",
+  "status": "VERIFIED-draft",
+  "rule_summary": "900 mm (3 ft) perimeter; 8 AWG bare solid copper; 18-24 in; 4-6 in; SR-8381 adds 40% copper-clad steel option; listing requirement effective 2029-01-01. No 2 ft to 3 ft change seen.",
+  "values": {
+   "horizontal_extent": "900 mm (3 ft)",
+   "copper_clad_steel_option": "40%",
+   "listing_effective": "2029-01-01"
+  },
+  "quote": "copper-clad steel will perform satisfactorily to provide equipotential bonding for pools",
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P17_SD_PrelimSR.pdf",
+  "permission_notice": "CONTENT NOT FINAL – SUBJECT TO REVISION (working draft)",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "680.42",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": "Undated gov paraphrase only: cord-connected outdoor package units, cord not longer than 15 ft (4.6 m) with GFCI.",
+  "values": {},
+  "quote": null,
+  "source_url": "https://www.muni.org/departments/ocpd/development-services/codes-handouts/handouts/handoute07.pdf",
+  "permission_notice": "none",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "680.43",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": "Undated gov paraphrase only: no receptacle within 6 ft; GFCI within 10 ft; luminaires within 5 ft at 12 ft (7.5 ft with GFCI); 8 AWG solid copper bonding.",
+  "values": {},
+  "quote": null,
+  "source_url": "https://www.muni.org/departments/ocpd/development-services/codes-handouts/handouts/handoute07.pdf",
+  "permission_notice": "none",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "680.44",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": "2017 Mike Holt paraphrase only: outlets supplying self-contained, packaged or field-assembled spas/hot tubs must be GFCI protected.",
+  "values": {},
+  "quote": null,
+  "source_url": "https://www.mikeholt.com/files/PDF/Swimming_Pools_Spas_2017NEC.pdf",
+  "permission_notice": "trademark notice only; COPYRIGHT © 2017 Charles Michael Holt",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "680.10",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "rule_summary": "680.10 covers electric pool water heaters with resistive elements and electrically powered pool heat pumps and chillers (listed; conductors and OCPD per nameplate). It is NOT underground wiring.",
+  "values": {},
+  "quote": "680.10 Electric Pool Water Heaters Incorporating Resistive Heating Elements and Electrically Powered Swimming Pool Heat Pumps and Chillers.",
+  "source_url": "https://captaincode2023.leviton.com/node/363",
+  "permission_notice": "Material taken from the National Electric Code® is reprinted with permission from NFPA 70®, 2023 edition. National Electrical Code®, Copyright 2022, National Fire Protection Association, Quincy, MA. All rights reserved.",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "680.11",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": "Underground wiring location; 2023 number and distances not seen (2017 Mike Holt paraphrase places underground wiring at 680.11).",
+  "values": {},
+  "quote": null,
+  "source_url": null,
+  "permission_notice": null,
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "680.12",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "rule_summary": "680.12 is Equipment Rooms, Vaults, and Pits (not the maintenance disconnect). (B): at least one GFCI 125 V 15/20 A general-purpose receptacle in an equipment room; other receptacles of 150 V or less to ground in equipment rooms, vaults and pits GFCI protected.",
+  "values": {},
+  "quote": "At least one GFCI-protected 125-volt, 15- or 20-ampere receptacle supplied from a general purpose branch circuit shall be located within an equipment room.",
+  "source_url": "https://captaincode2023.leviton.com/node/364",
+  "permission_notice": "Material taken from the National Electric Code® is reprinted with permission from NFPA 70®, 2023 edition. National Electrical Code®, Copyright 2022, National Fire Protection Association, Quincy, MA. All rights reserved.",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "551.73(A)",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": null,
+  "values": {},
+  "quote": null,
+  "source_url": null,
+  "permission_notice": null,
+  "note": "Per-site VA values (9600/3600/2400) not seen in any fetched document.",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "551.77",
+  "edition": "2023 (A2022 Second Draft)",
+  "status": "VERIFIED-draft",
+  "rule_summary": "Site supply equipment on the left (road) side of the parked vehicle; mounted not less than 600 mm (2 ft) above the electrical datum plane.",
+  "values": {
+   "min_height_ft": 2,
+   "min_height_mm": 600,
+   "side": "left (road) side"
+  },
+  "quote": "Site supply equipment shall be located not less than 600 mm (2 ft) above the electrical datum plane for that RV site",
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P07_SD_SRStatements.pdf",
+  "permission_notice": "none in extracted text (NFPA committee document)",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "120 Part VIII",
+  "edition": "2026 (draft)",
+  "status": "VERIFIED-draft (Part only); section number UNVERIFIED",
+  "rule_summary": "In the 2026 draft, Article 120 Part VIII holds RV park calculation methods. Mobile home calcs moved to 120.140/120.141 (labelled Part IX in the CMP-7 draft).",
+  "values": {
+   "part": "VIII",
+   "section_number": null
+  },
+  "quote": "Part VIII provides calculation methods for recreational vehicle parks.",
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P02_SD_PrelimSR.pdf",
+  "permission_notice": "CONTENT NOT FINAL – SUBJECT TO REVISION (working draft)",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "551.71(A)",
+  "edition": "2026 (draft)",
+  "status": "VERIFIED-draft",
+  "rule_summary": "SR-8244: 20 A 125 V receptacle at all sites; 30 A 125 V at minimum 70% of sites; 50 A 125/250 V at minimum 40% of new and 20% of existing sites.",
+  "values": {
+   "pct_30A": 70,
+   "pct_50A_new": 40,
+   "pct_50A_existing": 20
+  },
+  "quote": "(3) A 50-ampere, 125/250-volt receptacle at a minimum of 40 percent of new sites and 20 percent of existing sites",
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P07_SD_PrelimSR.pdf",
+  "permission_notice": "CONTENT NOT FINAL – SUBJECT TO REVISION (working draft)",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "225.18",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": null,
+  "values": {},
+  "quote": null,
+  "source_url": null,
+  "permission_notice": null,
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "225.31(B)",
+  "edition": "2023",
+  "status": "VERIFIED-2023 (structure only, via local amendment document); national wording UNVERIFIED",
+  "rule_summary": "In the 2023 NEC the outbuilding disconnect location rule is 225.31(B) 'Location' with Exceptions No. 1-3; 230.6 applies.",
+  "values": {
+   "exceptions_in_base": 3
+  },
+  "quote": "For the purposes of this section, the requirements in 230.6 shall apply.",
+  "source_url": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:9f7141aa-c587-49e3-8ecd-ad22f2775a07/original/as/2023-NEC-Amendments---Clark-County.pdf",
+  "permission_notice": "This document may be copied and used in whole or in part without permission or approval from the organizations listed on the cover page.",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "225.39",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": null,
+  "values": {},
+  "quote": null,
+  "source_url": null,
+  "permission_notice": null,
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "250.32",
+  "edition": "2023",
+  "status": "PARTIAL: EGC-with-feeder VERIFIED-2023 (gov paraphrase); no-neutral-bond UNVERIFIED",
+  "rule_summary": "Detached buildings supplied by a feeder need an EGC run with the feeder and a grounding electrode system (single-branch-circuit exception).",
+  "values": {},
+  "quote": "An equipment grounding conductor is required with the feeder.",
+  "source_url": "https://www.stpaul.gov/sites/default/files/2023-06/DSI.Bldg_Electrical_Residential%20Garage%20Wiring.pdf",
+  "permission_notice": "none",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "230.24",
+  "edition": "2023",
+  "status": "PARTIAL: 10/12/18 ft VERIFIED-2023 (gov paraphrase, cross-checked with 2022 CEC handout); other rows UNVERIFIED",
+  "rule_summary": "Service-drop clearances: 10 ft above final grade/pedestrian areas, 12 ft over residential driveways, 18 ft over public streets/alleys.",
+  "values": {
+   "pedestrian_ft": 10,
+   "residential_driveway_ft": 12,
+   "public_street_alley_ft": 18,
+   "commercial_ft": null,
+   "railroad_ft": null
+  },
+  "quote": "minimum clearance of 10 Feet from final grade or surface",
+  "source_url": "https://www.stpaul.gov/sites/default/files/2023-06/DSI.Bldg_Electrical_Checklist%20Dwelling%20Electrical%20Service%20-%20Subpanel.pdf",
+  "permission_notice": "none",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "230.79(C)",
+  "edition": "2023",
+  "status": "VERIFIED-2023 (partial quote via 2025 California Electrical Code citation)",
+  "rule_summary": "One-family dwelling service disconnecting means rated not less than 100 A, 3-wire.",
+  "values": {
+   "min_amperes": 100,
+   "wires": 3
+  },
+  "quote": "shall have a rating of not less than 100 amperes, 3-wire.",
+  "source_url": "https://www.cupertino.gov/files/assets/city/v/3/departments/documents/community-development/building/forms-amp-handouts-amp-fees/handouts/residential-electrical-load-calculation.pdf",
+  "permission_notice": "none",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "230.71",
+  "edition": "2020",
+  "status": "VERIFIED-other-edition",
+  "rule_summary": "One service disconnect unless 230.71(B); (B) two to six disconnects in separate enclosures, panelboards, switchboard sections, or switchgear/metering-center compartments; (A) lists devices not counted as service disconnects.",
+  "values": {
+   "max_disconnects": 6
+  },
+  "quote": "Two to six service disconnects shall be permitted for each service permitted by 230.2",
+  "source_url": "https://captaincode2020.leviton.com/node/244",
+  "permission_notice": "Material taken from the National Electric Code® is reprinted with permission from NFPA 70®, 2020 edition. National Electrical Code®, Copyright 2019, National Fire Protection Association, Quincy, MA. All rights reserved.",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "230.71(B)",
+  "edition": "2023",
+  "status": "VERIFIED-2023 (summary level only); exact text UNVERIFIED",
+  "rule_summary": "2023 permits two to six disconnects also in metering centers with individual main disconnecting means and motor control centers per 230.71(B)(6); new exception lets existing service equipment keep up to six disconnects if installed per previous editions.",
+  "values": {
+   "max_disconnects": 6
+  },
+  "quote": "New exception allows existing service equipment to have a maximum of six disconnects if installed per previous editions of the NEC",
+  "source_url": "https://dca.georgia.gov/document/public-notices/2023necchangespresentationpdf/download",
+  "permission_notice": "© National Fire Protection Association. All rights reserved.",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "230.67",
+  "edition": "2023",
+  "status": "PARTIAL VERIFIED-2023: (A) occupancy list, (C), (E); service-specific (A)/(B)/(D) wording UNVERIFIED",
+  "rule_summary": "SPD required for services supplying dwelling units, dormitory units, hotel/motel guest rooms and suites, and nursing-home/limited-care patient sleeping areas; Type 1 or Type 2; nominal discharge current In not less than 10 kA.",
+  "values": {
+   "spd_types": [
+    "Type 1",
+    "Type 2"
+   ],
+   "min_In_kA": 10
+  },
+  "quote": "SPDs shall have a nominal discharge current rating (In) of not less than 10 kA.",
+  "source_url": "https://captaincode2023.leviton.com/node/318",
+  "permission_notice": "Material taken from the National Electric Code® is reprinted with permission from NFPA 70®, 2023 edition. National Electrical Code®, Copyright 2022, National Fire Protection Association, Quincy, MA. All rights reserved.",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "230.67",
+  "edition": "2020",
+  "status": "VERIFIED-other-edition",
+  "rule_summary": "Services supplying dwelling units need an SPD, integral to or immediately adjacent to service equipment (exception: at each next-level distribution equipment); Type 1 or 2; applies on replacement. No (E) in 2020.",
+  "values": {
+   "spd_types": [
+    "Type 1",
+    "Type 2"
+   ]
+  },
+  "quote": "The SPD shall be an integral part of the service equipment or shall be located immediately adjacent thereto.",
+  "source_url": "https://captaincode2020.leviton.com/node/241",
+  "permission_notice": "Material taken from the National Electric Code® is reprinted with permission from NFPA 70®, 2020 edition. National Electrical Code®, Copyright 2019, National Fire Protection Association, Quincy, MA. All rights reserved.",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "230.85",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "rule_summary": "One- and two-family dwellings: emergency disconnect in a readily accessible outdoor location on or within sight of the dwelling; SCCR at least available fault current; grouped if more than one; service disconnect, meter disconnect, or other listed service-rated disconnect; applies on service-equipment replacement (not meter-socket/SEC-only); red labels with white text, letters at least 1/2 in.",
+  "values": {
+   "label_letter_height_in": 0.5,
+   "label_letter_height_mm": 13
+  },
+  "quote": "The disconnecting means shall be installed in a readily accessible outdoor location on or within sight of the dwelling unit.",
+  "source_url": "https://captaincode2023.leviton.com/node/322",
+  "permission_notice": "Material taken from the National Electric Code® is reprinted with permission from NFPA 70®, 2023 edition. National Electrical Code®, Copyright 2022, National Fire Protection Association, Quincy, MA. All rights reserved.",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "250.52(A)(5)",
+  "edition": "2023 (Southern Nevada local amendment)",
+  "status": "VERIFIED-other-edition (local amended text); national 2023 wording UNVERIFIED",
+  "rule_summary": "Rod electrodes not less than 8 ft (2.44 m) long; stainless or copper/zinc-coated steel; at least 5/8 in. (15.87 mm) diameter unless listed. No 1/2 in. value in text seen.",
+  "values": {
+   "min_length_ft": 8,
+   "min_length_m": 2.44,
+   "min_diameter_in": "5/8",
+   "min_diameter_mm": 15.87,
+   "listed_exception": "unless listed"
+  },
+  "quote": "Rod electrodes shall not be less than 2.44 m (8 ft) in length … and shall be at least 15.87 mm (⅝ in.) in diameter, unless listed.",
+  "source_url": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:9f7141aa-c587-49e3-8ecd-ad22f2775a07/original/as/2023-NEC-Amendments---Clark-County.pdf",
+  "permission_notice": "This document may be copied and used in whole or in part without permission or approval from the organizations listed on the cover page.",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "250.53(A)(2)",
+  "edition": "2023",
+  "status": "VERIFIED-2023 (government paraphrase x2 plus local amended text)",
+  "rule_summary": "A single rod (pipe, plate) electrode must be supplemented by an additional electrode unless it has a resistance to earth of 25 ohms or less.",
+  "values": {
+   "max_ohms_single_rod": 25
+  },
+  "quote": "Unless a rod, pipe and plate electrode have a resistance to ground of 25 ohms or less",
+  "source_url": "https://www.dli.mn.gov/sites/default/files/pdf/eli_inspection_checklist2023NEC.pdf",
+  "also_seen": [
+   {
+    "quote": "has a resistance of 25 ohms to earth or less",
+    "source_url": "https://www.stpaul.gov/sites/default/files/2023-06/DSI.Bldg_Electrical_Checklist%20Dwelling%20Electrical%20Service%20-%20Subpanel.pdf"
+   },
+   {
+    "quote": "Exception: If a single rod grounding electrode has a resistance to earth of 25 ohms or less, the supplemental electrode shall not be required.",
+    "source_url": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:9f7141aa-c587-49e3-8ecd-ad22f2775a07/original/as/2023-NEC-Amendments---Clark-County.pdf",
+    "note": "Southern Nevada local amended text"
+   }
+  ],
+  "permission_notice": "none",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "250.53(A)(3)",
+  "edition": "2023",
+  "status": "VERIFIED-2023 (local amended text plus gov paraphrase)",
+  "rule_summary": "Multiple rod electrodes installed to meet 250.53 must be not less than 1.8 m (6 ft) apart.",
+  "values": {
+   "min_spacing_ft": 6,
+   "min_spacing_m": 1.8
+  },
+  "quote": "If multiple rod electrodes are installed to meet the requirements of this section, they shall not be less than 1.8 m (6 ft) apart.",
+  "source_url": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:9f7141aa-c587-49e3-8ecd-ad22f2775a07/original/as/2023-NEC-Amendments---Clark-County.pdf",
+  "permission_notice": "This document may be copied and used in whole or in part without permission or approval from the organizations listed on the cover page.",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "250.66(A)/(B)",
+  "edition": "2023 (copper values) / 2020 (aluminum value)",
+  "status": "VERIFIED-2023 (gov, copper) + VERIFIED-other-edition (NFPA 2020 fact sheet); 2023 aluminum wording UNVERIFIED",
+  "rule_summary": "GEC portion that is the sole connection to rod/pipe/plate electrodes need not be larger than 6 AWG copper (2020: or 4 AWG aluminum); to concrete-encased electrode need not be larger than 4 AWG copper; to ground ring need not be larger than the ring conductor.",
+  "values": {
+   "rod_pipe_plate_max_cu": "6 AWG",
+   "rod_pipe_plate_max_al_2020": "4 AWG",
+   "concrete_encased_max_cu": "4 AWG"
+  },
+  "quote": "shall not be required to be larger than a 6 AWG copper wire",
+  "source_url": "https://www.stpaul.gov/sites/default/files/2023-06/DSI.Bldg_Electrical_Checklist%20Dwelling%20Electrical%20Service%20-%20Subpanel.pdf",
+  "permission_notice": "none (St. Paul); NFPA fact sheet: © 2020 National Fire Protection Association / June 2020",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "250.122(B)",
+  "edition": "2020 (NFPA fact sheet)",
+  "status": "VERIFIED-other-edition (paraphrase)",
+  "rule_summary": "Where ungrounded conductors are increased in size (other than for temperature correction), EGCs are increased proportionately by circular mil area.",
+  "values": {
+   "worked_example_ratio": 1.4
+  },
+  "quote": "Where the ungrounded circuit conductors are increased in size to compensate for voltage drop, the EGCs must be increased proportionately.",
+  "source_url": "https://www.salinas.gov/files/sharedassets/city/v/1/fire-department/documents/grounding-bonding-fact-sheet.pdf",
+  "permission_notice": "© 2020 National Fire Protection Association / June 2020. This material is not the official position of any NFPA Technical Committee on any referenced topic.",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "250.118",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": null,
+  "values": {},
+  "quote": null,
+  "source_url": null,
+  "permission_notice": null,
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "300.5(D)",
+  "edition": "2023",
+  "status": "PARTIAL: 12 in ribbon and 18 in below-grade protection VERIFIED-2023 (gov paraphrase); 8 ft above grade VERIFIED-other-edition (2022 CEC/NEC 2020 base paraphrase); verbatim UNVERIFIED",
+  "rule_summary": "Conductors emerging from grade protected from 18 in below grade (or minimum cover) up to termination / 8 ft above grade; warning ribbon at least 12 in above underground service conductors.",
+  "values": {
+   "ribbon_above_in": 12,
+   "protection_below_grade_in": 18,
+   "protection_above_grade_ft": 8
+  },
+  "quote": "warning ribbon placed in the trench at least 12-inches above the underground installation",
+  "source_url": "https://www.dli.mn.gov/sites/default/files/pdf/eli_inspection_checklist2023NEC.pdf",
+  "permission_notice": "none",
+  "retrieved": "2026-10-20"
+ }
+]

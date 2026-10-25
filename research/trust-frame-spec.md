@@ -7,7 +7,7 @@ Rule: nothing on this page set may claim a person, credential, review, endorseme
 - Author / editor: **Marko Visic** — BSc Physics, Faculty of Mathematics and Physics, University of Ljubljana (Slovenia).
 - Physics credential only on this site (pharmacy degree left off, same as hvacptcharts.com).
 - sameAs: https://www.linkedin.com/in/marko-visic/  (visible rel="me" link on /about)
-- Publisher and data controller: **Moving Data Systems d.o.o., Maribor, Slovenia** (EU) — the same wording the owner chose for populationpyramids.org in Oct 2026: company name and city, no registration number or VAT ID. Contact for privacy requests: the single contact address below.
+- Publisher and data controller: **Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia** (EU), company registration number 9041273000, VAT ID SI94001154. Owner decision 2026-10-25 (ZEPT Article 5), replacing the earlier name-and-city wording. Contact for privacy requests: the single contact address below.
 - He is **not** a licensed electrician or professional engineer. Say so once, plainly, on /about and in the page-footer disclaimer line. Never use "licensed", "certified", "master", "PE", "reviewed by electricians" or similar.
 
 ## Byline block (every content and tool page, visible, above the fold on articles, below the tool on tools)
@@ -31,8 +31,8 @@ Delete entirely: "reviewed by licensed electrical engineers and master electrici
 - One line: "For electrical emergencies call 911 or your utility. This site cannot give site-specific advice."
 
 ## /privacy
-- Controller: Moving Data Systems d.o.o., Maribor, Slovenia + contact@wiresizes.com. No "DPO" unless one is appointed.
-- List exactly what runs (verify in code: GA4? Vercel Analytics? Raptive? any consent tool?). Nothing that doesn't run.
+- Controller: Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia (company registration number 9041273000, VAT ID SI94001154) + contact@wiresizes.com. No "DPO" unless one is appointed.
+- List exactly what runs. WSZ-001 found (2026-10-20): Google Analytics 4 (gtag.js, measurement ID G-T871GVJZE2, loaded in src/app/layout.tsx), Vercel Web Analytics, Vercel Speed Insights, and Google Fonts was removed in WSZ-002 (fonts self-hosted via @fontsource). No consent tool, no ads. Nothing that doesn't run.
 - GDPR rights + lawful basis; Last updated = real date.
 
 ## /terms
@@ -48,8 +48,8 @@ Delete entirely: "reviewed by licensed electrical engineers and master electrici
 - Remove "Download NEC Table 310.16 PDF". Present values as our own data tables with attribution; never reproduce NEC text beyond short quotes.
 
 ## Schema (site-level)
-- Organization: Moving Data Systems d.o.o. (name, url https://www.wiresizes.com, sameAs only real profiles).
-- Person: Marko Visic — alumniOf University of Ljubljana (Faculty of Mathematics and Physics), hasCredential "BSc Physics" (EducationalOccupationalCredential), knowsAbout ["electrical conductor physics","unit conversion","wire resistance"], sameAs LinkedIn.
+- Organization: Moving Data Systems d.o.o. (name, legalName, url https://wiresizes.com, address Smolnik 62, 2342 Ruše, SI, vatID SI94001154, sameAs only real profiles). The canonical host is the apex; www 308-redirects to it.
+- Person: Marko Visic — alumniOf University of Ljubljana (Faculty of Mathematics and Physics), hasCredential "BSc Physics" (EducationalOccupationalCredential), knowsAbout ["conductor resistance","electrical units and conversions","wire gauge geometry"], sameAs LinkedIn.
 - Article/WebPage author → Person; publisher → Organization. Dataset on the AWG chart and NEC 310.16 pages. SoftwareApplication (applicationCategory "UtilitiesApplication", offers price 0) on tool pages only if it matches visible content. No aggregateRating, no Review, no HowTo; FAQPage optional (no rich result).
 
 ## New page: /methodology (generated from research/data-sources.csv)

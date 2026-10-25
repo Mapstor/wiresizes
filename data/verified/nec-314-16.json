@@ -1,0 +1,808 @@
+{
+ "id": "nec-314-16",
+ "title": "Box fill, NEC 314.16 (partial)",
+ "status": "partial — see per-item status",
+ "retrieved": "2026-10-20",
+ "evidence": "research/sources/round2/A5-ch9-boxfill.md; research/sources/round4/R4-3-ch9-boxfill.md",
+ "items": {
+  "314.16(A)": {
+   "ref": "314.16(A)",
+   "edition": "2023",
+   "status": "VERIFIED-2023",
+   "source": "N3 PI 3972 (base text)",
+   "text": "The volume of a wiring enclosure (box) shall be the total volume of the assembled sections and, where used, the space provided by plaster rings, domed covers, extension rings, and so forth, that are marked with their volume or are made from boxes the dimensions of which are listed in Table 314.16(A).",
+   "subsections_2023": [
+    {
+     "item": "(1)",
+     "title": "Standard Boxes",
+     "text": "The volumes of standard boxes that are not marked with their volume shall be as given in Table 314.16(A)."
+    },
+    {
+     "item": "(2)",
+     "title": "Other Boxes",
+     "text": "Boxes 1650 cm3 (100 in.3) or less, other than those described in Table 314.16(A), and nonmetallic boxes shall be durably and legibly marked by the manufacturer with their volume(s). Boxes described in Table 314.16(A) that have a volume larger than is designated in the table shall be permitted to have their volume marked as required by this section."
+    }
+   ],
+   "barrier_sentence": {
+    "text": "Each barrier, if not marked with its volume, shall be considered to take up 8.2 cm3 (1/2 in.3) if metal, and 16.4 cm3 (1.0 in.3) if nonmetallic.",
+    "status": "UNVERIFIED (PI-proposed '(1) Barriers.' numbering; flattened markup)"
+   }
+  },
+  "Table 314.16(A)": {
+   "ref": "Table 314.16(A)",
+   "title": "Metal Boxes",
+   "footnote_2011": "*Where no volume allowances are required by 314.16(B)(2) through 314.16(B)(5).",
+   "footnote_2023": "UNVERIFIED",
+   "rows": [
+    {
+     "box": "100 x 32 (4 x 1-1/4) round/octagonal",
+     "volume_cm3": 205,
+     "volume_in3": 12.5,
+     "max_18": 8,
+     "max_16": 7,
+     "max_14": 6,
+     "max_12": 5,
+     "max_10": 5,
+     "max_8": 4,
+     "max_6": 2,
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "N3 PI 3972",
+     "note": "2008/2011 reproductions print max_8 = 5"
+    },
+    {
+     "box": "100 x 38 (4 x 1-1/2) round/octagonal",
+     "volume_cm3": 254,
+     "volume_in3": 15.5,
+     "max_18": 10,
+     "max_16": 8,
+     "max_14": 7,
+     "max_12": 6,
+     "max_10": 6,
+     "max_8": 5,
+     "max_6": 3,
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "N3 PI 3972; same in P1-P4"
+    },
+    {
+     "box": "100 x 54 (4 x 2-1/8) round/octagonal",
+     "volume_cm3": 353,
+     "volume_in3": 21.5,
+     "max_18": 14,
+     "max_16": 12,
+     "max_14": 10,
+     "max_12": 9,
+     "max_10": 8,
+     "max_8": 7,
+     "max_6": 4,
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "N3 PI 3972; same in P1-P4"
+    },
+    {
+     "box": "100 x 32 (4 x 1-1/4) square",
+     "volume_cm3": 295,
+     "volume_in3": 18.0,
+     "max_18": 12,
+     "max_16": 10,
+     "max_14": 9,
+     "max_12": 8,
+     "max_10": 7,
+     "max_8": 6,
+     "max_6": 3,
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "N3 PI 3972; same in P1-P4"
+    },
+    {
+     "box": "100 x 38 (4 x 1-1/2) square",
+     "volume_cm3": 344,
+     "volume_in3": 21.0,
+     "max_18": 14,
+     "max_16": 12,
+     "max_14": 10,
+     "max_12": 9,
+     "max_10": 8,
+     "max_8": 7,
+     "max_6": 4,
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "N3 PI 3972; same in P1-P4"
+    },
+    {
+     "box": "100 x 54 (4 x 2-1/8) square",
+     "volume_cm3": 497,
+     "volume_in3": 30.3,
+     "max_18": 20,
+     "max_16": 17,
+     "max_14": 15,
+     "max_12": 13,
+     "max_10": 12,
+     "max_8": 10,
+     "max_6": 6,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "120 x 32 (4L x 1-1/4 as extracted) square",
+     "volume_cm3": 418,
+     "volume_in3": 25.5,
+     "max_18": 17,
+     "max_16": 14,
+     "max_14": 12,
+     "max_12": 11,
+     "max_10": 10,
+     "max_8": 8,
+     "max_6": 5,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "120 x 38 (4L x 1-1/2 as extracted) square",
+     "volume_cm3": 484,
+     "volume_in3": 29.5,
+     "max_18": 19,
+     "max_16": 16,
+     "max_14": 14,
+     "max_12": 13,
+     "max_10": 11,
+     "max_8": 9,
+     "max_6": 5,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "120 x 54 (4L x 2-1/8 as extracted) square",
+     "volume_cm3": 689,
+     "volume_in3": 42.0,
+     "max_18": 28,
+     "max_16": 24,
+     "max_14": 21,
+     "max_12": 18,
+     "max_10": 16,
+     "max_8": 14,
+     "max_6": 8,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "75 x 50 x 38 (3 x 2 x 1-1/2) device",
+     "volume_cm3": 123,
+     "volume_in3": 7.5,
+     "max_18": 5,
+     "max_16": 4,
+     "max_14": 3,
+     "max_12": 3,
+     "max_10": 3,
+     "max_8": 2,
+     "max_6": 1,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "75 x 50 x 50 (3 x 2 x 2) device",
+     "volume_cm3": 164,
+     "volume_in3": 10.0,
+     "max_18": 6,
+     "max_16": 5,
+     "max_14": 5,
+     "max_12": 4,
+     "max_10": 4,
+     "max_8": 3,
+     "max_6": 2,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "75 x 50 x 57 (3 x 2 x 2-1/4) device",
+     "volume_cm3": 172,
+     "volume_in3": 10.5,
+     "max_18": 7,
+     "max_16": 6,
+     "max_14": 5,
+     "max_12": 4,
+     "max_10": 4,
+     "max_8": 3,
+     "max_6": 2,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "75 x 50 x 65 (3 x 2 x 2-1/2) device",
+     "volume_cm3": 205,
+     "volume_in3": 12.5,
+     "max_18": 8,
+     "max_16": 7,
+     "max_14": 6,
+     "max_12": 5,
+     "max_10": 5,
+     "max_8": 4,
+     "max_6": 2,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "75 x 50 x 70 (3 x 2 x 2-3/4) device",
+     "volume_cm3": 230,
+     "volume_in3": 14.0,
+     "max_18": 9,
+     "max_16": 8,
+     "max_14": 7,
+     "max_12": 6,
+     "max_10": 5,
+     "max_8": 4,
+     "max_6": 2,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "75 x 50 x 90 (3 x 2 x 3-1/2) device",
+     "volume_cm3": 295,
+     "volume_in3": 18.0,
+     "max_18": 12,
+     "max_16": 10,
+     "max_14": 9,
+     "max_12": 8,
+     "max_10": 7,
+     "max_8": 6,
+     "max_6": 3,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "100 x 54 x 38 (4 x 2-1/8 x 1-1/2) device",
+     "volume_cm3": 169,
+     "volume_in3": 10.3,
+     "max_18": 6,
+     "max_16": 5,
+     "max_14": 5,
+     "max_12": 4,
+     "max_10": 4,
+     "max_8": 3,
+     "max_6": 2,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "100 x 54 x 48 (4 x 2-1/8 x 1-7/8) device",
+     "volume_cm3": 213,
+     "volume_in3": 13.0,
+     "max_18": 8,
+     "max_16": 7,
+     "max_14": 6,
+     "max_12": 5,
+     "max_10": 5,
+     "max_8": 4,
+     "max_6": 2,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "100 x 54 x 54 (4 x 2-1/8 x 2-1/8) device",
+     "volume_cm3": 238,
+     "volume_in3": 14.5,
+     "max_18": 9,
+     "max_16": 8,
+     "max_14": 7,
+     "max_12": 6,
+     "max_10": 5,
+     "max_8": 4,
+     "max_6": 2,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "95 x 50 x 65 (3-3/4 x 2 x 2-1/2) masonry box/gang",
+     "volume_cm3": 230,
+     "volume_in3": 14.0,
+     "max_18": 9,
+     "max_16": 8,
+     "max_14": 7,
+     "max_12": 6,
+     "max_10": 5,
+     "max_8": 4,
+     "max_6": 2,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "95 x 50 x 90 (3-3/4 x 2 x 3-1/2) masonry box/gang",
+     "volume_cm3": 344,
+     "volume_in3": 21.0,
+     "max_18": 14,
+     "max_16": 12,
+     "max_14": 10,
+     "max_12": 9,
+     "max_10": 8,
+     "max_8": 7,
+     "max_6": 4,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "min. 44.5 depth FS - single cover/gang (1-3/4)",
+     "volume_cm3": 221,
+     "volume_in3": 13.5,
+     "max_18": 9,
+     "max_16": 7,
+     "max_14": 6,
+     "max_12": 6,
+     "max_10": 5,
+     "max_8": 4,
+     "max_6": 2,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "min. 60.3 depth FD - single cover/gang (2-3/8)",
+     "volume_cm3": 295,
+     "volume_in3": 18.0,
+     "max_18": 12,
+     "max_16": 10,
+     "max_14": 9,
+     "max_12": 8,
+     "max_10": 7,
+     "max_8": 6,
+     "max_6": 3,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "min. 44.5 depth FS - multiple cover/gang (1-3/4)",
+     "volume_cm3": 295,
+     "volume_in3": 18.0,
+     "max_18": 12,
+     "max_16": 10,
+     "max_14": 9,
+     "max_12": 8,
+     "max_10": 7,
+     "max_8": 6,
+     "max_6": 3,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    },
+    {
+     "box": "min. 60.3 depth FD - multiple cover/gang (2-3/8)",
+     "volume_cm3": 395,
+     "volume_in3": 24.0,
+     "max_18": 16,
+     "max_16": 13,
+     "max_14": 12,
+     "max_12": 10,
+     "max_10": 9,
+     "max_8": 8,
+     "max_6": 4,
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1; P2-P4 agree"
+    }
+   ],
+   "status_round4": "rows 1-5 VERIFIED-2023 (carried A5, PI 3972 base text); rows 6-24 UNVERIFIED as 2023, VERIFIED-other-edition (2005, 2008, 2011; three publishers agree)",
+   "crosscheck_round4": [
+    {
+     "row": 1,
+     "box": "4 x 1-1/4 round/octagonal",
+     "in3": 12.5,
+     "max": {
+      "18": 8,
+      "16": 7,
+      "14": 6,
+      "12": 5,
+      "10": 5,
+      "8": 4,
+      "6": 2
+     },
+     "status_2023": "VERIFIED-2023 (A5, PI 3972)",
+     "row1_8awg_history": {
+      "2002 Steel City text (notice NFPA 70-1987)": 5,
+      "2005 Crouse-Hinds (NFPA 70-2005 notice)": 4,
+      "2008 Appleton": 5,
+      "2011 Steel City": 5,
+      "2023 PI 3972 base text": 4
+     }
+    },
+    {
+     "row": "2-24",
+     "match": "P13 equals data/verified/nec-314-16.json rows 2-24 in every in3 value and every count (script r4_3_scripts/compare_2005_2011.py: 0 differing rows)",
+     "status_2023": "UNVERIFIED"
+    }
+   ]
+  },
+  "Table 314.16(B)": {
+   "ref": "Table 314.16(B)(1)",
+   "edition": "2023",
+   "status": "VERIFIED-2023",
+   "status_basis": "Unrevised base text shown on the A2025 FD page of FR-7525 (whose only change is an informational note). Designation 'Table 314.16(B)(1)' is also cited in 2023-cycle SR-7528 and SR-7529.",
+   "pulls": "A5 two pulls + R4-3 raw pull + R4-3 canary pull: all agree",
+   "headers": [
+    "Size of Conductor (AWG)",
+    "Free Space Within Box for Each Conductor",
+    "cm3",
+    "in.3"
+   ],
+   "values": [
+    {
+     "awg": "18",
+     "cm3": 24.6,
+     "in3": 1.5
+    },
+    {
+     "awg": "16",
+     "cm3": 28.7,
+     "in3": 1.75
+    },
+    {
+     "awg": "14",
+     "cm3": 32.8,
+     "in3": 2.0
+    },
+    {
+     "awg": "12",
+     "cm3": 36.9,
+     "in3": 2.25
+    },
+    {
+     "awg": "10",
+     "cm3": 41.0,
+     "in3": 2.5
+    },
+    {
+     "awg": "8",
+     "cm3": 49.2,
+     "in3": 3.0
+    },
+    {
+     "awg": "6",
+     "cm3": 81.9,
+     "in3": 5.0
+    }
+   ],
+   "quote_segments": [
+    "Table 314.16(B)(1) Volume Allowance Required per Conductor",
+    "18 24.6 1.50",
+    "16 28.7 1.75",
+    "14 32.8 2.00",
+    "12 36.9 2.25",
+    "10 41.0 2.50",
+    "8 49.2 3.00",
+    "6 81.9 5.00"
+   ],
+   "crosscheck": "Eaton Crouse-Hinds catalog, NFPA 70-2005 notice (P13): 1.5 / 1.75 / 2 / 2.25 / 2.5 / 3 / 5 in3: match. A5: 2011 (Steel City) and 2008 (Appleton): match.",
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P08_FD_PrelimFR.pdf",
+   "source_page": "p. 26 of 163 (FR-7525 page)",
+   "permission_notice": "NFPA's own document (no notice applies)",
+   "retrieved": "2026-10-20",
+   "canaries": [
+    {
+     "planted": "18 24.6 1.75",
+     "rejected": true
+    },
+    {
+     "planted": "12 36.9 2.50",
+     "rejected": true
+    },
+    {
+     "planted": "6 81.9 4.00",
+     "rejected": true
+    }
+   ]
+  },
+  "314.16(B)(1)-(5)": {
+   "ref": "314.16(B)(1)-(5)",
+   "note": "2023 has (B)(1) through (B)(6). Text joins verbatim segments with ' … ' (words may be missing at a boundary).",
+   "rules": [
+    {
+     "item": "(B) intro",
+     "edition": "2020",
+     "status": "VERIFIED-other-edition",
+     "source": "P8",
+     "text": "The volumes in paragraphs 314.16(B)(1) through (B)(5), as applicable, shall be added together. … No allowance shall be required for small fittings such as locknuts and bushings. … Each space within a box installed with a barrier shall be calculated separately."
+    },
+    {
+     "item": "(B) intro",
+     "edition": "2026 First Draft",
+     "status": "VERIFIED-draft",
+     "source": "N1 FR-7529",
+     "text": "The volumes in 314.16(B)(1) through (B)(6), as applicable, shall be added together.",
+     "change": "adds 'splicing connectors' to small fittings needing no allowance"
+    },
+    {
+     "item": "(1)",
+     "title": "Conductor Fill",
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1",
+     "text": "Each conductor that originates outside the box and terminates or is spliced within the box … each conductor that passes through the box without splice or termination shall be counted once. … Each loop or coil of unbroken conductor not less than twice the minimum length required for free … conductors in 300.14 shall be counted twice. … A conductor, no part of which leaves the box, shall not be counted."
+    },
+    {
+     "item": "(1) exception",
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1",
+     "text": "An equipment grounding conductor or conductors not over four fixture wires smaller than #14 AWG … shall be permitted to be omitted from the calculations where they enter a box from a domed luminaire … and terminate within that box."
+    },
+    {
+     "item": "(2)",
+     "title": "Clamp Fill",
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1",
+     "text": "Where one or more internal cable clamps, whether factory or field supplied, are present in the box, … a single volume allowance in accordance with Table 314.16(B) shall be made … based on the largest conductor present in the box. … No allowance shall be required for a cable connector with its clamping mechanism outside the box."
+    },
+    {
+     "item": "(3)",
+     "title": "Support Fittings Fill",
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1",
+     "text": "Where one or more luminaire studs or hickeys are present in the box, … a single volume allowance in accordance with Table 314.16(B) … shall be made for each type of fitting based on the largest conductor present in the box."
+    },
+    {
+     "item": "(4)",
+     "title": "Device or Equipment Fill",
+     "edition": "2011",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P1",
+     "text": "For each yoke or strap containing one or more devices or equipment, a double volume allowance … in accordance with Table 314.16(B) shall be made for each yoke or strap based on the largest conductor … connected to a device(s) or equipment supported by that yoke or strap. … A device or utilization equipment wider than a single 50mm (2 in.) device box as described in Table 314.16(A) … shall have double volume allowances provided for each gang required for mounting.",
+     "draft_2026": "FR-7525 adds 'Informational Note: See 314.24(B) for additional information on minimum box depth.'"
+    },
+    {
+     "item": "(5)",
+     "title": "Equipment Grounding Conductor Fill",
+     "edition": "2020",
+     "status": "VERIFIED-other-edition",
+     "status_2023": "UNVERIFIED",
+     "source": "P8",
+     "text": "Where up to four equipment grounding conductors or equipment bonding jumpers enter a box, … a single volume allowance in accordance with Table 314.16(B) shall be made based on the largest … A 1/4 volume allowance shall be made for each additional equipment grounding conductor … or equipment bonding jumper that enters the box, based on the largest equipment grounding conductor",
+     "superseded_2011_text": "single allowance for all EGCs/EBJs plus an additional allowance for a 250.146(D) isolated-ground set (P1)"
+    },
+    {
+     "item": "(6)",
+     "title": "Terminal Block Fill",
+     "edition": "2026 First Draft",
+     "status": "VERIFIED-draft",
+     "exists_in_2023": "VERIFIED (N4: PIs 1617, 1785, 325 filed on 2023 314.16(B)(6))",
+     "source": "N1 FR-7527; C2 (category 4, 2023)",
+     "text": "Where a terminal block is present in a box, a single volume allowance in accordance with Table 314.16(B)(1) … shall be made for each terminal block assembly based on the largest conductor(s) terminated to the assembly."
+    }
+   ]
+  },
+  "314.16(B) intro (2023)": {
+   "ref": "NFPA 70 314.16(B) (paragraph excluding sub-sections)",
+   "edition": "2023",
+   "status": "VERIFIED-2023",
+   "status_basis": "Unrevised base text of the A2025 (2026-cycle) First Draft, whose base is NFPA 70-2023. FR-7529 inserted only 'splicing connectors' (statement); removing that insertion leaves the 2020 wording 'locknuts and bushings' (A5 P8).",
+   "values": {
+    "text_2023": "The volumes in 314.16(B)(1) through (B)(6), as applicable, shall be added together. No allowance shall be required for small fittings such as locknuts and bushings. Each space within a box installed with a barrier shall be calculated separately.",
+    "subsection_range": "(B)(1) through (B)(6)",
+    "word_paragraphs_present": false,
+    "sentence_in_no_case_present_in_B": false,
+    "text_2026_first_draft": "... small fittings such as locknuts, splicing connectors, and bushings. ..."
+   },
+   "quote_segments": [
+    "The volumes in 314.16(B)(1) through (B)(6), as applicable, shall be added together. No allowance",
+    "shall be required for small fittings such as locknuts, splicing connectors, and bushings. Each space",
+    "within a box installed with a barrier shall be calculated separately."
+   ],
+   "quote_note": "Segments are the 2026 FD text (FR-7529); the 2023 text omits the FR-stated insertion 'splicing connectors,'.",
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P08_FD_PrelimFR.pdf",
+   "source_page": "p. 28 of 163, First Revision No. 7529-NFPA 70-2024 [Section No. 314.16(B) [Excluding any Sub-Sections]]",
+   "permission_notice": "NFPA's own document (no notice applies)",
+   "retrieved": "2026-10-20",
+   "canaries": [
+    {
+     "planted": "The volumes in 314.16(B)(1) through (B)(5)",
+     "rejected": true
+    },
+    {
+     "planted": "text contains the word 'paragraphs'",
+     "result": "NOT SHOWN"
+    },
+    {
+     "planted": "text contains 'In no case shall the volume of the box'",
+     "result": "NOT SHOWN"
+    }
+   ]
+  },
+  "314.16(B)(4) (2023)": {
+   "ref": "NFPA 70 314.16(B)(4) Device or Equipment Fill",
+   "edition": "2023",
+   "status": "VERIFIED-2023",
+   "status_basis": "Base text of A2025 FD FR-7525; statement: 'An informational note was added to alert code users to minimum box depth requirements.' Body text unrevised.",
+   "values": {
+    "text_2023": "For each yoke or strap containing one or more devices or equipment, a double volume allowance in accordance with Table 314.16(B)(1) shall be made for each yoke or strap based on the largest conductor connected to a device(s) or equipment supported by that yoke or strap. A device or utilization equipment wider than a single 50 mm (2 in.) device box as described in Table 314.16(A) shall have double volume allowances provided for each gang required for mounting.",
+    "allowance_per_yoke": "double",
+    "basis": "largest conductor connected to a device(s) or equipment supported by that yoke or strap",
+    "wide_device": "double allowance for each gang required for mounting (wider than a single 50 mm (2 in.) device box)",
+    "added_in_2026_FD_not_2023": "Informational Note: See 314.24(B) for additional information on minimum box depth."
+   },
+   "quote_segments": [
+    "(4) Device or Equipment Fill.",
+    "For each yoke or strap containing one or more devices or equipment, a double volume",
+    "allowance in accordance with Table 314.16(B)(1) shall be made for each yoke or strap based on the",
+    "largest conductor connected to a device(s) or equipment supported by that yoke or strap. A device or",
+    "utilization equipment wider than a single 50 mm (2 in.) device box as described in Table 314.16(A) shall",
+    "have double volume allowances provided for each gang required for mounting."
+   ],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P08_FD_PrelimFR.pdf",
+   "source_page": "p. 26 of 163, First Revision No. 7525-NFPA 70-2024 [Section No. 314.16(B)(4)]",
+   "permission_notice": "NFPA's own document (no notice applies)",
+   "retrieved": "2026-10-20",
+   "canaries": [
+    {
+     "planted": "'a single volume allowance' for each yoke or strap",
+     "rejected": true
+    }
+   ]
+  },
+  "314.16(B)(5) (2023)": {
+   "ref": "NFPA 70 314.16(B)(5) Equipment Grounding Conductor Fill",
+   "edition": "2023 (Second Draft text)",
+   "status": "verified-sd2023. Condition 3 (checked 2026-10-24): 2022 Technical Meeting per-CAM results and Standards Council per-appeal decisions not seen. NFPA (blog, 31 Aug 2022): 55 CAMs; 14 appeals 'resulted in 18 amendments and four concurrently issuing' TIAs (by date, TIAs 23-3 to 23-6); appeal topics optical fiber cable, copper-clad aluminum wiring, surge protection devices, GFCI protection, swimming pool bonding. Overlap: none. Rendered as 2023 NEC under decision D-09.",
+   "conditions": {
+    "1_sd_text": "met: Second Revision SR-7528 (A2022 SD), responding to Public Comment No. 940",
+    "2_two_pulls_and_canaries": "met: text pull + raw-token pull agree; canary pull rejected 3 planted values",
+    "3_tm_sc_check": "not checked (no A2022 CAM list found; NITMAM_MC_Report_A2022.pdf does not resolve; IAEI/NFPA-staff column gives counts only: 55 CAMs, 18 passed)"
+   },
+   "caution": "314.16(B)(6) changed between this Second Draft and the printed 2023 edition (see b04), so a post-SD editorial change to (B)(5) cannot be excluded.",
+   "values": {
+    "text_sd": "Where up to four equipment grounding conductors enter a box, a single volume allowance in accordance with Table 314.16(B)(1) shall be made based on the largest equipment grounding conductor entering the box. A 1/4 volume allowance shall be made for each additional equipment grounding conductor that enters the box, based on the largest equipment grounding conductor entering the box.",
+    "count_covered_by_single_allowance": 4,
+    "additional_allowance_each": "1/4",
+    "basis": "largest equipment grounding conductor entering the box",
+    "equipment_bonding_jumpers_in_text": false,
+    "markup_note": "Raw tokens end '...largest equipment grounding conductor in entering the box.'; the SR statement says CMP 9 changed 'in' to 'entering', so 'in' is the struck word."
+   },
+   "quote_segments": [
+    "(5) Equipment Grounding Conductor Fill.",
+    "Where up to four equipment grounding conductors enter a box, a single volume allowance",
+    "in accordance with Table 314.16(B)(1) shall be made based on the largest equipment grounding conductor",
+    "entering the box.",
+    "A 1/4 volume allowance shall be made for each additional equipment grounding conductor that enters the box,",
+    "based on the largest equipment grounding conductor in entering the box.",
+    "A bonding jumper that never leaves the box is not counted,",
+    "CMP 9 is changing the word “in” to “entering” at the end of the paragraph so the rule will not be misapplied."
+   ],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P09_SD_SRStatements.pdf",
+   "source_page": "Second Revision No. 7528-NFPA 70-2021 [Section No. 314.16(B)(5)]; Committee NEC-P09; submitted Wed Oct 13 12:40:15 EDT 2021; printed 12/6/2021",
+   "permission_notice": "NFPA's own document (no notice applies)",
+   "retrieved": "2026-10-20",
+   "canaries": [
+    {
+     "planted": "Where up to six equipment grounding conductors enter a box",
+     "rejected": true
+    },
+    {
+     "planted": "A 1/2 volume allowance ... each additional equipment grounding conductor",
+     "rejected": true
+    },
+    {
+     "planted": "refers to Table 314.16(B)(2)",
+     "rejected": true,
+     "result": "NOT SHOWN"
+    }
+   ],
+   "contradicts": "data/verified/nec-314-16.json item (5) uses the 2020 wording 'equipment grounding conductors or equipment bonding jumpers'"
+  },
+  "314.16(B)(6) (2023)": {
+   "ref": "NFPA 70 314.16(B)(6) Terminal Block Fill",
+   "edition": "2023",
+   "status": "VERIFIED-2023",
+   "status_basis": "Base text of A2025 FD FR-7527 (statement: 'Editorial change was made to address consolidated words'). The 2023 print ends 'terminated tothe assembly' [sic]; 2026 FD corrects it to 'to the assembly'.",
+   "values": {
+    "text_2023": "Where a terminal block is present in a box, a single volume allowance in accordance with Table 314.16(B)(1) shall be made for each terminal block assembly based on the largest conductor(s) terminated tothe assembly. [sic: 'to the']",
+    "allowance": "single, per terminal block assembly (not per pole)",
+    "basis": "largest conductor(s) terminated to the assembly",
+    "second_draft_text_superseded": "... shall be made for each terminal block assembly based on the largest conductor(s) terminated to it. (SR-7529, A2022 SD; raw tokens 'terminated within to it', statement: 'within' changed to 'to')",
+    "sd_vs_print": "CONFLICT in final words only: SD 'to it' vs 2023 print 'tothe assembly'. Source of the post-SD change not identified."
+   },
+   "quote_segments": [
+    "(6) Terminal Block Fill.",
+    "Where a terminal block is present in a box, a single volume allowance in accordance with Table",
+    "314.16(B)(1) shall be made for each terminal block assembly based on the largest conductor(s)",
+    "terminated tothe to the assembly.",
+    "CMP 9 accepts the concept of applying the allowance for each terminal block, but adds the word “assembly”",
+    "to clarify that the allowance does not apply to each pole of a multipole terminal block,"
+   ],
+   "source_url": [
+    "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P08_FD_PrelimFR.pdf",
+    "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P09_SD_SRStatements.pdf"
+   ],
+   "source_page": "FR-7527 p. 27 of 163 (A2025 FD); SR-7529 (A2022 SD, Committee NEC-P09, PC 1062)",
+   "permission_notice": "NFPA's own documents (no notice applies)",
+   "retrieved": "2026-10-20",
+   "canaries": [
+    {
+     "planted": "'a double volume allowance' for a terminal block (SR-7529)",
+     "rejected": true
+    },
+    {
+     "planted": "allowance made 'for each pole of the terminal block' (SR-7529)",
+     "rejected": true
+    },
+    {
+     "planted": "allowance made 'for each pole of the terminal block' (FR-7527)",
+     "rejected": true
+    }
+   ]
+  },
+  "314.27(E) (2023)": {
+   "ref": "NFPA 70 314.27(E) WSCR box-fill sentence (box-fill relevant)",
+   "edition": "2023 (Second Draft text)",
+   "status": "verified-sd2023. Condition 3 (checked 2026-10-24): 2022 Technical Meeting per-CAM results and Standards Council per-appeal decisions not seen. NFPA (blog, 31 Aug 2022): 55 CAMs; 14 appeals 'resulted in 18 amendments and four concurrently issuing' TIAs (by date, TIAs 23-3 to 23-6); appeal topics optical fiber cable, copper-clad aluminum wiring, surge protection devices, GFCI protection, swimming pool bonding. Overlap: none. Rendered as 2023 NEC under decision D-09.",
+   "conditions": {
+    "1_sd_text": "met: SR-7535 (A2022 SD, PC 2179)",
+    "2_two_pulls_and_canaries": "met: text pull + raw pull agree; canary '314.16(B)(2)' rejected",
+    "3_tm_sc_check": "not checked"
+   },
+   "values": {
+    "rule": "A weight-supporting ceiling receptacle (WSCR) installed within a box is included in the box fill calculation under 314.16(B)(4) (device or equipment fill)."
+   },
+   "quote_segments": [
+    "Where the WSCR is installed within a box , it shall be included in the box fill calculation",
+    "covered in 314.16(B)(4)."
+   ],
+   "markup_note": "The space before the comma suggests flattened markup nearby; the cited subsection 314.16(B)(4) was confirmed by the canary pull.",
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P09_SD_SRStatements.pdf",
+   "source_page": "Second Revision No. 7535-NFPA 70-2021 [Section No. 314.27(E)]; Committee NEC-P09",
+   "permission_notice": "NFPA's own document (no notice applies)",
+   "retrieved": "2026-10-20",
+   "canaries": [
+    {
+     "planted": "included in the box fill calculation covered in 314.16(B)(2)",
+     "rejected": true
+    }
+   ]
+  }
+ },
+ "notes": [
+  "Table 314.16(A) rows 1–5 are 2023 (PI 3972); rows 6–24 and the footnote are 2005/2008/2011 reprints only (three publishers agree) — do not render them as 2023.",
+  "2023 counting rules verified: Table 314.16(B)(1) all 7 rows, 314.16(B) intro, (B)(4) and (B)(6) (VERIFIED-2023), (B)(5) (verified-sd2023: up to four EGCs entering = one allowance on the largest entering, ¼ for each additional; bonding jumpers that stay in the box are not counted), 314.27(E) (a WSCR counts as device fill).",
+  "Still unverified for 2023: the wording of (B)(1) conductor fill, (B)(2) clamp fill and (B)(3) support fittings fill. The box-fill tool stays withdrawn until they are verified.",
+  "The old '314.16(B)(1)-(5)' entry holds 2011/2020 wording, including the 2020 (B)(5) text that counted equipment bonding jumpers; the 2023 entries above replace it where they exist.",
+  "Chapter 9 Tables 1, 4, 5, 8 and 9 (2023): only the Table 4 IMC block is verified (nec-ch9-table4.json); the conduit-fill tool stays withdrawn."
+ ]
+}

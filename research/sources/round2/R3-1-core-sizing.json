@@ -1,0 +1,524 @@
+[
+ {
+  "ref": "110.14(C)(1)(a),(C)(1)(b),(C)(2)",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "values": {},
+  "quote_segments": [],
+  "source_url": null,
+  "permission_notice": null,
+  "retrieved": "2026-10-20",
+  "notes": "No tier 1-3 text reached. Round-2 tier-4 text (incl. motor letters B, C, or D) remains corroboration only."
+ },
+ {
+  "ref": "110.14(C) 2026 change check",
+  "edition": "2026 Second Draft (A2025)",
+  "status": "VERIFIED-draft (negative finding: no Second Revision on 110.14(C))",
+  "values": {
+   "sr_on_110_14": [
+    "SR-7644 110.14 [Excluding any Sub-Sections]",
+    "SR-7618 110.14(D)"
+   ],
+   "sr_on_110_14_C": "none"
+  },
+  "quote_segments": [
+   "(D) Terminal Connection Torque.",
+   "Tightening torque values for terminal connections shall be as indicated on equipment or in",
+   "installation instructions provided by the manufacturer. An approved means shall be used to",
+   "achieve the indicated torque value."
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P01_SD_PrelimSR.pdf",
+  "permission_notice": null,
+  "retrieved": "2026-10-20",
+  "notes": "Visible text runs through Annex A Table A.2, so all Art. 110 SRs are in view. A First-Draft-stage revision of 110.14(C) is not excluded."
+ },
+ {
+  "ref": "110.14(A) (Massachusetts amendment)",
+  "edition": "2023 NEC as amended by 527 CMR 12.00",
+  "status": "VERIFIED-2023 (MA only)",
+  "values": {
+   "wire_binding_screws_permitted_for": "10 AWG or smaller solid conductors, or conductors with Class B stranding"
+  },
+  "quote_segments": [
+   "Connection by means of wire binding screws or studs and nuts having upturned lugs or equivalent",
+   "shall be permitted for 10 AWG or smaller solid conductors, or conductors with Class B stranding."
+  ],
+  "source_url": "https://www.mass.gov/doc/527-cmr-1200-massachusetts-electrical-code-effective-21723/download",
+  "permission_notice": null,
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "334.80",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "values": {},
+  "quote_segments": [],
+  "source_url": null,
+  "permission_notice": null,
+  "retrieved": "2026-10-20",
+  "notes": "NEC base text not reached in tiers 1-3. See the WA and MA deviation blocks."
+ },
+ {
+  "ref": "334.80 (Washington: WAC 296-46B-334(8))",
+  "edition": "NFPA 70-2023 as adopted and amended by Washington (WAC 296-46B-010)",
+  "status": "VERIFIED (WA only)",
+  "values": {
+   "ungrounded_10AWG_and_smaller": "60°C (140°F) ampacity",
+   "ungrounded_larger_than_10AWG": "75°C (167°F) ampacity",
+   "adjustment_correction_basis": "90°C (194°F) rating",
+   "cable_tray": "NEC 392.80(A)",
+   "bundled_through_sealed_framing_opening": "more than two NM-B cables with two or more CCCs, no spacing: adjust per NEC Table 310.15(C)(1); 310.14(A)(2) Exception shall not apply",
+   "in_contact_with_thermal_insulation": "same adjustment rule"
+  },
+  "quote_segments": [
+   "(8)(a) The ampacity of Types NM and NMC cable carrying suffix letter \"-B\" shall be determined",
+   "in accordance with NEC 310.14.",
+   "(b) The ampacity of #10 AWG and smaller ungrounded conductors shall not exceed that of a 60°C (140°F) rated conductor.",
+   "(c) The ampacity of ungrounded conductors larger than #10 AWG shall not exceed that of a 75°C (167°F) rated conductor.",
+   "(d) The 90°C (194°F) rating shall be permitted to be used for ampacity adjustment and correction calculations,",
+   "provided the final calculated ampacity for #10 AWG and smaller ungrounded conductors does not exceed that of a",
+   "60°C (140°F) rated conductor or exceed that of a 75°C (167°F) rated conductor",
+   "for ungrounded conductors larger than #10 AWG.",
+   "(f) Where more than two NM cables carrying suffix letter \"-B\" containing two or more current-carrying conductors are installed,",
+   "without maintaining spacing between the cables, through the same opening in wood framing that is to be sealed",
+   "with thermal insulation, caulk, or sealing foam, the ampacity of each conductor shall be adjusted in accordance with",
+   "NEC Table 310.15(C)(1) and NEC 310.14(A)(2), Exception, shall not apply.",
+   "(g) Where more than two NM cables carrying suffix letter \"-B\" containing two or more current-carrying conductors are installed",
+   "in contact with thermal insulation without maintaining spacing between cables, the ampacity of each conductor shall be",
+   "adjusted in accordance with NEC Table 310.15(C)(1) and NEC 310.14(A)(2), Exception, shall not apply."
+  ],
+  "source_url": "http://app.leg.wa.gov/WAC/default.aspx?cite=296-46B-334",
+  "permission_notice": null,
+  "retrieved": "2026-10-20",
+  "notes": "WSR 25-23-069, filed 11/18/25, effective 12/19/25. WA adopts NFPA 70-2023 and NFPA 70-2026 effective Dec 31, 2026 (WAC 296-46B-010). This is state text, not NEC base text."
+ },
+ {
+  "ref": "334.80 (Massachusetts amendment)",
+  "edition": "2023 NEC as amended by 527 CMR 12.00",
+  "status": "VERIFIED-2023 (MA only)",
+  "values": {
+   "conductor_rating": "90°C (194°F)",
+   "in_thermal_insulation": "60°C conductor ampacity (summary this run; round 2 quoted the sentence)"
+  },
+  "quote_segments": [
+   "334.80 Ampacity. Type NM, and NMC cables shall have conductors rated at 90°C (194°F)."
+  ],
+  "source_url": "https://www.mass.gov/doc/527-cmr-1200-massachusetts-electrical-code-effective-21723/download",
+  "permission_notice": null,
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "Table 310.15(C)(1) (Massachusetts replacement) and 310.15(C)(1)(d) deletion",
+  "edition": "2023 NEC as amended by 527 CMR 12.00",
+  "status": "VERIFIED-2023 (MA only) for the fact of replacement; factor values from extractor summaries only (round 2 and round 3 agree); no raw-line pull",
+  "values": {
+   "4-6": "80%",
+   "7-24": "70%",
+   "25-42": "60%",
+   "43_and_above": "50%",
+   "header": "Percent of Values in Tables 310.16 through 310.19, as Adjusted for Ambient Temperature if Necessary.",
+   "310.15(C)(1)(d)": "deleted"
+  },
+  "quote_segments": [
+   "Percent of Values in Tables 310.16 through 310.19, as Adjusted for Ambient Temperature if Necessary."
+  ],
+  "source_url": "https://www.mass.gov/doc/527-cmr-1200-massachusetts-electrical-code-effective-21723/download",
+  "permission_notice": null,
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "340.80",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "values": {},
+  "quote_segments": [],
+  "source_url": null,
+  "permission_notice": null,
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "210.19(A)",
+  "edition": "2023 (base text of 2026 First Draft FR-8210)",
+  "status": "VERIFIED-2023 (excerpts; middle words of items (1) and (2) not seen)",
+  "values": {
+   "structure": "210.19(A) lead-in + items (1), (2); 'Exception to (1)'; 'Exception to (1) and (2)'",
+   "continuous_multiplier": "125 percent",
+   "item1_reference": "310.14",
+   "item2_reference": "310.15",
+   "exception_to_1_reference": "110.14(C)"
+  },
+  "quote_segments": [
+   "Branch-circuit conductors shall have an ampacity not less than the larger of the following...",
+   "(1) Where a branch circuit supplies continuous loads or any combination of continuous and noncontinu",
+   "less than the noncontinuous load plus 125 percent of the continuous load in accordance with 310.14.",
+   "(2) The minimum branch-circuit conductor size shall have an ampacity not less than the maximum load",
+   "be served after the application of any adjustment or correction factors in accordance with 310.15.",
+   "Exception to (1): If the assembly, including the overcurrent devices protecting the branch circuits",
+   "less than the sum of the continuous load plus the noncontinuous load in accordance with 110.14(C).",
+   "Exception to (1) and (2): Where a portion of a branch circuit is connected at both its supply and"
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P02_FD_PrelimFR.pdf",
+  "permission_notice": null,
+  "retrieved": "2026-10-20",
+  "notes": "FR-8210 statement: 'This revision applies consistent usage of the defined term “branch circuit overcurrent protective device.”' No informational notes, grounded-conductor exception or (B)-(D) shown."
+ },
+ {
+  "ref": "210.19 household ranges (8 3/4 kW, 40 A) and grounded-conductor exception",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "values": {},
+  "quote_segments": [],
+  "source_url": null,
+  "permission_notice": null,
+  "retrieved": "2026-10-20",
+  "notes": "Item number for the range rule in 2023 not seen; do not cite one."
+ },
+ {
+  "ref": "210.20(A)",
+  "edition": "2023 (base text of FR-8210)",
+  "status": "VERIFIED-2023 (main-rule excerpts); Exception VERIFIED-draft (round 2)",
+  "values": {
+   "continuous_multiplier": "125 percent",
+   "exception": "assembly listed for 100 percent operation (draft wording)"
+  },
+  "quote_segments": [
+   "Where a branch circuit supplies continuous loads or any combination of continuous and noncontinuous",
+   "shall not be less than the noncontinuous load plus 125 percent of the continuous load."
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P02_FD_PrelimFR.pdf",
+  "permission_notice": null,
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "215.2(A), (A)(1), (A)(2)",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "values": {
+   "lead_in": "larger of 215.2(A)(1) or (A)(2); comply with 110.14(C)",
+   "continuous_multiplier": "125 percent",
+   "exception_1": "assembly incl. OCPDs listed for 100 percent: sum of continuous plus noncontinuous",
+   "exception_2": "portion connected at both ends to separately installed pressure connections (110.14(C)(2)); not into enclosures with terminations",
+   "exception_3": "grounded conductors not connected to an overcurrent device: 100 percent",
+   "item2_reference": "310.14"
+  },
+  "quote_segments": [
+   "(A) General.",
+   "Feeder conductors shall have an ampacity not less than the larger of 215.2(A)(1) or (A)(2) and shall comply",
+   "with 110.14(C) .",
+   "(1) Continuous and Noncontinuous Loads.",
+   "Where a feeder supplies continuous loads or any combination of continuous and noncontinuous loads, the",
+   "minimum feeder conductor size shall have an ampacity not less than the noncontinuous load plus",
+   "125 percent of the continuous load.",
+   "Exception No. 1: If the assembly, including the overcurrent devices protecting the feeder(s), is listed for",
+   "operation at 100 percent of its rating, the ampacity of the feeder conductors shall be permitted to be not",
+   "less than the sum of the continuous load plus the noncontinuous load.",
+   "Exception No. 2: Where a portion of a feeder is connected at both its supply and load ends to separately",
+   "installed pressure connections as covered in 110.14(C)(2) , it shall be permitted to have an ampacity not",
+   "less than the sum of the continuous load plus the noncontinuous load. No portion of a feeder installed",
+   "under this exception shall extend into an enclosure containing either the feeder supply or the feeder load",
+   "terminations, as covered in 110.14(C)(1) .",
+   "Exception No. 3: Grounded conductors that are not connected to an overcurrent device shall be permitted",
+   "to be sized at 100 percent of the continuous and noncontinuous load.",
+   "(2) Ampacity Adjustment or Correction Factors.",
+   "The minimum feeder conductor size shall have an ampacity not less than the maximum load to be served",
+   "after the application of any adjustment or correction factors in accordance with 310.14 ."
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P10_PISubmittals.pdf",
+  "permission_notice": null,
+  "retrieved": "2026-10-20",
+  "notes": "Public Input No. 1824-NFPA 70-2023; cross-checked against PI 472 (identical up to '…either the feeder suppl' except PI 472's proposed added words in the (1) heading). Exception No. 3 and (2) are from PI 1824 only."
+ },
+ {
+  "ref": "215.2 / 215.3 headings and 2026 renumbering",
+  "edition": "2023 headings; 2026 First Draft numbering",
+  "status": "VERIFIED-2023 (headings); VERIFIED-draft (2026 215.2->215.4, 215.3->215.5)",
+  "values": {
+   "215.2_heading_2023": "Minimum Rating and Size.",
+   "215.3_heading_2023": "Overcurrent Protection.",
+   "2026_FD": {
+    "215.2": "215.4",
+    "215.3": "215.5",
+    "215.4": "215.14",
+    "215.5": "215.13"
+   }
+  },
+  "quote_segments": [
+   "215.2 215.4 Minimum Rating and Size. [Move 215.2 to 215.4]",
+   "215.3 215.5 Overcurrent Protection. [Move 215.3 to 215.5]",
+   "These sections are renumbered to comply with NEC Style Manual section 2.2.1."
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P10_FD_PrelimFR.pdf",
+  "permission_notice": null,
+  "retrieved": "2026-10-20",
+  "notes": "FR-8995 (Global). The 215.4->215.14 and 215.5->215.13 moves are from the extractor's FR list. Final 2026 numbering not seen."
+ },
+ {
+  "ref": "215.3",
+  "edition": "2023 (base text of FR-9001)",
+  "status": "VERIFIED-2023 (continuous-load sentence and Exception); first sentence VERIFIED-draft (merged)",
+  "values": {
+   "continuous_multiplier": "125 percent",
+   "exception": "assembly incl. OCPDs listed for 100 percent: OCPD rating not less than continuous plus noncontinuous"
+  },
+  "quote_segments": [
+   "215.3 Overcurrent Protection.",
+   "Feeders shall be protected against overcurrent in accordance with Part I of Article 240, Part I .",
+   "Where a feeder supplies continuous loads or any combination of continuous and noncontinuous",
+   "loads, the rating of the overcurrent device shall not be less than the noncontinuous load plus",
+   "125 percent of the continuous load.",
+   "Exception: Where the assembly, including the overcurrent devices protecting the feeder(s), is",
+   "listed for operation at 100 percent of its rating, the ampere rating of the overcurrent device",
+   "shall be permitted to be not less than the sum of the continuous load plus the noncontinuous",
+   "load."
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P10_FD_PrelimFR.pdf",
+  "permission_notice": null,
+  "retrieved": "2026-10-20",
+  "notes": "FR-9001 statement: 'The language is being revised to comply with the NEC Style Manual section 4.1.4.' Two pulls identical."
+ },
+ {
+  "ref": "230.42(A), (A)(1)",
+  "edition": "2023 (base text of FR-9117, FR-9119)",
+  "status": "VERIFIED-2023 (intro sentences 1, 2, 4, 5 and note; (A)(1) heading, body and Exception No. 1); intro sentence 3 VERIFIED-draft; Exception No. 2 CONFLICTING; (A)(2) UNVERIFIED",
+  "values": {
+   "lead_in": "largest of 230.42(A)(1) or (A)(2)",
+   "ampacity_source": "310.14 and comply with 110.14(C)",
+   "continuous_multiplier": "125 percent",
+   "exception_1": "grounded conductors not connected to an overcurrent device: 100 percent",
+   "exception_2_condition": "OCPD and its assembly listed for 100 percent operation (wording CONFLICTING)"
+  },
+  "quote_segments": [
+   "Service-entrance conductors shall have an ampacity of not less than the maximum load to be served.",
+   "Conductors shall be sized not less than the largest of 230.42(A)(1) or (A)(2).",
+   "Loads shall be determined in accordance with Article 220, Part III, IV, or V of Article 220 , as",
+   "applicable.",
+   "Ampacity shall be determined from 310.14 and shall comply with 110.14(C).",
+   "The maximum current of busways shall be that value for which the busway has been listed or labeled.",
+   "Informational Note: See UL 857, Standard for Safety for Busways, for information on busways.",
+   "(1) Continuous and Noncontinuous Loads.",
+   "Where the service-entrance conductors supply continuous loads or any combination of",
+   "noncontinuous and continuous loads, the minimum service-entrance conductor size shall have",
+   "an ampacity not less than the sum of the noncontinuous loads plus 125 percent of continuous",
+   "loads.",
+   "Exception No. 1: Grounded conductors that are not connected to an overcurrent device shall",
+   "be permitted to be sized at 100 percent of the sum of the continuous and noncontinuous load."
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P10_FD_PrelimFR.pdf",
+  "permission_notice": null,
+  "retrieved": "2026-10-20",
+  "notes": "FR-9117 statement: 'The text is revised to comply with the NEC Style Manual section 4.1.4, regarding the use of parts.' FR-9119 statement: 'The text of exception 2 is revised for clarity.' Exception No. 2 pulls differ ('the continuous load and the continuous load' vs 'the continuous and noncontinuous load and the continuous load')."
+ },
+ {
+  "ref": "215.2(A) Informational Notes No. 1-3 (voltage drop)",
+  "edition": "2023",
+  "status": "VERIFIED-2023 (single PI, single pull)",
+  "values": {
+   "feeder_drop": "3 percent at the farthest outlet",
+   "total_drop": "5 percent (feeders plus branch circuits to the farthest outlet)",
+   "effect_stated": "will provide reasonable efficiency of operation",
+   "note_number": "Informational Note No. 2",
+   "cross_reference_note": "Informational Note No. 3: See 210.19, Informational Note"
+  },
+  "quote_segments": [
+   "Informational Note No. 1: See Informative Annex D for Examples D1 through D11.",
+   "Informational Note No. 2: Conductors for feeders, as defined in Article 100, sized to prevent a voltage",
+   "drop exceeding 3 percent at the farthest outlet of power, heating, and lighting loads, or combinations",
+   "of such loads, and where the maximum total voltage drop on both feeders and branch circuits to the",
+   "farthest outlet does not exceed 5 percent, will provide reasonable efficiency of operation.",
+   "Informational Note No. 3: See 210.19, Informational Note for voltage drop for branch circuits."
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P10_PISubmittals.pdf",
+  "permission_notice": null,
+  "retrieved": "2026-10-20",
+  "notes": "Public Input No. 1824-NFPA 70-2023. Notes printed after 215.2(A)(2); attachment to (A) vs (A)(2) not determinable from extraction."
+ },
+ {
+  "ref": "210.19 voltage-drop informational note",
+  "edition": "2023",
+  "status": "UNVERIFIED (wording and number)",
+  "values": {},
+  "quote_segments": [],
+  "source_url": null,
+  "permission_notice": null,
+  "retrieved": "2026-10-20",
+  "notes": "Its existence is implied by 215.2(A) Informational Note No. 3 ('See 210.19, Informational Note ...')."
+ },
+ {
+  "ref": "310.15(E)",
+  "edition": "2023 / 2026",
+  "status": "UNVERIFIED (2023 wording); VERIFIED-other-edition (2026, government summary only)",
+  "values": {
+   "2026_change": "new list format identifying when a neutral counts as current-carrying"
+  },
+  "quote_segments": [
+   "A new list format will clearly identify when a neutral is considered as a current-carrying conductor."
+  ],
+  "source_url": "https://dli.mn.gov/sites/default/files/pdf/boe-011526-change-summary.pdf",
+  "permission_notice": null,
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "310.15(F)",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "values": {},
+  "quote_segments": [],
+  "source_url": null,
+  "permission_notice": null,
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "250.122(A)",
+  "edition": "2023",
+  "status": "UNVERIFIED (2023 wording; 'need not be larger than circuit conductors' sentence not seen); OCPD-based sizing VERIFIED-other-edition (NFPA 2020 paraphrase)",
+  "values": {
+   "sizing_basis": "rating or setting of the OCPD ahead of the equipment"
+  },
+  "quote_segments": [
+   "Table 250.122 uses the rating of the overcurrent protective device (OCPD) ahead of the equipment",
+   "or load that is being supplied to properly size the EGC.",
+   "Where necessary to comply with 250.4(A)(5) or (B)(4), the equipment grounding conductor",
+   "shall be sized larger than given in this table."
+  ],
+  "source_url": "https://www.salinas.gov/files/sharedassets/city/v/1/fire-department/documents/grounding-bonding-fact-sheet.pdf",
+  "permission_notice": "NFPA fact sheet: '© 2020 National Fire Protection Association / June 2020'; 'This material is not the official position of any NFPA Technical Committee on any referenced topic'",
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "250.122(B)",
+  "edition": "2020 (NFPA paraphrase); 2023 wording UNVERIFIED",
+  "status": "VERIFIED-other-edition (2020, paraphrase)",
+  "values": {
+   "rule": "increase EGC proportionally when ungrounded conductors are upsized for any reason other than temperature correction or number of current-carrying conductors",
+   "example_ratio": "1.4 (350,000 / 250,000 cmil)",
+   "example_result": "58,436 cmil -> 2 AWG Cu (66,360 cmil)"
+  },
+  "quote_segments": [
+   "If the ungrounded circuit conductors are increased in size for any reason other than temperature correction",
+   "or due to the number of current-carrying conductors in a raceway, the EGC must be increased proportionally.",
+   "Where the ungrounded circuit conductors are increased in size to compensate for voltage drop,",
+   "the EGCs must be increased proportionately.",
+   "41,740 circular mils × 1.4 = 58,436 circular mils",
+   "The next larger size is 66,360 circular mils, which converts to a 2 AWG copper EGC."
+  ],
+  "source_url": "https://www.salinas.gov/files/sharedassets/city/v/1/fire-department/documents/grounding-bonding-fact-sheet.pdf",
+  "permission_notice": "NFPA fact sheet: '© 2020 National Fire Protection Association / June 2020'",
+  "retrieved": "2026-10-20",
+  "notes": "Arithmetic re-run with python3 -I: 1.4; 58,436. No qualified-person exception mentioned; its 2023 status UNVERIFIED."
+ },
+ {
+  "ref": "625.41",
+  "edition": "2023 / 2026 SD",
+  "status": "UNVERIFIED (2023); VERIFIED-draft negative finding: no 2026 Second Revision",
+  "values": {},
+  "quote_segments": [],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P12_SD_PrelimSR.pdf",
+  "permission_notice": null,
+  "retrieved": "2026-10-20",
+  "notes": "125% for EV circuits is still supported via 625.42 (continuous, VERIFIED-2023 round 2) + 210.19(A)(1)/210.20(A) (VERIFIED-2023 this run)."
+ },
+ {
+  "ref": "625.17(A)/(C) cord and cable lengths",
+  "edition": "2026 Second Draft (merged redline)",
+  "status": "VERIFIED-draft (values only); 2023 UNVERIFIED",
+  "values": {
+   "portable_cord_max": "300 mm (12 in.)",
+   "fastened_in_place_cord_max": "1.8 m (6 ft)",
+   "interrupter_at_plug_or_first_300mm_cord_max": "4.6 m (15 ft)",
+   "overall_usable_length_max": "7.5 m (25 ft) unless cable management system part of listed EVSE"
+  },
+  "quote_segments": [
+   "(5) For portable equipment in accordance with 625.44(A) , the power-supply cord",
+   "shall be not more than 300 mm (12 in.) long.",
+   "(6) For hand fastened -in-place a. i. equipment in accordance with 625.44(B) , the power-supply cord",
+   "shall be not more than 1.8 m (6 ft) long and the equipment shall be installed at a height that prevents",
+   "b. When the interrupting device of the personnel protection system is located at the attachment plug,",
+   "or within the first 300 mm (12 in.) of the power-supply cord, the overall cord length shall be not",
+   "greater than 4.6 m (15 ft).",
+   "(C) Overall Cord and Cable Length. The overall usable length shall not exceed 7.5 m (25 ft) unless equipped with a cable management system"
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P12_SD_PrelimSR.pdf",
+  "permission_notice": null,
+  "retrieved": "2026-10-20",
+  "notes": "SR-7856. Item labels garbled by flattening; the condition each value applies to in 2023 is not established."
+ },
+ {
+  "ref": "625.50",
+  "edition": "2023 / 2026 SD",
+  "status": "UNVERIFIED (2023); no 2026 Second Revision (VERIFIED-draft negative)",
+  "values": {},
+  "quote_segments": [],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P12_SD_PrelimSR.pdf",
+  "permission_notice": null,
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "627.41(B) (2026; electric self-propelled vehicles; Article 627 renumbered 624 by SR-7898)",
+  "edition": "2026 Second Draft",
+  "status": "VERIFIED-draft",
+  "values": {
+   "continuous_multiplier": "125 percent"
+  },
+  "quote_segments": [
+   "(B) Noncontinuous Loads. Where noncontinuous loads are supplied from the same feeder, overcurrent devices OCPDs",
+   "shall have current ratings of not less than the sum of the noncontinuous loads plus 125 percent",
+   "of the continuous loads."
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P12_SD_PrelimSR.pdf",
+  "permission_notice": null,
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "110.15",
+  "edition": "2026 Second Draft (merged redline); 2023 UNVERIFIED",
+  "status": "VERIFIED-draft",
+  "values": {
+   "system": "4-wire, delta-connected, midpoint of one phase winding grounded",
+   "marked_conductor": "conductor or busbar having the higher phase voltage to ground",
+   "color": "orange",
+   "2026_change": "visibility moved to all splices and terminations; 'all accessible' removed; exception deleted"
+  },
+  "quote_segments": [
+   "110.15 High-Leg Marking.",
+   "On a 4-wire, delta-connected system where the midpoint of one phase winding is grounded,",
+   "only the conductor or busbar having the higher phase voltage to ground shall be durably and",
+   "permanently marked orange in color by an outer finish or by other effective means such that",
+   "orange is visible to all accessible points and terminations at all splices and terminations .",
+   "Such identification shall be placed at each point on the system where a connection is made if the",
+   "grounded conductor is also present."
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P01_SD_PrelimSR.pdf",
+  "permission_notice": null,
+  "retrieved": "2026-10-20",
+  "notes": "SR-7619 statement: 'The exception does not add clarity to the marking requirement.'"
+ },
+ {
+  "ref": "240.4(D)(4)-(D)(8); 240.6(A) fuse-only sentence",
+  "edition": "2023",
+  "status": "unchanged from round 2: (D)(4)-(D)(8) VERIFIED-draft / 2023 UNVERIFIED; fuse-only sentence CONFLICTING",
+  "values": {},
+  "quote_segments": [],
+  "source_url": null,
+  "permission_notice": null,
+  "retrieved": "2026-10-20",
+  "notes": "CMP-10 PI window ends in 215.2(A) (p.40 of 504); CMP-10 FD window ends in 230.67(A) (p.56 of 113); neither reaches Art. 240."
+ },
+ {
+  "ref": "adoption context seen in this run",
+  "edition": "n/a",
+  "status": "VERIFIED (government sources)",
+  "values": {
+   "WA": "NFPA 70-2023 in force; NFPA 70-2026 effective Dec 31, 2026 (WAC 296-46B-010)",
+   "OR": "OESC based on 2026 NEC, effective Oct 1, 2026; adopts TIAs 26-1 to 26-9 (Table 1-E)",
+   "NC": "2023 State Electrical Code effective date indefinitely delayed (Session Law 2025-2)",
+   "Clark County NV": "SNBO amendments to 2023 NEC effective Jan 11, 2026",
+   "2026_NEC_ANS_approval": "September 9, 2025 (per OR Table 1-E)"
+  },
+  "quote_segments": [
+   "The 2023 edition of the National Electrical Code (NFPA 70 - 2023) including Annex A, B, C,"
+  ],
+  "source_url": "http://app.leg.wa.gov/WAC/default.aspx?cite=296-46B-010",
+  "permission_notice": null,
+  "retrieved": "2026-10-20"
+ }
+]

@@ -1,0 +1,23 @@
+slug,wave,required_domains,optional_domains,engine_groups,notes
+/guides/wire-size-for-200-amp,WSZ-008,nec-310-12;nec-310-16;nec-250-grounding;conductor-resistance-20c;nec-110-14c,nec-misc-installation,voltage-drop;service-lookup,the 310.12-vs-310.16 explanation needs 110.14(C)
+/guides/wire-size-for-100-amp,WSZ-008,nec-310-12;nec-310-16;nec-250-grounding;conductor-resistance-20c;nec-110-14c;nec-feeders-outbuildings,,voltage-drop;service-lookup;wire-size-60c,subpanel answer depends on the terminal column and on 250.32
+/calculators/service-entrance-calculator,WSZ-008,nec-310-12;nec-250-grounding;conductor-resistance-20c,nec-misc-installation,service-lookup;voltage-drop,tool already a verified lookup since WSZ-002; this wave adds content and voltage drop
+/guides/wire-size-for-ev-charger,WSZ-008,mfr-evse;nec-2023-rule-excerpts;nec-continuous-load;nec-310-16;nec-110-14c;nec-cable-rules;nec-250-grounding;irs-30c-credit;conductor-resistance-20c,nec-ch9-fill,wire-size-60c;voltage-drop,
+/calculators/ground-wire-calculator,WSZ-008,nec-250-grounding,nec-grounding-rules,table-250-122;table-250-66,GEC mode limits (250.66(A)/(B)) only when nec-grounding-rules is verified
+/calculators/garage-subpanel-calculator,WSZ-008,nec-310-16;nec-250-grounding;nec-feeders-outbuildings;conductor-resistance-20c,nec-110-14c;nec-300-5-burial,wire-size-60c;voltage-drop,withdrawn in WSZ-002; without nec-110-14c the tool stays 60 °C-only
+/calculators/wire-size-calculator,WSZ-009,nec-310-16;nec-310-15-corrections;nec-240-4-d;nec-240-ocpd;nec-250-grounding;conductor-resistance-20c,nec-110-14c;nec-continuous-load;nec-cable-rules,wire-size-60c;ampacity-correction;wire-size-termination;wire-size-derated,75 °C option and continuous-load mode only when their domains are verified
+/calculators/ampacity-calculator,WSZ-009,nec-310-16;nec-310-15-corrections;nec-240-4-d,nec-110-14c;nec-cable-rules,ampacity-correction;ampacity-arithmetic;wire-size-termination,
+/calculators/circuit-breaker-calculator,WSZ-009,nec-continuous-load;nec-240-ocpd;nec-240-4-d;nec-310-16,nec-110-14c,breaker-sizing;wire-size-60c;wire-size-termination,withdrawn in WSZ-002
+/calculators/conduit-fill-calculator,WSZ-009,nec-ch9-fill,,,withdrawn in WSZ-002
+/calculators/box-fill-calculator,WSZ-009,nec-314-16-box-fill,,,withdrawn in WSZ-002
+/calculators/residential-load-calculator,WSZ-010,nec-220-load-calcs;nec-310-12,nec-2026-edition,load-calc-2023;load-calc-2023-standard,withdrawn in WSZ-002; 2023 methods only until Article 120 values are verified; the standard-method golden group waits on the 220.52 sentence that puts small-appliance and laundry loads under Table 220.45
+/calculators/range-calculator,WSZ-010,nec-220-load-calcs;nec-2023-rule-excerpts;nec-310-16;mfr-dryer-range;nema-receptacle-configs,nec-110-14c;nec-continuous-load,load-calc-2023;wire-size-60c,withdrawn in WSZ-002
+/calculators/dryer-calculator,WSZ-010,mfr-dryer-range;nec-220-load-calcs;nec-2023-rule-excerpts;nema-receptacle-configs;nec-310-16,,load-calc-2023,withdrawn in WSZ-002
+/calculators/horsepower-to-amps-calculator,WSZ-011,nec-430-flc,,motor-flc,"withdrawn in WSZ-002; table currents only (430.6(A)), no conductor or breaker output until nec-430-motors is verified"
+/calculators/motor-circuit,WSZ-011,nec-430-flc;nec-430-motors;nec-310-16;nec-240-ocpd,nec-110-14c,motor-flc;motor-circuit,withdrawn in WSZ-002
+/calculators/well-pump-calculator,WSZ-011,nec-430-flc;mfr-well-pump;nec-430-motors,,motor-flc,withdrawn in WSZ-002
+/calculators/pool-pump-calculator,WSZ-011,nec-430-flc;mfr-pool-pumps;nec-680-pools-spas;nec-430-motors,,motor-flc,withdrawn in WSZ-002
+/calculators/hot-tub-calculator,WSZ-011,mfr-spas;nec-680-pools-spas;nec-310-16;nec-250-grounding,nec-110-14c,wire-size-60c,withdrawn in WSZ-002
+/calculators/welder-calculator,WSZ-011,nec-630-welders;mfr-welders;nec-310-16,,welder,withdrawn in WSZ-002
+/calculators/air-conditioner-calculator,WSZ-011,nec-440-hvac;mfr-hvac-specs;nec-310-16,doe-efficiency-standards;nec-110-14c,hvac-mca,withdrawn in WSZ-002
+/calculators/rv-hookup-calculator,WSZ-011,nec-551-rv-demand;nec-2023-rule-excerpts;nema-receptacle-configs;nec-310-16;conductor-resistance-20c,nec-110-14c,rv-demand;voltage-drop,withdrawn in WSZ-002

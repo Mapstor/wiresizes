@@ -1,0 +1,1112 @@
+==================== WSZ-002 ====================
+WSZ-002 STOPBLEED (final, 2026-10-25; replaces every earlier WSZ-002 text) — wiresizes.com: remove fabrications and wrong numbers, fix the live calculators, withdraw 15 tools, 6 new redirects, honest trust pages
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes", and the DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 shows WSZ-001 BOOTSTRAP as done, and `git cat-file -t 506a451` prints "commit". Otherwise stop.
+SYNC: run `git fetch origin`, then `git status -sb` and `git log --oneline main..origin/main`. If origin/main has commits main lacks, stop and report. The owner pushes from his Mac. Never pull, rebase or force anything here.
+COMMIT IDENTITY: the box has no git identity. Commit with `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`. Never write git config.
+
+0. Install research pack v4
+   The owner unzipped wiresizes-research-pack-v4.zip in the repo root, which created wsz-pack-v4/. If an older wsz-pack-v3/ folder is also there, delete it first: `rm -rf wsz-pack-v3`.
+   - Verify it first: `(cd wsz-pack-v4 && sha256sum -c --quiet research/MANIFEST.sha256) && echo PACK-OK`. Continue only if it prints PACK-OK. Otherwise stop and paste the failing lines.
+   - Copy, overwriting: `cp -R wsz-pack-v4/research/. research/`, then `mkdir -p data/verified && cp -R wsz-pack-v4/data/verified/. data/verified/`. Chat generates these files; the repo copies are never hand-edited.
+   - Delete research/prompts/ALL-WSZ-001-007.txt. research/prompts/ALL-WSZ-002-011.txt replaces it.
+   - Confirm:
+     · `diff -r wsz-pack-v4/research research` prints only "Only in research: inventory-2026-10.md" and, if WSZ-013 DRAFTCHECK ran, "Only in research: wsz002-draft-review.md" (keep that file). If it prints anything else, stop and report it.
+     · `diff -r wsz-pack-v4/data/verified data/verified` prints nothing.
+     · `cat research/PACK_VERSION` prints v4.
+     Then `rm -rf wsz-pack-v4`.
+   - `python3 -I research/check_sources.py research/data-sources.csv research/page-map.csv` prints RESULT: OK.
+   - Commit "chore(wsz-002): research pack v4" on its own.
+
+Read before changing anything:
+- DEVLOG §0–§5 and the last 10 §6 entries
+- research/inventory-2026-10.md
+- research/wsz002-draft-review.md, if present (WSZ-013's check of the old draft; this prompt covers its must-fix items)
+- research/AUDIT-2026-10.md §4–§5
+- research/code-audit-2026-10.md: the calculator-logic audit, with file:line for every item in step 6
+- research/page-map.csv (column interim_wsz002)
+- research/wsz002-withdrawals.csv (15 rows)
+- research/wsz002-banned-strings.txt
+- research/trust-pages-copy.md: render it verbatim
+- research/trust-frame-spec.md
+- research/golden-cases.json: the "rules" field, including the size-key rule
+- .claude/skills/anti-slop-prose/SKILL.md
+
+Rules for this wave
+- Delete and correct. No new explanatory content; that starts in WSZ-005. New text is allowed only for:
+  · what research/trust-pages-copy.md gives;
+  · the withdrawal notices;
+  · the labels, captions, result titles and messages quoted in this prompt;
+  · the result-panel step lines (steps[]), error messages and llms.txt lines this prompt asks for. Each one states an input, a table value or a computed result and names its table. Nothing else.
+- A wrong value may be replaced only by a value read from data/verified/*.json, research/golden-cases.json or a row of research/data-sources.csv whose status is "verified". If the right value isn't there, delete the statement together with its table, example or FAQ entry.
+- Never render a value whose row or file status is VERIFIED-draft, UNVERIFIED, CONFLICTING or do_not_publish. Values marked verified-sd2023 (2023-cycle Second Draft text, double-checked) render as 2023 NEC, including those whose data file says the 2022 Technical Meeting and Standards Council record was not seen (decision D-09). 625.54 stays held.
+- A wrong computed table or worked example on a page is deleted, not recomputed. Calculators compute only through the code in step 6.
+- Never add an NEC section number that is missing from research/nec-sections-allowlist.csv.
+- Statements on the live pages about which temperature column a circuit, cable or terminal may use (110.14(C), 334.80) predate the verified rules: 334.80 is still unverified, and 110.14(C) is verified (data/verified/nec-110-14c.json) but is rebuilt into the tools and guides in WSZ-008/009, not in this wave. Delete every such statement, including the section numbers themselves. A statement rests on them if it:
+  · names either section;
+  · says which temperature column a circuit, cable, breaker or terminal uses or is rated for;
+  · recommends a wire size for a breaker or load from the 75 °C or 90 °C column.
+  Table values labelled with their column stay (for example "75 °C column: 180 A").
+  Examples to delete:
+  · wire-size-calculator/page.tsx ~188 ("This assumes 75°C rated conductors and terminations…");
+  · wire-size-calculator/page.tsx ~224 ("10 AWG copper is rated for 35 amps at 75°C, making it suitable for 30A breakers");
+  · wire-size-calculator/page.tsx ~75 ("May use 50A breaker");
+  · every 3/0 copper size given for a 200 A dwelling service;
+  · the 100-amp guide's meta description (~55);
+  · the homepage ~772 and ~810 ("…at 75°C").
+- The canonical host stays https://wiresizes.com (apex). Vercel already 308-redirects www to it. Don't change metadataBase, canonicals, the sitemap base URL or robots.txt.
+- Line numbers below are from commit a99da4e. Find each item by its text; the numbers are a guide.
+- Before the first change, record the TypeScript baseline in DEVLOG: `rm -rf .next && npm run build`, then `npx tsc --noEmit 2>&1 | grep -c "error TS"`. Step 9 measures the same way.
+- Commit at the checkpoints marked [commit]; each of those messages starts with "fix(wsz-002):". The step-0 pack commit uses the message given there. Run the full verification (step 9) at the end, before the DEVLOG step.
+
+1. Housekeeping
+   - .gitignore line 47: replace `.claude/` with two lines, `.claude/*` and `!.claude/skills/`. Skill folders then commit normally, and .claude/settings.local.json stays ignored. Check:
+     · `git check-ignore -v .claude/settings.local.json` → ignored;
+     · `git check-ignore -v .claude/skills/devlog/SKILL.md` → prints nothing (not ignored).
+   - `git add .gitignore .claude/skills`. This stages every skill folder WSZ-001 installed; they could not be committed while `.claude/` was ignored. Confirm with `git ls-files --cached .claude/skills | cut -d/ -f3 | sort -u`.
+   - Install the Impeccable design skill, pinned. On 2026-10-20 chat inspected npm package impeccable@4.7.0: author Paul Bakaus, repository github.com/pbakaus/impeccable. Its launcher runs the @impeccable/cli-linux-* 0.1.16 binary, which installs from registry.npmjs.org.
+     · Run `git status --short --ignored > /tmp/before.txt`, then `npx --yes impeccable@4.7.0 install -y --no-hooks --providers=claude --scope=project`, then `git status --short --ignored > /tmp/after.txt`.
+     · `diff /tmp/before.txt /tmp/after.txt` may show only paths under .claude/skills/impeccable/. (--ignored also shows writes to ignored paths such as .claude/settings.json.)
+     · `sed -n '1,6p' .claude/skills/impeccable/SKILL.md` must show `name: impeccable` in its front matter.
+     · If the install fails or either check fails:
+       - undo what the installer changed outside .claude/skills/impeccable/ (`git checkout -- <path>` for tracked files; delete untracked paths it created);
+       - delete .claude/skills/impeccable/;
+       - record "impeccable not installed: <error>" in DEVLOG §0;
+       - carry on.
+     · If both checks pass, run `find .claude/skills/impeccable -type f -size +1M`. Any file it lists (for example a bundled binary) goes into .gitignore and DEVLOG §0. Then `git add .claude/skills/impeccable`. WSZ-005 onward uses it.
+   - Self-host the fonts so no page requests Google Fonts:
+     · `npm install @fontsource/inter @fontsource/jetbrains-mono`;
+     · import the weights in use in src/app/layout.tsx: Inter 400, 500, 600 and 700; JetBrains Mono 400 and 500;
+     · delete the @import on src/app/globals.css line 2 and the two preconnect <link>s in layout.tsx.
+     The family names stay 'Inter' and 'JetBrains Mono'.
+   - Test runner, with no new packages: `node --experimental-strip-types --import ./tests/register.mjs --test "tests/**/*.test.ts"`. Add it to package.json as "test".
+     tests/register.mjs registers resolve and load hooks through node:module register(). The hooks:
+     · map "@/..." to src/...;
+     · for every extensionless specifier, relative or "@/...", try .ts, .tsx and /index.ts;
+     · load .json files as ES modules (export default of the parsed JSON).
+     Tests import only pure .ts modules, never .tsx. Every module a test loads uses erasable TypeScript only: `import type` for types, and no enums, namespaces or parameter properties. Node strips types; it does not compile them.
+   [commit] "fix(wsz-002): housekeeping (gitignore, skills, impeccable, self-hosted fonts, test runner)"
+
+2. Site-wide fabrications
+   Delete every phrase in research/wsz002-banned-strings.txt where it originates. Main locations:
+   - src/components/layout/Header.tsx:
+     · the trust bar (lines 18–36);
+     · the "Professional Tools" subtitle under the logo (53);
+     · both "FREE / Always" badges (69–74 and 79–82);
+     · the mobile "NEC Compliant / Professional" block (120–131).
+   - src/components/layout/Footer.tsx:
+     · the tagline and the three emoji badges (87–95) become the footer line from trust-pages-copy.md;
+     · the "Industry Standards & Authority Links" block (238–279) becomes links to /about, /contact, /privacy, /terms and /disclaimer, plus the NFPA notice;
+     · the "Professional Disclaimer" box (281–297) gets the "Disclaimer" heading and text;
+     · the copyright line (306) becomes "© {year} Moving Data Systems d.o.o.";
+     · delete the bottom tagline (309).
+   - src/app/opengraph-image.tsx (twitter-image re-exports it):
+     · the alt text (line 8) and the subtitle under the logo (80) per trust-pages-copy.md;
+     · delete the line under the headline (115) and the six reference pills.
+     If nothing references public/images/og-image.svg or public/images/og-template.html (grep first), delete them.
+   - src/app/layout.tsx: the meta description (14), the OpenGraph description (44) and the Twitter description (50), all per trust-pages-copy.md. public/manifest.json: description per trust-pages-copy.md.
+   - src/app/calculators/page.tsx:
+     · the meta (27, 44, 54, 337);
+     · the featured-tools usage line (262);
+     · the "NEC Compliant" feature card (273);
+     · the claims and badges in the H1 block (383–400). The H1 becomes "Electrical Calculators".
+   - src/app/guides/page.tsx:
+     · the STATS array and its row (137–142);
+     · the FAQ entries on AI assistants (~330–341) and on citing in design documents (~320–329). The NEC-edition FAQ (~298–308) stays; step 7 corrects it;
+     · the "update cadence" list (~427–440).
+     In src/app/guides/layout.tsx line 76, delete the "Professional-grade…" sentence.
+   - Every "Authority Links", "Authority Resources", "Authority References" and "Industry Standards" section on a page. They list organizations' home pages, not the sources of the page's numbers. WSZ-005 onward adds real per-page sources. Most are marked {/* Authority Links */}; they appear on box-fill, btu-to-watts, circuit-breaker, ground-wire, horsepower-to-amps, hot-tub, kilowatts-to-amps, kva-to-amps, low-voltage, ohms-law, volts-to-amps, welder, wire-resistance, wire-size, awg-wire-size-chart, nec-table-310-16, wire-size-for-100-amp and voltage-drop.
+   - Every compliance claim: "NEC Compliant", "NEC-compliant", "code-compliant", "Article NNN compliant" and so on, whether in a badge, card, heading, meta, OpenGraph or Twitter tag (`grep -rni compliant src public`, about 190 hits).
+   - Headings like "Complete your … with these professional tools": keep the links to live pages and rename the heading "Related calculators".
+   - Emoji in headings and badges, per-tool usage % bars, star ratings, and read-time and level badges.
+   - src/app/error.tsx line 75 and src/app/not-found.tsx (search form ~91, SearchAction ~239): change per trust-pages-copy.md.
+   - public/llms.txt: rewrite it to list only live, non-withdrawn pages, one factual line each saying what the page shows or computes. No social proof, no compliance claims.
+   - Cost, price, rebate, savings, ROI, energy-bill and permit-fee content everywhere, including tool outputs and print payloads:
+     · "Cost @ $0.12/kWh": KilowattsToAmpsCalculator.tsx ~430, VoltsToAmpsCalculator.tsx ~341, OhmsLawCalculator.tsx ~360;
+     · the dollar "case studies" in ServiceEntranceCalculator.tsx ~90–160;
+     · the "Cost Tip" in WireSizeCalculator.tsx ~241.
+
+   Homepage (src/app/page.tsx). Keep only the sections below, in this order, and delete every other section. WSZ-005 rebuilds the page.
+   - The H1 "Electrical Calculators & Wire Sizing Tools". Delete the line under it (~260).
+   - The calculator grid, live tools only:
+     · the H2 becomes "Calculators";
+     · delete its subtitle line and the "{n} professional tools" count;
+     · drop every withdrawn tool and every redirect source from CALCULATOR_CATEGORIES, and drop any category left empty;
+     · the BTU card's description becomes "Convert Btu/h, watts and tons".
+   - The "Quick Wire Size Lookup" card from the "Wire Sizing Made Simple" section. Delete that section's left column with the four steps.
+     · Keep its four rows: 15 A → 14 AWG, 20 A → 12 AWG, 30 A → 10 AWG and 40 A → 8 AWG.
+     · Delete the "use" line under each row.
+     · Add the caption "Copper, 60 °C column of NEC Table 310.16 (2023), 30 °C ambient, up to three current-carrying conductors."
+   - The "Service Entrance" table (SERVICE_SIZES):
+     · the 150 A row's copper size becomes 1 AWG [nec-310-12.json]; the other three rows already match;
+     · caption: "120/240 V single-phase dwelling service or main power feeder, NEC Table 310.12 (2023)."
+   - The "Grounding Electrode Conductors" table (GROUNDING_CONDUCTORS):
+     · its four rows equal Table 250.66 for each service's Table 310.12 conductors, in both materials [nec-250-66.json];
+     · column headers become "Service", "Copper GEC" and "Aluminum GEC", and sizes print as "8 AWG", not "#8 AWG";
+     · caption: "NEC Table 250.66, for the Table 310.12 conductors (values from NFPA's 2020 grounding fact sheet)."
+   - The guide and tool link lists, live pages only:
+     · delete the links to the six redirect sources and the description line under every link;
+     · the headings become "Guides" and "Charts and references".
+   - The compact disclaimer, with the footer disclaimer text from trust-pages-copy.md.
+   Everything else goes, including:
+   - the constants that only deleted sections use: COMMON_WIRE_SIZES, VOLTAGE_DROP_LIMITS, HOMEPAGE_BREAKER_PAIRINGS, MOTOR_FLA and the rest;
+   - the "Professional Electrical Engineering Tools" block (~266–340);
+   - the mistakes list (~472–503), the checklist (~505–556) and the inspector rankings (~557–583);
+   - the visual comparison;
+   - the NEC code references and the copy of Table 310.16 (~720–800);
+   - the article summaries, cost, troubleshooting, safety (arc flash and LOTO), equipment loads, motor FLC and wire-cost sections;
+   - the equipment-specific guides (~1260–1304);
+   - the questions and calculation examples (~1305–1369);
+   - the regional differences and the code-evolution timeline.
+   The meta description (25) becomes "Wire size, ampacity and voltage drop calculators with AWG and NEC reference tables." Step 3 covers the homepage schema.
+
+3. Structured data
+   - CombinedSchema.tsx (about 34 calculator pages): drop FAQPage from the @graph, and change applicationCategory to "UtilitiesApplication".
+   - Delete src/data/calculator-faqs.ts and every import of it. Its 151 answers were never shown on a page, and the code audit lists 18 of them as wrong.
+   - Remove FAQPage everywhere else:
+     · ArticleFAQSchema on the 200-amp and EV guides keeps its Article and BreadcrumbList output and loses the FAQPage node;
+     · delete src/components/FAQSchema.tsx and src/components/seo/FAQSchema.tsx.
+   - Remove every HowToSchema use (6 guides) and delete src/components/seo/HowToSchema.tsx.
+   - In src/components/seo/index.ts, delete the FAQSchema and HowToSchema exports in the same change, so every import still resolves.
+   - Remove SearchAction from the WebSite schema in src/app/page.tsx (~203–210) and from src/app/not-found.tsx (~239). The site has no /search.
+   - Homepage JSON-LD (src/app/page.tsx):
+     · Organization (~173–190): remove contactPoint (support@ doesn't exist); its description becomes "Wire gauge charts, NEC table values and calculators for sizing conductors.";
+     · WebSite (~192–212): the same description;
+     · CollectionPage (~214–235): its description becomes the homepage meta description.
+   - DatasetSchema.tsx: delete the license field (CC BY 4.0 cannot apply to NFPA table data) and the creator field.
+   - Keep BreadcrumbList, WebSite (without SearchAction), WebApplication and Article. WSZ-004 adds Person and Organization.
+
+4. Redirects (308): add six entries to next.config.ts redirects(), each with permanent: true, a relative destination, one hop and no trailing slash.
+   - /calculators/ev-charger-calculator → /guides/wire-size-for-ev-charger
+   - /calculators/ev-charger-wire-size-calculator → /guides/wire-size-for-ev-charger
+   - /calculators/hot-tub-wire-size-calculator → /calculators/hot-tub-calculator
+   - /calculators/electrical-load-calculator → /calculators/residential-load-calculator
+   - /guides/wire-sizing-guide → /calculators/wire-size-calculator
+   - /guides/electrical-safety → /guides
+   The existing redirects stay, including /calculators/ac-wire-size → /calculators/air-conditioner-calculator. Seven redirects (two new, five existing) land on pages this wave withdraws; they stay pointed there until WSZ-010/011 rebuilds those pages.
+   Then:
+   - Delete the six route folders.
+   - Delete the components only they used: EVChargerCalculator, EVChargerWireSizeCalculator, HotTubWireSizeCalculator, ElectricalLoadCalculator and ClientElectricalLoadCalculator. Also delete GarageSubpanelWireSizeCalculator, which nothing imports. Update src/components/calculators/index.ts.
+   - Remove the six routes from src/app/sitemap.ts, both hubs, the homepage, the footer and every internal link. Point each link at its redirect target, or drop it where the target is withdrawn.
+
+5. Withdraw the 15 tools in research/wsz002-withdrawals.csv
+   For each slug:
+   - The URL keeps returning 200. Set metadata robots to { index: false, follow: true }.
+   - Remove it from sitemap.ts, both hubs, the homepage, the footer and every "related" block or internal link.
+   - Replace the whole page body (calculator, tables, FAQ, schema) with three things: the existing H1; the withdrawal paragraph from trust-pages-copy.md, filled with the row's what_was_wrong; and the row's links.
+   - Keep the meta title, minus any banned phrase. The OpenGraph and Twitter titles become the meta title. The meta, OpenGraph and Twitter descriptions become the withdrawn line from trust-pages-copy.md. (Example: circuit-breaker-calculator/page.tsx:14 has the OpenGraph title "… NEC Compliant Breaker Sizing Tool".)
+   - Leave the old components in the repo, unused. WSZ-008 to WSZ-011 rebuild these pages.
+   [commit] "fix(wsz-002): remove fabricated claims, schema fixes, 6 redirects, withdraw 15 tools"
+
+6. Calculator code fixes on the live tools
+   research/code-audit-2026-10.md has the details and file:line for each item. Data comes only from data/verified/*.json (plus, for 6h, the nist-sp811-conversions row of research/data-sources.csv):
+   - awg.json
+   - nec-310-16.json
+   - nec-310-15-B-1-1.json
+   - nec-310-15-C-1.json
+   - nec-240-4-d.json
+   - nec-240-6-a.json
+   - nec-250-122.json
+   - nec-250-66.json
+   - nec-310-12.json
+   Rules for every tool in this step:
+   - Put each piece of math in a pure .ts module under src/lib/calculations/ so tests can import it. The .tsx components only call those modules.
+   - Size keys: modules take and return nec-310-16.json keys ("14", "1/0", "4/0", "250"). One file, src/lib/calculations/sizes.ts, maps them to awg.json names ("0" to "0000" for 1/0 to 4/0) and formats them for display: "14 AWG", "1/0 AWG", "250 kcmil". Never "#250 AWG".
+   - Result titles, labels and error messages are exported constants in the pure modules, and each module exports its default and reset inputs. The tests assert both.
+   - Inputs: volts must be greater than 0, and three-phase is allowed only at the line-to-line voltages 208, 240, 480 and 600 V. Power factor must be greater than 0 and at most 1.
+   - Print and share: every print()/handlePrint payload and every share-URL field lists exactly what the result panel shows, with the same labels, the EGC per material and kcmil labels. Delete the print fields of every removed output. Known cases:
+     · WireSizeCalculator.tsx 90–98 prints one copper ground wire for both materials, and kcmil sizes as "#… AWG";
+     · GroundWireCalculator prints the copper size only;
+     · KilowattsToAmps prints 'Circuit Current (125%)' and 'Breaker Size';
+     · kVAToAmps prints 'Circuit Amperage' and 'Breaker Size';
+     · BTUToWatts prints 'Annual Operating Cost: $…';
+     · ThreePhase prints 'Neutral Current';
+     · WattsToAmps prints wire sizes.
+   - Shared components: keep the props of CalculatorResult and WireComparison backward compatible (add optional props, remove none). Withdrawn components still import them.
+
+   6a. Wire size engine. A new module, src/lib/calculations/conductor-sizing.ts, exports sizeConductor(input). It replaces calculateWireSize for every live tool. The withdrawn components keep importing calculateWireSize, so src/lib/calculations/wire-sizing.ts stays; after this wave no live file imports from wire-sizing.ts or from src/lib/calculations/index.ts, type imports included. Import new modules by their own paths.
+   - Inputs:
+     · ocpdA: a rating from nec-240-6-a.json between 15 and 400;
+     · loadA: optional; defaults to ocpdA; must not exceed ocpdA;
+     · lengthFt: one way, 0 to 2000;
+     · volts, under the input rules above;
+     · phase: single or three;
+     · material: Cu or Al;
+     · vdTargetPct: 1 to 10, default 3.
+   - Invalid input returns { error } with one of these codes, never a size, checked in this order (the first failure wins): 'rating-not-standard', 'rating-out-of-range', 'load-above-rating', 'length-out-of-range', 'vd-target-out-of-range', 'voltage-invalid'.
+   - Step 1, ampacity: take the smallest nec-310-16.json size whose 60 °C ampacity for the material (cu_60 or al_60) is at least ocpdA. Skip sizes with no 60 °C value.
+   - Step 2, 240.4(D): call maxOcpd240_4D(size, material) (see 6c). If it returns a row with conditions null and ocpdA exceeds its max_ocpd_a, move up to the next size with a 60 °C value until it doesn't. In the 60 °C column this never changes the size; it guards the later 75 °C option.
+   - Step 3, EGC: take the first nec-250-122.json row whose ocpd_a_not_exceeding is at least ocpdA. Use the cu column for copper circuits and al_cca for aluminum.
+   - Step 4, voltage drop at loadA, with 75 °C resistance from awg.json:
+     · copper AWG: r75_cu_solid_ohm_per_1000ft_derived;
+     · copper kcmil: r75_cu_solid_equiv_ohm_per_1000ft_derived;
+     · aluminum: r75_al_ech19_ohm_per_1000ft_derived.
+     VD = k × I × R × L / 1000, where k = 2 for single-phase and √3 for three-phase. % = VD / volts × 100.
+   - Step 5: if the % is above vdTargetPct, step to the next larger nec-310-16 size until it meets the target or reaches 2000 kcmil. In that case return the 2000 kcmil result with meetsTarget false. Never fall back to a smaller size.
+   - Step 6: if step 5 upsized, the required EGC area is tableEgcArea × chosenArea ÷ step2Area, multiplied first. awg.json areas are whole numbers, so the product is exact and the division is correctly rounded. (Computing the ratio first gives 211600.00000000003 cmil for a 4/0 circuit and picks a 250 kcmil ground wire.) Pick the smallest nec-310-16 size with at least that area, never smaller than the table EGC. This is the 250.122(B) rule in nec-250-122.json (rule_250_122_b). Table 250.122 can give an EGC larger than the conductor: a 25 A aluminum circuit gets a 10 AWG conductor and an 8 AWG EGC, and step 6 then scales from that 8 AWG. Show the computed size and don't cap it; the 250.122(A) sentence that would cap it is not verified yet. If no nec-310-16 size reaches the required area, return egc null, with egcUpsized and egcLargerThanConductor true.
+   - Return { size, ampacity60, minSizeByAmpacity, vdVolts, vdPct, meetsTarget, egc, egcUpsized, egcLargerThanConductor, steps[] }:
+     · ampacity60 is the 60 °C ampacity of the returned size;
+     · egcUpsized is true when the returned EGC is larger than the Table 250.122 size;
+     · egc is null only when no nec-310-16 size reaches the required area;
+     · egcLargerThanConductor is true when the EGC is null or its awg.json area is larger than the returned size's area (in this wave, only 25 A aluminum);
+     · steps[] explains each step in plain words for the result panel.
+   - Golden groups in research/golden-cases.json: "wire-size-60c" (34 cases; three of them catch a ratio-first EGC computation, and the three 25 A aluminum cases have a Table 250.122 EGC larger than the conductor, one of them larger than any Table 310.16 size), "wire-size-errors" (7) and "service-lookup".
+   - WireSizeCalculator.tsx:
+     · Inputs:
+       - "Breaker or fuse rating": a select of the nec-240-6-a.json ratings from 15 to 400 A, default 20;
+       - "Load current for voltage drop (A)": optional, defaults to the rating;
+       - length: a number input in feet, 0 to 2000, step 1 (the old slider stops at 500 ft in 10 ft steps; a slider may stay beside it);
+       - voltage: single-phase 120, 208, 240, 277 or 480 V; three-phase 208, 240, 480 or 600 V. Switching phase resets an invalid voltage to 240 V;
+       - phase;
+       - "Voltage-drop target (your choice)": a select of 1, 2, 3, 4 and 5 %, default 3 %.
+     · Copper and aluminum results side by side, each with its own EGC.
+     · Under the results, these three lines verbatim:
+       "Sized from the 60 °C column of NEC Table 310.16 (2023), limited by 240.4(D); ground wire from Table 250.122."
+       "Assumes 30 °C (86 °F) ambient and no more than three current-carrying conductors together. Hotter locations or more conductors need the factors in Tables 310.15(B)(1)(1) and 310.15(C)(1): use the ampacity calculator."
+       "A 120/240 V dwelling service or main power feeder is sized from NEC Table 310.12 instead: see the service entrance calculator."
+     · When egcUpsized is true, add under that material's result: "Ground wire increased in proportion to the larger conductors (NEC 250.122(B))."
+     · When egcLargerThanConductor is true, add under that material's result: "For this rating, Table 250.122 lists a ground wire larger than the smallest conductor the rating allows."
+     · When egc is null, show in place of the ground wire size: "No size in NEC Table 310.16 is large enough for this ground wire."
+     · No 75 °C or 90 °C option in this wave. WSZ-009 adds the 75 °C option under the 110.14(C) rules in data/verified/nec-110-14c.json.
+     · Share URLs carry the new inputs. An old link's amps value is used as the rating only if it is a standard rating from 15 to 400 A; otherwise the default applies.
+   - CalculatorResult.tsx:
+     · show the EGC by material and name the material;
+     · use kcmil labels;
+     · render an error state instead of "#N/A AWG", "0A" and a green "0.00 %";
+     · titles "Meets your voltage-drop target" or "Above your voltage-drop target", from meetsTarget and the reader's target. Delete the hard-coded 3 % and 5 % thresholds (~26–30 and ~85–88) and the titles "Wire Size (With Caution)" and "Wire Size (Not Recommended)" (~45, ~52).
+   - WireVisualization.tsx and WireComparison: diameters from awg.json (kcmil: √cmil mils × 0.0254 mm); kcmil labels. Delete WireSizeScale.tsx, which is unused, and its export line in src/components/visualizations/index.ts.
+
+   6b. Voltage drop calculator (VoltageDropCalculator.tsx, through a pure voltage-drop.ts):
+   - Sizes come from nec-310-16.json (aluminum from 12 AWG; no 14 AWG Al). Resistance at 75 °C from awg.json for every size up to 2000 kcmil, which fixes the 0 % shown above 500 kcmil.
+   - Voltage options follow the wire size calculator's lists for each phase.
+   - Power loss in watts: 2·I²·R·L/1000 for single-phase, 3·I²·R·L/1000 for three-phase.
+   - The aluminum line reads "about 64 % higher resistance than copper" (17.002 ÷ 10.371).
+   - Results show the % and volts against the reader's target, with no NEC claim. Delete "Within NEC 3% recommendation", "Exceeds 3% but within 5% limit" and "Voltage drop exceeds NEC recommendation of 3%" (VoltageDropCalculator.tsx ~173, ~175, ~245, ~297; VoltageDropVisual.tsx ~180–181). VoltageDropVisual takes the reader's target as a prop: delete its fixed 3 %/5 % thresholds (lines 20–21) and line 182 ("exceeds 5% - consider larger wire").
+   - Label: "DC resistance of solid conductors at 75 °C, calculated from NIST Handbook 100 and 109 constants. Stranded conductors measure slightly higher, and AC reactance is not included."
+   - Length: a number input in feet, 0 to 2000, step 1, replacing the 0–500 ft slider in 10 ft steps.
+   - Golden group: "voltage-drop".
+
+   6c. Ampacity calculator (AmpacityCalculator.tsx, through a pure ampacity.ts):
+   - The ambient options are the 16 rows of nec-310-15-B-1-1.json. The factor comes from the selected column (f_60, f_75 or f_90).
+   - A null factor shows "Not permitted at this ambient temperature for this insulation rating" and no number.
+   - Adjustment comes from nec-310-15-C-1.json.
+   - Defaults and reset: the 60 °C column (line 74 has useState('75')), the 26–30 °C row and 1–3 conductors. Fix handleReset to restore all three.
+   - A pure lookup, maxOcpd240_4D(size, material), returns { max_ocpd_a, conditions, status } for any nec-240-4-d.json row, including CCA and conditional rows, or null. Step 2 of 6a uses it only when conditions is null. The "240-4-D" golden group runs through it.
+   - Display: for 14, 12 and 10 AWG copper and 12 and 10 AWG aluminum, show "Overcurrent protection limited to X A (NEC 240.4(D))" beside the result, from the nec-240-4-d.json rows without conditions.
+   - Delete any text about which temperature column a circuit may use.
+   - Golden groups: "ampacity-correction" and "240-4-D".
+
+   6d. Wire resistance calculator (WireResistanceCalculator.tsx, through a pure resistance.ts):
+   - R(T) = R20 × (1 + α(T − 20)):
+     · copper R20 from awg.json r20_cu_ohm_per_1000ft (kcmil: r20_cu_ohm_per_1000ft_derived), α 0.00393;
+     · aluminum (EC-H19) R20 from r20_al_ech19_ohm_per_1000ft_derived, α 0.00403, from 12 AWG up (awg.json has no aluminum value for 14 AWG; the 14 AWG aluminum option goes).
+     Both constants are in awg.json.
+   - Delete TEMPERATURE_FACTORS and WIRE_RESISTANCE_DATA.
+   - Report per-conductor resistance and loop resistance separately. Power loss is 2·I²·R·L/1000 for single-phase or DC and 3·I²·R·L/1000 for three-phase (R in Ω/1000 ft, L one way in ft); the result is in watts.
+   - Delete the "Wire Size from Voltage Drop" mode; it ignored ampacity.
+   - In each remaining mode, show every input the outputs use: no hidden current or voltage. Clear the results when the mode changes.
+   - Temperature is entered in °F with °C shown alongside.
+   - Golden group: "resistance".
+
+   6e. Low-voltage calculator (LowVoltageCalculator.tsx, through a pure dc-sizing.ts), copper only:
+   - CM = 2 × K × I × L / VD, with K = 10.371 × (1 + 0.00393 × (T − 20)) Ω·cmil/ft (constants from awg.json), L one way in ft, and VD = volts × the reader's drop target (%) ÷ 100.
+   - T is a select of 20 °C or 75 °C, default 75 °C.
+   - I = W ÷ V per load. Volts, watts and length must be greater than 0.
+   - Two sizes, both from nec-310-16.json:
+     · voltage drop: the smallest size whose awg.json area is at least CM;
+     · current: the smallest size whose cu_60 is at least I.
+     The result is the larger of the two. Show both and say which one governs ("both" when they are the same size). If either has no size, show "No size in NEC Table 310.16 is large enough for this load." and no result.
+   - Delete:
+     · the max-amps filter;
+     · the 10 AWG fallback;
+     · the voltage-dependent "capacity";
+     · the COMPLIANT badge;
+     · the Class 2, 725 and PoE claims;
+     · the per-load wattage presets.
+   - One line under the result: "Sized for voltage drop and for current (60 °C column of NEC Table 310.16, 30 °C ambient)."
+   - Delete every worked example, table and FAQ answer on the page that came from the old method.
+   - Golden group: "dc-sizing" (6 cases: voltage drop governs in two, current in three, and nothing fits in one).
+
+   6f. Ground wire calculator (GroundWireCalculator.tsx, through a pure grounding.ts):
+   - Replace GROUNDING_CONDUCTOR_TABLE with nec-250-122.json (15–6000 A) and show both Cu and Al/CCA, on screen and in print.
+   - Delete the conductor-size method, the "upsized" block and the notes (audit lines 88–163 and 345).
+   - Line 347 stays, reworded: "Size increases in proportion if the phase conductors are upsized (NEC 250.122(B)); the wire size calculator does this."
+   - The visible table shows real rows only, without the 30 A and 40 A pseudo-rows.
+   - Golden group: "table-250-122".
+
+   6g. Service entrance calculator (ServiceEntranceCalculator.tsx): replace the tool with a lookup, through a pure service-lookup.ts.
+   - Input: the rating of a 120/240 V single-phase dwelling service or main power feeder: a select of the 11 nec-310-12.json rows (100–400 A). The lookup returns null for any other rating; the UI then shows "Table 310.12 has no row for this rating."
+   - Outputs:
+     · the copper and aluminum conductor sizes from Table 310.12;
+     · four grounding electrode conductor sizes from nec-250-66.json: the copper and aluminum GEC for the copper service conductor (column service_cu), and the same pair for the aluminum service conductor (column service_al_cca). Parse each Table 250.66 cell ("2 or smaller", "1 or 1/0", "Over 3/0 through 350", "Over 1100") into an area range using awg.json for AWG sizes; convert a kcmil number as kcmil × 1000 cmil (awg.json has no 1100 kcmil row).
+   - Scope lines, verbatim:
+     "For a 120/240 V single-phase service or main power feeder of one dwelling unit. Other services are sized from Table 310.16. Where the conductors run hotter than 30 °C or with more than three current-carrying conductors, the corrections in Tables 310.15(B)(1)(1) and 310.15(C)(1) still apply."
+     "Grounding electrode conductor from NEC Table 250.66 (values from NFPA's 2020 grounding fact sheet)."
+   - Delete everything else:
+     · the watts input, the 80 % rule and the growth factor;
+     · the commercial and three-phase options;
+     · the meter base, mast, weatherhead, anchoring and panel spaces;
+     · the cost and the case studies;
+     · the compliance flags and the neutral.
+   - Golden groups: "service-lookup", "table-310-12" and "table-250-66".
+
+   6h. Converters:
+   - KilowattsToAmps, kVAToAmps, WattsToAmps, VoltsToAmps and AmpsToWatts:
+     · remove every wire-size, "circuit amps (125 %)", breaker and cost output, on screen and in print;
+     · apply the input rules above (line-to-line voltages for three-phase; PF from above 0 to 1).
+   - KilowattsToAmps: delete APPLICATION_PRESETS (26–33: 'HVAC Unit - 5 Ton' at 6 kW, 'Industrial Motor - 10HP' at 7.5 kW and the rest).
+   - WattsToAmps: keep only the conversion. Delete lines 36–49, 199–203 ("Wire sized for … (125% continuous load)") and 206–254, per the audit.
+   - VoltsToAmps:
+     · apply the selected phase's formula to every comparison row; for three-phase, show only the line-to-line rows;
+     · show the PF input for every load type;
+     · the meta description, the OpenGraph description (page.tsx:15) and the WebApplication description (:28) state what the tool computes: I = P ÷ (V × PF) single-phase, I = P ÷ (√3 × V × PF) three-phase.
+   - kVAToAmps: relabel "Turns Ratio" as "Line-to-line voltage ratio" and delete the 450.3 guidelines.
+   - AmpsToWatts:
+     · delete the "DC Efficiency" card;
+     · the AC card's PF line reads "Power factor (PF = P/S)", with no efficiency colours (93–94, 381–384);
+     · label hp as "electrical horsepower (746 W)".
+   - OhmsLaw: keep raw values and format them to 4 significant figures; fix "Ohm\'s"; delete the energy cost.
+   - BtuToWatts: delete the "SEER to EER Conversion" and "AFUE" blocks with their tables. Their values have no verified source, and the tables put <tr> directly inside <table>, which throws React hydration error #418 on every load of the page (chat's Chrome test of the live site, 2026-10-25).
+   - BTUToWatts: make it a thermal conversion only, W ↔ Btu/h at 0.2930711 W per Btu/h and tons = Btu/h ÷ 12,000. Delete the electrical power, current, circuit size, costs, presets and comparison table.
+   - One pure conversions.ts holds the NIST SP 811 factors from research/data-sources.csv (domain nist-sp811-conversions): 0.2930711 W per Btu/h, 746 W per electrical horsepower, 745.6999 W per mechanical horsepower (550 ft·lbf/s), 3516.853 W per ton of refrigeration. BTUToWatts and AmpsToWatts read them from there.
+   - Golden groups: "power" and "conversion".
+
+   6i. Three-phase calculator:
+   - Remove wire sizing, neutral current, the load-balance factors, "Actual Power" and the motor-hp mode.
+   - Keep a balanced P ↔ I converter on line-to-line voltage. Round for display only: no Math.ceil (ThreePhaseCalculator.tsx:176 shows 66.83 where the value is 66.823).
+   - Drop the connection-type selector, which was independent of the system selector, and the "NEC 220.22" note.
+   - On the page, delete the PF-correction table, the motor guide and the transformer table. WSZ-006 rebuilds them from the engine.
+
+   6j. src/lib/data/nec-tables.ts:
+   - Add the Table 310.16 rows for 700, 800, 900, 1250, 1500, 1750 and 2000 kcmil from nec-310-16.json.
+   - Delete NEC_310_15_TEMP_CORRECTION (wrong and unused), NEC_250_122, NEC_240_4_D_MAX_OCPD and NEC_COMMON_REFERENCE_75C. The JSON files replace them.
+   - Delete the dc_resistance_ohms_per_1000ft and weight fields and everything that renders them. Their label claimed NEC Table 8 at 25 °C; the values are 75 °C.
+   WSZ-003 replaces this module.
+
+   6k. Form accessibility (chat's Chrome test of the live site, 2026-10-25): none of the roughly 70 inputs, selects and sliders on the 15 live calculators has a programmatic label, and the share and print icon buttons have no accessible name on 12 of them.
+   - Give every control a visible label tied to it with htmlFor and id (React useId). Use aria-label only where the design has no visible label; its text names the control in plain words (for example "Length in feet"), which this step allows as new text.
+   - Icon-only buttons get aria-label "Share this result" and "Print this result".
+
+   6l. Regression tests: tests/wsz002-calculators.test.ts, run by `npm test`.
+   - Every case in these research/golden-cases.json groups, run through the step-6 modules within each case's tolerance ("exact" means equality): "wire-size-60c", "wire-size-errors", "service-lookup", "ampacity-correction", "resistance", "voltage-drop", "dc-sizing", "table-250-122", "table-250-66", "table-310-12", "240-4-D", "power" and "conversion". Size keys follow the rule in the file's "rules" field, through sizes.ts. Golden keys are snake_case (ampacity_60c, vd_percent, meets_target, egc_upsized, egc_larger_than_conductor); map them to the camelCase return fields in the test. The test file is inside tsconfig's include, so it must type-check too.
+   - Also assert:
+     · for every wire-size-60c case, egcLargerThanConductor is true exactly when the EGC is null or its awg.json area is larger than the returned size's area, and it is true only in the three 25 A aluminum cases;
+     · the exported constants: the titles "Meets your voltage-drop target" and "Above your voltage-drop target", the ground-wire notes "For this rating, Table 250.122 lists a ground wire larger than the smallest conductor the rating allows." and "No size in NEC Table 310.16 is large enough for this ground wire.", and the defaults (ampacity: 60 °C column, 26–30 °C row, 1–3 conductors; wire size: 20 A rating, 3 % target);
+     · Ohm's law: 12 V across 10 kΩ gives 1.200 mA;
+     · BTU: 12,000 Btu/h = 3,516.853 W ± 0.001;
+     · VoltsToAmps: at 10 kW three-phase 240 V, the 240 V comparison row equals the headline current.
+   [commit] "fix(wsz-002): live calculators on verified data (60 °C sizing with 240.4(D), EGC by OCPD and material, 75 °C voltage drop, service lookup) + tests"
+
+7. Content fixes on pages marked "fix" in research/page-map.csv
+   Go page by page through AUDIT §5 and apply every P0 and P1 item under the rules above.
+   - Delete:
+     · cost, price, rebate, savings, ROI, energy-bill, utility and permit tables;
+     · personas;
+     · invented percentages and "typical" figures;
+     · unsourced manufacturer spec lists;
+     · arc-flash and PPE advice;
+     · items tagged [F] or [U], since their replacement value isn't sourced yet;
+     · any text describing the old calculator behaviour: the 75 °C default, 125 % sizing, ground wire from load amps, "NEC 3 % / 5 %" limits.
+   - Replace with verified values (source file in brackets):
+     · / (homepage): done in step 2.
+     · /guides/awg-wire-size-chart:
+       - label the resistance column "Ω/1000 ft, solid annealed copper, 20 °C (NIST Handbook 100)";
+       - every diameter and area matches awg.json, which fixes 2.052/2.053, 4.115/4.116 and 107.00/107.2;
+       - the stranding line becomes: in raceways, 8 AWG and larger shall be stranded unless permitted or required elsewhere to be solid (2023 NEC 310.3(C));
+       - delete the 334.10 solid-conductor claim, the heat-balance derivation, the cost table and the unconditioned application list.
+     · /guides/nec-table-310-16:
+       - the 200 A service row becomes 4/0 Al via Table 310.12 (dwelling service), not 310.16;
+       - delete the worked EV example, the PE-stamp line, the Download section (a button that did nothing), and the section numbers 310.15(B)(7), 310.15(B)(5) and "210.19(A)/215.2(A) OCPD";
+       - render all 30 rows of nec-310-16.json and all 16 correction rows of nec-310-15-B-1-1.json.
+     · /guides/wire-size-for-200-amp:
+       - the meta and intro sizes become "2/0 AWG copper or 4/0 AWG aluminum for a 120/240 V dwelling service (2023 NEC Table 310.12)" [nec-310-12.json];
+       - "NEC 2024" becomes "2023 NEC";
+       - "3/0 Cu and 4/0 Al each rated 200 A at 75 °C" becomes: 4/0 aluminum is 180 A in the 75 °C column of Table 310.16, and Table 310.12 permits it for a 200 A dwelling service [nec-310-16.json, nec-310-12.json];
+       - delete the 310.12 paragraph's sentences (~714–719, "With 310.12, you can use the smaller 4/0 AWG copper or 250 kcmil aluminum…") and the matching JSON-LD text (~19);
+       - delete every 3/0 copper size given for a 200 A dwelling service: the cards (~116, ~312), the table (~244–262), ~413, ~475, the FAQ answers (~60, ~76) and the meta keywords (~43);
+       - delete the voltage-drop table, the conduit sizes and the costs.
+     · /guides/wire-size-for-100-amp:
+       - the whole meta description (~55) becomes "Wire size for a 100 A dwelling service: 4 AWG copper or 2 AWG aluminum (2023 NEC Table 310.12)." [nec-310-12.json];
+       - every other 310.12 size on the page becomes 4 AWG copper or 2 AWG aluminum for a 100 A dwelling service [nec-310-12.json];
+       - the attic factor becomes 0.82 for 41–45 °C in the 75 °C column [nec-310-15-B-1-1.json];
+       - the GEC for a 3 AWG copper service becomes 8 AWG copper [nec-250-66.json];
+       - delete the subpanel sizes that rest on the 75 °C column, the distance table, "THHN-2" and the costs.
+     · /calculators/wire-size-calculator:
+       - the correction table becomes all 16 rows of nec-310-15-B-1-1.json;
+       - the equipment ground for 20 A becomes 12 AWG copper, and 15 A stays 14 AWG copper [nec-250-122.json];
+       - "Dwelling 200 A: 2/0 aluminum" becomes "4/0 aluminum (dwelling service, Table 310.12)" [nec-310-12.json];
+       - delete the max-distance table, "reduce distance 13%", "each AWG step halves resistance", and the 75 °C statements at ~75, ~188 and ~224.
+     · /calculators/ampacity-calculator:
+       - every correction factor in the examples and the FAQ comes from nec-310-15-B-1-1.json;
+       - 1 AWG aluminum at 75 °C is 100 A;
+       - delete the 110, 125 and 150 °C columns, the rooftop adders, the altitude derating, "add 20 °F for sun" and "assumes 30-in burial".
+     · /calculators/wire-resistance-calculator:
+       - the table uses one labeled basis: copper at 20 °C from awg.json; copper at 75 °C and aluminum EC-H19 from the *_derived fields, labeled "calculated";
+       - delete the 500 kcmil aluminum "0.206" example (page.tsx:251), the RF/skin-effect example, the "0 Ω, 0%" server-rendered default and the "AWG" label on kcmil sizes.
+     · /calculators/voltage-drop-calculator: delete
+       - the temperature table, the PF multiplier and its formula;
+       - the parallel equivalences ("2×1/0 = 3/0" and so on);
+       - "200 A at 150 ft needs 350 kcmil", "8% fire hazard" and "10% code violation";
+       - the loss, ROI and cost tables, and $0.12/kWh.
+     · /calculators/service-entrance-calculator:
+       - delete the utility table, the cost and timeline tables, the 220.82 example and its FAQ claims, "GEC 4 AWG minimum" and "3 ft wide";
+       - the page text describes only the new lookup.
+     · /calculators/ground-wire-calculator: the meta "through 2000 A" becomes "15 A to 6000 A"; delete "must be copper unless…" and the pool rebar line.
+     · /guides/wire-size-for-ev-charger:
+       - the federal credit sentence becomes "The federal home-charger credit (IRS §30C) covered equipment placed in service from January 1, 2023 through June 30, 2026, at homes in eligible census tracts." No dollar figure in this wave;
+       - delete the rebates, the costs, "most homes need 200 A", the long-run table and the "6 AWG only to 75 ft" FAQ.
+     · /guides/single-vs-three-phase:
+       - 4/0 copper weight becomes 0.6405 lb/ft [awg.json, 640.5 lb/1000 ft];
+       - delete the decision matrix, the converter prices, the motor-size limits and "408 V".
+     · /calculators/kva-to-amps-calculator: delete the wire and breaker columns and the 450.3 summary.
+     · /calculators/three-phase-calculator: delete the motor table, every wire size or breaker derived from formula currents, the 50 hp example and the PF-correction table.
+     · /calculators/kilowatts-to-amps-calculator: delete the range example, the PF table and "PF > 1.0".
+     · /calculators/watts-to-amps-calculator, /calculators/amps-to-watts-calculator and /calculators/volts-to-amps-calculator: delete the examples AUDIT §5 lists as wrong.
+     · /calculators/ohms-law-calculator: delete "+40% hot winding".
+     · /calculators/btu-to-watts-calculator: delete the MCA/MOP table, the SEER/HSPF minimums, fuel prices, rules of thumb and "EER = SEER × 0.875".
+     · /guides/power-factor-explained: delete the equipment PF table and the cost examples.
+     · /guides/electrical-power-calculations: delete Example 5 (the dwelling load), the refrigerator energy figures, "PF = efficiency", "73% more power" and the 25 hp overload example.
+     · /guides/nec-code-compliance: delete its copy of Table 310.16, its 250.122 table, the sample dwelling calculation, the AFCI history and the "FPN" wording. WSZ-005 repurposes the page.
+     · /calculators and /guides hubs:
+       - delete the counts, the usage bars and the AI/schema/llms.txt FAQ;
+       - in the guides-hub FAQ "Which NEC edition do these guides reference?" (~298–308), the answer becomes: "The guides cite the 2023 NEC unless a page names another edition. The 2026 NEC was issued by NFPA on August 20, 2025 and took effect September 9, 2025." [research/data-sources.csv, domain nec-2026-edition];
+       - list live, non-withdrawn pages only.
+
+8. Trust pages
+   - Render /about, /contact, /privacy, /terms and /disclaimer from research/trust-pages-copy.md, verbatim, replacing everything on those pages. {N_WITHDRAWN} = 15 and {N_REDIRECTED} = 6.
+   - Before publishing /privacy, list every third-party script, font, image or iframe origin in the built HTML of five pages: /, /guides/awg-wire-size-chart, /calculators/wire-size-calculator, /about and /privacy. Only Vercel (/_vercel/...) and www.googletagmanager.com / google-analytics.com may appear. If anything else does, stop and report it.
+   [commit] "fix(wsz-002): content corrections on live pages and honest trust pages"
+
+8b. Google Analytics behind consent (owner decision 2026-10-25)
+   - Find the GA4 tag (measurement ID G-T871GVJZE2) and replace it with one client component, src/components/analytics/Consent.tsx, rendered once in the root layout. No other file loads googletagmanager.com or calls gtag. Vercel Web Analytics and Speed Insights stay as they are.
+   - Region: a route handler, src/app/api/consent-region/route.ts, with `export const dynamic = 'force-dynamic'` and the header Cache-Control: no-store. It returns {"consent": true} when the x-vercel-ip-country request header is one of AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE (EU), IS LI NO (EEA), GB or CH, and also when the header is missing; otherwise {"consent": false}. Export the code list and a pure consentRequired(country) from src/lib/consent-region.ts.
+   - Consent.tsx:
+     · Before anything loads, set the Consent Mode v2 defaults: ad_storage, ad_user_data and ad_personalization 'denied' always; analytics_storage 'denied'.
+     · Stored choice: localStorage key "ws-consent", value "granted" or "denied", read and written inside try/catch. "granted": load GA with analytics_storage 'granted' and show no banner. "denied": load nothing.
+     · No stored choice: fetch /api/consent-region once per session (cache the answer in sessionStorage). {"consent": false}: load GA with analytics_storage 'granted' and show no banner. {"consent": true}: show the banner and load nothing until "Accept analytics".
+     · On localhost and 127.0.0.1 only, a ?consent-region=eu or ?consent-region=other query overrides the region, so chat's browser test can reach both paths.
+     · The banner: the text, buttons and link from trust-pages-copy.md ("Cookie banner"), in a region with aria-label "Cookie choice", fixed to the bottom of the viewport, reachable by keyboard, no focus trap. Add bottom padding to the page equal to the banner's height while it shows, so it never hides the footer. "Accept analytics" stores "granted", updates consent and loads GA. "Reject" stores "denied".
+     · The footer button "Cookie settings" reopens the banner for every visitor. Choosing "Reject" after an earlier "Accept" updates analytics_storage to 'denied' and deletes the _ga and _ga_T871GVJZE2 cookies (domain .wiresizes.com and the bare host).
+   - Tests (run by `npm test`): consentRequired() is true for SI, DE, GB, CH and NO, false for US, CA and AU, and true for "" and undefined; "googletagmanager.com" appears in no file under src except src/components/analytics/Consent.tsx.
+   [commit] "fix(wsz-002): Google Analytics behind consent for EU, EEA, UK and Swiss visitors"
+
+9. Verify (all of it, at the end)
+   - `rm -rf .next && npm run build` passes.
+   - scripts/check-banned.mjs (Node built-ins, plus the typescript package that is already a devDependency). It checks three kinds of input:
+     · Every prerendered HTML file in the build output: visible text, attributes, <title>, <meta> and JSON-LD. It skips every other <script> body, because the RSC payload holds $-prefixed tokens. Before matching, it inserts a space at every tag boundary and collapses whitespace runs to one space, so "<span>FREE</span><span>Always</span>" reads "FREE Always".
+     · sitemap.xml, robots.txt, llms.txt, manifest.json and the source text of src/app/opengraph-image.tsx.
+     · The source of every .ts/.tsx file a live route imports under src/components and src/lib. Start from the live page.tsx files and their layouts, follow relative and "@/" import declarations, `export … from` re-exports (src/components/calculators/index.ts contains nothing else) and import() calls. Skip these components of the withdrawn routes, by name: RangeCalculator, WelderCalculator, BoxFillCalculator, ClientBoxFillCalculator, WellPumpCalculator, HotTubCalculator, PoolPumpCalculator, AirConditionerCalculator, DryerCalculator, MotorCircuitCalculator, HorsepowerToAmpsCalculator, CircuitBreakerCalculator, ConduitFillCalculator, ResidentialLoadCalculator, RVHookupCalculator, GarageSubpanelCalculator, ClientGarageSubpanelCalculator. Parse each file with the TypeScript compiler API and check only string literals, template-literal text and JSX text, so identifiers such as isCompliant don't count. Skip module specifiers (import, export and import() paths), so '@/lib/data/nec-tables' doesn't count either.
+     It looks for each phrase in research/wsz002-banned-strings.txt (case-insensitive) and for "$" followed by a digit. scripts/check-banned.allow.txt may list exceptions, one per line with a reason (for example a regex replacement string '$1'). It prints file + phrase per hit, prints how many files of each kind it scanned, and exits 1 on any hit. Run it until it reports 0.
+   - scripts/check-structure.mjs (Node built-ins only), on the build output. It prints a pass/fail line per check and exits 1 on any fail:
+     · every withdrawn route has <meta name="robots" content="noindex, follow"> (or the equivalent Next.js output) and is absent from sitemap.xml;
+     · no live page has an <a href> to a withdrawn route or to any source in next.config.ts redirects() (all of them, not only the six new ones);
+     · next.config.ts holds the six new redirects, and no destination is itself a redirect source;
+     · every <link rel="canonical">, sitemap <loc>, and every url, @id, item, logo and image value in JSON-LD (ignore @context and @type) is https://wiresizes.com or starts with https://wiresizes.com/;
+     · no JSON-LD @type is FAQPage, HowTo, SearchAction or Review, and no block has an aggregateRating key or a creativecommons URL;
+     · no built page references fonts.googleapis.com or fonts.gstatic.com;
+     · no rendered page contains "110.14(C)" or "334.80". (WSZ-008 drops the 110.14(C) part.)
+     · no <table> in a prerendered page has a <tr> as a direct child (rows sit in <thead>, <tbody> or <tfoot>);
+     · every <input>, <select> and <textarea> in a prerendered page has a label (a <label for> matching its id, a wrapping <label>, aria-label or aria-labelledby), and every <button> has text or an aria-label;
+     · no prerendered page has a <script> whose src or text contains googletagmanager.com (GA loads only from Consent.tsx, after the region check or consent).
+   - `npm test`: every test passes, 0 skipped.
+   - TypeScript: `rm -rf .next && npm run build`, then `npx tsc --noEmit 2>&1 | grep -c "error TS"`. The count must not be above the baseline you recorded before the first change. (WSZ-003 brings it to 0 and removes ignoreBuildErrors.)
+   - `python3 -I research/check_sources.py research/data-sources.csv research/page-map.csv` prints RESULT: OK.
+   - Optional live check, with nothing left running:
+     · Pick a free port: `for p in 3022 3023 3024 3025; do [ "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:$p/)" = "000" ] && echo "free: $p" && break; done`. Use the printed number in place of PORT below. If nothing prints, skip the live check and say so; never stop a process to free a port.
+     · `(timeout 120 npm run dev -- -p PORT > /tmp/dev.log 2>&1 &)`.
+     · `curl -s --retry 30 --retry-connrefused --retry-delay 1 -o /dev/null -w "%{http_code}\n" http://localhost:PORT/`, then the same for one live calculator and one withdrawn calculator (expect 200 each).
+     · Each redirect source with `-o /dev/null -w "%{http_code} %{redirect_url}\n"` (expect 308 and its target).
+     The server stops by itself after 120 seconds.
+
+Definition of done (paste each output):
+- check-banned: 0 hits, with the file counts per input kind
+- check-structure: every line passes
+- npm test summary: pass count, 0 fail, 0 skipped
+- the build result line, and the tsc baseline and final counts
+- the check_sources result
+- `git log --oneline 506a451..HEAD` and `git diff --stat 506a451..HEAD | tail -3`
+- per page: what you deleted, what you replaced (with each replacement's source file), and any item you couldn't do, with the reason
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-002 STOPBLEED. Mark it done only if the verification ran and passed. Skipped tests and UI behaviour count as unverified. Also record these chat notes:
+- §2 D-01 2026-10-20 · Canonical host stays https://wiresizes.com (apex); Vercel 308s www → apex, live since May 2026. Why: Google already moved to the apex, and switching now would start a second migration.
+- §2 D-02 2026-10-20 · 15 tools withdrawn (noindex, follow; dated notice; out of sitemap, hubs and links) until their sources are verified. Seven redirects (two new, five existing) land on withdrawal notices until WSZ-010/011. Why: their core outputs rested on unverified or wrong code rules, and a wrong number is worse than no page.
+- §2 D-03 2026-10-25 · The byline uses only the physics credential. The publisher is shown as Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia, with company registration number 9041273000 and VAT ID SI94001154, on /about, /contact, /privacy and /terms. Why: ZEPT Article 5 requires the company and its seat, an email address, the registration number and the tax number, reachable from the home page (owner decision 2026-10-25, replacing the 2026-10-19 choice to leave the numbers out).
+- §2 D-04 2026-10-20 · Commits in the box use `git -c user.name="Mapstor" -c user.email="your-email@example.com"`. Why: it matches the 50 existing commits, and nothing is written to git config.
+- §2 D-05 2026-10-20 · Fonts are self-hosted via @fontsource, and tests run on Node 22 strip-types with tests/register.mjs. Why: no page makes a third-party font request, and there's no test framework dependency.
+- §2 D-06 2026-10-20 · In WSZ-002 the wire size calculator sizes from the 60 °C column only. WSZ-009 adds the 75 °C option under 110.14(C) (verified from NFPA's 2023-cycle Second Draft); NM and UF cable stay at 60 °C until 334.80/340.80 are verified. Why: the 60 °C column is never undersized for termination or cable-type limits; ambient and bundling corrections still apply, and the results say so.
+- §2 D-07 2026-10-20 · Impeccable is pinned to impeccable@4.7.0, the version chat inspected. Why: npx would otherwise run whatever the name resolves to that day; upgrades go through a chat prompt.
+- §2 D-08 2026-10-24 · The ground wire is not capped at the circuit conductor size. Table 250.122 gives 25 A aluminum an 8 AWG EGC on a 10 AWG conductor, and the tools show it with the note "For this rating, Table 250.122 lists a ground wire larger than the smallest conductor the rating allows." Why: the 250.122(A) sentence that caps it has been seen only in the 2026 Second Draft, not in 2023 text; a larger ground wire is conservative, and chat will lift this when the sentence is verified.
+- §2 D-09 2026-10-24 · Text marked verified-sd2023 (2023-cycle Second Draft, two pulls with planted wrong values rejected) renders as 2023 NEC even where the 2022 Technical Meeting and Standards Council record was not seen; each data file says which items that covers. 625.54 stays held. Why: NFPA lists the 2022 appeal topics (optical fiber cable, copper-clad aluminum wiring, surge protection, GFCI protection, pool bonding); 625.54 is a GFCI rule with no post-issuance 2023 source, and the only other overlap, the CCA items of 240.4(D), is covered by a post-issuance Minnesota review of the issued code. The owner can reverse this; chat closes items as post-issuance text arrives.
+- §2 D-10 2026-10-25 · Google Analytics 4 runs only after consent for visitors from the EU, the EEA, the UK and Switzerland (region from Vercel's x-vercel-ip-country header; missing header counts as covered), and by default elsewhere; Consent Mode v2 with ad signals always denied; "Cookie settings" in the footer for everyone. Why: Slovenia's ZEKom-2 Article 225 requires prior consent for non-essential cookies, and Raptive needs GA4 data when the site applies. Raptive's own consent tool replaces this banner after onboarding.
+- §4 Gotchas: "Research packs install only through a prompt's pack step: verify research/MANIFEST.sha256, copy, diff, check_sources, commit. research/PACK_VERSION names the installed pack."
+- §5 Backlog: [P3] per-gauge pages (/awg/14 …). Decide after the chart rebuild, with a google-ai-content-policy pass (scaled-template risk). [P2] The BTU-to-watts and three-phase calculators render only in the browser, so their tools are missing from the HTML; server-render them when WSZ-003 rebuilds the engines. [P2] Before WSZ-002, 9 of 32 pages scrolled sideways at 320 px (chat's Chrome test, 2026-10-25); chat rechecks them on the new build.
+- §0 Waiting on owner:
+  · push the local commits (506a451, the WSZ-013 commit if present, and the WSZ-002 commits) after chat's Chrome test;
+  · create the contact@wiresizes.com forwarding alias;
+  · add the GSC Domain property and check Manual actions;
+  · add the apex site in Bing Webmaster Tools;
+  · let chat run its Chrome test of the local build and apply the fixes it sends.
+Commit DEVLOG.md with the work, and don't push. End with the §6 entry, `git status --short` and `git log --oneline -6`.
+
+
+==================== WSZ-003 ====================
+WSZ-003 DATALAYER — wiresizes.com: verified data module, calculation engines, golden tests, three build gates, zero type errors
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes", and the DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 shows WSZ-002 STOPBLEED as done. Otherwise stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`. If origin/main has commits that main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
+
+Read first:
+- DEVLOG §0–§5 and the last 10 §6 entries
+- research/golden-cases.json
+- research/nec-sections-allowlist.csv
+- research/data-sources.csv
+- data/verified/*.json (read the notes in each file)
+- the pure modules WSZ-002 created in src/lib/calculations/ (including sizes.ts and conversions.ts), and tests/register.mjs
+- .claude/skills/content-page/SKILL.md ("Rendering rules")
+- .claude/skills/data-sourcing/SKILL.md
+
+Tooling:
+- npm works in the box, but add no packages unless this prompt names one.
+- Tests use the WSZ-002 runner: `npm test`, which is node --experimental-strip-types with tests/register.mjs.
+- Engine code must use erasable TypeScript only: no enums, no namespaces, no parameter properties.
+
+1. Verified data module: one import point for every number on the site
+   - Create src/lib/verified/ and record it in DEVLOG §1 Key paths. It imports data/verified/*.json with TypeScript types and exposes:
+     · awgRow(size) and kcmilRow(size), taking nec-310-16.json keys. The size-key mapping and display formatting from WSZ-002's src/lib/calculations/sizes.ts move here; keep one copy.
+     · table31016(size, column)
+     · correction(ambientRow, column). Returns null where the table has no factor.
+     · adjustment(nConductors)
+     · table31012(ratingA). Returns null when the rating isn't a table row. Never interpolate.
+     · egc(ocpdA, material). Uses the first row not exceeded; returns null above 6000 A.
+     · egcProportional(egcSize, minSize, installedSize): the 250.122(B) method in nec-250-122.json. Multiply before dividing (WSZ-002's golden cases catch the other order).
+     · gec(serviceConductorSize, material): Table 250.66, using area thresholds from awg.json.
+     · max240_4D(size, material) → { max_ocpd_a, conditions, status } for any nec-240-4-d.json row, or null. It replaces WSZ-002's maxOcpd240_4D. The sizing engine uses a row only when conditions is null; pages render only what the allowlist permits.
+     · ocpdRatings(): Table 240.6(A).
+     · loadCalc2023: typed access to nec-220-2023.json.
+     · adoption(): verified rows only.
+   - Move every importer of src/lib/data/nec-tables.ts and src/lib/data/wire-properties.ts to the new module, then delete both files. Withdrawn pages keep their old components unused. No live route may import the old files.
+   - registry.ts: parse research/data-sources.csv at build time with a small RFC 4180 parser (quoted fields contain commas). Expose attribution(domain) → { text, url, verified_date, status }. It throws during the build if a page asks for a domain whose status is not "verified".
+
+2. Engines in src/lib/engine/: pure functions, no React. Each module exports ENGINE_ID and DOMAINS (the registry domains it uses, all verified). Move WSZ-002's src/lib/calculations/* modules here and rebuild them on src/lib/verified. Don't write a second copy of any formula.
+   - awg-geometry: d = 0.005 in × 92^((36 − n)/39); area in cmil and mm²; step ratios.
+   - resistance: R(T) for copper and EC-H19 aluminum from the awg.json constants; per run, per 1000 ft and per km; loop resistance.
+   - voltage-drop: k × L × I × R / 1000 (k = 2 single-phase, √3 three-phase); parallel sets (areas add); smallest size for a target %.
+   - dc-sizing: CM = 2 × K × I × L / VD. The result is the larger of the smallest nec-310-16.json size by awg.json area and the smallest size whose cu_60 carries the current, as in WSZ-002.
+   - conductor-sizing (from WSZ-002): 60 °C column, 240.4(D), EGC by OCPD and material, voltage-drop upsizing, 250.122(B). Add optional inputs termination ('unknown' | '60' | '75') and wiringMethod ('cable' | 'conductors') that choose the column per the engine_rules in data/verified/nec-110-14c.json (cable always 60 °C; unknown → 60 °C at 100 A or less, 75 °C above; '75' only when the reader confirmed listed and identified terminations). The defaults ('unknown', 'cable') keep today's 60 °C results for every WSZ-002 golden case. Pages keep the 60 °C-only inputs until WSZ-009 adds the new ones. Golden group: wire-size-termination. For that group the result adds columnC (the column used), ampacity (the returned size's ampacity in that column) and limitedBy240_4D (true only when 240.4(D) moved the size above the first size whose column ampacity reaches the rating); golden keys column_c, ampacity, limited_by_240_4_D and egc map to them.
+     · terminationColumn(ocpdA, termination, wiringMethod) is exported on its own, for the ampacity tool.
+     · Derating inputs (optional): ambientRow (a Table 310.15(B)(1)(1) row key from nec-310-15-B-1-1.json) and cccBand (a Table 310.15(C)(1) row key, or null for 1–3 conductors). Start column: 90 °C for individual conductors, 60 °C for cable. Derated ampacity = start-column ampacity × the Table 310.15(B)(1)(1) factor for the start column × the Table 310.15(C)(1) percent, capped at the termination-column ampacity. The step-2 baseline becomes the smallest size whose derated ampacity is at least the rating, then 240.4(D); voltage-drop upsizing and the 250.122(B) scaling start from that baseline (increases needed for correction and adjustment never scale the EGC). Without derating inputs the results equal the plain mode. Golden group: wire-size-derated (result fields columnC, startColumnC, minSizeByAmpacity, deratedAmpacity, size, vdVolts, vdPct, meetsTarget, egc, egcUpsized, egcLargerThanConductor). Pages get these inputs in WSZ-009.
+   - ampacity-arithmetic: table value × correction × adjustment, plus the 240.4(D) limit as a separate output.
+   - service-lookup (from WSZ-002): Table 310.12 + Table 250.66.
+   - power: kW ↔ A ↔ kVA for single- and three-phase with PF; PF correction (kVAR = P × (tan φ1 − tan φ2); current reduction = 1 − PF1/PF2).
+   - conversions: NIST SP 811 factors (Btu_IT/h ↔ W 0.2930711; hp electric 746 W; hp 745.6999 W; ton of refrigeration 3516.853 W).
+   - load-calc-2023: the standard and optional dwelling methods and Table 220.55, from nec-220-2023.json. No page uses it until WSZ-010; it must still pass its golden cases if chat adds them.
+
+3. Golden tests
+   - tests/golden.test.ts loads research/golden-cases.json and runs every case through the matching data function or engine, within each case's tolerance. The file's "count" field gives the number of cases; "exact" means equality.
+   - It fails if any group in the file has no test mapping.
+   - WSZ-002's tests/wsz002-calculators.test.ts stays, rewired to the engines.
+
+4. Rendering components (server components)
+   - <Val v={number} unit="A" src="nec-310-16" digits={…}/> renders <span data-src="nec-310-16">20 A</span>. The non-breaking space and the units come from one formatter: US style, imperial first, metric in parentheses where both are shown.
+   - Engine outputs use src="calc:<ENGINE_ID>".
+   - <Sources domains={[…]} /> renders registry attribution strings, each linked to its registry URL. Never hand-typed.
+   - <AsOf domain="…" /> renders "Data as of {Mon YYYY}" from verified_date.
+   - Size names (14 AWG, 4/0, 250 kcmil) are names, not measurements. Render them through <Size s="4/0"/>, which checks that the size exists in awg.json or nec-310-16.json.
+
+5. Gates (scripts/*.mjs, Node built-ins only)
+   Shared parsing: a small HTML tokenizer that tracks the open-element stack. It skips <style>, <noscript> and every <script> except type="application/ld+json"; gates a and c read those JSON-LD blocks as JSON strings. The Next.js RSC payload contains $-prefixed tokens and must never be scanned.
+   a. check-rendered-text.mjs. If a check-rendered-text.mjs from poolsolver exists on this machine (search ~ to depth 4), copy and extend it. Otherwise write it to the content-page "Rendering rules" spec.
+      What it scans:
+      · title, meta description, og:* and twitter:* tags;
+      · alt, title and aria-label attributes;
+      · visible text, SVG <text> and JSON-LD string values;
+      · llms.txt.
+      What it flags:
+      · spec vocabulary: hook, promise, wedge, information gain, fan-out, attack plan, ledger, registry, archetype, cluster, flagship, money query, engine, single-sourced, by construction, build pipeline, crawlable, crawler, LLM, citation-worthy, "cite us";
+      · status notes: "coming soon", "shipping later", "now shipped", "when … ships";
+      · self-praise: trusted, professional-grade, ultimate, comprehensive guide, rigorous, honest, exact, accurate (as self-description), compliant;
+      · UK spellings: colour, behaviour, metre, litre, centre, aluminium, analyse, modelling;
+      · joined words: a digit or a closing inline tag running straight into a letter.
+      Keep an allowlist file with a reason per entry.
+   b. check-number-trace.mjs. Every unit-bearing number in visible text must sit inside an element with data-src. That data-src must be a verified registry domain, or calc:<ENGINE_ID> whose DOMAINS are all verified.
+      · Units: A, amps, V, volts, kV, W, kW, kVA, kVAR, VA, Ω, ohms, °C, °F, %, ft, feet, in, inches, mm, mm², m, km, cmil, kcmil, lb, kg, hp, Btu/h, ton.
+      · A "$" amount counts as unit-bearing.
+      · Exempt: size names inside <Size>, years, dates and NEC section numbers.
+   c. check-nec-refs.mjs. Every NEC reference in rendered text ("Table 310.16", "310.12", "240.4(D)", "Article 120") must match a ref in research/nec-sections-allowlist.csv. A number followed by a unit is not a reference.
+   - Staged rollout: scripts/gates.config.json has:
+     · enforce: [routes] for gates b and c. Start with the WSZ-002 calculator routes whose numbers all come from engines now (wire-size, voltage-drop, ampacity, wire-resistance, low-voltage, ground-wire, service-entrance) if they pass. Otherwise start empty, and each rebuild wave adds its routes.
+     · reportOnly: everything else.
+     Withdrawn (noindex) routes are skipped.
+   - Gate a enforces site-wide from now on: fix or allowlist what it finds. The "$" and banned-string checks from WSZ-002 also stay site-wide.
+   - package.json "postbuild" runs the three gates plus check-banned.mjs and check-structure.mjs. Report-only routes print a count; enforced routes fail the build.
+
+6. Type safety
+   - Fix every `npx tsc --noEmit` error. WSZ-001 found 3; WSZ-002 may have changed the count.
+   - Then delete `typescript: { ignoreBuildErrors: true }` from next.config.ts, so the build type-checks.
+
+7. Build stamp: add <meta name="x-build" content={first 7 chars of process.env.VERCEL_GIT_COMMIT_SHA, or "local"}> to the root layout, so chat can confirm that production equals main by fetching a page.
+
+8. Layout check: the box has no Chromium, and npm can't download one through the firewall. Don't add a browser here. Record "unverified: overflow (box has no browser)" in DEVLOG §4. The owner's Mac already has scripts/check-overflow-local.mjs (puppeteer-core with the Mac Chrome path); list the exact command in DEVLOG §1 Commands.
+
+9. Verify
+   - `rm -rf .next && npm run build` (gates run in postbuild; the build now type-checks)
+   - `npm test`: all golden cases pass, 0 skipped
+   - `npx tsc --noEmit` reports 0 errors
+   - `python3 -I research/check_sources.py research/data-sources.csv research/page-map.csv`
+
+10. Commit "feat(wsz-003): verified data layer, engines, golden tests, rendered-text/number-trace/NEC-ref gates, strict types". Don't push.
+
+Definition of done (paste each output):
+- the golden test summary (passed = the file's count, 0 failed, 0 skipped)
+- gate output: gate a hits (must be 0 after fixes/allowlist); gates b and c per route (enforced routes 0, report-only counts listed)
+- the "$" and banned-string checks (0)
+- the build, tsc (0 errors) and check_sources result lines
+- `grep -rn "lib/data/nec-tables\|lib/data/wire-properties" src` (no output)
+- the x-build meta from one built HTML file
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-003 DATALAYER. Status is done only if the verification ran and passed. Skipped tests and UI behaviour count as unverified. Also record these chat notes:
+- §4 Gotchas:
+  · "Every unit-bearing number renders through <Val>/<Size> with data-src; gates b/c enforce per route via scripts/gates.config.json — add a route when its rebuild lands."
+  · "golden-cases.json and data/verified/*.json are generated in chat; regenerate, never hand-edit."
+  · "The build type-checks now; never re-add ignoreBuildErrors."
+- §1 Key paths: verified module, engines, components, gates, tests.
+Commit DEVLOG.md with the work. Don't push. End with the §6 entry, `git status --short` and `git log --oneline -3`.
+
+
+==================== WSZ-004 ====================
+WSZ-004 TRUSTFRAME — wiresizes.com: byline and real dates on every page, Person/Organization schema, /methodology built from the registry, corrections log, footer
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes", and the DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 shows WSZ-003 DATALAYER as done. Otherwise stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`. If origin/main has commits that main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
+
+Read first:
+- DEVLOG §0–§5 and the last 10 §6 entries
+- research/trust-frame-spec.md (the spec for this wave)
+- research/trust-pages-copy.md (the WSZ-002 text now live on /about, /contact, /privacy, /terms, /disclaimer)
+- .claude/skills/raptive-ready/SKILL.md ("Trust and author-identity standard")
+- .claude/skills/seo-visibility (schema guidance)
+- .claude/skills/anti-slop-prose/SKILL.md
+
+1. Real dates
+   - scripts/update-page-dates.mjs takes, for each live route, the last commit date: `git log -1 --format=%cs -- <the route's files and the data/verified files it imports>`. It writes the dates to src/data/page-dates.json.
+   - It runs in the box before each content commit. Vercel builds use a shallow clone, so git dates there can't be trusted.
+   - src/app/sitemap.ts: lastmod reads page-dates.json. Delete its execSync git and mtime fallbacks. Never use the build time as a content date.
+   - The same goes for schema and visible dates: delete src/lib/article-dates.ts (git at build time on Vercel's shallow clone, then file mtime, then a made-up '2026-01-01') and the FALLBACK_DATE constants in src/components/seo/ArticleSchema.tsx and ArticleFAQSchema.tsx. Every date comes from page-dates.json; where it has none, the page and its schema show none.
+   - Add an npm script "dates".
+
+2. Byline block, visible on every content and tool page: above the fold on guides, below the tool on tool pages.
+   - Text: "By Marko Visic, BSc Physics · Updated {date} · Sources below". The name links to /about.
+   - "Reviewed" never appears unless DEVLOG logs a dated review.
+   - Withdrawn pages get no byline.
+
+3. Schema (JSON-LD, site level plus per page)
+   - Organization: name and legalName "Moving Data Systems d.o.o.", url https://wiresizes.com, address (PostalAddress: Smolnik 62, 2342 Ruše, SI), vatID "SI94001154", no sameAs unless a real profile exists.
+   - Person: Marko Visic.
+     · alumniOf: CollegeOrUniversity "University of Ljubljana, Faculty of Mathematics and Physics"
+     · hasCredential: EducationalOccupationalCredential "BSc Physics"
+     · knowsAbout: ["conductor resistance", "electrical units and conversions", "wire gauge geometry"]
+     · sameAs: https://www.linkedin.com/in/marko-visic/
+   - Article or WebPage on content pages:
+     · author → Person; publisher → Organization
+     · datePublished only if git shows a real first-publish date
+     · dateModified from page-dates.json
+   - BreadcrumbList on every non-home page.
+   - No aggregateRating, Review, HowTo or FAQPage.
+   - scripts/check-jsonld.mjs validates the shape: required keys are present, every URL starts with https://wiresizes.com, and none of the banned types appear. Add it to postbuild.
+
+4. /about: keep the WSZ-002 text and add three things:
+   - a visible rel="me" link to the LinkedIn profile;
+   - the Corrections section, rendered as a dated list from src/data/corrections.json. Move the WSZ-002 line into that file; each later wave appends one line;
+   - a link to /methodology in "Where the numbers come from".
+
+5. /methodology (new page; add it to the sitemap and the footer)
+   - Generated from research/data-sources.csv: one section per verified domain, giving:
+     · what it is;
+     · publisher;
+     · edition or date;
+     · deep link;
+     · retrieved date;
+     · what the site calculates from it, with the formula in plain notation;
+     · known limits, rewritten for readers from the coverage and notes fields.
+   - A short "Not covered yet" section lists, in plain words, the topics whose sources are still open (from the GAP and candidate rows). No status words, no build talk.
+   - Formulas published here:
+     · AWG diameter definition
+     · R(T) for copper and aluminum
+     · voltage drop (single- and three-phase)
+     · DC circular mils
+     · ampacity correction and adjustment arithmetic
+     · the 60 °C sizing method with 240.4(D) and the 250.122(B) proportional ground
+     · power and PF correction
+   - Attribution strings come from the registry, never hand-typed.
+
+6. Footer and housekeeping
+   - Footer: About · Methodology · Contact · Privacy · Terms · Disclaimer, plus the NFPA trademark notice.
+   - public/manifest.json lists /icons/icon-192.png and /icons/icon-512.png, which don't exist. Remove those two entries, or generate the PNGs from public/icon.svg if that needs no new dependency.
+   - Check that the favicon set and the custom 404 page work (report).
+
+7. Prose: run anti-slop-prose on every new or changed sentence in this wave and report the fix count.
+
+8. Verify
+   - `npm run dates`
+   - `rm -rf .next && npm run build` (all gates; add /about, /methodology, /contact, /privacy, /terms and /disclaimer to the gates' enforce list)
+   - `npm test`
+   - `npx tsc --noEmit` (0 errors)
+   - check-jsonld.mjs
+   - a script that confirms every live page's HTML contains the byline text and an "Updated" date equal to page-dates.json
+
+9. Commit "feat(wsz-004): byline, dates, schema, methodology, corrections log". Don't push.
+
+Definition of done (paste each output):
+- the byline/date script result (live pages checked = live route count)
+- the check-jsonld result
+- the gate results with the enforced routes
+- the test and tsc lines
+- the /methodology section list
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-004 TRUSTFRAME. Mark it done only if the verification ran and passed. Skipped tests and UI behaviour count as unverified. Also record this chat note under §4 Gotchas: "Run `npm run dates` before every content commit; append a line to src/data/corrections.json for every substantive correction." Commit DEVLOG.md with the work, and don't push. End with the §6 entry, `git status --short` and `git log --oneline -3`.
+
+
+==================== WSZ-005 ====================
+WSZ-005 FLAGSHIPS — wiresizes.com: rebuild the AWG chart, NEC Table 310.16, homepage, both hubs and the NEC-editions-by-state page
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 has WSZ-004 TRUSTFRAME as done. If not, stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`; if origin/main has commits main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
+Read first:
+- DEVLOG §0–§5 + last 10 §6 entries
+- research/page-specs.md, section "WSZ-005" (the approved page specs, built from 12 months of Bing queries)
+- .claude/skills/content-page/SKILL.md and its references (formatting-system, svg-spec, prepublish-checklist)
+- .claude/skills/anti-slop-prose/SKILL.md
+- .claude/skills/google-ai-content-policy/SKILL.md
+- data/verified/*.json
+- research/golden-cases.json
+
+Pages:
+- /guides/awg-wire-size-chart (Bing: 222,588 impressions, 4,248 clicks)
+- /guides/nec-table-310-16 (26,196 / 1,512)
+- / (homepage)
+- /calculators
+- /guides
+- /guides/nec-code-compliance (repurposed as "NEC edition by state"; slug unchanged)
+
+Hard rules:
+- Every unit-bearing number goes through <Val>/<Size> with data-src.
+- Every NEC reference must be in research/nec-sections-allowlist.csv.
+- Every source line comes from <Sources>.
+- The two table pages are the most valuable URLs on the site. Keep their slugs.
+- Keep each H1's primary keyword and the existing title wording where it already matches the query. Rewrite the meta for the primary query.
+- No content that needs a GAP domain, and nothing yet on terminal temperature columns:
+  · which temperature column a circuit may use (110.14(C) is verified in pack v3, but check-structure bans it until WSZ-008 lifts the ban);
+  · NM cable at 60 °C (334.80);
+  · Table 310.17;
+  · voltage-drop recommendations.
+- Do not write placeholders for them.
+
+1. Build each page to its spec in research/page-specs.md:
+   - H1 and direct-answer block
+   - tables (server-rendered, scroll-wrapped, sticky first column; mobile never overflows)
+   - per-gauge anchors on the AWG chart
+   - worked example from the engine
+   - FAQ from the listed real queries
+   - sources block, byline
+   - schema: Article + Dataset on both table pages, with isBasedOn the NIST/NFPA source URLs and no license claim for NFPA data
+   - two SVGs per page per svg-spec (labels from data)
+   Sibling pages must not share one H2 skeleton.
+2. NFPA rules on the 310.16 page and the AWG chart:
+   - present values as data with attribution (2023 NEC);
+   - no verbatim table notes;
+   - the NFPA trademark notice on the page.
+3. The edition panel (310.16 page) and the editions page:
+   - read data/verified/nec-adoption.json and the nec-2026-edition registry row;
+   - follow every entry in the file's rules array: verified rows only, per-jurisdiction counts, "Local adoption" for edition "local", each row's scope text, the next_change wording, the TN qualifier, and HI and MS as "not verified";
+   - never show counts from anywhere else; any count on the page is derived from the file's rows;
+   - show "Verified {Mon YYYY}" from the file's as_of.
+4. Homepage and hubs:
+   - cards for live, non-withdrawn routes only, derived from the route list (one source of truth; withdrawn and redirected routes drop out automatically);
+   - no counts unless derived;
+   - two plain lines under the H1 naming what the site covers and who keeps it.
+5. Add the six routes to scripts/gates.config.json enforce. Run anti-slop-prose on all new copy (report the fix count). Run Impeccable (/impeccable audit; installed in WSZ-002) on the two table-page templates and the homepage at 390 px, fix what it finds and report. If .claude/skills/impeccable is missing, write "impeccable not installed" in DEVLOG and continue.
+6. Run the content-page prepublish checklist (references/prepublish-checklist.md plus the v2.1 lines in SKILL.md) for each page. Report each line as pass, fail or n/a. Fix every fail before committing.
+7. Append one line to src/data/corrections.json: "{date}: rebuilt the AWG chart and NEC Table 310.16 pages from NIST and NFPA sources; added the full 0000–40 AWG and 250–2000 kcmil range and all Table 310.16 rows."
+8. Verify:
+   - `npm run dates`
+   - `rm -rf .next && npm run build` (gates enforce these six routes)
+   - golden tests
+   - `npx tsc --noEmit`
+   - the check-overflow script if it exists
+9. Commit "feat(wsz-005): rebuild AWG chart, NEC 310.16, homepage, hubs, NEC editions by state". Don't push.
+
+Definition of done (paste each output):
+- gate output showing the six routes enforced with 0 hits
+- golden/tsc/build lines
+- per page: rendered word count, H2 list, FAQ count, tables, the two SVG titles
+- the prepublish checklist table
+- anti-slop fix count
+- impeccable result or "not installed"
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-005 FLAGSHIPS. Status done only if the verification ran and passed; skipped tests and UI behaviour count as unverified (layout at 390 px is unverified unless the overflow script ran). Also record these chat notes: §5: "110.14(C) is verified (pack v3). After WSZ-008 lifts the check-structure ban, add a 'which column applies' section to the 310.16 page and the AWG chart (small follow-up prompt)." Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.
+
+
+==================== WSZ-006 ====================
+WSZ-006 PHYSICS — wiresizes.com: rebuild the wire resistance, voltage drop, 12 V/DC and three-phase tools on the verified engines
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 has WSZ-005 FLAGSHIPS as done. If not, stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`; if origin/main has commits main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
+Read first:
+- DEVLOG §0–§5 + last 10 §6 entries
+- research/page-specs.md, section "WSZ-006"
+- .claude/skills/content-page/SKILL.md and references/tool-pages.md, svg-spec.md, prepublish-checklist.md
+- .claude/skills/anti-slop-prose/SKILL.md
+- the engines in the verified data layer (DEVLOG §1 Key paths)
+- research/golden-cases.json
+
+Pages:
+- /calculators/wire-resistance-calculator (Bing: 8,389 impressions, 256 clicks)
+- /calculators/voltage-drop-calculator
+- /calculators/low-voltage-calculator
+- /calculators/three-phase-calculator
+
+These are the site's physics tools. They sit under Marko's BSc Physics byline, so the method has to be visible and exact.
+
+Tool-page rules (content-page tool anatomy):
+- H1 plus at most two plain lines above the tool.
+- The first input within about 60 rendered words of the H1.
+- Sensible defaults, so the first click works.
+- Results render only after the button. They explain every output number in plain words: what it means, how it compares, what to do with it.
+- Assumptions are stated, with a link to /methodology.
+- A server-rendered twin with the same substance: worked example, typical-values table, how to read the results.
+- Inputs: imperial first, metric toggles.
+- No live recomputation while typing.
+
+Calculations come only from the engines. Inputs and results never round-trip through hand-typed constants.
+
+1. Build each page to its spec in research/page-specs.md:
+   - inputs and outputs as listed
+   - worked examples = golden cases (render the engine's output for the golden inputs; never type the numbers)
+   - FAQ from the listed queries
+   - sources, byline, two SVGs (hero below the tool on tool pages)
+   - Article + SoftwareApplication schema (applicationCategory UtilitiesApplication, offers price 0) only where it matches visible content
+2. Specific requirements:
+   - Wire resistance:
+     · show the 20 °C and 75 °C results side by side;
+     · say values are for solid conductors and that stranded conductors run slightly higher, without a number;
+     · aluminum only for 12 AWG and larger.
+   - Voltage drop:
+     · single-phase and three-phase;
+     · parallel sets add area;
+     · "smallest size for your target" mode, where the target is the reader's (default 3%, labeled as the reader's choice, never as an NEC limit);
+     · say the resistive approximation leaves out AC reactance;
+     · optional energy line using the EIA price with its month (registry domain eia-electricity-price).
+   - 12 V/DC:
+     · the formula with K is shown on the page;
+     · temperature choice 20 °C or 75 °C;
+     · show both minimums from WSZ-002's dc-sizing rule (voltage drop, and current in the 60 °C column) and say which governs; link the 310.16 page for other temperatures and bundling.
+   - Three-phase:
+     · conversions, line-to-neutral voltage, PF correction;
+     · no motor tables;
+     · no wire or breaker outputs.
+3. Remove any leftover old engine code for these four pages once nothing imports it.
+4. Add the four routes to scripts/gates.config.json enforce. Run anti-slop-prose on all copy (report the fix count). Run Impeccable (/impeccable audit; installed in WSZ-002) on the tool template at 390 px and fix what it finds.
+5. Run the prepublish checklist per page. Fix every fail.
+6. Append a corrections line: "{date}: rebuilt the wire resistance, voltage drop, 12 V DC and three-phase calculators; the 12 V calculator's formula now includes copper resistivity."
+7. Verify:
+   - `npm run dates`
+   - `rm -rf .next && npm run build` (gates enforced on these routes)
+   - golden tests
+   - `npx tsc --noEmit`
+   - a node script that imports each page's calculation path and reproduces every golden case in the groups resistance, voltage-drop, dc-sizing and pf-correction
+8. Commit "feat(wsz-006): physics tools on verified engines". Don't push.
+
+Definition of done (paste each output): the golden reproduction script output; gate output for the four routes (0 hits); build/tsc lines; per page: inputs, outputs, word count below the tool, FAQ count, SVG titles; the checklist table; the anti-slop count; the impeccable result or "not installed".
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-006 PHYSICS. Status done only if the verification ran and passed; skipped tests and UI behaviour count as unverified. Also record these chat notes: §5: "When G2 is sourced, add the NEC informational notes on voltage drop to the voltage drop page." Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.
+
+
+==================== WSZ-007 ====================
+WSZ-007 CONVERTERS — wiresizes.com: rebuild the 7 unit converters and 3 power guides on the verified engines
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 has WSZ-006 PHYSICS as done. If not, stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`; if origin/main has commits main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
+Read first: DEVLOG §0–§5 + last 10 §6 entries; research/page-specs.md section "WSZ-007"; .claude/skills/content-page (tool-pages.md for the converters, intro-and-hooks.md for the guides); .claude/skills/anti-slop-prose/SKILL.md; research/golden-cases.json.
+
+Pages:
+- /calculators/kilowatts-to-amps-calculator
+- /calculators/kva-to-amps-calculator
+- /calculators/watts-to-amps-calculator
+- /calculators/amps-to-watts-calculator
+- /calculators/volts-to-amps-calculator
+- /calculators/ohms-law-calculator
+- /calculators/btu-to-watts-calculator
+- /guides/power-factor-explained
+- /guides/single-vs-three-phase
+- /guides/electrical-power-calculations
+
+Rules: same as WSZ-006 (tool-first anatomy for the converters, article anatomy for the guides, engines only, <Val>/<Size>, registry sources, byline, two SVGs).
+- These are short pages: depth comes from answering the listed questions, not from length.
+- Converters share an engine but must not share one H2 skeleton or one FAQ set. Each page answers its own queries.
+
+1. Build each page to its spec line in research/page-specs.md. Worked examples are the listed golden cases, rendered from the engine.
+2. Specific requirements:
+   - volts-to-amps: the tool must do what its description says (I = P / (V × PF), plus the Ohm's-law path I = V / R).
+   - single-vs-three-phase: write a title and meta that answer the question directly (446 impressions at position 7.9 with 0 clicks), and include the engine-computed comparison of one 10 kW load at 240 V single-phase, 208 V three-phase and 480 V three-phase.
+   - power-factor-explained: use the DOE example as DOE states it (about 26% less current) next to the engine's exact numbers. Never copy DOE's "67-kW" misprint.
+   - electrical-power-calculations: the formula table plus engine examples only.
+3. Add the ten routes to scripts/gates.config.json enforce. Run anti-slop-prose (report the count). Run Impeccable (/impeccable audit; installed in WSZ-002) on the converter template and the guide template at 390 px.
+4. Run the prepublish checklist per page and fix every fail. Append a corrections line: "{date}: rebuilt the power converters and guides; removed unsourced equipment tables."
+5. Verify:
+   - `npm run dates`
+   - `rm -rf .next && npm run build`
+   - golden tests
+   - `npx tsc --noEmit`
+   - a node script that reproduces every golden case in the groups power, conversion and pf-correction through each page's calculation path
+6. Commit "feat(wsz-007): converters and power guides on verified engines". Don't push.
+
+Definition of done (paste each output): the golden reproduction output; gate output for the ten routes (0 hits); build/tsc lines; one line per page (word count, H2 count, FAQ count, SVG titles); the checklist table; the anti-slop count; the impeccable result or "not installed".
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-007 CONVERTERS. Status done only if the verification ran and passed; skipped tests and UI behaviour count as unverified. Also record these chat notes: §0 Next action: "WSZ-008 is held until chat closes G14/G2/G13 (next sourcing session); owner pastes DEVLOG §0 into chat with 'continue sourcing'." Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.
+
+
+==================== WSZ-008 ====================
+WSZ-008 SERVICE+EV — wiresizes.com: 200 A and 100 A guides, service entrance, EV charger guide, ground wire and garage subpanel tools (pages whose sources are verified)
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 has WSZ-007 CONVERTERS as done. If not, stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`; if origin/main has commits main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
+Read first: DEVLOG §0–§5 + last 10 §6 entries; research/held-waves-rules.md (the rules for this wave — follow every section); research/held-pages-domains.csv; research/page-specs-held.md section "WSZ-008"; research/data-sources.csv; the data/verified files named below; .claude/skills/content-page/SKILL.md and its references; .claude/skills/anti-slop-prose/SKILL.md; research/golden-cases.json.
+
+Pages (gate decides BUILD/HOLD per research/held-pages-domains.csv): /guides/wire-size-for-200-amp, /guides/wire-size-for-100-amp, /calculators/service-entrance-calculator, /guides/wire-size-for-ev-charger, /calculators/ground-wire-calculator, /calculators/garage-subpanel-calculator.
+
+Data files: nec-310-12.json, nec-310-16.json, nec-110-14c.json, nec-250-122.json, nec-250-66.json, nec-225-2023.json, nec-300-5-2023.json, nec-continuous-load-2023.json, awg.json, nec-2023-rules-round2.json, plus any file chat adds for nec-cable-rules, nec-feeders-outbuildings or nec-grounding-rules (check the registry notes for the file name).
+
+Wave specifics:
+0. Before any page work: in scripts/check-structure.mjs, remove "110.14(C)" from the forbidden-text check (verified since pack v3), keep "334.80" and add "340.80". Run it on a fresh build (`rm -rf .next && npm run build`); every WSZ-002 to WSZ-007 route must still pass. Commit "chore(wsz-008): check-structure allows 110.14(C)" on its own.
+1. The 200 A and 100 A guides explain Table 310.12 (dwelling service or main power feeder, 120/240 V) versus Table 310.16 (every other feeder, at the terminal column) side by side, with the exact scope sentence from nec-310-12.json. The terminal column follows the engine_rules in nec-110-14c.json: not sure → 60 °C at 100 A or less and 75 °C above; 75 °C at 100 A or less only with terminations listed and identified for 75 °C conductors; cable (NM, UF) always 60 °C on this site. The subpanel answer on the 100 A guide shows the size per column with the condition for each, only if nec-110-14c is verified (the gate holds the page otherwise).
+2. Service entrance: keep the WSZ-002 lookup engine; add voltage drop at a reader-entered length and current (75 °C, awg.json), and the GEC note for rod/concrete-encased electrodes only if nec-grounding-rules is verified.
+3. EV guide: tool = charger output (A) or kW at 240 V → breaker (125 % only if nec-continuous-load is verified; otherwise show the manufacturer's stated breaker from mfr-evse) → conductor by wiring method (NM cable only if nec-cable-rules is verified) → EGC → voltage drop. Manufacturer rows from the mfr-evse registry evidence, each cited to its document.
+4. Ground wire: EGC mode (Table 250.122, Cu and Al/CCA, 15–6000 A) and GEC mode (Table 250.66 by service conductor, Cu and Al); 250.66(A)/(B) limits only if nec-grounding-rules is verified.
+5. Garage subpanel: feeder by OCPD rating on the WSZ-002 sizing engine, EGC by material, 4-wire feeder and no neutral bond at the separate building per 250.32 (nec-feeders-outbuildings), burial depth from Table 300.5(A) (nec-300-5-burial, verified; never an EMT depth).
+
+Run held-waves-rules.md §1 (data gate) first and paste its output. Then §2–§5 for the BUILD pages.
+
+Commit "feat(wsz-008): service, feeder and EV pages on verified sources". Don't push.
+
+Definition of done (paste each output): the data-gate output (BUILD/HOLD per page with blocking domains); the golden reproduction output for the wave's engine groups; gate output for the rebuilt routes (0 hits); build/test/tsc lines; per rebuilt page: word count, H2 list, FAQ count, SVG titles; the prepublish checklist table; anti-slop fix count; Impeccable result.
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-008. Status done only if every BUILD page passed verification; HOLD pages are listed in §0 as "waiting on chat sourcing: <domains>". Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.
+
+
+==================== WSZ-009 ====================
+WSZ-009 CODETOOLS — wiresizes.com: wire size, ampacity, circuit breaker, conduit fill and box fill tools (pages whose sources are verified)
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 has WSZ-008 SERVICE+EV as done (HOLD pages allowed). If not, stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`; if origin/main has commits main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
+Read first: DEVLOG §0–§5 + last 10 §6 entries; research/held-waves-rules.md (the rules for this wave — follow every section); research/held-pages-domains.csv; research/page-specs-held.md section "WSZ-009"; research/data-sources.csv; the data/verified files named below; .claude/skills/content-page/SKILL.md and its references; .claude/skills/anti-slop-prose/SKILL.md; research/golden-cases.json.
+
+Pages (gate decides BUILD/HOLD): /calculators/wire-size-calculator, /calculators/ampacity-calculator, /calculators/circuit-breaker-calculator, /calculators/conduit-fill-calculator, /calculators/box-fill-calculator.
+
+Data files: nec-310-16.json, nec-310-15-B-1-1.json, nec-310-15-C-1.json, nec-240-4-d.json, nec-240-6-a.json, nec-250-122.json, awg.json, nec-314-16.json, nec-110-14c.json, nec-continuous-load-2023.json, nec-ch9-table4.json (IMC only; not enough for a conduit-fill tool), plus any file chat adds for nec-cable-rules or nec-ch9-fill.
+
+Wave specifics:
+1. Wire size calculator: rebuild the page around the WSZ-002 engine. Optional features switch on with their domains. Every step of the result is explained in plain words.
+   - Termination temperature (nec-110-14c, verified 2023): follow the engine_rules in data/verified/nec-110-14c.json exactly.
+     · Input "Wiring method": "Cable (NM, UF) or not sure", or "Individual conductors (THHN/THWN-2, XHHW-2 and similar)". Cable is always sized from the 60 °C column, and for cable, correction and adjustment also start from the 60 °C column (derating-start applies to individual conductors only). Say why in one line: the site has not verified the 2023 cable rules (334.80, 340.80), so cable gets the lowest column, which is never undersized for terminations or cable type. Never cite 334.80 or 340.80.
+     · Input "Terminations" for individual conductors: "Not sure", "Marked 60 °C" or "Every termination is listed and identified for 75 °C conductors" (a checkbox the reader must tick; never preselected).
+     · Column: not sure → 60 °C at 100 A or less, 75 °C above 100 A (110.14(C)(1)(a)/(b)); marked 60 °C → 60 °C; the confirmed 75 °C box → 75 °C. Never offer 90 °C as the final column; a 90 °C conductor may start from its own column for derating, but the result is capped at the termination column (engine rule derating-start).
+     · Golden group "wire-size-termination" (research/golden-cases.json) runs through the engine.
+     · Keep the WSZ-002 EGC rule: Table 250.122 can give an EGC larger than the conductor (25 A aluminum, in the 60 °C and the 75 °C column). Show it uncapped, with the egcLargerThanConductor note (and the no-size message when egc is null), until chat verifies the 250.122(A) sentence that caps it.
+   - Continuous-load mode with 125 % (nec-continuous-load).
+   - Ambient and conductor-count derating (nec-310-15-corrections, verified). With derating, the 250.122(B) baseline is the smallest size whose ampacity in the termination column, after correction and adjustment, is at least the OCPD rating and that 240.4(D) allows (WSZ-002's step-2 size, computed with derating); only upsizing beyond that (for example for voltage drop) enlarges the EGC (data/verified/nec-250-122.json rule_250_122_b). Golden group "wire-size-derated" (its entry in the golden file's rules defines the inputs) runs through this mode: start column 90 °C for individual conductors and 60 °C for cable; derated ampacity = start-column ampacity × the Table 310.15(B)(1)(1) factor for the start column × the Table 310.15(C)(1) percent, capped at the termination-column ampacity; result fields columnC, startColumnC, minSizeByAmpacity, deratedAmpacity, size, vdVolts, vdPct, meetsTarget, egc, egcUpsized and egcLargerThanConductor (golden keys in snake_case).
+2. Ampacity: corrected and adjusted ampacity with the 240.4(D) cap shown separately (all eight 2023 items, with item numbers; 18/16 AWG Cu and 14 AWG CCA only with their conditions); the rooftop adder from 310.15(B)(2) (verified 2023) as an option; the termination cap from 110.14(C) shown as a third separate line, with the same column rules as the wire size calculator.
+3. Circuit breaker: continuous and noncontinuous load → minimum OCPD = noncontinuous + 125 % of continuous (210.20(A), 215.3; data/verified/nec-continuous-load-2023.json) → next standard rating from Table 240.6(A) → conductor from the WSZ-002 sizing engine (ampacity at least the rating, 240.4(D)) → EGC from Table 250.122. Size the conductor to at least the OCPD rating; 240.4(B) (verified 2023, SR-8283) may be explained in one line but is not applied by the tool. Show the egcLargerThanConductor note when it applies (breaker-sizing case "10 A continuous + 8 A noncontinuous" on aluminum: 10 AWG conductor, 8 AWG EGC). Termination column per item 1. Golden groups: breaker-sizing and wire-size-termination.
+4. Conduit fill and box fill: only when the gate says BUILD (Chapter 9 Tables 1/4/5 and 314.16 counting rules verified). Fill % against Table 1 limits; EGCs counted per the verified notes; box volume per 314.16(B) rules with each allowance shown.
+
+Run held-waves-rules.md §1 (data gate) first and paste its output. Then §2–§5 for the BUILD pages.
+
+Commit "feat(wsz-009): code-rule tools on verified sources". Don't push.
+
+Definition of done (paste each output): the data-gate output (BUILD/HOLD per page with blocking domains); the golden reproduction output for the wave's engine groups; gate output for the rebuilt routes (0 hits); build/test/tsc lines; per rebuilt page: word count, H2 list, FAQ count, SVG titles; the prepublish checklist table; anti-slop fix count; Impeccable result.
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-009. Status done only if every BUILD page passed verification; HOLD pages are listed in §0 as "waiting on chat sourcing: <domains>". Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.
+
+
+==================== WSZ-010 ====================
+WSZ-010 LOADCALC — wiresizes.com: residential load, range and dryer calculators on NEC 2023 Article 220 (pages whose sources are verified)
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 has WSZ-009 CODETOOLS as done (HOLD pages allowed). If not, stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`; if origin/main has commits main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
+Read first: DEVLOG §0–§5 + last 10 §6 entries; research/held-waves-rules.md (the rules for this wave — follow every section); research/held-pages-domains.csv; research/page-specs-held.md section "WSZ-010"; research/data-sources.csv; the data/verified files named below; .claude/skills/content-page/SKILL.md and its references; .claude/skills/anti-slop-prose/SKILL.md; research/golden-cases.json.
+
+Pages (gate decides BUILD/HOLD): /calculators/residential-load-calculator, /calculators/range-calculator, /calculators/dryer-calculator.
+
+Data files: nec-220-2023.json, nec-310-12.json, nec-310-16.json, mfr-equipment.json (dryers, ranges), nema-receptacle-configs.json, nec-2023-rules-round2.json; 210.8(D) from the nec-2023-rule-excerpts registry row.
+
+Wave specifics:
+1. Engine load-calc-2023 (src/lib/engine): standard method (220.41 3 VA/ft² and the 220.52 small-appliance and laundry loads of 1500 VA each, added together before the Table 220.45 demand factors; 220.51 fixed space heating at 100 %; 220.53 75 % for four or more fastened appliances; 220.54 dryers; Table 220.55 ranges with Notes 1–4; 220.57 EVSE; 220.60 noncoincident loads with the method stated in nec-220-2023.json notes; 220.61 neutral; motor loads only after the Article 430 tables are verified — until then the tool asks for no motor inputs) and optional method (220.82: first 10 kVA at 100 %, remainder at 40 %, heating/AC largest of the six items in 220.82(C)); 220.83 for existing dwellings. Golden groups "load-calc-2023" and "load-calc-2023-standard" must exist (chat generates them); otherwise HOLD.
+2. Residential load: both methods side by side for the same inputs, each step visible, result in VA and in amperes at 240 V, then service conductors from Table 310.12 for the result rounded up to a table row. The page says the results use the 2023 NEC and that the 2026 NEC moved these rules to Article 120 with changed values (state only the changes verified in nec-220-2023.json edition_2026; everything else "not yet verified").
+3. Range: nameplate kW (one range, or cooktop + up to two ovens per Note 4) → Table 220.55 demand → amperes; the manufacturer's stated circuit (Whirlpool kW table, Frigidaire 40 A cord) cited per model; GFCI per 210.8(D) (verified). Conductor size only from the WSZ-002 engine, with the same termination inputs and defaults as the WSZ-009 wire size calculator (nec-110-14c engine_rules; the default "Not sure" gives 60 °C at 100 A or less).
+4. Dryer: 220.54 load-calculation value (5000 W or nameplate, whichever is larger) kept clearly separate from the branch circuit the manufacturer specifies (30 A, 10 AWG Cu, 14-30R/10-30R per Whirlpool); GFCI per 210.8(D).
+
+Run held-waves-rules.md §1 (data gate) first and paste its output. Then §2–§5 for the BUILD pages.
+
+Commit "feat(wsz-010): load calculations on NEC 2023 Article 220". Don't push.
+
+Definition of done (paste each output): the data-gate output (BUILD/HOLD per page with blocking domains); the golden reproduction output for the wave's engine groups; gate output for the rebuilt routes (0 hits); build/test/tsc lines; per rebuilt page: word count, H2 list, FAQ count, SVG titles; the prepublish checklist table; anti-slop fix count; Impeccable result.
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-010. Status done only if every BUILD page passed verification; HOLD pages are listed in §0 as "waiting on chat sourcing: <domains>". Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.
+
+
+==================== WSZ-011 ====================
+WSZ-011 EQUIPMENT — wiresizes.com: motor, well pump, pool pump, hot tub, welder, air conditioner and RV calculators (pages whose sources are verified)
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 has WSZ-010 LOADCALC as done (HOLD pages allowed). If not, stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`; if origin/main has commits main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
+Read first: DEVLOG §0–§5 + last 10 §6 entries; research/held-waves-rules.md (the rules for this wave — follow every section); research/held-pages-domains.csv; research/page-specs-held.md section "WSZ-011"; research/data-sources.csv; the data/verified files named below; .claude/skills/content-page/SKILL.md and its references; .claude/skills/anti-slop-prose/SKILL.md; research/golden-cases.json.
+
+Pages (gate decides BUILD/HOLD): /calculators/horsepower-to-amps-calculator, /calculators/motor-circuit, /calculators/well-pump-calculator, /calculators/pool-pump-calculator, /calculators/hot-tub-calculator, /calculators/welder-calculator, /calculators/air-conditioner-calculator, /calculators/rv-hookup-calculator.
+
+Data files: nec-430-440-2023.json, mfr-equipment.json, doe-efficiency-standards.json, nema-receptacle-configs.json, nec-2023-rules-round2.json, plus any file chat adds for nec-430-motors (Tables 430.247/430.248 and the rest of 430.250), nec-440-hvac, nec-630-welders, nec-680-pools-spas, nec-551-rv-demand, mfr-well-pump.
+
+Wave specifics:
+1. Motor currents come only from the verified FLC tables (430.6(A)): never from a formula. A row the data file marks unverified is "not available" on the page, not estimated. Table 430.250 columns are rated motor voltages; map system voltages with the verified note.
+2. Motor circuit: conductor 125 % (430.22, only when verified), several motors 430.24 (verified), branch SC/GF device per Table 430.52(C)(1) (verified 2023) with the (C)(1)(a)/(b) rules only when their wording is verified, feeder 430.62, disconnect 430.110.
+3. Air conditioner: inputs are the nameplate MCA and MOCP; worked examples are the verified manufacturer rows (Carrier 26SCA5, Amana) cited per model; 440.22(A) values (verified 2023) explain MOCP; DOE SEER2 minimums from doe-efficiency-standards.json with the CFR citation.
+4. Hot tub and pool pump: manufacturer requirements first (mfr-spas, mfr-pool-pumps), then the verified 680 rules; never 680.10/680.12 for disconnects or wiring (2023 numbering differs).
+5. Welder: 630.11 sizing only when verified; manufacturer input current and fuse data (mfr-welders) shown per model either way.
+6. RV hookup: single RV outlet at a house (TT-30R 30 A 125 V; 14-50R 50 A 125/250 V from nema-receptacle-configs.json; GFCI rule per the verified section) and the RV-park feeder with Table 551.73(A) only when verified.
+7. Well pump: Franklin AIM cable-length tables only from a verified 2026 edition (mfr-well-pump must be verified; the 2015 edition is candidate only).
+
+Run held-waves-rules.md §1 (data gate) first and paste its output. Then §2–§5 for the BUILD pages.
+
+Commit "feat(wsz-011): equipment calculators on verified sources". Don't push.
+
+Definition of done (paste each output): the data-gate output (BUILD/HOLD per page with blocking domains); the golden reproduction output for the wave's engine groups; gate output for the rebuilt routes (0 hits); build/test/tsc lines; per rebuilt page: word count, H2 list, FAQ count, SVG titles; the prepublish checklist table; anti-slop fix count; Impeccable result.
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-011. Status done only if every BUILD page passed verification; HOLD pages are listed in §0 as "waiting on chat sourcing: <domains>". Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.
+
+

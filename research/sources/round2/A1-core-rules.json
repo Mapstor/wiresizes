@@ -1,0 +1,460 @@
+[
+ {
+  "ref": "110.14(C)(1)(a),(C)(1)(b),(C)(2)",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": "Equipment terminations for circuits rated 100 amperes or less, or marked for 14 AWG through 1 AWG, are used with 60°C conductors or with higher-rated conductors sized at their 60°C ampacity, unless the equipment is listed and identified for higher-rated conductors; a motor item allows 75°C. Over 100 amperes or larger than 1 AWG, terminations are used with 75°C conductors or higher-rated conductors limited to 75°C ampacity. (Tier-4 text only.)",
+  "values": {
+   "small_circuit_threshold": "100 amperes or less",
+   "small_conductor_range": "14 AWG through 1 AWG",
+   "small_temp": "60°C (140°F)",
+   "large_temp": "75°C (167°F)",
+   "motor_design_letters_tier4": "B, C, or D",
+   "pressure_connector_paragraph": "110.14(C)(2) (cross-reference seen in NFPA FR-8210 extractor summary)"
+  },
+  "quote": "Termination provisions of equipment for circuits rated 100 amperes or less | marked for 14 AWG through 1 AWG conductors | Conductors rated 60°C (140°F). | For motors marked with design letters B, C, or D, | Conductors rated 75°C (167°F).",
+  "source_url": "https://forums.mikeholt.com/threads/pi-110-14-c-1.2573319",
+  "source_title": "Mike Holt forum: PI 110.14(C)(1) (wwhitney, 21 Mar 2023) - tier 4",
+  "permission_notice": null,
+  "corroboration": [
+   {
+    "url": "https://open-exam-prep.com/study-guides/ak-electrician/ch03/ch03-sec02",
+    "matches": true
+   },
+   {
+    "url": "https://www.ecmag.com/magazine/articles/article-detail/codes-standards-general-installation-requirements-part-ix",
+    "matches": true
+   },
+   {
+    "url": "https://www.ecmag.com/magazine/articles/article-detail/codes-standards-temperature-limitations-connections-must-not-be-exceeded",
+    "matches": false
+   }
+  ],
+  "retrieved": "2026-10-20",
+  "notes": "2001 ECmag (1999 NEC) quotes design letters 'B, C, D, or E' - letters have varied by edition. 2026 change/move not established (CMP-1 FR doc only partly visible); 2026 FD CMP-6 note still cites 110.14(C)."
+ },
+ {
+  "ref": "210.19(A)",
+  "edition": "2023",
+  "status": "VERIFIED-2023 (intro sentence only); items (1)/(2) VERIFIED-draft via extractor summary; grounded-conductor exception and informational notes UNVERIFIED",
+  "rule_summary": "Branch-circuit conductors need an ampacity not less than the larger of: (1) the noncontinuous load plus 125 percent of the continuous load, and (2) the maximum load after adjustment or correction factors. Exceptions cover assemblies listed for 100 percent operation and portions connected at both ends to separately installed pressure connections.",
+  "values": {
+   "continuous_multiplier": "125 percent",
+   "structure_2023": "210.19(A) 'General.' with items (1) and (2)",
+   "exception_100pct_assembly": "listed for operation at 100 percent of its rating (tier-4 verbatim)"
+  },
+  "quote": "Branch-circuit conductors shall have an ampacity not less than the larger of the following",
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P02_FD_PrelimFR.pdf",
+  "source_title": "NFPA, Working Draft of NEC CMP-2 Meeting Output (A2025 First Draft), FR-8210-NFPA 70-2024",
+  "permission_notice": null,
+  "corroboration": [
+   {
+    "url": "https://forums.mikeholt.com/threads/pi-210-19-a-number-one.2573389",
+    "matches": true
+   },
+   {
+    "url": "https://productinfo.se.com/na-std-ref/viewer/5c0fee4b347bdf0001de4d55/5c0fee5b347bdf0001de4d6b/r/NEC210.19ConductorsMinimumAmpacityA-F20BBAC1",
+    "matches": false
+   }
+  ],
+  "retrieved": "2026-10-20",
+  "notes": "Schneider page is 2017 NEC with (A)(1)(a)/(b) numbering - mismatch is an edition difference. 2026 FD: OCPD term change only (FR-8210)."
+ },
+ {
+  "ref": "210.20(A)",
+  "edition": "2023 base / 2026 First Draft",
+  "status": "VERIFIED-draft (partial)",
+  "rule_summary": "The branch-circuit OCPD rating must be not less than the noncontinuous load plus 125 percent of the continuous load, except where the assembly including its OCPDs is listed for operation at 100 percent of its rating.",
+  "values": {
+   "continuous_multiplier": "125 percent (extractor-summarized, not verbatim)",
+   "exception": "assembly listed for 100 percent operation"
+  },
+  "quote": "Exception: Where the assembly, including the branch-circuit OCPDs overcurrent devices protecting the branch circuit(s)",
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P02_FD_PrelimFR.pdf",
+  "source_title": "NFPA, Working Draft of NEC CMP-2 Meeting Output (A2025 First Draft), FR-8210",
+  "permission_notice": null,
+  "corroboration": [],
+  "retrieved": "2026-10-20",
+  "notes": "Quote shows run-together old/new OCPD terms. 210.20 intro scope phrase 'not exceeding 1000 volts ac or 1500 volts dc nominal' seen; base vs inserted unknown."
+ },
+ {
+  "ref": "215.2(A)(1)",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": "Not seen in any fetched document. Annex D Example D3(a) in the 2026 First Draft cross-references 215.2(A) and 215.2(B).",
+  "values": {},
+  "quote": null,
+  "source_url": null,
+  "source_title": null,
+  "permission_notice": null,
+  "corroboration": [],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "215.3",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": "Text not seen. Annex D Example D3(a) (2026 First Draft, FR-8210) applies 125% of the continuous load plus the noncontinuous load under 215.3 and cites a 215.3 Exception for 100 percent-listed assemblies.",
+  "values": {
+   "annex_example_only": "150 A standard size; 125 A for 100 percent-listed assembly (example, extractor summary)"
+  },
+  "quote": "must accommodate 125% of the continuous load, plus the noncontinuous load",
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P02_FD_PrelimFR.pdf",
+  "source_title": "NFPA A2025 CMP-2 working draft, FR-8210, Annex D Example D3(a) (example text, not 215.3)",
+  "permission_notice": null,
+  "corroboration": [],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "230.42(A)",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": "Not seen in any fetched document.",
+  "values": {},
+  "quote": null,
+  "source_url": null,
+  "source_title": null,
+  "permission_notice": null,
+  "corroboration": [],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "625.41",
+  "edition": "2023",
+  "status": "UNVERIFIED (edition-unstated government quote seen; probably pre-2023)",
+  "rule_summary": "OCPD for feeders and branch circuits supplying EV equipment is sized for continuous duty at not less than 125 percent of the maximum load.",
+  "values": {
+   "multiplier": "125 percent"
+  },
+  "quote": "Overcurrent protection for feeders and branch circuits supplying equipment shall be sized for continuous duty",
+  "source_url": "https://www.nyserda.ny.gov/-/media/Project/Nyserda/Files/Programs/ChargeNY/DCFC-Program-Inspection-Checklist.pdf",
+  "source_title": "NYSERDA, Quality and Market Standards Checklist Specifications, August 2024 (no NEC edition named)",
+  "permission_notice": null,
+  "corroboration": [
+   {
+    "url": "https://www.ecmweb.com/national-electrical-code/quizzes/article/55279390/code-quiz-sizing-overcurrent-protective-devices-for-feeders-or-branch-circuits-supplying-evse",
+    "matches": true
+   }
+  ],
+  "retrieved": "2026-10-20",
+  "notes": "NYSERDA's 625.40 wording differs from Leviton's 2023 625.40, so its 625.41 is likely an older edition. 2026 FD new 627.41 mirrors this structure (VERIFIED-draft)."
+ },
+ {
+  "ref": "625.42 (supplementary)",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "rule_summary": "EV charging loads are continuous loads for Article 625.",
+  "values": {},
+  "quote": "Electric vehicle charging loads shall be considered to be continuous loads for the purposes of this article.",
+  "source_url": "https://captaincode2023.leviton.com/node/357",
+  "source_title": "Leviton Captain Code 2023 - 625.40, 625.42(A)(B), 625.43 Electric Vehicle Branch Circuit",
+  "permission_notice": "Material taken from the National Electric Code. is reprinted with permission from NFPA 70., 2023 edition. National Electrical Code®, Copyright 2022, National Fire Protection Association, Quincy, MA. All rights reserved.",
+  "corroboration": [],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "627.41 (2026 First Draft, new article)",
+  "edition": "2026 First Draft",
+  "status": "VERIFIED-draft",
+  "rule_summary": "New Article 627 OCPD rule: sized for continuous duty, not less than 125 percent of the maximum load of the equipment; with noncontinuous loads on the same feeder, the sum of noncontinuous loads plus 125 percent of continuous loads.",
+  "values": {
+   "multiplier": "125 percent"
+  },
+  "quote": "of not less than the sum of the noncontinuous loads plus 125 percent of the continuous loads.",
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P12_FD_PrelimFR.pdf",
+  "source_title": "NFPA, NEC CMP-12 First Draft Meeting Output (A2025), FR-9039",
+  "permission_notice": null,
+  "corroboration": [],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "210.19 / 215.2 voltage-drop informational notes",
+  "edition": "2023",
+  "status": "UNVERIFIED (2023); seen in 2017 manufacturer reproduction without NFPA notice and in a 2021 forum post",
+  "rule_summary": "Branch circuits sized to prevent voltage drop above 3 percent at the farthest outlet, with total feeder plus branch drop not above 5 percent, give reasonable efficiency. 2023 note numbers and the 215.2 feeder note were not seen.",
+  "values": {
+   "branch": "3 percent",
+   "total": "5 percent",
+   "note_number_pre2023_tier4": "Informational Note No. 4 to 210.19(A)"
+  },
+  "quote": "sized to prevent voltage drop exceeding 3 percent at the farthest outlet",
+  "source_url": "https://productinfo.se.com/na-std-ref/viewer/5c0fee4b347bdf0001de4d55/5c0fee5b347bdf0001de4d6b/r/NEC210.19ConductorsMinimumAmpacityA-F20BBAC1",
+  "source_title": "Schneider Electric, North America Standards Reference, NEC 210.19 (2017 NEC; © 2018)",
+  "permission_notice": null,
+  "corroboration": [
+   {
+    "url": "https://forums.mikeholt.com/threads/voltage-drop-2-or-3-or-5.2564977/",
+    "matches": true
+   }
+  ],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "334.80",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": "NM cable ampacity is capped at the 60°C conductor value; the 90°C rating may be used for adjustment and correction calculations. (Tier-4 text only; 2026 First Draft appears to split it into lettered subdivisions.)",
+  "values": {
+   "cap": "60°C (140°F)",
+   "derating_basis": "90°C (194°F)"
+  },
+  "quote": "The ampacity shall not exceed that of a 60°C (140°F) rated conductor.",
+  "source_url": "https://forums.mikeholt.com/threads/pc-334-80-a-nm-temperature-limits.2582807/post-2941704",
+  "source_title": "Mike Holt forum: PC 334.80(A) NM temperature limits (24 Aug 2024) - tier 4",
+  "permission_notice": null,
+  "corroboration": [],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "334.80 (Massachusetts amendment)",
+  "edition": "2023 NEC as amended by 527 CMR 12.00",
+  "status": "VERIFIED-2023 (Massachusetts only)",
+  "rule_summary": "Massachusetts replaces 334.80: NM/NMC conductors are rated 90°C, and in thermal insulation the ampacity is that of 60°C conductors; the second NEC paragraph is deleted.",
+  "values": {
+   "conductor_rating": "90°C (194°F)",
+   "in_thermal_insulation": "60°C (140°F)"
+  },
+  "quote": "Where installed in thermal insulation, the ampacity of conductors shall be that of 60°C (140°F) conductors.",
+  "source_url": "https://www.mass.gov/doc/527-cmr-1200-massachusetts-electrical-code-effective-21723/download",
+  "source_title": "527 CMR 12.00 Massachusetts Electrical Code (Amendments), BFPR, 2/17/23",
+  "permission_notice": null,
+  "corroboration": [],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "340.80",
+  "edition": "2023",
+  "status": "UNVERIFIED (own text); cross-reference VERIFIED-draft",
+  "rule_summary": "340.80 text not seen. Table 310.4(1) footnote in the 2026 First Draft says UF cable ampacity is limited in accordance with 340.80.",
+  "values": {},
+  "quote": "The ampacity of Type UF cable shall be limited in accordance with 340.80.",
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_FD_PrelimFR.pdf",
+  "source_title": "NFPA, NEC CMP-6 First Draft Meeting Output (A2025), Table 310.4(1) note 4 (FR-7931 revises the table)",
+  "permission_notice": null,
+  "corroboration": [],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "310.14(A)(2) Exception",
+  "edition": "2023 (values) / 2026 First Draft (wording)",
+  "status": "VERIFIED-2023 (values); VERIFIED-draft (2026 list wording)",
+  "rule_summary": "Where different ampacities apply to portions of a circuit, the higher ampacity may be used if the lower-ampacity portion does not exceed the lesser of 3.0 m (10 ft) or 10 percent of the total circuit.",
+  "values": {
+   "length_limit": "3.0 m (10 ft)",
+   "percent_limit": "10 percent of the total circuit",
+   "rule": "lesser of"
+  },
+  "quote": "or 10 percent of the total circuit.the following:",
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_FD_PrelimFR.pdf",
+  "source_title": "NFPA, NEC CMP-6 First Draft Meeting Output (A2025), FR-7955 ('Editorial changes were made for clarity.')",
+  "permission_notice": null,
+  "corroboration": [],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "310.15(B)(2)",
+  "edition": "2023 (base text)",
+  "status": "VERIFIED-2023",
+  "rule_summary": "For raceways or cables in direct sunlight on or above rooftops less than 19 mm (3/4 in.) above the roof, add 33°C (60°F) to the outdoor temperature before applying Table 310.15(B)(1)(1) or (B)(1)(2) correction; Type XHHW-2 is exempt.",
+  "values": {
+   "distance_threshold": "19 mm (3⁄4 in.)",
+   "temperature_adder": "33°C (60°F)",
+   "exempt_conductor": "XHHW-2",
+   "correction_table": "Table 310.15(B)(1)(1) or Table …"
+  },
+  "quote": "⁄4 in.), a temperature adder of 33°C (60°F) shall be added to the outdoor temperature",
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_FD_PrelimFR.pdf",
+  "source_title": "NFPA, NEC CMP-6 First Draft Meeting Output (A2025), FR-7961",
+  "permission_notice": null,
+  "corroboration": [
+   {
+    "url": "https://www.ecmag.com/magazine/articles/article-detail/codes-standards-under-hot-sun-ambient-temperature-adjustments-rooftops",
+    "matches": false
+   }
+  ],
+  "retrieved": "2026-10-20",
+  "notes": "ECmag 2016 quotes proposed 2017 text '7⁄8 of an inch' - edition difference. CONTRADICTS brief's 7/8 in. 2026 FD changes exception wording to 'temperature correction'."
+ },
+ {
+  "ref": "310.15(E)",
+  "edition": "2026 First Draft (reorganized)",
+  "status": "VERIFIED-draft; 2023 wording UNVERIFIED",
+  "rule_summary": "The 2026 First Draft reorganizes the neutral-counting rule into a list naming a 2-wire circuit, a 3-wire circuit taken from a 4-wire 3-phase system, and a 4-wire 3-phase wye circuit with mostly nonlinear load; the list lead-in was not visible.",
+  "values": {},
+  "quote": "shall not be required to be counted when applying the provisions of 310.15(C)(1).",
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_FD_PrelimFR.pdf",
+  "source_title": "NFPA, NEC CMP-6 First Draft Meeting Output (A2025), FR-8035",
+  "permission_notice": null,
+  "corroboration": [],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "310.15(F)",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": "Not seen in any fetched document; not revised in the CMP-6 2026 First Draft.",
+  "values": {},
+  "quote": null,
+  "source_url": null,
+  "source_title": null,
+  "permission_notice": null,
+  "corroboration": [],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "110.15",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": "Not seen in any fetched document.",
+  "values": {},
+  "quote": null,
+  "source_url": null,
+  "source_title": null,
+  "permission_notice": null,
+  "corroboration": [],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "230.56",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": "Not seen in any fetched document.",
+  "values": {},
+  "quote": null,
+  "source_url": null,
+  "source_title": null,
+  "permission_notice": null,
+  "corroboration": [],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "110.26 (main paragraph, door-impediment rule)",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "rule_summary": "Working space and access/egress must be provided and maintained; open equipment doors must not impede access or egress, and access is impeded if opened doors leave less than 610 mm (24 in.) wide and 2.0 m (6-1/2 ft) high.",
+  "values": {
+   "door_clear_width": "610 mm (24 in.)",
+   "door_clear_height": "2.0 m (6-1/2 ft)"
+  },
+  "quote": "to be less than 610 mm (24 in.) wide and 2.0 m (6-1/2 ft) high.",
+  "source_url": "https://captaincode2023.leviton.com/node/301",
+  "source_title": "Leviton Captain Code 2023 - 110.26 Spaces About Electrical Equipment",
+  "permission_notice": "Material taken from the National Electric Code. is reprinted with permission from NFPA 70., 2023 edition. National Electrical Code®, Copyright 2022, National Fire Protection Association, Quincy, MA. All rights reserved.",
+  "corroboration": [
+   {
+    "url": "https://www.csemag.com/know-how-to-size-an-electrical-room-properly/",
+    "matches": true
+   }
+  ],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "110.26(A)(1) / Table 110.26(A)(1)",
+  "edition": "2023",
+  "status": "CONFLICTING (tier-4 sources only) / UNVERIFIED for 2023",
+  "rule_summary": "Minimum working-space depth depends on nominal voltage to ground and Conditions 1-3. Tier-4 sources disagree on the 2023 voltage bands (three rows 0-150/151-600/601-1000 vs two rows 0-150/151-1000).",
+  "values": {
+   "variant_A_upcodes_print_edition_unstated": {
+    "0-150": [
+     "900 mm (3 ft)",
+     "900 mm (3 ft)",
+     "900 mm (3 ft)"
+    ],
+    "151-600": [
+     "900 mm (3 ft)",
+     "1.0 m (3 ft 6 in.)",
+     "1.2 m (4 ft)"
+    ],
+    "601-1000": [
+     "900 mm (3 ft)",
+     "1.2 m (4 ft)",
+     "1.5 m (5 ft)"
+    ]
+   },
+   "variant_B_open_exam_prep_summary": {
+    "0-150 V": [
+     "3 ft",
+     "3 ft",
+     "3 ft"
+    ],
+    "151-1000 V": [
+     "3 ft",
+     "3.5 ft",
+     "4 ft"
+    ]
+   },
+   "nfpa_staff_paraphrase_2023": "depths range 3 to 5 ft"
+  },
+  "quote": "151—600 900 mm (3 ft) 1.0 m (3 ft 6 in.) 1.2 m (4 ft)",
+  "source_url": "https://inspectapedia.com/electric/US-NEC-110.26-Electrical-Panel_Working-Space.pdf",
+  "source_title": "Inspectapedia copy of an UpCodes print of 110.26 (edition not stated; cites NFPA 70E-2018) - tier 4",
+  "permission_notice": null,
+  "corroboration": [
+   {
+    "url": "https://open-exam-prep.com/study-guides/tx-electrician/equipment-devices-transformers/working-space-and-equipment-access",
+    "matches": false
+   },
+   {
+    "url": "https://iaeimagazine.org/columns/nfpa-code-talk/electrical-room-basics/",
+    "matches": true
+   }
+  ],
+  "retrieved": "2026-10-20",
+  "notes": "Table pulled twice from the same source (data + raw lines): matched. 2026 FD FR-9213 revises 110.26(A) voltage wording."
+ },
+ {
+  "ref": "110.26(A)(2) width",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": "Working-space width is the width of the equipment or 762 mm (30 in.), whichever is greater (tier-4 print, edition not stated).",
+  "values": {
+   "min_width": "762 mm (30 in.)"
+  },
+  "quote": "the width of the equipment or 762 mm (30 in.), whichever is greater.",
+  "source_url": "https://inspectapedia.com/electric/US-NEC-110.26-Electrical-Panel_Working-Space.pdf",
+  "source_title": "Inspectapedia copy of an UpCodes print (edition not stated) - tier 4",
+  "permission_notice": null,
+  "corroboration": [
+   {
+    "url": "https://iaeimagazine.org/columns/nfpa-code-talk/electrical-room-basics/",
+    "matches": true
+   }
+  ],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "110.26(A)(3) height",
+  "edition": "2023",
+  "status": "UNVERIFIED",
+  "rule_summary": "Working-space height is 2.0 m (6½ ft) or the equipment height, whichever is greater (tier-4 print; fraction garbled in extraction).",
+  "values": {
+   "min_height": "2.0 m (6½ ft) - extracted as '2.0 m (6 / ft)'"
+  },
+  "quote": "to a height of 2.0 m (6 / ft) or the height of the equipment, whichever is greater.",
+  "source_url": "https://inspectapedia.com/electric/US-NEC-110.26-Electrical-Panel_Working-Space.pdf",
+  "source_title": "Inspectapedia copy of an UpCodes print (edition not stated) - tier 4",
+  "permission_notice": null,
+  "corroboration": [
+   {
+    "url": "https://iaeimagazine.org/columns/nfpa-code-talk/electrical-room-basics/",
+    "matches": true
+   }
+  ],
+  "retrieved": "2026-10-20"
+ },
+ {
+  "ref": "NFPA 70-2023 TIAs 23-1..23-13",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "rule_summary": "None of the 13 TIAs to the 2023 NEC amends any section targeted here.",
+  "values": {
+   "tias": "23-1 250.114; 23-2 Art.100/506; 23-3 210.8(F); 23-4 215.15; 23-5 555.30; 23-6 555.35; 23-7 Tables C.18-C.20; 23-8 300.26; 23-9 Pool/680.26; 23-10 314.29(A); 23-11 700.32(C)/701.32(C)/708.54(C); 23-12 408.6; 23-13 400.47"
+  },
+  "quote": "shall not supply loads greater than the ampacities specified in 310.14.",
+  "source_url": "https://www.nj.gov/dca/codes/codreg/pdf_misc_codes/nec_2023_tia_1_13.pdf",
+  "source_title": "NFPA 70 2023 Edition Tentative Interim Amendments (NFPA documents hosted by NJ DCA)",
+  "permission_notice": "Copyright © [year] All Rights Reserved NATIONAL FIRE PROTECTION ASSOCIATION (per TIA)",
+  "corroboration": [],
+  "retrieved": "2026-10-20"
+ }
+]

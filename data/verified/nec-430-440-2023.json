@@ -1,0 +1,1302 @@
+{
+ "id": "nec-430-440-2023",
+ "title": "Motor full-load currents and motor/AC protection rules, NEC 2023",
+ "status": "per table and rule (see each status)",
+ "retrieved": "2026-10-20",
+ "status_key": {
+  "verified-2023": "seen in a 2023 reproduction carrying an NFPA permission notice (Eaton bus-ele-br-11318, Leviton Captain Code 2023)",
+  "verified-sd2023": "verified-sd2023: NFPA 2023-cycle Second Draft (SR-7559 changed titles and notes only), values confirmed by two independent checks with planted wrong cells; no revision in the 2026 cycle. Render as '2023 NEC' and cite the Second Draft in the source line.",
+  "verified-sd2023-rule": "verified-sd2023 for a rule: text of a 2023-cycle Second Revision, confirmed by two pulls with planted wrong values rejected; 2022 Technical Meeting record not seen. Render as '2023 NEC' (decision D-09). Condition 3 (checked 2026-10-24): 2022 Technical Meeting per-CAM results and Standards Council per-appeal decisions not seen. NFPA (blog, 31 Aug 2022): 55 CAMs; 14 appeals 'resulted in 18 amendments and four concurrently issuing' TIAs (by date, TIAs 23-3 to 23-6); appeal topics optical fiber cable, copper-clad aluminum wiring, surge protection devices, GFCI protection, swimming pool bonding."
+ },
+ "source": {
+  "publisher": "NFPA; Eaton and Leviton reprints with NFPA 2023 permission",
+  "documents": [
+   "NFPA 70 A2022 CMP-11 Second Revision compilation (printed 12/6/2021), SR-7559, SR-7526, SR-7533, SR-7605",
+   "Eaton bus-ele-br-11318 '2023 NEC Code Changes'",
+   "Leviton Captain Code 2023 nodes 346, 347",
+   "NFPA PI 445 (A2025 cycle, 2023 base text)"
+  ],
+  "url_sd": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P11_SD_SRStatements.pdf",
+  "url_2023": "https://eaton.com/content/dam/eaton/products/electrical-circuit-protection/fuses/code-updates/bus-ele-br-11318-2023-NEC-code-changes.pdf",
+  "attribution": "Source: NFPA 70 (NEC) 2023, Article 430 tables (NFPA 2023 Second Draft and Eaton reprint with NFPA permission) — retrieved Oct 2026",
+  "evidence": "research/sources/round2/A4-motors-hvac-welders.md"
+ },
+ "table_430_247": {
+  "ref": "Table 430.247",
+  "edition": "2023",
+  "status": "verified-sd2023",
+  "title_as_seen": "Table 430.247 Full-Load Current in Amperes, Direct-Current Motors",
+  "columns": [
+   "90",
+   "120",
+   "180",
+   "240",
+   "500",
+   "550"
+  ],
+  "rows": [
+   {
+    "hp": "1/4",
+    "90": 4.0,
+    "120": 3.1,
+    "180": 2.0,
+    "240": 1.6,
+    "500": null,
+    "550": null
+   },
+   {
+    "hp": "1/3",
+    "90": 5.2,
+    "120": 4.1,
+    "180": 2.6,
+    "240": 2.0,
+    "500": null,
+    "550": null
+   },
+   {
+    "hp": "1/2",
+    "90": 6.8,
+    "120": 5.4,
+    "180": 3.4,
+    "240": 2.7,
+    "500": null,
+    "550": null
+   },
+   {
+    "hp": "3/4",
+    "90": 9.6,
+    "120": 7.6,
+    "180": 4.8,
+    "240": 3.8,
+    "500": null,
+    "550": null
+   },
+   {
+    "hp": "1",
+    "90": 12.2,
+    "120": 9.5,
+    "180": 6.1,
+    "240": 4.7,
+    "500": null,
+    "550": null
+   },
+   {
+    "hp": "1-1/2",
+    "90": null,
+    "120": 13.2,
+    "180": 8.3,
+    "240": 6.6,
+    "500": null,
+    "550": null
+   },
+   {
+    "hp": "2",
+    "90": null,
+    "120": 17.0,
+    "180": 10.8,
+    "240": 8.5,
+    "500": null,
+    "550": null
+   },
+   {
+    "hp": "3",
+    "90": null,
+    "120": 25.0,
+    "180": 16.0,
+    "240": 12.2,
+    "500": null,
+    "550": null
+   },
+   {
+    "hp": "5",
+    "90": null,
+    "120": 40.0,
+    "180": 27.0,
+    "240": 20.0,
+    "500": null,
+    "550": null
+   },
+   {
+    "hp": "7-1/2",
+    "90": null,
+    "120": 58.0,
+    "180": null,
+    "240": 29.0,
+    "500": 13.6,
+    "550": 12.2
+   },
+   {
+    "hp": "10",
+    "90": null,
+    "120": 76.0,
+    "180": null,
+    "240": 38.0,
+    "500": 18.0,
+    "550": 16.0
+   },
+   {
+    "hp": "15",
+    "90": null,
+    "120": null,
+    "180": null,
+    "240": 55.0,
+    "500": 27.0,
+    "550": 24.0
+   },
+   {
+    "hp": "20",
+    "90": null,
+    "120": null,
+    "180": null,
+    "240": 72.0,
+    "500": 34.0,
+    "550": 31.0
+   },
+   {
+    "hp": "25",
+    "90": null,
+    "120": null,
+    "180": null,
+    "240": 89.0,
+    "500": 43.0,
+    "550": 38.0
+   },
+   {
+    "hp": "30",
+    "90": null,
+    "120": null,
+    "180": null,
+    "240": 106.0,
+    "500": 51.0,
+    "550": 46.0
+   },
+   {
+    "hp": "40",
+    "90": null,
+    "120": null,
+    "180": null,
+    "240": 140.0,
+    "500": 67.0,
+    "550": 61.0
+   },
+   {
+    "hp": "50",
+    "90": null,
+    "120": null,
+    "180": null,
+    "240": 173.0,
+    "500": 83.0,
+    "550": 75.0
+   },
+   {
+    "hp": "60",
+    "90": null,
+    "120": null,
+    "180": null,
+    "240": 206.0,
+    "500": 99.0,
+    "550": 90.0
+   },
+   {
+    "hp": "75",
+    "90": null,
+    "120": null,
+    "180": null,
+    "240": 255.0,
+    "500": 123.0,
+    "550": 111.0
+   },
+   {
+    "hp": "100",
+    "90": null,
+    "120": null,
+    "180": null,
+    "240": 341.0,
+    "500": 164.0,
+    "550": 148.0
+   },
+   {
+    "hp": "125",
+    "90": null,
+    "120": null,
+    "180": null,
+    "240": 425.0,
+    "500": 205.0,
+    "550": 185.0
+   },
+   {
+    "hp": "150",
+    "90": null,
+    "120": null,
+    "180": null,
+    "240": 506.0,
+    "500": 246.0,
+    "550": 222.0
+   },
+   {
+    "hp": "200",
+    "90": null,
+    "120": null,
+    "180": null,
+    "240": 675.0,
+    "500": 330.0,
+    "550": 294.0
+   }
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P11_SD_SRStatements.pdf",
+  "permission_notice": "NFPA's own document (restriction notice as above)",
+  "retrieved": "2026-10-20"
+ },
+ "table_430_248": {
+  "ref": "Table 430.248",
+  "edition": "2023",
+  "status": "verified-sd2023",
+  "title_as_seen": "Table 430.248 Full-Load Currents in Amperes, Single-Phase Alternating-Current Motors",
+  "columns": [
+   "115",
+   "200",
+   "208",
+   "230"
+  ],
+  "rows": [
+   {
+    "hp": "1/6",
+    "115": 4.4,
+    "200": 2.5,
+    "208": 2.4,
+    "230": 2.2
+   },
+   {
+    "hp": "1/4",
+    "115": 5.8,
+    "200": 3.3,
+    "208": 3.2,
+    "230": 2.9
+   },
+   {
+    "hp": "1/3",
+    "115": 7.2,
+    "200": 4.1,
+    "208": 4.0,
+    "230": 3.6
+   },
+   {
+    "hp": "1/2",
+    "115": 9.8,
+    "200": 5.6,
+    "208": 5.4,
+    "230": 4.9
+   },
+   {
+    "hp": "3/4",
+    "115": 13.8,
+    "200": 7.9,
+    "208": 7.6,
+    "230": 6.9
+   },
+   {
+    "hp": "1",
+    "115": 16.0,
+    "200": 9.2,
+    "208": 8.8,
+    "230": 8.0
+   },
+   {
+    "hp": "1-1/2",
+    "115": 20.0,
+    "200": 11.5,
+    "208": 11.0,
+    "230": 10.0
+   },
+   {
+    "hp": "2",
+    "115": 24.0,
+    "200": 13.8,
+    "208": 13.2,
+    "230": 12.0
+   },
+   {
+    "hp": "3",
+    "115": 34.0,
+    "200": 19.6,
+    "208": 18.7,
+    "230": 17.0
+   },
+   {
+    "hp": "5",
+    "115": 56.0,
+    "200": 32.2,
+    "208": 30.8,
+    "230": 28.0
+   },
+   {
+    "hp": "7-1/2",
+    "115": 80.0,
+    "200": 46.0,
+    "208": 44.0,
+    "230": 40.0
+   },
+   {
+    "hp": "10",
+    "115": 100.0,
+    "200": 57.5,
+    "208": 55.0,
+    "230": 50.0
+   }
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P11_SD_SRStatements.pdf",
+  "permission_notice": "NFPA's own document; page carries NFPA restriction 'may not be used for any other purpose or distributed to any other persons or parties'",
+  "retrieved": "2026-10-20"
+ },
+ "table_430_249": {
+  "ref": "Table 430.249",
+  "edition": "2023",
+  "status": "verified-sd2023",
+  "title_as_seen": "Table 430.249 Full-Load Current, Two-Phase Alternating-Current Motors (4-Wire)",
+  "columns": [
+   "115",
+   "230",
+   "460",
+   "575",
+   "2300"
+  ],
+  "rows": [
+   {
+    "hp": "1/2",
+    "115": 4,
+    "230": 2,
+    "460": 1,
+    "575": 0.8,
+    "2300": null
+   },
+   {
+    "hp": "3/4",
+    "115": 4.8,
+    "230": 2.4,
+    "460": 1.2,
+    "575": 1.0,
+    "2300": null
+   },
+   {
+    "hp": "1",
+    "115": 6.4,
+    "230": 3.2,
+    "460": 1.6,
+    "575": 1.3,
+    "2300": null
+   },
+   {
+    "hp": "1-1/2",
+    "115": 9,
+    "230": 4.5,
+    "460": 2.3,
+    "575": 1.8,
+    "2300": null
+   },
+   {
+    "hp": "2",
+    "115": 11.8,
+    "230": 5.9,
+    "460": 3,
+    "575": 2.4,
+    "2300": null
+   },
+   {
+    "hp": "3",
+    "115": null,
+    "230": 8.3,
+    "460": 4.2,
+    "575": 3.3,
+    "2300": null
+   },
+   {
+    "hp": "5",
+    "115": null,
+    "230": 13.2,
+    "460": 6.6,
+    "575": 5.3,
+    "2300": null
+   },
+   {
+    "hp": "7-1/2",
+    "115": null,
+    "230": 19,
+    "460": 9,
+    "575": 8,
+    "2300": null
+   },
+   {
+    "hp": "10",
+    "115": null,
+    "230": 24,
+    "460": 12,
+    "575": 10,
+    "2300": null
+   },
+   {
+    "hp": "15",
+    "115": null,
+    "230": 36,
+    "460": 18,
+    "575": 14,
+    "2300": null
+   },
+   {
+    "hp": "20",
+    "115": null,
+    "230": 47,
+    "460": 23,
+    "575": 19,
+    "2300": null
+   },
+   {
+    "hp": "25",
+    "115": null,
+    "230": 59,
+    "460": 29,
+    "575": 24,
+    "2300": null
+   },
+   {
+    "hp": "30",
+    "115": null,
+    "230": 69,
+    "460": 35,
+    "575": 28,
+    "2300": null
+   },
+   {
+    "hp": "40",
+    "115": null,
+    "230": 90,
+    "460": 45,
+    "575": 36,
+    "2300": null
+   },
+   {
+    "hp": "50",
+    "115": null,
+    "230": 113,
+    "460": 56,
+    "575": 45,
+    "2300": null
+   },
+   {
+    "hp": "60",
+    "115": null,
+    "230": 133,
+    "460": 67,
+    "575": 53,
+    "2300": 14
+   },
+   {
+    "hp": "75",
+    "115": null,
+    "230": 166,
+    "460": 83,
+    "575": 66,
+    "2300": 18
+   },
+   {
+    "hp": "100",
+    "115": null,
+    "230": 218,
+    "460": 109,
+    "575": 87,
+    "2300": 23
+   },
+   {
+    "hp": "125",
+    "115": null,
+    "230": 270,
+    "460": 135,
+    "575": 108,
+    "2300": 28
+   },
+   {
+    "hp": "150",
+    "115": null,
+    "230": 312,
+    "460": 156,
+    "575": 125,
+    "2300": 32
+   },
+   {
+    "hp": "200",
+    "115": null,
+    "230": 416,
+    "460": 208,
+    "575": 167,
+    "2300": 43
+   }
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P11_SD_SRStatements.pdf",
+  "permission_notice": "NFPA's own document (restriction notice as above)",
+  "retrieved": "2026-10-20"
+ },
+ "table_430_250": {
+  "title": "Table 430.250 Full-Load Current, Three-Phase Alternating-Current Motors",
+  "induction_columns": [
+   "115",
+   "200",
+   "208",
+   "230",
+   "460",
+   "575",
+   "2300"
+  ],
+  "induction_rows": [
+   {
+    "hp": "1/2",
+    "status": "verified-2023",
+    "115": 4.4,
+    "200": 2.5,
+    "208": 2.4,
+    "230": 2.2,
+    "460": 1.1,
+    "575": 0.9,
+    "2300": null
+   },
+   {
+    "hp": "3/4",
+    "status": "verified-2023",
+    "115": 6.4,
+    "200": 3.7,
+    "208": 3.5,
+    "230": 3.2,
+    "460": 1.6,
+    "575": 1.3,
+    "2300": null
+   },
+   {
+    "hp": "1",
+    "status": "verified-2023",
+    "115": 8.4,
+    "200": 4.8,
+    "208": 4.6,
+    "230": 4.2,
+    "460": 2.1,
+    "575": 1.7,
+    "2300": null
+   },
+   {
+    "hp": "1-1/2",
+    "status": "verified-2023",
+    "115": 12.0,
+    "200": 6.9,
+    "208": 6.6,
+    "230": 6.0,
+    "460": 3.0,
+    "575": 2.4,
+    "2300": null
+   },
+   {
+    "hp": "2",
+    "status": "verified-2023",
+    "115": 13.6,
+    "200": 7.8,
+    "208": 7.5,
+    "230": 6.8,
+    "460": 3.4,
+    "575": 2.7,
+    "2300": null
+   },
+   {
+    "hp": "3",
+    "status": "verified-2023",
+    "115": null,
+    "200": 11.0,
+    "208": 10.6,
+    "230": 9.6,
+    "460": 4.8,
+    "575": 3.9,
+    "2300": null
+   },
+   {
+    "hp": "5",
+    "status": "verified-2023",
+    "115": null,
+    "200": 17.5,
+    "208": 16.7,
+    "230": 15.2,
+    "460": 7.6,
+    "575": 6.1,
+    "2300": null
+   },
+   {
+    "hp": "7-1/2",
+    "status": "verified-2023",
+    "115": null,
+    "200": 25.3,
+    "208": 24.2,
+    "230": 22,
+    "460": 11,
+    "575": 9,
+    "2300": null
+   },
+   {
+    "hp": "10",
+    "status": "verified-2023",
+    "115": null,
+    "200": 32.2,
+    "208": 30.8,
+    "230": 28,
+    "460": 14,
+    "575": 11,
+    "2300": null
+   },
+   {
+    "hp": "15",
+    "status": "verified-2023",
+    "115": null,
+    "200": 48.3,
+    "208": 46.2,
+    "230": 42,
+    "460": 21,
+    "575": 17,
+    "2300": null
+   },
+   {
+    "hp": "20",
+    "status": "verified-2023",
+    "115": null,
+    "200": 62.1,
+    "208": 59.4,
+    "230": 54,
+    "460": 27,
+    "575": 22,
+    "2300": null
+   },
+   {
+    "hp": "25",
+    "status": "verified-2023",
+    "115": null,
+    "200": 78.2,
+    "208": 74.8,
+    "230": 68,
+    "460": 34,
+    "575": 27,
+    "2300": null
+   },
+   {
+    "hp": "30",
+    "status": "verified-2023",
+    "115": null,
+    "200": 92,
+    "208": 88,
+    "230": 80,
+    "460": 40,
+    "575": 32,
+    "2300": null
+   },
+   {
+    "hp": "40",
+    "status": "verified-2023",
+    "115": null,
+    "200": 120,
+    "208": 114,
+    "230": 104,
+    "460": 52,
+    "575": 41,
+    "2300": null
+   },
+   {
+    "hp": "50",
+    "status": "verified-sd2023",
+    "115": null,
+    "200": 150,
+    "208": 143,
+    "230": 130,
+    "460": 65,
+    "575": 52,
+    "2300": null
+   },
+   {
+    "hp": "60",
+    "status": "verified-sd2023",
+    "115": null,
+    "200": 177,
+    "208": 169,
+    "230": 154,
+    "460": 77,
+    "575": 62,
+    "2300": 16
+   },
+   {
+    "hp": "75",
+    "status": "verified-sd2023",
+    "115": null,
+    "200": 221,
+    "208": 211,
+    "230": 192,
+    "460": 96,
+    "575": 77,
+    "2300": 20
+   },
+   {
+    "hp": "100",
+    "status": "verified-sd2023",
+    "115": null,
+    "200": 285,
+    "208": 273,
+    "230": 248,
+    "460": 124,
+    "575": 99,
+    "2300": 26
+   },
+   {
+    "hp": "125",
+    "status": "verified-sd2023",
+    "115": null,
+    "200": 359,
+    "208": 343,
+    "230": 312,
+    "460": 156,
+    "575": 125,
+    "2300": 31
+   },
+   {
+    "hp": "150",
+    "status": "verified-sd2023",
+    "115": null,
+    "200": 414,
+    "208": 396,
+    "230": 360,
+    "460": 180,
+    "575": 144,
+    "2300": 37
+   },
+   {
+    "hp": "200",
+    "status": "verified-sd2023",
+    "115": null,
+    "200": 552,
+    "208": 528,
+    "230": 480,
+    "460": 240,
+    "575": 192,
+    "2300": 49
+   },
+   {
+    "hp": "250",
+    "status": "verified-sd2023",
+    "115": null,
+    "200": null,
+    "208": null,
+    "230": null,
+    "460": 302,
+    "575": 242,
+    "2300": 60
+   },
+   {
+    "hp": "300",
+    "status": "verified-sd2023",
+    "115": null,
+    "200": null,
+    "208": null,
+    "230": null,
+    "460": 361,
+    "575": 289,
+    "2300": 72
+   },
+   {
+    "hp": "350",
+    "status": "verified-sd2023",
+    "115": null,
+    "200": null,
+    "208": null,
+    "230": null,
+    "460": 414,
+    "575": 336,
+    "2300": 83
+   },
+   {
+    "hp": "400",
+    "status": "verified-sd2023",
+    "115": null,
+    "200": null,
+    "208": null,
+    "230": null,
+    "460": 477,
+    "575": 382,
+    "2300": 95
+   },
+   {
+    "hp": "450",
+    "status": "verified-sd2023",
+    "115": null,
+    "200": null,
+    "208": null,
+    "230": null,
+    "460": 515,
+    "575": 412,
+    "2300": 103
+   },
+   {
+    "hp": "500",
+    "status": "verified-sd2023",
+    "115": null,
+    "200": null,
+    "208": null,
+    "230": null,
+    "460": 590,
+    "575": 472,
+    "2300": 118
+   }
+  ],
+  "synchronous_columns": [
+   "230",
+   "460",
+   "575",
+   "2300"
+  ],
+  "synchronous_rows": [
+   {
+    "hp": "1/2 to 20",
+    "status": "verified-2023",
+    "230": null,
+    "460": null,
+    "575": null,
+    "2300": null
+   },
+   {
+    "hp": "25",
+    "status": "verified-2023",
+    "230": 53,
+    "460": 26,
+    "575": 21,
+    "2300": null
+   },
+   {
+    "hp": "30",
+    "status": "verified-2023",
+    "230": 63,
+    "460": 32,
+    "575": 26,
+    "2300": null
+   },
+   {
+    "hp": "40",
+    "status": "verified-2023",
+    "230": 83,
+    "460": 41,
+    "575": 33,
+    "2300": null
+   },
+   {
+    "hp": "50",
+    "status": "unverified (do not render)",
+    "230": 104,
+    "460": 52,
+    "575": 42,
+    "2300": null
+   },
+   {
+    "hp": "60",
+    "status": "verified-sd2023 (230 V column only; 460/575/2300 V unverified, do not render)",
+    "230": 123,
+    "460": 61,
+    "575": 49,
+    "2300": 12
+   },
+   {
+    "hp": "75",
+    "status": "verified-sd2023 (230 V column only; 460/575/2300 V unverified, do not render)",
+    "230": 155,
+    "460": 78,
+    "575": 62,
+    "2300": 15
+   },
+   {
+    "hp": "100",
+    "status": "verified-sd2023 (230 V column only; 460/575/2300 V unverified, do not render)",
+    "230": 202,
+    "460": 101,
+    "575": 81,
+    "2300": 20
+   },
+   {
+    "hp": "125",
+    "status": "verified-sd2023 (230 V column only; 460/575/2300 V unverified, do not render)",
+    "230": 253,
+    "460": 126,
+    "575": 101,
+    "2300": 25
+   },
+   {
+    "hp": "150",
+    "status": "verified-sd2023 (230 V column only; 460/575/2300 V unverified, do not render)",
+    "230": 302,
+    "460": 151,
+    "575": 121,
+    "2300": 30
+   },
+   {
+    "hp": "200",
+    "status": "verified-sd2023 (230 V column only; 460/575/2300 V unverified, do not render)",
+    "230": 400,
+    "460": 201,
+    "575": 161,
+    "2300": 40
+   },
+   {
+    "hp": "250 to 500",
+    "status": "unverified (do not render)",
+    "230": null,
+    "460": null,
+    "575": null,
+    "2300": null
+   }
+  ],
+  "pf_footnote": {
+   "text": "*For 90 and 80 percent power factor, the figures shall be multiplied by 1.1 and 1.25, respectively.",
+   "status": "VERIFIED-draft"
+  }
+ },
+ "table_430_52_c_1": {
+  "ref": "Table 430.52(C)(1)",
+  "edition": "2023",
+  "status": "VERIFIED-2023 (Eaton, 2 pulls 28/28); 2023-cycle SD SR-7526 identical",
+  "title_as_seen": "Table 430.52(C)(1) Maximum Rating or Setting of Motor Branch-Circuit Short-Circuit and Ground-Fault Protective Devices",
+  "rows": [
+   {
+    "motor_type": "Single-phase motors",
+    "nontime_delay_fuse_pct": 300,
+    "dual_element_fuse_pct": 175,
+    "instantaneous_trip_pct": 800,
+    "inverse_time_pct": 250
+   },
+   {
+    "motor_type": "AC polyphase motors other than wound-rotor",
+    "nontime_delay_fuse_pct": 300,
+    "dual_element_fuse_pct": 175,
+    "instantaneous_trip_pct": 800,
+    "inverse_time_pct": 250
+   },
+   {
+    "motor_type": "Squirrel cage — other than Design B energy-efficient and Design B premium efficiency",
+    "nontime_delay_fuse_pct": 300,
+    "dual_element_fuse_pct": 175,
+    "instantaneous_trip_pct": 800,
+    "inverse_time_pct": 250
+   },
+   {
+    "motor_type": "Design B energy-efficient and Design B premium efficiency",
+    "nontime_delay_fuse_pct": 300,
+    "dual_element_fuse_pct": 175,
+    "instantaneous_trip_pct": 1100,
+    "inverse_time_pct": 250
+   },
+   {
+    "motor_type": "Synchronous (note 3)",
+    "nontime_delay_fuse_pct": 300,
+    "dual_element_fuse_pct": 175,
+    "instantaneous_trip_pct": 800,
+    "inverse_time_pct": 250
+   },
+   {
+    "motor_type": "Wound-rotor",
+    "nontime_delay_fuse_pct": 150,
+    "dual_element_fuse_pct": 150,
+    "instantaneous_trip_pct": 800,
+    "inverse_time_pct": 150
+   },
+   {
+    "motor_type": "DC (constant voltage)",
+    "nontime_delay_fuse_pct": 150,
+    "dual_element_fuse_pct": 150,
+    "instantaneous_trip_pct": 250,
+    "inverse_time_pct": 150
+   }
+  ],
+  "source_url": [
+   "https://eaton.com/content/dam/eaton/products/electrical-circuit-protection/fuses/code-updates/bus-ele-br-11318-2023-NEC-code-changes.pdf",
+   "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P11_SD_SRStatements.pdf"
+  ],
+  "permission_notice": [
+   "Reproduced with permission of NFPA from NFPA 70®, National Electrical Code®, 2023 edition.",
+   "NFPA's own document"
+  ],
+  "retrieved": "2026-10-20"
+ },
+ "rules": [
+  {
+   "ref": "430.6(A)",
+   "edition": "2023",
+   "status": "VERIFIED-2023",
+   "values": {
+    "table_flc_for": [
+     "conductor ampacity",
+     "switch ratings",
+     "branch-circuit SC/GF protection"
+    ],
+    "nameplate_for": [
+     "separate overload protection",
+     "low-speed/high-torque/canned-pump/multispeed motors",
+     "large motors beyond Part XIV (conductors)"
+    ]
+   },
+   "quote_segments": [
+    "the values given in Table 430.247, Table 430.248, Table 430.249, and Table 430.250 shall be used instead of",
+    "the actual current rating marked on the motor nameplate to determine the following:"
+   ],
+   "source_url": "https://captaincode2023.leviton.com/node/346",
+   "permission_notice": "Material taken from the National Electric Code. is reprinted with permission from NFPA 70., 2023 edition.",
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "430.24",
+   "edition": "2023",
+   "status": "VERIFIED-2023 (NFPA PI 445 base text; marks lost)",
+   "values": {
+    "highest_rated_motor_pct": 125,
+    "other_motors_pct": 100,
+    "noncontinuous_nonmotor_pct": 100,
+    "continuous_nonmotor_pct": 125
+   },
+   "quote_segments": [
+    "(1) 125 percent of the full-load current rating of the highest rated motor, as determined by",
+    "(4) 125 percent of the continuous non-motor load."
+   ],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P11_PISubmittals.pdf",
+   "permission_notice": "NFPA's own document",
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "430.52(C)(1)(b)",
+   "edition": "2023",
+   "status": "items (2) 225 %, (3) 400 %/300 % (FLC ≤ 100 A / > 100 A), (4) 300 %: verified-sd2023-rule (SR-7526, two pulls, canaries rejected); item (1) 400 %: VERIFIED-draft (single pull). Condition 3 open (overlap: none; Eaton's 2023 table notes show the (C)(1)(a)/(b) names, not the percentages).",
+   "values": {
+    "nontime_delay_fuse_le_600A_or_class_CC_time_delay_max_pct": 400,
+    "time_delay_dual_element_fuse_max_pct": 225,
+    "inverse_time_cb_max_pct_flc_le_100A": 400,
+    "inverse_time_cb_max_pct_flc_gt_100A": 300,
+    "fuse_601_6000A_max_pct": 300,
+    "condition": "only where the Table or (C)(1)(a) rating will not carry the starting current"
+   },
+   "quote_segments": [
+    "permitted to be increased but shall in no case exceed 400 percent of the fullload current.",
+    "in no case exceed 225 percent of the full-load current.",
+    "no case exceed 400 percent for full-load currents of 100 amperes or less or 300 percent",
+    "but shall in no case exceed 300 percent of the full-load current."
+   ],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P11_SD_SRStatements.pdf",
+   "permission_notice": "NFPA's own document",
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "430.62(A)",
+   "edition": "2023",
+   "status": "VERIFIED-draft (first paragraph; 2023-cycle SD SR-7533 = 2026 SD). Rest UNVERIFIED",
+   "values": {
+    "max_feeder_ocpd": "largest permitted branch SC/GF device for any motor (430.52, or 440.22(A)) + sum of the other motors' FLC"
+   },
+   "quote_segments": [
+    "440.22(A) for hermetic refrigerant motor-compressors], plus the sum of the full-load currents",
+    "of the other motors of the group."
+   ],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P11_SD_SRStatements.pdf",
+   "permission_notice": "NFPA's own document",
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "430.110(A)",
+   "edition": "2023",
+   "status": "verified-sd2023-rule (115 percent and 'a current rating'; SR-7538 with canaries; 2026 FD base text agrees); '1000 volts, nominal, or less' VERIFIED-draft",
+   "values": {
+    "disconnect_min_pct_of_flc": 115,
+    "disconnect_min_pct_of_table_flc": 115
+   },
+   "quote_segments": [
+    "nominal, or less shall have a current rating not less than 115 percent of the fullload current rating of the motor."
+   ],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P11_FD_PrelimFR.pdf",
+   "permission_notice": "NFPA's own document",
+   "retrieved": "2026-10-20",
+   "note_2026": "2026 SR-8089 revises 430.110(C)(1) Exception No. 1; 430.110(A) unchanged as far as seen"
+  },
+  {
+   "ref": "440.4(B)",
+   "edition": "2026 draft",
+   "status": "VERIFIED-draft",
+   "values": {
+    "nameplate": [
+     "minimum supply circuit conductor ampacity",
+     "maximum rating of the branch-circuit SC/GF protective device",
+     "SCCR of motor controllers or industrial control panel"
+    ]
+   },
+   "quote_segments": [
+    "minimum supply circuit conductor ampacity, the maximum rating ",
+    "of the branch-circuit short-circuit and ground-fault protective device"
+   ],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P11_SD_PrelimSR.pdf",
+   "permission_notice": "NFPA's own document",
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "440.11",
+   "edition": "2023",
+   "status": "VERIFIED-2023",
+   "values": {
+    "lock_or_tool": "if the disconnect is readily accessible to unqualified persons"
+   },
+   "quote_segments": [
+    "shall require a tool to open or be capable of being locked."
+   ],
+   "source_url": "https://captaincode2023.leviton.com/node/347",
+   "permission_notice": "Material taken from the National Electric Code. is reprinted with permission from NFPA 70., 2023 edition.",
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "440.14",
+   "edition": "2026 draft",
+   "status": "VERIFIED-draft",
+   "values": {
+    "location": "within sight from, and readily accessible from, the equipment"
+   },
+   "quote_segments": [
+    "Disconnecting means shall be located within sight from, and readily accessible from, the air-conditioning"
+   ],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P11_FD_PrelimFR.pdf",
+   "permission_notice": "NFPA's own document",
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "440.22(A)",
+   "edition": "2023",
+   "status": "verified-sd2023-rule (main paragraph, SR-7605, canaries rejected) and VERIFIED-2023 (values 175 / 225 / 15 A, Eaton 2023 reprint)",
+   "values": {
+    "basis": "greater of RLA or BCSC",
+    "max_pct": 175,
+    "exc1_next_higher_standard": true,
+    "exc2_max_pct_if_needed_to_start": 225,
+    "exc3_not_required_below_A": 15
+   },
+   "quote_segments": [
+    "rated-load current or branch-circuit selection current, whichever is greater, shall be permitted.",
+    "225 percent of the motor rated-load current or branch-circuit selection current, whichever is greater.",
+    "required to be less than 15 amperes."
+   ],
+   "source_url": [
+    "https://eaton.com/content/dam/eaton/products/electrical-circuit-protection/fuses/code-updates/bus-ele-br-11318-2023-NEC-code-changes.pdf",
+    "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P11_SD_SRStatements.pdf"
+   ],
+   "permission_notice": [
+    "Reproduced with permission of NFPA from NFPA 70®, National Electrical Code®, 2023 edition.",
+    "NFPA's own document"
+   ],
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "440.33",
+   "edition": "2026 draft",
+   "status": "VERIFIED-draft",
+   "values": {
+    "compressors": "sum of greater of RLA or BCSC",
+    "other_motors": "sum of FLC",
+    "adder_pct_of_highest": 25
+   },
+   "quote_segments": [
+    "(3) 25 percent of the highest motor-compressor or motor full load current in the group"
+   ],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P11_FD_PrelimFR.pdf",
+   "permission_notice": "NFPA's own document",
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "630.12",
+   "edition": "2026 draft (terminology only; base 2023)",
+   "status": "VERIFIED-draft",
+   "values": {
+    "welder_ocpd_max_pct": 200,
+    "basis": "I1max, else rated primary current",
+    "conductor_ocpd_max_pct_of_ampacity": 200,
+    "next_higher_standard_permitted": true
+   },
+   "quote_segments": [
+    "Each welder shall have overcurrent protection rated or set at not more than 200 percent of",
+    "not more than 200 percent of the rated primary current of the welder."
+   ],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P12_SD_PrelimSR.pdf",
+   "permission_notice": "NFPA's own document",
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "630.13",
+   "edition": "2023",
+   "status": "VERIFIED-draft (2023-cycle SD SR-7589); marking sentence UNVERIFIED",
+   "values": {
+    "disconnect_required_unless_integral": true,
+    "types": [
+     "switch",
+     "circuit breaker",
+     "listed cord-and-plug connector"
+    ],
+    "rating": "not less than needed to accommodate the 630.12 overcurrent protection"
+   },
+   "quote_segments": [
+    "A disconnecting means shall be provided in the supply circuit for each arc welder that is not",
+    "The disconnecting means shall be a switch, circuit breaker, or listed cord-and-plug connector,"
+   ],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P12_SD_SRStatements.pdf",
+   "permission_notice": "NFPA's own document",
+   "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "2026 changes",
+   "edition": "2026 drafts",
+   "status": "VERIFIED-draft",
+   "values": {
+    "no_SR": [
+     "Tables 430.247-430.250",
+     "Table 430.52(C)(1)"
+    ],
+    "no_FR": [
+     "430.247",
+     "430.248",
+     "430.249",
+     "430.250",
+     "430.251"
+    ],
+    "changed": [
+     "Table 430.52(C)(1) via FR-7971",
+     "Table 430.251(C) via SR-8049",
+     "430.22(H) new",
+     "430.24 SR-8015",
+     "SR-8086 terminology",
+     "440.4, 440.11, 440.12(A)(2), 440.14, 440.33, new 440.2, new 440.15",
+     "630.12/630.32 terminology"
+    ]
+   },
+   "quote_segments": [
+    "BE and CE motors have been included throughout Article 430 due to their energy-efficient design."
+   ],
+   "source_url": [
+    "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P11_SD_PrelimSR.pdf",
+    "https://www.dli.mn.gov/sites/default/files/pdf/NEC-2026-adoption-review-092525-change-summary.pdf"
+   ],
+   "permission_notice": "NFPA documents; MN DLI has no notice",
+   "retrieved": "2026-10-20"
+  }
+ ],
+ "unverified_rules": [
+  "430.22 (incl. Table 430.22(E))",
+  "430.32(A)(1)",
+  "Table 430.7(B) rows",
+  "440.32",
+  "440.62-440.64",
+  "630.11(A)",
+  "630.11(B)",
+  "625.41",
+  "625.50",
+  "625.17(A)"
+ ],
+ "notes": [
+  "Never compute motor current by formula for conductor or protection sizing: 430.6(A) requires the table values (verified-2023).",
+  "Pick the column by rated motor voltage; the table notes map system voltages 110–120, 220–240, 440–480, 550–600 and 2300–2400 V to the 115, 230, 460, 575 and 2300 V columns; 200 V and 208 V have their own columns.",
+  "430.22 (125 %), 430.32(A)(1), Table 430.7(B), 440.32, 440.62–440.64 and Article 630.11 are unverified: tools must not output them.",
+  "430.52(C)(1)(b) maximums apply only where the Table 430.52(C)(1) or (C)(1)(a) rating will not carry the motor's starting current.",
+  "Round 4 (2026-10-24): 430.110(A), 430.52(C)(1)(b)(2)–(4) and the 440.22(A) paragraph confirmed as 2023-cycle Second Draft text; no value changed. Evidence research/sources/round4/R4-4-motors-hvac-welders-ev.md"
+ ]
+}

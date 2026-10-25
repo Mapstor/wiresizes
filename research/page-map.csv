@@ -6,7 +6,7 @@ slug,archetype,disposition,redirect_to,primary_query,data_source,data_sources_al
 /calculators/wire-resistance-calculator,tool,rebuild,,wire resistance calculator,conductor-resistance-20c,conductor-resistance-20c;awg-geometry,WSZ-006,fix,8389,256,0,physics tool: R(T) with alpha
 /guides/wire-size-for-100-amp,guide,rebuild,,wire size for 100 amp sub panel,nec-310-12,nec-310-12;nec-310-16;nec-250-grounding;conductor-resistance-20c;nec-misc-installation;nec-ch9-fill,WSZ-008,fix,5013,65,0,service vs subpanel split
 /guides/single-vs-three-phase,guide,rebuild,,single phase vs 3 phase,power-definitions,power-definitions;us-nominal-voltages;awg-geometry;nec-430-motors,WSZ-007,fix,4097,20,0,CTR 0.49% — title/answer block
-/calculators/service-entrance-calculator,tool,rebuild,,service entrance conductor size,nec-310-12,nec-310-12;nec-250-grounding;nec-220-load-calcs;nec-misc-installation,WSZ-008,fix,3877,124,884,
+/calculators/service-entrance-calculator,tool,rebuild,,service entrance conductor size,nec-310-12,nec-310-12;nec-250-grounding;nec-220-load-calcs;nec-misc-installation,WSZ-008,fix,3877,124,884,"WSZ-002 replaces the tool with a Table 310.12 + Table 250.66 lookup (code audit: 100 A for any load above 960 A, dwelling table used for commercial/3-phase)"
 /guides/wire-size-for-ev-charger,tool,rebuild-absorb,,wire size for ev charger,mfr-evse,mfr-evse;nec-2023-rule-excerpts;nec-310-16;nec-250-grounding;irs-30c-credit;nec-continuous-load;nec-misc-installation;conductor-resistance-20c,WSZ-008,fix,3478,167,0,absorbs both EV calculators
 /guides/power-factor-explained,guide,rebuild,,power factor explained,power-definitions,power-definitions;nist-sp811-conversions,WSZ-007,fix,1576,21,0,
 /calculators/ampacity-calculator,tool,rebuild,,wire ampacity calculator,nec-310-16,nec-310-16;nec-310-15-corrections;nec-240-4-d;nec-misc-installation,WSZ-009,fix,1502,22,0,
@@ -36,7 +36,7 @@ slug,archetype,disposition,redirect_to,primary_query,data_source,data_sources_al
 /calculators/dryer-calculator,tool,rebuild,,dryer wire size,mfr-dryer-range,mfr-dryer-range;nec-220-load-calcs;nec-2023-rule-excerpts;nec-310-16;nema-receptacle-configs,WSZ-010,withdraw,31,1,0,
 /calculators/amps-to-watts-calculator,tool,rebuild,,amps to watts,power-definitions,power-definitions,WSZ-007,fix,31,0,0,
 /calculators/pool-pump-calculator,tool,rebuild,,pool pump wire size,nec-680-pools-spas,nec-680-pools-spas;mfr-pool-pumps;nec-430-motors,WSZ-011,withdraw,28,2,0,
-/calculators/garage-subpanel-calculator,tool,rebuild,,garage subpanel wire size,nec-310-16,nec-310-16;nec-250-grounding;conductor-resistance-20c;nec-misc-installation,WSZ-008,fix,22,1,0,225/250.32
+/calculators/garage-subpanel-calculator,tool,rebuild,,garage subpanel wire size,nec-310-16,nec-310-16;nec-250-grounding;conductor-resistance-20c;nec-misc-installation,WSZ-008,withdraw,22,1,0,"225/250.32; withdrawn in WSZ-002 (code audit 2026-10-20: invented load calc, panel smaller than computed load, Cu EGC on Al card)"
 /calculators/watts-to-amps-calculator,tool,rebuild,,watts to amps,power-definitions,power-definitions;mfr-water-heaters,WSZ-007,fix,11,0,0,
 /calculators/ohms-law-calculator,tool,rebuild,,ohms law calculator,power-definitions,power-definitions,WSZ-007,fix,10,0,0,mostly correct already
 /calculators/low-voltage-calculator,tool,rebuild,,12v wire size calculator,conductor-resistance-20c,conductor-resistance-20c;awg-geometry,WSZ-006,fix,2,0,0,P0 formula fix in W1

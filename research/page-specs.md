@@ -51,7 +51,7 @@ Traffic: Bing 26,196 impressions, 1,512 clicks, position 4.1.
 - Optional mini-tool (button-gated): size + column + ambient + number of conductors → corrected ampacity, with the 240.4(D) limit shown for 14/12/10 AWG copper.
 - H2 order: the table · reading the columns (insulation temperature ratings; copper vs aluminum/CCA) · ambient temperature correction · more than three current-carrying conductors · small conductors and 240.4(D) · dwelling services and Table 310.12 · what changed in 2026 · FAQ · sources.
 - FAQ: What is NEC Table 310.16? What is the ampacity of 10 AWG copper? Of 8 AWG? Of 14 AWG (and why it is protected at 15 A)? Why do 200 A dwelling services use 4/0 aluminum when Table 310.16 lists 180 A? (Table 310.12, 83% rule). Did the 2026 NEC change Table 310.16? (Revision drafts show 14 AWG–2000 kcmil unchanged; final text not seen — say exactly that.)
-- Not in WSZ-005 (sources pending): which temperature column a circuit may use (110.14(C)), NM cable at 60 °C (334.80), Table 310.17 free air.
+- Not in WSZ-005: which temperature column a circuit may use (110.14(C) is verified, but check-structure bans it until WSZ-008), NM cable at 60 °C (334.80, sources pending), Table 310.17 free air (sources pending).
 - Remove: "Download PDF", "requires PE stamp", the worked EV example, wrong section numbers (310.15(B)(7), 310.15(B)(5), "210.19(A)/215.2(A) OCPD"), "200 A service = 4/0 Al at 75 °C".
 - Legal: NFPA trademark notice on the page; values as data; no verbatim table notes; short quotes only.
 
@@ -69,7 +69,7 @@ Traffic: Bing 15,369 impressions, 284 clicks; Google www 433 impressions at posi
 ### /guides/nec-code-compliance → NEC editions by state (slug unchanged)
 - Traffic: 176 impressions. Repurposed because the old page carried a shifted Table 310.16 and wrong grounding sizes.
 - H1 idea: "NEC Edition by State (Verified October 2026)". The title must not promise all 50 states.
-- Content: the nec-adoption.json table (16 jurisdictions: state, edition, effective date, scheduled change, source link); the not-yet-verified list; what changed in the 2026 NEC (final-edition facts from nec-2026-edition only); the 2023 GFCI changes (210.8(A)(6), 210.8(D), 210.8(F)) and EV rules (625.40, 625.42, 625.43, 220.57). Local amendments can differ; say so.
+- Content: the nec-adoption.json table (every verified row: state, edition, effective date, scope, scheduled change, source link, rendered per the file's rules array); the not-verified list; what changed in the 2026 NEC (final-edition facts from nec-2026-edition only); the 2023 GFCI changes (210.8(A)(6), 210.8(D), 210.8(F)) and EV rules (625.40, 625.42, 625.43, 220.57). Local amendments can differ; say so.
 - Never publish IAEI counts. Re-check date visible.
 
 ---
@@ -99,27 +99,27 @@ Traffic: 9 impressions (the drop topic lives on other pages today). Queries: "wi
 
 ### /calculators/low-voltage-calculator (12 V / 24 V / 48 V DC)
 - Inputs: system voltage (12, 24, 48 or custom), load in amps or watts, one-way length, allowed drop (reader's target), conductor temperature (20 °C or 75 °C), copper.
-- Outputs: required circular mils and mm², smallest gauge that meets it, actual drop for that size and its neighbours.
+- Outputs: required circular mils and mm²; the smallest Table 310.16 size that meets the drop; the smallest size whose 60 °C ampacity (cu_60) carries the current; the result is the larger of the two, with the one that governs named; actual drop for the result and its neighbours.
 - Method on the page: CM = 2 × K × I × L / VD, K = 10.371 × (1 + 0.00393 × (T − 20)) Ω·cmil/ft.
-- Worked example (golden): 12 V, 400 W, 40 ft, 2% → about 115,000 cmil at 20 °C (2/0) or 140,000 cmil at 75 °C (3/0). The old page said 10 or 8 AWG.
-- Say: this checks voltage drop only; the conductor must also be rated for the current (link Table 310.16 for building wiring).
+- Worked examples (golden group dc-sizing): 12 V, 400 W, 40 ft, 2% → about 115,000 cmil at 20 °C (2/0) or 140,000 cmil at 75 °C (3/0); voltage drop governs. The old page said 10 or 8 AWG. 12 V, 360 W, 1 ft, 3% → the drop allows 16 AWG, but 30 A needs 10 AWG in the 60 °C column; current governs.
+- Say: the result covers voltage drop and current (60 °C column of Table 310.16, 30 °C ambient); link the 310.16 page for other temperatures and bundling.
 - Remove: the formula without K, every example built on it, Class 2 section numbers, ABYC/RVIA/SAE claims, the unlabeled resistance table.
 
 ### /calculators/three-phase-calculator
 Traffic: 161 impressions.
 - Inputs: any two of kW, kVA, amps, voltage (line-to-line), PF. Optional: target PF.
 - Outputs: amps, kVA, kW, kVAR; line-to-neutral voltage (V_LN = V_LL / √3) for 208Y/120 and 480Y/277 (nominal systems listed in NCUC Rule R8-17 / ANSI C84.1); PF correction: capacitor kVAR and the drop in current.
-- Worked examples (golden): 50 kW at 480 V, PF 0.9 → 66.84 A · 100 kW from PF 0.80 to 0.95 → 42.13 kVAR, current down 15.79% (the old page printed 32.9 kVAR and 18.8%).
+- Worked examples (golden): 50 kW at 480 V, PF 0.9 → 66.82 A (66.823) · 100 kW from PF 0.80 to 0.95 → 42.13 kVAR, current down 15.79% (the old page printed 32.9 kVAR and 18.8%).
 - Remove: the motor table with formula FLA and every wire size derived from it, the 50 hp example, HVAC/water-plant/welding examples, "GF 30 mA personnel".
 
 ---
 
 ## WSZ-007 — converters and power guides
 One worked example each from research/golden-cases.json, a short "how the formula works" section, the reader's real questions, and nothing that needs a GAP domain.
-- /calculators/kilowatts-to-amps-calculator ("kw to amps" 105, pos 8.9; "kw to amps calculator" 25): 7.2 kW at 240 V → 30 A; 50 kW at 480 V three-phase PF 0.9 → 66.84 A. Remove the range rule, the PF-by-equipment table, "leading PF > 1.0", the kW ranges and rack claims.
+- /calculators/kilowatts-to-amps-calculator ("kw to amps" 105, pos 8.9; "kw to amps calculator" 25): 7.2 kW at 240 V → 30 A; 50 kW at 480 V three-phase PF 0.9 → 66.82 A (66.823). Remove the range rule, the PF-by-equipment table, "leading PF > 1.0", the kW ranges and rack claims.
 - /calculators/kva-to-amps-calculator ("750 kva to amps", "125 kva to amps"): 75 kVA at 208 V three-phase → 208.18 A; 75 kVA at 480 V → 90.21 A; 25 kVA at 240 V single-phase → 104.17 A. Remove the wire and breaker columns, the 450.3 summary, the motor code-letter table.
 - /calculators/watts-to-amps-calculator: 4500 W at 240 V → 18.75 A (Rheem and A.O. Smith wire their two 4500 W elements so only one heats at a time). Remove "12 AWG for 25 A", "most appliances are continuous loads", the pool-pump amps, the "max practical amps" table.
-- /calculators/amps-to-watts-calculator: 50 A at 480 V three-phase PF 0.92 → 38,243.4 W (the old page printed 38,323). Remove "≈7 hp", the 220.54/424.3 references, PF penalty figures, generator and altitude rules.
+- /calculators/amps-to-watts-calculator: 50 A at 480 V three-phase PF 0.92 → 38,243.7 W (the old page printed 38,323). Remove "≈7 hp", the 220.54/424.3 references, PF penalty figures, generator and altitude rules.
 - /calculators/volts-to-amps-calculator: make the tool match its description (I = P / (V × PF), or I = V / R with Ohm's law). Remove the EV, furnace, motor, pool-pump and solar examples.
 - /calculators/ohms-law-calculator: keep the correct examples; remove "+40% hot winding".
 - /calculators/btu-to-watts-calculator ("btu to watts converter for heat pump", "9000 btu in watts"): 12,000 Btu/h = 3,516.85 W; 1 ton of refrigeration = 3,516.853 W; 1,000 W = 3,412.14 Btu/h (NIST SP 811). Remove the MCA/MOP table, SEER/HSPF minimums, fuel prices, rules of thumb, "EER = SEER × 0.875".

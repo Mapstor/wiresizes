@@ -1,0 +1,138 @@
+{
+  "id": "doe-efficiency-standards",
+  "title": "DOE minimum efficiency for central air conditioners and heat pumps, 10 CFR 430.32(c)",
+  "status": "verified",
+  "retrieved": "2026-10-20",
+  "source": "eCFR Title 10 Part 430 Subpart C, up to date as of 10/02/2026, https://www.ecfr.gov/current/title-10/chapter-II/subchapter-D/part-430/subpart-C; cross-checked against DOE 2023 CAC Standards FAQ (Issued October 5, 2022)",
+  "regions": {
+    "Southeast": "Alabama, Arkansas, Delaware, Florida, Georgia, Hawaii, Kentucky, Louisiana, Maryland, Mississippi, North Carolina, Oklahoma, Puerto Rico, South Carolina, Tennessee, Texas, Virginia, the District of Columbia, and the U.S. Territories",
+    "Southwest": "Arizona, California, Nevada, and New Mexico"
+  },
+  "rows": [
+    {
+      "product_class": "Split-system AC, certified cooling capacity < 45,000 Btu/h",
+      "region": "National (DOE FAQ label: North)",
+      "seer2": 13.4,
+      "eer2": null,
+      "hspf2": null,
+      "cfr": "430.32(c)(5)(i)(A)",
+      "basis": "manufactured on or after 2023-01-01",
+      "status": "VERIFIED (CFR)"
+    },
+    {
+      "product_class": "Split-system AC, < 45,000 Btu/h",
+      "region": "Southeast",
+      "seer2": 14.3,
+      "eer2": null,
+      "hspf2": null,
+      "cfr": "430.32(c)(6)(i)(A)",
+      "basis": "installed on or after 2023-01-01",
+      "status": "VERIFIED (CFR)"
+    },
+    {
+      "product_class": "Split-system AC, < 45,000 Btu/h",
+      "region": "Southwest",
+      "seer2": 14.3,
+      "eer2": "11.7/9.8",
+      "eer2_if_certified_seer2_lt_15_2": 11.7,
+      "eer2_if_certified_seer2_ge_15_2": 9.8,
+      "hspf2": null,
+      "cfr": "430.32(c)(6)(i)(A)",
+      "basis": "installed on or after 2023-01-01",
+      "status": "VERIFIED (CFR)"
+    },
+    {
+      "product_class": "Split-system AC, >= 45,000 Btu/h",
+      "region": "National (North)",
+      "seer2": 13.4,
+      "eer2": null,
+      "hspf2": null,
+      "cfr": "430.32(c)(5)(i)(B)",
+      "status": "VERIFIED (CFR)"
+    },
+    {
+      "product_class": "Split-system AC, >= 45,000 Btu/h",
+      "region": "Southeast",
+      "seer2": 13.8,
+      "eer2": null,
+      "hspf2": null,
+      "cfr": "430.32(c)(6)(i)(B)",
+      "status": "VERIFIED (CFR)"
+    },
+    {
+      "product_class": "Split-system AC, >= 45,000 Btu/h",
+      "region": "Southwest",
+      "seer2": 13.8,
+      "eer2": "11.2/9.8",
+      "eer2_if_certified_seer2_lt_15_2": 11.2,
+      "eer2_if_certified_seer2_ge_15_2": 9.8,
+      "hspf2": null,
+      "cfr": "430.32(c)(6)(i)(B)",
+      "status": "VERIFIED (CFR)"
+    },
+    {
+      "product_class": "Split-system heat pumps",
+      "region": "National (no regional standard)",
+      "seer2": 14.3,
+      "eer2": null,
+      "hspf2": 7.5,
+      "cfr": "430.32(c)(5)(ii)",
+      "status": "VERIFIED (CFR)"
+    },
+    {
+      "product_class": "Single-package AC",
+      "region": "National",
+      "seer2": 13.4,
+      "eer2": null,
+      "hspf2": null,
+      "cfr": "430.32(c)(5)(iii)",
+      "status": "VERIFIED (CFR)"
+    },
+    {
+      "product_class": "Single-package AC",
+      "region": "Southwest (additional)",
+      "seer2": null,
+      "eer2": 10.6,
+      "hspf2": null,
+      "cfr": "430.32(c)(6)(i)(iii)",
+      "status": "VERIFIED (CFR)"
+    },
+    {
+      "product_class": "Single-package heat pumps",
+      "region": "National",
+      "seer2": 13.4,
+      "eer2": null,
+      "hspf2": 6.7,
+      "cfr": "430.32(c)(5)(iv)",
+      "status": "VERIFIED (CFR)"
+    },
+    {
+      "product_class": "Small-duct, high-velocity systems",
+      "region": "National",
+      "seer2": 12,
+      "eer2": null,
+      "hspf2": 6.1,
+      "cfr": "430.32(c)(5)(v)",
+      "status": "VERIFIED (CFR)"
+    },
+    {
+      "product_class": "Space-constrained AC",
+      "region": "National",
+      "seer2": 11.7,
+      "eer2": null,
+      "hspf2": null,
+      "cfr": "430.32(c)(5)(vi)(A)",
+      "status": "VERIFIED (CFR)"
+    },
+    {
+      "product_class": "Space-constrained heat pumps",
+      "region": "National",
+      "seer2": 11.9,
+      "eer2": null,
+      "hspf2": 6.3,
+      "cfr": "430.32(c)(5)(vi)(B)",
+      "status": "VERIFIED (CFR)"
+    }
+  ],
+  "evidence": "research/sources/round2/A8-mfr-doe-nema.md"
+}

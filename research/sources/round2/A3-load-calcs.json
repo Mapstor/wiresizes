@@ -1,0 +1,1086 @@
+[
+ {
+  "ref": "Table 220.55",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "source": "N1 PI 4311 (printed as Table 120.55)",
+  "title": "Demand Factors and Loads for Household Electric Ranges, Wall-Mounted Ovens, Counter-Mounted Cooking Units, and Other Household Cooking Appliances over 1 3/4 kW Rating (Column C to be used in all cases except as otherwise permitted in Note 3.)",
+  "columns": {
+   "A": "less than 3.5 kW (printed: Less than 3 1/2 kW Rating) — demand factor %",
+   "B": "3.5–8.75 kW (printed: 3 1/2 kW through 8 3/4 kW Rating) — demand factor %",
+   "C": "not over 12 kW (printed: Maximum Demand (kW), Not over 12 kW Rating)"
+  },
+  "rows": [
+   {
+    "n": 1,
+    "A_pct": 80,
+    "B_pct": 80,
+    "C_kw": 8
+   },
+   {
+    "n": 2,
+    "A_pct": 75,
+    "B_pct": 65,
+    "C_kw": 11
+   },
+   {
+    "n": 3,
+    "A_pct": 70,
+    "B_pct": 55,
+    "C_kw": 14
+   },
+   {
+    "n": 4,
+    "A_pct": 66,
+    "B_pct": 50,
+    "C_kw": 17
+   },
+   {
+    "n": 5,
+    "A_pct": 62,
+    "B_pct": 45,
+    "C_kw": 20
+   },
+   {
+    "n": 6,
+    "A_pct": 59,
+    "B_pct": 43,
+    "C_kw": 21
+   },
+   {
+    "n": 7,
+    "A_pct": 56,
+    "B_pct": 40,
+    "C_kw": 22
+   },
+   {
+    "n": 8,
+    "A_pct": 53,
+    "B_pct": 36,
+    "C_kw": 23
+   },
+   {
+    "n": 9,
+    "A_pct": 51,
+    "B_pct": 35,
+    "C_kw": 24
+   },
+   {
+    "n": 10,
+    "A_pct": 49,
+    "B_pct": 34,
+    "C_kw": 25
+   },
+   {
+    "n": 11,
+    "A_pct": 47,
+    "B_pct": 32,
+    "C_kw": 26
+   },
+   {
+    "n": 12,
+    "A_pct": 45,
+    "B_pct": 32,
+    "C_kw": 27
+   },
+   {
+    "n": 13,
+    "A_pct": 43,
+    "B_pct": 32,
+    "C_kw": 28
+   },
+   {
+    "n": 14,
+    "A_pct": 41,
+    "B_pct": 32,
+    "C_kw": 29
+   },
+   {
+    "n": 15,
+    "A_pct": 40,
+    "B_pct": 32,
+    "C_kw": 30
+   },
+   {
+    "n": 16,
+    "A_pct": 39,
+    "B_pct": 28,
+    "C_kw": 31
+   },
+   {
+    "n": 17,
+    "A_pct": 38,
+    "B_pct": 28,
+    "C_kw": 32
+   },
+   {
+    "n": 18,
+    "A_pct": 37,
+    "B_pct": 28,
+    "C_kw": 33
+   },
+   {
+    "n": 19,
+    "A_pct": 36,
+    "B_pct": 28,
+    "C_kw": 34
+   },
+   {
+    "n": 20,
+    "A_pct": 35,
+    "B_pct": 28,
+    "C_kw": 35
+   },
+   {
+    "n": 21,
+    "A_pct": 34,
+    "B_pct": 26,
+    "C_kw": 36
+   },
+   {
+    "n": 22,
+    "A_pct": 33,
+    "B_pct": 26,
+    "C_kw": 37
+   },
+   {
+    "n": 23,
+    "A_pct": 32,
+    "B_pct": 26,
+    "C_kw": 38
+   },
+   {
+    "n": 24,
+    "A_pct": 31,
+    "B_pct": 26,
+    "C_kw": 39
+   },
+   {
+    "n": 25,
+    "A_pct": 30,
+    "B_pct": 26,
+    "C_kw": 40
+   },
+   {
+    "n": "26–30",
+    "A_pct": 30,
+    "B_pct": 24,
+    "C_kw": "15 kW + 1 kW for each range"
+   },
+   {
+    "n": "31–40",
+    "A_pct": 30,
+    "B_pct": 22,
+    "C_kw": "15 kW + 1 kW for each range",
+    "C_cell": "merged; printed once on the 26–30 row"
+   },
+   {
+    "n": "41–50",
+    "A_pct": 30,
+    "B_pct": 20,
+    "C_kw": "25 kW + 3/4 kW for each range"
+   },
+   {
+    "n": "51–60",
+    "A_pct": 30,
+    "B_pct": 18,
+    "C_kw": "25 kW + 3/4 kW for each range",
+    "C_cell": "merged; printed once on the 41–50 row"
+   },
+   {
+    "n": "61 and over",
+    "A_pct": 30,
+    "B_pct": 16,
+    "C_kw": "25 kW + 3/4 kW for each range",
+    "C_cell": "merged; printed once on the 41–50 row"
+   }
+  ],
+  "notes": {
+   "1": "Over 12 kW through 27 kW ranges all of same rating. For ranges individually rated more than 12 kW but not more than 27 kW, the maximum demand in Column C shall be increased 5 percent for each additional kilowatt of rating or major fraction thereof by which the rating of individual ranges exceeds 12 kW.",
+   "2": "Over 8 3/4 kW through 27 kW ranges of unequal ratings. For ranges individually rated more than 8 3/4 kW and of different ratings, but none exceeding 27 kW, an average value of rating shall be calculated by adding together the ratings of all ranges to obtain the total connected load (using 12 kW for any range rated less than 12 kW) and dividing by the total number of ranges. Then the maximum demand in Column C shall be increased 5 percent for each kilowatt or major fraction thereof by which this average value exceeds 12 kW.",
+   "3": "Over 1 3/4 kW through 8 3/4 kW. In lieu of the method provided in Column C, adding the nameplate ratings of all household cooking appliances rated more than 1 3/4 kW but not more than 8 3/4 kW and multiplying the sum by the demand factors specified in Column A or Column B for the given number of appliances shall be permitted. Where the rating of cooking appliances falls under both Column A and Column B, the demand factors for each column shall be applied to the appliances for that column, and the results added together.",
+   "4": [
+    "Calculating the branch-circuit load for one range in accordance with Table 120.55 shall be permitted.",
+    "The branch-circuit load for one wall-mounted oven or one counter-mounted cooking unit shall be the nameplate rating of the appliance.",
+    "The branch-circuit load for a counter-mounted cooking unit and not more than two wall-mounted ovens, all supplied from a single branch circuit and located in the same room, shall be calculated by adding the nameplate rating of the individual appliances and treating this total as equivalent to one range."
+   ],
+   "5": "This table shall also apply to household cooking appliances rated over 1 3/4 kW and used in instructional programs."
+  },
+  "notes_text_status": "VERIFIED-2023",
+  "notes_numbering_status": "UNVERIFIED (every item extracted as '(1)'; 4/5 grouping per order + C sources)",
+  "pulls": {
+   "raw": "N1 P2",
+   "data": "N1 P3",
+   "rows_compared": 30,
+   "mismatches": 0
+  },
+  "cross_check": "partial match C6 (n=10,15 A/B; C for 10,15,20,30); C4-CT has Column C formulas swapped (do not use)"
+ },
+ {
+  "ref": "220.82",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "source": "N1 PI 4311 (printed as 120.82); cross-check G1 (2022 CEC), G2, C7",
+  "scope_A": "a dwelling unit having the total connected load served by a single 120/240-volt or 208Y/120-volt set of 3-wire service or feeder conductors with an ampacity of 100 or greater",
+  "general_first_kva": 10,
+  "general_first_pct": 100,
+  "general_rest_pct": 40,
+  "va_per_ft2": 3,
+  "va_per_m2": 33,
+  "floor_area": "outside dimensions of the dwelling unit; shall not include open porches, garages, or unused or unfinished spaces not adaptable for future use",
+  "small_appliance_and_laundry_va_each": 1500,
+  "B3_nameplate_items": [
+   "All appliances that are fastened in place, permanently connected, or located to be on a specific circuit",
+   "Ranges, wall-mounted ovens, counter-mounted cooking units",
+   "Clothes dryers that are not connected to the laundry branch circuit specified in 120.82(B)(2)",
+   "Water heaters"
+  ],
+  "B4": "The nameplate ampere or kVA rating of all permanently connected motors not included in 120.82(B)(3).",
+  "heating_ac_rule": "The largest of the following six selections (load in kVA) shall be included",
+  "heating_ac_items": [
+   {
+    "item": "(C)(1)",
+    "text": "100 percent of the nameplate rating(s) of the air conditioning and cooling.",
+    "pct": 100
+   },
+   {
+    "item": "(C)(2)",
+    "text": "100 percent of the nameplate rating(s) of the heat pump when the heat pump is used without any supplemental electric heating.",
+    "pct": 100
+   },
+   {
+    "item": "(C)(3)",
+    "text": "100 percent of the nameplate rating(s) of the heat pump compressor and 65 percent of the supplemental electric heating for central electric space-heating systems. If the heat pump compressor is prevented from operating at the same time as the supplementary heat, it does not need to be added to the supplementary heat for the total central space heating load.",
+    "pct": {
+     "compressor": 100,
+     "supplemental_heat": 65
+    }
+   },
+   {
+    "item": "(C)(4)",
+    "text": "65 percent of the nameplate rating(s) of electric space heating if less than four separately controlled units.",
+    "pct": 65
+   },
+   {
+    "item": "(C)(5)",
+    "text": "40 percent of the nameplate rating(s) of electric space heating if four or more separately controlled units.",
+    "pct": 40
+   },
+   {
+    "item": "(C)(6)",
+    "text": "100 percent of the nameplate ratings of electric thermal storage and other heating systems where the usual load is expected to be continuous at the full nameplate value. Systems qualifying under this selection shall not be calculated under any other selection in 120.82(C).",
+    "pct": 100
+   }
+  ]
+ },
+ {
+  "ref": "120.82",
+  "edition": "2026",
+  "status": "UNVERIFIED",
+  "basis": "secondary only (C2 Mike Holt 2026 Exam Prep sample, C3, C4-MN, C5); no NFPA text seen; no SR in N2; FD (N3) 220.x FRs not reached",
+  "general_first_kva": 8,
+  "general_first_pct": 100,
+  "general_rest_pct": 40,
+  "va_per_ft2": 2,
+  "new_D_evse": "EVSE at 100 percent [120.57 and 120.82(D)] per C2",
+  "heating_ac_items": "same six items per C4-MN (paraphrase)"
+ },
+ {
+  "ref": "220.41",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "source": "N1 PI 4311 (printed as 120.41); C1",
+  "text": "In one-family, two-family, and multifamily dwellings, the minimum unit load shall be not less than 33 volt-amperes/m2 (3 volt-amperes/ft2).",
+  "va_per_ft2": 3,
+  "va_per_m2": 33,
+  "floor_area_section_2023": "220.5(C) (printed 120.5(C) in the PI)",
+  "floor_area_text": "The floor area for each floor shall be calculated from the outside dimensions of the building, dwelling unit, or other area involved. For dwelling units, the calculated floor area shall not include open porches or unfinished areas not adaptable for future use as a habitable room or occupiable space.",
+  "link_220.41_to_220.5C": "UNVERIFIED (extractor narrative)",
+  "2026": {
+   "ref": "120.41",
+   "va_per_ft2": 2,
+   "status": "UNVERIFIED (C1 NFPA-staff EC&M, C2, C3, C9)",
+   "new_120.13_branch_circuit_count_va_per_ft2": 3,
+   "new_120.13_status": "UNVERIFIED (C1, C2, C9)"
+  }
+ },
+ {
+  "ref": "Table 220.45",
+  "edition": "2023",
+  "status": "VERIFIED-2023 (dwelling rows: 2 pulls); other rows single read",
+  "source": "N1 PI 4311 (printed as Table 120.45)",
+  "title": "Lighting Load Demand Factors",
+  "dwelling_units": [
+   {
+    "portion": "First 3000 at",
+    "pct": 100
+   },
+   {
+    "portion": "From 3001 to 120,000 at",
+    "pct": 35
+   },
+   {
+    "portion": "Remainder over 120,000 at",
+    "pct": 25
+   }
+  ],
+  "hotels_motels_incl_apartment_houses_without_cooking_by_tenants": [
+   {
+    "portion": "First 20,000 or less at",
+    "pct": 60
+   },
+   {
+    "portion": "From 20,001 to 100,000 at",
+    "pct": 50
+   },
+   {
+    "portion": "Remainder over 100,000 at",
+    "pct": 35
+   }
+  ],
+  "warehouses_storage": [
+   {
+    "portion": "First 12,500 or less at",
+    "pct": 100
+   },
+   {
+    "portion": "Remainder over 12,500 at",
+    "pct": 50
+   }
+  ],
+  "all_others": [
+   {
+    "portion": "Total volt-amperes",
+    "pct": 100
+   }
+  ],
+  "footnote": "The demand factors of this table shall not apply to the calculated load of feeders or services supplying areas in hotels and motels where the entire lighting is likely to be used at one time, as in ballrooms or dining rooms.",
+  "note_2023_numbering": "Table 220.42(A) in 2023 = non-dwelling general lighting unit loads (G5; N2 SR-7797 for 120.42(A)); the demand table is 220.45",
+  "2026": {
+   "ref": "Table 120.45",
+   "status": "UNVERIFIED (no change seen; C2 uses same tiers)"
+  }
+ },
+ {
+  "ref": "220.52",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "source": "N1 (printed 120.52); G1; G2",
+  "A_small_appliance_va_per_2wire_circuit": 1500,
+  "A_text": "In each dwelling unit, the load shall be calculated at 1500 volt-amperes for each 2-wire small-appliance branch circuit as covered by 210.11(C)(1).",
+  "B_laundry_va_per_2wire_circuit": 1500,
+  "B_text": "A load of not less than 1500 volt-amperes shall be included for each 2-wire laundry branch circuit installed as covered by 210.11(C)(2).",
+  "not_captured": "superseded: full (A), (B) and the Exception captured in section 'Follow-up 2026-10-20'",
+  "2026": {
+   "ref": "120.52",
+   "status": "UNVERIFIED (no SR seen)"
+  }
+ },
+ {
+  "ref": "220.53",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "source": "L1 (NFPA permission notice) + N1",
+  "pct": 75,
+  "min_appliances": 4,
+  "qualifying": "rated 1/4 hp or greater, or 500 watts or greater, fastened in place, served by the same feeder or service in a one-family, two-family, or multifamily dwelling",
+  "excluded": [
+   "Household electric cooking equipment that is fastened in place",
+   "Clothes dryers",
+   "Space heating equipment",
+   "Air-conditioning equipment",
+   "Electric vehicle supply equipment (EVSE)"
+  ],
+  "2026": {
+   "ref": "120.53",
+   "status": "UNVERIFIED (no SR seen)"
+  }
+ },
+ {
+  "ref": "220.54",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "source": "N1 (printed 120.54); G2",
+  "text": "The load for household electric clothes dryers in a dwelling unit(s) shall be either 5000 watts (volt-amperes) or the nameplate rating, whichever is larger, for each dryer served. The use of the demand factors in Table 120.54 shall be permitted.",
+  "min_w": 5000,
+  "table": {
+   "ref": "Table 220.54",
+   "rows": [
+    {
+     "n": "1–4",
+     "pct": 100
+    },
+    {
+     "n": "5",
+     "pct": 85
+    },
+    {
+     "n": "6",
+     "pct": 75
+    },
+    {
+     "n": "7",
+     "pct": 65
+    },
+    {
+     "n": "8",
+     "pct": 60
+    },
+    {
+     "n": "9",
+     "pct": 55
+    },
+    {
+     "n": "10",
+     "pct": 50
+    },
+    {
+     "n": "11",
+     "pct": 47
+    },
+    {
+     "n": "12–23",
+     "pct": "47% minus 1% for each dryer exceeding 11"
+    },
+    {
+     "n": "24–42",
+     "pct": "35% minus 0.5% for each dryer exceeding 23"
+    },
+    {
+     "n": "43 and over",
+     "pct": "25%"
+    }
+   ],
+   "pulls": "rows 1–4: one NFPA read (N1) + C3, C4-CT, C4-MI agree; rows 5–43+: N1 + N2 redline"
+  }
+ },
+ {
+  "ref": "120.54",
+  "edition": "2026",
+  "status": "VERIFIED-other-edition (NFPA 70-2026 via N4 NEC Handbook 2026 replacement page, errata dated March 27, 2026)",
+  "text": "The load for household electric clothes dryers in a dwelling unit(s) shall be the nameplate rating if available or 5000 watts (volt-amperes), whichever is larger, for each dryer served. The use of the demand factors in Table 120.54 shall be permitted. Where two or more single-phase dryers are supplied by a 3-phase, 4-wire feeder or service, the total load shall be calculated on the basis of twice the maximum number connected between any two phases. Kilovoltamperes (kVA) shall be considered equivalent to kilowatts (kW) for loads calculated in this section.",
+  "table": {
+   "ref": "Table 120.54",
+   "title": "Demand Factors for Household Electric Clothes Dryers",
+   "rows": [
+    {
+     "n": "1–2",
+     "pct": 100
+    },
+    {
+     "n": "3–5",
+     "pct": 80
+    },
+    {
+     "n": "6",
+     "pct": 75
+    },
+    {
+     "n": "7",
+     "pct": 65
+    },
+    {
+     "n": "8",
+     "pct": 60
+    },
+    {
+     "n": "9",
+     "pct": 55
+    },
+    {
+     "n": "10",
+     "pct": 50
+    },
+    {
+     "n": "11",
+     "pct": 47
+    },
+    {
+     "n": "12–23",
+     "pct": "47% minus 1% for each dryer exceeding 11"
+    },
+    {
+     "n": "24–42",
+     "pct": "35% minus 0.5% for each dryer exceeding 23"
+    },
+    {
+     "n": "43 and over",
+     "pct": "25%"
+    }
+   ],
+   "pulls": "N4 raw == N4 pairs; rows 6–43+ == N2 redline; N2 redline consistent with 1–2→100, 3–5→80"
+  },
+  "changed_counts_vs_2023": [
+   {
+    "n": 3,
+    "2023": 100,
+    "2026": 80
+   },
+   {
+    "n": 4,
+    "2023": 100,
+    "2026": 80
+   },
+   {
+    "n": 5,
+    "2023": 85,
+    "2026": 80
+   }
+  ]
+ },
+ {
+  "ref": "Table 220.56",
+  "edition": "2023",
+  "status": "VERIFIED-2023 (2 pulls)",
+  "source": "N1 (printed Table 120.56)",
+  "rows": [
+   {
+    "n": "1",
+    "pct": 100
+   },
+   {
+    "n": "2",
+    "pct": 100
+   },
+   {
+    "n": "3",
+    "pct": 90
+   },
+   {
+    "n": "4",
+    "pct": 80
+   },
+   {
+    "n": "5",
+    "pct": 70
+   },
+   {
+    "n": "6 and over",
+    "pct": 65
+   }
+  ],
+  "2026": {
+   "ref": "120.56",
+   "status": "UNVERIFIED",
+   "note": "C9: instantaneous water heaters now included"
+  }
+ },
+ {
+  "ref": "220.57",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "source": "L1 + N1",
+  "text": "The EVSE load shall be calculated at either 7200 watts (volt-amperes) or the nameplate rating of the equipment, whichever is larger.",
+  "min_w": 7200,
+  "rule": "larger of 7200 W (VA) or nameplate",
+  "2026": {
+   "ref": "120.57",
+   "status": "intent VERIFIED-draft (N2 SR-7809 committee statement); exact wording UNVERIFIED; CONFLICTING within C2",
+   "rule_per_draft_and_C3": "nameplate rating if available, otherwise 7200 W (VA)",
+   "committee_statement": "The revision allows the use of nameplate ratings, in lieu of the 7200 VA value."
+  }
+ },
+ {
+  "ref": "220.60",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "source": "N1",
+  "text": "If it is unlikely that two or more noncoincident loads will be in use simultaneously, using only the largest load(s) that will be used at one time for calculating the total load of a feeder or service shall be permitted. If a motor or air-conditioning load is part of the noncoincident load and is not the largest of the noncoincident loads, 125 percent of either the motor load or air-conditioning load, whichever is larger, shall be used in the calculation.",
+  "2026": {
+   "ref": "120.60",
+   "status": "UNVERIFIED (no SR seen)"
+  }
+ },
+ {
+  "ref": "220.61",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "source": "N1 (printed 120.61)",
+  "A": "The feeder or service neutral load shall be the maximum unbalance of the load determined by this article. The maximum unbalanced load shall be the maximum net calculated load between the neutral conductor and any one ungrounded conductor.",
+  "B_additional_demand_pct": 70,
+  "B1": "ranges, wall-mounted ovens, counter-mounted cooking units, and electric dryers, where the maximum unbalanced load has been determined in accordance with Table 120.55 for ranges and Table 120.54 for dryers",
+  "B2_threshold_a": 200,
+  "B2": "That portion of the unbalanced load in excess of 200 amperes where the feeder or service is supplied from a 3-wire dc or single-phase ac system; a 4-wire, 3-phase system; a 3-wire, 2-phase system; or a 5-wire, 2-phase system.",
+  "C_no_reduction": [
+   "Any portion of a 3-wire circuit consisting of 2 ungrounded conductors and the neutral conductor of a 4-wire, 3-phase, wye-connected system",
+   "That portion consisting of nonlinear loads supplied from a 4-wire, wye-connected, 3-phase system"
+  ],
+  "2026": {
+   "ref": "120.61(B)(1)",
+   "status": "VERIFIED-draft (N2 SR-7812)",
+   "change": "70% applies to the portion of the feeder or service (neutral) supplying ranges/ovens/cooktops/dryers; 70% unchanged"
+  }
+ },
+ {
+  "ref": "220.83",
+  "edition": "2023",
+  "status": "VERIFIED-2023 ((A) table 2 pulls; (B) table 1 NFPA read + G6)",
+  "source": "N1 (printed 120.83); G3, G4, G6",
+  "va_per_ft2": 3,
+  "va_per_m2": 33,
+  "small_appliance_laundry_va": 1500,
+  "A_no_added_ac_or_heat": [
+   {
+    "load": "First 8 kVA of load at",
+    "pct": 100
+   },
+   {
+    "load": "Remainder of load at",
+    "pct": 40
+   }
+  ],
+  "B_ac_or_heat_added": [
+   {
+    "load": "Air-conditioning equipment",
+    "pct": 100
+   },
+   {
+    "load": "Central electric space heating",
+    "pct": 100
+   },
+   {
+    "load": "Less than four separately controlled space-heating units",
+    "pct": 100
+   },
+   {
+    "load": "First 8 kVA of all other loads",
+    "pct": 100
+   },
+   {
+    "load": "Remainder of all other loads",
+    "pct": 40
+   }
+  ]
+ },
+ {
+  "ref": "120.83",
+  "edition": "2026",
+  "status": "VERIFIED-draft (N2 SR-7832, single read, flattened)",
+  "va_per_ft2": 2,
+  "va_per_m2": 22,
+  "small_appliance_laundry_va": 1500,
+  "table": [
+   {
+    "load": "First 8 kVA of existing and new load",
+    "pct": 100
+   },
+   {
+    "load": "Remainder of existing load",
+    "pct": 40
+   },
+   {
+    "load": "New EVSE",
+    "pct": 80
+   },
+   {
+    "load": "New central electric resistance space heating",
+    "pct": 80
+   },
+   {
+    "load": "All other new loads",
+    "pct": 50
+   }
+  ],
+  "corroboration": "C3, C5"
+ },
+ {
+  "ref": "220.84",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "source": "N1 (printed 120.84; table label extracted as 'Table 120.84(B)')",
+  "conditions": [
+   "No dwelling unit is supplied by more than one feeder.",
+   "Each dwelling unit is equipped with electric cooking equipment.",
+   "Each dwelling unit is equipped with either electric space heating or air conditioning, or both."
+  ],
+  "C1_va_per_ft2": 3,
+  "C2_va_each": 1500,
+  "C9": "The larger of the air-conditioning load or the fixed electric space-heating load",
+  "C3_to_C8": "not captured",
+  "table": [
+   {
+    "units": "3–5",
+    "pct": 45
+   },
+   {
+    "units": "6–7",
+    "pct": 44
+   },
+   {
+    "units": "8–10",
+    "pct": 43
+   },
+   {
+    "units": "11",
+    "pct": 42
+   },
+   {
+    "units": "12–13",
+    "pct": 41
+   },
+   {
+    "units": "14–15",
+    "pct": 40
+   },
+   {
+    "units": "16–17",
+    "pct": 39
+   },
+   {
+    "units": "18–20",
+    "pct": 38
+   },
+   {
+    "units": "21",
+    "pct": 37
+   },
+   {
+    "units": "22–23",
+    "pct": 36
+   },
+   {
+    "units": "24–25",
+    "pct": 35
+   },
+   {
+    "units": "26–27",
+    "pct": 34
+   },
+   {
+    "units": "28–30",
+    "pct": 33
+   },
+   {
+    "units": "31",
+    "pct": 32
+   },
+   {
+    "units": "32–33",
+    "pct": 31
+   },
+   {
+    "units": "34–36",
+    "pct": 30
+   },
+   {
+    "units": "37–38",
+    "pct": 29
+   },
+   {
+    "units": "39–42",
+    "pct": 28
+   },
+   {
+    "units": "43–45",
+    "pct": 27
+   },
+   {
+    "units": "46–50",
+    "pct": 26
+   },
+   {
+    "units": "51–55",
+    "pct": 25
+   },
+   {
+    "units": "56–61",
+    "pct": 24
+   },
+   {
+    "units": "62 and over",
+    "pct": 23
+   }
+  ],
+  "pulls": "N1 data == N1 endpoints == N2 raw (23/23 identical)",
+  "2026": {
+   "ref": "120.84 / Table 120.84(C)",
+   "status": "VERIFIED-draft (table rows, relabel, (A) revision); (C)(1) 2 VA/ft2 UNVERIFIED in this run"
+  }
+ },
+ {
+  "ref": "220.85",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "text": "Where two dwelling units are supplied by a single feeder or service and the calculated load under Part III of this article exceeds that for three identical units calculated under 120.84, the lesser of the two loads shall be permitted to be used."
+ },
+ {
+  "ref": "220.87",
+  "edition": "2023",
+  "status": "VERIFIED-2023 (items (1),(2) only)",
+  "item_1": "The maximum demand data is available for a 1-year period.",
+  "item_2": "The maximum demand at 125 percent plus the new load does not exceed the ampacity of the feeder or rating of the service.",
+  "multiplier_pct": 125,
+  "2026": {
+   "ref": "120.87",
+   "status": "VERIFIED-draft (125%); exact wording UNVERIFIED",
+   "draft_line_flattened": "(2) The maximum demand at 125 percent plus the new load does load minus any removed load determined in accordance"
+  }
+ },
+ {
+  "ref": "120.5(E)",
+  "edition": "2026",
+  "status": "VERIFIED-draft (N2 SR-7609)",
+  "text": "Load calculations shall not require continuous loads to be calculated at 125 percent.",
+  "informational_note": "A 125-percent multiplier could be required for reasons other than continuous load.",
+  "corroboration": "C3 (identical sentence); G7"
+ },
+ [
+  {
+   "2023": "220.5(C) floor area",
+   "2026": "120.5(C)",
+   "value_change": "none seen",
+   "status_2026": "number per C1 only"
+  },
+  {
+   "2023": "(none)",
+   "2026": "120.5(E)",
+   "value_change": "new: continuous loads not required at 125% in load calculations",
+   "status_2026": "VERIFIED-draft"
+  },
+  {
+   "2023": "(none)",
+   "2026": "120.13",
+   "value_change": "new: branch-circuit count at 3 VA/ft2",
+   "status_2026": "UNVERIFIED (C)"
+  },
+  {
+   "2023": "220.41",
+   "2026": "120.41",
+   "value_change": "3 VA/ft2 -> 2 VA/ft2",
+   "status_2026": "UNVERIFIED (C, incl. NFPA-staff EC&M)"
+  },
+  {
+   "2023": "Table 220.42(A) (non-dwelling)",
+   "2026": "Table 120.42(A)",
+   "value_change": "125% note removed; values not changed per committee intent",
+   "status_2026": "VERIFIED-draft (statement)"
+  },
+  {
+   "2023": "Table 220.45",
+   "2026": "Table 120.45",
+   "value_change": "none seen",
+   "status_2026": "UNVERIFIED"
+  },
+  {
+   "2023": "220.52",
+   "2026": "120.52",
+   "value_change": "none seen",
+   "status_2026": "UNVERIFIED"
+  },
+  {
+   "2023": "220.53",
+   "2026": "120.53",
+   "value_change": "none seen",
+   "status_2026": "UNVERIFIED"
+  },
+  {
+   "2023": "220.54 + Table 220.54",
+   "2026": "120.54 + Table 120.54",
+   "value_change": "table 1–4@100,5@85 -> 1–2@100,3–5@80; text now 'nameplate rating if available or 5000 watts (volt-amperes), whichever is larger'",
+   "status_2026": "VERIFIED-other-edition (N4)"
+  },
+  {
+   "2023": "220.55 + Table 220.55",
+   "2026": "120.55 + Table 120.55",
+   "value_change": "none seen",
+   "status_2026": "UNVERIFIED"
+  },
+  {
+   "2023": "220.56 + Table 220.56",
+   "2026": "120.56",
+   "value_change": "instantaneous water heaters added (C9); values not seen",
+   "status_2026": "UNVERIFIED"
+  },
+  {
+   "2023": "220.57",
+   "2026": "120.57",
+   "value_change": "larger of 7200 W or nameplate -> nameplate if available, else 7200 W",
+   "status_2026": "intent VERIFIED-draft; wording UNVERIFIED"
+  },
+  {
+   "2023": "220.60",
+   "2026": "120.60",
+   "value_change": "none seen",
+   "status_2026": "UNVERIFIED"
+  },
+  {
+   "2023": "220.61",
+   "2026": "120.61",
+   "value_change": "(B)(1) reworded (portion of feeder/service); 70% and 200 A unchanged as far as seen",
+   "status_2026": "VERIFIED-draft ((B)(1) only)"
+  },
+  {
+   "2023": "220.82",
+   "2026": "120.82",
+   "value_change": "secondary: 3->2 VA/ft2; first 10 kVA -> first 8 kVA at 100%; new (D) EVSE at 100%",
+   "status_2026": "UNVERIFIED"
+  },
+  {
+   "2023": "220.83 (A)/(B) tables",
+   "2026": "120.83 single Table 120.83",
+   "value_change": "3->2 VA/ft2; new table (8 kVA existing+new 100; rest of existing 40; new EVSE 80; new central resistance heat 80; other new 50)",
+   "status_2026": "VERIFIED-draft"
+  },
+  {
+   "2023": "220.84 + Table 220.84(B)",
+   "2026": "120.84 + Table 120.84(C)",
+   "value_change": "table rows none; relabel B->C; (A) single-phase 120/208V units; (C)(1) 3->2 VA/ft2 not re-seen this run",
+   "status_2026": "VERIFIED-draft (except (C)(1))"
+  },
+  {
+   "2023": "220.85",
+   "2026": "120.85",
+   "value_change": "none seen",
+   "status_2026": "UNVERIFIED"
+  },
+  {
+   "2023": "220.87",
+   "2026": "120.87",
+   "value_change": "(2) reworded (new load, minus removed load); 125% unchanged",
+   "status_2026": "VERIFIED-draft (125%)"
+  }
+ ],
+ {
+  "ref": "220.52",
+  "edition": "2023",
+  "status": "VERIFIED-2023",
+  "source": "N1 PI 4311 (printed 120.52); pulls F1 (full) + F3 (inclusion sentences)",
+  "retrieved": "2026-10-20",
+  "A": {
+   "va_per_2wire_small_appliance_circuit": 1500,
+   "text": "In each dwelling unit, the load shall be calculated at 1500 volt-amperes for each 2-wire small-appliance branch circuit as covered by 210.11(C)(1). Where the load is subdivided through two or more feeders, the calculated load for each shall include not less than 1500 volt-amperes for each 2-wire small-appliance branch circuit. These loads shall be permitted to be included with the general lighting load and subjected to the demand factors provided in Table 120.45.",
+   "exception": "The individual branch circuit permitted by 210.52(B)(1), Exception No. 2, shall be permitted to be excluded from the calculation required by 120.52.",
+   "may_add_to_general_lighting_before_lighting_demand_table": true
+  },
+  "B": {
+   "va_per_2wire_laundry_circuit_min": 1500,
+   "text": "A load of not less than 1500 volt-amperes shall be included for each 2-wire laundry branch circuit installed as covered by 210.11(C)(2). This load shall be permitted to be included with the general lighting load and shall be subjected to the demand factors provided in Table 120.45.",
+   "may_add_to_general_lighting_before_lighting_demand_table": true
+  },
+  "numbering": "PI prints Table 120.45 and 120.52; 2023 edition = Table 220.45 and 220.52"
+ },
+ {
+  "ref": "220.50",
+  "edition": "2023",
+  "status": "VERIFIED-2023 (F1 and F6 identical)",
+  "title": "Motors and Air-Conditioning Equipment",
+  "A_motors": "The conductor sizing requirements specified in 430.24 and 430.25 and the feeder demand factor calculation method specified in 430.26 shall be used to determine motor loads.",
+  "B_air_conditioning": "The conductor sizing requirements specified in Part IV of Article 440 shall be used to determine airconditioning loads for hermetic refrigerant motor-compressors.",
+  "cites": [
+   "430.24",
+   "430.25",
+   "430.26",
+   "Article 440, Part IV"
+  ],
+  "cites_440_6": false
+ },
+ {
+  "ref": "220.51",
+  "edition": "2023",
+  "status": "VERIFIED-2023 (first sentence 2 pulls; remainder 1 pull)",
+  "pct_of_total_connected_load": 100,
+  "text": "Fixed electric space-heating loads shall be calculated at 100 percent of the total connected load. However, in no case shall a feeder or service load current rating be less than the rating of the largest branch circuit supplied.",
+  "exception": "If reduced loading of the conductors results from units operating on duty-cycle or intermittently, or from all units not operating at the same time, the authority having jurisdiction shall be permitted to grant permission for feeder and service conductors to have an ampacity less than 100 percent if the conductors have an ampacity for the load so determined."
+ },
+ {
+  "ref": "220.14",
+  "edition": "2023",
+  "status": "PARTIAL — quoted phrases VERIFIED-2023; full text UNVERIFIED (extractor declined)",
+  "subdivisions": "A–K (no L in PI 4311)",
+  "lead_in": "Branch-circuit load calculations shall include calculation of a minimum load on each outlet as calculated",
+  "items": [
+   {
+    "sub": "A",
+    "title": "Specific Appliances or Loads",
+    "value": null
+   },
+   {
+    "sub": "B",
+    "title": "Electric Dryers and Electric Cooking Appliances in Dwellings and Household Cooking Appliances Used in Instructional Programs",
+    "value": null
+   },
+   {
+    "sub": "C",
+    "title": "Motor Outlets",
+    "value": null
+   },
+   {
+    "sub": "D",
+    "title": "Luminaires",
+    "text": "An outlet supplying a luminaire(s) shall be calculated based on the maximum volt-ampere rating of the equipment and lamps for which the luminaire(s) is rated."
+   },
+   {
+    "sub": "E",
+    "title": "Heavy-Duty Lampholders",
+    "text": "shall be calculated at a minimum of 600 volt-amperes",
+    "va": 600
+   },
+   {
+    "sub": "F",
+    "title": "Sign and Outline Lighting",
+    "text": "calculated at a minimum of 1200 volt-amperes for each required branch circuit",
+    "va": 1200
+   },
+   {
+    "sub": "G",
+    "title": "Show Windows",
+    "text": "At 200 volt-amperes per linear 300 mm (1 ft) of show window",
+    "va_per_linear_ft": 200,
+    "rest_of_G": "not seen"
+   },
+   {
+    "sub": "H",
+    "title": "Fixed Multioutlet Assemblies",
+    "text": [
+     "Where appliances are unlikely to be used simultaneously, each 1.5 m (5 ft) or fraction thereof of each separate and continuous length shall be considered as one outlet of not less than 180 voltamperes.",
+     "Where appliances are likely to be used simultaneously, each 300 mm (1 ft) or fraction thereof shall be considered as an outlet of not less than 180 volt-amperes."
+    ],
+    "va": 180
+   },
+   {
+    "sub": "I",
+    "title": "Receptacle Outlets",
+    "text": "calculated at not less than 180 volt-amperes for each single or for each multiple receptacle on one yoke",
+    "va": 180,
+    "conditions_exceptions": "not seen"
+   },
+   {
+    "sub": "J",
+    "title": "Receptacle Outlets in Office Buildings",
+    "text": "11 volt-amperes/ m2 (1 volt-ampere/f t2 )",
+    "va_per_ft2": 1,
+    "va_per_m2": 11,
+    "conditions": "not seen"
+   },
+   {
+    "sub": "K",
+    "title": "Other Outlets",
+    "text": "calculated based on 180 volt-amperes per outlet",
+    "va": 180
+   }
+  ]
+ },
+ {
+  "ref": "Annex D Example D1(a) and D1(b)",
+  "edition": "2023",
+  "status": "UNVERIFIED — no authorized copy reached",
+  "inputs": null,
+  "intermediate_figures": null,
+  "final_figures": null,
+  "checked": [
+   "N1 PI submittals first window: no Annex D PI (first PI 3085)",
+   "N3 FD first window: only FR-8210, Example D3(a)",
+   "N2 SD first window: only SR-7974, Examples D3 and D3(a)",
+   "S15 NFPA 2023 changes presentation: no Annex D slide",
+   "IAEI Hunter 2013 and Werning 'House Divided': no D1",
+   "EC&M Holt 2015 and OpenExamPrep ICC 5.3: not Annex D"
+  ],
+  "websearch": "0 performed — shared per-turn limit reached",
+  "leads": [
+   "70_A2025_NEC_AAC_SD_SCRReport.pdf",
+   "Annex D PIs near the end of 70_A2025_NEC_P02_PISubmittals.pdf (offset read)",
+   "70_A2022_NEC_P02_SD_PCSubmittals.pdf",
+   "authorized reproductions via search"
+  ]
+ }
+]

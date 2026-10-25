@@ -1,0 +1,34 @@
+WSZ-009 CODETOOLS — wiresizes.com: wire size, ampacity, circuit breaker, conduit fill and box fill tools (pages whose sources are verified)
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 has WSZ-008 SERVICE+EV as done (HOLD pages allowed). If not, stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`; if origin/main has commits main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
+Read first: DEVLOG §0–§5 + last 10 §6 entries; research/held-waves-rules.md (the rules for this wave — follow every section); research/held-pages-domains.csv; research/page-specs-held.md section "WSZ-009"; research/data-sources.csv; the data/verified files named below; .claude/skills/content-page/SKILL.md and its references; .claude/skills/anti-slop-prose/SKILL.md; research/golden-cases.json.
+
+Pages (gate decides BUILD/HOLD): /calculators/wire-size-calculator, /calculators/ampacity-calculator, /calculators/circuit-breaker-calculator, /calculators/conduit-fill-calculator, /calculators/box-fill-calculator.
+
+Data files: nec-310-16.json, nec-310-15-B-1-1.json, nec-310-15-C-1.json, nec-240-4-d.json, nec-240-6-a.json, nec-250-122.json, awg.json, nec-314-16.json, nec-110-14c.json, nec-continuous-load-2023.json, nec-ch9-table4.json (IMC only; not enough for a conduit-fill tool), plus any file chat adds for nec-cable-rules or nec-ch9-fill.
+
+Wave specifics:
+1. Wire size calculator: rebuild the page around the WSZ-002 engine. Optional features switch on with their domains. Every step of the result is explained in plain words.
+   - Termination temperature (nec-110-14c, verified 2023): follow the engine_rules in data/verified/nec-110-14c.json exactly.
+     · Input "Wiring method": "Cable (NM, UF) or not sure", or "Individual conductors (THHN/THWN-2, XHHW-2 and similar)". Cable is always sized from the 60 °C column, and for cable, correction and adjustment also start from the 60 °C column (derating-start applies to individual conductors only). Say why in one line: the site has not verified the 2023 cable rules (334.80, 340.80), so cable gets the lowest column, which is never undersized for terminations or cable type. Never cite 334.80 or 340.80.
+     · Input "Terminations" for individual conductors: "Not sure", "Marked 60 °C" or "Every termination is listed and identified for 75 °C conductors" (a checkbox the reader must tick; never preselected).
+     · Column: not sure → 60 °C at 100 A or less, 75 °C above 100 A (110.14(C)(1)(a)/(b)); marked 60 °C → 60 °C; the confirmed 75 °C box → 75 °C. Never offer 90 °C as the final column; a 90 °C conductor may start from its own column for derating, but the result is capped at the termination column (engine rule derating-start).
+     · Golden group "wire-size-termination" (research/golden-cases.json) runs through the engine.
+     · Keep the WSZ-002 EGC rule: Table 250.122 can give an EGC larger than the conductor (25 A aluminum, in the 60 °C and the 75 °C column). Show it uncapped, with the egcLargerThanConductor note (and the no-size message when egc is null), until chat verifies the 250.122(A) sentence that caps it.
+   - Continuous-load mode with 125 % (nec-continuous-load).
+   - Ambient and conductor-count derating (nec-310-15-corrections, verified). With derating, the 250.122(B) baseline is the smallest size whose ampacity in the termination column, after correction and adjustment, is at least the OCPD rating and that 240.4(D) allows (WSZ-002's step-2 size, computed with derating); only upsizing beyond that (for example for voltage drop) enlarges the EGC (data/verified/nec-250-122.json rule_250_122_b). Golden group "wire-size-derated" (its entry in the golden file's rules defines the inputs) runs through this mode: start column 90 °C for individual conductors and 60 °C for cable; derated ampacity = start-column ampacity × the Table 310.15(B)(1)(1) factor for the start column × the Table 310.15(C)(1) percent, capped at the termination-column ampacity; result fields columnC, startColumnC, minSizeByAmpacity, deratedAmpacity, size, vdVolts, vdPct, meetsTarget, egc, egcUpsized and egcLargerThanConductor (golden keys in snake_case).
+2. Ampacity: corrected and adjusted ampacity with the 240.4(D) cap shown separately (all eight 2023 items, with item numbers; 18/16 AWG Cu and 14 AWG CCA only with their conditions); the rooftop adder from 310.15(B)(2) (verified 2023) as an option; the termination cap from 110.14(C) shown as a third separate line, with the same column rules as the wire size calculator.
+3. Circuit breaker: continuous and noncontinuous load → minimum OCPD = noncontinuous + 125 % of continuous (210.20(A), 215.3; data/verified/nec-continuous-load-2023.json) → next standard rating from Table 240.6(A) → conductor from the WSZ-002 sizing engine (ampacity at least the rating, 240.4(D)) → EGC from Table 250.122. Size the conductor to at least the OCPD rating; 240.4(B) (verified 2023, SR-8283) may be explained in one line but is not applied by the tool. Show the egcLargerThanConductor note when it applies (breaker-sizing case "10 A continuous + 8 A noncontinuous" on aluminum: 10 AWG conductor, 8 AWG EGC). Termination column per item 1. Golden groups: breaker-sizing and wire-size-termination.
+4. Conduit fill and box fill: only when the gate says BUILD (Chapter 9 Tables 1/4/5 and 314.16 counting rules verified). Fill % against Table 1 limits; EGCs counted per the verified notes; box volume per 314.16(B) rules with each allowance shown.
+
+Run held-waves-rules.md §1 (data gate) first and paste its output. Then §2–§5 for the BUILD pages.
+
+Commit "feat(wsz-009): code-rule tools on verified sources". Don't push.
+
+Definition of done (paste each output): the data-gate output (BUILD/HOLD per page with blocking domains); the golden reproduction output for the wave's engine groups; gate output for the rebuilt routes (0 hits); build/test/tsc lines; per rebuilt page: word count, H2 list, FAQ count, SVG titles; the prepublish checklist table; anti-slop fix count; Impeccable result.
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-009. Status done only if every BUILD page passed verification; HOLD pages are listed in §0 as "waiting on chat sourcing: <domains>". Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.

@@ -1,0 +1,28 @@
+WSZ-008 SERVICE+EV — wiresizes.com: 200 A and 100 A guides, service entrance, EV charger guide, ground wire and garage subpanel tools (pages whose sources are verified)
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 has WSZ-007 CONVERTERS as done. If not, stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`; if origin/main has commits main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
+Read first: DEVLOG §0–§5 + last 10 §6 entries; research/held-waves-rules.md (the rules for this wave — follow every section); research/held-pages-domains.csv; research/page-specs-held.md section "WSZ-008"; research/data-sources.csv; the data/verified files named below; .claude/skills/content-page/SKILL.md and its references; .claude/skills/anti-slop-prose/SKILL.md; research/golden-cases.json.
+
+Pages (gate decides BUILD/HOLD per research/held-pages-domains.csv): /guides/wire-size-for-200-amp, /guides/wire-size-for-100-amp, /calculators/service-entrance-calculator, /guides/wire-size-for-ev-charger, /calculators/ground-wire-calculator, /calculators/garage-subpanel-calculator.
+
+Data files: nec-310-12.json, nec-310-16.json, nec-110-14c.json, nec-250-122.json, nec-250-66.json, nec-225-2023.json, nec-300-5-2023.json, nec-continuous-load-2023.json, awg.json, nec-2023-rules-round2.json, plus any file chat adds for nec-cable-rules, nec-feeders-outbuildings or nec-grounding-rules (check the registry notes for the file name).
+
+Wave specifics:
+0. Before any page work: in scripts/check-structure.mjs, remove "110.14(C)" from the forbidden-text check (verified since pack v3), keep "334.80" and add "340.80". Run it on a fresh build (`rm -rf .next && npm run build`); every WSZ-002 to WSZ-007 route must still pass. Commit "chore(wsz-008): check-structure allows 110.14(C)" on its own.
+1. The 200 A and 100 A guides explain Table 310.12 (dwelling service or main power feeder, 120/240 V) versus Table 310.16 (every other feeder, at the terminal column) side by side, with the exact scope sentence from nec-310-12.json. The terminal column follows the engine_rules in nec-110-14c.json: not sure → 60 °C at 100 A or less and 75 °C above; 75 °C at 100 A or less only with terminations listed and identified for 75 °C conductors; cable (NM, UF) always 60 °C on this site. The subpanel answer on the 100 A guide shows the size per column with the condition for each, only if nec-110-14c is verified (the gate holds the page otherwise).
+2. Service entrance: keep the WSZ-002 lookup engine; add voltage drop at a reader-entered length and current (75 °C, awg.json), and the GEC note for rod/concrete-encased electrodes only if nec-grounding-rules is verified.
+3. EV guide: tool = charger output (A) or kW at 240 V → breaker (125 % only if nec-continuous-load is verified; otherwise show the manufacturer's stated breaker from mfr-evse) → conductor by wiring method (NM cable only if nec-cable-rules is verified) → EGC → voltage drop. Manufacturer rows from the mfr-evse registry evidence, each cited to its document.
+4. Ground wire: EGC mode (Table 250.122, Cu and Al/CCA, 15–6000 A) and GEC mode (Table 250.66 by service conductor, Cu and Al); 250.66(A)/(B) limits only if nec-grounding-rules is verified.
+5. Garage subpanel: feeder by OCPD rating on the WSZ-002 sizing engine, EGC by material, 4-wire feeder and no neutral bond at the separate building per 250.32 (nec-feeders-outbuildings), burial depth from Table 300.5(A) (nec-300-5-burial, verified; never an EMT depth).
+
+Run held-waves-rules.md §1 (data gate) first and paste its output. Then §2–§5 for the BUILD pages.
+
+Commit "feat(wsz-008): service, feeder and EV pages on verified sources". Don't push.
+
+Definition of done (paste each output): the data-gate output (BUILD/HOLD per page with blocking domains); the golden reproduction output for the wave's engine groups; gate output for the rebuilt routes (0 hits); build/test/tsc lines; per rebuilt page: word count, H2 list, FAQ count, SVG titles; the prepublish checklist table; anti-slop fix count; Impeccable result.
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-008. Status done only if every BUILD page passed verification; HOLD pages are listed in §0 as "waiting on chat sourcing: <domains>". Commit DEVLOG.md with the work, don't push. End with the §6 entry + git status --short + git log --oneline -3.

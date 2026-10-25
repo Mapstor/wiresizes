@@ -1,0 +1,529 @@
+{
+ "id": "mfr-equipment",
+ "title": "Manufacturer installation data: air conditioners (MCA/MOCP), dryers, ranges",
+ "status": "verified (per row; see each row's status)",
+ "retrieved": "2026-10-20",
+ "evidence": "research/sources/round2/A8-mfr-doe-nema.md",
+ "ac_units": [
+  {
+   "brand": "Carrier",
+   "model": "26SCA5 size 18",
+   "tons": 1.5,
+   "voltage": "208/230/1",
+   "mca_a": 10.9,
+   "mocp_a": 15,
+   "doc": "Catalog No. 26SCA5-02PD",
+   "rev": "Edition Date 06/25 (replaces 26SCA5-01PD)",
+   "url": "https://www.shareddocs.com/hvac/docs/1009/Public/08/26SCA5-02PD.pdf",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "brand": "Carrier",
+   "model": "26SCA5 size 24",
+   "tons": 2,
+   "voltage": "208/230/1",
+   "mca_a": 13.6,
+   "mocp_a": 20,
+   "doc": "Catalog No. 26SCA5-02PD",
+   "rev": "06/25",
+   "url": "https://www.shareddocs.com/hvac/docs/1009/Public/08/26SCA5-02PD.pdf",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "brand": "Carrier",
+   "model": "26SCA5 size 30",
+   "tons": 2.5,
+   "voltage": "208/230/1",
+   "mca_a": 16.5,
+   "mocp_a": 25,
+   "doc": "Catalog No. 26SCA5-02PD",
+   "rev": "06/25",
+   "url": "https://www.shareddocs.com/hvac/docs/1009/Public/08/26SCA5-02PD.pdf",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "brand": "Carrier",
+   "model": "26SCA5 size 36",
+   "tons": 3,
+   "voltage": "208/230/1",
+   "mca_a": 17.6,
+   "mocp_a": 30,
+   "doc": "Catalog No. 26SCA5-02PD",
+   "rev": "06/25",
+   "url": "https://www.shareddocs.com/hvac/docs/1009/Public/08/26SCA5-02PD.pdf",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "brand": "Carrier",
+   "model": "26SCA5 size 42",
+   "tons": 3.5,
+   "voltage": "208/230/1",
+   "mca_a": 22.7,
+   "mocp_a": 35,
+   "mocp_conflict": {
+    "value_a": 40,
+    "doc": "26SCA5C-01PD (coastal), Edition Date 08/24",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/02/26SCA5C-01PD.pdf"
+   },
+   "doc": "Catalog No. 26SCA5-02PD",
+   "rev": "06/25",
+   "url": "https://www.shareddocs.com/hvac/docs/1009/Public/08/26SCA5-02PD.pdf",
+   "status": "MCA VERIFIED (mfr); MOCP CONFLICTING"
+  },
+  {
+   "brand": "Carrier",
+   "model": "26SCA5 size 48",
+   "tons": 4,
+   "voltage": "208/230/1",
+   "mca_a": 29.1,
+   "mocp_a": 40,
+   "mocp_conflict": {
+    "value_a": 50,
+    "doc": "26SCA5C-01PD (coastal), Edition Date 08/24",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/02/26SCA5C-01PD.pdf"
+   },
+   "doc": "Catalog No. 26SCA5-02PD",
+   "rev": "06/25",
+   "url": "https://www.shareddocs.com/hvac/docs/1009/Public/08/26SCA5-02PD.pdf",
+   "status": "MCA VERIFIED (mfr); MOCP CONFLICTING"
+  },
+  {
+   "brand": "Carrier",
+   "model": "26SCA5 size 60",
+   "tons": 5,
+   "voltage": "208/230/1",
+   "mca_a": 31.1,
+   "mocp_a": 50,
+   "doc": "Catalog No. 26SCA5-02PD",
+   "rev": "06/25",
+   "url": "https://www.shareddocs.com/hvac/docs/1009/Public/08/26SCA5-02PD.pdf",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "brand": "Amana",
+   "model": "ALXS3NN1810A*",
+   "tons": 1.5,
+   "voltage": "208/230-1 (60 Hz per nomenclature)",
+   "mca_a": 10.9,
+   "mocp_a": 15.0,
+   "doc": "SS-ALXS3N-R32",
+   "rev": "04/25 (superseded 02/25)",
+   "url": "https://apps.goodmanmfg.com/brochures/files/68ee7585b25f3SS-ALXS3N-R32.pdf",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "brand": "Amana",
+   "model": "ALXS3NN2410A*",
+   "tons": 2,
+   "voltage": "208/230-1",
+   "mca_a": 10.9,
+   "mocp_a": 15.0,
+   "doc": "SS-ALXS3N-R32",
+   "rev": "04/25",
+   "url": "https://apps.goodmanmfg.com/brochures/files/68ee7585b25f3SS-ALXS3N-R32.pdf",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "brand": "Amana",
+   "model": "ALXS3NN3010A*",
+   "tons": 2.5,
+   "voltage": "208/230-1",
+   "mca_a": 14.7,
+   "mocp_a": 25.0,
+   "doc": "SS-ALXS3N-R32",
+   "rev": "04/25",
+   "url": "https://apps.goodmanmfg.com/brochures/files/68ee7585b25f3SS-ALXS3N-R32.pdf",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "brand": "Amana",
+   "model": "ALXS3NN3610A*",
+   "tons": 3,
+   "voltage": "208/230-1",
+   "mca_a": 17.5,
+   "mocp_a": 30.0,
+   "doc": "SS-ALXS3N-R32",
+   "rev": "04/25",
+   "url": "https://apps.goodmanmfg.com/brochures/files/68ee7585b25f3SS-ALXS3N-R32.pdf",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "brand": "Amana",
+   "model": "ALXS3NN4210A*",
+   "tons": 3.5,
+   "voltage": "208/230-1",
+   "mca_a": 19.4,
+   "mocp_a": 30.0,
+   "doc": "SS-ALXS3N-R32",
+   "rev": "04/25",
+   "url": "https://apps.goodmanmfg.com/brochures/files/68ee7585b25f3SS-ALXS3N-R32.pdf",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "brand": "Amana",
+   "model": "ALXS3NN4810A*",
+   "tons": 4,
+   "voltage": "208/230-1",
+   "mca_a": 25.6,
+   "mocp_a": 45.0,
+   "doc": "SS-ALXS3N-R32",
+   "rev": "04/25",
+   "url": "https://apps.goodmanmfg.com/brochures/files/68ee7585b25f3SS-ALXS3N-R32.pdf",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "brand": "Amana",
+   "model": "ALXS3NN6010A*",
+   "tons": 5,
+   "voltage": "208/230-1",
+   "mca_a": 31.1,
+   "mocp_a": 50.0,
+   "doc": "SS-ALXS3N-R32",
+   "rev": "04/25",
+   "url": "https://apps.goodmanmfg.com/brochures/files/68ee7585b25f3SS-ALXS3N-R32.pdf",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "brand": "Trane/American Standard (RunTru/Ameristar)",
+   "model": "A5AC4018A1000A",
+   "tons": 1.5,
+   "voltage": "208/230/1/60",
+   "mca_a": 9,
+   "mocp_a": 20,
+   "doc": "ODR-PSD031B-EN",
+   "rev": "Sep 2025 (supersedes ODR-PSD031A-EN)",
+   "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Product%20and%20Submittal%20Data/ODR-PSD031B-EN_09202025.pdf",
+   "status": "VERIFIED (mfr); MOCP QA flag"
+  },
+  {
+   "brand": "Trane/American Standard",
+   "model": "A5AC4024A1000A",
+   "tons": 2,
+   "voltage": "208/230/1/60",
+   "mca_a": 14,
+   "mocp_a": 20,
+   "doc": "ODR-PSD031B-EN",
+   "rev": "Sep 2025",
+   "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Product%20and%20Submittal%20Data/ODR-PSD031B-EN_09202025.pdf",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "brand": "Trane/American Standard",
+   "model": "A5AC4030A1000A",
+   "tons": 2.5,
+   "voltage": "208/230/1/60",
+   "mca_a": null,
+   "mca_printed": 15,
+   "mocp_a": 25,
+   "doc": "ODR-PSD031B-EN",
+   "rev": "Sep 2025",
+   "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Product%20and%20Submittal%20Data/ODR-PSD031B-EN_09202025.pdf",
+   "status": "MCA UNVERIFIED (printed value < 1.25xRLA); MOCP VERIFIED"
+  },
+  {
+   "brand": "Trane/American Standard",
+   "model": "A5AC4030A1000B",
+   "tons": 2.5,
+   "voltage": "208/230/1/60",
+   "mca_a": null,
+   "mca_candidates": [
+    15,
+    17
+   ],
+   "mocp_a": 25,
+   "doc": "ODR-PSD031B-EN",
+   "rev": "Sep 2025",
+   "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Product%20and%20Submittal%20Data/ODR-PSD031B-EN_09202025.pdf",
+   "status": "MCA UNVERIFIED (merged cells); MOCP VERIFIED"
+  },
+  {
+   "brand": "Trane/American Standard",
+   "model": "A5AC4036A1000A",
+   "tons": 3,
+   "voltage": "208/230/1/60",
+   "mca_a": null,
+   "mca_candidates": [
+    17,
+    18
+   ],
+   "mocp_a": 30,
+   "doc": "ODR-PSD031B-EN",
+   "rev": "Sep 2025",
+   "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Product%20and%20Submittal%20Data/ODR-PSD031B-EN_09202025.pdf",
+   "status": "MCA UNVERIFIED (merged cells); MOCP VERIFIED"
+  },
+  {
+   "brand": "Trane/American Standard",
+   "model": "A5AC4036A1000B",
+   "tons": 3,
+   "voltage": "208/230/1/60",
+   "mca_a": 18,
+   "mocp_a": 30,
+   "doc": "ODR-PSD031B-EN",
+   "rev": "Sep 2025",
+   "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Product%20and%20Submittal%20Data/ODR-PSD031B-EN_09202025.pdf",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "brand": "Trane/American Standard",
+   "model": "A5AC4042A1000A",
+   "tons": 3.5,
+   "voltage": "208/230/1/60",
+   "mca_a": null,
+   "mca_printed": 21,
+   "mocp_a": 30,
+   "doc": "ODR-PSD031B-EN",
+   "rev": "Sep 2025",
+   "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Product%20and%20Submittal%20Data/ODR-PSD031B-EN_09202025.pdf",
+   "status": "MCA UNVERIFIED (inconsistent with printed RLA); MOCP VERIFIED"
+  },
+  {
+   "brand": "Trane/American Standard",
+   "model": "A5AC4042A1000B",
+   "tons": 3.5,
+   "voltage": "208/230/1/60",
+   "mca_a": 23,
+   "mocp_a": null,
+   "mocp_candidates": [
+    30,
+    40
+   ],
+   "doc": "ODR-PSD031B-EN",
+   "rev": "Sep 2025",
+   "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Product%20and%20Submittal%20Data/ODR-PSD031B-EN_09202025.pdf",
+   "status": "MCA VERIFIED; MOCP UNVERIFIED (merged cells)"
+  },
+  {
+   "brand": "Trane/American Standard",
+   "model": "A5AC4048A1000A",
+   "tons": 4,
+   "voltage": "208/230/1/60",
+   "mca_a": 23,
+   "mocp_a": null,
+   "mocp_candidates": [
+    35,
+    40
+   ],
+   "doc": "ODR-PSD031B-EN",
+   "rev": "Sep 2025",
+   "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Product%20and%20Submittal%20Data/ODR-PSD031B-EN_09202025.pdf",
+   "status": "MCA VERIFIED; MOCP UNVERIFIED"
+  },
+  {
+   "brand": "Trane/American Standard",
+   "model": "A5AC4048A1000B",
+   "tons": 4,
+   "voltage": "208/230/1/60",
+   "mca_a": 25,
+   "mocp_a": null,
+   "mocp_candidates": [
+    35,
+    45
+   ],
+   "doc": "ODR-PSD031B-EN",
+   "rev": "Sep 2025",
+   "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Product%20and%20Submittal%20Data/ODR-PSD031B-EN_09202025.pdf",
+   "status": "MCA VERIFIED; MOCP UNVERIFIED"
+  },
+  {
+   "brand": "Trane/American Standard",
+   "model": "A5AC4060A1000A",
+   "tons": 5,
+   "voltage": "208/230/1/60",
+   "mca_a": 28,
+   "mocp_a": null,
+   "mocp_candidates": [
+    45,
+    50
+   ],
+   "doc": "ODR-PSD031B-EN",
+   "rev": "Sep 2025",
+   "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Product%20and%20Submittal%20Data/ODR-PSD031B-EN_09202025.pdf",
+   "status": "MCA VERIFIED; MOCP UNVERIFIED"
+  },
+  {
+   "brand": "Trane/American Standard",
+   "model": "A5AC4060A1000B",
+   "tons": 5,
+   "voltage": "208/230/1/60",
+   "mca_a": 30,
+   "mocp_a": 50,
+   "doc": "ODR-PSD031B-EN",
+   "rev": "Sep 2025",
+   "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Product%20and%20Submittal%20Data/ODR-PSD031B-EN_09202025.pdf",
+   "status": "VERIFIED (mfr)"
+  }
+ ],
+ "dryers": [
+  {
+   "brand": "Whirlpool",
+   "doc": "W10267633A",
+   "title": "ELECTRIC DRYER INSTALLATION INSTRUCTIONS (U.S.A. ONLY)",
+   "date": "11/09",
+   "notice": "© 2009 Whirlpool Corporation. All rights reserved.",
+   "circuit_a": 30,
+   "circuit_text": "a separate 30-amp circuit, fused on both sides of the line.",
+   "supply": "3 or 4 wire, single phase, 120/240 volt, 60 Hz AC only (or 3 or 4 wire, 120/208 volt if specified on the serial/rating plate)",
+   "receptacles": [
+    "NEMA 14-30R (4-wire)",
+    "NEMA 10-30R (3-wire)"
+   ],
+   "cord": "UL listed 30-amp, rated 120/240 volt minimum, type SRD or SRDT, at least 4 ft; four (4-wire) or three (3-wire) 10-gauge copper wires",
+   "direct_wire": "10-gauge solid copper wire (do not use aluminum)",
+   "four_wire_statement": "The National Electrical Code requires a 4-wire power supply connection for homes built after 1996, dryer circuits involved in remodeling after 1996, and all mobile home installations.",
+   "url": "https://www.whirlpool.com/content/dam/global/documents/200912/installation-instructions-W10267633-RevA.pdf",
+   "host": "official",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "brand": "GE",
+   "doc": "Pub # 31-16135 / 500A187P054",
+   "rev": "2-01",
+   "circuit_a": 30,
+   "circuit_text": "This dryer must be connected to an individual branch circuit, ... A four or three-wire, single phase, 120/240V or 120/208V, 60Hz, 30 amp circuit is required.",
+   "receptacles": null,
+   "conductors": "4 (or 3) #10 AWG minimum copper conductors or 120/240V 30A power supply cord kit",
+   "url": "https://products-salsify.geappliances.com/image/upload/s--jp9uW82b--/a0c420af37ccb28b86f8c8e4a2d7f65cba8fe294.pdf",
+   "host": "official",
+   "status": "VERIFIED (mfr)"
+  },
+  {
+   "brand": "GE",
+   "doc": "234D1582P001 / 31-16680",
+   "rev": "03-12",
+   "circuit_a": null,
+   "conductors": "4 #10 AWG MINIMUM COPPER CONDUCTORS OR 120/240V 30A POWER SUPPLY CORD KIT MARKED FOR USE WITH DRYERS",
+   "url": "https://products-salsify.geappliances.com/image/upload/s--cnAzJwyC--/f936177ad8fecd7c9fad36fa73e6039662884118.pdf",
+   "host": "official",
+   "status": "PARTIAL (circuit-amps line illegible)"
+  },
+  {
+   "brand": "GE",
+   "doc": "DBLR333EE spec sheet (370278)",
+   "rev": "Specification Created 2/04",
+   "circuit_a": 30,
+   "circuit_text": "An individual, properly-grounded branch circuit, protected by a 30-amp circuit breaker",
+   "rating": "240V, 5600W, 24A, 60 Hz; 208V, 4400W, 22A, 60 Hz",
+   "url": "https://products-salsify.geappliances.com/image/upload/s--UoRmjZxw--/8bf0ae6df943bf071c7225c4a8acbd9b33f01de4.pdf",
+   "host": "official",
+   "status": "VERIFIED (mfr)"
+  }
+ ],
+ "ranges": [
+  {
+   "brand": "Whirlpool",
+   "doc": "Ref. W10403811C",
+   "date": "04/17/2017",
+   "type": "30in freestanding electric range dimension/installation guide",
+   "table": [
+    {
+     "kw_120_240": "8.8 – 16.5",
+     "kw_120_208": "7.8 – 12.5",
+     "amps": "40 or 50"
+    },
+    {
+     "kw_120_240": "16.6 – 22.5",
+     "kw_120_208": "12.6 – 18.5",
+     "amps": "50"
+    }
+   ],
+   "cord_3wire": "3-wire, UL Listed, 40- or 50-amp power supply cord (pigtail)",
+   "cord_4wire": "4-wire power supply cord rated at 250 volts, 40 or 50 amps and investigated for use with ranges",
+   "nema": null,
+   "url": "https://pdf.lowes.com/productdocuments/bec1ae1e-5c73-4878-bf30-b1d7e6dacd5c/61917695.pdf",
+   "host": "retailer copy of manufacturer document",
+   "status": "VERIFIED (mfr doc; retailer-hosted)"
+  },
+  {
+   "brand": "Whirlpool",
+   "doc": "Ref. W10575959A",
+   "date": "05/06/2016",
+   "models": [
+    "WGE555S0B",
+    "WGE755C0B",
+    "WGI925C0B",
+    "WGE745C0F"
+   ],
+   "table": "same as W10403811C",
+   "url": "https://images.thdstatic.com/catalog/pdfImages/83/83e89524-eaeb-47f6-bae5-48567e2a7801.pdf",
+   "host": "retailer copy of manufacturer document",
+   "status": "VERIFIED (mfr doc; retailer-hosted); matches W10403811C"
+  },
+  {
+   "brand": "Frigidaire (host frigidaire.bynder.com; brand not printed in extracted text)",
+   "doc": "P/N 318201707 Rev. A",
+   "print_code": "(1201)",
+   "title": "40\" ELECTRIC RANGE INSTALLATION INSTRUCTIONS",
+   "cord": "power supply cord kit rated at 125/250 volts minimum, 40 amperes and marked for use with ranges",
+   "nema": "14-50R with matching U.L.-listed 4-wire, 250 volt, 40 ampere range cord",
+   "min_copper_4wire_40a_circuit": {
+    "hot": "2 No. 8",
+    "neutral": "1 No. 10 white",
+    "ground": "1 No. 8 green"
+   },
+   "four_wire_when": "Mobile homes, new installations, recreational vehicles, or areas where local codes do not permit grounding through neutral",
+   "url": "https://frigidaire.bynder.com/m/1dd4af3d9e5b8bf4/original/318201707-pdf.pdf",
+   "host": "official",
+   "status": "VERIFIED (mfr)"
+  }
+ ],
+ "franklin_2026": {
+  "readable": false,
+  "rows": [],
+  "doc": "AIM MANUAL 60 Hz Submersible Systems, 2026 Edition (Nebraska DWEE-hosted copy)",
+  "url": "https://dwee.nebraska.gov/sites/default/files/water/2026_60Hz_AIM_Manual_Submersible_Systems.pdf",
+  "reason": "WebFetch PDF text ends at character 76,879 (p. 40 footer 'Motor Specifications 40'); offset 76000 confirmed the end; pp. 49-52 and 57 unreachable",
+  "equal_to_2015": "UNVERIFIED",
+  "2015_reference": "Table 11 60C, 230 V 1 hp: 14 AWG 250, 12 AWG 400, 10 AWG 630, 8 AWG 990, 6 AWG 1540 ft (VERIFIED-other-edition 2015, research/equipment.md)"
+ },
+ "notes": [
+  "Cite each value to its model, document number and revision. Never generalize one brand's value to a rule.",
+  "Carrier 26SCA5 3.5 and 4 ton MOCP differ between 26SCA5-02PD (35/40 A) and coastal 26SCA5C-01PD (40/50 A): CONFLICTING for those two rows; minimum circuit amps match."
+ ],
+ "pool_pumps": {
+  "status": "VERIFIED (mfr): two pulls agree on the six 1-2 HP rows below",
+  "values": [
+   {
+    "model": "SHPM1.0",
+    "thp": 1.14,
+    "voltage": "208-230/115",
+    "amps_raw": "5.4-5.2/10.3"
+   },
+   {
+    "model": "SHPM1.5",
+    "thp": 1.65,
+    "voltage": "208-230/115",
+    "amps_raw": "7.8-7.4/14.8"
+   },
+   {
+    "model": "SHPM2.0",
+    "thp": 2.21,
+    "voltage": "208-230",
+    "amps_raw": "9.6-8.8"
+   },
+   {
+    "model": "SHPF1.0",
+    "thp": 1.65,
+    "voltage": "208-230/115",
+    "amps_raw": "7.8-7.4/14.8"
+   },
+   {
+    "model": "SHPF1.5",
+    "thp": 2.21,
+    "voltage": "208-230",
+    "amps_raw": "9.6-8.8"
+   },
+   {
+    "model": "SHPF2.0",
+    "thp": 2.6,
+    "voltage": "208-230",
+    "amps_raw": "11.0-10.0"
+   }
+  ],
+  "source_url": "https://zodiacpoolsystems.com/~/media/43DD98976ABE48C1A8223FBCBFC41E56",
+  "document": "Jandy Stealth SHPF/SHPM pump installation and operation manual H0573800 Rev Y (©2025 Fluidra)",
+  "retrieved": "2026-10-20",
+  "render": "Input total horsepower (THP) or nameplate amps, never nominal HP: SHPM1.5 and SHPF1.0 are the same 1.65 THP pump. The Jandy wire/breaker table is single-pull: don't render it.",
+  "evidence": "research/sources/round4/R4-7-tias-nist-makers.md"
+ }
+}

@@ -1,0 +1,263 @@
+{
+ "id": "nec-300-5-2023",
+ "title": "Minimum cover for underground installations, NEC Table 300.5(A) (2023) and 300.5(D)",
+ "status": "Table 300.5(A): verified-sd2023 (SR-8551; 2022 Technical Meeting record not seen; rendered per D-09); row 1 columns 1–4 also VERIFIED-2023 (three government sources); EMT column placement UNVERIFIED; 300.5(D) parent text VERIFIED-draft",
+ "retrieved": "2026-10-20",
+ "source": {
+  "publisher": "NFPA",
+  "document": "NEC CMP-3 Second Revisions, 2023 cycle (A2022), SR-8551 and SR-8553",
+  "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P03_SD_SRStatements.pdf",
+  "attribution": "Source: NFPA 70 (NEC) 2023, Table 300.5(A) (NFPA 2023-cycle Second Draft SR-8551) — retrieved Oct 2026",
+  "evidence": "research/sources/round4/R4-5-outbuilding-pool-rv.md"
+ },
+ "table_300_5_A": {
+  "ref": "Table 300.5(A) (2023 numbering; cited as 'Table 300.5' in earlier editions and on the current site)",
+  "edition": "2023 (A2022 Second Draft, SR-8551)",
+  "status": "verified-sd2023 for conditions 1-2 (SR-8551 is revised text in the A2022 Second Draft; two pulls agree; 6 planted canaries rejected). Condition 3 (checked 2026-10-24): 2022 Technical Meeting per-CAM results and Standards Council per-appeal decisions not seen. NFPA (blog, 31 Aug 2022): 55 CAMs; 14 appeals 'resulted in 18 amendments and four concurrently issuing' TIAs (by date, TIAs 23-3 to 23-6); appeal topics optical fiber cable, copper-clad aluminum wiring, surge protection devices, GFCI protection, swimming pool bonding. Overlap: none. Rendered as 2023 NEC under decision D-09. Row 1 (all locations not specified below), columns 1-4, is also VERIFIED-2023 (government paraphrase, three 2023 sources). EMT column placement UNVERIFIED (flattened headings)",
+  "caption": "Table 300.5(A) Minimum Cover Requirements, 0 to 1000 Volts ac, 1500 Volts dc, Nominal, Burial in Millimeters (Inches)",
+  "columns": [
+   {
+    "col": 1,
+    "label": "Direct Burial Cables or Conductors"
+   },
+   {
+    "col": 2,
+    "label_as_extracted": "Electrical Metallic Tubing, Rigid Metal Conduit, or Intermediate Metal Conduit",
+    "note": "EMT term probably struck here (flattened markup); final 2023 heading UNVERIFIED"
+   },
+   {
+    "col": 3,
+    "label_as_extracted": "Electric Metallic Tubing, Nonmetallic Raceways Listed for Direct Burial Without Concrete Encasement, or Other Approved Raceways",
+    "note": "EMT term probably inserted here; T4 STI commentary says EMT ended in Column 3; final 2023 heading UNVERIFIED"
+   },
+   {
+    "col": 4,
+    "label": "Residential Branch Circuits Rated 120 Volts or Less with GFCI Protection and Maximum Overcurrent Protection of 20 Amperes"
+   },
+   {
+    "col": 5,
+    "label": "Circuits for Control of Irrigation and Landscape Lighting Limited to Not More Than 30 Volts and Installed with Type UF or in Other Identified Cable or Raceway"
+   }
+  ],
+  "rows": [
+   {
+    "row": 1,
+    "location": "All locations not specified below",
+    "col1_mm": 600,
+    "col1_in": 24,
+    "col2_mm": 150,
+    "col2_in": 6,
+    "col3_mm": 450,
+    "col3_in": 18,
+    "col4_mm": 300,
+    "col4_in": 12,
+    "col5_mm": 150,
+    "col5_in": 6,
+    "col5_footnotes": [
+     1,
+     2
+    ]
+   },
+   {
+    "row": 2,
+    "location": "In trench below 50 mm (2 in.) thick concrete or equivalent",
+    "col1_mm": 450,
+    "col1_in": 18,
+    "col2_mm": 150,
+    "col2_in": 6,
+    "col3_mm": 300,
+    "col3_in": 12,
+    "col4_mm": 150,
+    "col4_in": 6,
+    "col5_mm": 150,
+    "col5_in": 6
+   },
+   {
+    "row": 3,
+    "location": "Under a building",
+    "all_columns_mm": 0,
+    "all_columns_in": 0,
+    "qualifier": "(in raceway or Type MC or Type MI cable identified for direct burial)",
+    "qualifier_note": "qualifier printed three times; which three columns it attaches to is not determinable from the extraction (UNVERIFIED)",
+    "raw_tokens": "0 00 00 0 0 0 0 0"
+   },
+   {
+    "row": 4,
+    "location": "Under minimum of 102 mm (4 in.) thick concrete exterior slab with no vehicular traffic and the slab extending not less than 152 mm (6 in.) beyond the underground installation",
+    "col1_mm": 450,
+    "col1_in": 18,
+    "col2_mm": 100,
+    "col2_in": 4,
+    "col3_mm": 100,
+    "col3_in": 4,
+    "col4_direct_burial_mm": 150,
+    "col4_direct_burial_in": 6,
+    "col4_in_raceway_mm": 100,
+    "col4_in_raceway_in": 4,
+    "col5_direct_burial_mm": 150,
+    "col5_direct_burial_in": 6,
+    "col5_in_raceway_mm": 100,
+    "col5_in_raceway_in": 4,
+    "mapping_note": "columns 4-5 mapping follows printed token order (two '150 6' then '(direct burial)' x2, two '100 4' then '(in raceway)' x2)"
+   },
+   {
+    "row": 5,
+    "location": "Under streets, highways, roads, alleys, driveways, and parking lots",
+    "all_columns_mm": 600,
+    "all_columns_in": 24
+   },
+   {
+    "row": 6,
+    "location": "One- and two-family dwelling driveways and outdoor parking areas, and used only for dwelling-related purposes",
+    "col1_mm": 450,
+    "col1_in": 18,
+    "col2_mm": 450,
+    "col2_in": 18,
+    "col3_mm": 450,
+    "col3_in": 18,
+    "col4_mm": 300,
+    "col4_in": 12,
+    "col5_mm": 450,
+    "col5_in": 18
+   },
+   {
+    "row": 7,
+    "location": "In or under airport runways, including adjacent areas where trespassing is prohibited",
+    "all_columns_mm": 450,
+    "all_columns_in": 18
+   }
+  ],
+  "footnotes": {
+   "1": "A lesser depth shall be permitted where specified in the installation instructions of a listed low-voltage lighting system.",
+   "2": "A depth of 150 mm (6 in.) shall be permitted for pool, spa, and fountain lighting, installed in a nonmetallic raceway, limited to not more than 30 volts where part of a listed low-voltage lighting system."
+  },
+  "notes": {
+   "1": "Cover is [shall be] defined as the shortest distance in mm (in.) measured between a point on the top surface of any direct-buried conductor, cable, conduit, or other raceway and the top surface of finished grade, concrete, or similar cover. (verb flattened: 'is shall be')",
+   "2": "Raceways approved for burial only where concrete encased shall require a concrete envelope not less than 50 mm (2 in.) thick.",
+   "3": "Lesser depths shall be permitted where cables and conductors rise for terminations or splices or where access is otherwise required.",
+   "4": "Where one of the wiring method types listed in Columns 1 through 3 is used for one of the circuit types in Columns 4 and 5, the shallowest depth of burial shall be permitted.",
+   "5": "Where solid rock prevents compliance with the cover depths specified in this table, the wiring shall be installed in a metal raceway, or a nonmetallic raceway permitted for direct burial. The raceways shall be covered by a minimum of 50 mm (2 in.) of concrete extending down to rock.",
+   "6": "Directly buried electrical metallic tubing (EMT) shall comply with 358.10."
+  },
+  "values": {
+   "sr": "SR-8551-NFPA 70-2021",
+   "sr_section_label": "Section 300.5(A), Table 300.5(A)",
+   "sr_submitted": "Thu Oct 28 12:59:35 EDT 2021",
+   "report_header": "National Fire Protection Association Report, NEC-P03, printed 12/7/2021, of 168 pages"
+  },
+  "quote_segments": [
+   "Table 300.5(A) Minimum Cover Requirements, 0 to 1000 Volts ac, 1500 Volts dc, Nominal,",
+   "Burial in Millimeters (Inches)",
+   "mm in. mm in. mm in. mm in. mm in.",
+   "600 24 150 6 450 18 300 12 1501,2 61,2",
+   "450 18 150 6 300 12 150 6 150 6",
+   "0 00 00 0 0 0 0 0",
+   "450 18 100 4 100 4",
+   "150 6 150 6",
+   "(direct burial)",
+   "100 4 100 4",
+   "(in raceway)",
+   "600 24 600 24 600 24 600 24 600 24",
+   "450 18 450 18 450 18 300 12 450 18",
+   "450 18 450 18 450 18 450 18 450 18",
+   "Cover is shall be defined as the shortest distance in mm (in.) measured between a point on the top surface",
+   "Raceways approved for burial only where concrete encased shall require a concrete envelope",
+   "not less than 50 mm (2 in.) thick.",
+   "The raceways shall be covered by a minimum of 50 mm (2 in.) of concrete extending down to rock.",
+   "Directly buried electrical metallic tubing (EMT) shall comply with 358.10."
+  ],
+  "committee_statement_quote_segments": [
+   "There are other types of EMT aside from galvanized, and not all require supplemental protection.",
+   "Pointing the reader to 358.10 will help them decide if supplemental protection is needed.",
+   "EMT has been allowed in direct burial applications."
+  ],
+  "two_pull_check": "pull 1 (data) and pull 2 (raw lines in printed order) give identical row labels and identical number sequences for all 7 rows; footnotes and Notes 1, 3, 4, 6 are from pull 1 only; Notes 2 and 5 values confirmed in pull 2",
+  "canaries": [
+   {
+    "planted": "row 1 column 3 = 300 mm (12 in.)",
+    "result": "rejected"
+   },
+   {
+    "planted": "streets row column 4 = 300 mm (12 in.)",
+    "result": "rejected"
+   },
+   {
+    "planted": "dwelling driveways row column 1 = 600 mm (24 in.)",
+    "result": "rejected"
+   },
+   {
+    "planted": "2 in. concrete trench row column 1 = 300 mm (12 in.)",
+    "result": "rejected"
+   },
+   {
+    "planted": "airport row column 2 = 600 mm (24 in.)",
+    "result": "rejected"
+   },
+   {
+    "planted": "Note 5 concrete minimum 75 mm (3 in.)",
+    "result": "rejected"
+   },
+   {
+    "true_check": "row 1 column 3 = 450 mm (18 in.); Note 2 = 50 mm (2 in.); caption 'Table 300.5(A)' with '0 to 1000 Volts ac, 1500 Volts dc'",
+    "result": "confirmed"
+   }
+  ],
+  "cross_check": [
+   "MN DLI, Electrical Inspection Checklist for One-Family Dwellings, 2023 NEC, rev 20230506 (T3): 24 / 6 / 18 in and 12 in for the 120 V 20 A GFCI residential circuit (row 1, columns 1-4) - match",
+   "SD Electrical Commission, Homeowner Wiring Manual, 'based on the 2023 National Electrical Code' incl. TIAs 23-1 to 23-15 (T3): 24 / 6 / 18 in - match",
+   "St. Paul DSI, Residential Checklist 2023 NEC (Garage), rev 07/2023 (T3): 6 in RMC/IMC, 18 in PVC, 24 in direct burial - match",
+   "Steel Tube Institute, '2023 National Electrical Code (NEC) Changes' (T4, no notice): 'Cover requirements for EMT were added in Column 3'; 'Table Note 6 was added' - consistent with SR-8551"
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P03_SD_SRStatements.pdf",
+  "permission_notice": "none (NFPA's own committee report)",
+  "retrieved": "2026-10-20"
+ },
+ "rule_300_5_D": {
+  "ref": "300.5(D)",
+  "edition": "2023",
+  "status": "Parent text: VERIFIED-draft (A2022 Second Draft SR-8553; single pull; TM check not done). (D)(1)-(4) values: VERIFIED-2023 (government paraphrase only); verbatim UNVERIFIED",
+  "rule_summary": "2023 parent text (per SR-8553 and its statement): 'Conductors and cables shall be protected from damage in accordance with 300.5(D)(1) through (D)(4).' The word 'Direct-buried' was removed so the subdivisions also cover conductors in raceways. Government paraphrases of 2023: conductors emerging from grade protected by RMC, IMC or Schedule 80 PVC from 18 in below grade (or the minimum cover) to the point of termination above ground; warning ribbon at least 12 in above underground service conductors.",
+  "values": {
+   "sr": "SR-8553-NFPA 70-2021",
+   "sr_submitted": "Thu Oct 28 13:06:32 EDT 2021",
+   "protection_from_below_grade_in": 18,
+   "warning_ribbon_above_in": 12,
+   "above_grade_ft": "8 (2020-base CEC handout only; not 2023)"
+  },
+  "quote_segments": [
+   "Direct-buried conductors Conductors and cables shall be protected from damage in accordance with",
+   "300.5(D)(1) through (D)(4)."
+  ],
+  "committee_statement_quote_segments": [
+   "By removing the words “Direct-buried” from the parent text, the subdivisions will now cover conductors",
+   "whether they are in a raceway or are direct buried."
+  ],
+  "corroboration": [
+   {
+    "source": "SD Electrical Commission, Homeowner Wiring Manual (2023 NEC) (T3)",
+    "url": "https://dlr.sd.gov/electrical/documents/HomeOwnerWiringBooklet.pdf",
+    "quote_segments": [
+     "NEC 300.5 – Conductors emerging from underground shall be installed in rigid metal conduit, intermediate",
+     "metal conduit, or Schedule 80 rigid nonmetallic conduit from 18 inches below grade",
+     "or the minimum cover distance to the point of termination above ground."
+    ]
+   },
+   {
+    "source": "MN DLI checklist (2023 NEC, rev 20230506), items 076 and 079 (T3)",
+    "url": "https://www.dli.mn.gov/sites/default/files/pdf/eli_inspection_checklist2023NEC.pdf",
+    "quote_segments": [
+     "Underground service conductors must have their location identified by a warning ribbon placed in the trench",
+     "at least 12-inches above the underground installation."
+    ]
+   }
+  ],
+  "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P03_SD_SRStatements.pdf",
+  "permission_notice": "none (NFPA's own committee report)",
+  "retrieved": "2026-10-20"
+ },
+ "render": [
+  "Call it 'Table 300.5(A)' (2023 numbering), never 'Table 300.5'.",
+  "Never state an EMT depth (column placement unverified).",
+  "Row 3 (under a building) qualifier columns are unresolved: show 0 in. only with the qualifier text, or omit the row."
+ ]
+}

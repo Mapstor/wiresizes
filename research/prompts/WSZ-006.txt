@@ -2,6 +2,9 @@ WSZ-006 PHYSICS — wiresizes.com: rebuild the wire resistance, voltage drop, 12
 
 REPO GUARD: `git remote get-url origin` must contain "wiresizes" and DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
 PRECONDITION: DEVLOG §6 has WSZ-005 FLAGSHIPS as done. If not, stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`; if origin/main has commits main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
 Read first:
 - DEVLOG §0–§5 + last 10 §6 entries
 - research/page-specs.md, section "WSZ-006"
@@ -50,13 +53,13 @@ Calculations come only from the engines. Inputs and results never round-trip thr
    - 12 V/DC:
      · the formula with K is shown on the page;
      · temperature choice 20 °C or 75 °C;
-     · state that it checks voltage drop only and that the conductor must also be rated for the current (link the 310.16 page).
+     · show both minimums from WSZ-002's dc-sizing rule (voltage drop, and current in the 60 °C column) and say which governs; link the 310.16 page for other temperatures and bundling.
    - Three-phase:
      · conversions, line-to-neutral voltage, PF correction;
      · no motor tables;
      · no wire or breaker outputs.
 3. Remove any leftover old engine code for these four pages once nothing imports it.
-4. Add the four routes to scripts/gates.config.json enforce. Run anti-slop-prose on all copy (report the fix count). If impeccable is installed, run its audit on the tool template at 390 px and fix what it finds.
+4. Add the four routes to scripts/gates.config.json enforce. Run anti-slop-prose on all copy (report the fix count). Run Impeccable (/impeccable audit; installed in WSZ-002) on the tool template at 390 px and fix what it finds.
 5. Run the prepublish checklist per page. Fix every fail.
 6. Append a corrections line: "{date}: rebuilt the wire resistance, voltage drop, 12 V DC and three-phase calculators; the 12 V calculator's formula now includes copper resistivity."
 7. Verify:
