@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Zap, Calculator, Home, Cpu, ArrowRight } from 'lucide-react';
+import { CookieSettingsButton } from '@/components/analytics/Consent';
 
 const footerLinks = {
   coreCalculators: [
@@ -200,6 +201,9 @@ export function Footer() {
                 </Link>
               </li>
             ))}
+            <li>
+              <CookieSettingsButton className="text-neutral-300 hover:text-blue-400 transition-colors" />
+            </li>
           </ul>
           <p className="mt-4 text-neutral-400 text-xs leading-relaxed max-w-3xl">
             NFPA 70®, National Electrical Code® and NEC® are registered trademarks of the National Fire Protection
