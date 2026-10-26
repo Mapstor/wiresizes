@@ -205,7 +205,7 @@ export default function GroundWireCalculatorPage() {
           
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Equipment Grounding Conductors */}
-            <div className="space-y-6">
+            <div className="space-y-6 min-w-0">
               <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
                 Equipment Grounding Conductors (NEC Table 250.122)
               </h3>
@@ -238,7 +238,7 @@ export default function GroundWireCalculatorPage() {
             </div>
 
             {/* Grounding Electrode Conductors */}
-            <div className="space-y-6">
+            <div className="space-y-6 min-w-0">
               <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
                 Grounding Electrode Conductors (NEC Table 250.66)
               </h3>

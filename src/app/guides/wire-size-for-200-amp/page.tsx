@@ -356,7 +356,7 @@ export default function WireSizeFor200AmpPage() {
                   Use our professional wire size calculator to verify the correct wire gauge for your specific 
                   installation, including voltage drop calculations.
                 </p>
-                <div className="flex gap-4 justify-center">
+                <div className="flex flex-wrap gap-4 justify-center">
                   <Link 
                     href="/calculators/wire-size-calculator"
                     className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
