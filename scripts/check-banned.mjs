@@ -15,6 +15,8 @@
 //      Template or JSX text that ends in "$" right before an interpolated value counts as a "$" amount too.
 //      Reachable modules elsewhere (the entry files themselves, src/app helpers such as GuideClient.tsx,
 //      src/utils, src/data) are checked the same way and counted separately.
+//   4. (WSZ-014) The same modules may not call alert(), confirm() or prompt(): call expressions in code, bare or
+//      on window, globalThis or self; strings and comments don't count.
 // Exceptions: scripts/check-banned.allow.txt, one per line: `<file> | <matched text> | <reason>` (file may be *).
 
 import { readFileSync, existsSync, statSync } from 'node:fs';
@@ -180,11 +182,37 @@ while (queue.length) {
   }
 }
 
+const DIALOGS = new Set(['alert', 'confirm', 'prompt']);
+const GLOBAL_OBJECTS = new Set(['window', 'globalThis', 'self']);
+const dialogCalls = [];
+
+// alert(…), window.alert(…), window['alert'](…) and the same for confirm and prompt
+function dialogCallName(node) {
+  if (!ts.isCallExpression(node)) return null;
+  const callee = node.expression;
+  if (ts.isIdentifier(callee) && DIALOGS.has(callee.text)) return callee.text;
+  const onGlobal = (expr) => ts.isIdentifier(expr) && GLOBAL_OBJECTS.has(expr.text);
+  if (ts.isPropertyAccessExpression(callee) && DIALOGS.has(callee.name.text) && onGlobal(callee.expression)) {
+    return `${callee.expression.text}.${callee.name.text}`;
+  }
+  if (
+    ts.isElementAccessExpression(callee) &&
+    ts.isStringLiteralLike(callee.argumentExpression) &&
+    DIALOGS.has(callee.argumentExpression.text) &&
+    onGlobal(callee.expression)
+  ) {
+    return `${callee.expression.text}['${callee.argumentExpression.text}']`;
+  }
+  return null;
+}
+
 function checkSource(file, sf) {
   const skip = moduleSpecifierNodes(sf);
   const lineOf = (node) => sf.getLineAndCharacterOfPosition(node.getStart(sf)).line + 1;
   const visit = (node) => {
     if (skip.has(node)) return;
+    const dialog = dialogCallName(node);
+    if (dialog) dialogCalls.push({ file: rel(file), line: lineOf(node), name: dialog });
     let text = null;
     let endsBeforeValue = false;
     if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) text = node.text;
@@ -221,11 +249,13 @@ for (const [file, sf] of reachable) {
 }
 
 for (const h of hits) console.log(`${h.file} [${h.where}] "${h.match}" … ${h.context}`);
+for (const d of dialogCalls) console.log(`${d.file} [line ${d.line}] ${d.name}() call`);
 console.log('');
 console.log(`check-banned: ${hits.length} hit(s)`);
+console.log(`  alert(), confirm() and prompt() calls in the scanned modules: ${dialogCalls.length}`);
 console.log(`  prerendered HTML files: ${pages.length}`);
 console.log(`  text files (sitemap.xml, robots.txt, llms.txt, manifest.json, opengraph-image.tsx): ${textFiles.length}`);
 console.log(`  source modules under src/components and src/lib reachable from live routes: ${libCount}`);
 console.log(`  other source modules reachable from live routes (entries, src/app helpers, src/utils, src/data): ${otherCount}`);
 console.log(`  phrases: ${phrases.length}, allowlist entries: ${allow.length}`);
-process.exit(hits.length ? 1 : 0);
+process.exit(hits.length || dialogCalls.length ? 1 : 0);

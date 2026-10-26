@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// WSZ-002 gate: structural checks on the Next.js build output. Node built-ins only.
+// WSZ-002 gate: structural checks on the Next.js build output (checks 11–15 added in WSZ-014). Node built-ins only.
 // Run after `rm -rf .next && npm run build`. Prints a PASS/FAIL line per check and exits 1 on any FAIL.
 
 import { readFileSync, existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative, sep } from 'node:path';
 import {
   repoRoot, appOutDir, rel, htmlPages, withdrawnRoutes, configRedirects, tokenizeHtml, isJsonLd, visibleText,
-  jsonLdStrings, SITE_ORIGIN,
+  jsonLdStrings, walkFiles, SITE_ORIGIN,
 } from './lib/build-output.mjs';
 
 const NEW_REDIRECTS = [
@@ -286,6 +286,135 @@ const livePages = pages.filter((p) => !withdrawnSet.has(p.route));
     }
   }
   check('no prerendered page has a <script> that loads googletagmanager.com', failures, `${pages.length} pages`);
+}
+
+// ── WSZ-014 ─────────────────────────────────────────────────────────────────
+const LIVE_CALCULATORS = livePages.filter((p) => p.route.startsWith('/calculators/')).map((p) => p.route);
+const LIVE_GUIDES = livePages.filter((p) => p.route.startsWith('/guides/')).map((p) => p.route);
+const NOT_FOUND_ROUTE = '/_not-found';
+const inMain = (e) => e.stack.includes('main');
+
+function mainLinks(page) {
+  return new Set(
+    page.events
+      .filter((e) => e.type === 'open' && e.name === 'a' && e.attrs.href !== undefined && inMain(e))
+      .map((e) => normalizePath(e.attrs.href))
+      .filter(Boolean),
+  );
+}
+
+// 11. Every live calculator page renders its form on the server
+{
+  const failures = [];
+  if (LIVE_CALCULATORS.length !== 15) failures.push(`${LIVE_CALCULATORS.length} live calculator pages, expected 15`);
+  for (const route of LIVE_CALCULATORS) {
+    const page = pageByRoute.get(route);
+    const controls = page.events.filter((e) => e.type === 'open' && (e.name === 'input' || e.name === 'select') && inMain(e));
+    if (controls.length === 0) failures.push(`${route}: no <input> or <select> inside <main>`);
+  }
+  check('each live calculator page has an <input> or <select> inside <main> in its prerendered HTML', failures, `${LIVE_CALCULATORS.length} pages`);
+}
+
+// 12. Hubs link to every live page of their kind inside <main> (header and footer links don't count)
+{
+  const failures = [];
+  if (LIVE_GUIDES.length !== 9) failures.push(`${LIVE_GUIDES.length} live guides, expected 9`);
+  const expectLinks = (route, targets) => {
+    const page = pageByRoute.get(route);
+    if (!page) {
+      failures.push(`${route}: no prerendered HTML`);
+      return;
+    }
+    const links = mainLinks(page);
+    for (const target of targets) if (target !== route && !links.has(target)) failures.push(`${route}: no link to ${target} inside <main>`);
+  };
+  expectLinks('/', LIVE_CALCULATORS);
+  expectLinks('/calculators', LIVE_CALCULATORS);
+  expectLinks('/guides', LIVE_GUIDES);
+  for (const route of LIVE_GUIDES) expectLinks(route, LIVE_GUIDES);
+  check('inside <main>, / and /calculators link to all 15 live calculators, /guides to all 9 live guides, and each guide to every other guide', failures, `${2 + 1 + LIVE_GUIDES.length} pages`);
+}
+
+// 13. Internal links on live pages and the 404 page reach a built page or route, and their #fragments exist
+{
+  const failures = [];
+  let links = 0;
+  const targets = new Set(pages.map((p) => p.route).filter((r) => r !== NOT_FOUND_ROUTE && r !== '/_global-error'));
+  for (const f of walkFiles(appOutDir, (x) => x.endsWith('.body'))) {
+    targets.add('/' + relative(appOutDir, f).split(sep).join('/').replace(/\.body$/, ''));
+  }
+  for (const f of walkFiles(join(appOutDir, 'api'), (x) => x.endsWith('/route.js') || x.endsWith('\\route.js'))) {
+    targets.add('/' + relative(appOutDir, f).split(sep).join('/').replace(/\/route\.js$/, ''));
+  }
+  for (const f of walkFiles(join(repoRoot, 'public'), () => true)) {
+    targets.add('/' + relative(join(repoRoot, 'public'), f).split(sep).join('/'));
+  }
+  const idsOf = new Map(
+    pages.map((p) => [p.route, new Set(p.events.filter((e) => e.type === 'open' && e.attrs.id).map((e) => e.attrs.id))]),
+  );
+  const checked = livePages.filter((p) => p.route !== '/_global-error');
+  for (const page of checked) {
+    for (const e of page.events) {
+      if (e.type !== 'open' || e.name !== 'a' || e.attrs.href === undefined) continue;
+      const href = e.attrs.href.trim();
+      if (!href.startsWith('/') || href.startsWith('//')) {
+        if (!href.startsWith('#')) continue;
+      }
+      links++;
+      const hashAt = href.indexOf('#');
+      const fragment = hashAt === -1 ? null : decodeURIComponent(href.slice(hashAt + 1));
+      const path = href.startsWith('#') ? page.route : normalizePath(href);
+      if (!targets.has(path)) {
+        failures.push(`${page.route} → ${href}: no built page or route at ${path}`);
+        continue;
+      }
+      if (fragment) {
+        const ids = idsOf.get(path);
+        if (!ids || !ids.has(fragment)) failures.push(`${page.route} → ${href}: no id "${fragment}" on ${path}`);
+      }
+    }
+  }
+  check('every internal <a href> on a live page and on the 404 page reaches a built page or route, and its #fragment exists there', failures, `${checked.length} pages, ${links} links, ${targets.size} targets`);
+}
+
+// 14. Inside <main>, no heading is more than one level deeper than the heading before it
+{
+  const failures = [];
+  let headings = 0;
+  for (const page of pages) {
+    let previous = null;
+    for (const e of page.events) {
+      if (e.type !== 'open' || !/^h[1-6]$/.test(e.name) || !inMain(e)) continue;
+      headings++;
+      const level = Number(e.name[1]);
+      if (previous !== null && level > previous.level + 1) {
+        failures.push(`${page.route}: <h${level}> after <h${previous.level}> "${previous.text}"`);
+      }
+      // the heading's own text, for the report
+      const at = page.events.indexOf(e);
+      let text = '';
+      for (let k = at + 1; k < page.events.length && text.length < 60; k++) {
+        const t = page.events[k];
+        if (t.type === 'close' && t.name === e.name) break;
+        if (t.type === 'text') text += t.value;
+      }
+      previous = { level, text: text.replace(/\s+/g, ' ').trim() };
+    }
+  }
+  check('inside <main>, no prerendered page has a heading more than one level deeper than the heading before it', failures, `${pages.length} pages, ${headings} headings`);
+}
+
+// 15. Table 250.66 values carry NFPA's 2020 grounding fact sheet note
+{
+  const failures = [];
+  let pagesWith = 0;
+  for (const page of pages) {
+    const text = visibleText(page.events);
+    if (!text.includes('Table 250.66')) continue;
+    pagesWith++;
+    if (!text.includes('2020 grounding fact sheet')) failures.push(`${page.route}: "Table 250.66" without "2020 grounding fact sheet"`);
+  }
+  check('every prerendered page whose text contains "Table 250.66" also contains "2020 grounding fact sheet"', failures, `${pagesWith} pages mention Table 250.66`);
 }
 
 const failed = results.filter((r) => r.failures.length > 0).length;
