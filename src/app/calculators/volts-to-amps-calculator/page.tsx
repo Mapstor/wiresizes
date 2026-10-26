@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
-import { Suspense } from 'react';
-import { VoltsToAmpsCalculator } from '@/components/calculators';
+import { VoltsToAmpsCalculator } from '@/components/calculators/VoltsToAmpsCalculator';
 import { Zap, Calculator, TrendingUp, AlertCircle, Battery } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -65,9 +64,7 @@ export default function VoltsToAmpsCalculatorPage() {
       {/* Calculator */}
       <section className="mb-12">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-          <Suspense fallback={<div>Loading calculator...</div>}>
-            <VoltsToAmpsCalculator />
-          </Suspense>
+          <VoltsToAmpsCalculator />
         </div>
       </section>
 

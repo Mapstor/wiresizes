@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { CalculatorLayout } from './CalculatorLayout';
-import { useShareableUrl } from '@/lib/hooks/useShareableUrl';
+import { focusResults, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
+import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
 import { Calculator, RefreshCw } from 'lucide-react';
 import {
   formatSi,
@@ -18,61 +19,83 @@ import {
 } from '@/lib/calculations/ohms-law';
 import type { OhmsLawMode, OhmsLawValues } from '@/lib/calculations/ohms-law';
 
+type Quantity = keyof OhmsLawValues;
+const QUANTITIES: Quantity[] = ['voltage', 'current', 'resistance', 'power'];
+
+interface Inputs {
+  mode: OhmsLawMode;
+  /** Field text of each quantity */
+  values: Record<Quantity, string>;
+}
+
+const EMPTY_VALUES: Record<Quantity, string> = {
+  voltage: String(OHMS_LAW_DEFAULTS.voltage),
+  current: String(OHMS_LAW_DEFAULTS.current),
+  resistance: String(OHMS_LAW_DEFAULTS.resistance),
+  power: String(OHMS_LAW_DEFAULTS.power),
+};
+
+const DEFAULT_INPUTS: Inputs = { mode: OHMS_LAW_DEFAULTS.mode, values: EMPTY_VALUES };
+
+/** A value counts when it is a number above 0. */
+function usable(text: string): boolean {
+  return fieldNumber(text) > 0;
+}
+
+function solve(inputs: Inputs): OhmsLawValues | null {
+  const given = (q: Quantity) => (usable(inputs.values[q]) ? fieldNumber(inputs.values[q]) : null);
+  return solveOhmsLaw(inputs.mode, {
+    voltage: given('voltage'),
+    current: given('current'),
+    resistance: given('resistance'),
+    power: given('power'),
+  });
+}
+
+/** Inputs from a share link. */
+function inputsFromQuery(params: URLSearchParams): Inputs {
+  const values = { ...EMPTY_VALUES };
+  for (const q of QUANTITIES) values[q] = numberParam(params, q) ?? values[q];
+  return { mode: choiceParam(params, 'mode', OHMS_LAW_MODE_OPTIONS.map((o) => o.value)) ?? DEFAULT_INPUTS.mode, values };
+}
+
 export function OhmsLawCalculator() {
-  const [mode, setMode] = useState<OhmsLawMode>(OHMS_LAW_DEFAULTS.mode);
-  const [voltage, setVoltage] = useState<number | ''>(OHMS_LAW_DEFAULTS.voltage);
-  const [current, setCurrent] = useState<number | ''>(OHMS_LAW_DEFAULTS.current);
-  const [resistance, setResistance] = useState<number | ''>(OHMS_LAW_DEFAULTS.resistance);
-  const [power, setPower] = useState<number | ''>(OHMS_LAW_DEFAULTS.power);
-  const [results, setResults] = useState<OhmsLawValues | null>(null);
-  const [showResults, setShowResults] = useState(false);
-  const resultsRef = useRef<HTMLDivElement>(null);
-
+  const [inputs, setInputs] = useState<Inputs>(DEFAULT_INPUTS);
+  const formRef = useRef<HTMLDivElement>(null);
+  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+  const { mode, values } = inputs;
   // Values stay unrounded; display formats them to 4 significant figures
-  const calculate = useCallback(() => {
-    const value = (v: number | '') => (typeof v === 'number' ? v : null);
-    setResults(solveOhmsLaw(mode, {
-      voltage: value(voltage),
-      current: value(current),
-      resistance: value(resistance),
-      power: value(power),
-    }));
-  }, [mode, voltage, current, resistance, power]);
+  const results = solve(inputs);
 
-  // Auto-calculation disabled - user must click Calculate button
-  // useEffect(() => {
-  //   calculate();
-  // }, [calculate]);
-
-  const performCalculation = useCallback(() => {
-    calculate();
-    setShowResults(true);
-    // Scroll to results
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-    }, 100);
-  }, [calculate]);
-
-  const shareableInputs: Record<string, string | number | boolean> = {
+  const query = buildQuery({
     mode,
-    ...(typeof voltage === 'number' && { voltage }),
-    ...(typeof current === 'number' && { current }),
-    ...(typeof resistance === 'number' && { resistance }),
-    ...(typeof power === 'number' && { power }),
-  };
-  const { getShareableUrl } = useShareableUrl(shareableInputs);
+    ...Object.fromEntries(QUANTITIES.filter((q) => q !== mode).map((q) => [q, values[q].trim()])),
+  });
+  const { markChanged, shareUrl } = useUrlState(query, (params) => setInputs(inputsFromQuery(params)));
   const { print } = usePrintExport();
 
-  const handleShare = useCallback(async () => {
-    const url = getShareableUrl();
-    await navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }, [getShareableUrl]);
+  const setValue = (q: Quantity, text: string) => {
+    markChanged();
+    setInputs((prev) => ({ ...prev, values: { ...prev.values, [q]: text } }));
+  };
 
-  const handlePrint = useCallback(() => {
+  // a new mode starts from empty fields
+  const setMode = (next: OhmsLawMode) => {
+    markChanged();
+    setInputs({ mode: next, values: EMPTY_VALUES });
+  };
+
+  const handleCalculate = () => {
+    if (results) {
+      focusResults(resultsHeadingRef.current);
+      return;
+    }
+    // fewer than two values: the empty-state lines stay, and the first field without a value takes focus
+    const first = QUANTITIES.find((q) => q !== mode && !usable(values[q]));
+    if (first) formRef.current?.querySelector<HTMLInputElement>(`input[name="${first}"]`)?.focus();
+  };
+
+  const handlePrint = () => {
     if (!results) return;
     print({
       title: 'Ohm\'s Law Calculation',
@@ -87,36 +110,31 @@ export function OhmsLawCalculator() {
         'Conductance (S)': formatSi(1 / results.resistance, 'S'),
       },
     });
-  }, [results, mode, print]);
+  };
 
   const handleReset = () => {
-    setVoltage(OHMS_LAW_DEFAULTS.voltage);
-    setCurrent(OHMS_LAW_DEFAULTS.current);
-    setResistance(OHMS_LAW_DEFAULTS.resistance);
-    setPower(OHMS_LAW_DEFAULTS.power);
-    setResults(null);
+    markChanged();
+    setInputs(DEFAULT_INPUTS);
   };
 
   return (
     <CalculatorLayout
       title="Ohm's Law Calculator"
       description="Calculate voltage, current, resistance, or power using Ohm's Law"
-      onShare={handleShare}
+      shareUrl={shareUrl}
       onPrint={handlePrint}
+      actionsDisabled={!results}
     >
       <div className="max-w-4xl mx-auto p-6 space-y-8">
         {/* Inputs Section */}
-        <div className="bg-gray-50 rounded-lg p-6">
+        <div className="bg-gray-50 rounded-lg p-6" ref={formRef}>
           <h2 className="text-lg font-semibold mb-6">Input Parameters</h2>
           <div className="grid md:grid-cols-2 gap-6">
           <Select
             label="What to Calculate?"
             options={OHMS_LAW_MODE_OPTIONS}
             value={mode}
-            onChange={(e) => {
-              setMode(e.target.value as OhmsLawMode);
-              handleReset();
-            }}
+            onChange={(e) => setMode(e.target.value as OhmsLawMode)}
           />
 
           {/* Dynamic Input Fields Based on Mode */}
@@ -125,8 +143,9 @@ export function OhmsLawCalculator() {
               <Input
                 label="Voltage"
                 type="number"
-                value={voltage}
-                onChange={(e) => setVoltage(e.target.value ? Number(e.target.value) : '')}
+                name="voltage"
+                value={values.voltage}
+                onChange={(e) => setValue('voltage', e.target.value)}
                 suffix="V"
                 min={0}
                 step={0.1}
@@ -138,8 +157,9 @@ export function OhmsLawCalculator() {
               <Input
                 label="Current"
                 type="number"
-                value={current}
-                onChange={(e) => setCurrent(e.target.value ? Number(e.target.value) : '')}
+                name="current"
+                value={values.current}
+                onChange={(e) => setValue('current', e.target.value)}
                 suffix="A"
                 min={0}
                 step={0.001}
@@ -151,8 +171,9 @@ export function OhmsLawCalculator() {
               <Input
                 label="Resistance"
                 type="number"
-                value={resistance}
-                onChange={(e) => setResistance(e.target.value ? Number(e.target.value) : '')}
+                name="resistance"
+                value={values.resistance}
+                onChange={(e) => setValue('resistance', e.target.value)}
                 suffix="Ω"
                 min={0}
                 step={0.1}
@@ -164,8 +185,9 @@ export function OhmsLawCalculator() {
               <Input
                 label="Power"
                 type="number"
-                value={power}
-                onChange={(e) => setPower(e.target.value ? Number(e.target.value) : '')}
+                name="power"
+                value={values.power}
+                onChange={(e) => setValue('power', e.target.value)}
                 suffix="W"
                 min={0}
                 step={0.1}
@@ -193,7 +215,7 @@ export function OhmsLawCalculator() {
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
-            <Button onClick={performCalculation} className="flex-1">
+            <Button onClick={handleCalculate} className="flex-1">
               <Calculator className="w-4 h-4" />
               Calculate
             </Button>
@@ -205,9 +227,8 @@ export function OhmsLawCalculator() {
         </div>
 
         {/* Results Section */}
-        {showResults && (
-          <div className="space-y-6" ref={resultsRef}>
-            <h2 className="text-lg font-semibold">Calculation Results</h2>
+        <div className="space-y-6">
+          <h2 ref={resultsHeadingRef} tabIndex={-1} className="text-lg font-semibold">Calculation Results</h2>
             {results ? (
             <>
               {/* Ohm's Law Circle Visualization */}
@@ -269,8 +290,7 @@ export function OhmsLawCalculator() {
               </p>
             </div>
           )}
-          </div>
-        )}
+        </div>
       </div>
     </CalculatorLayout>
   );

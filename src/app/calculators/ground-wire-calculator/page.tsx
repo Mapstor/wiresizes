@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
-import { Suspense } from 'react';
-import { GroundWireCalculator } from '@/components/calculators';
+import { GroundWireCalculator } from '@/components/calculators/GroundWireCalculator';
 import { Shield, Calculator, TrendingUp, AlertCircle, BookOpen, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -88,9 +87,7 @@ export default function GroundWireCalculatorPage() {
 
       {/* Calculator Component */}
       <section className="mb-16">
-        <Suspense fallback={<div>Loading calculator...</div>}>
-          <GroundWireCalculator />
-        </Suspense>
+        <GroundWireCalculator />
       </section>
 
       {/* Understanding Grounding Systems */}

@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Calculator, RotateCcw } from 'lucide-react';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { CalculatorLayout } from './CalculatorLayout';
-import { useShareableUrl } from '@/lib/hooks/useShareableUrl';
+import { focusResults, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
+import { buildQuery, choiceParam } from '@/lib/calculations/fields';
 import {
   ADJUSTMENT_BANDS,
   AMBIENT_ROWS,
@@ -57,71 +58,74 @@ function resultRows(result: AmpacityResult, column: AmpacityColumn): Row[] {
   return rows;
 }
 
+/** Inputs from a share link: size, temperature column, ambient row and conductor band. */
+function inputsFromQuery(params: URLSearchParams): AmpacityInput {
+  return {
+    ...AMPACITY_DEFAULTS,
+    size: choiceParam(params, 'awg', AMPACITY_SIZES) ?? AMPACITY_DEFAULTS.size,
+    column: choiceParam(params, 'temperature', COLUMN_OPTIONS.map((c) => c.value)) ?? AMPACITY_DEFAULTS.column,
+    ambientRow: choiceParam(params, 'ambient', AMBIENT_ROWS.map((row) => row.key)) ?? AMPACITY_DEFAULTS.ambientRow,
+    band: choiceParam(params, 'conductors', ADJUSTMENT_BANDS.map((band) => band.key)) ?? AMPACITY_DEFAULTS.band,
+  };
+}
+
+function calculate(inputs: AmpacityInput) {
+  return MATERIALS.flatMap((m) => {
+    const result = calculateAmpacity({ ...inputs, material: m.material });
+    // no Table 310.16 value for this size and material (14 AWG aluminum)
+    return result.tableAmpacity === null ? [] : [{ key: m.key, label: m.label, result }];
+  });
+}
+
 export function AmpacityCalculator() {
   const [inputs, setInputs] = useState<AmpacityInput>(AMPACITY_DEFAULTS);
-  const [calculated, setCalculated] = useState<{
-    inputs: AmpacityInput;
-    results: { key: 'copper' | 'aluminum'; label: string; result: AmpacityResult }[];
-  } | null>(null);
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+  const results = calculate(inputs);
 
-  const shareableInputs = {
+  const query = buildQuery({
     awg: inputs.size,
     temperature: inputs.column,
     ambient: inputs.ambientRow,
     conductors: inputs.band,
-  };
-  const { getShareableUrl } = useShareableUrl(shareableInputs);
+  });
+  const { markChanged, shareUrl } = useUrlState(query, (params) => setInputs(inputsFromQuery(params)));
   const { print } = usePrintExport();
 
-  const performCalculation = useCallback(() => {
-    const results = MATERIALS.flatMap((m) => {
-      const result = calculateAmpacity({ ...inputs, material: m.material });
-      // no Table 310.16 value for this size and material (14 AWG aluminum)
-      return result.tableAmpacity === null ? [] : [{ key: m.key, label: m.label, result }];
-    });
-    setCalculated({ inputs, results });
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-  }, [inputs]);
+  const change = (patch: Partial<AmpacityInput>) => {
+    markChanged();
+    setInputs((p) => ({ ...p, ...patch }));
+  };
 
-  const handleReset = useCallback(() => {
+  const handleCalculate = () => focusResults(resultsHeadingRef.current);
+
+  const handleReset = () => {
+    markChanged();
     setInputs(AMPACITY_DEFAULTS);
-    setCalculated(null);
-  }, []);
+  };
 
-  const handleShare = useCallback(async () => {
-    const url = getShareableUrl();
-    await navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }, [getShareableUrl]);
-
-  const handlePrint = useCallback(() => {
-    if (!calculated) return;
-    const shown = calculated.inputs;
-    const results: Record<string, string> = {};
-    for (const { label, result } of calculated.results) {
-      for (const row of resultRows(result, shown.column)) results[`${label}: ${row.label}`] = row.value;
+  const handlePrint = () => {
+    const printed: Record<string, string> = {};
+    for (const { label, result } of results) {
+      for (const row of resultRows(result, inputs.column)) printed[`${label}: ${row.label}`] = row.value;
     }
     print({
       title: 'Wire Ampacity Calculation',
       inputs: {
-        'Wire Size': formatSize(shown.size),
-        'Temperature Rating': COLUMN_OPTIONS.find((c) => c.value === shown.column)?.label ?? '',
-        'Ambient Temperature': AMBIENT_OPTIONS.find((o) => o.value === shown.ambientRow)?.label ?? '',
-        'Number of Current-Carrying Conductors': BAND_OPTIONS.find((o) => o.value === shown.band)?.label ?? '',
+        'Wire Size': formatSize(inputs.size),
+        'Temperature Rating': COLUMN_OPTIONS.find((c) => c.value === inputs.column)?.label ?? '',
+        'Ambient Temperature': AMBIENT_OPTIONS.find((o) => o.value === inputs.ambientRow)?.label ?? '',
+        'Number of Current-Carrying Conductors': BAND_OPTIONS.find((o) => o.value === inputs.band)?.label ?? '',
       },
-      results,
+      results: printed,
       notes: [`NEC References: ${AMPACITY_NEC_REFERENCES}`],
     });
-  }, [calculated, print]);
+  };
 
   return (
     <CalculatorLayout
       title="Wire Ampacity Calculator"
       description="Calculate the current carrying capacity for copper and aluminum conductors"
-      onShare={handleShare}
+      shareUrl={shareUrl}
       onPrint={handlePrint}
     >
       <div className="max-w-4xl mx-auto p-6 space-y-8">
@@ -133,34 +137,34 @@ export function AmpacityCalculator() {
               label="Wire Size"
               options={SIZE_OPTIONS}
               value={inputs.size}
-              onChange={(e) => setInputs((p) => ({ ...p, size: e.target.value }))}
+              onChange={(e) => change({ size: e.target.value })}
             />
 
             <Select
               label="Temperature Rating"
               options={TEMPERATURE_OPTIONS}
               value={String(inputs.column)}
-              onChange={(e) => setInputs((p) => ({ ...p, column: Number(e.target.value) as AmpacityColumn }))}
+              onChange={(e) => change({ column: Number(e.target.value) as AmpacityColumn })}
             />
 
             <Select
               label="Ambient Temperature"
               options={AMBIENT_OPTIONS}
               value={inputs.ambientRow}
-              onChange={(e) => setInputs((p) => ({ ...p, ambientRow: e.target.value }))}
+              onChange={(e) => change({ ambientRow: e.target.value })}
             />
 
             <Select
               label="Number of Current-Carrying Conductors"
               options={BAND_OPTIONS}
               value={inputs.band}
-              onChange={(e) => setInputs((p) => ({ ...p, band: e.target.value }))}
+              onChange={(e) => change({ band: e.target.value })}
             />
           </div>
 
           {/* Calculate and Reset Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
-            <Button onClick={performCalculation} className="flex-1">
+            <Button onClick={handleCalculate} className="flex-1">
               <Calculator className="w-4 h-4" />
               Calculate Ampacity
             </Button>
@@ -172,11 +176,10 @@ export function AmpacityCalculator() {
         </div>
 
         {/* Results Section */}
-        {calculated && calculated.results.length > 0 && (
-          <div className="bg-white rounded-lg border border-gray-200 p-6" ref={resultsRef}>
-            <h2 className="text-lg font-semibold text-gray-800 mb-6">Calculation Results</h2>
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h2 ref={resultsHeadingRef} tabIndex={-1} className="text-lg font-semibold text-gray-800 mb-6">Calculation Results</h2>
             <div className="space-y-6">
-              {calculated.results.map(({ key, label, result }) => (
+              {results.map(({ key, label, result }) => (
                 <div
                   key={key}
                   className={`border rounded-lg p-4 ${
@@ -193,10 +196,10 @@ export function AmpacityCalculator() {
                         key === 'copper' ? 'from-copper-400 to-copper-600' : 'from-aluminum-300 to-aluminum-500'
                       }`}
                     ></div>
-                    {label}: {formatSize(calculated.inputs.size)}
+                    {label}: {formatSize(inputs.size)}
                   </h3>
                   <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                    {resultRows(result, calculated.inputs.column).map((row) => (
+                    {resultRows(result, inputs.column).map((row) => (
                       <div key={row.label}>
                         <dt className="text-neutral-600">{row.label}:</dt>
                         <dd className={row.label === 'Ampacity' ? 'font-mono font-semibold text-lg' : 'font-mono'}>
@@ -215,8 +218,7 @@ export function AmpacityCalculator() {
                 </p>
               </div>
             </div>
-          </div>
-        )}
+        </div>
       </div>
     </CalculatorLayout>
   );

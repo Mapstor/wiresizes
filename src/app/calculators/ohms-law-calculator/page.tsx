@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
-import { Suspense } from 'react';
-import { OhmsLawCalculator } from '@/components/calculators';
+import { OhmsLawCalculator } from '@/components/calculators/OhmsLawCalculator';
 import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -98,9 +97,7 @@ export default function OhmsLawCalculatorPage() {
 
       {/* Calculator Component */}
       <section className="mb-16">
-        <Suspense fallback={<div>Loading calculator...</div>}>
-          <OhmsLawCalculator />
-        </Suspense>
+        <OhmsLawCalculator />
       </section>
 
       {/* Understanding Ohms Law */}

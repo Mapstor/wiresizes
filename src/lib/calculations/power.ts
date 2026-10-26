@@ -39,11 +39,35 @@ export function phaseMultiplier(circuit: Circuit): number {
   return circuit === 'three' ? Math.sqrt(3) : 1;
 }
 
+/** Power, apparent power or current: a finite number greater than 0. */
+export function powerValueValid(value: number): boolean {
+  return Number.isFinite(value) && value > 0;
+}
+
 function check(value: number, volts: number, circuit: Circuit, pf: number): PowerError | null {
-  if (!(Number.isFinite(value) && value > 0)) return 'value-invalid';
+  if (!powerValueValid(value)) return 'value-invalid';
   if (!voltsValid(volts, circuit)) return 'voltage-invalid';
   if (!powerFactorValid(pf)) return 'power-factor-invalid';
   return null;
+}
+
+export interface PowerInputErrors {
+  value: string | null;
+  volts: string | null;
+  pf: string | null;
+}
+
+/** The message for each invalid input at once (the calculations stop at the first); DC has no power factor. */
+export function powerInputErrors(input: { value: number; volts: number; circuit: Circuit; pf: number }): PowerInputErrors {
+  return {
+    value: powerValueValid(input.value) ? null : POWER_ERROR_MESSAGES['value-invalid'],
+    volts: voltsValid(input.volts, input.circuit) ? null : POWER_ERROR_MESSAGES['voltage-invalid'],
+    pf: input.circuit === 'dc' || powerFactorValid(input.pf) ? null : POWER_ERROR_MESSAGES['power-factor-invalid'],
+  };
+}
+
+export function hasPowerInputError(errors: PowerInputErrors): boolean {
+  return errors.value !== null || errors.volts !== null || errors.pf !== null;
 }
 
 function result(amps: number, watts: number, va: number, pf: number): PowerResult {

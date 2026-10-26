@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Building, Calculator, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
@@ -13,6 +13,7 @@ import {
   serviceLookup,
 } from '@/lib/calculations/service-lookup';
 import type { ServiceLookupResult } from '@/lib/calculations/service-lookup';
+import { focusResults } from '@/lib/hooks/useCalculatorForm';
 
 const RATING_OPTIONS = SERVICE_RATINGS.map((a) => ({ value: String(a), label: `${a} A` }));
 
@@ -45,22 +46,13 @@ function resultRows(result: ServiceLookupResult): { conductors: Row[]; gec: Row[
 
 export default function ServiceEntranceCalculator() {
   const [ratingA, setRatingA] = useState(SERVICE_LOOKUP_DEFAULTS.ratingA);
-  const [lookup, setLookup] = useState<{ ratingA: number; result: ServiceLookupResult | null } | null>(null);
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+  const result = serviceLookup(ratingA);
+  const rows = result ? resultRows(result) : null;
 
-  const performLookup = useCallback(() => {
-    setLookup({ ratingA, result: serviceLookup(ratingA) });
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-  }, [ratingA]);
+  const handleLookup = () => focusResults(resultsHeadingRef.current);
 
-  const handleReset = useCallback(() => {
-    setRatingA(SERVICE_LOOKUP_DEFAULTS.ratingA);
-    setLookup(null);
-  }, []);
-
-  const rows = lookup?.result ? resultRows(lookup.result) : null;
+  const handleReset = () => setRatingA(SERVICE_LOOKUP_DEFAULTS.ratingA);
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
@@ -83,7 +75,7 @@ export default function ServiceEntranceCalculator() {
 
         {/* Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
-          <Button onClick={performLookup} className="flex-1">
+          <Button onClick={handleLookup} className="flex-1">
             <Calculator className="w-4 h-4" />
             Look Up
           </Button>
@@ -95,18 +87,17 @@ export default function ServiceEntranceCalculator() {
       </div>
 
       {/* Results Section */}
-      {lookup && (
-        <div className="space-y-6" ref={resultsRef}>
-          <h2 className="text-lg font-semibold">Results</h2>
-          {!rows ? (
-            <div className="rounded-xl p-6 bg-red-50 border border-red-200 text-sm text-red-700" role="alert">
-              {NO_ROW_MESSAGE}
-            </div>
-          ) : (
+      <div className="space-y-6">
+        <h2 ref={resultsHeadingRef} tabIndex={-1} className="text-lg font-semibold">Results</h2>
+        {!rows ? (
+          <div className="rounded-xl p-6 bg-red-50 border border-red-200 text-sm text-red-700" role="alert">
+            {NO_ROW_MESSAGE}
+          </div>
+        ) : (
             <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
               <div className="flex items-center gap-2">
                 <Building className="w-5 h-5 text-blue-600" />
-                <h3 className="text-lg font-semibold text-gray-900">{lookup.ratingA} A, 120/240 V dwelling</h3>
+                <h3 className="text-lg font-semibold text-gray-900">{ratingA} A, 120/240 V dwelling</h3>
               </div>
 
               <div>
@@ -134,9 +125,8 @@ export default function ServiceEntranceCalculator() {
               </div>
 
             </div>
-          )}
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

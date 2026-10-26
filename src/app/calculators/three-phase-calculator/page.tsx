@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import ClientThreePhaseCalculator from '@/components/calculators/ClientThreePhaseCalculator';
+import { ThreePhaseCalculator } from '@/components/calculators/ThreePhaseCalculator';
 import { Zap, Calculator, Settings, Target, Users, AlertTriangle, TrendingUp, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -212,7 +212,7 @@ export default function ThreePhaseCalculatorPage() {
           </div>
 
           {/* Main Calculator */}
-          <ClientThreePhaseCalculator />
+          <ThreePhaseCalculator />
 
           {/* Power Formulas */}
           <div className="bg-white rounded-xl shadow-lg p-8">

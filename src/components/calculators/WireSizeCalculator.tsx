@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Select } from '@/components/ui/Select';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -24,7 +24,8 @@ import type { Material } from '@/lib/calculations/sizes';
 import { voltageOptions, voltsAfterPhaseChange } from '@/lib/calculations/inputs';
 import type { Phase } from '@/lib/calculations/inputs';
 import { LENGTH_MAX_FT, LENGTH_MIN_FT, targetTitle, VD_TARGET_OPTIONS } from '@/lib/calculations/voltage-drop';
-import { useShareableUrl } from '@/lib/hooks/useShareableUrl';
+import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
+import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { RefreshCw, Calculator } from 'lucide-react';
 
@@ -48,9 +49,10 @@ const GROUND_WIRE_LABELS = {
 
 interface Inputs {
   ocpdA: number;
-  /** '' = use the rating */
-  loadA: number | '';
-  lengthFt: number | '';
+  /** Field text; empty = use the rating */
+  loadA: string;
+  /** Field text */
+  lengthFt: string;
   volts: number;
   phase: Phase;
   vdTargetPct: number;
@@ -59,37 +61,35 @@ interface Inputs {
 const DEFAULT_INPUTS: Inputs = {
   ocpdA: WIRE_SIZE_DEFAULTS.ocpdA,
   loadA: '',
-  lengthFt: WIRE_SIZE_DEFAULTS.lengthFt,
+  lengthFt: String(WIRE_SIZE_DEFAULTS.lengthFt),
   volts: WIRE_SIZE_DEFAULTS.volts,
   phase: WIRE_SIZE_DEFAULTS.phase,
   vdTargetPct: WIRE_SIZE_DEFAULTS.vdTargetPct,
 };
 
 /** Inputs from a share link: rating, load, length, voltage, phase and target; old links carried amps and distance. */
-function inputsFromQuery(query: string): Inputs | null {
-  const params = new URLSearchParams(query);
-  if ([...params.keys()].length === 0) return null;
-  const num = (key: string): number | null => {
-    const raw = params.get(key);
-    if (raw === null || raw.trim() === '') return null;
-    const value = Number(raw);
-    return Number.isFinite(value) ? value : null;
-  };
+function inputsFromQuery(params: URLSearchParams): Inputs {
   const next: Inputs = { ...DEFAULT_INPUTS };
   // the old amps value counts as the rating only when it is a standard rating from 15 to 400 A
-  const rating = num('rating') ?? num('amps');
-  if (rating !== null && WIRE_SIZE_RATINGS.includes(rating)) next.ocpdA = rating;
-  const load = num('load');
-  if (load !== null && load >= 0 && load <= next.ocpdA) next.loadA = load;
-  const length = num('length') ?? num('distance');
-  if (length !== null && length >= LENGTH_MIN_FT && length <= LENGTH_MAX_FT) next.lengthFt = length;
-  const phase = params.get('phase');
-  if (phase === 'single' || phase === 'three') next.phase = phase;
-  const volts = num('voltage');
-  next.volts = volts !== null && voltageOptions(next.phase).includes(volts) ? volts : voltsAfterPhaseChange(next.volts, next.phase);
-  const target = num('target');
-  if (target !== null && VD_TARGET_OPTIONS.includes(target)) next.vdTargetPct = target;
+  next.ocpdA = choiceParam(params, 'rating', WIRE_SIZE_RATINGS) ?? choiceParam(params, 'amps', WIRE_SIZE_RATINGS) ?? next.ocpdA;
+  const load = numberParam(params, 'load');
+  if (load !== null && Number(load) >= 0 && Number(load) <= next.ocpdA) next.loadA = load;
+  const length = numberParam(params, 'length', 'distance');
+  if (length !== null && Number(length) >= LENGTH_MIN_FT && Number(length) <= LENGTH_MAX_FT) next.lengthFt = length;
+  next.phase = choiceParam(params, 'phase', ['single', 'three'] as Phase[]) ?? next.phase;
+  next.volts = choiceParam(params, 'voltage', voltageOptions(next.phase)) ?? voltsAfterPhaseChange(next.volts, next.phase);
+  next.vdTargetPct = choiceParam(params, 'target', VD_TARGET_OPTIONS) ?? next.vdTargetPct;
   return next;
+}
+
+/** The message for each invalid field. */
+function fieldErrors(inputs: Inputs): { loadA: string | null; lengthFt: string | null } {
+  const load = fieldNumber(inputs.loadA);
+  const length = fieldNumber(inputs.lengthFt);
+  return {
+    loadA: inputs.loadA.trim() === '' || (load >= 0 && load <= inputs.ocpdA) ? null : SIZING_ERROR_MESSAGES['load-above-rating'],
+    lengthFt: length >= LENGTH_MIN_FT && length <= LENGTH_MAX_FT ? null : SIZING_ERROR_MESSAGES['length-out-of-range'],
+  };
 }
 
 function materialNotes(result: SizeConductorResult): string[] {
@@ -109,8 +109,8 @@ function calculate(inputs: Inputs): Outcome {
   for (const m of MATERIALS) {
     const result = sizeConductor({
       ocpdA: inputs.ocpdA,
-      loadA: inputs.loadA === '' ? null : inputs.loadA,
-      lengthFt: inputs.lengthFt === '' ? Number.NaN : inputs.lengthFt,
+      loadA: inputs.loadA.trim() === '' ? null : fieldNumber(inputs.loadA),
+      lengthFt: fieldNumber(inputs.lengthFt),
       volts: inputs.volts,
       phase: inputs.phase,
       material: m.material,
@@ -128,49 +128,40 @@ interface WireSizeCalculatorProps {
 
 export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculatorProps) {
   const [inputs, setInputs] = useState<Inputs>(DEFAULT_INPUTS);
-  const [outcome, setOutcome] = useState<Outcome | null>(null);
-  const [calculatedFor, setCalculatedFor] = useState<Inputs | null>(null);
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
+  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+  const fields = useFieldErrors();
 
-  // Read a share link once on load
-  useEffect(() => {
-    if (!enableUrlSharing) return;
-    const fromQuery = inputsFromQuery(window.location.search);
-    if (fromQuery) setInputs(fromQuery);
-  }, [enableUrlSharing]);
+  const errors = fieldErrors(inputs);
+  const invalid = errors.loadA !== null || errors.lengthFt !== null;
+  const outcome = invalid ? null : calculate(inputs);
+  const valid = outcome !== null && outcome.error === null;
 
-  const shareableInputs = {
+  const query = buildQuery({
     rating: inputs.ocpdA,
-    load: inputs.loadA,
-    length: inputs.lengthFt,
+    load: inputs.loadA.trim(),
+    length: inputs.lengthFt.trim(),
     voltage: inputs.volts,
     phase: inputs.phase,
     target: inputs.vdTargetPct,
-  };
-  const { getShareableUrl } = useShareableUrl(shareableInputs, { enabled: enableUrlSharing });
+  });
+  const { markChanged, shareUrl } = useUrlState(query, (params) => {
+    if (enableUrlSharing) setInputs(inputsFromQuery(params));
+  });
   const { print } = usePrintExport();
 
-  const performCalculation = useCallback(() => {
-    setOutcome(calculate(inputs));
-    setCalculatedFor(inputs);
+  const change = (patch: Partial<Inputs>) => {
+    if (enableUrlSharing) markChanged();
+    setInputs((prev) => ({ ...prev, ...patch }));
+  };
 
-    // Scroll to results
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }, 100);
-  }, [inputs]);
+  const handleCalculate = () => {
+    if (valid) focusResults(resultsHeadingRef.current);
+    else fields.revealAll(formRef.current);
+  };
 
-  const handleShare = useCallback(async () => {
-    const url = getShareableUrl();
-    await navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }, [getShareableUrl]);
-
-  const handlePrint = useCallback(() => {
-    if (!outcome || !calculatedFor || outcome.error) return;
+  const handlePrint = () => {
+    if (!valid || !outcome) return;
     const results: Record<string, string> = {};
     const notes: string[] = [];
     for (const { key, label, result } of outcome.results) {
@@ -185,22 +176,22 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
     print({
       title: 'Wire Size Calculation',
       inputs: {
-        'Breaker or fuse rating': `${calculatedFor.ocpdA} A`,
-        'Load current for voltage drop (A)': `${calculatedFor.loadA === '' ? calculatedFor.ocpdA : calculatedFor.loadA} A`,
-        'Length (one-way)': `${calculatedFor.lengthFt} ft`,
-        Voltage: `${calculatedFor.volts} V`,
-        Phase: calculatedFor.phase === 'three' ? 'Three-Phase' : 'Single-Phase',
-        'Voltage-drop target (your choice)': `${calculatedFor.vdTargetPct} %`,
+        'Breaker or fuse rating': `${inputs.ocpdA} A`,
+        'Load current for voltage drop (A)': `${inputs.loadA.trim() === '' ? inputs.ocpdA : fieldNumber(inputs.loadA)} A`,
+        'Length (one-way)': `${fieldNumber(inputs.lengthFt)} ft`,
+        Voltage: `${inputs.volts} V`,
+        Phase: inputs.phase === 'three' ? 'Three-Phase' : 'Single-Phase',
+        'Voltage-drop target (your choice)': `${inputs.vdTargetPct} %`,
       },
       results,
       notes,
     });
-  }, [outcome, calculatedFor, print]);
+  };
 
   const handleReset = () => {
+    if (enableUrlSharing) markChanged();
+    fields.reset();
     setInputs(DEFAULT_INPUTS);
-    setOutcome(null);
-    setCalculatedFor(null);
   };
 
   const voltageSelectOptions = voltageOptions(inputs.phase).map((v) => ({ value: String(v), label: `${v} V` }));
@@ -209,19 +200,20 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
     <CalculatorLayout
       title="Wire Size Calculator"
       description="Calculate the correct AWG wire size for both copper and aluminum conductors"
-      onShare={handleShare}
+      shareUrl={enableUrlSharing ? shareUrl : undefined}
       onPrint={handlePrint}
+      actionsDisabled={!valid}
     >
       <div className="max-w-full px-4 sm:px-6 lg:max-w-4xl lg:mx-auto lg:px-8 py-4 sm:py-6 space-y-6 sm:space-y-8">
         {/* Inputs Section */}
-        <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+        <div className="bg-gray-50 rounded-lg p-4 sm:p-6" ref={formRef}>
           <h2 className="text-lg font-semibold mb-6">Input Parameters</h2>
           <div className="grid lg:grid-cols-2 gap-4 lg:gap-6">
             <Select
               label="Breaker or fuse rating"
               options={RATING_OPTIONS}
               value={String(inputs.ocpdA)}
-              onChange={(e) => setInputs((prev) => ({ ...prev, ocpdA: Number(e.target.value) }))}
+              onChange={(e) => change({ ocpdA: Number(e.target.value) })}
             />
 
             <Input
@@ -229,9 +221,9 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
               type="number"
               value={inputs.loadA}
               placeholder={String(inputs.ocpdA)}
-              onChange={(e) =>
-                setInputs((prev) => ({ ...prev, loadA: e.target.value === '' ? '' : Number(e.target.value) }))
-              }
+              onChange={(e) => change({ loadA: e.target.value })}
+              onBlur={() => fields.touch('loadA')}
+              error={fields.shown('loadA', errors.loadA)}
               min={0}
               max={inputs.ocpdA}
               step="any"
@@ -242,9 +234,9 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
               label="Length (one-way)"
               type="number"
               value={inputs.lengthFt}
-              onChange={(e) =>
-                setInputs((prev) => ({ ...prev, lengthFt: e.target.value === '' ? '' : Number(e.target.value) }))
-              }
+              onChange={(e) => change({ lengthFt: e.target.value })}
+              onBlur={() => fields.touch('lengthFt')}
+              error={fields.shown('lengthFt', errors.lengthFt)}
               min={LENGTH_MIN_FT}
               max={LENGTH_MAX_FT}
               step={1}
@@ -255,7 +247,7 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
               label="Voltage"
               options={voltageSelectOptions}
               value={String(inputs.volts)}
-              onChange={(e) => setInputs((prev) => ({ ...prev, volts: Number(e.target.value) }))}
+              onChange={(e) => change({ volts: Number(e.target.value) })}
             />
 
             <Select
@@ -264,7 +256,7 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
               value={inputs.phase}
               onChange={(e) => {
                 const phase = e.target.value as Phase;
-                setInputs((prev) => ({ ...prev, phase, volts: voltsAfterPhaseChange(prev.volts, phase) }));
+                change({ phase, volts: voltsAfterPhaseChange(inputs.volts, phase) });
               }}
             />
 
@@ -272,13 +264,13 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
               label="Voltage-drop target (your choice)"
               options={TARGET_OPTIONS}
               value={String(inputs.vdTargetPct)}
-              onChange={(e) => setInputs((prev) => ({ ...prev, vdTargetPct: Number(e.target.value) }))}
+              onChange={(e) => change({ vdTargetPct: Number(e.target.value) })}
             />
           </div>
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
-            <Button onClick={performCalculation} className="flex-1">
+            <Button onClick={handleCalculate} className="flex-1">
               <Calculator className="w-4 h-4" />
               Calculate Wire Size
             </Button>
@@ -290,11 +282,11 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
         </div>
 
         {/* Results Section */}
-        {outcome && calculatedFor && (
-          <div className="space-y-6" ref={resultsRef}>
-            <h2 className="text-lg font-semibold">Calculation Results</h2>
+        <div className="space-y-6">
+          <h2 ref={resultsHeadingRef} tabIndex={-1} className="text-lg font-semibold">Calculation Results</h2>
 
-            {outcome.error ? (
+          {outcome && (
+            outcome.error ? (
               <div className="rounded-xl p-6 bg-red-50 border border-red-200 text-sm text-red-700" role="alert">
                 {outcome.error}
               </div>
@@ -304,7 +296,7 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
                 <WireComparison
                   copperAwg={outcome.results[0].result.size}
                   aluminumAwg={outcome.results[1].result.size}
-                  amps={calculatedFor.ocpdA}
+                  amps={inputs.ocpdA}
                 />
 
                 {/* Results Display for Both Materials */}
@@ -347,9 +339,9 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
                   ))}
                 </div>
               </>
-            )}
-          </div>
-        )}
+            )
+          )}
+        </div>
       </div>
     </CalculatorLayout>
   );

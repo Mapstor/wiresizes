@@ -1,119 +1,147 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { CalculatorLayout } from './CalculatorLayout';
-import { useShareableUrl } from '@/lib/hooks/useShareableUrl';
+import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
+import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
 import { Calculator, RefreshCw } from 'lucide-react';
 import { voltageOptions, voltsAfterPhaseChange } from '@/lib/calculations/inputs';
 import type { Phase } from '@/lib/calculations/inputs';
 import {
   currentByVoltage,
   fromRealPower,
+  hasPowerInputError,
   isPowerError,
   KILOWATTS_TO_AMPS_COMPARISON_VOLTS,
   KILOWATTS_TO_AMPS_DEFAULTS,
   PHASE_OPTIONS,
-  POWER_ERROR_MESSAGES,
+  powerInputErrors,
 } from '@/lib/calculations/power';
 import type { PowerResult, VoltageRow } from '@/lib/calculations/power';
 
-type Inputs = typeof KILOWATTS_TO_AMPS_DEFAULTS;
-
-interface Calculated {
-  inputs: Inputs;
-  error: string | null;
-  result: PowerResult | null;
-  rows: VoltageRow[];
+interface Inputs {
+  /** Field text */
+  kilowatts: string;
+  volts: number;
+  phase: Phase;
+  /** Field text */
+  pf: string;
 }
 
-function calculate(inputs: Inputs): Calculated {
-  const r = fromRealPower({ watts: inputs.kilowatts * 1000, volts: inputs.volts, circuit: inputs.phase, pf: inputs.pf });
-  if (isPowerError(r)) return { inputs, error: POWER_ERROR_MESSAGES[r.error], result: null, rows: [] };
-  const rows = currentByVoltage({ watts: inputs.kilowatts * 1000 }, inputs.phase, inputs.pf, KILOWATTS_TO_AMPS_COMPARISON_VOLTS);
-  return { inputs, error: null, result: r, rows };
+const DEFAULT_INPUTS: Inputs = {
+  kilowatts: String(KILOWATTS_TO_AMPS_DEFAULTS.kilowatts),
+  volts: KILOWATTS_TO_AMPS_DEFAULTS.volts,
+  phase: KILOWATTS_TO_AMPS_DEFAULTS.phase,
+  pf: String(KILOWATTS_TO_AMPS_DEFAULTS.pf),
+};
+
+/** Inputs from a share link. */
+function inputsFromQuery(params: URLSearchParams): Inputs {
+  const phase = choiceParam(params, 'phase', ['single', 'three'] as Phase[]) ?? DEFAULT_INPUTS.phase;
+  return {
+    kilowatts: numberParam(params, 'kilowatts') ?? DEFAULT_INPUTS.kilowatts,
+    phase,
+    volts: choiceParam(params, 'voltage', voltageOptions(phase)) ?? voltsAfterPhaseChange(DEFAULT_INPUTS.volts, phase),
+    pf: numberParam(params, 'powerFactor') ?? DEFAULT_INPUTS.pf,
+  };
+}
+
+/** The result for valid inputs, with the current at each comparison voltage. */
+function calculate(inputs: Inputs): { result: PowerResult; rows: VoltageRow[] } | null {
+  const watts = fieldNumber(inputs.kilowatts) * 1000;
+  const pf = fieldNumber(inputs.pf);
+  const r = fromRealPower({ watts, volts: inputs.volts, circuit: inputs.phase, pf });
+  if (isPowerError(r)) return null;
+  return { result: r, rows: currentByVoltage({ watts }, inputs.phase, pf, KILOWATTS_TO_AMPS_COMPARISON_VOLTS) };
 }
 
 const phaseLabel = (phase: Phase) => (phase === 'single' ? 'Single-Phase' : 'Three-Phase');
 
 export function KilowattsToAmpsCalculator() {
-  const [inputs, setInputs] = useState<Inputs>(KILOWATTS_TO_AMPS_DEFAULTS);
-  const [calculated, setCalculated] = useState<Calculated | null>(null);
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const [inputs, setInputs] = useState<Inputs>(DEFAULT_INPUTS);
+  const formRef = useRef<HTMLDivElement>(null);
+  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+  const fields = useFieldErrors();
 
-  const performCalculation = useCallback(() => {
-    setCalculated(calculate(inputs));
-    // Scroll to results
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }, 100);
-  }, [inputs]);
+  const errors = powerInputErrors({
+    value: fieldNumber(inputs.kilowatts),
+    volts: inputs.volts,
+    circuit: inputs.phase,
+    pf: fieldNumber(inputs.pf),
+  });
+  const calculated = hasPowerInputError(errors) ? null : calculate(inputs);
 
-  const handleReset = () => {
-    setInputs(KILOWATTS_TO_AMPS_DEFAULTS);
-    setCalculated(null);
-  };
-
-  const shareableInputs = {
-    kilowatts: inputs.kilowatts,
+  const query = buildQuery({
+    kilowatts: inputs.kilowatts.trim(),
     voltage: inputs.volts,
     phase: inputs.phase,
-    powerFactor: inputs.pf,
-  };
-  const { getShareableUrl } = useShareableUrl(shareableInputs);
+    powerFactor: inputs.pf.trim(),
+  });
+  const { markChanged, shareUrl } = useUrlState(query, (params) => setInputs(inputsFromQuery(params)));
   const { print } = usePrintExport();
 
-  const handleShare = useCallback(async () => {
-    const url = getShareableUrl();
-    await navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }, [getShareableUrl]);
+  const change = (patch: Partial<Inputs>) => {
+    markChanged();
+    setInputs((p) => ({ ...p, ...patch }));
+  };
 
-  const handlePrint = useCallback(() => {
-    if (!calculated?.result) return;
-    const { inputs: shown, result } = calculated;
+  const handleCalculate = () => {
+    if (calculated) focusResults(resultsHeadingRef.current);
+    else fields.revealAll(formRef.current);
+  };
+
+  const handleReset = () => {
+    markChanged();
+    fields.reset();
+    setInputs(DEFAULT_INPUTS);
+  };
+
+  const handlePrint = () => {
+    if (!calculated) return;
+    const { result, rows } = calculated;
     print({
       title: 'Kilowatts to Amps Calculation',
       inputs: {
-        'Power': `${shown.kilowatts} kW`,
-        'Voltage': `${shown.volts} V`,
-        'Phase Configuration': phaseLabel(shown.phase),
-        'Power Factor': shown.pf,
+        'Power': `${fieldNumber(inputs.kilowatts)} kW`,
+        'Voltage': `${inputs.volts} V`,
+        'Phase Configuration': phaseLabel(inputs.phase),
+        'Power Factor': fieldNumber(inputs.pf),
       },
       results: {
         'Load Current': `${result.amps.toFixed(2)} A`,
-        'Real Power (P)': `${shown.kilowatts} kW`,
+        'Real Power (P)': `${fieldNumber(inputs.kilowatts)} kW`,
         'Apparent Power (S)': `${(result.va / 1000).toFixed(1)} kVA`,
         'Reactive Power (Q)': `${(result.vars / 1000).toFixed(1)} kVAR`,
         'Power Factor': result.pf.toFixed(2),
-        ...Object.fromEntries(calculated.rows.map((row) => [`Current at ${row.volts} V`, `${row.amps.toFixed(1)} A`])),
+        ...Object.fromEntries(rows.map((row) => [`Current at ${row.volts} V`, `${row.amps.toFixed(1)} A`])),
       },
     });
-  }, [calculated, print]);
+  };
 
   return (
     <CalculatorLayout
       title="Kilowatts to Amps Calculator"
       description="Convert kilowatts to amperage for electrical loads and equipment"
-      onShare={handleShare}
+      shareUrl={shareUrl}
       onPrint={handlePrint}
+      actionsDisabled={!calculated}
     >
       <div className="max-w-4xl mx-auto p-6 space-y-8">
         {/* Input Parameters */}
-        <div className="bg-gray-50 rounded-lg p-6">
+        <div className="bg-gray-50 rounded-lg p-6" ref={formRef}>
           <h2 className="text-lg font-semibold text-gray-800 mb-6">Input Parameters</h2>
           <div className="grid md:grid-cols-2 gap-6">
           <Input
             label="Power"
             type="number"
             value={inputs.kilowatts}
-            onChange={(e) => setInputs((p) => ({ ...p, kilowatts: Number(e.target.value) }))}
+            onChange={(e) => change({ kilowatts: e.target.value })}
+            onBlur={() => fields.touch('kilowatts')}
+            error={fields.shown('kilowatts', errors.value)}
             suffix="kW"
             min={0}
             step={0.1}
@@ -124,7 +152,7 @@ export function KilowattsToAmpsCalculator() {
             label="Voltage"
             options={voltageOptions(inputs.phase).map((v) => ({ value: String(v), label: `${v} V` }))}
             value={String(inputs.volts)}
-            onChange={(e) => setInputs((p) => ({ ...p, volts: Number(e.target.value) }))}
+            onChange={(e) => change({ volts: Number(e.target.value) })}
           />
 
           <Select
@@ -133,7 +161,7 @@ export function KilowattsToAmpsCalculator() {
             value={inputs.phase}
             onChange={(e) => {
               const phase = e.target.value as Phase;
-              setInputs((p) => ({ ...p, phase, volts: voltsAfterPhaseChange(p.volts, phase) }));
+              change({ phase, volts: voltsAfterPhaseChange(inputs.volts, phase) });
             }}
           />
 
@@ -141,7 +169,9 @@ export function KilowattsToAmpsCalculator() {
             label="Power Factor"
             type="number"
             value={inputs.pf}
-            onChange={(e) => setInputs((p) => ({ ...p, pf: Number(e.target.value) }))}
+            onChange={(e) => change({ pf: e.target.value })}
+            onBlur={() => fields.touch('pf')}
+            error={fields.shown('pf', errors.pf)}
             min={0}
             max={1}
             step={0.01}
@@ -165,7 +195,7 @@ export function KilowattsToAmpsCalculator() {
 
           {/* Calculate and Reset Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
-            <Button onClick={performCalculation} className="flex-1">
+            <Button onClick={handleCalculate} className="flex-1">
               <Calculator className="w-4 h-4" />
               Calculate
             </Button>
@@ -177,14 +207,9 @@ export function KilowattsToAmpsCalculator() {
         </div>
 
         {/* Results Section */}
-        {calculated && (
-          <div className="bg-white rounded-lg border border-gray-200 p-6" ref={resultsRef}>
-            <h2 className="text-lg font-semibold text-gray-800 mb-6">Calculation Results</h2>
-            {calculated.error || !calculated.result ? (
-              <div className="rounded-xl p-6 bg-red-50 border border-red-200 text-sm text-red-700" role="alert">
-                {calculated.error}
-              </div>
-            ) : (
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h2 ref={resultsHeadingRef} tabIndex={-1} className="text-lg font-semibold text-gray-800 mb-6">Calculation Results</h2>
+          {calculated && (
             <div className="space-y-6">
               {/* Main Current Result */}
               <div className="text-center p-6 bg-primary-50 rounded-xl border-2 border-primary-200">
@@ -194,7 +219,7 @@ export function KilowattsToAmpsCalculator() {
                 </div>
                 <div className="text-xl font-medium text-primary-600 mt-1">Amps</div>
                 <div className="text-sm text-primary-500 mt-2">
-                  {phaseLabel(calculated.inputs.phase)} @ {calculated.inputs.volts}V
+                  {phaseLabel(inputs.phase)} @ {inputs.volts}V
                 </div>
               </div>
 
@@ -204,7 +229,7 @@ export function KilowattsToAmpsCalculator() {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-neutral-600">Real Power (P):</span>
-                    <span className="font-mono font-semibold">{calculated.inputs.kilowatts} kW</span>
+                    <span className="font-mono font-semibold">{fieldNumber(inputs.kilowatts)} kW</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-neutral-600">Apparent Power (S):</span>
@@ -234,7 +259,7 @@ export function KilowattsToAmpsCalculator() {
                     </thead>
                     <tbody className="divide-y divide-blue-200">
                       {calculated.rows.map((row) => (
-                        <tr key={row.volts} className={calculated.inputs.volts === row.volts ? 'bg-blue-100' : ''}>
+                        <tr key={row.volts} className={inputs.volts === row.volts ? 'bg-blue-100' : ''}>
                           <td className="p-1">{row.volts}V</td>
                           <td className="p-1 font-mono">{row.amps.toFixed(1)}A</td>
                         </tr>
@@ -244,9 +269,8 @@ export function KilowattsToAmpsCalculator() {
                 </div>
               </div>
             </div>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </CalculatorLayout>
   );

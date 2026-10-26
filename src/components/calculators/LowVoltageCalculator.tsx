@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { Input } from '@/components/ui/Input';
 import { CalculatorLayout } from './CalculatorLayout';
-import { useShareableUrl } from '@/lib/hooks/useShareableUrl';
+import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
+import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
 import { Cpu, Calculator, RefreshCw } from 'lucide-react';
 import {
   BASIS_LINE,
@@ -20,11 +21,16 @@ import {
 import { formatSize } from '@/lib/calculations/sizes';
 
 interface Inputs {
-  volts: number;
-  loads: number;
-  wattsPerLoad: number;
-  lengthFt: number;
-  dropPct: number;
+  /** Field text */
+  volts: string;
+  /** Field text */
+  loads: string;
+  /** Field text */
+  wattsPerLoad: string;
+  /** Field text */
+  lengthFt: string;
+  /** Field text */
+  dropPct: string;
   tempC: number;
 }
 
@@ -33,27 +39,58 @@ interface Row {
   value: string;
 }
 
-const DEFAULT_INPUTS: Inputs = { ...DC_SIZING_DEFAULTS };
+const DEFAULT_INPUTS: Inputs = {
+  volts: String(DC_SIZING_DEFAULTS.volts),
+  loads: String(DC_SIZING_DEFAULTS.loads),
+  wattsPerLoad: String(DC_SIZING_DEFAULTS.wattsPerLoad),
+  lengthFt: String(DC_SIZING_DEFAULTS.lengthFt),
+  dropPct: String(DC_SIZING_DEFAULTS.dropPct),
+  tempC: DC_SIZING_DEFAULTS.tempC,
+};
+
+type FieldName = 'volts' | 'loads' | 'wattsPerLoad' | 'lengthFt' | 'dropPct';
+const NUMBER_FIELDS: FieldName[] = ['volts', 'loads', 'wattsPerLoad', 'lengthFt', 'dropPct'];
+
+/** Every number must be greater than 0; the message names them all. */
+function fieldErrors(inputs: Inputs): Partial<Record<FieldName, string>> {
+  const errors: Partial<Record<FieldName, string>> = {};
+  for (const name of NUMBER_FIELDS) if (!(fieldNumber(inputs[name]) > 0)) errors[name] = INPUT_INVALID_MESSAGE;
+  return errors;
+}
+
+/** Inputs from a share link. */
+function inputsFromQuery(params: URLSearchParams): Inputs {
+  return {
+    volts: numberParam(params, 'voltage') ?? DEFAULT_INPUTS.volts,
+    loads: numberParam(params, 'numberOfLoads') ?? DEFAULT_INPUTS.loads,
+    wattsPerLoad: numberParam(params, 'wattsPerLoad') ?? DEFAULT_INPUTS.wattsPerLoad,
+    lengthFt: numberParam(params, 'distance') ?? DEFAULT_INPUTS.lengthFt,
+    dropPct: numberParam(params, 'maxVoltageDrop') ?? DEFAULT_INPUTS.dropPct,
+    tempC: choiceParam(params, 'temperature', DC_TEMPERATURE_OPTIONS.map((t) => t.value)) ?? DEFAULT_INPUTS.tempC,
+  };
+}
 
 function inputRows(inputs: Inputs): Row[] {
   return [
-    { label: 'Voltage', value: `${inputs.volts} V` },
-    { label: 'Number of Loads', value: String(inputs.loads) },
-    { label: 'Watts per Load', value: `${inputs.wattsPerLoad} W` },
-    { label: 'Distance (one way)', value: `${inputs.lengthFt} ft` },
-    { label: 'Voltage-drop target (your choice)', value: `${inputs.dropPct} %` },
+    { label: 'Voltage', value: `${fieldNumber(inputs.volts)} V` },
+    { label: 'Number of Loads', value: String(fieldNumber(inputs.loads)) },
+    { label: 'Watts per Load', value: `${fieldNumber(inputs.wattsPerLoad)} W` },
+    { label: 'Distance (one way)', value: `${fieldNumber(inputs.lengthFt)} ft` },
+    { label: 'Voltage-drop target (your choice)', value: `${fieldNumber(inputs.dropPct)} %` },
     { label: 'Conductor temperature', value: DC_TEMPERATURE_OPTIONS.find((t) => t.value === inputs.tempC)?.label ?? '' },
   ];
 }
 
 /** Result lines (screen and print) or a message when there is no result. */
 function computeRows(inputs: Inputs): { rows: Row[]; resultSize: string | null; message: string | null } {
-  const watts = inputs.loads * inputs.wattsPerLoad;
+  const volts = fieldNumber(inputs.volts);
+  const loads = fieldNumber(inputs.loads);
+  const watts = loads * fieldNumber(inputs.wattsPerLoad);
   const result = dcSizing({
-    volts: inputs.volts,
-    watts: inputs.loads > 0 ? watts : 0,
-    lengthFt: inputs.lengthFt,
-    dropPct: inputs.dropPct,
+    volts,
+    watts: loads > 0 ? watts : 0,
+    lengthFt: fieldNumber(inputs.lengthFt),
+    dropPct: fieldNumber(inputs.dropPct),
     tempC: inputs.tempC,
   });
   if ('error' in result) return { rows: [], resultSize: null, message: INPUT_INVALID_MESSAGE };
@@ -71,69 +108,73 @@ function computeRows(inputs: Inputs): { rows: Row[]; resultSize: string | null; 
 
 export function LowVoltageCalculator() {
   const [inputs, setInputs] = useState<Inputs>(DEFAULT_INPUTS);
-  const [calculated, setCalculated] = useState<
-    ({ inputs: Inputs } & ReturnType<typeof computeRows>) | null
-  >(null);
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
+  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+  const fields = useFieldErrors();
 
-  const update = (patch: Partial<Inputs>) => setInputs((prev) => ({ ...prev, ...patch }));
+  const errors = fieldErrors(inputs);
+  const valid = Object.keys(errors).length === 0;
+  const computed = valid ? computeRows(inputs) : null;
 
-  const performCalculation = useCallback(() => {
-    setCalculated({ inputs, ...computeRows(inputs) });
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }, 100);
-  }, [inputs]);
-
-  const handleReset = () => {
-    setInputs(DEFAULT_INPUTS);
-    setCalculated(null);
-  };
-
-  const shareableInputs = {
-    voltage: inputs.volts,
-    numberOfLoads: inputs.loads,
-    wattsPerLoad: inputs.wattsPerLoad,
-    distance: inputs.lengthFt,
-    maxVoltageDrop: inputs.dropPct,
+  const query = buildQuery({
+    voltage: inputs.volts.trim(),
+    numberOfLoads: inputs.loads.trim(),
+    wattsPerLoad: inputs.wattsPerLoad.trim(),
+    distance: inputs.lengthFt.trim(),
+    maxVoltageDrop: inputs.dropPct.trim(),
     temperature: inputs.tempC,
-  };
-  const { getShareableUrl } = useShareableUrl(shareableInputs);
+  });
+  const { markChanged, shareUrl } = useUrlState(query, (params) => setInputs(inputsFromQuery(params)));
   const { print } = usePrintExport();
 
-  const handleShare = useCallback(async () => {
-    const url = getShareableUrl();
-    await navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }, [getShareableUrl]);
+  const update = (patch: Partial<Inputs>) => {
+    markChanged();
+    setInputs((prev) => ({ ...prev, ...patch }));
+  };
 
-  const handlePrint = useCallback(() => {
-    if (!calculated || calculated.rows.length === 0) return;
+  const handleCalculate = () => {
+    if (valid) focusResults(resultsHeadingRef.current);
+    else fields.revealAll(formRef.current);
+  };
+
+  const handleReset = () => {
+    markChanged();
+    fields.reset();
+    setInputs(DEFAULT_INPUTS);
+  };
+
+  const handlePrint = () => {
+    if (!computed || computed.rows.length === 0) return;
     const results: Record<string, string> = {};
-    if (calculated.resultSize) results['Copper wire size'] = formatSize(calculated.resultSize);
-    for (const row of calculated.rows) results[row.label] = row.value;
+    if (computed.resultSize) results['Copper wire size'] = formatSize(computed.resultSize);
+    for (const row of computed.rows) results[row.label] = row.value;
     print({
       title: 'Low Voltage Circuit Calculation',
-      inputs: Object.fromEntries(inputRows(calculated.inputs).map((r) => [r.label, r.value])),
+      inputs: Object.fromEntries(inputRows(inputs).map((r) => [r.label, r.value])),
       results,
-      notes: calculated.message ? [calculated.message, BASIS_LINE] : [BASIS_LINE],
+      notes: computed.message ? [computed.message, BASIS_LINE] : [BASIS_LINE],
     });
-  }, [calculated, print]);
+  };
+
+  const numberField = (name: FieldName) => ({
+    value: inputs[name],
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => update({ [name]: e.target.value }),
+    onBlur: () => fields.touch(name),
+    error: fields.shown(name, errors[name]),
+  });
 
   return (
     <CalculatorLayout
       title="Low Voltage Calculator"
       description="Calculate wire size for low voltage electrical systems"
-      onShare={handleShare}
+      shareUrl={shareUrl}
       onPrint={handlePrint}
+      actionsDisabled={!valid}
     >
       <div className="space-y-6">
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Input Section */}
-          <div className="space-y-6">
+          <div className="space-y-6" ref={formRef}>
             <h2 className="text-lg font-semibold text-neutral-900 flex items-center gap-2">
               <Cpu className="w-5 h-5 text-primary-600" />
               Low Voltage Circuit
@@ -143,8 +184,7 @@ export function LowVoltageCalculator() {
               <Input
                 label="Voltage"
                 type="number"
-                value={inputs.volts}
-                onChange={(e) => update({ volts: Number(e.target.value) })}
+                {...numberField('volts')}
                 suffix="V"
                 min={0}
                 step="any"
@@ -154,8 +194,7 @@ export function LowVoltageCalculator() {
                 <Input
                   label="Number of Loads"
                   type="number"
-                  value={inputs.loads}
-                  onChange={(e) => update({ loads: Number(e.target.value) })}
+                  {...numberField('loads')}
                   suffix="units"
                   min={1}
                   step={1}
@@ -163,8 +202,7 @@ export function LowVoltageCalculator() {
                 <Input
                   label="Watts per Load"
                   type="number"
-                  value={inputs.wattsPerLoad}
-                  onChange={(e) => update({ wattsPerLoad: Number(e.target.value) })}
+                  {...numberField('wattsPerLoad')}
                   suffix="W"
                   min={0}
                   step="any"
@@ -175,8 +213,7 @@ export function LowVoltageCalculator() {
                 <Input
                   label="Distance (one way)"
                   type="number"
-                  value={inputs.lengthFt}
-                  onChange={(e) => update({ lengthFt: Number(e.target.value) })}
+                  {...numberField('lengthFt')}
                   suffix="feet"
                   min={0}
                   step="any"
@@ -185,8 +222,7 @@ export function LowVoltageCalculator() {
                 <Input
                   label="Voltage-drop target (your choice)"
                   type="number"
-                  value={inputs.dropPct}
-                  onChange={(e) => update({ dropPct: Number(e.target.value) })}
+                  {...numberField('dropPct')}
                   suffix="%"
                   min={0}
                   step={0.5}
@@ -201,7 +237,7 @@ export function LowVoltageCalculator() {
               />
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <Button onClick={performCalculation} className="flex-1">
+                <Button onClick={handleCalculate} className="flex-1">
                   <Calculator className="w-4 h-4" />
                   Calculate
                 </Button>
@@ -214,27 +250,27 @@ export function LowVoltageCalculator() {
           </div>
 
           {/* Results Section */}
-          <div className="space-y-6" ref={resultsRef}>
-            <h2 className="text-lg font-semibold text-neutral-900">
+          <div className="space-y-6">
+            <h2 ref={resultsHeadingRef} tabIndex={-1} className="text-lg font-semibold text-neutral-900">
               Low Voltage Wire Size Results
             </h2>
 
-            {calculated && (
+            {computed && (
               <div className="bg-neutral-50 rounded-xl p-6 space-y-4">
-                {calculated.resultSize ? (
+                {computed.resultSize ? (
                   <div className="bg-blue-100 rounded-lg p-3 text-center">
                     <div className="text-blue-800 font-semibold">Copper wire size</div>
-                    <div className="text-2xl font-bold text-blue-900">{formatSize(calculated.resultSize)}</div>
+                    <div className="text-2xl font-bold text-blue-900">{formatSize(computed.resultSize)}</div>
                   </div>
                 ) : (
                   <div className="rounded-lg p-4 bg-red-50 border border-red-200 text-sm text-red-700" role="alert">
-                    {calculated.message}
+                    {computed.message}
                   </div>
                 )}
 
-                {calculated.rows.length > 0 && (
+                {computed.rows.length > 0 && (
                   <dl className="space-y-2 text-sm">
-                    {calculated.rows.map((row) => (
+                    {computed.rows.map((row) => (
                       <div key={row.label} className="flex justify-between gap-4">
                         <dt>{row.label}:</dt>
                         <dd className="font-mono">{row.value}</dd>

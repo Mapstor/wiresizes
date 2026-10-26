@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
-import { Suspense } from 'react';
-import { KilowattsToAmpsCalculator } from '@/components/calculators';
+import { KilowattsToAmpsCalculator } from '@/components/calculators/KilowattsToAmpsCalculator';
 import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -94,9 +93,7 @@ export default function KilowattsToAmpsCalculatorPage() {
 
       {/* Calculator Component */}
       <section className="mb-16">
-        <Suspense fallback={<div>Loading calculator...</div>}>
-          <KilowattsToAmpsCalculator />
-        </Suspense>
+        <KilowattsToAmpsCalculator />
       </section>
 
       {/* Understanding Power and Current Relationships */}

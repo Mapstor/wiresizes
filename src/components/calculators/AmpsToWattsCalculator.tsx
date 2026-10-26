@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Calculator, Zap, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -9,11 +9,14 @@ import { THREE_PHASE_VOLTS } from '@/lib/calculations/inputs';
 import {
   AMPS_TO_WATTS_DEFAULTS,
   fromCurrent,
+  hasPowerInputError,
   isPowerError,
-  POWER_ERROR_MESSAGES,
+  powerInputErrors,
 } from '@/lib/calculations/power';
-import type { Circuit, PowerResult } from '@/lib/calculations/power';
+import type { Circuit } from '@/lib/calculations/power';
 import { wattsToElectricalHorsepower } from '@/lib/calculations/conversions';
+import { fieldNumber } from '@/lib/calculations/fields';
+import { focusResults, useFieldErrors } from '@/lib/hooks/useCalculatorForm';
 
 const DC_VOLTAGES = [12, 24, 48];
 const AC_VOLTAGES = [120, 208, 240, 277, 480, 600];
@@ -23,23 +26,26 @@ type PowerType = 'ac' | 'dc';
 type PhaseType = 'single' | 'three';
 
 interface Inputs {
-  amps: number;
+  /** Field text */
+  amps: string;
   volts: number;
+  /** Field text */
   customVoltage: string;
   useCustomVoltage: boolean;
   powerType: PowerType;
   phaseType: PhaseType;
-  pf: number;
+  /** Field text */
+  pf: string;
 }
 
 const DEFAULT_INPUTS: Inputs = {
-  amps: AMPS_TO_WATTS_DEFAULTS.amps,
+  amps: String(AMPS_TO_WATTS_DEFAULTS.amps),
   volts: AMPS_TO_WATTS_DEFAULTS.volts,
   customVoltage: '',
   useCustomVoltage: false,
   powerType: AMPS_TO_WATTS_DEFAULTS.circuit === 'dc' ? 'dc' : 'ac',
   phaseType: AMPS_TO_WATTS_DEFAULTS.circuit === 'three' ? 'three' : 'single',
-  pf: AMPS_TO_WATTS_DEFAULTS.pf,
+  pf: String(AMPS_TO_WATTS_DEFAULTS.pf),
 };
 
 /** Voltages offered for the power type and phase; three-phase offers line-to-line voltages only. */
@@ -63,42 +69,40 @@ function withValidVoltage(inputs: Inputs): Inputs {
 }
 
 function formulaText(inputs: Inputs, volts: number, watts: number): string {
-  if (inputs.powerType === 'dc') return `P = I × V = ${inputs.amps}A × ${volts}V = ${watts.toFixed(2)}W`;
+  const amps = fieldNumber(inputs.amps);
+  if (inputs.powerType === 'dc') return `P = I × V = ${amps}A × ${volts}V = ${watts.toFixed(2)}W`;
+  const pf = fieldNumber(inputs.pf);
   if (inputs.phaseType === 'single') {
-    return `P = I × V × PF = ${inputs.amps}A × ${volts}V × ${inputs.pf} = ${watts.toFixed(2)}W`;
+    return `P = I × V × PF = ${amps}A × ${volts}V × ${pf} = ${watts.toFixed(2)}W`;
   }
-  return `P = I × V × √3 × PF = ${inputs.amps}A × ${volts}V × 1.732 × ${inputs.pf} = ${watts.toFixed(2)}W`;
+  return `P = I × V × √3 × PF = ${amps}A × ${volts}V × 1.732 × ${pf} = ${watts.toFixed(2)}W`;
 }
 
 export default function AmpsToWattsCalculator() {
   const [inputs, setInputs] = useState<Inputs>(DEFAULT_INPUTS);
-  const [calculated, setCalculated] = useState<{
-    inputs: Inputs;
-    result: PowerResult | null;
-    error: string | null;
-    formula: string;
-  } | null>(null);
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
+  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+  const fields = useFieldErrors();
+
+  const amps = fieldNumber(inputs.amps);
+  const pf = fieldNumber(inputs.pf);
+  const volts = inputs.useCustomVoltage ? fieldNumber(inputs.customVoltage) : inputs.volts;
+  const circuit = circuitOf(inputs);
+  const errors = powerInputErrors({ value: amps, volts, circuit, pf });
+  const r = hasPowerInputError(errors) ? null : fromCurrent({ amps, volts, circuit, pf });
+  const result = r && !isPowerError(r) ? r : null;
 
   const update = (patch: Partial<Inputs>) => setInputs((prev) => withValidVoltage({ ...prev, ...patch }));
 
-  const performCalculation = useCallback(() => {
-    const volts = inputs.useCustomVoltage ? Number.parseFloat(inputs.customVoltage) : inputs.volts;
-    const r = fromCurrent({ amps: inputs.amps, volts, circuit: circuitOf(inputs), pf: inputs.pf });
-    setCalculated(
-      isPowerError(r)
-        ? { inputs, result: null, error: POWER_ERROR_MESSAGES[r.error], formula: '' }
-        : { inputs, result: r, error: null, formula: formulaText(inputs, volts, r.watts) },
-    );
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-  }, [inputs]);
+  const handleCalculate = () => {
+    if (result) focusResults(resultsHeadingRef.current);
+    else fields.revealAll(formRef.current);
+  };
 
-  const handleReset = useCallback(() => {
+  const handleReset = () => {
+    fields.reset();
     setInputs(DEFAULT_INPUTS);
-    setCalculated(null);
-  }, []);
+  };
 
   const choices = voltageChoices(inputs.powerType, inputs.phaseType);
   const allowCustom = !(inputs.powerType === 'ac' && inputs.phaseType === 'three');
@@ -110,7 +114,7 @@ export default function AmpsToWattsCalculator() {
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       {/* Inputs Section */}
-      <div className="bg-gray-50 rounded-lg p-6">
+      <div className="bg-gray-50 rounded-lg p-6" ref={formRef}>
         <h2 className="text-lg font-semibold mb-6">Input Parameters</h2>
 
         <div className="grid md:grid-cols-2 gap-6">
@@ -120,7 +124,9 @@ export default function AmpsToWattsCalculator() {
               label="Current (Amps)"
               type="number"
               value={inputs.amps}
-              onChange={(e) => update({ amps: Number(e.target.value) })}
+              onChange={(e) => update({ amps: e.target.value })}
+              onBlur={() => fields.touch('amps')}
+              error={fields.shown('amps', errors.value)}
               min={0}
               max={10000}
               step={0.1}
@@ -145,6 +151,8 @@ export default function AmpsToWattsCalculator() {
                   type="number"
                   value={inputs.customVoltage}
                   onChange={(e) => update({ customVoltage: e.target.value })}
+                  onBlur={() => fields.touch('customVoltage')}
+                  error={fields.shown('customVoltage', errors.volts)}
                   placeholder="Enter custom voltage"
                   min={0}
                   step={0.1}
@@ -185,7 +193,9 @@ export default function AmpsToWattsCalculator() {
                 label="Power Factor"
                 type="number"
                 value={inputs.pf}
-                onChange={(e) => update({ pf: Number(e.target.value) })}
+                onChange={(e) => update({ pf: e.target.value })}
+                onBlur={() => fields.touch('pf')}
+                error={fields.shown('pf', errors.pf)}
                 min={0}
                 max={1}
                 step={0.01}
@@ -196,7 +206,7 @@ export default function AmpsToWattsCalculator() {
 
         {/* Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
-          <Button onClick={performCalculation} className="flex-1">
+          <Button onClick={handleCalculate} className="flex-1">
             <Calculator className="w-4 h-4" />
             Calculate Power
           </Button>
@@ -209,14 +219,9 @@ export default function AmpsToWattsCalculator() {
       </div>
 
       {/* Results Section */}
-      {calculated && (
-        <div className="space-y-6" ref={resultsRef}>
-          <h2 className="text-lg font-semibold">Calculation Results</h2>
-          {calculated.error || !calculated.result ? (
-            <div className="rounded-xl p-6 bg-red-50 border border-red-200 text-sm text-red-700" role="alert">
-              {calculated.error}
-            </div>
-          ) : (
+      <div className="space-y-6">
+        <h2 ref={resultsHeadingRef} tabIndex={-1} className="text-lg font-semibold">Calculation Results</h2>
+        {result && (
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center gap-2 mb-6">
               <Zap className="w-5 h-5 text-blue-600" />
@@ -227,30 +232,30 @@ export default function AmpsToWattsCalculator() {
               {/* Real Power */}
               <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
                 <div className="text-sm text-blue-600 mb-1">Real Power</div>
-                <div className="text-2xl font-bold text-blue-900">{calculated.result.watts.toFixed(2)} W</div>
-                <div className="text-sm text-blue-700 mt-1">{(calculated.result.watts / 1000).toFixed(3)} kW</div>
+                <div className="text-2xl font-bold text-blue-900">{result.watts.toFixed(2)} W</div>
+                <div className="text-sm text-blue-700 mt-1">{(result.watts / 1000).toFixed(3)} kW</div>
               </div>
 
               {/* Apparent Power */}
               <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
                 <div className="text-sm text-purple-600 mb-1">Apparent Power</div>
-                <div className="text-2xl font-bold text-purple-900">{calculated.result.va.toFixed(2)} VA</div>
-                <div className="text-sm text-purple-700 mt-1">{(calculated.result.va / 1000).toFixed(3)} kVA</div>
+                <div className="text-2xl font-bold text-purple-900">{result.va.toFixed(2)} VA</div>
+                <div className="text-sm text-purple-700 mt-1">{(result.va / 1000).toFixed(3)} kVA</div>
               </div>
 
               {/* Electrical horsepower */}
               <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
                 <div className="text-sm text-orange-600 mb-1">Electrical horsepower (746 W)</div>
                 <div className="text-2xl font-bold text-orange-900">
-                  {wattsToElectricalHorsepower(calculated.result.watts).toFixed(2)} hp
+                  {wattsToElectricalHorsepower(result.watts).toFixed(2)} hp
                 </div>
               </div>
 
               {/* Power factor (AC only) */}
-              {calculated.inputs.powerType === 'ac' && (
+              {inputs.powerType === 'ac' && (
                 <div className="bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-lg p-4 border border-neutral-200">
                   <div className="text-sm text-neutral-600 mb-1">Power factor (PF = P/S)</div>
-                  <div className="text-2xl font-bold text-neutral-900">{calculated.result.pf.toFixed(2)}</div>
+                  <div className="text-2xl font-bold text-neutral-900">{result.pf.toFixed(2)}</div>
                 </div>
               )}
             </div>
@@ -258,12 +263,11 @@ export default function AmpsToWattsCalculator() {
             {/* Formula Display */}
             <div className="mt-6 bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="text-sm font-medium text-gray-600 mb-2">Calculation Formula:</div>
-              <div className="font-mono text-sm text-gray-800">{calculated.formula}</div>
+              <div className="font-mono text-sm text-gray-800">{formulaText(inputs, volts, result.watts)}</div>
             </div>
           </div>
-          )}
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

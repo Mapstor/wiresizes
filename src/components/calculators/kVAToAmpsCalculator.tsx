@@ -1,23 +1,25 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { CalculatorLayout } from './CalculatorLayout';
-import { useShareableUrl } from '@/lib/hooks/useShareableUrl';
+import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
+import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
 import { Zap, Calculator, RefreshCw } from 'lucide-react';
 import { voltageOptions, voltsAfterPhaseChange } from '@/lib/calculations/inputs';
 import type { Phase } from '@/lib/calculations/inputs';
 import {
   currentByVoltage,
   fromApparentPower,
+  hasPowerInputError,
   isPowerError,
   KVA_TO_AMPS_COMPARISON_VOLTS,
   KVA_TO_AMPS_DEFAULTS,
   PHASE_OPTIONS,
-  POWER_ERROR_MESSAGES,
+  powerInputErrors,
 } from '@/lib/calculations/power';
 import type { PowerResult, VoltageRow } from '@/lib/calculations/power';
 
@@ -34,122 +36,157 @@ const EQUIPMENT_PRESETS = [
   { name: 'Motor Control Center', kva: 800, voltage: 480, phase: 'three' },
 ];
 
-type Inputs = typeof KVA_TO_AMPS_DEFAULTS;
+interface Inputs {
+  /** Field text */
+  kva: string;
+  volts: number;
+  phase: Phase;
+  /** Field text */
+  pf: string;
+  isTransformer: boolean;
+  primaryVolts: number;
+  usePreset: boolean;
+  selectedPreset: string;
+}
+
+const DEFAULT_INPUTS: Inputs = {
+  kva: String(KVA_TO_AMPS_DEFAULTS.kva),
+  volts: KVA_TO_AMPS_DEFAULTS.volts,
+  phase: KVA_TO_AMPS_DEFAULTS.phase,
+  pf: String(KVA_TO_AMPS_DEFAULTS.pf),
+  isTransformer: KVA_TO_AMPS_DEFAULTS.isTransformer,
+  primaryVolts: KVA_TO_AMPS_DEFAULTS.primaryVolts,
+  usePreset: false,
+  selectedPreset: EQUIPMENT_PRESETS[0].name,
+};
+
+/** With a preset on, its apparent power, voltage and phase replace the inputs. */
+function withPreset(inputs: Inputs): Inputs {
+  if (!inputs.usePreset) return inputs;
+  const preset = EQUIPMENT_PRESETS.find((p) => p.name === inputs.selectedPreset);
+  if (!preset) return inputs;
+  const phase = preset.phase as Phase;
+  return {
+    ...inputs,
+    kva: String(preset.kva),
+    volts: preset.voltage,
+    phase,
+    primaryVolts: voltsAfterPhaseChange(inputs.primaryVolts, phase),
+    isTransformer: preset.name.toLowerCase().includes('transformer'),
+  };
+}
+
+/** Inputs from a share link. */
+function inputsFromQuery(params: URLSearchParams): Inputs {
+  const phase = choiceParam(params, 'phase', ['single', 'three'] as Phase[]) ?? DEFAULT_INPUTS.phase;
+  return withPreset({
+    kva: numberParam(params, 'kva') ?? DEFAULT_INPUTS.kva,
+    phase,
+    volts: choiceParam(params, 'voltage', voltageOptions(phase)) ?? voltsAfterPhaseChange(DEFAULT_INPUTS.volts, phase),
+    pf: numberParam(params, 'powerFactor') ?? DEFAULT_INPUTS.pf,
+    isTransformer: choiceParam(params, 'isTransformer', ['true', 'false']) === 'true',
+    primaryVolts:
+      choiceParam(params, 'primaryVoltage', voltageOptions(phase)) ?? voltsAfterPhaseChange(DEFAULT_INPUTS.primaryVolts, phase),
+    usePreset: choiceParam(params, 'usePreset', ['true', 'false']) === 'true',
+    selectedPreset: choiceParam(params, 'selectedPreset', EQUIPMENT_PRESETS.map((p) => p.name)) ?? DEFAULT_INPUTS.selectedPreset,
+  });
+}
 
 interface Calculated {
-  inputs: Inputs;
-  error: string | null;
-  result: PowerResult | null;
+  result: PowerResult;
   primary: PowerResult | null;
   rows: VoltageRow[];
 }
 
-function calculate(inputs: Inputs): Calculated {
-  const va = inputs.kva * 1000;
-  const r = fromApparentPower({ va, volts: inputs.volts, circuit: inputs.phase, pf: inputs.pf });
-  if (isPowerError(r)) return { inputs, error: POWER_ERROR_MESSAGES[r.error], result: null, primary: null, rows: [] };
+/** The result for valid inputs: load or secondary current, primary current for a transformer, comparison rows. */
+function calculate(inputs: Inputs): Calculated | null {
+  const va = fieldNumber(inputs.kva) * 1000;
+  const pf = fieldNumber(inputs.pf);
+  const r = fromApparentPower({ va, volts: inputs.volts, circuit: inputs.phase, pf });
+  if (isPowerError(r)) return null;
   let primary: PowerResult | null = null;
   if (inputs.isTransformer) {
-    const p = fromApparentPower({ va, volts: inputs.primaryVolts, circuit: inputs.phase, pf: inputs.pf });
-    if (isPowerError(p)) return { inputs, error: POWER_ERROR_MESSAGES[p.error], result: null, primary: null, rows: [] };
+    const p = fromApparentPower({ va, volts: inputs.primaryVolts, circuit: inputs.phase, pf });
+    if (isPowerError(p)) return null;
     primary = p;
   }
-  const rows = currentByVoltage({ va }, inputs.phase, inputs.pf, KVA_TO_AMPS_COMPARISON_VOLTS);
-  return { inputs, error: null, result: r, primary, rows };
+  const rows = currentByVoltage({ va }, inputs.phase, pf, KVA_TO_AMPS_COMPARISON_VOLTS);
+  return { result: r, primary, rows };
 }
 
 const phaseLabel = (phase: Phase) => (phase === 'single' ? 'Single-Phase' : 'Three-Phase');
 
 export function KVAToAmpsCalculator() {
-  const [inputs, setInputs] = useState<Inputs>(KVA_TO_AMPS_DEFAULTS);
-  const [usePreset, setUsePreset] = useState(false);
-  const [selectedPreset, setSelectedPreset] = useState(EQUIPMENT_PRESETS[0].name);
-  const [calculated, setCalculated] = useState<Calculated | null>(null);
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const [inputs, setInputs] = useState<Inputs>(DEFAULT_INPUTS);
+  const formRef = useRef<HTMLDivElement>(null);
+  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+  const fields = useFieldErrors();
 
-  // Apply preset values
-  const applyPreset = useCallback(() => {
-    if (usePreset) {
-      const preset = EQUIPMENT_PRESETS.find(p => p.name === selectedPreset);
-      if (preset) {
-        setInputs((p) => ({
-          ...p,
-          kva: preset.kva,
-          volts: preset.voltage,
-          phase: preset.phase as Phase,
-          isTransformer: preset.name.toLowerCase().includes('transformer'),
-        }));
-      }
-    }
-  }, [usePreset, selectedPreset]);
+  const errors = powerInputErrors({
+    value: fieldNumber(inputs.kva),
+    volts: inputs.volts,
+    circuit: inputs.phase,
+    pf: fieldNumber(inputs.pf),
+  });
+  const calculated = hasPowerInputError(errors) ? null : calculate(inputs);
 
-  useEffect(() => {
-    applyPreset();
-  }, [applyPreset]);
-
-  const performCalculation = useCallback(() => {
-    setCalculated(calculate(inputs));
-    // Scroll to results
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }, 100);
-  }, [inputs]);
-
-  const handleReset = () => {
-    setInputs(KVA_TO_AMPS_DEFAULTS);
-    setUsePreset(false);
-    setCalculated(null);
-  };
-
-  const shareableInputs: Record<string, string | number | boolean> = {
-    kva: inputs.kva,
+  const query = buildQuery({
+    kva: inputs.kva.trim(),
     voltage: inputs.volts,
     phase: inputs.phase,
-    powerFactor: inputs.pf,
+    powerFactor: inputs.pf.trim(),
     isTransformer: inputs.isTransformer,
     ...(inputs.isTransformer && { primaryVoltage: inputs.primaryVolts }),
-    usePreset,
-    ...(usePreset && { selectedPreset }),
-  };
-  const { getShareableUrl } = useShareableUrl(shareableInputs);
+    usePreset: inputs.usePreset,
+    ...(inputs.usePreset && { selectedPreset: inputs.selectedPreset }),
+  });
+  const { markChanged, shareUrl } = useUrlState(query, (params) => setInputs(inputsFromQuery(params)));
   const { print } = usePrintExport();
 
-  const handleShare = useCallback(async () => {
-    const url = getShareableUrl();
-    await navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }, [getShareableUrl]);
+  const change = (patch: Partial<Inputs>) => {
+    markChanged();
+    setInputs(withPreset({ ...inputs, ...patch }));
+  };
 
-  const handlePrint = useCallback(() => {
-    if (!calculated?.result) return;
-    const { inputs: shown, result, primary } = calculated;
+  const handleCalculate = () => {
+    if (calculated) focusResults(resultsHeadingRef.current);
+    else fields.revealAll(formRef.current);
+  };
+
+  const handleReset = () => {
+    markChanged();
+    fields.reset();
+    setInputs(DEFAULT_INPUTS);
+  };
+
+  const handlePrint = () => {
+    if (!calculated) return;
+    const { result, primary, rows } = calculated;
+    const kva = fieldNumber(inputs.kva);
     print({
       title: 'kVA to Amps Calculation',
       inputs: {
-        'Apparent Power': `${shown.kva} kVA`,
-        'Secondary Voltage': `${shown.volts} V`,
-        'Phase Configuration': phaseLabel(shown.phase),
-        'Power Factor': shown.pf,
-        ...(shown.isTransformer && { 'Primary Voltage': `${shown.primaryVolts} V` }),
+        'Apparent Power': `${kva} kVA`,
+        'Secondary Voltage': `${inputs.volts} V`,
+        'Phase Configuration': phaseLabel(inputs.phase),
+        'Power Factor': fieldNumber(inputs.pf),
+        ...(inputs.isTransformer && { 'Primary Voltage': `${inputs.primaryVolts} V` }),
       },
       results: {
-        [`${shown.isTransformer ? 'Secondary' : 'Load'} Current`]: `${result.amps.toFixed(2)} A`,
+        [`${inputs.isTransformer ? 'Secondary' : 'Load'} Current`]: `${result.amps.toFixed(2)} A`,
         ...(primary && { 'Primary Current': `${primary.amps.toFixed(2)} A` }),
-        'Apparent Power (S)': `${shown.kva} kVA`,
+        'Apparent Power (S)': `${kva} kVA`,
         'Real Power (P)': `${(result.watts / 1000).toFixed(1)} kW`,
         'Reactive Power (Q)': `${(result.vars / 1000).toFixed(1)} kVAR`,
         'Power Factor': result.pf.toFixed(2),
         ...(primary && {
           'Current Ratio': `1:${(result.amps / primary.amps).toFixed(2)}`,
-          'Line-to-line voltage ratio': `${Math.round((shown.primaryVolts / shown.volts) * 100) / 100}:1`,
+          'Line-to-line voltage ratio': `${Math.round((inputs.primaryVolts / inputs.volts) * 100) / 100}:1`,
         }),
-        ...Object.fromEntries(calculated.rows.map((row) => [`Current at ${row.volts} V`, `${row.amps.toFixed(1)} A`])),
+        ...Object.fromEntries(rows.map((row) => [`Current at ${row.volts} V`, `${row.amps.toFixed(1)} A`])),
       },
     });
-  }, [calculated, print]);
+  };
 
   const voltageSelectOptions = voltageOptions(inputs.phase).map((v) => ({ value: String(v), label: `${v}V` }));
 
@@ -157,12 +194,13 @@ export function KVAToAmpsCalculator() {
     <CalculatorLayout
       title="kVA to Amps Calculator"
       description="Convert kilovolt-amperes to current for transformers, generators, and electrical equipment"
-      onShare={handleShare}
+      shareUrl={shareUrl}
       onPrint={handlePrint}
+      actionsDisabled={!calculated}
     >
       <div className="max-w-4xl mx-auto p-6 space-y-8">
         {/* Input Parameters */}
-        <div className="bg-gray-50 rounded-lg p-6">
+        <div className="bg-gray-50 rounded-lg p-6" ref={formRef}>
           <h2 className="text-lg font-semibold text-gray-800 mb-6">Input Parameters</h2>
           <div className="grid md:grid-cols-2 gap-6">
           {/* Preset Toggle */}
@@ -170,8 +208,8 @@ export function KVAToAmpsCalculator() {
             <input
               type="checkbox"
               id="usePreset"
-              checked={usePreset}
-              onChange={(e) => setUsePreset(e.target.checked)}
+              checked={inputs.usePreset}
+              onChange={(e) => change({ usePreset: e.target.checked })}
               className="rounded border-gray-300"
             />
             <label htmlFor="usePreset" className="text-sm text-neutral-700">
@@ -179,15 +217,15 @@ export function KVAToAmpsCalculator() {
             </label>
           </div>
 
-          {usePreset && (
+          {inputs.usePreset && (
             <Select
               label="Equipment Preset"
               options={EQUIPMENT_PRESETS.map(preset => ({
                 value: preset.name,
                 label: preset.name,
               }))}
-              value={selectedPreset}
-              onChange={(e) => setSelectedPreset(e.target.value)}
+              value={inputs.selectedPreset}
+              onChange={(e) => change({ selectedPreset: e.target.value })}
             />
           )}
 
@@ -195,11 +233,13 @@ export function KVAToAmpsCalculator() {
             label="Apparent Power"
             type="number"
             value={inputs.kva}
-            onChange={(e) => setInputs((p) => ({ ...p, kva: Number(e.target.value) }))}
+            onChange={(e) => change({ kva: e.target.value })}
+            onBlur={() => fields.touch('kva')}
+            error={fields.shown('kva', errors.value)}
             suffix="kVA"
             min={0}
             step={0.1}
-            disabled={usePreset}
+            disabled={inputs.usePreset}
             hint="Kilovolt-amperes rating"
           />
 
@@ -207,8 +247,8 @@ export function KVAToAmpsCalculator() {
             label="Secondary Voltage"
             options={voltageSelectOptions}
             value={String(inputs.volts)}
-            onChange={(e) => setInputs((p) => ({ ...p, volts: Number(e.target.value) }))}
-            disabled={usePreset}
+            onChange={(e) => change({ volts: Number(e.target.value) })}
+            disabled={inputs.usePreset}
           />
 
           <Select
@@ -217,21 +257,22 @@ export function KVAToAmpsCalculator() {
             value={inputs.phase}
             onChange={(e) => {
               const phase = e.target.value as Phase;
-              setInputs((p) => ({
-                ...p,
+              change({
                 phase,
-                volts: voltsAfterPhaseChange(p.volts, phase),
-                primaryVolts: voltsAfterPhaseChange(p.primaryVolts, phase),
-              }));
+                volts: voltsAfterPhaseChange(inputs.volts, phase),
+                primaryVolts: voltsAfterPhaseChange(inputs.primaryVolts, phase),
+              });
             }}
-            disabled={usePreset}
+            disabled={inputs.usePreset}
           />
 
           <Input
             label="Power Factor"
             type="number"
             value={inputs.pf}
-            onChange={(e) => setInputs((p) => ({ ...p, pf: Number(e.target.value) }))}
+            onChange={(e) => change({ pf: e.target.value })}
+            onBlur={() => fields.touch('pf')}
+            error={fields.shown('pf', errors.pf)}
             min={0}
             max={1}
             step={0.01}
@@ -242,7 +283,7 @@ export function KVAToAmpsCalculator() {
               type="checkbox"
               id="isTransformer"
               checked={inputs.isTransformer}
-              onChange={(e) => setInputs((p) => ({ ...p, isTransformer: e.target.checked }))}
+              onChange={(e) => change({ isTransformer: e.target.checked })}
               className="rounded border-gray-300"
             />
             <label htmlFor="isTransformer" className="text-sm text-neutral-700">
@@ -255,7 +296,7 @@ export function KVAToAmpsCalculator() {
               label="Primary Voltage"
               options={voltageSelectOptions}
               value={String(inputs.primaryVolts)}
-              onChange={(e) => setInputs((p) => ({ ...p, primaryVolts: Number(e.target.value) }))}
+              onChange={(e) => change({ primaryVolts: Number(e.target.value) })}
             />
           )}
 
@@ -282,7 +323,7 @@ export function KVAToAmpsCalculator() {
 
           {/* Calculate and Reset Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
-            <Button onClick={performCalculation} className="flex-1">
+            <Button onClick={handleCalculate} className="flex-1">
               <Calculator className="w-4 h-4" />
               Calculate
             </Button>
@@ -294,26 +335,21 @@ export function KVAToAmpsCalculator() {
         </div>
 
         {/* Results Section */}
-        {calculated && (
-          <div className="bg-white rounded-lg border border-gray-200 p-6" ref={resultsRef}>
-            <h2 className="text-lg font-semibold text-gray-800 mb-6">Calculation Results</h2>
-            {calculated.error || !calculated.result ? (
-              <div className="rounded-xl p-6 bg-red-50 border border-red-200 text-sm text-red-700" role="alert">
-                {calculated.error}
-              </div>
-            ) : (
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h2 ref={resultsHeadingRef} tabIndex={-1} className="text-lg font-semibold text-gray-800 mb-6">Calculation Results</h2>
+          {calculated && (
             <div className="space-y-6">
               {/* Main Current Result */}
               <div className="text-center p-6 bg-primary-50 rounded-xl border-2 border-primary-200">
                 <div className="text-sm text-primary-600 font-medium mb-2">
-                  {calculated.inputs.isTransformer ? 'Secondary' : 'Load'} Current
+                  {inputs.isTransformer ? 'Secondary' : 'Load'} Current
                 </div>
                 <div className="text-2xl sm:text-4xl font-bold font-mono text-primary-700 break-words min-w-0">
                   {calculated.result.amps.toFixed(2)}
                 </div>
                 <div className="text-xl font-medium text-primary-600 mt-1">Amps</div>
                 <div className="text-sm text-primary-500 mt-2">
-                  @ {calculated.inputs.volts}V {phaseLabel(calculated.inputs.phase)}
+                  @ {inputs.volts}V {phaseLabel(inputs.phase)}
                 </div>
               </div>
 
@@ -330,7 +366,7 @@ export function KVAToAmpsCalculator() {
                     </div>
                     <div className="text-lg font-medium text-amber-600">Amps</div>
                     <div className="text-sm text-amber-600 mt-1">
-                      @ {calculated.inputs.primaryVolts}V Primary
+                      @ {inputs.primaryVolts}V Primary
                     </div>
                   </div>
                 </div>
@@ -342,7 +378,7 @@ export function KVAToAmpsCalculator() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-blue-600">Apparent Power (S):</span>
-                    <span className="font-mono font-semibold">{calculated.inputs.kva} kVA</span>
+                    <span className="font-mono font-semibold">{fieldNumber(inputs.kva)} kVA</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-blue-600">Real Power (P):</span>
@@ -373,7 +409,7 @@ export function KVAToAmpsCalculator() {
                     <div className="flex justify-between">
                       <span className="text-neutral-600">Line-to-line voltage ratio:</span>
                       <span className="font-mono font-semibold">
-                        {Math.round((calculated.inputs.primaryVolts / calculated.inputs.volts) * 100) / 100}:1
+                        {Math.round((inputs.primaryVolts / inputs.volts) * 100) / 100}:1
                       </span>
                     </div>
                   </div>
@@ -393,7 +429,7 @@ export function KVAToAmpsCalculator() {
                     </thead>
                     <tbody className="divide-y divide-purple-200">
                       {calculated.rows.map((row) => (
-                        <tr key={row.volts} className={calculated.inputs.volts === row.volts ? 'bg-purple-100' : ''}>
+                        <tr key={row.volts} className={inputs.volts === row.volts ? 'bg-purple-100' : ''}>
                           <td className="p-1">{row.volts}V</td>
                           <td className="p-1 font-mono">{row.amps.toFixed(1)}A</td>
                         </tr>
@@ -403,9 +439,8 @@ export function KVAToAmpsCalculator() {
                 </div>
               </div>
             </div>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </CalculatorLayout>
   );

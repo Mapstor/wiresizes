@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { WattsToAmpsCalculator } from '@/components/calculators';
+import { WattsToAmpsCalculator } from '@/components/calculators/WattsToAmpsCalculator';
 import { Zap, Calculator, AlertTriangle, Settings, Target, BookOpen, Users, TrendingUp, Power } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';

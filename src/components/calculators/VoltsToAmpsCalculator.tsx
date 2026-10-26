@@ -1,20 +1,22 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { CalculatorLayout } from './CalculatorLayout';
-import { useShareableUrl } from '@/lib/hooks/useShareableUrl';
+import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
+import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
 import { Calculator, RefreshCw } from 'lucide-react';
 import type { Phase } from '@/lib/calculations/inputs';
 import {
   currentByVoltage,
   fromRealPower,
+  hasPowerInputError,
   isPowerError,
   PHASE_OPTIONS,
-  POWER_ERROR_MESSAGES,
+  powerInputErrors,
   VOLTS_TO_AMPS_COMPARISON_VOLTS,
   VOLTS_TO_AMPS_DEFAULTS,
 } from '@/lib/calculations/power';
@@ -28,102 +30,131 @@ const LOAD_TYPE_OPTIONS = [
 
 const LOAD_TYPE_PF: Record<LoadType, number> = { resistive: 1.0, inductive: 0.85, mixed: 0.9 };
 
-type Inputs = typeof VOLTS_TO_AMPS_DEFAULTS;
-
-interface Calculated {
-  inputs: Inputs;
-  error: string | null;
-  result: PowerResult | null;
-  rows: VoltageRow[];
+interface Inputs {
+  /** Field text */
+  volts: string;
+  /** Field text */
+  watts: string;
+  phase: Phase;
+  /** Field text */
+  pf: string;
+  loadType: LoadType;
 }
 
-function calculate(inputs: Inputs): Calculated {
-  const r = fromRealPower({ watts: inputs.watts, volts: inputs.volts, circuit: inputs.phase, pf: inputs.pf });
-  if (isPowerError(r)) return { inputs, error: POWER_ERROR_MESSAGES[r.error], result: null, rows: [] };
+const DEFAULT_INPUTS: Inputs = {
+  volts: String(VOLTS_TO_AMPS_DEFAULTS.volts),
+  watts: String(VOLTS_TO_AMPS_DEFAULTS.watts),
+  phase: VOLTS_TO_AMPS_DEFAULTS.phase,
+  pf: String(VOLTS_TO_AMPS_DEFAULTS.pf),
+  loadType: VOLTS_TO_AMPS_DEFAULTS.loadType,
+};
+
+/** Inputs from a share link. */
+function inputsFromQuery(params: URLSearchParams): Inputs {
+  return {
+    volts: numberParam(params, 'voltage') ?? DEFAULT_INPUTS.volts,
+    watts: numberParam(params, 'power') ?? DEFAULT_INPUTS.watts,
+    phase: choiceParam(params, 'phase', ['single', 'three'] as Phase[]) ?? DEFAULT_INPUTS.phase,
+    pf: numberParam(params, 'powerFactor') ?? DEFAULT_INPUTS.pf,
+    loadType: choiceParam(params, 'loadType', LOAD_TYPE_OPTIONS.map((o) => o.value as LoadType)) ?? DEFAULT_INPUTS.loadType,
+  };
+}
+
+/** The result for valid inputs, with the current at each comparison voltage. */
+function calculate(inputs: Inputs): { result: PowerResult; rows: VoltageRow[] } | null {
+  const watts = fieldNumber(inputs.watts);
+  const pf = fieldNumber(inputs.pf);
+  const r = fromRealPower({ watts, volts: fieldNumber(inputs.volts), circuit: inputs.phase, pf });
+  if (isPowerError(r)) return null;
   // the selected phase's formula on every row; three-phase shows line-to-line voltages only
-  const rows = currentByVoltage({ watts: inputs.watts }, inputs.phase, inputs.pf, VOLTS_TO_AMPS_COMPARISON_VOLTS);
-  return { inputs, error: null, result: r, rows };
+  return { result: r, rows: currentByVoltage({ watts }, inputs.phase, pf, VOLTS_TO_AMPS_COMPARISON_VOLTS) };
 }
 
 const phaseLabel = (phase: Phase) => (phase === 'single' ? 'Single-Phase' : 'Three-Phase');
 
 export function VoltsToAmpsCalculator() {
-  const [inputs, setInputs] = useState<Inputs>(VOLTS_TO_AMPS_DEFAULTS);
-  const [calculated, setCalculated] = useState<Calculated | null>(null);
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const [inputs, setInputs] = useState<Inputs>(DEFAULT_INPUTS);
+  const formRef = useRef<HTMLDivElement>(null);
+  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+  const fields = useFieldErrors();
 
-  const performCalculation = useCallback(() => {
-    setCalculated(calculate(inputs));
-    // Scroll to results
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }, 100);
-  }, [inputs]);
+  const errors = powerInputErrors({
+    value: fieldNumber(inputs.watts),
+    volts: fieldNumber(inputs.volts),
+    circuit: inputs.phase,
+    pf: fieldNumber(inputs.pf),
+  });
+  const calculated = hasPowerInputError(errors) ? null : calculate(inputs);
 
-  const handleReset = () => {
-    setInputs(VOLTS_TO_AMPS_DEFAULTS);
-    setCalculated(null);
-  };
-
-  const shareableInputs = {
-    voltage: inputs.volts,
-    power: inputs.watts,
+  const query = buildQuery({
+    voltage: inputs.volts.trim(),
+    power: inputs.watts.trim(),
     phase: inputs.phase,
-    powerFactor: inputs.pf,
+    powerFactor: inputs.pf.trim(),
     loadType: inputs.loadType,
-  };
-  const { getShareableUrl } = useShareableUrl(shareableInputs);
+  });
+  const { markChanged, shareUrl } = useUrlState(query, (params) => setInputs(inputsFromQuery(params)));
   const { print } = usePrintExport();
 
-  const handleShare = useCallback(async () => {
-    const url = getShareableUrl();
-    await navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }, [getShareableUrl]);
+  const change = (patch: Partial<Inputs>) => {
+    markChanged();
+    setInputs((p) => ({ ...p, ...patch }));
+  };
 
-  const handlePrint = useCallback(() => {
-    if (!calculated?.result) return;
-    const { inputs: shown, result } = calculated;
+  const handleCalculate = () => {
+    if (calculated) focusResults(resultsHeadingRef.current);
+    else fields.revealAll(formRef.current);
+  };
+
+  const handleReset = () => {
+    markChanged();
+    fields.reset();
+    setInputs(DEFAULT_INPUTS);
+  };
+
+  const handlePrint = () => {
+    if (!calculated) return;
+    const { result, rows } = calculated;
     print({
       title: 'Volts to Amps Calculation',
       inputs: {
-        'Voltage': `${shown.volts} V`,
-        'Power': `${shown.watts} W`,
-        'Phase Configuration': phaseLabel(shown.phase),
-        'Load Type': LOAD_TYPE_OPTIONS.find((o) => o.value === shown.loadType)?.label ?? shown.loadType,
-        'Power Factor': shown.pf,
+        'Voltage': `${fieldNumber(inputs.volts)} V`,
+        'Power': `${fieldNumber(inputs.watts)} W`,
+        'Phase Configuration': phaseLabel(inputs.phase),
+        'Load Type': LOAD_TYPE_OPTIONS.find((o) => o.value === inputs.loadType)?.label ?? inputs.loadType,
+        'Power Factor': fieldNumber(inputs.pf),
       },
       results: {
         'Current Draw': `${result.amps.toFixed(2)} A`,
-        'Real Power (P)': `${Math.round(result.watts).toLocaleString()} W`,
-        'Apparent Power (S)': `${Math.round(result.va).toLocaleString()} VA`,
-        'Reactive Power (Q)': `${Math.round(result.vars).toLocaleString()} VAR`,
+        'Real Power (P)': `${Math.round(result.watts).toLocaleString('en-US')} W`,
+        'Apparent Power (S)': `${Math.round(result.va).toLocaleString('en-US')} VA`,
+        'Reactive Power (Q)': `${Math.round(result.vars).toLocaleString('en-US')} VAR`,
         'Power Factor': result.pf.toFixed(2),
-        ...Object.fromEntries(calculated.rows.map((row) => [`Current at ${row.volts} V`, `${row.amps.toFixed(1)} A`])),
+        ...Object.fromEntries(rows.map((row) => [`Current at ${row.volts} V`, `${row.amps.toFixed(1)} A`])),
       },
     });
-  }, [calculated, print]);
+  };
 
   return (
     <CalculatorLayout
       title="Volts to Amps Calculator"
       description="Convert voltage and power to current for electrical circuits"
-      onShare={handleShare}
+      shareUrl={shareUrl}
       onPrint={handlePrint}
+      actionsDisabled={!calculated}
     >
       <div className="max-w-4xl mx-auto p-6 space-y-8">
         {/* Input Parameters */}
-        <div className="bg-gray-50 rounded-lg p-6">
+        <div className="bg-gray-50 rounded-lg p-6" ref={formRef}>
           <h2 className="text-lg font-semibold text-gray-800 mb-6">Input Parameters</h2>
           <div className="grid md:grid-cols-2 gap-6">
           <Input
             label="Voltage"
             type="number"
             value={inputs.volts}
-            onChange={(e) => setInputs((p) => ({ ...p, volts: Number(e.target.value) }))}
+            onChange={(e) => change({ volts: e.target.value })}
+            onBlur={() => fields.touch('volts')}
+            error={fields.shown('volts', errors.volts)}
             suffix="V"
             min={0}
             step={1}
@@ -134,7 +165,9 @@ export function VoltsToAmpsCalculator() {
             label="Power"
             type="number"
             value={inputs.watts}
-            onChange={(e) => setInputs((p) => ({ ...p, watts: Number(e.target.value) }))}
+            onChange={(e) => change({ watts: e.target.value })}
+            onBlur={() => fields.touch('watts')}
+            error={fields.shown('watts', errors.value)}
             suffix="W"
             min={0}
             step={1}
@@ -145,7 +178,7 @@ export function VoltsToAmpsCalculator() {
             label="Phase Configuration"
             options={PHASE_OPTIONS}
             value={inputs.phase}
-            onChange={(e) => setInputs((p) => ({ ...p, phase: e.target.value as Phase }))}
+            onChange={(e) => change({ phase: e.target.value as Phase })}
           />
 
           <Select
@@ -154,7 +187,7 @@ export function VoltsToAmpsCalculator() {
             value={inputs.loadType}
             onChange={(e) => {
               const loadType = e.target.value as LoadType;
-              setInputs((p) => ({ ...p, loadType, pf: LOAD_TYPE_PF[loadType] }));
+              change({ loadType, pf: String(LOAD_TYPE_PF[loadType]) });
             }}
           />
 
@@ -162,7 +195,9 @@ export function VoltsToAmpsCalculator() {
             label="Power Factor"
             type="number"
             value={inputs.pf}
-            onChange={(e) => setInputs((p) => ({ ...p, pf: Number(e.target.value) }))}
+            onChange={(e) => change({ pf: e.target.value })}
+            onBlur={() => fields.touch('pf')}
+            error={fields.shown('pf', errors.pf)}
             min={0}
             max={1}
             step={0.01}
@@ -189,7 +224,7 @@ export function VoltsToAmpsCalculator() {
 
           {/* Calculate and Reset Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
-            <Button onClick={performCalculation} className="flex-1">
+            <Button onClick={handleCalculate} className="flex-1">
               <Calculator className="w-4 h-4" />
               Calculate
             </Button>
@@ -201,14 +236,9 @@ export function VoltsToAmpsCalculator() {
         </div>
 
         {/* Results Section */}
-        {calculated && (
-          <div className="bg-white rounded-lg border border-gray-200 p-6" ref={resultsRef}>
-            <h2 className="text-lg font-semibold text-gray-800 mb-6">Calculation Results</h2>
-            {calculated.error || !calculated.result ? (
-              <div className="rounded-xl p-6 bg-red-50 border border-red-200 text-sm text-red-700" role="alert">
-                {calculated.error}
-              </div>
-            ) : (
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h2 ref={resultsHeadingRef} tabIndex={-1} className="text-lg font-semibold text-gray-800 mb-6">Calculation Results</h2>
+          {calculated && (
             <div className="space-y-6">
               {/* Main Current Result */}
               <div className="text-center p-6 bg-primary-50 rounded-xl border-2 border-primary-200">
@@ -218,7 +248,7 @@ export function VoltsToAmpsCalculator() {
                 </div>
                 <div className="text-xl font-medium text-primary-600 mt-1">Amps</div>
                 <div className="text-sm text-primary-500 mt-2">
-                  {phaseLabel(calculated.inputs.phase)}
+                  {phaseLabel(inputs.phase)}
                 </div>
               </div>
 
@@ -229,7 +259,7 @@ export function VoltsToAmpsCalculator() {
                   <div className="bg-white rounded-lg p-3">
                     <div className="text-xs text-neutral-500">Real Power (P)</div>
                     <div className="text-sm sm:text-lg font-bold font-mono text-green-600 break-words">
-                      {Math.round(calculated.result.watts).toLocaleString()}
+                      {Math.round(calculated.result.watts).toLocaleString('en-US')}
                     </div>
                     <div className="text-sm text-neutral-600">W</div>
                   </div>
@@ -237,7 +267,7 @@ export function VoltsToAmpsCalculator() {
                   <div className="bg-white rounded-lg p-3">
                     <div className="text-xs text-neutral-500">Apparent Power (S)</div>
                     <div className="text-sm sm:text-lg font-bold font-mono text-blue-600 break-words">
-                      {Math.round(calculated.result.va).toLocaleString()}
+                      {Math.round(calculated.result.va).toLocaleString('en-US')}
                     </div>
                     <div className="text-sm text-neutral-600">VA</div>
                   </div>
@@ -245,7 +275,7 @@ export function VoltsToAmpsCalculator() {
                   <div className="bg-white rounded-lg p-3">
                     <div className="text-xs text-neutral-500">Reactive Power (Q)</div>
                     <div className="text-sm sm:text-lg font-bold font-mono text-orange-600 break-words">
-                      {Math.round(calculated.result.vars).toLocaleString()}
+                      {Math.round(calculated.result.vars).toLocaleString('en-US')}
                     </div>
                     <div className="text-sm text-neutral-600">VAR</div>
                   </div>
@@ -272,7 +302,7 @@ export function VoltsToAmpsCalculator() {
                     </thead>
                     <tbody className="divide-y divide-neutral-200">
                       {calculated.rows.map((row) => (
-                        <tr key={row.volts} className={calculated.inputs.volts === row.volts ? 'bg-primary-100' : ''}>
+                        <tr key={row.volts} className={fieldNumber(inputs.volts) === row.volts ? 'bg-primary-100' : ''}>
                           <td className="p-1">{row.volts}V</td>
                           <td className="p-1 font-mono">{row.amps.toFixed(1)}A</td>
                         </tr>
@@ -282,9 +312,8 @@ export function VoltsToAmpsCalculator() {
                 </div>
               </div>
             </div>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </CalculatorLayout>
   );

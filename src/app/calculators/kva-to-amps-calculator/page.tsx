@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
-import { Suspense } from 'react';
-import { KVAToAmpsCalculator } from '@/components/calculators';
+import { KVAToAmpsCalculator } from '@/components/calculators/kVAToAmpsCalculator';
 import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -58,9 +57,7 @@ export default function KVAToAmpsCalculatorPage() {
       {/* Calculator */}
       <section className="mb-12">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-          <Suspense fallback={<div>Loading calculator...</div>}>
-            <KVAToAmpsCalculator />
-          </Suspense>
+          <KVAToAmpsCalculator />
         </div>
       </section>
 

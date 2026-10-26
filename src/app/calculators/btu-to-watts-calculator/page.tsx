@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
-import { Suspense } from 'react';
-import ClientBTUToWattsCalculator from '@/components/calculators/ClientBTUToWattsCalculator';
+import { BTUToWattsCalculator } from '@/components/calculators/BTUToWattsCalculator';
 import { Flame, Calculator, TrendingUp, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -64,7 +63,7 @@ export default function BTUToWattsCalculatorPage() {
       {/* Calculator */}
       <section className="mb-12">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-          <ClientBTUToWattsCalculator />
+          <BTUToWattsCalculator />
         </div>
       </section>
 

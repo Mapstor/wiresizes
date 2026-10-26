@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { CalculatorLayout } from './CalculatorLayout';
-import { useShareableUrl } from '@/lib/hooks/useShareableUrl';
+import { focusResults, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
+import { buildQuery, choiceParam } from '@/lib/calculations/fields';
 import { Shield, AlertTriangle, Calculator, RefreshCw } from 'lucide-react';
 import {
   egcForOcpd,
@@ -14,7 +15,6 @@ import {
   PROPORTIONAL_NOTE,
   TABLE_250_122_ROWS,
 } from '@/lib/calculations/grounding';
-import type { EgcRow } from '@/lib/calculations/grounding';
 import { formatSize } from '@/lib/calculations/sizes';
 
 const RATING_OPTIONS = GROUND_WIRE_RATINGS.map((a) => ({ value: String(a), label: `${a} A` }));
@@ -23,58 +23,44 @@ const ALUMINUM_LABEL = 'Aluminum or copper-clad aluminum';
 
 export function GroundWireCalculator() {
   const [ocpdA, setOcpdA] = useState(GROUND_WIRE_DEFAULTS.ocpdA);
-  const [result, setResult] = useState<{ ocpdA: number; row: EgcRow } | null>(null);
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+  const row = egcForOcpd(ocpdA);
 
-  const performCalculation = useCallback(() => {
-    const row = egcForOcpd(ocpdA);
-    setResult(row ? { ocpdA, row } : null);
-    // Scroll to results
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }, 100);
-  }, [ocpdA]);
-
-  const handleReset = () => {
-    setOcpdA(GROUND_WIRE_DEFAULTS.ocpdA);
-    setResult(null);
-  };
-
-  const shareableInputs = { breakerSize: ocpdA };
-  const { getShareableUrl } = useShareableUrl(shareableInputs);
+  const { markChanged, shareUrl } = useUrlState(buildQuery({ breakerSize: ocpdA }), (params) =>
+    setOcpdA(choiceParam(params, 'breakerSize', GROUND_WIRE_RATINGS) ?? GROUND_WIRE_DEFAULTS.ocpdA),
+  );
   const { print } = usePrintExport();
 
-  const handleShare = useCallback(async () => {
-    const url = getShareableUrl();
-    await navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }, [getShareableUrl]);
+  const handleCalculate = () => focusResults(resultsHeadingRef.current);
 
-  const handlePrint = useCallback(() => {
-    if (!result) return;
+  const handleReset = () => {
+    markChanged();
+    setOcpdA(GROUND_WIRE_DEFAULTS.ocpdA);
+  };
+
+  const handlePrint = () => {
+    if (!row) return;
     print({
       title: 'Equipment Grounding Conductor Calculation',
       inputs: {
-        'Overcurrent Device Rating': `${result.ocpdA} A`,
+        'Overcurrent Device Rating': `${ocpdA} A`,
       },
       results: {
-        [COPPER_LABEL]: formatSize(result.row.cu),
-        [ALUMINUM_LABEL]: formatSize(result.row.alCca),
-        'NEC Table 250.122 row': `${result.row.rowA} A`,
+        [COPPER_LABEL]: formatSize(row.cu),
+        [ALUMINUM_LABEL]: formatSize(row.alCca),
+        'NEC Table 250.122 row': `${row.rowA} A`,
       },
       notes: [PROPORTIONAL_NOTE],
     });
-  }, [result, print]);
+  };
 
   return (
     <CalculatorLayout
       title="Grounding Conductor Calculator"
       description="Calculate equipment grounding conductor size per NEC 250.122"
-      onShare={handleShare}
+      shareUrl={shareUrl}
       onPrint={handlePrint}
+      actionsDisabled={!row}
     >
       <div className="max-w-4xl mx-auto p-6 space-y-8">
         {/* Input Parameters */}
@@ -85,7 +71,10 @@ export function GroundWireCalculator() {
             label="Overcurrent Device Rating"
             options={RATING_OPTIONS}
             value={String(ocpdA)}
-            onChange={(e) => setOcpdA(Number(e.target.value))}
+            onChange={(e) => {
+              markChanged();
+              setOcpdA(Number(e.target.value));
+            }}
           />
 
           {/* Safety Notice */}
@@ -116,7 +105,7 @@ export function GroundWireCalculator() {
 
           {/* Calculate and Reset Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
-            <Button onClick={performCalculation} className="flex-1">
+            <Button onClick={handleCalculate} className="flex-1">
               <Calculator className="w-4 h-4" />
               Calculate Ground Wire Size
             </Button>
@@ -128,9 +117,9 @@ export function GroundWireCalculator() {
         </div>
 
         {/* Results Section */}
-        {result && (
-          <div className="bg-white rounded-lg border border-gray-200 p-6" ref={resultsRef}>
-            <h2 className="text-lg font-semibold text-gray-800 mb-6">Calculation Results</h2>
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h2 ref={resultsHeadingRef} tabIndex={-1} className="text-lg font-semibold text-gray-800 mb-6">Calculation Results</h2>
+          {row && (
             <div className="space-y-6">
               {/* Main Result */}
               <div className="bg-green-50 border-2 border-green-200 rounded-xl p-6">
@@ -143,18 +132,18 @@ export function GroundWireCalculator() {
                   <div>
                     <div className="text-sm text-neutral-600">{COPPER_LABEL}</div>
                     <div className="text-2xl sm:text-4xl font-bold font-mono text-green-700 break-words min-w-0">
-                      {formatSize(result.row.cu)}
+                      {formatSize(row.cu)}
                     </div>
                   </div>
                   <div>
                     <div className="text-sm text-neutral-600">{ALUMINUM_LABEL}</div>
                     <div className="text-2xl sm:text-4xl font-bold font-mono text-green-700 break-words min-w-0">
-                      {formatSize(result.row.alCca)}
+                      {formatSize(row.alCca)}
                     </div>
                   </div>
                 </div>
                 <div className="text-sm text-neutral-600 mt-4 text-center">
-                  Based on {result.ocpdA} A overcurrent device (NEC Table 250.122 row: {result.row.rowA} A)
+                  Based on {ocpdA} A overcurrent device (NEC Table 250.122 row: {row.rowA} A)
                 </div>
                 <p className="text-sm text-neutral-700 mt-3 text-center">{PROPORTIONAL_NOTE}</p>
               </div>
@@ -174,11 +163,11 @@ export function GroundWireCalculator() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-neutral-200">
-                      {TABLE_250_122_ROWS.map((row) => (
-                        <tr key={row.rowA} className={row.rowA === result.row.rowA ? 'bg-green-100' : ''}>
-                          <td className="p-2">{row.rowA} A</td>
-                          <td className="p-2 font-mono">{formatSize(row.cu)}</td>
-                          <td className="p-2 font-mono">{formatSize(row.alCca)}</td>
+                      {TABLE_250_122_ROWS.map((r) => (
+                        <tr key={r.rowA} className={r.rowA === row.rowA ? 'bg-green-100' : ''}>
+                          <td className="p-2">{r.rowA} A</td>
+                          <td className="p-2 font-mono">{formatSize(r.cu)}</td>
+                          <td className="p-2 font-mono">{formatSize(r.alCca)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -192,8 +181,8 @@ export function GroundWireCalculator() {
                 <div className="text-sm text-neutral-600">NEC Table 250.122</div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </CalculatorLayout>
   );

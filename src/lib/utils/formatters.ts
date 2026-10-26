@@ -9,11 +9,11 @@ export function formatVoltageDrop(percent: number): string {
 }
 
 export function formatDistance(feet: number): string {
-  return `${feet.toLocaleString()} ft`;
+  return `${feet.toLocaleString('en-US')} ft`;
 }
 
 export function formatAmps(amps: number): string {
-  return `${amps.toLocaleString()}A`;
+  return `${amps.toLocaleString('en-US')}A`;
 }
 
 export function formatVoltage(volts: number): string {

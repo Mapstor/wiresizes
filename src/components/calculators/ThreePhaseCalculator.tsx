@@ -1,25 +1,55 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { Input } from '@/components/ui/Input';
 import { CalculatorLayout } from './CalculatorLayout';
-import { useShareableUrl } from '@/lib/hooks/useShareableUrl';
+import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
+import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
 import { Zap, AlertTriangle, Triangle, Calculator, RefreshCw } from 'lucide-react';
 import {
   fromCurrent,
   fromRealPower,
+  hasPowerInputError,
   isPowerError,
-  POWER_ERROR_MESSAGES,
+  powerInputErrors,
   THREE_PHASE_DEFAULTS,
   THREE_PHASE_MODE_OPTIONS,
   THREE_PHASE_SYSTEMS,
 } from '@/lib/calculations/power';
 import type { PowerResult, ThreePhaseMode } from '@/lib/calculations/power';
 
-type Inputs = typeof THREE_PHASE_DEFAULTS;
+interface Inputs {
+  system: string;
+  mode: ThreePhaseMode;
+  /** Field text */
+  kilowatts: string;
+  /** Field text */
+  amps: string;
+  /** Field text */
+  pf: string;
+}
+
+const DEFAULT_INPUTS: Inputs = {
+  system: THREE_PHASE_DEFAULTS.system,
+  mode: THREE_PHASE_DEFAULTS.mode,
+  kilowatts: String(THREE_PHASE_DEFAULTS.kilowatts),
+  amps: String(THREE_PHASE_DEFAULTS.amps),
+  pf: String(THREE_PHASE_DEFAULTS.pf),
+};
+
+/** Inputs from a share link. */
+function inputsFromQuery(params: URLSearchParams): Inputs {
+  return {
+    system: choiceParam(params, 'system', THREE_PHASE_SYSTEMS.map((s) => s.system)) ?? DEFAULT_INPUTS.system,
+    mode: choiceParam(params, 'mode', THREE_PHASE_MODE_OPTIONS.map((m) => m.value)) ?? DEFAULT_INPUTS.mode,
+    kilowatts: numberParam(params, 'power') ?? DEFAULT_INPUTS.kilowatts,
+    amps: numberParam(params, 'current') ?? DEFAULT_INPUTS.amps,
+    pf: numberParam(params, 'powerFactor') ?? DEFAULT_INPUTS.pf,
+  };
+}
 
 const FORMULAS: Record<ThreePhaseMode, string> = {
   power: 'I = P / (√3 × V × PF)',
@@ -31,77 +61,81 @@ function lineVolts(system: string): number {
 }
 
 /** Balanced three-phase P ↔ I on line-to-line voltage; values are rounded for display only. */
-function calculate(inputs: Inputs): { result: PowerResult | null; error: string | null } {
-  const base = { volts: lineVolts(inputs.system), circuit: 'three' as const, pf: inputs.pf };
+function calculate(inputs: Inputs): PowerResult | null {
+  const base = { volts: lineVolts(inputs.system), circuit: 'three' as const, pf: fieldNumber(inputs.pf) };
   const r = inputs.mode === 'power'
-    ? fromRealPower({ ...base, watts: inputs.kilowatts * 1000 })
-    : fromCurrent({ ...base, amps: inputs.amps });
-  return isPowerError(r) ? { result: null, error: POWER_ERROR_MESSAGES[r.error] } : { result: r, error: null };
+    ? fromRealPower({ ...base, watts: fieldNumber(inputs.kilowatts) * 1000 })
+    : fromCurrent({ ...base, amps: fieldNumber(inputs.amps) });
+  return isPowerError(r) ? null : r;
 }
 
 export function ThreePhaseCalculator() {
-  const [inputs, setInputs] = useState<Inputs>(THREE_PHASE_DEFAULTS);
-  const [calculated, setCalculated] = useState<({ inputs: Inputs } & ReturnType<typeof calculate>) | null>(null);
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const [inputs, setInputs] = useState<Inputs>(DEFAULT_INPUTS);
+  const formRef = useRef<HTMLDivElement>(null);
+  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+  const fields = useFieldErrors();
 
-  const update = (patch: Partial<Inputs>) => setInputs((prev) => ({ ...prev, ...patch }));
+  const valueField = inputs.mode === 'power' ? 'kilowatts' : 'amps';
+  const errors = powerInputErrors({
+    value: fieldNumber(inputs[valueField]),
+    volts: lineVolts(inputs.system),
+    circuit: 'three',
+    pf: fieldNumber(inputs.pf),
+  });
+  const result = hasPowerInputError(errors) ? null : calculate(inputs);
 
-  const performCalculation = useCallback(() => {
-    setCalculated({ inputs, ...calculate(inputs) });
-    // Scroll to results
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }, 100);
-  }, [inputs]);
-
-  const handleReset = () => {
-    setInputs(THREE_PHASE_DEFAULTS);
-    setCalculated(null);
-  };
-
-  const shareableInputs = {
+  const query = buildQuery({
     system: inputs.system,
     mode: inputs.mode,
-    powerFactor: inputs.pf,
-    ...(inputs.mode === 'power' ? { power: inputs.kilowatts } : { current: inputs.amps }),
-  };
-  const { getShareableUrl } = useShareableUrl(shareableInputs);
+    powerFactor: inputs.pf.trim(),
+    ...(inputs.mode === 'power' ? { power: inputs.kilowatts.trim() } : { current: inputs.amps.trim() }),
+  });
+  const { markChanged, shareUrl } = useUrlState(query, (params) => setInputs(inputsFromQuery(params)));
   const { print } = usePrintExport();
 
-  const handleShare = useCallback(async () => {
-    const url = getShareableUrl();
-    await navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }, [getShareableUrl]);
+  const update = (patch: Partial<Inputs>) => {
+    markChanged();
+    setInputs((prev) => ({ ...prev, ...patch }));
+  };
 
-  const handlePrint = useCallback(() => {
-    if (!calculated?.result) return;
-    const shown = calculated.inputs;
+  const handleCalculate = () => {
+    if (result) focusResults(resultsHeadingRef.current);
+    else fields.revealAll(formRef.current);
+  };
+
+  const handleReset = () => {
+    markChanged();
+    fields.reset();
+    setInputs(DEFAULT_INPUTS);
+  };
+
+  const handlePrint = () => {
+    if (!result) return;
     print({
       title: 'Three-Phase Calculation',
       inputs: {
-        'Voltage System': shown.system,
-        'Calculation Mode': THREE_PHASE_MODE_OPTIONS.find((m) => m.value === shown.mode)?.label ?? shown.mode,
-        'Power Factor': shown.pf.toString(),
-        ...(shown.mode === 'power' ? { 'Power (kW)': `${shown.kilowatts} kW` } : { 'Line Current': `${shown.amps} A` }),
+        'Voltage System': inputs.system,
+        'Calculation Mode': THREE_PHASE_MODE_OPTIONS.find((m) => m.value === inputs.mode)?.label ?? inputs.mode,
+        'Power Factor': fieldNumber(inputs.pf).toString(),
+        ...(inputs.mode === 'power'
+          ? { 'Power (kW)': `${fieldNumber(inputs.kilowatts)} kW` }
+          : { 'Line Current': `${fieldNumber(inputs.amps)} A` }),
       },
       results: {
-        'Line Current': `${calculated.result.amps.toFixed(2)} A`,
-        'Power': `${(calculated.result.watts / 1000).toFixed(2)} kW`,
-        'Line Voltage': `${lineVolts(shown.system)} V`,
+        'Line Current': `${result.amps.toFixed(2)} A`,
+        'Power': `${(result.watts / 1000).toFixed(2)} kW`,
+        'Line Voltage': `${lineVolts(inputs.system)} V`,
       },
     });
-  }, [calculated, print]);
+  };
 
   return (
     <CalculatorLayout
       title="Three-Phase Calculator"
       description="Calculate three-phase electrical circuits"
-      onShare={handleShare}
+      shareUrl={shareUrl}
       onPrint={handlePrint}
+      actionsDisabled={!result}
     >
       <div className="space-y-6">
         {/* Safety Notice */}
@@ -119,7 +153,7 @@ export function ThreePhaseCalculator() {
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Input Section */}
-          <div className="space-y-6">
+          <div className="space-y-6" ref={formRef}>
             <h2 className="text-lg font-semibold text-neutral-900 flex items-center gap-2">
               <Triangle className="w-5 h-5 text-primary-600" />
               Three-Phase System Configuration
@@ -155,7 +189,9 @@ export function ThreePhaseCalculator() {
                     label="Power (kW)"
                     type="number"
                     value={inputs.kilowatts}
-                    onChange={(e) => update({ kilowatts: Number(e.target.value) })}
+                    onChange={(e) => update({ kilowatts: e.target.value })}
+                    onBlur={() => fields.touch('kilowatts')}
+                    error={fields.shown('kilowatts', errors.value)}
                     suffix="kW"
                     min={0}
                     step={0.1}
@@ -165,7 +201,9 @@ export function ThreePhaseCalculator() {
                     label="Line Current"
                     type="number"
                     value={inputs.amps}
-                    onChange={(e) => update({ amps: Number(e.target.value) })}
+                    onChange={(e) => update({ amps: e.target.value })}
+                    onBlur={() => fields.touch('amps')}
+                    error={fields.shown('amps', errors.value)}
                     suffix="amps"
                     min={0}
                     step={0.1}
@@ -176,7 +214,9 @@ export function ThreePhaseCalculator() {
                   label="Power Factor"
                   type="number"
                   value={inputs.pf}
-                  onChange={(e) => update({ pf: Number(e.target.value) })}
+                  onChange={(e) => update({ pf: e.target.value })}
+                  onBlur={() => fields.touch('pf')}
+                  error={fields.shown('pf', errors.pf)}
                   min={0}
                   max={1.0}
                   step={0.01}
@@ -184,7 +224,7 @@ export function ThreePhaseCalculator() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <Button onClick={performCalculation} className="flex-1">
+                <Button onClick={handleCalculate} className="flex-1">
                   <Calculator className="w-4 h-4" />
                   Calculate
                 </Button>
@@ -197,33 +237,29 @@ export function ThreePhaseCalculator() {
           </div>
 
           {/* Results Section */}
-          <div className="space-y-6" ref={resultsRef}>
-            <h2 className="text-lg font-semibold text-neutral-900">
+          <div className="space-y-6">
+            <h2 ref={resultsHeadingRef} tabIndex={-1} className="text-lg font-semibold text-neutral-900">
               Three-Phase Results
             </h2>
 
-            {calculated && (calculated.error || !calculated.result ? (
-              <div className="rounded-xl p-6 bg-red-50 border border-red-200 text-sm text-red-700" role="alert">
-                {calculated.error}
-              </div>
-            ) : (
+            {result && (
               <div className="bg-neutral-50 rounded-xl p-6">
                 <div className="grid grid-cols-2 gap-4 text-center">
                   <div className="bg-blue-100 rounded-lg p-3">
                     <div className="text-blue-800 font-semibold">Line Current</div>
-                    <div className="text-2xl font-bold text-blue-900">{calculated.result.amps.toFixed(2)}A</div>
+                    <div className="text-2xl font-bold text-blue-900">{result.amps.toFixed(2)}A</div>
                   </div>
                   <div className="bg-green-100 rounded-lg p-3">
                     <div className="text-green-800 font-semibold">Power</div>
-                    <div className="text-2xl font-bold text-green-900">{(calculated.result.watts / 1000).toFixed(2)}kW</div>
+                    <div className="text-2xl font-bold text-green-900">{(result.watts / 1000).toFixed(2)}kW</div>
                   </div>
                 </div>
                 <div className="mt-4 text-center text-sm text-neutral-600 flex items-center justify-center gap-2">
                   <Zap className="w-4 h-4" />
-                  {calculated.inputs.system} • {lineVolts(calculated.inputs.system)}V • PF: {calculated.inputs.pf}
+                  {inputs.system} • {lineVolts(inputs.system)}V • PF: {fieldNumber(inputs.pf)}
                 </div>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>

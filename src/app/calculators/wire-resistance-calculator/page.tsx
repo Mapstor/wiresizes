@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
-import { Suspense } from 'react';
-import { WireResistanceCalculator } from '@/components/calculators';
+import { WireResistanceCalculator } from '@/components/calculators/WireResistanceCalculator';
 import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -106,9 +105,7 @@ export default function WireResistanceCalculatorPage() {
 
       {/* Calculator Component */}
       <section className="mb-16">
-        <Suspense fallback={<div>Loading calculator...</div>}>
-          <WireResistanceCalculator />
-        </Suspense>
+        <WireResistanceCalculator />
       </section>
 
       {/* Understanding Wire Resistance */}

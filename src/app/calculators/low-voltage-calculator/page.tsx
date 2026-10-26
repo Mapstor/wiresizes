@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
-import { Suspense } from 'react';
-import { LowVoltageCalculator } from '@/components/calculators';
+import { LowVoltageCalculator } from '@/components/calculators/LowVoltageCalculator';
 import { Battery, Calculator, TrendingUp, AlertCircle, BookOpen, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -75,9 +74,7 @@ export default function LowVoltageCalculatorPage() {
 
       {/* Calculator Component */}
       <section className="mb-16">
-        <Suspense fallback={<div>Loading calculator...</div>}>
-          <LowVoltageCalculator />
-        </Suspense>
+        <LowVoltageCalculator />
       </section>
 
       {/* Understanding Low Voltage Systems */}
