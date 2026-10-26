@@ -54,13 +54,6 @@ const POWER_FORMULAS_TABLE = [
     example: '1500VA ÷ 120V = 12.5A', 
     applications: 'Transformers, reactive loads',
     notes: 'Includes reactive power component'
-  },
-  { 
-    systemType: 'Motor Full Load', 
-    formula: 'Use NEC Table 430.248/250', 
-    example: '5HP 480V 3Φ = 7.6A (table)', 
-    applications: 'Motor circuit design',
-    notes: ''
   }
 ];
 
@@ -175,7 +168,7 @@ export default function WattsToAmpsCalculatorPage() {
             </div>
             
             <div className="mt-4 bg-blue-50 rounded-lg p-4 border border-blue-200">
-              <h4 className="font-semibold text-blue-800 mb-2">Formula Key:</h4>
+              <p className="text-xl leading-tight font-semibold text-blue-800 mb-2">Formula Key:</p>
               <ul className="text-sm text-blue-700 space-y-1">
                 <li>• I = Current in Amperes • P = Power in Watts • V = Voltage • PF = Power Factor</li>
                 <li>• √3 = 1.732 (square root of 3 for three-phase calculations)</li>

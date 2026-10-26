@@ -32,15 +32,15 @@ const articleData = {
 const faqs = [
   {
     question: "Can I use aluminum wire for 200 amp service?",
-    answer: "Yes, aluminum wire is commonly used for 200 amp service. You'll need 4/0 AWG aluminum or aluminum alloy conductors. Aluminum requires proper anti-oxidant compound and rated connectors."
+    answer: "Yes, aluminum wire is commonly used for 200 amp service. You'll need 4/0 AWG aluminum or aluminum alloy conductors. Aluminum requires rated connectors."
   },
   {
     question: "What size ground wire for 200 amp service?",
-    answer: "Per NEC Table 250.66, 200 amp service requires a 4 AWG copper or 2 AWG aluminum grounding electrode conductor. The equipment grounding conductor size depends on the overcurrent protection per NEC Table 250.122."
+    answer: "Per NEC Table 250.66 (values from NFPA's 2020 grounding fact sheet), 200 amp service requires a 4 AWG copper or 2 AWG aluminum grounding electrode conductor. The equipment grounding conductor size depends on the overcurrent protection per NEC Table 250.122."
   },
   {
     question: "Do I need a permit to upgrade to 200 amp service?",
-    answer: "Yes, upgrading to 200 amp service requires an electrical permit in virtually all jurisdictions. The work must be performed by a licensed electrician and will require inspection before the utility company connects the service."
+    answer: "Permit and licensing rules depend on where you live. Where your jurisdiction requires a permit, an inspection or a licensed electrician, those requirements apply."
   }
 ]
 
@@ -170,7 +170,6 @@ export default function WireSizeFor200AmpPage() {
                       <ul className="text-sm space-y-1 text-gray-700">
                         <li>• Superior conductivity and durability</li>
                         <li>• Smaller diameter, easier routing</li>
-                        <li>• No special anti-oxidant required</li>
                         <li>• Better for long runs (less voltage drop)</li>
                       </ul>
                     </div>
@@ -199,7 +198,6 @@ export default function WireSizeFor200AmpPage() {
                     <div>
                       <h4 className="font-semibold text-red-700 mb-2">Disadvantages</h4>
                       <ul className="text-sm space-y-1 text-gray-700">
-                        <li>• Requires anti-oxidant compound</li>
                         <li>• Larger diameter wire</li>
                         <li>• Special AL-rated connectors needed</li>
                         <li>• More expansion/contraction</li>
@@ -252,7 +250,7 @@ export default function WireSizeFor200AmpPage() {
                       <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">4</div>
                       <div className="flex-1">
                         <h4 className="font-semibold text-gray-900">Run Service Entrance Conductors</h4>
-                        <p className="text-sm text-gray-600 mt-1">Pull {CU_200A} copper or {AL_200A} aluminum through conduit. Apply anti-oxidant if using aluminum.</p>
+                        <p className="text-sm text-gray-600 mt-1">Pull {CU_200A} copper or {AL_200A} aluminum through conduit.</p>
                       </div>
                     </div>
 
@@ -280,7 +278,6 @@ export default function WireSizeFor200AmpPage() {
                     <ul className="space-y-2 text-sm text-yellow-800">
                       <li>• Use proper wire pulling lubricant</li>
                       <li>• Torque all connections to manufacturer specs</li>
-                      <li>• Apply anti-oxidant to all aluminum connections</li>
                       <li>• Use listed connectors rated for wire type</li>
                       <li>• Protect wire from physical damage</li>
                     </ul>
@@ -292,7 +289,6 @@ export default function WireSizeFor200AmpPage() {
                       <li>• Using undersized wire for the run length</li>
                       <li>• Mixing copper and aluminum improperly</li>
                       <li>• Insufficient torque on connections</li>
-                      <li>• Forgetting anti-oxidant on aluminum</li>
                       <li>• Improper grounding or bonding</li>
                       <li>• Not checking voltage drop calculations</li>
                     </ul>
@@ -335,12 +331,7 @@ export default function WireSizeFor200AmpPage() {
 
                 <div className="bg-white rounded-lg p-4 border border-red-200">
                   <h3 className="font-semibold mb-2">Legal Requirements</h3>
-                  <ul className="text-sm space-y-1">
-                    <li>• Must be performed by licensed electrician</li>
-                    <li>• Requires electrical permit and inspections</li>
-                    <li>• Must meet all local code amendments</li>
-                    <li>• Utility company coordination required</li>
-                  </ul>
+                  <p className="text-sm">Where your jurisdiction requires a permit, an inspection or a licensed electrician, those requirements apply.</p>
                 </div>
 
                 <div className="bg-white rounded-lg p-4 border border-red-200">

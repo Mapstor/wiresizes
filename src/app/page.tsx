@@ -36,9 +36,11 @@ const CALCULATOR_CATEGORIES = [
     calculators: [
       { name: 'Watts to Amps Calculator', slug: 'watts-to-amps-calculator', desc: 'Convert watts to amperage' },
       { name: 'Amps to Watts Calculator', slug: 'amps-to-watts-calculator', desc: 'Convert amperage to watts' },
+      { name: 'Volts to Amps Calculator', slug: 'volts-to-amps-calculator', desc: 'Current from power and voltage' },
       { name: 'kVA to Amps Calculator', slug: 'kva-to-amps-calculator', desc: 'Convert kilovolt-amperes to amps' },
       { name: 'Kilowatts to Amps Calculator', slug: 'kilowatts-to-amps-calculator', desc: 'Convert kilowatts to amperage' },
       { name: 'BTU to Watts Calculator', slug: 'btu-to-watts-calculator', desc: 'Convert Btu/h, watts and tons' },
+      { name: "Ohm's Law Calculator", slug: 'ohms-law-calculator', desc: 'Solve for volts, amps, ohms or watts' },
     ]
   },
   {
@@ -46,6 +48,7 @@ const CALCULATOR_CATEGORIES = [
     icon: Cpu,
     calculators: [
       { name: 'Three Phase Calculator', slug: 'three-phase-calculator', desc: '3-phase power calculations' },
+      { name: 'Service Entrance Calculator', slug: 'service-entrance-calculator', desc: 'Dwelling service conductors from Table 310.12' },
       { name: 'Low Voltage Calculator', slug: 'low-voltage-calculator', desc: '12V/24V DC applications' },
     ]
   }

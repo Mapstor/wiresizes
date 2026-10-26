@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { BookOpen, Calculator, Zap, Target, BarChart3 } from 'lucide-react';
+import { BookOpen, Calculator, Zap, Target, BarChart3, Table, FileText, Home, Car } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Electrical Guides',
@@ -9,12 +9,42 @@ export const metadata: Metadata = {
 
 const GUIDES = [
   {
+    slug: 'awg-wire-size-chart',
+    title: 'AWG Wire Size Chart & Reference Guide',
+    icon: Table,
+    color: 'blue',
+  },
+  {
+    slug: 'nec-table-310-16',
+    title: 'NEC Table 310.16',
+    icon: FileText,
+    color: 'green',
+  },
+  {
+    slug: 'wire-size-for-200-amp',
+    title: 'Wire Size for 200 Amp Service',
+    icon: Home,
+    color: 'amber',
+  },
+  {
+    slug: 'wire-size-for-100-amp',
+    title: '100 Amp Wire Size Guide',
+    icon: Home,
+    color: 'amber',
+  },
+  {
+    slug: 'wire-size-for-ev-charger',
+    title: 'EV Charger Wire Size Guide',
+    icon: Car,
+    color: 'purple',
+  },
+  {
     slug: 'electrical-power-calculations',
     title: 'Electrical Power Calculations',
     description: 'Master the fundamentals of electrical power, current, voltage, and energy calculations',
     icon: Calculator,
     color: 'blue',
-    topics: ['Watts, Amps, Volts', 'Power Factor', 'Single & Three Phase', 'Ohms Law']
+    topics: ['Watts, Amps, Volts', 'Power Factor', 'Single & Three Phase', "Ohm's Law"]
   },
   {
     slug: 'nec-code-compliance',
@@ -54,7 +84,7 @@ export default function GuidesLayout({
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-3">
             <BookOpen className="w-8 h-8 text-primary-600" />
-            <span className="text-3xl font-bold text-gray-900">Electrical Engineering Guides</span>
+            <span className="text-3xl font-bold text-gray-900">Electrical Guides</span>
           </div>
         </div>
       </div>

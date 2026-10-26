@@ -342,7 +342,7 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {WIRING_CONFIGURATIONS.map((config, index) => (
                 <div key={index} className="border rounded-lg p-4 hover:shadow-lg transition-shadow">
-                  <h4 className="font-semibold text-gray-900 mb-3">{config.name}</h4>
+                  <h3 className="text-xl leading-tight font-semibold text-gray-900 mb-3">{config.name}</h3>
                   
                   <div className="space-y-2 text-sm">
                     <div>

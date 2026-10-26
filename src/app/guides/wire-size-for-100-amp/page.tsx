@@ -15,6 +15,7 @@ const CU_100A = formatSize(SERVICE_100A ? SERVICE_100A.cu : '4');
 const AL_100A = formatSize(SERVICE_100A ? SERVICE_100A.alCca : '2');
 const GEC_100A = gecForServiceConductor(SERVICE_100A ? SERVICE_100A.cu : '4', 'Cu');
 const GEC_CU_100A = formatSize(GEC_100A ? GEC_100A.cu : '8');
+const GEC_AL_100A = formatSize(GEC_100A ? GEC_100A.alCca : '6');
 const EGC_100A = egcForOcpd(100);
 const EGC_CU_100A = formatSize(EGC_100A ? EGC_100A.cu : '8');
 const EGC_AL_100A = formatSize(EGC_100A ? EGC_100A.alCca : '6');
@@ -43,7 +44,7 @@ const APPLICATIONS_100A = [
     description: 'Small home main panel',
     copper: CU_100A,
     aluminum: AL_100A,
-    ground: `${EGC_CU_100A} copper`,
+    ground: `${GEC_CU_100A} copper`,
   },
 ];
 
@@ -52,8 +53,8 @@ const INSTALLATION_REQUIREMENTS = [
   { item: 'Main Breaker', spec: '100A 2-pole breaker', code: 'NEC 230.79' },
   { item: 'Wire Size (Copper)', spec: `${CU_100A} (100 A dwelling service)`, code: 'NEC Table 310.12' },
   { item: 'Wire Size (Aluminum)', spec: `${AL_100A} (100 A dwelling service)`, code: 'NEC Table 310.12' },
-  { item: 'Ground Wire', spec: `${EGC_CU_100A} copper`, code: 'NEC Table 250.122' },
-  { item: 'Grounding Electrode', spec: `${GEC_CU_100A} copper GEC`, code: 'NEC Table 250.66' },
+  { item: 'Equipment grounding conductor (main power feeder)', spec: `${EGC_CU_100A} copper`, code: 'NEC Table 250.122' },
+  { item: 'Grounding electrode conductor (service)', spec: `${GEC_CU_100A} copper`, code: 'NEC Table 250.66' },
 ];
 
 export default function WireSizeFor100AmpPage() {
@@ -80,7 +81,7 @@ export default function WireSizeFor100AmpPage() {
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
               <div className="text-3xl font-bold text-green-400">{EGC_CU_100A}</div>
-              <div className="text-sm text-blue-100">Ground Wire</div>
+              <div className="text-sm text-blue-100">Copper grounding conductor</div>
             </div>
           </div>
         </div>
@@ -94,8 +95,10 @@ export default function WireSizeFor100AmpPage() {
             <div>
               <h2 className="font-bold text-green-900 mb-2">Quick Answer: Wire Size for 100 Amp Service</h2>
               <p className="text-green-800">
-                <strong>For a 100 A dwelling service, use {CU_100A} copper or {AL_100A} aluminum (2023 NEC Table 310.12).</strong>{' '}
-                Use {EGC_CU_100A} copper or {EGC_AL_100A} aluminum for the equipment grounding conductor per NEC Table 250.122.
+                <strong>For a 100 A dwelling service or main power feeder, use {CU_100A} copper or {AL_100A} aluminum (2023 NEC Table 310.12).</strong>{' '}
+                A service needs a grounding electrode conductor: {GEC_CU_100A} copper or {GEC_AL_100A} aluminum (NEC Table 250.66, values from NFPA&apos;s 2020 grounding fact sheet).
+                If these conductors are the main power feeder, they carry an equipment grounding conductor instead: {EGC_CU_100A} copper or {EGC_AL_100A} aluminum (NEC Table 250.122).
+                A feeder to a subpanel is sized from NEC Table 310.16: see the <Link href="/calculators/wire-size-calculator" className="text-primary-600 hover:text-primary-700 underline">wire size calculator</Link>.
               </p>
             </div>
           </div>
@@ -126,7 +129,7 @@ export default function WireSizeFor100AmpPage() {
                       <span className="font-mono font-semibold text-gray-600">{app.aluminum}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Ground:</span>
+                      <span className="text-gray-500">GEC:</span>
                       <span className="font-mono text-green-600">{app.ground}</span>
                     </div>
                   </div>
@@ -198,7 +201,7 @@ export default function WireSizeFor100AmpPage() {
                   <div className="flex-shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">4</div>
                   <div>
                     <h3 className="font-semibold mb-1">Install Conduit</h3>
-                    <p className="text-gray-600">Run conduit for 4 conductors (2 hots, 1 neutral, 1 ground).</p>
+                    <p className="text-gray-600">Run conduit for the two ungrounded conductors and the neutral, plus an equipment grounding conductor if the run is the main power feeder.</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
@@ -212,14 +215,14 @@ export default function WireSizeFor100AmpPage() {
                   <div className="flex-shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">6</div>
                   <div>
                     <h3 className="font-semibold mb-1">Make Terminations</h3>
-                    <p className="text-gray-600">Use proper torque specs and anti-oxidant compound for aluminum connections.</p>
+                    <p className="text-gray-600">Use proper torque specs.</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
                   <div className="flex-shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">7</div>
                   <div>
                     <h3 className="font-semibold mb-1">Install Grounding System</h3>
-                    <p className="text-gray-600">Connect {EGC_CU_100A} equipment ground and {GEC_CU_100A} grounding electrode conductor.</p>
+                    <p className="text-gray-600">Connect the {GEC_CU_100A} copper grounding electrode conductor at the service, or the {EGC_CU_100A} copper equipment grounding conductor on the main power feeder.</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
@@ -327,7 +330,6 @@ export default function WireSizeFor100AmpPage() {
                   <h3 className="font-semibold text-amber-900 mb-3">Installation Errors</h3>
                   <ul className="space-y-2 text-sm text-amber-800">
                     <li>❌ Undersized conduit causing difficult pulls</li>
-                    <li>❌ Missing anti-oxidant on aluminum connections</li>
                     <li>❌ Incorrect torque on terminals</li>
                     <li>❌ Wrong ground wire size (10 AWG instead of 8 AWG)</li>
                   </ul>

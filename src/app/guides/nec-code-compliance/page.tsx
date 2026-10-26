@@ -161,7 +161,6 @@ export default function NECCodeComplianceGuide() {
                   <li>• Equipment grounding conductors</li>
                   <li>• Conduit systems (rigid, IMC, EMT)</li>
                   <li>• Cable armor and sheaths</li>
-                  <li>• Grounding-type receptacles</li>
                 </ul>
               </div>
             </div>
@@ -395,7 +394,7 @@ export default function NECCodeComplianceGuide() {
             href="/guides"
             className="border border-amber-600 text-amber-700 px-6 py-3 rounded-lg font-medium hover:bg-amber-50 transition-colors"
           >
-            Electrical Engineering Education
+            Electrical Guides
           </Link>
           <Link 
             href="/guides/electrical-power-calculations"

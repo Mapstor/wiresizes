@@ -7,9 +7,24 @@ import { AMBIENT_ROWS, ambientLabel } from '@/lib/calculations/ampacity';
 
 export const metadata: Metadata = {
   title: 'Wire Size Calculator — AWG / NEC 310.16',
-  description: 'Calculate AWG wire size for any circuit. NEC 310.16 ampacity, voltage drop check, copper and aluminum.',
+  description: 'Copper and aluminum wire size for a 15–400 A breaker or fuse from the 60 °C column of NEC Table 310.16, limited by 240.4(D), with the ground wire and a voltage-drop check.',
   keywords: 'wire size calculator, AWG calculator, electrical wire sizing, cable size calculator, conductor sizing, NEC wire size, copper wire calculator, aluminum wire calculator',
   alternates: { canonical: '/calculators/wire-size-calculator' },
+  openGraph: {
+    title: 'Wire Size Calculator — AWG / NEC 310.16',
+    description: 'Copper and aluminum wire size for a 15–400 A breaker or fuse from the 60 °C column of NEC Table 310.16, limited by 240.4(D), with the ground wire and a voltage-drop check.',
+    url: 'https://wiresizes.com/calculators/wire-size-calculator',
+    siteName: 'WireSizes.com',
+    locale: 'en_US',
+    type: 'website',
+    images: ['/opengraph-image'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Wire Size Calculator — AWG / NEC 310.16',
+    description: 'Copper and aluminum wire size for a 15–400 A breaker or fuse from the 60 °C column of NEC Table 310.16, limited by 240.4(D), with the ground wire and a voltage-drop check.',
+    images: ['/twitter-image'],
+  },
 };
 
 // Web application data for schema
@@ -69,7 +84,7 @@ const faqItems = [
   },
   {
     question: "Can I use aluminum wire instead of copper?",
-    answer: "Yes, aluminum wire is safe when properly installed with AL-rated connections and anti-oxidant compound. Aluminum requires one size larger than copper for same ampacity (e.g., 8 AWG aluminum vs 10 AWG copper for 30A)."
+    answer: "Yes. Aluminum carries less current than copper of the same size, so it often needs a larger one: for a 30 A breaker, the 60 °C column of NEC Table 310.16 gives 10 AWG copper and 8 AWG aluminum. The calculator shows both."
   },
   {
     question: "How many amps can 12 gauge wire handle?",
@@ -85,15 +100,11 @@ const faqItems = [
   },
   {
     question: "Can I use 14 gauge wire on a 20 amp circuit?",
-    answer: "No, 14 AWG wire is limited to 15A circuits per NEC 240.4(D). While Table 310.16 shows 20A ampacity at 75°C, the code restricts 14 AWG to 15A overcurrent protection for safety margins."
+    answer: "No. NEC 240.4(D) limits 14 AWG copper to 15 A overcurrent protection, even though Table 310.16 lists 20 A for it in the 75 °C column."
   },
   {
     question: "What affects wire ampacity ratings?",
     answer: "Wire ampacity is affected by: conductor material (copper vs aluminum), insulation temperature rating (60/75/90°C), ambient temperature (derating required above 86°F), number of conductors in raceway (derating for heat), and installation method."
-  },
-  {
-    question: "Should I oversize wire for future expansion?",
-    answer: "Yes, oversizing by one AWG provides headroom for future loads and reduces voltage drop. Document spare capacity for future reference."
   },
   {
     question: "What's the difference between stranded and solid wire?",
@@ -113,8 +124,8 @@ export default function WireSizeCalculatorPage() {
               Wire Size Calculator - AWG Electrical Wire Sizing
             </h1>
             <p className="text-lg text-neutral-700 mb-6">
-              Calculate the correct AWG wire size for any branch circuit or
-              feeder.
+              Copper and aluminum conductor sizes for a 15–400 A breaker or fuse, from the 60 °C column of NEC
+              Table 310.16, with a voltage-drop check.
             </p>
             
             {/* Quick Answer Box */}
@@ -170,8 +181,8 @@ export default function WireSizeCalculatorPage() {
                   
                   <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
                     <p className="text-sm text-amber-800">
-                      <strong>Important:</strong> These are starting points based on ampacity only. 
-                      Always verify voltage drop and apply derating factors for temperature and conduit fill.
+                      <strong>Important:</strong> These sizes are based on ampacity alone. Check voltage drop, and apply the
+                      correction for ambient temperature and the adjustment for more than three current-carrying conductors.
                     </p>
                   </div>
                 </div>
@@ -211,14 +222,9 @@ export default function WireSizeCalculatorPage() {
                 
                 <div className="bg-white p-6 rounded-lg border border-neutral-200 mb-6">
                   <h4 className="text-lg font-semibold mb-3">Key Factors in Wire Sizing</h4>
-                  <ol className="space-y-3">
-                    <li className="flex gap-3">
-                      <span className="font-bold text-blue-600">1.</span>
-                      <div>
-                        <strong>Ampacity:</strong> The maximum current a conductor can carry continuously without exceeding its temperature rating.
-                      </div>
-                    </li>
-                  </ol>
+                  <p>
+                    <strong>Ampacity:</strong> The maximum current a conductor can carry continuously without exceeding its temperature rating.
+                  </p>
                 </div>
               </div>
               
@@ -293,10 +299,10 @@ export default function WireSizeCalculatorPage() {
             
             <div className="mt-6 grid gap-4">
               <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
-                <h3 className="font-semibold text-amber-900 mb-2">Temperature Derating Required</h3>
+                <h3 className="font-semibold text-amber-900 mb-2">Ambient Temperature Correction</h3>
                 <p className="text-sm text-amber-800">
-                  Ampacity must be adjusted for ambient temperatures above 86°F (30°C). 
-                  In attics or outdoor conduit exposed to sunlight, significant derating may be required.
+                  Ampacity is corrected when the ambient temperature differs from 30 °C (86 °F). Multiply by the
+                  factor for the {"conductor's"} temperature column.
                 </p>
               </div>
             </div>
@@ -395,10 +401,11 @@ export default function WireSizeCalculatorPage() {
             
             <div className="grid lg:grid-cols-2 gap-4 lg:gap-6">
               <div>
-                <h3 className="font-semibold text-neutral-900 mb-4">Conduit Fill Derating</h3>
+                <h3 className="font-semibold text-neutral-900 mb-4">More Than Three Current-Carrying Conductors</h3>
                 <div className="bg-white p-4 rounded-lg border border-neutral-200">
                   <p className="text-sm text-neutral-700 mb-3">
-                    More than 3 current-carrying conductors in a raceway require derating per NEC 310.15(C)(1).
+                    With more than three current-carrying conductors together, multiply the ampacity by the adjustment
+                    factor in NEC Table 310.15(C)(1).
                   </p>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
@@ -465,10 +472,6 @@ export default function WireSizeCalculatorPage() {
                   <li className="flex items-start gap-2">
                     <ArrowRight className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
                     <span>Use proper torque specifications</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Apply antioxidant on aluminum</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <ArrowRight className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />

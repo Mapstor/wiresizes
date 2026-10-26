@@ -9,8 +9,8 @@ export const metadata: Metadata = {
   description: "Solve any of voltage, current, resistance, or power given two values. V = IR, P = VI, with the full Ohm's Law / power triangle.",
   keywords: 'ohms law calculator, voltage current resistance power, V=IR calculator, electrical calculations, circuit analysis, power calculations, electrical formulas',
   openGraph: {
-    title: 'Ohms Law Calculator - Voltage Current Resistance Power Calculator',
-    description: 'Calculate voltage, current, resistance, and power using Ohms Law.',
+    title: "Ohm's Law Calculator - Voltage Current Resistance Power Calculator",
+    description: "Calculate voltage, current, resistance, and power using Ohm's law.",
     type: 'website',
     url: 'https://wiresizes.com/calculators/ohms-law-calculator',
     images: ['/opengraph-image']
@@ -21,31 +21,31 @@ export const metadata: Metadata = {
 
 // Web application data for schema
 const webAppData = {
-  name: "Ohms Law Calculator",
+  name: "Ohm's Law Calculator",
   url: "https://wiresizes.com/calculators/ohms-law-calculator",
-  description: "Ohms Law calculator for electrical engineers and technicians. Calculate voltage, current, resistance, and power using V=IR and P=VI formulas. AC and DC circuit calculations."
+  description: "Ohm's law calculator for electrical engineers and technicians. Calculate voltage, current, resistance, and power using V=IR and P=VI formulas. AC and DC circuit calculations."
 };
 
 const ohmsLawFAQs = [
   {
-    question: "What is Ohms Law and how do I use it?",
-    answer: "Ohms Law states that voltage equals current times resistance (V = I × R). It's fundamental to electrical calculations. Given any two values, you can calculate the third: V = I × R, I = V ÷ R, or R = V ÷ I. Additionally, power relationships are P = V × I, P = I² × R, or P = V² ÷ R. These formulas apply to DC circuits and AC circuits with resistive loads."
+    question: "What is Ohm's Law and how do I use it?",
+    answer: "Ohm's law states that voltage equals current times resistance (V = I × R). It's fundamental to electrical calculations. Given any two values, you can calculate the third: V = I × R, I = V ÷ R, or R = V ÷ I. Additionally, power relationships are P = V × I, P = I² × R, or P = V² ÷ R. These formulas apply to DC circuits and AC circuits with resistive loads."
   },
   {
-    question: "How do I calculate power using Ohms Law?",
+    question: "How do I calculate power using Ohm's Law?",
     answer: "Power can be calculated using three formulas: P = V × I (power = voltage × current), P = I² × R (power = current squared × resistance), or P = V² ÷ R (power = voltage squared ÷ resistance). Choose the formula based on which values you know. For example, if you know voltage (120V) and current (10A), then P = 120 × 10 = 1200 watts."
   },
   {
-    question: "Does Ohms Law apply to AC circuits?",
-    answer: "Ohms Law applies to AC circuits, but with important considerations. For purely resistive AC circuits, use RMS values for voltage and current. For reactive circuits (with inductance or capacitance), impedance (Z) replaces resistance: V = I × Z. The phase relationship between voltage and current also affects power calculations, requiring the power factor: P = V × I × cos(φ)."
+    question: "Does Ohm's Law apply to AC circuits?",
+    answer: "Ohm's law applies to AC circuits, but with important considerations. For purely resistive AC circuits, use RMS values for voltage and current. For reactive circuits (with inductance or capacitance), impedance (Z) replaces resistance: V = I × Z. The phase relationship between voltage and current also affects power calculations, requiring the power factor: P = V × I × cos(φ)."
   },
   {
     question: "What's the difference between resistance and impedance?",
     answer: "Resistance (R) is opposition to current flow in DC circuits or AC circuits with pure resistive loads, measured in ohms. Impedance (Z) is the total opposition to current flow in AC circuits, including both resistance and reactance (from inductance and capacitance), also measured in ohms. At DC and low frequencies, R ≈ Z, but they differ significantly at higher frequencies."
   },
   {
-    question: "How do I use Ohms Law for series and parallel circuits?",
-    answer: "In series circuits: total voltage = sum of individual voltages, current is the same throughout, total resistance = sum of individual resistances. In parallel circuits: voltage is the same across all branches, total current = sum of branch currents, 1/Rtotal = 1/R1 + 1/R2 + 1/R3... Apply Ohms Law to each component individually and to the total circuit."
+    question: "How do I use Ohm's Law for series and parallel circuits?",
+    answer: "In series circuits: total voltage = sum of individual voltages, current is the same throughout, total resistance = sum of individual resistances. In parallel circuits: voltage is the same across all branches, total current = sum of branch currents, 1/Rtotal = 1/R1 + 1/R2 + 1/R3... Apply Ohm's law to each component individually and to the total circuit."
   }
 ];
 
@@ -62,7 +62,7 @@ export default function OhmsLawCalculatorPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Ohms Law Calculator
+              Ohm&apos;s Law Calculator
             </h1>
             <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
               Calculate voltage, current, resistance, and power using fundamental electrical laws.
@@ -72,21 +72,21 @@ export default function OhmsLawCalculatorPage() {
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
               <Zap className="h-12 w-12 text-yellow-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Four-Way Calculations</h3>
+              <p className="text-xl font-semibold mb-2">Four-Way Calculations</p>
               <p className="text-gray-600 dark:text-gray-400">
                 Calculate any electrical parameter when given two others: V, I, R, or P.
               </p>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
               <Calculator className="h-12 w-12 text-orange-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Multiple Formulas</h3>
+              <p className="text-xl font-semibold mb-2">Multiple Formulas</p>
               <p className="text-gray-600 dark:text-gray-400">
-                Uses all Ohms Law and power formulas for comprehensive electrical analysis.
+                Uses all Ohm&apos;s law and power formulas for comprehensive electrical analysis.
               </p>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
               <Settings className="h-12 w-12 text-red-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">AC/DC Applications</h3>
+              <p className="text-xl font-semibold mb-2">AC/DC Applications</p>
               <p className="text-gray-600 dark:text-gray-400">
                 Applicable to DC circuits and AC circuits with proper considerations.
               </p>
@@ -100,19 +100,19 @@ export default function OhmsLawCalculatorPage() {
         <OhmsLawCalculator />
       </section>
 
-      {/* Understanding Ohms Law */}
+      {/* Understanding Ohm's Law */}
       <section className="mb-16">
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
           <div className="flex items-center gap-3 mb-6">
             <BookOpen className="h-8 w-8 text-blue-600" />
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Understanding Ohms Law and Power Relationships
+              Understanding Ohm&apos;s Law and Power Relationships
             </h2>
           </div>
           
           <div className="prose prose-lg dark:prose-invert max-w-none">
             <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-              Ohms Law is the fundamental relationship governing electrical circuits, establishing the 
+              Ohm&apos;s law is the fundamental relationship governing electrical circuits, establishing the 
               connection between voltage, current, and resistance. Combined with power formulas, these 
               relationships form the foundation of electrical engineering and circuit analysis.
             </p>
@@ -120,7 +120,7 @@ export default function OhmsLawCalculatorPage() {
             <div className="grid lg:grid-cols-2 gap-8 mb-8">
               <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
                 <h3 className="text-2xl font-semibold text-blue-800 dark:text-blue-300 mb-4">
-                  Ohms Law Formulas
+                  Ohm&apos;s Law Formulas
                 </h3>
                 <div className="space-y-4">
                   <div className="bg-white dark:bg-gray-700 p-4 rounded-lg">
@@ -173,10 +173,10 @@ export default function OhmsLawCalculatorPage() {
 
             <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg mb-8">
               <h3 className="text-xl font-semibold text-yellow-800 dark:text-yellow-300 mb-4">
-                Ohms Law Wheel - The Complete Picture
+                Ohm&apos;s Law Wheel - The Complete Picture
               </h3>
               <p className="text-yellow-700 dark:text-yellow-300 mb-4">
-                The Ohms Law wheel shows all 12 possible calculations using the fundamental relationships. 
+                The Ohm&apos;s law wheel shows all 12 possible calculations using the fundamental relationships. 
                 Any two known values allow calculation of the remaining two parameters.
               </p>
               <div className="grid md:grid-cols-2 gap-6">
@@ -218,7 +218,7 @@ export default function OhmsLawCalculatorPage() {
       <section className="mb-16">
         <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-8">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Real-World Ohms Law Applications
+            Real-World Ohm&apos;s Law Applications
           </h2>
           
           <div className="grid lg:grid-cols-2 gap-8">
@@ -606,7 +606,7 @@ export default function OhmsLawCalculatorPage() {
                 <ul className="space-y-3 text-gray-700 dark:text-gray-300">
                   <li className="flex items-start gap-2">
                     <span className="text-red-500 mt-1">•</span>
-                    <span>Ohms Law applies directly to linear, resistive circuits only</span>
+                    <span>Ohm&apos;s law applies directly to linear, resistive circuits only</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-red-500 mt-1">•</span>
@@ -680,7 +680,7 @@ export default function OhmsLawCalculatorPage() {
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Watts to Amps</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Convert power to current using Ohms Law relationships
+                Convert power to current using Ohm&apos;s law relationships
               </p>
             </Link>
             
@@ -693,7 +693,7 @@ export default function OhmsLawCalculatorPage() {
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Voltage Drop Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Apply Ohms Law to calculate voltage drop in conductors
+                Apply Ohm&apos;s law to calculate voltage drop in conductors
               </p>
             </Link>
 
@@ -706,7 +706,7 @@ export default function OhmsLawCalculatorPage() {
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Wire Resistance</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Calculate conductor resistance for Ohms Law applications
+                Calculate conductor resistance for Ohm&apos;s law applications
               </p>
             </Link>
 
@@ -732,7 +732,7 @@ export default function OhmsLawCalculatorPage() {
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Three Phase Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Apply Ohms Law to three-phase power systems
+                Apply Ohm&apos;s law to three-phase power systems
               </p>
             </Link>
 

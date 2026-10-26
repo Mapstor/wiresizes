@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { VoltageDropCalculator } from '@/components/calculators/VoltageDropCalculator';
 import { Calculator, Zap, BookOpen, Info, CheckCircle, XCircle, ArrowRight, Settings, Gauge, Battery, Lightbulb } from 'lucide-react';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
-import { formatSize } from '@/lib/calculations/sizes';
+import { formatVdPct, voltageDrop } from '@/lib/calculations/voltage-drop';
 
 export const metadata: Metadata = {
   title: 'Voltage Drop Calculator',
@@ -18,34 +18,24 @@ const webAppData = {
   description: "Calculate voltage drop in electrical circuits instantly. Free calculator for copper and aluminum wire. Includes distance calculations."
 };
 
-// Extended wire resistance data with temperature coefficients
-const WIRE_RESISTANCE_DATA_EXTENDED = [
-  { awg: "18", copperOhms: 7.95, aluminumOhms: 13.1, diameter: 1.02, area: 1620 },
-  { awg: "16", copperOhms: 5.00, aluminumOhms: 8.23, diameter: 1.29, area: 2580 },
-  { awg: "14", copperOhms: 3.14, aluminumOhms: 5.17, diameter: 1.63, area: 4110 },
-  { awg: "12", copperOhms: 1.98, aluminumOhms: 3.25, diameter: 2.05, area: 6530 },
-  { awg: "10", copperOhms: 1.24, aluminumOhms: 2.04, diameter: 2.59, area: 10380 },
-  { awg: "8", copperOhms: 0.778, aluminumOhms: 1.28, diameter: 3.26, area: 16510 },
-  { awg: "6", copperOhms: 0.491, aluminumOhms: 0.808, diameter: 4.12, area: 26240 },
-  { awg: "4", copperOhms: 0.308, aluminumOhms: 0.508, diameter: 5.19, area: 41740 },
-  { awg: "3", copperOhms: 0.245, aluminumOhms: 0.403, diameter: 5.83, area: 52620 },
-  { awg: "2", copperOhms: 0.194, aluminumOhms: 0.319, diameter: 6.54, area: 66360 },
-  { awg: "1", copperOhms: 0.154, aluminumOhms: 0.253, diameter: 7.35, area: 83690 },
-  { awg: "1/0", copperOhms: 0.122, aluminumOhms: 0.201, diameter: 8.25, area: 105600 },
-  { awg: "2/0", copperOhms: 0.0967, aluminumOhms: 0.159, diameter: 9.27, area: 133100 },
-  { awg: "3/0", copperOhms: 0.0766, aluminumOhms: 0.126, diameter: 10.4, area: 167800 },
-  { awg: "4/0", copperOhms: 0.0608, aluminumOhms: 0.100, diameter: 11.7, area: 211600 },
-  { awg: "250", copperOhms: 0.0515, aluminumOhms: 0.0847, diameter: 12.7, area: 250000 },
-  { awg: "300", copperOhms: 0.0429, aluminumOhms: 0.0707, diameter: 13.9, area: 300000 },
-  { awg: "350", copperOhms: 0.0367, aluminumOhms: 0.0605, diameter: 15.0, area: 350000 },
-  { awg: "400", copperOhms: 0.0321, aluminumOhms: 0.0529, diameter: 16.0, area: 400000 },
-  { awg: "500", copperOhms: 0.0258, aluminumOhms: 0.0424, diameter: 17.9, area: 500000 }
-];
+// Quick answer: single-phase drop of solid copper at 75 °C from voltage-drop.ts, the calculator's own numbers
+const QUICK_ANSWER_CIRCUITS = [
+  { title: '12 AWG Copper at 120V, 20A:', size: '12', volts: 120, amps: 20, lengthsFt: [25, 50, 75, 100] },
+  { title: '10 AWG Copper at 240V, 30A:', size: '10', volts: 240, amps: 30, lengthsFt: [50, 100, 150, 200] },
+  { title: '6 AWG Copper at 240V, 50A:', size: '6', volts: 240, amps: 50, lengthsFt: [50, 100, 150, 200] },
+].map((circuit) => ({
+  title: circuit.title,
+  rows: circuit.lengthsFt.map((lengthFt) => {
+    const result = voltageDrop({ size: circuit.size, material: 'Cu', amps: circuit.amps, lengthFt, volts: circuit.volts, phase: 'single' });
+    if (!result) throw new Error(`No voltage drop for ${circuit.size} AWG copper`);
+    return { lengthFt, pct: formatVdPct(result.vdPct) };
+  }),
+}));
 
 const faqItems = [
   {
     question: "How do you calculate voltage drop for a 100 foot run?",
-    answer: "For single-phase: Voltage Drop = (2 × Length × Current × Resistance) ÷ 1000. For a 100ft run at 20A using 12 AWG copper: VD = (2 × 100 × 20 × 1.98) ÷ 1000 = 7.92V or 6.6% at 120V."
+    answer: "For single-phase: Voltage Drop = (2 × Length × Current × Resistance) ÷ 1000."
   },
   {
     question: "Why is my voltage drop so high with aluminum wire?",
@@ -54,10 +44,6 @@ const faqItems = [
   {
     question: "Does voltage drop affect 240V circuits?",
     answer: "Yes, but the percentage impact is half that of 120V circuits. A 7.2V drop is 6% on a 120V circuit but only 3% on a 240V circuit. This is why 240V is preferred for long-distance, high-current applications."
-  },
-  {
-    question: "What happens if voltage drop exceeds 5%?",
-    answer: "Excessive voltage drop causes: dimming lights, motors running hot and inefficiently, reduced equipment lifespan, and potential failure to start motors. Electronic equipment may malfunction or shut down."
   },
   {
     question: "Should I calculate voltage drop for LED lighting?",
@@ -92,14 +78,6 @@ const faqItems = [
     answer: "Measure voltage at the panel and at the load while under full current. The difference is your voltage drop. For accuracy, use a true RMS meter and ensure connections are tight."
   },
   {
-    question: "Can voltage drop damage motors?",
-    answer: "Yes, voltage drop reduces motor torque proportionally to voltage squared. A 10% voltage drop causes 19% torque loss, leading to overheating, increased current draw, and premature failure."
-  },
-  {
-    question: "What's the voltage drop for a 50 amp hot tub 75 feet away?",
-    answer: "Using 6 AWG copper at 240V: VD = (2 × 75 × 50 × 0.491) ÷ 1000 = 3.68V or 1.53%."
-  },
-  {
     question: "How does voltage drop affect solar panels?",
     answer: "Solar DC circuits are particularly sensitive to voltage drop because MPPT controllers need minimum voltage to operate."
   }
@@ -128,66 +106,23 @@ export default function VoltageDropCalculatorPage() {
                 <div className="w-full">
                   <h2 className="text-xl font-semibold text-neutral-900 mb-4">Quick Answer: Common Voltage Drop Values</h2>
                   <div className="grid lg:grid-cols-3 gap-6">
-                    <div>
-                      <h3 className="font-semibold text-neutral-800 mb-2">12 AWG Copper at 120V, 20A:</h3>
-                      <ul className="space-y-1 text-sm text-neutral-600">
-                        <li className="flex items-center gap-2">
-                          <span>25 ft = 1.65% drop</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span>50 ft = 3.3% drop</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span>75 ft = 4.95% drop</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span>100 ft = 6.6% drop</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-neutral-800 mb-2">10 AWG Copper at 240V, 30A:</h3>
-                      <ul className="space-y-1 text-sm text-neutral-600">
-                        <li className="flex items-center gap-2">
-                          <span>50 ft = 1.55% drop</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span>100 ft = 3.1% drop</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span>150 ft = 4.65% drop</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span>200 ft = 6.2% drop</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-neutral-800 mb-2">6 AWG Copper at 240V, 50A:</h3>
-                      <ul className="space-y-1 text-sm text-neutral-600">
-                        <li className="flex items-center gap-2">
-                          <span>50 ft = 1.02% drop</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span>100 ft = 2.05% drop</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span>150 ft = 3.07% drop</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span>200 ft = 4.09% drop</span>
-                        </li>
-                      </ul>
-                    </div>
+                    {QUICK_ANSWER_CIRCUITS.map((circuit) => (
+                      <div key={circuit.title}>
+                        <h3 className="font-semibold text-neutral-800 mb-2">{circuit.title}</h3>
+                        <ul className="space-y-1 text-sm text-neutral-600">
+                          {circuit.rows.map((row) => (
+                            <li key={row.lengthFt} className="flex items-center gap-2">
+                              <span>{row.lengthFt} ft = {row.pct} drop</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
                   </div>
-                  
-                  {/* Instant recommendation */}
-                  <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <p className="text-sm text-green-800">
-                      <strong>Rule of Thumb:</strong> For every 50 feet of distance at 120V, expect roughly 1.65% voltage drop per 10 amps on 12 AWG copper. 
-                      Double the voltage (240V) cuts the percentage in half. Larger wire significantly reduces drop.
-                    </p>
-                  </div>
+                  <p className="mt-4 text-sm text-neutral-600">
+                    Solid copper at 75 °C, calculated from NIST Handbook 100 constants, as in the calculator. Stranded
+                    conductors measure slightly higher.
+                  </p>
                 </div>
               </div>
             </div>
@@ -255,9 +190,8 @@ export default function VoltageDropCalculatorPage() {
                   
                   <div className="bg-amber-50 p-4 rounded border border-amber-200">
                     <p className="text-sm text-amber-900">
-                      <strong>Important:</strong> The factor of 2 accounts for both the hot and neutral conductors 
-                      in single-phase circuits. Current flows out through the hot and returns through the neutral, 
-                      doubling the effective wire length.
+                      <strong>Important:</strong> The factor of 2 counts both conductors of a single-phase or DC circuit:
+                      current goes out on one and returns on the other.
                     </p>
                   </div>
                 </div>
@@ -298,42 +232,17 @@ export default function VoltageDropCalculatorPage() {
         </div>
       </section>
 
-      {/* Comprehensive Wire Resistance Reference */}
+      {/* Wire resistance: see the wire resistance calculator */}
       <section className="py-8">
         <div className="container">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6">
-              Complete Wire Resistance Reference Table
-            </h2>
-            
-            <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-neutral-50 border-b border-neutral-200">
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Size</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Copper (Ω/1000ft)</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Aluminum (Ω/1000ft)</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Diameter (mm)</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Area (CM)</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100">
-                    {WIRE_RESISTANCE_DATA_EXTENDED.map((wire) => (
-                      <tr key={wire.awg} className="hover:bg-neutral-50">
-                        <td className="px-4 py-3 font-mono font-medium">
-                          {formatSize(wire.awg)}
-                        </td>
-                        <td className="px-4 py-3 font-mono text-copper-600">{wire.copperOhms}</td>
-                        <td className="px-4 py-3 font-mono text-aluminum-600">{wire.aluminumOhms}</td>
-                        <td className="px-4 py-3 font-mono text-neutral-500">{wire.diameter}</td>
-                        <td className="px-4 py-3 font-mono text-neutral-500">{wire.area.toLocaleString()}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            <p className="text-neutral-700">
+              The{' '}
+              <a href="/calculators/wire-resistance-calculator" className="text-blue-600 hover:underline">
+                wire resistance calculator
+              </a>{' '}
+              lists the resistance of each size and the basis of each column.
+            </p>
           </div>
         </div>
       </section>
@@ -359,7 +268,6 @@ export default function VoltageDropCalculatorPage() {
                       <li>• Motors struggle to start or overheat</li>
                       <li>• Electronic equipment randomly resets</li>
                       <li>• Flickering lights, especially at end of circuit</li>
-                      <li>• Circuit breakers trip without overload</li>
                     </ul>
                   </div>
                   
@@ -387,7 +295,7 @@ export default function VoltageDropCalculatorPage() {
                     </p>
                     <p className="text-sm text-green-700">
                       <strong>Solution:</strong> Retorque all connections to manufacturer specs, 
-                      use antioxidant on aluminum, replace corroded terminals
+                      replace corroded terminals
                     </p>
                   </div>
                   
@@ -529,10 +437,6 @@ export default function VoltageDropCalculatorPage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <ArrowRight className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Apply antioxidant on all aluminum connections</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
                     <span>Minimize splices and junction points</span>
                   </li>
                   <li className="flex items-start gap-2">
@@ -559,10 +463,6 @@ export default function VoltageDropCalculatorPage() {
                   <li className="flex items-start gap-2">
                     <ArrowRight className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" />
                     <span>Document readings for future reference</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" />
-                    <span>Re-torque connections after thermal cycling</span>
                   </li>
                 </ul>
               </div>

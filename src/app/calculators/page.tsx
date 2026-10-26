@@ -73,6 +73,11 @@ const calculatorCategories = [
         href: '/calculators/ground-wire-calculator',
         desc: 'Determines equipment grounding conductor size per NEC Table 250.122',
       },
+      {
+        name: 'Wire Resistance Calculator',
+        href: '/calculators/wire-resistance-calculator',
+        desc: 'Resistance per 1000 ft and power loss',
+      },
     ],
   },
   {
@@ -93,6 +98,11 @@ const calculatorCategories = [
         desc: 'Convert current in amps to power in watts',
       },
       {
+        name: 'Volts to Amps Calculator',
+        href: '/calculators/volts-to-amps-calculator',
+        desc: 'Current from power and voltage',
+      },
+      {
         name: 'Ohm\'s Law Calculator',
         href: '/calculators/ohms-law-calculator',
         desc: 'Complete Ohm\'s Law and power calculations - solve for V, I, R, or P',
@@ -101,6 +111,16 @@ const calculatorCategories = [
         name: 'kW to Amps',
         href: '/calculators/kilowatts-to-amps-calculator',
         desc: 'Convert kilowatts to amps',
+      },
+      {
+        name: 'kVA to Amps Calculator',
+        href: '/calculators/kva-to-amps-calculator',
+        desc: 'Convert kVA to amps',
+      },
+      {
+        name: 'BTU to Watts Calculator',
+        href: '/calculators/btu-to-watts-calculator',
+        desc: 'Convert Btu/h, watts and tons',
       },
     ],
   },
@@ -119,6 +139,11 @@ const calculatorCategories = [
         href: '/calculators/service-entrance-calculator',
         desc: 'Size service entrance conductors',
       },
+      {
+        name: 'Low Voltage Calculator',
+        href: '/calculators/low-voltage-calculator',
+        desc: '12 V and 24 V DC wire size',
+      },
     ],
   },
 ];
@@ -129,6 +154,7 @@ const featuredTools = [
     icon: Activity,
     href: '/calculators/watts-to-amps-calculator',
     description: 'Watts to Amps - Instant power to current conversion',
+    cta: 'Open Calculator',
     color: 'green'
   },
   {
@@ -136,13 +162,13 @@ const featuredTools = [
     icon: Battery,
     href: '/guides/wire-size-for-ev-charger',
     description: 'EV Charger Sizing - Level 2 charger installations',
+    cta: 'Read the guide',
     color: 'orange'
   }
 ];
 
-// Canonical, complete inventory of all calculators on the site (used by the
-// JSON-LD ItemList below). The visible card grid above shows a curated
-// subset; this list is the full set crawlers see.
+// Canonical, complete inventory of the 15 live calculators (used by the
+// JSON-LD ItemList below). The card grid above shows the same 15.
 const ALL_CALCULATORS = [
   { slug: 'wire-size-calculator', name: 'Wire Size Calculator' },
   { slug: 'voltage-drop-calculator', name: 'Voltage Drop Calculator' },
@@ -236,7 +262,7 @@ export default function CalculatorsPage() {
                 <h3 className="font-semibold text-gray-900 mb-2">{tool.title}</h3>
                 <p className="text-sm text-gray-600">{tool.description}</p>
                 <div className="flex items-center gap-1 mt-3 text-blue-600 group-hover:gap-2 transition-all">
-                  <span className="text-sm font-medium">Open Calculator</span>
+                  <span className="text-sm font-medium">{tool.cta}</span>
                   <ArrowRight className="w-4 h-4" />
                 </div>
               </Link>

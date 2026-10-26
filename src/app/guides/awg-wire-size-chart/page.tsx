@@ -47,17 +47,35 @@ const METRIC_ROWS = ['14', '12', '10', '8', '6', '4', '2', '0'].map((name) => {
 
 const INSULATION_TYPES = table31016.columns_types;
 
+const TITLE = 'AWG Wire Size Chart — Diameter & Ampacity';
+const DESCRIPTION = 'AWG chart from 18 AWG to 4/0: diameter in mm and inches, area in mm², copper resistance at 20 °C and NEC Table 310.16 ampacity at 75 °C.';
+
 export const metadata: Metadata = {
-  title: 'AWG Wire Size Chart — Diameter & Ampacity',
-  description: 'Complete AWG reference: diameter (mm, inch), area (kcmil, mm²), DC resistance, NEC 310.16 copper and aluminum ampacity at 75°C.',
+  title: TITLE,
+  description: DESCRIPTION,
   keywords: 'AWG chart, wire size chart, American wire gauge, wire diameter table, AWG to mm conversion, wire resistance table, copper wire sizes, aluminum wire sizes, electrical wire chart',
   alternates: { canonical: '/guides/awg-wire-size-chart' },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    siteName: 'WireSizes.com',
+    title: TITLE,
+    description: DESCRIPTION,
+    url: 'https://wiresizes.com/guides/awg-wire-size-chart',
+    images: ['/opengraph-image'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ['/twitter-image'],
+  },
 };
 
 // Article data for schema
 const articleData = {
-  headline: "Complete AWG Wire Size Chart & Reference Guide",
-  description: "Comprehensive AWG wire size chart with diameters, resistance, ampacity ratings for copper and aluminum. Includes metric conversions and NEC ampacity tables.",
+  headline: "AWG Wire Size Chart & Reference Guide",
+  description: DESCRIPTION,
   url: "https://wiresizes.com/guides/awg-wire-size-chart",
   ...getArticleDates('src/app/guides/awg-wire-size-chart/page.tsx'),
 };
@@ -70,11 +88,10 @@ export default function AWGWireSizeChartPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl">
             <h1 className="text-4xl font-bold mb-4">
-              Complete AWG Wire Size Chart & Reference Guide
+              AWG Wire Size Chart & Reference Guide
             </h1>
             <p className="text-xl text-blue-100 mb-6">
-              American Wire Gauge (AWG) comprehensive reference table with diameters, resistance, 
-              ampacity ratings, and metric conversions for electrical installations.
+              American Wire Gauge (AWG) reference table with diameters, resistance, ampacity and the nearest metric sizes, 18 AWG to 4/0.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link 
@@ -145,7 +162,7 @@ export default function AWGWireSizeChartPage() {
           <div className="max-w-6xl mx-auto">
             <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
               <Table className="w-6 h-6 text-blue-600" />
-              Complete AWG Wire Size Table
+              AWG Wire Size Table
             </h2>
             
             <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden shadow-lg">
@@ -406,7 +423,7 @@ export default function AWGWireSizeChartPage() {
         path="/guides/awg-wire-size-chart"
         name="AWG Wire Size Chart — Diameter, Cross-Section, Resistance, Ampacity"
         alternateName={['American Wire Gauge Reference', 'AWG to mm² Conversion Chart']}
-        description="Comprehensive AWG (American Wire Gauge) reference table from 18 AWG through 4/0 AWG. Per-row data: conductor diameter (mm, inch), cross-sectional area (mm²), DC resistance per 1000 ft at 20°C, and NEC 310.16 ampacity at 75°C for both copper and aluminum."
+        description="AWG (American Wire Gauge) reference table from 18 AWG through 4/0 AWG. Per-row data: conductor diameter (mm, inch), cross-sectional area (mm²), DC resistance per 1000 ft at 20°C, and NEC 310.16 ampacity at 75°C for both copper and aluminum."
         variableMeasured={[
           { name: 'AWG size', description: 'American Wire Gauge designation per ASTM B258' },
           { name: 'Conductor diameter (metric)', description: 'Bare conductor outside diameter', unitText: 'millimeter', unitCode: 'MMT' },

@@ -2,7 +2,16 @@ import { Metadata } from 'next';
 import { AmpacityCalculator } from '@/components/calculators/AmpacityCalculator';
 import { AlertTriangle, Calculator, Thermometer, BookOpen, Info, CheckCircle, ArrowRight, Gauge, AlertCircle, Shield, Activity } from 'lucide-react';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
-import { AMBIENT_ROWS, ambientLabel } from '@/lib/calculations/ampacity';
+import {
+  AMBIENT_ROWS,
+  ambientLabel,
+  adjustmentPercent,
+  correctionFactor,
+  formatFactor,
+  maxOcpd240_4D,
+} from '@/lib/calculations/ampacity';
+import { formatSize, tableAmpacity } from '@/lib/calculations/sizes';
+import type { Material, SizeKey } from '@/lib/calculations/sizes';
 
 export const metadata: Metadata = {
   title: 'Ampacity Calculator — NEC Table 310.16',
@@ -17,6 +26,25 @@ const webAppData = {
   url: "https://wiresizes.com/calculators/ampacity-calculator",
   description: "Calculate wire ampacity with temperature and conduit fill derating factors. Free ampacity calculator for copper and aluminum conductors at different temperature ratings."
 };
+
+// Quick reference: the 60 °C column of NEC Table 310.16 (cu_60 and al_60 of nec-310-16.json).
+// * marks the sizes 240.4(D) limits (the rows of nec-240-4-d.json without conditions).
+function quickReference(material: Material, sizes: SizeKey[]) {
+  return sizes.map((size) => ({
+    size,
+    ampacity: tableAmpacity(size, material, 60),
+    limited: maxOcpd240_4D(size, material)?.conditions === null,
+  }));
+}
+const COPPER_QUICK_REFERENCE = quickReference('Cu', ['14', '12', '10', '8', '6']);
+const ALUMINUM_QUICK_REFERENCE = quickReference('Al', ['12', '10', '8', '6', '4']);
+
+// Key Derating: the 60 °C column of Table 310.15(B)(1)(1) (104 °F is the 36–40 °C row, 122 °F the 46–50 °C row)
+// and Table 310.15(C)(1), with two decimals like the correction table below.
+const FACTOR_104F = formatFactor(correctionFactor('36–40', 'f_60'));
+const FACTOR_122F = formatFactor(correctionFactor('46–50', 'f_60'));
+const FACTOR_4_TO_6 = formatFactor(adjustmentPercent('4–6') / 100);
+const FACTOR_7_TO_9 = formatFactor(adjustmentPercent('7–9') / 100);
 
 // Conduit fill adjustment factors
 const CONDUIT_FILL_FACTORS = [
@@ -46,7 +74,6 @@ const SPECIAL_CONDITIONS = [
     description: "Non-linear loads affect neutral sizing",
     details: [
       "Neutral carries harmonic currents",
-      "Count neutral as current-carrying",
       "Common with LED and electronic loads"
     ]
   }
@@ -54,14 +81,14 @@ const SPECIAL_CONDITIONS = [
 
 // Wire insulation types and ratings
 const INSULATION_TYPES = [
-  { type: "TW", dryRating: "60°C", wetRating: "60°C", application: "Residential wiring in dry locations" },
-  { type: "THW", dryRating: "75°C", wetRating: "75°C", application: "General purpose, wet or dry" },
-  { type: "THWN", dryRating: "75°C", wetRating: "75°C", application: "Conduit and raceway, wet/dry" },
-  { type: "THHN", dryRating: "90°C", wetRating: "—", application: "Dry and damp locations only" },
-  { type: "THWN-2", dryRating: "90°C", wetRating: "90°C", application: "All locations, high temp" },
-  { type: "XHHW", dryRating: "90°C", wetRating: "75°C", application: "Industrial, wet/dry locations" },
-  { type: "XHHW-2", dryRating: "90°C", wetRating: "90°C", application: "All locations, industrial" },
-  { type: "USE-2", dryRating: "90°C", wetRating: "90°C", application: "Underground service entrance" }
+  { type: "TW", dryRating: "60°C", wetRating: "60°C" },
+  { type: "THW", dryRating: "75°C", wetRating: "75°C" },
+  { type: "THWN", dryRating: "75°C", wetRating: "75°C" },
+  { type: "THHN", dryRating: "90°C", wetRating: "—" },
+  { type: "THWN-2", dryRating: "90°C", wetRating: "90°C" },
+  { type: "XHHW", dryRating: "90°C", wetRating: "75°C" },
+  { type: "XHHW-2", dryRating: "90°C", wetRating: "90°C" },
+  { type: "USE-2", dryRating: "90°C", wetRating: "90°C" }
 ];
 
 // Common ampacity mistakes
@@ -72,7 +99,7 @@ const AMPACITY_MISTAKES = [
     solution: "Apply temperature correction for ambients above 86°F"
   },
   {
-    mistake: "Ignoring conduit fill derating",
+    mistake: "Ignoring the adjustment for more than three current-carrying conductors",
     consequence: "Excessive heat buildup in raceways",
     solution: "Apply Table 310.15(C)(1) for more than 3 conductors"
   },
@@ -141,56 +168,28 @@ export default function AmpacityCalculatorPage() {
               <div className="flex items-start gap-3">
                 <Gauge className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
                 <div className="w-full">
-                  <h2 className="text-xl font-semibold text-neutral-900 mb-4">Quick Reference: Common Wire Ampacities at 75°C</h2>
+                  <h2 className="text-xl font-semibold text-neutral-900 mb-4">Quick Reference: Common Wire Ampacities, 60 °C column (NEC Table 310.16)</h2>
                   <div className="grid lg:grid-cols-3 gap-6">
                     <div>
                       <h3 className="font-semibold text-neutral-800 mb-2">Copper Wire:</h3>
                       <ul className="space-y-1 text-sm text-neutral-600">
-                        <li className="flex justify-between">
-                          <span><strong>14 AWG:</strong></span>
-                          <span className="font-mono">20A*</span>
-                        </li>
-                        <li className="flex justify-between">
-                          <span><strong>12 AWG:</strong></span>
-                          <span className="font-mono">25A*</span>
-                        </li>
-                        <li className="flex justify-between">
-                          <span><strong>10 AWG:</strong></span>
-                          <span className="font-mono">35A*</span>
-                        </li>
-                        <li className="flex justify-between">
-                          <span><strong>8 AWG:</strong></span>
-                          <span className="font-mono">50A</span>
-                        </li>
-                        <li className="flex justify-between">
-                          <span><strong>6 AWG:</strong></span>
-                          <span className="font-mono">65A</span>
-                        </li>
+                        {COPPER_QUICK_REFERENCE.map((row) => (
+                          <li key={row.size} className="flex justify-between">
+                            <span><strong>{formatSize(row.size)}:</strong></span>
+                            <span className="font-mono">{row.ampacity}A{row.limited ? '*' : ''}</span>
+                          </li>
+                        ))}
                       </ul>
                     </div>
                     <div>
                       <h3 className="font-semibold text-neutral-800 mb-2">Aluminum Wire:</h3>
                       <ul className="space-y-1 text-sm text-neutral-600">
-                        <li className="flex justify-between">
-                          <span><strong>12 AWG:</strong></span>
-                          <span className="font-mono">20A*</span>
-                        </li>
-                        <li className="flex justify-between">
-                          <span><strong>10 AWG:</strong></span>
-                          <span className="font-mono">30A*</span>
-                        </li>
-                        <li className="flex justify-between">
-                          <span><strong>8 AWG:</strong></span>
-                          <span className="font-mono">40A</span>
-                        </li>
-                        <li className="flex justify-between">
-                          <span><strong>6 AWG:</strong></span>
-                          <span className="font-mono">50A</span>
-                        </li>
-                        <li className="flex justify-between">
-                          <span><strong>4 AWG:</strong></span>
-                          <span className="font-mono">65A</span>
-                        </li>
+                        {ALUMINUM_QUICK_REFERENCE.map((row) => (
+                          <li key={row.size} className="flex justify-between">
+                            <span><strong>{formatSize(row.size)}:</strong></span>
+                            <span className="font-mono">{row.ampacity}A{row.limited ? '*' : ''}</span>
+                          </li>
+                        ))}
                       </ul>
                     </div>
                     <div>
@@ -198,19 +197,19 @@ export default function AmpacityCalculatorPage() {
                       <ul className="space-y-1 text-sm text-neutral-600">
                         <li className="flex items-center gap-2">
                           <Thermometer className="w-4 h-4 text-orange-500" />
-                          <span>104°F: × 0.88</span>
+                          <span>104°F: × {FACTOR_104F}</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <Thermometer className="w-4 h-4 text-red-500" />
-                          <span>122°F: × 0.75</span>
+                          <span>122°F: × {FACTOR_122F}</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <Activity className="w-4 h-4 text-blue-500" />
-                          <span>4-6 wires: × 0.80</span>
+                          <span>4-6 wires: × {FACTOR_4_TO_6}</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <Activity className="w-4 h-4 text-purple-500" />
-                          <span>7-9 wires: × 0.70</span>
+                          <span>7-9 wires: × {FACTOR_7_TO_9}</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <AlertCircle className="w-4 h-4 text-amber-500" />
@@ -285,7 +284,7 @@ export default function AmpacityCalculatorPage() {
                     <li className="flex gap-3">
                       <span className="font-bold text-blue-600">4.</span>
                       <div>
-                        <strong>Final Ampacity:</strong> Base × Temperature × Fill = Derated Ampacity.
+                        <strong>Final Ampacity:</strong> Base × Correction × Adjustment = Adjusted Ampacity.
                       </div>
                     </li>
                   </ol>
@@ -341,7 +340,7 @@ export default function AmpacityCalculatorPage() {
         <div className="container">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-2xl font-bold text-neutral-900 mb-6">
-              Conduit Fill Adjustment Factors (NEC Table 310.15(C)(1))
+              Adjustment Factors for More Than Three Current-Carrying Conductors (NEC Table 310.15(C)(1))
             </h2>
             
             <div className="grid lg:grid-cols-2 gap-6">
@@ -429,7 +428,6 @@ export default function AmpacityCalculatorPage() {
                       <th className="px-4 py-3 text-left font-medium text-neutral-700">Type</th>
                       <th className="px-4 py-3 text-left font-medium text-neutral-700">Dry Rating</th>
                       <th className="px-4 py-3 text-left font-medium text-neutral-700">Wet Rating</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Application</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-neutral-100">
@@ -438,7 +436,6 @@ export default function AmpacityCalculatorPage() {
                         <td className="px-4 py-3 font-mono font-bold">{type.type}</td>
                         <td className="px-4 py-3">{type.dryRating}</td>
                         <td className="px-4 py-3">{type.wetRating}</td>
-                        <td className="px-4 py-3 text-sm">{type.application}</td>
                       </tr>
                     ))}
                   </tbody>

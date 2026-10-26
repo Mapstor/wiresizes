@@ -52,7 +52,7 @@ export default function BTUToWattsCalculatorPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
               <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg">
                 <Flame className="h-8 w-8 text-orange-600 mb-2 mx-auto" />
-                <h3 className="font-semibold text-gray-900 dark:text-white">Heat Output</h3>
+                <p className="text-2xl leading-tight font-semibold text-gray-900 dark:text-white">Heat Output</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">BTU/hr thermal capacity</p>
               </div>
             </div>

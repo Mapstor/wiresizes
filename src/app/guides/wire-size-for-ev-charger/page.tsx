@@ -215,8 +215,6 @@ export default function WireSizeForEVChargerPage() {
                 <div className="bg-white rounded-lg p-4 border border-red-200">
                   <h3 className="font-semibold text-red-900 mb-3">Installation Safety</h3>
                   <ul className="text-sm text-red-800 space-y-2">
-                    <li>• Must be installed by licensed electrician</li>
-                    <li>• Permit and inspection required</li>
                     <li>• Proper grounding essential</li>
                     <li>• Torque connections to spec</li>
                     <li>• Use copper-rated or dual-rated lugs</li>

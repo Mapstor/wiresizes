@@ -49,7 +49,7 @@ const wireResistanceFAQs = [
   },
   {
     question: "Why is copper wire resistance lower than aluminum?",
-    answer: "Copper has lower resistivity than aluminum: 1.72 × 10⁻⁸ ohm-meters vs 2.82 × 10⁻⁸ ohm-meters. This means aluminum has about 64% higher resistance than copper for the same size conductor."
+    answer: "Aluminum EC-H19 has about 64 % higher resistance than copper of the same size: 17.002 against 10.371 Ω·cmil/ft at 20 °C (NIST Handbooks 109 and 100)."
   },
   {
     question: "How do I calculate voltage drop from wire resistance?",
@@ -80,21 +80,21 @@ export default function WireResistanceCalculatorPage() {
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
               <Zap className="h-12 w-12 text-purple-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Precise Calculations</h3>
+              <p className="text-xl font-semibold mb-2">Precise Calculations</p>
               <p className="text-gray-600 dark:text-gray-400">
                 Accurate resistance calculations for copper and aluminum conductors at various temperatures.
               </p>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
               <Calculator className="h-12 w-12 text-indigo-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Multiple Parameters</h3>
+              <p className="text-xl font-semibold mb-2">Multiple Parameters</p>
               <p className="text-gray-600 dark:text-gray-400">
                 Calculate resistance and power loss for any conductor.
               </p>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
               <Settings className="h-12 w-12 text-blue-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Engineering Data</h3>
+              <p className="text-xl font-semibold mb-2">Engineering Data</p>
               <p className="text-gray-600 dark:text-gray-400">
                 Access comprehensive resistance tables and technical specifications.
               </p>
@@ -154,12 +154,6 @@ export default function WireResistanceCalculatorPage() {
                     <span className="font-medium">Copper Resistivity:</span> 1.72 × 10⁻⁸ Ω⋅m at 20°C
                   </div>
                   <div>
-                    <span className="font-medium">Aluminum Resistivity:</span> 2.82 × 10⁻⁸ Ω⋅m at 20°C
-                  </div>
-                  <div>
-                    <span className="font-medium">Silver Resistivity:</span> 1.59 × 10⁻⁸ Ω⋅m at 20°C
-                  </div>
-                  <div>
                     <span className="font-medium">Temperature Coefficient:</span> Increases with temperature
                   </div>
                 </div>
@@ -202,7 +196,7 @@ export default function WireResistanceCalculatorPage() {
               <div className="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-lg">
                 <h4 className="text-lg font-semibold text-purple-800 dark:text-purple-300 mb-3">AC Impedance</h4>
                 <ul className="list-disc pl-4 space-y-2 text-purple-700 dark:text-purple-300 text-sm">
-                  <li>Includes resistance plus reactance (X = jωL)</li>
+                  <li>Includes resistance plus reactance</li>
                   <li>Skin effect concentrates current at surface</li>
                   <li>Proximity effect from nearby conductors</li>
                   <li>Frequency-dependent characteristics</li>
@@ -332,12 +326,12 @@ export default function WireResistanceCalculatorPage() {
           <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">{RESISTANCE_NOTES[0]}</p>
 
           <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
-            <h4 className="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-3">
+            <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-3">
               Temperature Correction Factors
-            </h4>
+            </h3>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h5 className="font-medium text-blue-800 dark:text-blue-300 mb-2">Copper Temperature Coefficient</h5>
+                <h4 className="text-base leading-tight font-medium text-blue-800 dark:text-blue-300 mb-2">Copper Temperature Coefficient</h4>
                 <p className="text-sm text-blue-700 dark:text-blue-300 mb-2">
                   R₂ = R₁ × [1 + 0.00393(T₂ - T₁)]
                 </p>
@@ -349,7 +343,7 @@ export default function WireResistanceCalculatorPage() {
                 </div>
               </div>
               <div>
-                <h5 className="font-medium text-blue-800 dark:text-blue-300 mb-2">Aluminum Temperature Coefficient</h5>
+                <h4 className="text-base leading-tight font-medium text-blue-800 dark:text-blue-300 mb-2">Aluminum Temperature Coefficient</h4>
                 <p className="text-sm text-blue-700 dark:text-blue-300 mb-2">
                   R₂ = R₁ × [1 + 0.00403(T₂ - T₁)]
                 </p>
@@ -383,7 +377,6 @@ export default function WireResistanceCalculatorPage() {
                     <h4 className="font-medium text-gray-900 dark:text-white mb-2">Loss Calculations:</h4>
                     <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
                       <li>• Power loss = I² × R (watts per conductor)</li>
-                      <li>• Annual energy loss = Loss × 8760 hours</li>
                       <li>• Critical for high-current, long-distance applications</li>
                     </ul>
                   </div>
@@ -476,10 +469,6 @@ export default function WireResistanceCalculatorPage() {
                   Testing Requirements
                 </h3>
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Manufacturing QC:</span>
-                    <span className="text-gray-800 dark:text-gray-200">Every conductor lot tested</span>
-                  </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Acceptance Testing:</span>
                     <span className="text-gray-800 dark:text-gray-200">Field verification of installed cable</span>
@@ -587,10 +576,10 @@ export default function WireResistanceCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <Calculator className="h-6 w-6 text-green-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Ohms Law Calculator</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Ohm&apos;s Law Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Apply Ohms law with resistance calculations
+                Apply Ohm&apos;s law with resistance calculations
               </p>
             </Link>
 

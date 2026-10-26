@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import ServiceEntranceCalculator from '@/components/calculators/ServiceEntranceCalculator';
-import { Building, Shield, AlertTriangle, Zap, Calculator, Users } from 'lucide-react';
+import { Building, Shield, Zap, Calculator, Users } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
@@ -54,22 +54,6 @@ export default function ServiceEntranceCalculatorPage() {
                   <div className="text-sm text-purple-100">Service Range</div>
                   <div className="font-semibold">100A to 400A</div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Critical Information */}
-          <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6">
-            <div className="flex items-start gap-3">
-              <AlertTriangle className="w-6 h-6 text-red-600 flex-shrink-0 mt-1" />
-              <div>
-                <h2 className="text-lg font-semibold text-red-900 mb-2">Service Entrance Installation Requirements</h2>
-                <ul className="text-red-800 space-y-1 text-sm">
-                  <li>• Service entrance work requires electrical permit and professional installation in most jurisdictions</li>
-                  <li>• Power will be disconnected during upgrade - plan accordingly</li>
-                  <li>• NEC Table 310.12 allows reduced wire sizes for residential services only</li>
-                  <li>• Improper installation can result in fire, electrocution, or utility rejection</li>
-                </ul>
               </div>
             </div>
           </div>

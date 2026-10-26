@@ -68,21 +68,21 @@ export default function KilowattsToAmpsCalculatorPage() {
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
               <Zap className="h-12 w-12 text-green-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Real Power Conversion</h3>
+              <p className="text-xl font-semibold mb-2">Real Power Conversion</p>
               <p className="text-gray-600 dark:text-gray-400">
                 Convert kilowatts (real power) to current requirements for accurate electrical design.
               </p>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
               <Calculator className="h-12 w-12 text-emerald-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Power Factor Integration</h3>
+              <p className="text-xl font-semibold mb-2">Power Factor Integration</p>
               <p className="text-gray-600 dark:text-gray-400">
                 Accounts for power factor effects on current requirements for realistic calculations.
               </p>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
               <Settings className="h-12 w-12 text-blue-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Multi-Phase Systems</h3>
+              <p className="text-xl font-semibold mb-2">Multi-Phase Systems</p>
               <p className="text-gray-600 dark:text-gray-400">
                 Supports single-phase and three-phase systems with proper phase relationships.
               </p>
@@ -442,22 +442,7 @@ export default function KilowattsToAmpsCalculatorPage() {
             </h2>
           </div>
           
-          <div className="grid lg:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  NEC Requirements
-                </h3>
-                <ul className="space-y-3 text-gray-700 dark:text-gray-300">
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Account for temperature derating factors</span>
-                  </li>
-                </ul>
-              </div>
-
-            </div>
-
+          <div className="grid gap-8">
             <div className="space-y-6">
               <div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">

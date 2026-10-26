@@ -1,22 +1,77 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Calculator, Zap, Target, BarChart3 } from 'lucide-react';
+import { Calculator, Zap, Target, BarChart3, Table, FileText, Home, Car } from 'lucide-react';
+
+const TITLE = 'Electrical Engineering Guides — NEC, AWG';
+const DESCRIPTION = 'Guides to wire sizing, NEC ampacity tables, dwelling service sizes, voltage drop and power calculations.';
 
 export const metadata: Metadata = {
-  title: 'Electrical Engineering Guides — NEC, AWG',
-  description: 'In-depth guides on wire sizing, NEC code compliance, voltage drop and ampacity. For licensed electricians and contractors.',
+  title: TITLE,
+  description: DESCRIPTION,
   keywords: 'electrical guides, NEC compliance guide, wire sizing guide, voltage drop guide, electrical code, ampacity guide, electrical engineering',
   alternates: { canonical: '/guides' },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    siteName: 'WireSizes.com',
+    title: TITLE,
+    description: DESCRIPTION,
+    url: 'https://wiresizes.com/guides',
+    images: ['/opengraph-image'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ['/twitter-image'],
+  },
 };
 
+// Canonical, complete list of the 9 live guides (used by both the in-page
+// rendering below and the JSON-LD ItemList).
 const GUIDES = [
+  {
+    slug: 'awg-wire-size-chart',
+    title: 'AWG Wire Size Chart & Reference Guide',
+    description: 'Diameter, area, resistance and ampacity by AWG size',
+    icon: Table,
+    color: 'blue',
+  },
+  {
+    slug: 'nec-table-310-16',
+    title: 'NEC Table 310.16',
+    description: 'Copper and aluminum ampacity at 60, 75 and 90 °C',
+    icon: FileText,
+    color: 'green',
+  },
+  {
+    slug: 'wire-size-for-200-amp',
+    title: 'Wire Size for 200 Amp Service',
+    description: 'Table 310.12 conductor sizes for a 200 A dwelling service',
+    icon: Home,
+    color: 'amber',
+  },
+  {
+    slug: 'wire-size-for-100-amp',
+    title: '100 Amp Wire Size Guide',
+    description: 'Table 310.12 conductor sizes for a 100 A dwelling service',
+    icon: Home,
+    color: 'amber',
+  },
+  {
+    slug: 'wire-size-for-ev-charger',
+    title: 'EV Charger Wire Size Guide',
+    description: 'Wire size for Level 2 charger circuits',
+    icon: Car,
+    color: 'purple',
+  },
   {
     slug: 'electrical-power-calculations',
     title: 'Electrical Power Calculations',
     description: 'Master the fundamentals of electrical power, current, voltage, and energy calculations.',
     icon: Calculator,
     color: 'blue',
-    topics: ['Watts, Amps, Volts Relationships', 'Power Factor Analysis', 'Single & Three Phase Systems', 'Ohms Law Applications'],
+    topics: ['Watts, Amps, Volts Relationships', 'Power Factor Analysis', 'Single & Three Phase Systems', "Ohm's Law Applications"],
     calculators: ['amps-to-watts-calculator', 'watts-to-amps-calculator', 'ohms-law-calculator']
   },
   {
@@ -48,20 +103,6 @@ const GUIDES = [
   },
 ];
 
-// Canonical, complete list of all guides on the site (used by both the
-// in-page rendering above and the JSON-LD ItemList below).
-const ALL_GUIDES = [
-  { slug: 'awg-wire-size-chart', title: 'AWG Wire Size Chart' },
-  { slug: 'nec-table-310-16', title: 'NEC Table 310.16 — Conductor Ampacities' },
-  { slug: 'nec-code-compliance', title: 'NEC Code Compliance Guide' },
-  { slug: 'wire-size-for-100-amp', title: 'Wire Size for 100 Amp Service' },
-  { slug: 'wire-size-for-200-amp', title: 'Wire Size for 200 Amp Service' },
-  { slug: 'wire-size-for-ev-charger', title: 'Wire Size for EV Charger' },
-  { slug: 'electrical-power-calculations', title: 'Electrical Power Calculations' },
-  { slug: 'single-vs-three-phase', title: 'Single vs Three Phase Systems' },
-  { slug: 'power-factor-explained', title: 'Power Factor Explained' },
-];
-
 const guidesCollectionSchema = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -70,8 +111,7 @@ const guidesCollectionSchema = {
       '@id': 'https://wiresizes.com/guides#webpage',
       url: 'https://wiresizes.com/guides',
       name: 'Electrical Engineering Guides',
-      description:
-        'In-depth guides on electrical wire sizing, NEC code compliance, voltage drop, ampacity and power factor. Written for licensed electricians, contractors, and engineers.',
+      description: DESCRIPTION,
       isPartOf: { '@id': 'https://wiresizes.com/#website' },
       publisher: { '@id': 'https://wiresizes.com/#organization' },
       inLanguage: 'en-US',
@@ -82,9 +122,9 @@ const guidesCollectionSchema = {
       '@type': 'ItemList',
       '@id': 'https://wiresizes.com/guides#guide-list',
       name: 'WireSizes.com electrical engineering guides',
-      numberOfItems: ALL_GUIDES.length,
+      numberOfItems: GUIDES.length,
       itemListOrder: 'https://schema.org/ItemListOrderAscending',
-      itemListElement: ALL_GUIDES.map((g, idx) => ({
+      itemListElement: GUIDES.map((g, idx) => ({
         '@type': 'ListItem',
         position: idx + 1,
         url: `https://wiresizes.com/guides/${g.slug}`,
@@ -113,7 +153,7 @@ export default function GuidesHomePage() {
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 border">
         <div className="max-w-3xl">
           <h1 className="text-4xl font-bold text-gray-900 mb-6">
-            Electrical Engineering Education
+            Electrical Guides
           </h1>
           <div className="flex flex-wrap gap-4">
             <Link 
@@ -155,30 +195,32 @@ export default function GuidesHomePage() {
                   
                   <p className="text-gray-600 mb-4">{guide.description}</p>
                   
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Topics Covered:</h4>
-                      <ul className="space-y-1">
-                        {guide.topics.map((topic, index) => (
-                          <li key={index} className="text-sm text-gray-600 flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 bg-primary-500 rounded-full"></div>
-                            {topic}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Related Calculators:</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {guide.calculators.map((calc, index) => (
-                          <span key={index} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
-                            {calc.replace(/-/g, ' ').replace(/calculator/g, '').trim()}
-                          </span>
-                        ))}
+                  {guide.topics && guide.calculators && (
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">Topics Covered:</h4>
+                        <ul className="space-y-1">
+                          {guide.topics.map((topic, index) => (
+                            <li key={index} className="text-sm text-gray-600 flex items-center gap-2">
+                              <div className="w-1.5 h-1.5 bg-primary-500 rounded-full"></div>
+                              {topic}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">Related Calculators:</h4>
+                        <div className="flex flex-wrap gap-1">
+                          {guide.calculators.map((calc, index) => (
+                            <span key={index} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
+                              {calc.replace(/-/g, ' ').replace(/calculator/g, '').trim()}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                   
                   <div className="mt-6 pt-4 border-t border-gray-100">
                     <span className={`text-${guide.color}-600 font-medium hover:text-${guide.color}-700`}>

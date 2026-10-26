@@ -338,7 +338,7 @@ export default function ElectricalPowerCalculationsGuide() {
           {[
             { name: 'Amps to Watts', slug: 'amps-to-watts-calculator', icon: Calculator, color: 'blue' },
             { name: 'Watts to Amps', slug: 'watts-to-amps-calculator', icon: Zap, color: 'green' },
-            { name: 'Ohms Law', slug: 'ohms-law-calculator', icon: BarChart3, color: 'purple' },
+            { name: "Ohm's Law", slug: 'ohms-law-calculator', icon: BarChart3, color: 'purple' },
             { name: 'Three Phase', slug: 'three-phase-calculator', icon: Target, color: 'amber' },
             { name: 'kVA to Amps', slug: 'kva-to-amps-calculator', icon: TrendingUp, color: 'red' },
           ].map((calc, index) => {

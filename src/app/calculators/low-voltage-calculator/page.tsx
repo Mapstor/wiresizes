@@ -6,14 +6,21 @@ import { CombinedSchema } from '@/components/seo/CombinedSchema';
 
 export const metadata: Metadata = {
   title: 'Low Voltage Calculator — 12V / 24V DC',
-  description: '12V and 24V DC circuit wire sizing for solar, battery banks, RV, and marine.',
-  keywords: 'low voltage calculator, 12v wire size, 24v dc calculator, automotive wire size, marine electrical, solar panel wiring, RV electrical',
+  description: 'Wire size for 12 V and 24 V DC circuits from voltage drop and current: copper, NEC Table 310.16, 60 °C column.',
+  keywords: 'low voltage calculator, 12v wire size, 24v dc calculator',
   openGraph: {
     title: 'Low Voltage Calculator - 12V 24V DC Wire Size Calculator',
-    description: 'Calculate wire size for low voltage DC systems. Automotive, marine, solar, and RV wire sizing calculator.',
+    description: 'Wire size for 12 V and 24 V DC circuits from voltage drop and current: copper, NEC Table 310.16, 60 °C column.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/low-voltage-calculator',
+    siteName: 'WireSizes.com',
     images: ['/opengraph-image']
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Low Voltage Calculator - 12V 24V DC Wire Size Calculator',
+    description: 'Wire size for 12 V and 24 V DC circuits from voltage drop and current: copper, NEC Table 310.16, 60 °C column.',
+    images: ['/twitter-image']
   },
   alternates: { canonical: '/calculators/low-voltage-calculator' },
 };
@@ -23,7 +30,7 @@ export const metadata: Metadata = {
 const webAppData = {
   name: "Low Voltage Calculator",
   url: "https://wiresizes.com/calculators/low-voltage-calculator",
-  description: "Low voltage DC wire calculator for 12V and 24V systems. Calculate wire size for automotive, marine, solar, and RV applications. Includes voltage drop calculations."
+  description: "Wire size for 12 V and 24 V DC circuits from voltage drop and current: copper, NEC Table 310.16, 60 °C column."
 };
 
 const lowVoltageFAQs = [
@@ -52,23 +59,6 @@ export default function LowVoltageCalculatorPage() {
               Calculate wire sizes for 12V and 24V DC systems.
             </p>
           </div>
-          
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-              <Battery className="h-12 w-12 text-blue-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">DC Power Systems</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Specialized calculations for 12V, 24V, and 48V DC electrical systems.
-              </p>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-              <Calculator className="h-12 w-12 text-cyan-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Multiple Applications</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Automotive, marine, solar, RV, and off-grid system wire sizing.
-              </p>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -89,8 +79,7 @@ export default function LowVoltageCalculatorPage() {
           
           <div className="prose prose-lg dark:prose-invert max-w-none">
             <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-              Low voltage DC systems operate at voltages below 50V DC and are commonly found in automotive, 
-              marine, solar, and mobile applications. Unlike AC systems, DC power flows in one direction and 
+              Unlike AC systems, DC power flows in one direction and
               requires different calculations and considerations for proper wire sizing and system design.
             </p>
 
@@ -121,44 +110,6 @@ export default function LowVoltageCalculatorPage() {
                   <li>1V drop in 120V system = 0.83% loss</li>
                   <li>Critical for equipment operation</li>
                   <li>Affects battery life and performance</li>
-                </ul>
-              </div>
-            </div>
-
-            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              Common Low Voltage Applications
-            </h3>
-            <div className="grid lg:grid-cols-3 gap-6 mb-8">
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg">
-                <h4 className="text-lg font-semibold text-yellow-800 dark:text-yellow-300 mb-3">Automotive Systems</h4>
-                <ul className="list-disc pl-4 space-y-1 text-yellow-700 dark:text-yellow-300 text-sm">
-                  <li>Engine control modules</li>
-                  <li>Lighting circuits</li>
-                  <li>Audio/entertainment systems</li>
-                  <li>Charging systems</li>
-                  <li>Starter motor circuits</li>
-                </ul>
-              </div>
-              
-              <div className="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-lg">
-                <h4 className="text-lg font-semibold text-purple-800 dark:text-purple-300 mb-3">Marine Electronics</h4>
-                <ul className="list-disc pl-4 space-y-1 text-purple-700 dark:text-purple-300 text-sm">
-                  <li>Navigation equipment</li>
-                  <li>Radio communications</li>
-                  <li>Fish finders/sonar</li>
-                  <li>Bilge pumps</li>
-                  <li>Cabin lighting</li>
-                </ul>
-              </div>
-              
-              <div className="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-lg">
-                <h4 className="text-lg font-semibold text-orange-800 dark:text-orange-300 mb-3">Solar/RV Systems</h4>
-                <ul className="list-disc pl-4 space-y-1 text-orange-700 dark:text-orange-300 text-sm">
-                  <li>Solar panel wiring</li>
-                  <li>Battery bank connections</li>
-                  <li>Inverter DC connections</li>
-                  <li>LED lighting systems</li>
-                  <li>DC appliances</li>
                 </ul>
               </div>
             </div>
@@ -331,7 +282,7 @@ export default function LowVoltageCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <Zap className="h-6 w-6 text-purple-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Ohms Law Calculator</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Ohm&apos;s Law Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Calculate voltage, current, resistance, and power

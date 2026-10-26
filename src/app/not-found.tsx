@@ -1,5 +1,4 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { 
   Home, 
@@ -7,9 +6,13 @@ import {
   BookOpen, 
   Zap,
   AlertTriangle,
-  ArrowLeft,
   TrendingUp
 } from 'lucide-react';
+import { GoBackButton } from './GoBackButton';
+
+export const metadata: Metadata = {
+  title: { absolute: 'Page not found | WireSizes.com' },
+};
 
 export default function NotFound() {
   const popularCalculators = [
@@ -39,12 +42,12 @@ export default function NotFound() {
     {
       title: 'Wire & Cable Calculators',
       icon: <Zap className="w-5 h-5" />,
-      href: '/calculators#wire-cable',
+      href: '/calculators',
     },
     {
       title: 'Load & Power Calculators',
       icon: <TrendingUp className="w-5 h-5" />,
-      href: '/calculators#load-power',
+      href: '/calculators',
     },
     {
       title: 'Electrical Guides',
@@ -92,13 +95,7 @@ export default function NotFound() {
               <Calculator className="w-5 h-5" />
               Browse All Calculators
             </Link>
-            <button
-              onClick={() => window.history.back()}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-neutral-700 border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              Go Back
-            </button>
+            <GoBackButton />
           </div>
         </section>
 
@@ -140,7 +137,7 @@ export default function NotFound() {
           <div className="grid md:grid-cols-3 gap-4">
             {categories.map((category) => (
               <Link
-                key={category.href}
+                key={category.title}
                 href={category.href}
                 className="bg-white p-6 rounded-lg border border-neutral-200 hover:border-primary-300 hover:shadow-md transition-all group text-center"
               >
@@ -165,13 +162,6 @@ export default function NotFound() {
             it might have been moved or renamed. Check our full calculator list or contact us for assistance.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link
-              href="/sitemap"
-              className="text-primary-600 hover:text-primary-700 underline"
-            >
-              View Sitemap
-            </Link>
-            <span className="text-neutral-400">•</span>
             <Link
               href="/guides"
               className="text-primary-600 hover:text-primary-700 underline"
