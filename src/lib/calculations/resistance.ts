@@ -83,7 +83,12 @@ export const RESISTANCE_NOTES = [
   'Power loss: 2 × I² × R × L ÷ 1000 for DC or single-phase, 3 × I² × R × L ÷ 1000 for three-phase (R in Ω per 1000 ft, L one way in ft).',
 ];
 
-export const RESISTANCE_INPUT_INVALID_MESSAGE = 'Enter a length, current and resistance limit greater than 0.';
+/** The message for an invalid input in each mode. */
+export const RESISTANCE_INPUT_MESSAGES: Record<ResistanceMode, string> = {
+  resistance: 'Enter a one-way distance greater than 0 ft.',
+  distance: 'Enter a loop resistance greater than 0 Ω.',
+  power: 'Enter a one-way distance and a current greater than 0.',
+};
 
 export const RESISTANCE_DEFAULTS = {
   mode: 'resistance' as ResistanceMode,

@@ -12,6 +12,8 @@ export const RESISTANCE_BASIS_LABEL =
   'DC resistance of solid conductors at 75 °C, calculated from NIST Handbook 100 and 109 constants. Stranded conductors measure slightly higher, and AC reactance is not included.';
 export const ALUMINUM_RESISTANCE_NOTE = 'about 64 % higher resistance than copper';
 export const VD_INPUT_INVALID_MESSAGE = 'Enter a current of 0 A or more and a one-way length from 0 ft to 2000 ft.';
+/** Labels of the copper and aluminum lines under the voltage drop inputs. */
+export const VD_HEADLINE_LABELS = { Cu: 'Copper:', Al: 'Aluminum:' };
 
 export const VD_TARGET_OPTIONS = [1, 2, 3, 4, 5];
 export const DEFAULT_VD_TARGET_PCT = 3;
@@ -20,6 +22,16 @@ export const LENGTH_MAX_FT = 2000;
 
 export function targetTitle(meetsTarget: boolean): string {
   return meetsTarget ? MEETS_TARGET_TITLE : ABOVE_TARGET_TITLE;
+}
+
+/** Voltage drop percent as the result panel shows it: "2.02 %". */
+export function formatVdPct(pct: number): string {
+  return `${pct.toFixed(2)} %`;
+}
+
+/** Voltage drop in volts as the result panel shows it: "4.86 V". */
+export function formatVdVolts(volts: number): string {
+  return `${volts.toFixed(2)} V`;
 }
 
 /** Ω per 1000 ft at 75 °C: copper AWG and kcmil, or aluminum EC-H19 (12 AWG and larger); null otherwise. */

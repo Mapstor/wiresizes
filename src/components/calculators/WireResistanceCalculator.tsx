@@ -19,7 +19,7 @@ import {
   powerLossWatts,
   r20,
   RESISTANCE_DEFAULTS,
-  RESISTANCE_INPUT_INVALID_MESSAGE,
+  RESISTANCE_INPUT_MESSAGES,
   RESISTANCE_MODE_OPTIONS,
   RESISTANCE_NOTES,
   resistanceAt,
@@ -74,15 +74,16 @@ function modeFields(mode: ResistanceMode): FieldName[] {
 }
 
 /**
- * The message for each invalid field of the current mode. A temperature that is not a number has no message:
- * the field is marked invalid and the result is left out.
+ * The mode's message for each invalid field of the current mode. A temperature that is not a number has no
+ * message: the field is marked invalid and the result is left out.
  */
 function fieldErrors(inputs: Inputs): Partial<Record<FieldName, string>> {
   const errors: Partial<Record<FieldName, string>> = {};
   const used = modeFields(inputs.mode);
-  if (used.includes('lengthFt') && !(fieldNumber(inputs.lengthFt) > 0)) errors.lengthFt = RESISTANCE_INPUT_INVALID_MESSAGE;
-  if (used.includes('maxLoopOhms') && !(fieldNumber(inputs.maxLoopOhms) > 0)) errors.maxLoopOhms = RESISTANCE_INPUT_INVALID_MESSAGE;
-  if (used.includes('amps') && !(fieldNumber(inputs.amps) > 0)) errors.amps = RESISTANCE_INPUT_INVALID_MESSAGE;
+  const message = RESISTANCE_INPUT_MESSAGES[inputs.mode];
+  if (used.includes('lengthFt') && !(fieldNumber(inputs.lengthFt) > 0)) errors.lengthFt = message;
+  if (used.includes('maxLoopOhms') && !(fieldNumber(inputs.maxLoopOhms) > 0)) errors.maxLoopOhms = message;
+  if (used.includes('amps') && !(fieldNumber(inputs.amps) > 0)) errors.amps = message;
   if (!Number.isFinite(fieldNumber(inputs.tempF))) errors.tempF = '';
   return errors;
 }

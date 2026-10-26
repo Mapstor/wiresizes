@@ -5,6 +5,9 @@ import awgData from '../../../data/verified/awg.json';
 import table31016 from '../../../data/verified/nec-310-16.json';
 
 export type SizeKey = string;
+
+/** Shown in place of the aluminum result when 14 AWG is selected. */
+export const NO_14_AWG_ALUMINUM_NOTE = 'NEC Table 310.16 lists aluminum from 12 AWG, so there is no 14 AWG aluminum result.';
 export type Material = 'Cu' | 'Al';
 export type AmpacityColumn = 60 | 75 | 90;
 

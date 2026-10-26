@@ -18,10 +18,11 @@ import {
   bandLabel,
   calculateAmpacity,
   COLUMN_OPTIONS,
+  formatFactor,
   NOT_PERMITTED_MESSAGE,
 } from '@/lib/calculations/ampacity';
 import type { AmpacityInput, AmpacityResult } from '@/lib/calculations/ampacity';
-import { formatSize } from '@/lib/calculations/sizes';
+import { formatSize, NO_14_AWG_ALUMINUM_NOTE } from '@/lib/calculations/sizes';
 import type { AmpacityColumn, Material } from '@/lib/calculations/sizes';
 
 const SIZE_OPTIONS = AMPACITY_SIZES.map((key) => ({ value: key, label: formatSize(key) }));
@@ -49,7 +50,7 @@ function resultRows(result: AmpacityResult, column: AmpacityColumn): Row[] {
     { label: `NEC Table 310.16, ${column} °C column`, value: amps(result.tableAmpacity as number) },
     {
       label: 'Ambient correction, Table 310.15(B)(1)(1)',
-      value: result.correctionFactor === null ? '–' : String(result.correctionFactor),
+      value: formatFactor(result.correctionFactor),
     },
     { label: 'Adjustment, Table 310.15(C)(1)', value: `${result.adjustmentPercent} %` },
     { label: 'Ampacity', value: result.ampacity === null ? NOT_PERMITTED_MESSAGE : amps(result.ampacity) },
@@ -103,11 +104,15 @@ export function AmpacityCalculator() {
     setInputs(AMPACITY_DEFAULTS);
   };
 
+  const noAluminum = !results.some((r) => r.key === 'aluminum');
+
   const handlePrint = () => {
     const printed: Record<string, string> = {};
     for (const { label, result } of results) {
       for (const row of resultRows(result, inputs.column)) printed[`${label}: ${row.label}`] = row.value;
     }
+    const notes = [`NEC References: ${AMPACITY_NEC_REFERENCES}`];
+    if (noAluminum) notes.unshift(NO_14_AWG_ALUMINUM_NOTE);
     print({
       title: 'Wire Ampacity Calculation',
       inputs: {
@@ -117,7 +122,7 @@ export function AmpacityCalculator() {
         'Number of Current-Carrying Conductors': BAND_OPTIONS.find((o) => o.value === inputs.band)?.label ?? '',
       },
       results: printed,
-      notes: [`NEC References: ${AMPACITY_NEC_REFERENCES}`],
+      notes,
     });
   };
 
@@ -210,6 +215,12 @@ export function AmpacityCalculator() {
                   </dl>
                 </div>
               ))}
+
+              {noAluminum && (
+                <div className="border rounded-lg p-4 bg-aluminum-50 border-aluminum-200">
+                  <p className="text-sm text-neutral-700">{NO_14_AWG_ALUMINUM_NOTE}</p>
+                </div>
+              )}
 
               {/* NEC Reference */}
               <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">

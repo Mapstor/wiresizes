@@ -8,16 +8,19 @@ import { CalculatorLayout } from './CalculatorLayout';
 import { VoltageDropVisual } from '@/components/visualizations/VoltageDropVisual';
 import { Badge } from '@/components/ui/Badge';
 import { AlertCircle, CheckCircle2, Calculator, RotateCcw } from 'lucide-react';
-import { formatSize } from '@/lib/calculations/sizes';
+import { formatSize, NO_14_AWG_ALUMINUM_NOTE } from '@/lib/calculations/sizes';
 import type { Material } from '@/lib/calculations/sizes';
 import { voltageOptions, voltsAfterPhaseChange } from '@/lib/calculations/inputs';
 import type { Phase } from '@/lib/calculations/inputs';
 import {
   ALUMINUM_RESISTANCE_NOTE,
+  formatVdPct,
+  formatVdVolts,
   LENGTH_MAX_FT,
   LENGTH_MIN_FT,
   RESISTANCE_BASIS_LABEL,
   targetTitle,
+  VD_HEADLINE_LABELS,
   VD_INPUT_INVALID_MESSAGE,
   VD_TARGET_OPTIONS,
   voltageDrop,
@@ -40,6 +43,8 @@ const MATERIALS: { material: Material; key: 'copper' | 'aluminum'; label: string
   { material: 'Cu', key: 'copper', label: 'Copper Wire' },
   { material: 'Al', key: 'aluminum', label: 'Aluminum Wire' },
 ];
+
+type Results = { key: 'copper' | 'aluminum'; material: Material; label: string; result: VoltageDropResult }[];
 
 interface Inputs {
   awg: string;
@@ -71,8 +76,6 @@ function fieldErrors(inputs: Inputs): { amps: string | null; lengthFt: string | 
   };
 }
 
-type Results = { key: 'copper' | 'aluminum'; label: string; result: VoltageDropResult }[];
-
 function calculate(inputs: Inputs): Results {
   const results: Results = [];
   for (const m of MATERIALS) {
@@ -85,7 +88,7 @@ function calculate(inputs: Inputs): Results {
       volts: inputs.voltage,
       phase: inputs.phase,
     });
-    if (result) results.push({ key: m.key, label: m.label, result });
+    if (result) results.push({ key: m.key, material: m.material, label: m.label, result });
   }
   return results;
 }
@@ -196,21 +199,35 @@ export function VoltageDropCalculator() {
             </Button>
           </div>
 
-          {/* Prominent Result Display */}
-          {copper && (
-            <div className="mt-6 p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border-2 border-green-200 shadow-lg">
-              <h3 className="text-sm font-medium text-neutral-700 mb-2">Voltage Drop Result:</h3>
-              <div className="text-3xl font-bold">
-                <span className={copper.vdPct <= inputs.targetPct ? 'text-green-600' : 'text-amber-600'}>
-                  {copper.vdPct.toFixed(2)} %
-                </span>
-                <span className="text-lg font-medium text-neutral-600 ml-2">
-                  ({copper.vdVolts.toFixed(2)} V drop)
-                </span>
-              </div>
-              <p className="text-xs text-neutral-500 mt-1">
-                {targetTitle(copper.vdPct <= inputs.targetPct)} ({inputs.targetPct} %)
-              </p>
+          {/* Prominent Result Display: copper, then aluminum (no aluminum row for 14 AWG) */}
+          {results && (
+            <div className="mt-6 p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border-2 border-green-200 shadow-lg space-y-4">
+              {MATERIALS.map((m) => {
+                const result = results.find((r) => r.material === m.material)?.result ?? null;
+                const meets = result !== null && result.vdPct <= inputs.targetPct;
+                return (
+                  <div key={m.key}>
+                    <h3 className="text-sm font-medium text-neutral-700 mb-2">{VD_HEADLINE_LABELS[m.material]}</h3>
+                    {result ? (
+                      <>
+                        <div className="text-3xl font-bold">
+                          <span className={meets ? 'text-green-600' : 'text-amber-600'}>
+                            {formatVdPct(result.vdPct)}
+                          </span>
+                          <span className="text-lg font-medium text-neutral-600 ml-2">
+                            ({formatVdVolts(result.vdVolts)} drop)
+                          </span>
+                        </div>
+                        <p className="text-xs text-neutral-500 mt-1">
+                          {targetTitle(meets)} ({inputs.targetPct} %)
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-sm text-neutral-700">{NO_14_AWG_ALUMINUM_NOTE}</p>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
@@ -253,7 +270,7 @@ export function VoltageDropCalculator() {
                           </h3>
                           <Badge variant={meets ? 'success' : 'warning'}>
                             {meets ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
-                            {result.vdPct.toFixed(2)} % Drop
+                            {formatVdPct(result.vdPct)} Drop
                           </Badge>
                         </div>
                         <p className="text-sm font-medium text-neutral-700 mb-3">{targetTitle(meets)}</p>
@@ -261,7 +278,7 @@ export function VoltageDropCalculator() {
                         <div className="grid grid-cols-2 gap-3 text-sm">
                           <div>
                             <span className="text-neutral-500">Voltage Drop:</span>
-                            <p className="font-semibold font-mono">{result.vdVolts.toFixed(2)} V</p>
+                            <p className="font-semibold font-mono">{formatVdVolts(result.vdVolts)}</p>
                           </div>
                           <div>
                             <span className="text-neutral-500">End Voltage:</span>
@@ -279,6 +296,11 @@ export function VoltageDropCalculator() {
                       </div>
                     );
                   })}
+                  {!results.some((r) => r.material === 'Al') && (
+                    <div className="bg-white border border-neutral-200 rounded-lg p-4">
+                      <p className="text-sm text-neutral-700">{NO_14_AWG_ALUMINUM_NOTE}</p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Material Comparison Note */}

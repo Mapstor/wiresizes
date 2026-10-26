@@ -27,6 +27,11 @@ export const AMBIENT_ROWS: AmbientRow[] = corrections.rows.map((row) => ({
   f_90: row.f_90,
 }));
 
+/** A Table 310.15(B)(1)(1) factor with two decimals, as the table prints it: 1.00, 1.20; "–" where none applies. */
+export function formatFactor(factor: number | null): string {
+  return factor === null ? '–' : factor.toFixed(2);
+}
+
 export function correctionFactor(ambientRow: string, column: CorrectionColumn): number | null {
   const row = AMBIENT_ROWS.find((r) => r.key === ambientRow);
   if (!row) throw new Error(`Unknown Table 310.15(B)(1)(1) row: ${ambientRow}`);

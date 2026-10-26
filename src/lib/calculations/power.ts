@@ -154,14 +154,15 @@ export const KVA_TO_AMPS_COMPARISON_VOLTS = [208, 240, 480];
 
 export const WATTS_TO_AMPS_DEFAULTS = { watts: 1000, volts: 120, phase: 'single' as Phase, pf: 1 };
 
-export type LoadType = 'resistive' | 'inductive' | 'mixed';
 export const VOLTS_TO_AMPS_DEFAULTS = {
   volts: 240,
   watts: 1000,
   phase: 'single' as Phase,
   pf: 1,
-  loadType: 'resistive' as LoadType,
 };
+/** Under the volts-to-amps power factor input. */
+export const POWER_FACTOR_NAMEPLATE_NOTE =
+  'Enter the power factor from the equipment nameplate. Resistive loads such as heaters have a power factor of 1.';
 export const VOLTS_TO_AMPS_COMPARISON_VOLTS = [120, 240, 480];
 
 export const AMPS_TO_WATTS_DEFAULTS = { amps: 20, volts: 120, circuit: 'single' as Circuit, pf: 0.9 };

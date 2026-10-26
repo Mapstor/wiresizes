@@ -16,19 +16,12 @@ import {
   hasPowerInputError,
   isPowerError,
   PHASE_OPTIONS,
+  POWER_FACTOR_NAMEPLATE_NOTE,
   powerInputErrors,
   VOLTS_TO_AMPS_COMPARISON_VOLTS,
   VOLTS_TO_AMPS_DEFAULTS,
 } from '@/lib/calculations/power';
-import type { LoadType, PowerResult, VoltageRow } from '@/lib/calculations/power';
-
-const LOAD_TYPE_OPTIONS = [
-  { value: 'resistive', label: 'Resistive Load (Heaters, Incandescent)' },
-  { value: 'inductive', label: 'Inductive Load (Motors, Transformers)' },
-  { value: 'mixed', label: 'Mixed Load' },
-];
-
-const LOAD_TYPE_PF: Record<LoadType, number> = { resistive: 1.0, inductive: 0.85, mixed: 0.9 };
+import type { PowerResult, VoltageRow } from '@/lib/calculations/power';
 
 interface Inputs {
   /** Field text */
@@ -38,7 +31,6 @@ interface Inputs {
   phase: Phase;
   /** Field text */
   pf: string;
-  loadType: LoadType;
 }
 
 const DEFAULT_INPUTS: Inputs = {
@@ -46,17 +38,15 @@ const DEFAULT_INPUTS: Inputs = {
   watts: String(VOLTS_TO_AMPS_DEFAULTS.watts),
   phase: VOLTS_TO_AMPS_DEFAULTS.phase,
   pf: String(VOLTS_TO_AMPS_DEFAULTS.pf),
-  loadType: VOLTS_TO_AMPS_DEFAULTS.loadType,
 };
 
-/** Inputs from a share link. */
+/** Inputs from a share link; an old link's loadType is ignored. */
 function inputsFromQuery(params: URLSearchParams): Inputs {
   return {
     volts: numberParam(params, 'voltage') ?? DEFAULT_INPUTS.volts,
     watts: numberParam(params, 'power') ?? DEFAULT_INPUTS.watts,
     phase: choiceParam(params, 'phase', ['single', 'three'] as Phase[]) ?? DEFAULT_INPUTS.phase,
     pf: numberParam(params, 'powerFactor') ?? DEFAULT_INPUTS.pf,
-    loadType: choiceParam(params, 'loadType', LOAD_TYPE_OPTIONS.map((o) => o.value as LoadType)) ?? DEFAULT_INPUTS.loadType,
   };
 }
 
@@ -91,7 +81,6 @@ export function VoltsToAmpsCalculator() {
     power: inputs.watts.trim(),
     phase: inputs.phase,
     powerFactor: inputs.pf.trim(),
-    loadType: inputs.loadType,
   });
   const { markChanged, shareUrl } = useUrlState(query, (params) => setInputs(inputsFromQuery(params)));
   const { print } = usePrintExport();
@@ -121,7 +110,6 @@ export function VoltsToAmpsCalculator() {
         'Voltage': `${fieldNumber(inputs.volts)} V`,
         'Power': `${fieldNumber(inputs.watts)} W`,
         'Phase Configuration': phaseLabel(inputs.phase),
-        'Load Type': LOAD_TYPE_OPTIONS.find((o) => o.value === inputs.loadType)?.label ?? inputs.loadType,
         'Power Factor': fieldNumber(inputs.pf),
       },
       results: {
@@ -181,16 +169,6 @@ export function VoltsToAmpsCalculator() {
             onChange={(e) => change({ phase: e.target.value as Phase })}
           />
 
-          <Select
-            label="Load Type"
-            options={LOAD_TYPE_OPTIONS}
-            value={inputs.loadType}
-            onChange={(e) => {
-              const loadType = e.target.value as LoadType;
-              change({ loadType, pf: String(LOAD_TYPE_PF[loadType]) });
-            }}
-          />
-
           <Input
             label="Power Factor"
             type="number"
@@ -198,6 +176,7 @@ export function VoltsToAmpsCalculator() {
             onChange={(e) => change({ pf: e.target.value })}
             onBlur={() => fields.touch('pf')}
             error={fields.shown('pf', errors.pf)}
+            hint={POWER_FACTOR_NAMEPLATE_NOTE}
             min={0}
             max={1}
             step={0.01}

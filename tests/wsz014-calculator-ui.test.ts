@@ -3,7 +3,18 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '../src/lib/calculations/fields';
-import { POWER_ERROR_MESSAGES, powerInputErrors, hasPowerInputError } from '../src/lib/calculations/power';
+import {
+  POWER_ERROR_MESSAGES,
+  POWER_FACTOR_NAMEPLATE_NOTE,
+  powerInputErrors,
+  hasPowerInputError,
+  VOLTS_TO_AMPS_DEFAULTS,
+} from '../src/lib/calculations/power';
+import { NO_14_AWG_ALUMINUM_NOTE } from '../src/lib/calculations/sizes';
+import { formatVdPct, formatVdVolts, VD_HEADLINE_LABELS, voltageDrop } from '../src/lib/calculations/voltage-drop';
+import { RESISTANCE_INPUT_MESSAGES } from '../src/lib/calculations/resistance';
+import { calculateAmpacity, formatFactor } from '../src/lib/calculations/ampacity';
+import { DC_SIZING_DEFAULTS } from '../src/lib/calculations/dc-sizing';
 
 describe('number fields', () => {
   it('empty or blank text is NaN, numbers parse', () => {
@@ -49,5 +60,45 @@ describe('power inputs', () => {
   it('valid inputs have no messages; DC ignores the power factor', () => {
     assert.ok(!hasPowerInputError(powerInputErrors({ value: 1000, volts: 240, circuit: 'single', pf: 0.9 })));
     assert.ok(!hasPowerInputError(powerInputErrors({ value: 20, volts: 12, circuit: 'dc', pf: Number.NaN })));
+  });
+});
+
+describe('WSZ-014 step 3 texts and formats', () => {
+  it('voltage drop headline labels and formats; no 14 AWG aluminum result', () => {
+    assert.deepEqual(VD_HEADLINE_LABELS, { Cu: 'Copper:', Al: 'Aluminum:' });
+    assert.equal(formatVdPct(2.0234), '2.02 %');
+    assert.equal(formatVdVolts(4.8561), '4.86 V');
+    assert.equal(NO_14_AWG_ALUMINUM_NOTE, 'NEC Table 310.16 lists aluminum from 12 AWG, so there is no 14 AWG aluminum result.');
+    assert.equal(voltageDrop({ size: '14', material: 'Al', amps: 10, lengthFt: 50, volts: 120, phase: 'single' }), null);
+    assert.notEqual(voltageDrop({ size: '14', material: 'Cu', amps: 10, lengthFt: 50, volts: 120, phase: 'single' }), null);
+  });
+
+  it('ampacity: factors with two decimals; no 14 AWG aluminum value', () => {
+    assert.equal(formatFactor(1), '1.00');
+    assert.equal(formatFactor(1.2), '1.20');
+    assert.equal(formatFactor(0.82), '0.82');
+    assert.equal(formatFactor(null), '–');
+    const al14 = calculateAmpacity({ size: '14', material: 'Al', column: 60, ambientRow: '26–30', band: '1–3' });
+    assert.equal(al14.tableAmpacity, null);
+  });
+
+  it('wire resistance: one message per mode', () => {
+    assert.deepEqual(RESISTANCE_INPUT_MESSAGES, {
+      resistance: 'Enter a one-way distance greater than 0 ft.',
+      distance: 'Enter a loop resistance greater than 0 Ω.',
+      power: 'Enter a one-way distance and a current greater than 0.',
+    });
+  });
+
+  it('low voltage: the default target is one of the 1–5 % choices', () => {
+    assert.equal(DC_SIZING_DEFAULTS.dropPct, 3);
+  });
+
+  it('volts to amps: no load type; the power factor note', () => {
+    assert.ok(!('loadType' in VOLTS_TO_AMPS_DEFAULTS));
+    assert.equal(
+      POWER_FACTOR_NAMEPLATE_NOTE,
+      'Enter the power factor from the equipment nameplate. Resistive loads such as heaters have a power factor of 1.',
+    );
   });
 });

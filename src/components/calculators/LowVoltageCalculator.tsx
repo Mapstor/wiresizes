@@ -19,6 +19,9 @@ import {
   NO_SIZE_MESSAGE,
 } from '@/lib/calculations/dc-sizing';
 import { formatSize } from '@/lib/calculations/sizes';
+import { VD_TARGET_OPTIONS } from '@/lib/calculations/voltage-drop';
+
+const TARGET_OPTIONS = VD_TARGET_OPTIONS.map((pct) => ({ value: String(pct), label: `${pct} %` }));
 
 interface Inputs {
   /** Field text */
@@ -29,8 +32,7 @@ interface Inputs {
   wattsPerLoad: string;
   /** Field text */
   lengthFt: string;
-  /** Field text */
-  dropPct: string;
+  dropPct: number;
   tempC: number;
 }
 
@@ -44,12 +46,12 @@ const DEFAULT_INPUTS: Inputs = {
   loads: String(DC_SIZING_DEFAULTS.loads),
   wattsPerLoad: String(DC_SIZING_DEFAULTS.wattsPerLoad),
   lengthFt: String(DC_SIZING_DEFAULTS.lengthFt),
-  dropPct: String(DC_SIZING_DEFAULTS.dropPct),
+  dropPct: DC_SIZING_DEFAULTS.dropPct,
   tempC: DC_SIZING_DEFAULTS.tempC,
 };
 
-type FieldName = 'volts' | 'loads' | 'wattsPerLoad' | 'lengthFt' | 'dropPct';
-const NUMBER_FIELDS: FieldName[] = ['volts', 'loads', 'wattsPerLoad', 'lengthFt', 'dropPct'];
+type FieldName = 'volts' | 'loads' | 'wattsPerLoad' | 'lengthFt';
+const NUMBER_FIELDS: FieldName[] = ['volts', 'loads', 'wattsPerLoad', 'lengthFt'];
 
 /** Every number must be greater than 0; the message names them all. */
 function fieldErrors(inputs: Inputs): Partial<Record<FieldName, string>> {
@@ -65,7 +67,8 @@ function inputsFromQuery(params: URLSearchParams): Inputs {
     loads: numberParam(params, 'numberOfLoads') ?? DEFAULT_INPUTS.loads,
     wattsPerLoad: numberParam(params, 'wattsPerLoad') ?? DEFAULT_INPUTS.wattsPerLoad,
     lengthFt: numberParam(params, 'distance') ?? DEFAULT_INPUTS.lengthFt,
-    dropPct: numberParam(params, 'maxVoltageDrop') ?? DEFAULT_INPUTS.dropPct,
+    // a target that is not one of the choices falls back to the default 3 %
+    dropPct: choiceParam(params, 'maxVoltageDrop', VD_TARGET_OPTIONS) ?? DEFAULT_INPUTS.dropPct,
     tempC: choiceParam(params, 'temperature', DC_TEMPERATURE_OPTIONS.map((t) => t.value)) ?? DEFAULT_INPUTS.tempC,
   };
 }
@@ -76,7 +79,7 @@ function inputRows(inputs: Inputs): Row[] {
     { label: 'Number of Loads', value: String(fieldNumber(inputs.loads)) },
     { label: 'Watts per Load', value: `${fieldNumber(inputs.wattsPerLoad)} W` },
     { label: 'Distance (one way)', value: `${fieldNumber(inputs.lengthFt)} ft` },
-    { label: 'Voltage-drop target (your choice)', value: `${fieldNumber(inputs.dropPct)} %` },
+    { label: 'Voltage-drop target (your choice)', value: `${inputs.dropPct} %` },
     { label: 'Conductor temperature', value: DC_TEMPERATURE_OPTIONS.find((t) => t.value === inputs.tempC)?.label ?? '' },
   ];
 }
@@ -90,7 +93,7 @@ function computeRows(inputs: Inputs): { rows: Row[]; resultSize: string | null; 
     volts,
     watts: loads > 0 ? watts : 0,
     lengthFt: fieldNumber(inputs.lengthFt),
-    dropPct: fieldNumber(inputs.dropPct),
+    dropPct: inputs.dropPct,
     tempC: inputs.tempC,
   });
   if ('error' in result) return { rows: [], resultSize: null, message: INPUT_INVALID_MESSAGE };
@@ -121,7 +124,7 @@ export function LowVoltageCalculator() {
     numberOfLoads: inputs.loads.trim(),
     wattsPerLoad: inputs.wattsPerLoad.trim(),
     distance: inputs.lengthFt.trim(),
-    maxVoltageDrop: inputs.dropPct.trim(),
+    maxVoltageDrop: inputs.dropPct,
     temperature: inputs.tempC,
   });
   const { markChanged, shareUrl } = useUrlState(query, (params) => setInputs(inputsFromQuery(params)));
@@ -219,13 +222,11 @@ export function LowVoltageCalculator() {
                   step="any"
                 />
 
-                <Input
+                <Select
                   label="Voltage-drop target (your choice)"
-                  type="number"
-                  {...numberField('dropPct')}
-                  suffix="%"
-                  min={0}
-                  step={0.5}
+                  value={String(inputs.dropPct)}
+                  onChange={(e) => update({ dropPct: Number(e.target.value) })}
+                  options={TARGET_OPTIONS}
                 />
               </div>
 

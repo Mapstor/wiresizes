@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { formatSize } from '@/lib/calculations/sizes';
-import { DEFAULT_VD_TARGET_PCT, targetTitle } from '@/lib/calculations/voltage-drop';
+import { DEFAULT_VD_TARGET_PCT, formatVdPct, targetTitle } from '@/lib/calculations/voltage-drop';
 
 interface VoltageDropVisualProps {
   sourceVoltage: number;
@@ -159,7 +159,7 @@ export function VoltageDropVisual({
           fontWeight="800"
           fill={textColor}
         >
-          -{dropPercent.toFixed(2)} % drop
+          {formatVdPct(dropPercent)} drop
         </text>
 
         {/* Load (end) - position based on wire length */}
