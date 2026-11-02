@@ -1,17 +1,17 @@
 // Voltage drop with DC resistance of solid conductors at 75 °C from awg.json (src/lib/verified/awg.ts):
 // VD = k × I × R × L / 1000 (k = 2 single-phase, √3 three-phase; R in Ω per 1000 ft; L one way in ft),
-// % = VD ÷ volts × 100. Power lost in the conductors: resistance.ts. Size search: from a size up through
-// Table 310.16 until the drop meets the target.
+// % = VD ÷ volts × 100. Parallel sets: the areas add, so R divides by the number of sets. Power lost in the
+// conductors: resistance.ts. Size search: from a size up through Table 310.16 until the drop meets the target.
 import { formatFixed, materialName } from './format';
-import { conductor, formatSize } from '../verified/awg';
+import { areaCmil, conductor, formatSize } from '../verified/awg';
 import type { Material, SizeKey } from '../verified/awg';
-import { columnKey, nextLargerSize, table31016, TABLE_310_16_SIZES } from '../verified/nec-310-16';
+import { columnKey, nextLargerSize, smallestSizeWithArea, table31016, TABLE_310_16_SIZES } from '../verified/nec-310-16';
 import { voltsValid } from './inputs';
 import type { Phase } from './inputs';
 import { powerLossWatts } from './resistance';
 
 export const ENGINE_ID = 'voltage-drop';
-export const DOMAINS = ['conductor-resistance-20c', 'nec-310-16'];
+export const DOMAINS = ['conductor-resistance-20c', 'nec-310-16', 'awg-geometry'];
 
 /** Shown in place of the aluminum result when 14 AWG is selected (also on the ampacity calculator). */
 export const NO_14_AWG_ALUMINUM_NOTE = 'NEC Table 310.16 lists aluminum from 12 AWG, so there is no 14 AWG aluminum result.';
@@ -74,6 +74,8 @@ export interface VoltageDropInput {
   lengthFt: number;
   volts: number;
   phase: Phase;
+  /** Conductors in parallel per phase (1 when left out). */
+  sets?: number;
 }
 
 export interface VoltageDropResult {
@@ -85,9 +87,11 @@ export interface VoltageDropResult {
 }
 
 export function voltageDrop(input: VoltageDropInput): VoltageDropResult | null {
-  const { size, material, amps, lengthFt, volts, phase } = input;
-  const r = resistance75(size, material);
-  if (r === null || !voltsValid(volts, phase) || !(amps >= 0) || !(lengthFt >= 0)) return null;
+  const { size, material, amps, lengthFt, volts, phase, sets } = input;
+  const single = resistance75(size, material);
+  if (single === null || !voltsValid(volts, phase) || !(amps >= 0) || !(lengthFt >= 0)) return null;
+  if (sets !== undefined && !(Number.isInteger(sets) && sets >= 1)) return null;
+  const r = sets === undefined ? single : single / sets;
   const vdVolts = (phaseFactor(phase) * amps * r * lengthFt) / 1000;
   return {
     ohmsPer1000ft: r,
@@ -121,6 +125,23 @@ export function sizeForDrop(input: VoltageDropInput, targetPct: number): SizeFor
   return { size, result };
 }
 
+/** The smallest size the voltage drop calculator offers whose drop is at most `targetPct` (or 2000 kcmil). */
+export function smallestSizeForDrop(input: Omit<VoltageDropInput, 'size'>, targetPct: number): SizeForDrop {
+  return sizeForDrop({ ...input, size: voltageDropSizes(input.material)[0] }, targetPct);
+}
+
+export interface ParallelEquivalent {
+  /** Total area of the sets, in cmil. */
+  totalCmil: number;
+  /** The smallest single Table 310.16 size with at least that area, or null. */
+  smallestSingleSize: SizeKey | null;
+}
+
+/** `sets` conductors of one size in parallel: their areas add (awg.json areas). */
+export function parallelEquivalent(size: SizeKey, sets: number): ParallelEquivalent {
+  const totalCmil = areaCmil(size) * sets;
+  return { totalCmil, smallestSingleSize: smallestSizeWithArea(totalCmil) };
+}
 
 /** A drop of 100 % or more of the supply voltage: DROP_EXCEEDS_SUPPLY_MESSAGE replaces its figures. */
 export function dropExceedsSupply(result: VoltageDropResult): boolean {

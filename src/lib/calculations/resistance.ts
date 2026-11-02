@@ -2,7 +2,7 @@
 // copper R20 from HB100 (kcmil sizes calculated), α 0.00393; aluminum EC-H19 R20 calculated from HB109
 // constants, α 0.00403, 12 AWG and larger. Power loss: 2·I²·R·L/1000 for DC or single-phase,
 // 3·I²·R·L/1000 for three-phase (R in Ω per 1000 ft, L one way in ft), in watts.
-import { AWG_CONSTANTS, conductor } from '../verified/awg';
+import { AWG_CONSTANTS, awgRow, conductor } from '../verified/awg';
 import type { Material, SizeKey } from '../verified/awg';
 import { TABLE_310_16_SIZES } from '../verified/nec-310-16';
 
@@ -37,6 +37,12 @@ export function atTemperature(value20: number, material: Material, tempC: number
 export function resistanceAt(key: SizeKey, material: Material, tempC: number): number | null {
   const base = r20(key, material);
   return base === null ? null : atTemperature(base, material, tempC);
+}
+
+/** Ω per km of copper AWG sizes at `tempC`, from awg.json r20_cu_ohm_per_km (HB100); null for other sizes and aluminum. */
+export function resistancePerKmAt(key: SizeKey, material: Material, tempC: number): number | null {
+  const row = material === 'Cu' ? awgRow(key) : null;
+  return row ? atTemperature(row.r20_cu_ohm_per_km, material, tempC) : null;
 }
 
 export function fahrenheitToCelsius(f: number): number {

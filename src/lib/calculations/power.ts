@@ -1,7 +1,7 @@
 // Power and current for DC, single-phase and balanced three-phase loads (three-phase on line-to-line voltage):
 // I = P ÷ (V × PF) single-phase, I = P ÷ (√3 × V × PF) three-phase, DC with PF 1;
 // I = S ÷ V or S ÷ (√3 × V) from apparent power; P = V × I × PF or √3 × V × I × PF;
-// S = P ÷ PF, Q = √(S² − P²).
+// S = P ÷ PF, Q = √(S² − P²). Power factor correction: Qc = P × (tan φ1 − tan φ2), current reduction = 1 − PF1 ÷ PF2.
 import { powerFactorValid, voltsValid, POWER_FACTOR_INVALID_MESSAGE, VOLTAGE_INVALID_MESSAGE } from './inputs';
 import type { Phase } from './inputs';
 
@@ -134,6 +134,42 @@ export function currentByVoltage(
     if (!isPowerError(r)) rows.push({ volts, amps: r.amps });
   }
   return rows;
+}
+
+export interface PfCorrectionInput {
+  /** Real power P in kW. */
+  kw: number;
+  /** The power factor to correct to. */
+  pfTo: number;
+  /** The present power factor, or kva: apparent power in kVA (PF = kW ÷ kVA). */
+  pfFrom?: number;
+  kva?: number;
+}
+
+export interface PfCorrectionResult {
+  pfFrom: number;
+  /** Capacitor reactive power Qc = P × (tan φ1 − tan φ2), in kVAR. */
+  kvar: number;
+  /** Line current reduction at the same real power and voltage: (1 − PF1 ÷ PF2) × 100. */
+  currentReductionPct: number;
+}
+
+/** tan φ of a power factor: √(1 − PF²) ÷ PF. */
+function tanPhi(pf: number): number {
+  return Math.sqrt(1 - pf * pf) / pf;
+}
+
+/** Null unless P is above 0, both power factors are in (0, 1] and the target is not below the present one. */
+export function pfCorrection(input: PfCorrectionInput): PfCorrectionResult | null {
+  const pfFrom = input.pfFrom ?? (input.kva !== undefined ? input.kw / input.kva : Number.NaN);
+  if (!powerValueValid(input.kw) || !powerFactorValid(pfFrom) || !powerFactorValid(input.pfTo) || input.pfTo < pfFrom) {
+    return null;
+  }
+  return {
+    pfFrom,
+    kvar: input.kw * (tanPhi(pfFrom) - tanPhi(input.pfTo)),
+    currentReductionPct: (1 - pfFrom / input.pfTo) * 100,
+  };
 }
 
 export const PHASE_OPTIONS: { value: Phase; label: string }[] = [
