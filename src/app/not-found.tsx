@@ -57,10 +57,10 @@ export default function NotFound() {
   ];
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 py-16 bg-gradient-to-br from-neutral-50 to-neutral-100">
+    <div className="min-h-screen flex items-center justify-center px-4 py-16 bg-gradient-to-br from-neutral-50 to-neutral-100">
       <div className="max-w-5xl w-full">
         {/* Error Message Section */}
-        <section className="text-center mb-12" role="main" aria-labelledby="error-title">
+        <section className="text-center mb-12" aria-labelledby="error-title">
           <div className="flex justify-center mb-6">
             <div className="relative">
               <div className="w-32 h-32 bg-red-100 rounded-full flex items-center justify-center">
@@ -197,6 +197,6 @@ export default function NotFound() {
           }}
         />
       </div>
-    </main>
+    </div>
   );
 }

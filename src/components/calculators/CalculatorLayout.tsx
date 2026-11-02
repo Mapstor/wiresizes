@@ -14,8 +14,6 @@ interface CalculatorLayoutProps {
   children: ReactNode;
   /** Builds the link Share copies; tools without a Share button leave it out. */
   shareUrl?: () => string;
-  /** The withdrawn tools' own Share handler (unused until WSZ-008–011 rebuild them with shareUrl). */
-  onShare?: () => void;
   onPrint?: () => void;
   /** Share and Print are disabled while the inputs are invalid. */
   actionsDisabled?: boolean;
@@ -26,7 +24,6 @@ export function CalculatorLayout({
   description,
   children,
   shareUrl,
-  onShare,
   onPrint,
   actionsDisabled = false,
 }: CalculatorLayoutProps) {
@@ -45,12 +42,12 @@ export function CalculatorLayout({
               {status}
             </span>
           )}
-          {(shareUrl || onShare) && (
+          {shareUrl && (
             <Tooltip content="Share Results">
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={shareUrl ? share : onShare}
+                onClick={share}
                 disabled={actionsDisabled}
                 aria-label="Share this result"
               >

@@ -241,14 +241,8 @@ export function CircuitBreakerCalculator() {
     ...(hasMotorLoad && { motorFLA }),
   };
 
-  const { getShareableUrl } = useShareableUrl(shareableInputs);
+  useShareableUrl(shareableInputs);
   const { print } = usePrintExport();
-
-  const handleShare = useCallback(async () => {
-    const url = getShareableUrl();
-    await navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }, [getShareableUrl]);
 
   const handlePrint = useCallback(() => {
     if (!results) return;
@@ -279,7 +273,6 @@ export function CircuitBreakerCalculator() {
     <CalculatorLayout
       title="Circuit Breaker Calculator"
       description="Calculate breaker size and conductor requirements for electrical circuits"
-      onShare={handleShare}
       onPrint={handlePrint}
     >
       <div className="space-y-6">

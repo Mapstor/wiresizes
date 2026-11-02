@@ -15,8 +15,9 @@
 //      Template or JSX text that ends in "$" right before an interpolated value counts as a "$" amount too.
 //      Reachable modules elsewhere (the entry files themselves, src/app helpers such as GuideClient.tsx,
 //      src/utils, src/data) are checked the same way and counted separately.
-//   4. (WSZ-014) The same modules may not call alert(), confirm() or prompt(): call expressions in code, bare or
-//      on window, globalThis or self; strings and comments don't count.
+//   4. (WSZ-014; every module since WSZ-015) No .ts/.tsx module under src/ may call alert(), confirm() or prompt(),
+//      reachable from a live route or not (the withdrawn components too): call expressions in code, bare or on
+//      window, globalThis or self; strings and comments don't count.
 // Exceptions: scripts/check-banned.allow.txt, one per line: `<file> | <matched text> | <reason>` (file may be *).
 
 import { readFileSync, existsSync, statSync } from 'node:fs';
@@ -206,13 +207,23 @@ function dialogCallName(node) {
   return null;
 }
 
+function lineOf(sf, node) {
+  return sf.getLineAndCharacterOfPosition(node.getStart(sf)).line + 1;
+}
+
+function checkDialogs(file, sf) {
+  const visit = (node) => {
+    const dialog = dialogCallName(node);
+    if (dialog) dialogCalls.push({ file: rel(file), line: lineOf(sf, node), name: dialog });
+    ts.forEachChild(node, visit);
+  };
+  visit(sf);
+}
+
 function checkSource(file, sf) {
   const skip = moduleSpecifierNodes(sf);
-  const lineOf = (node) => sf.getLineAndCharacterOfPosition(node.getStart(sf)).line + 1;
   const visit = (node) => {
     if (skip.has(node)) return;
-    const dialog = dialogCallName(node);
-    if (dialog) dialogCalls.push({ file: rel(file), line: lineOf(node), name: dialog });
     let text = null;
     let endsBeforeValue = false;
     if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) text = node.text;
@@ -230,8 +241,8 @@ function checkSource(file, sf) {
       }
     }
     if (text !== null) {
-      checkText(file, `line ${lineOf(node)}`, text);
-      if (endsBeforeValue && /\$\s*$/.test(text)) report(file, `line ${lineOf(node)}`, '$ before a value', text);
+      checkText(file, `line ${lineOf(sf, node)}`, text);
+      if (endsBeforeValue && /\$\s*$/.test(text)) report(file, `line ${lineOf(sf, node)}`, '$ before a value', text);
     }
     ts.forEachChild(node, visit);
   };
@@ -248,11 +259,15 @@ for (const [file, sf] of reachable) {
   checkSource(file, sf);
 }
 
+// 4. Dialog calls in every module under src/
+const allModules = walkFiles(srcDir, (f) => ['.ts', '.tsx'].includes(extname(f)));
+for (const file of allModules) checkDialogs(file, reachable.get(file) ?? parse(file));
+
 for (const h of hits) console.log(`${h.file} [${h.where}] "${h.match}" … ${h.context}`);
 for (const d of dialogCalls) console.log(`${d.file} [line ${d.line}] ${d.name}() call`);
 console.log('');
 console.log(`check-banned: ${hits.length} hit(s)`);
-console.log(`  alert(), confirm() and prompt() calls in the scanned modules: ${dialogCalls.length}`);
+console.log(`  alert(), confirm() and prompt() calls in the ${allModules.length} .ts/.tsx modules under src/: ${dialogCalls.length}`);
 console.log(`  prerendered HTML files: ${pages.length}`);
 console.log(`  text files (sitemap.xml, robots.txt, llms.txt, manifest.json, opengraph-image.tsx): ${textFiles.length}`);
 console.log(`  source modules under src/components and src/lib reachable from live routes: ${libCount}`);

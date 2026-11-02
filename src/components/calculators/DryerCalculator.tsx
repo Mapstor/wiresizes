@@ -228,14 +228,8 @@ export function DryerCalculator() {
     existingOutlet: hasExistingOutlet ? existingOutletType.type : 'none',
   };
 
-  const { getShareableUrl } = useShareableUrl(shareableInputs);
+  useShareableUrl(shareableInputs);
   const { print } = usePrintExport();
-
-  const handleShare = useCallback(async () => {
-    const url = getShareableUrl();
-    await navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }, [getShareableUrl]);
 
   const handlePrint = useCallback(() => {
     if (!copperResult) return;
@@ -262,7 +256,6 @@ export function DryerCalculator() {
     <CalculatorLayout
       title="Dryer Wire Size Calculator"
       description="Calculate wire size for electric and gas dryer installations"
-      onShare={handleShare}
       onPrint={handlePrint}
     >
       <div className="space-y-6">

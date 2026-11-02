@@ -261,14 +261,8 @@ export function AirConditionerCalculator() {
     ...(hasHeatStrip && { heatStrip: 'yes', heatStripAmps }),
   };
 
-  const { getShareableUrl } = useShareableUrl(shareableInputs);
+  useShareableUrl(shareableInputs);
   const { print } = usePrintExport();
-
-  const handleShare = useCallback(async () => {
-    const url = getShareableUrl();
-    await navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }, [getShareableUrl]);
 
   const handlePrint = useCallback(() => {
     if (!copperResult) return;
@@ -299,7 +293,6 @@ export function AirConditionerCalculator() {
     <CalculatorLayout
       title="Air Conditioner Wire Size Calculator"
       description="Calculate wire size for air conditioning units per NEC Article 440"
-      onShare={handleShare}
       onPrint={handlePrint}
     >
       <div className="space-y-6">

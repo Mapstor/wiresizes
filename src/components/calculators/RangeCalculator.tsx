@@ -262,14 +262,8 @@ export function RangeCalculator() {
     existingCircuit: hasExistingCircuit ? `${existingBreakerSize}A` : 'none',
   };
 
-  const { getShareableUrl } = useShareableUrl(shareableInputs);
+  useShareableUrl(shareableInputs);
   const { print } = usePrintExport();
-
-  const handleShare = useCallback(async () => {
-    const url = getShareableUrl();
-    await navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }, [getShareableUrl]);
 
   const handlePrint = useCallback(() => {
     if (!copperResult) return;
@@ -300,7 +294,6 @@ export function RangeCalculator() {
     <CalculatorLayout
       title="Range/Cooktop Wire Size Calculator"
       description="Calculate wire size for electric ranges and cooktops per NEC Table 220.55"
-      onShare={handleShare}
       onPrint={handlePrint}
     >
       <div className="space-y-6">

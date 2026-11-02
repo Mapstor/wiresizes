@@ -248,14 +248,8 @@ export function GarageSubpanelCalculator() {
     ...(has240VTools && { tools: `${toolAmps}A` }),
   };
 
-  const { getShareableUrl } = useShareableUrl(shareableInputs);
+  useShareableUrl(shareableInputs);
   const { print } = usePrintExport();
-
-  const handleShare = useCallback(async () => {
-    const url = getShareableUrl();
-    await navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }, [getShareableUrl]);
 
   const handlePrint = useCallback(() => {
     if (!copperResult) return;
@@ -285,7 +279,6 @@ export function GarageSubpanelCalculator() {
     <CalculatorLayout
       title="Garage Subpanel Calculator"
       description="Calculate feeder size for garage subpanels per NEC Article 225"
-      onShare={handleShare}
       onPrint={handlePrint}
     >
       <div className="space-y-6">

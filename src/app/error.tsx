@@ -52,7 +52,7 @@ export default function Error({
   ];
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 py-16 bg-gradient-to-br from-red-50 to-orange-50">
+    <div className="min-h-screen flex items-center justify-center px-4 py-16 bg-gradient-to-br from-red-50 to-orange-50">
       <div className="max-w-3xl w-full">
         {/* Error Icon and Message */}
         <section className="text-center mb-12" role="alert" aria-live="assertive">
@@ -180,6 +180,6 @@ export default function Error({
           </p>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

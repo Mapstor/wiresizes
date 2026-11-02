@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// WSZ-002 gate: structural checks on the Next.js build output (checks 11–15 added in WSZ-014). Node built-ins only.
+// WSZ-002 gate: structural checks on the Next.js build output (checks 11–15 added in WSZ-014, 16 in WSZ-015). Node built-ins only.
 // Run after `rm -rf .next && npm run build`. Prints a PASS/FAIL line per check and exits 1 on any FAIL.
 
 import { readFileSync, existsSync } from 'node:fs';
@@ -415,6 +415,31 @@ function mainLinks(page) {
     if (!text.includes('2020 grounding fact sheet')) failures.push(`${page.route}: "Table 250.66" without "2020 grounding fact sheet"`);
   }
   check('every prerendered page whose text contains "Table 250.66" also contains "2020 grounding fact sheet"', failures, `${pagesWith} pages mention Table 250.66`);
+}
+
+// ── WSZ-015 ─────────────────────────────────────────────────────────────────
+// 16. Every prerendered page has exactly one main landmark: one <main>, and no other element with role="main".
+//     /_global-error is Next.js's built-in root error page (the app has no global-error.tsx): it replaces the root
+//     layout, so it has no <main>, and it is not counted.
+{
+  const GLOBAL_ERROR_ROUTE = '/_global-error';
+  const failures = [];
+  const counted = pages.filter((p) => p.route !== GLOBAL_ERROR_ROUTE);
+  for (const page of counted) {
+    const mains = page.events.filter(
+      (e) => e.type === 'open' && (e.name === 'main' || (e.attrs.role ?? '').trim().toLowerCase() === 'main'),
+    );
+    if (mains.length !== 1 || mains[0].name !== 'main') {
+      const found = mains.map((e) => `<${e.name}${e.attrs.role ? ` role="${e.attrs.role}"` : ''}>`).join(', ') || 'none';
+      failures.push(`${page.route}: ${mains.length} main landmark(s): ${found}`);
+    }
+  }
+  const skipped = pages.length - counted.length;
+  check(
+    'every prerendered page has exactly one <main> and no other role="main" element',
+    failures,
+    `${counted.length} pages${skipped ? `; ${GLOBAL_ERROR_ROUTE} not counted (Next.js's built-in root error page, without the site layout)` : ''}`,
+  );
 }
 
 const failed = results.filter((r) => r.failures.length > 0).length;

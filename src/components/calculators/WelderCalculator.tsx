@@ -224,14 +224,8 @@ export function WelderCalculator() {
     usePreset,
     ...(usePreset && { selectedPreset }),
   };
-  const { getShareableUrl } = useShareableUrl(shareableInputs);
+  useShareableUrl(shareableInputs);
   const { print } = usePrintExport();
-
-  const handleShare = useCallback(async () => {
-    const url = getShareableUrl();
-    await navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }, [getShareableUrl]);
 
   const handlePrint = useCallback(() => {
     if (!result) return;
@@ -259,7 +253,6 @@ export function WelderCalculator() {
     <CalculatorLayout
       title="Welder Calculator"
       description="Calculate wire size and circuit requirements for welding equipment"
-      onShare={handleShare}
       onPrint={handlePrint}
     >
       <div className="max-w-4xl mx-auto p-6 space-y-8">

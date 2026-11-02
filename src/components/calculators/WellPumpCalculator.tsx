@@ -215,14 +215,8 @@ export function WellPumpCalculator() {
     wellDepth,
   };
 
-  const { getShareableUrl } = useShareableUrl(shareableInputs);
+  useShareableUrl(shareableInputs);
   const { print } = usePrintExport();
-
-  const handleShare = useCallback(async () => {
-    const url = getShareableUrl();
-    await navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }, [getShareableUrl]);
 
   const handlePrint = useCallback(() => {
     if (!copperResult) return;
@@ -251,7 +245,6 @@ export function WellPumpCalculator() {
     <CalculatorLayout
       title="Well Pump Wire Size Calculator"
       description="Calculate wire size for well pump installations per NEC Article 430"
-      onShare={handleShare}
       onPrint={handlePrint}
     >
       <div className="space-y-6">

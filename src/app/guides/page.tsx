@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Calculator, Zap, Target, BarChart3, Table, FileText, Home, Car } from 'lucide-react';
 
-const TITLE = 'Electrical Engineering Guides — NEC, AWG';
+const TITLE = 'Electrical Guides — NEC, AWG';
 const DESCRIPTION = 'Guides to wire sizing, NEC ampacity tables, dwelling service sizes, voltage drop and power calculations.';
 
 export const metadata: Metadata = {
@@ -110,7 +110,7 @@ const guidesCollectionSchema = {
       '@type': 'CollectionPage',
       '@id': 'https://wiresizes.com/guides#webpage',
       url: 'https://wiresizes.com/guides',
-      name: 'Electrical Engineering Guides',
+      name: 'Electrical Guides',
       description: DESCRIPTION,
       isPartOf: { '@id': 'https://wiresizes.com/#website' },
       publisher: { '@id': 'https://wiresizes.com/#organization' },
@@ -121,7 +121,7 @@ const guidesCollectionSchema = {
     {
       '@type': 'ItemList',
       '@id': 'https://wiresizes.com/guides#guide-list',
-      name: 'WireSizes.com electrical engineering guides',
+      name: 'WireSizes.com electrical guides',
       numberOfItems: GUIDES.length,
       itemListOrder: 'https://schema.org/ItemListOrderAscending',
       itemListElement: GUIDES.map((g, idx) => ({
