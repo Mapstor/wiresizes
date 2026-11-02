@@ -1,7 +1,7 @@
 'use client';
 
 import { formatFixed } from '@/lib/calculations/format';
-import { diameterMm, formatSize } from '@/lib/calculations/sizes';
+import { diameterMm, formatSize } from '@/lib/verified/awg';
 
 interface WireVisualizationProps {
   awg: string;

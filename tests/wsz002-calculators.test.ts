@@ -3,8 +3,9 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import golden from '../research/golden-cases.json';
-import { areaCmil, TABLE_310_16_SIZES } from '../src/lib/calculations/sizes';
-import type { Material, SizeKey } from '../src/lib/calculations/sizes';
+import { areaCmil } from '../src/lib/verified/awg';
+import type { Material, SizeKey } from '../src/lib/verified/awg';
+import { TABLE_310_16_SIZES } from '../src/lib/verified/nec-310-16';
 import type { Phase } from '../src/lib/calculations/inputs';
 import {
   BASIS_LINES,

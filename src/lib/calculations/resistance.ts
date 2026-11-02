@@ -1,13 +1,18 @@
-// Conductor resistance R(T) = R20 × (1 + α(T − 20)) with R20 and α from data/verified/awg.json:
+// Conductor resistance R(T) = R20 × (1 + α(T − 20)) with R20 and α from awg.json (src/lib/verified/awg.ts):
 // copper R20 from HB100 (kcmil sizes calculated), α 0.00393; aluminum EC-H19 R20 calculated from HB109
 // constants, α 0.00403, 12 AWG and larger. Power loss: 2·I²·R·L/1000 for DC or single-phase,
 // 3·I²·R·L/1000 for three-phase (R in Ω per 1000 ft, L one way in ft), in watts.
-import awgData from '../../../data/verified/awg.json';
-import { conductor, TABLE_310_16_SIZES } from './sizes';
-import type { Material, SizeKey } from './sizes';
+import { AWG_CONSTANTS, conductor } from '../verified/awg';
+import type { Material, SizeKey } from '../verified/awg';
+import { TABLE_310_16_SIZES } from '../verified/nec-310-16';
 
-export const COPPER_ALPHA = awgData.constants.copper_alpha_per_C_20C;
-export const ALUMINUM_ALPHA = awgData.constants.aluminum_ECH19_alpha_per_C_20C;
+export const ENGINE_ID = 'resistance';
+export const DOMAINS = ['conductor-resistance-20c'];
+
+export const COPPER_ALPHA = AWG_CONSTANTS.copper_alpha_per_C_20C;
+export const ALUMINUM_ALPHA = AWG_CONSTANTS.aluminum_ECH19_alpha_per_C_20C;
+// the awg.json resistances, resistivities and α are for 20 °C
+const REFERENCE_TEMP_C = 20;
 
 export type ResistanceMode = 'resistance' | 'distance' | 'power';
 export type CircuitType = 'dc' | 'single' | 'three';
@@ -23,10 +28,15 @@ export function alpha(material: Material): number {
   return material === 'Cu' ? COPPER_ALPHA : ALUMINUM_ALPHA;
 }
 
+/** A 20 °C resistance or resistivity of the material at `tempC`: value × (1 + α × (T − 20 °C)). */
+export function atTemperature(value20: number, material: Material, tempC: number): number {
+  return value20 * (1 + alpha(material) * (tempC - REFERENCE_TEMP_C));
+}
+
 /** Ω per 1000 ft at `tempC`. */
 export function resistanceAt(key: SizeKey, material: Material, tempC: number): number | null {
   const base = r20(key, material);
-  return base === null ? null : base * (1 + alpha(material) * (tempC - 20));
+  return base === null ? null : atTemperature(base, material, tempC);
 }
 
 export function fahrenheitToCelsius(f: number): number {

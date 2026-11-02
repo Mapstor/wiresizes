@@ -10,8 +10,9 @@ import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
 import { Activity, AlertTriangle, Info, Thermometer, Calculator, RefreshCw } from 'lucide-react';
 import { formatEntered, formatFixed, formatSignificant, formatUpTo } from '@/lib/calculations/format';
-import { diameterMm, formatSize, materialName } from '@/lib/calculations/sizes';
-import type { Material, SizeKey } from '@/lib/calculations/sizes';
+import { materialName } from '@/lib/calculations/format';
+import { diameterMm, formatSize } from '@/lib/verified/awg';
+import type { Material, SizeKey } from '@/lib/verified/awg';
 import {
   alpha,
   CIRCUIT_OPTIONS,

@@ -2,12 +2,15 @@
 // CM = 2 × K × I × L ÷ VD, K = 10.371 × (1 + 0.00393 × (T − 20)) Ω·cmil/ft (awg.json constants), L one way in ft,
 // VD = volts × target % ÷ 100. Voltage-drop size: smallest NEC Table 310.16 size whose awg.json area is at least CM.
 // Current size: smallest size whose 60 °C copper ampacity is at least I. The larger of the two applies.
-import awgData from '../../../data/verified/awg.json';
-import { areaCmil, smallestSizeWithArea, tableAmpacity, TABLE_310_16_SIZES } from './sizes';
-import type { SizeKey } from './sizes';
+import { areaCmil, AWG_CONSTANTS } from '../verified/awg';
+import type { SizeKey } from '../verified/awg';
+import { columnKey, smallestSizeWithArea, table31016, TABLE_310_16_SIZES } from '../verified/nec-310-16';
+import { atTemperature } from './resistance';
 
-export const COPPER_K20 = awgData.constants.copper_resistivity_ohm_cmil_per_ft_20C;
-export const COPPER_ALPHA = awgData.constants.copper_alpha_per_C_20C;
+export const ENGINE_ID = 'dc-sizing';
+export const DOMAINS = ['conductor-resistance-20c', 'awg-geometry', 'nec-310-16'];
+
+export const COPPER_K20 = AWG_CONSTANTS.copper_resistivity_ohm_cmil_per_ft_20C;
 
 export const DC_TEMPERATURE_OPTIONS = [
   { value: 20, label: '20 °C (68 °F)' },
@@ -48,7 +51,7 @@ export interface DcSizingResult {
 }
 
 export function resistivityK(tempC: number): number {
-  return COPPER_K20 * (1 + COPPER_ALPHA * (tempC - 20));
+  return atTemperature(COPPER_K20, 'Cu', tempC);
 }
 
 export function dcSizing(input: DcSizingInput): DcSizingResult | { error: 'input-invalid' } {
@@ -61,7 +64,7 @@ export function dcSizing(input: DcSizingInput): DcSizingResult | { error: 'input
   const vdSize = smallestSizeWithArea(requiredCmil);
   const currentSize =
     TABLE_310_16_SIZES.find((key) => {
-      const a = tableAmpacity(key, 'Cu', 60);
+      const a = table31016(key, columnKey('Cu', 60));
       return a !== null && a >= amps;
     }) ?? null;
   let resultSize: SizeKey | null = null;

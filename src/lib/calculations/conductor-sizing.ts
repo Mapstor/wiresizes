@@ -3,26 +3,23 @@
 // 2. NEC 240.4(D) rows without conditions move the size up while the rating exceeds their limit;
 // 3. equipment grounding conductor (EGC) from Table 250.122 by rating, copper or aluminum/CCA column;
 // 4. voltage drop at the load current with 75 °C resistance from awg.json;
-// 5. larger Table 310.16 sizes until the drop meets the reader's target, 2000 kcmil at most;
-// 6. if step 5 upsized, the EGC grows in proportion (250.122(B)): table EGC area × chosen area ÷ step-2 area,
-//    multiplied first, smallest Table 310.16 size at or above it, never smaller than the table EGC, not capped.
-import ratings from '../../../data/verified/nec-240-6-a.json';
-import { formatEntered, formatFixed } from './format';
-import {
-  areaCmil,
-  formatSize,
-  materialName,
-  nextLargerSize,
-  smallestSizeWithArea,
-  tableAmpacity,
-  TABLE_310_16_SIZES,
-} from './sizes';
-import type { Material, SizeKey } from './sizes';
+// 5. larger Table 310.16 sizes until the drop meets the reader's target, 2000 kcmil at most (voltage-drop.ts);
+// 6. if step 5 upsized, the EGC grows in proportion (250.122(B), egcProportional): table EGC area × chosen area ÷
+//    step-2 area, multiplied first, smallest Table 310.16 size at or above it, never smaller than the table EGC, not
+//    capped.
+import { formatEntered, formatFixed, materialName } from './format';
+import { areaCmil, formatSize } from '../verified/awg';
+import type { Material, SizeKey } from '../verified/awg';
+import { columnKey, nextLargerSize, table31016, TABLE_310_16_SIZES } from '../verified/nec-310-16';
+import { max240_4D } from '../verified/nec-240-4-d';
+import { ocpdRatings } from '../verified/nec-240-6-a';
+import { egc as tableEgcFor, egcProportional } from '../verified/nec-250-122';
 import { voltsValid } from './inputs';
 import type { Phase } from './inputs';
-import { DEFAULT_VD_TARGET_PCT, LENGTH_MAX_FT, LENGTH_MIN_FT, voltageDrop } from './voltage-drop';
-import { maxOcpd240_4D } from './ampacity';
-import { egcSize } from './grounding';
+import { DEFAULT_VD_TARGET_PCT, LENGTH_MAX_FT, LENGTH_MIN_FT, sizeForDrop, voltageDrop } from './voltage-drop';
+
+export const ENGINE_ID = 'conductor-sizing';
+export const DOMAINS = ['nec-310-16', 'nec-240-4-d', 'nec-240-ocpd', 'nec-250-grounding', 'conductor-resistance-20c', 'awg-geometry'];
 
 export type SizingError =
   | 'rating-not-standard'
@@ -48,7 +45,7 @@ export const VD_TARGET_MIN_PCT = 1;
 export const VD_TARGET_MAX_PCT = 10;
 
 /** NEC Table 240.6(A) standard ratings. */
-export const STANDARD_RATINGS: number[] = ratings.ratings_a;
+export const STANDARD_RATINGS: number[] = ocpdRatings();
 /** Ratings the wire size calculator offers: 15 A to 400 A. */
 export const WIRE_SIZE_RATINGS: number[] = STANDARD_RATINGS.filter((a) => a >= RATING_MIN_A && a <= RATING_MAX_A);
 
@@ -132,19 +129,20 @@ export function sizeConductor(input: SizeConductorInput): SizeConductorResult | 
   const steps: string[] = [];
 
   // Step 1: smallest size whose 60 °C ampacity is at least the rating (sizes without a 60 °C value are skipped)
+  const column60 = columnKey(material, 60);
   const step1 = TABLE_310_16_SIZES.find((key) => {
-    const a = tableAmpacity(key, material, 60);
+    const a = table31016(key, column60);
     return a !== null && a >= ocpdA;
   });
   if (!step1) throw new Error(`No 60 °C ${metal} size carries ${ocpdA} A`);
   steps.push(
-    `Smallest ${metal} size with a 60 °C ampacity of at least ${amps(ocpdA)} in NEC Table 310.16: ${formatSize(step1)} (${amps(tableAmpacity(step1, material, 60) as number)}).`,
+    `Smallest ${metal} size with a 60 °C ampacity of at least ${amps(ocpdA)} in NEC Table 310.16: ${formatSize(step1)} (${amps(table31016(step1, column60) as number)}).`,
   );
 
   // Step 2: 240.4(D) rows without conditions
   let step2 = step1;
   for (;;) {
-    const limit = maxOcpd240_4D(step2, material);
+    const limit = max240_4D(step2, material);
     if (!limit || limit.conditions !== null) break;
     if (ocpdA <= limit.max_ocpd_a) {
       steps.push(
@@ -153,7 +151,7 @@ export function sizeConductor(input: SizeConductorInput): SizeConductorResult | 
       break;
     }
     let next = nextLargerSize(step2);
-    while (next && tableAmpacity(next, material, 60) === null) next = nextLargerSize(next);
+    while (next && table31016(next, column60) === null) next = nextLargerSize(next);
     if (!next) break;
     steps.push(
       `NEC 240.4(D) limits ${formatSize(step2)} ${metal} to ${amps(limit.max_ocpd_a)} overcurrent protection, so the size moves up to ${formatSize(next)}.`,
@@ -162,7 +160,7 @@ export function sizeConductor(input: SizeConductorInput): SizeConductorResult | 
   }
 
   // Step 3: EGC by rating and material
-  const tableEgc = egcSize(ocpdA, material) as SizeKey;
+  const tableEgc = tableEgcFor(ocpdA, material) as SizeKey;
   steps.push(
     `Ground wire for a ${amps(ocpdA)} breaker or fuse, NEC Table 250.122 (${material === 'Cu' ? 'copper' : 'aluminum or copper-clad aluminum'} column): ${formatSize(tableEgc)}.`,
   );
@@ -177,13 +175,7 @@ export function sizeConductor(input: SizeConductorInput): SizeConductorResult | 
 
   // Step 5: step up until the drop meets the target or 2000 kcmil
   if (vd.vdPct > target) {
-    while (vd.vdPct > target) {
-      const next = nextLargerSize(size);
-      if (!next) break;
-      size = next;
-      vd = voltageDrop({ size, material, amps: loadA, lengthFt, volts, phase });
-      if (!vd) throw new Error(`No resistance for ${size} ${metal}`);
-    }
+    ({ size, result: vd } = sizeForDrop({ size, material, amps: loadA, lengthFt, volts, phase }, target));
     if (vd.vdPct <= target) {
       steps.push(
         `Above your ${target} % target, so the size steps up to ${formatSize(size)}: ${formatFixed(vd.vdVolts, 2)} V, ${formatFixed(vd.vdPct, 2)} %.`,
@@ -198,9 +190,8 @@ export function sizeConductor(input: SizeConductorInput): SizeConductorResult | 
   // Step 6: proportional EGC when step 5 upsized
   let egc: SizeKey | null = tableEgc;
   if (size !== step2) {
-    const required = (areaCmil(tableEgc) * areaCmil(size)) / areaCmil(step2);
-    const candidate = smallestSizeWithArea(required);
-    egc = candidate === null ? null : areaCmil(candidate) >= areaCmil(tableEgc) ? candidate : tableEgc;
+    const { requiredCmil: required, egc: proportional } = egcProportional(tableEgc, step2, size);
+    egc = proportional;
     steps.push(
       egc
         ? `Ground wire increased in proportion to the larger conductors (NEC 250.122(B)): ${cmil(areaCmil(tableEgc))} × ${cmil(areaCmil(size))} ÷ ${cmil(areaCmil(step2))} = ${cmil(required)}, so ${formatSize(egc)}.`
@@ -213,7 +204,7 @@ export function sizeConductor(input: SizeConductorInput): SizeConductorResult | 
 
   return {
     size,
-    ampacity60: tableAmpacity(size, material, 60) as number,
+    ampacity60: table31016(size, column60) as number,
     minSizeByAmpacity: step2,
     vdVolts: vd.vdVolts,
     vdPct: vd.vdPct,

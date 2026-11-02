@@ -16,7 +16,7 @@ import {
   PROPORTIONAL_NOTE,
   TABLE_250_122_ROWS,
 } from '@/lib/calculations/grounding';
-import { formatSize } from '@/lib/calculations/sizes';
+import { formatSize } from '@/lib/verified/awg';
 
 const RATING_OPTIONS = GROUND_WIRE_RATINGS.map((a) => ({ value: String(a), label: `${a} A` }));
 const COPPER_LABEL = 'Copper';

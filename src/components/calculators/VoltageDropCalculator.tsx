@@ -9,8 +9,8 @@ import { CalculatorLayout } from './CalculatorLayout';
 import { VoltageDropVisual } from '@/components/visualizations/VoltageDropVisual';
 import { Badge } from '@/components/ui/Badge';
 import { AlertCircle, CheckCircle2, Calculator, RotateCcw } from 'lucide-react';
-import { formatSize, NO_14_AWG_ALUMINUM_NOTE } from '@/lib/calculations/sizes';
-import type { Material } from '@/lib/calculations/sizes';
+import { formatSize } from '@/lib/verified/awg';
+import type { Material } from '@/lib/verified/awg';
 import { voltageOptions, voltsAfterPhaseChange } from '@/lib/calculations/inputs';
 import type { Phase } from '@/lib/calculations/inputs';
 import {
@@ -23,6 +23,7 @@ import {
   formatVdVolts,
   LENGTH_MAX_FT,
   LENGTH_MIN_FT,
+  NO_14_AWG_ALUMINUM_NOTE,
   RESISTANCE_BASIS_LABEL,
   targetTitle,
   VD_HEADLINE_LABELS,

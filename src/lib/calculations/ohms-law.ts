@@ -3,6 +3,10 @@
 import { fieldNumber } from './fields';
 import { formatSignificant } from './format';
 
+export const ENGINE_ID = 'ohms-law';
+// NIST SP 330 (W = V·A, Ω = V/A) is in the power-definitions row
+export const DOMAINS = ['power-definitions'];
+
 export type OhmsLawMode = 'voltage' | 'current' | 'resistance' | 'power';
 
 export const OHMS_LAW_MODE_OPTIONS: { value: OhmsLawMode; label: string }[] = [

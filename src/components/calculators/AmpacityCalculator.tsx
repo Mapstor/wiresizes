@@ -23,8 +23,10 @@ import {
   NOT_PERMITTED_MESSAGE,
 } from '@/lib/calculations/ampacity';
 import type { AmpacityInput, AmpacityResult } from '@/lib/calculations/ampacity';
-import { formatSize, NO_14_AWG_ALUMINUM_NOTE } from '@/lib/calculations/sizes';
-import type { AmpacityColumn, Material } from '@/lib/calculations/sizes';
+import { NO_14_AWG_ALUMINUM_NOTE } from '@/lib/calculations/voltage-drop';
+import { formatSize } from '@/lib/verified/awg';
+import type { Material } from '@/lib/verified/awg';
+import type { AmpacityColumn } from '@/lib/verified/nec-310-16';
 
 const SIZE_OPTIONS = AMPACITY_SIZES.map((key) => ({ value: key, label: formatSize(key) }));
 const TEMPERATURE_OPTIONS = COLUMN_OPTIONS.map((c) => ({ value: String(c.value), label: c.label }));

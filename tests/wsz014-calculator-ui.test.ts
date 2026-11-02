@@ -10,8 +10,7 @@ import {
   hasPowerInputError,
   VOLTS_TO_AMPS_DEFAULTS,
 } from '../src/lib/calculations/power';
-import { NO_14_AWG_ALUMINUM_NOTE } from '../src/lib/calculations/sizes';
-import { formatVdPct, formatVdVolts, VD_HEADLINE_LABELS, voltageDrop } from '../src/lib/calculations/voltage-drop';
+import { formatVdPct, formatVdVolts, NO_14_AWG_ALUMINUM_NOTE, VD_HEADLINE_LABELS, voltageDrop } from '../src/lib/calculations/voltage-drop';
 import { RESISTANCE_INPUT_MESSAGES } from '../src/lib/calculations/resistance';
 import { calculateAmpacity, formatFactor } from '../src/lib/calculations/ampacity';
 import { DC_SIZING_DEFAULTS } from '../src/lib/calculations/dc-sizing';

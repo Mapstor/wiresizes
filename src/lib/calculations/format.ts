@@ -1,6 +1,9 @@
 // Numbers as the calculators show them in results, headlines and print payloads: en-US digit grouping and never
 // exponential notation ("38,243.68", "15,900", "0.000005186"). Rounding is toFixed's or toPrecision's, so the
 // digits are the ones the tools showed before; only the grouping is new. The same output on server and client (D-11).
+// Also the material names. Sizes ("14 AWG", "250 kcmil") are formatted by src/lib/verified/awg.ts, which knows the
+// kcmil sizes.
+import type { Material } from '../verified/awg';
 
 const formatters = new Map<string, Intl.NumberFormat>();
 
@@ -38,4 +41,9 @@ export function formatSignificant(value: number, digits: number): string {
 /** A number as the reader entered it, grouped and unrounded: formatEntered(1500) → "1,500", formatEntered(0.85) → "0.85". */
 export function formatEntered(value: number): string {
   return group(value, 'entered', { maximumFractionDigits: 20 });
+}
+
+/** "copper" or "aluminum". */
+export function materialName(material: Material): string {
+  return material === 'Cu' ? 'copper' : 'aluminum';
 }

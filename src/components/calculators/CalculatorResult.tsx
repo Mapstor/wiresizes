@@ -1,7 +1,7 @@
 import { Check, AlertTriangle, X } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
 import { formatEntered, formatFixed } from '@/lib/calculations/format';
-import { conductor, formatSize } from '@/lib/calculations/sizes';
+import { conductor, formatSize } from '@/lib/verified/awg';
 import { targetTitle } from '@/lib/calculations/voltage-drop';
 
 interface CalculatorResultProps {

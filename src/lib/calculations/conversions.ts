@@ -2,6 +2,9 @@
 // 1 Btu_IT/h = 0.2930711 W; electrical horsepower = 746 W (exact); horsepower (550 ft·lbf/s) = 745.6999 W;
 // ton of refrigeration = 3516.853 W. Tons from Btu/h: Btu/h ÷ 12,000.
 
+export const ENGINE_ID = 'conversions';
+export const DOMAINS = ['nist-sp811-conversions'];
+
 export const W_PER_BTU_PER_H = 0.2930711;
 export const W_PER_ELECTRICAL_HP = 746;
 export const W_PER_MECHANICAL_HP = 745.6999;

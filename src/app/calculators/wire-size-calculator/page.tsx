@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import { WireSizeCalculator } from '@/components/calculators/WireSizeCalculator';
 import { AlertTriangle, Calculator, Zap, BookOpen, Info, CheckCircle, ArrowRight, Gauge, AlertCircle, Shield, Lightbulb, Wrench } from 'lucide-react';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
-import { NEC_310_16 } from '@/lib/data/nec-tables';
 import { AMBIENT_ROWS, ambientLabel } from '@/lib/calculations/ampacity';
+import { TABLE_310_16_ROWS } from '@/lib/verified/nec-310-16';
 
 export const metadata: Metadata = {
   title: 'Wire Size Calculator — AWG / NEC 310.16',
@@ -34,19 +34,19 @@ const webAppData = {
   description: "Calculate the correct AWG wire size for any electrical circuit. Free wire size calculator for copper and aluminum conductors. Includes voltage drop, ampacity, and distance calculations."
 };
 
-// Wire ampacity table — derived from canonical NEC 310.16. Limited to
+// Wire ampacity table — NEC Table 310.16 (src/lib/verified/nec-310-16.ts). Limited to
 // 14 AWG through 4/0 since this calculator is for branch / feeder
 // circuits typical in residential and small-commercial work.
-const WIRE_AMPACITY_TABLE = NEC_310_16
-  .filter((row) => /^(14|12|10|8|6|4|3|2|1|[1234]\/0)$/.test(row.awg))
+const WIRE_AMPACITY_TABLE = TABLE_310_16_ROWS
+  .filter((row) => /^(14|12|10|8|6|4|3|2|1|[1234]\/0)$/.test(row.size))
   .map((row) => ({
-    awg: row.awg,
-    copper60C: row.copper_60c,
-    copper75C: row.copper_75c,
-    copper90C: row.copper_90c,
-    aluminum60C: row.aluminum_60c ?? '—',
-    aluminum75C: row.aluminum_75c ?? '—',
-    aluminum90C: row.aluminum_90c ?? '—',
+    awg: row.size,
+    copper60C: row.cu_60,
+    copper75C: row.cu_75,
+    copper90C: row.cu_90,
+    aluminum60C: row.al_60 ?? '—',
+    aluminum75C: row.al_75 ?? '—',
+    aluminum90C: row.al_90 ?? '—',
   }));
 
 // Common mistakes in wire sizing

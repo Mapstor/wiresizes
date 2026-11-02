@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { Building, Calculator, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
-import { formatSize } from '@/lib/calculations/sizes';
+import { formatSize } from '@/lib/verified/awg';
 import {
   NO_ROW_MESSAGE,
   SCOPE_LINES,

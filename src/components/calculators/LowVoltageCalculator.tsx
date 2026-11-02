@@ -19,7 +19,7 @@ import {
   INPUT_INVALID_MESSAGE,
   NO_SIZE_MESSAGE,
 } from '@/lib/calculations/dc-sizing';
-import { formatSize } from '@/lib/calculations/sizes';
+import { formatSize } from '@/lib/verified/awg';
 import { VD_TARGET_OPTIONS } from '@/lib/calculations/voltage-drop';
 
 const TARGET_OPTIONS = VD_TARGET_OPTIONS.map((pct) => ({ value: String(pct), label: `${pct} %` }));

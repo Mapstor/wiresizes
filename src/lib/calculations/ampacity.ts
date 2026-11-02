@@ -1,77 +1,53 @@
 // Ampacity arithmetic: NEC Table 310.16 value × Table 310.15(B)(1)(1) ambient correction factor
 // × Table 310.15(C)(1) adjustment percent, with the 240.4(D) overcurrent limit reported separately.
-import corrections from '../../../data/verified/nec-310-15-B-1-1.json';
-import adjustments from '../../../data/verified/nec-310-15-C-1.json';
-import limits240_4D from '../../../data/verified/nec-240-4-d.json';
-import { tableAmpacity, TABLE_310_16_SIZES } from './sizes';
-import type { AmpacityColumn, Material, SizeKey } from './sizes';
+import { correction } from '../verified/nec-310-15-B-1-1';
+import type { AmbientRow, CorrectionColumn } from '../verified/nec-310-15-B-1-1';
+import { adjustment, ADJUSTMENT_ROWS } from '../verified/nec-310-15-C-1';
+import { max240_4D } from '../verified/nec-240-4-d';
+import { columnKey, table31016, TABLE_310_16_SIZES } from '../verified/nec-310-16';
+import type { AmpacityColumn } from '../verified/nec-310-16';
+import type { Material, SizeKey } from '../verified/awg';
 
-export type CorrectionColumn = 'f_60' | 'f_75' | 'f_90';
+export const ENGINE_ID = 'ampacity';
+export const DOMAINS = ['nec-310-16', 'nec-310-15-corrections', 'nec-240-4-d'];
+
+export { AMBIENT_ROWS } from '../verified/nec-310-15-B-1-1';
+export type { AmbientRow, CorrectionColumn } from '../verified/nec-310-15-B-1-1';
+export type { Limit240_4D } from '../verified/nec-240-4-d';
+// The names before WSZ-003a, for the ampacity calculator page and the guides
+export { correction as correctionFactor } from '../verified/nec-310-15-B-1-1';
+export { max240_4D as maxOcpd240_4D } from '../verified/nec-240-4-d';
 
 export const NOT_PERMITTED_MESSAGE = 'Not permitted at this ambient temperature for this insulation rating';
-
-export interface AmbientRow {
-  key: string;
-  ambientF: string;
-  f_60: number | null;
-  f_75: number | null;
-  f_90: number | null;
-}
-
-/** The 16 rows of Table 310.15(B)(1)(1), coldest first. */
-export const AMBIENT_ROWS: AmbientRow[] = corrections.rows.map((row) => ({
-  key: row.ambient_c,
-  ambientF: row.ambient_f,
-  f_60: row.f_60,
-  f_75: row.f_75,
-  f_90: row.f_90,
-}));
 
 /** A Table 310.15(B)(1)(1) factor with two decimals, as the table prints it: 1.00, 1.20; "–" where none applies. */
 export function formatFactor(factor: number | null): string {
   return factor === null ? '–' : factor.toFixed(2);
 }
 
-export function correctionFactor(ambientRow: string, column: CorrectionColumn): number | null {
-  const row = AMBIENT_ROWS.find((r) => r.key === ambientRow);
-  if (!row) throw new Error(`Unknown Table 310.15(B)(1)(1) row: ${ambientRow}`);
-  return row[column];
-}
-
 /** Table 310.15(C)(1) bands; 1–3 current-carrying conductors take no adjustment (100 %). */
 export const NO_ADJUSTMENT_BAND = '1–3';
 export const ADJUSTMENT_BANDS: { key: string; percent: number }[] = [
-  { key: NO_ADJUSTMENT_BAND, percent: 100 },
-  ...adjustments.rows.map((row) => ({ key: row.conductors, percent: row.percent })),
+  { key: NO_ADJUSTMENT_BAND, percent: adjustment(null) },
+  ...ADJUSTMENT_ROWS,
 ];
 
 export function adjustmentPercent(band: string): number {
-  const row = ADJUSTMENT_BANDS.find((b) => b.key === band);
-  if (!row) throw new Error(`Unknown Table 310.15(C)(1) band: ${band}`);
-  return row.percent;
+  return adjustment(band === NO_ADJUSTMENT_BAND ? null : band);
 }
 
-export interface Limit240_4D {
-  max_ocpd_a: number;
-  conditions: string | null;
-  status: string;
-}
-
-/** The nec-240-4-d.json row for a size and material (Cu, Al or CCA), conditional rows included, or null. */
-export function maxOcpd240_4D(size: SizeKey, material: Material | 'CCA'): Limit240_4D | null {
-  const row = limits240_4D.rows.find((r) => r.size === size && r.material === material);
-  return row ? { max_ocpd_a: row.max_ocpd_a, conditions: row.conditions, status: row.status } : null;
+/** Table value × correction factor × adjustment percent ÷ 100. */
+export function correctedAmpacity(tableA: number, factor: number, percent: number): number {
+  return (tableA * factor * percent) / 100;
 }
 
 export function ocpdLimitLabel(maxOcpdA: number): string {
   return `Overcurrent protection limited to ${maxOcpdA} A (NEC 240.4(D))`;
 }
 
-/** The 240.4(D) label shown beside a result: 14, 12 and 10 AWG copper and 12 and 10 AWG aluminum only. */
+/** The 240.4(D) label shown beside a result: the rows without conditions (14, 12 and 10 AWG copper, 12 and 10 AWG aluminum). */
 export function displayedOcpdLimit(size: SizeKey, material: Material): string | null {
-  const shown = material === 'Cu' ? ['14', '12', '10'] : ['12', '10'];
-  if (!shown.includes(size)) return null;
-  const row = maxOcpd240_4D(size, material);
+  const row = max240_4D(size, material);
   return row && row.conditions === null ? ocpdLimitLabel(row.max_ocpd_a) : null;
 }
 
@@ -94,15 +70,15 @@ export interface AmpacityResult {
 }
 
 export function calculateAmpacity(input: AmpacityInput): AmpacityResult {
-  const base = tableAmpacity(input.size, input.material, input.column);
-  const factor = correctionFactor(input.ambientRow, `f_${input.column}` as CorrectionColumn);
+  const base = table31016(input.size, columnKey(input.material, input.column));
+  const factor = correction(input.ambientRow, `f_${input.column}` as CorrectionColumn);
   const percent = adjustmentPercent(input.band);
   const notPermitted = factor === null;
   return {
     tableAmpacity: base,
     correctionFactor: factor,
     adjustmentPercent: percent,
-    ampacity: base === null || factor === null ? null : (base * factor * percent) / 100,
+    ampacity: base === null || factor === null ? null : correctedAmpacity(base, factor, percent),
     notPermitted,
     ocpdLimit: displayedOcpdLimit(input.size, input.material),
   };

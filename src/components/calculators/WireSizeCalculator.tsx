@@ -19,8 +19,8 @@ import {
   WIRE_SIZE_RATINGS,
 } from '@/lib/calculations/conductor-sizing';
 import type { SizeConductorResult } from '@/lib/calculations/conductor-sizing';
-import { formatSize } from '@/lib/calculations/sizes';
-import type { Material } from '@/lib/calculations/sizes';
+import { formatSize } from '@/lib/verified/awg';
+import type { Material } from '@/lib/verified/awg';
 import { voltageOptions, voltsAfterPhaseChange } from '@/lib/calculations/inputs';
 import type { Phase } from '@/lib/calculations/inputs';
 import { LENGTH_MAX_FT, LENGTH_MIN_FT, targetTitle, VD_TARGET_OPTIONS } from '@/lib/calculations/voltage-drop';

@@ -1,12 +1,20 @@
-// Voltage drop with DC resistance of solid conductors at 75 °C from data/verified/awg.json:
+// Voltage drop with DC resistance of solid conductors at 75 °C from awg.json (src/lib/verified/awg.ts):
 // VD = k × I × R × L / 1000 (k = 2 single-phase, √3 three-phase; R in Ω per 1000 ft; L one way in ft),
-// % = VD ÷ volts × 100. Power lost in the conductors: 2·I²·R·L/1000 single-phase, 3·I²·R·L/1000 three-phase.
-import { formatFixed } from './format';
-import { conductor, formatSize, materialName, tableAmpacity, TABLE_310_16_SIZES } from './sizes';
-import type { Material, SizeKey } from './sizes';
+// % = VD ÷ volts × 100. Power lost in the conductors: resistance.ts. Size search: from a size up through
+// Table 310.16 until the drop meets the target.
+import { formatFixed, materialName } from './format';
+import { conductor, formatSize } from '../verified/awg';
+import type { Material, SizeKey } from '../verified/awg';
+import { columnKey, nextLargerSize, table31016, TABLE_310_16_SIZES } from '../verified/nec-310-16';
 import { voltsValid } from './inputs';
 import type { Phase } from './inputs';
+import { powerLossWatts } from './resistance';
 
+export const ENGINE_ID = 'voltage-drop';
+export const DOMAINS = ['conductor-resistance-20c', 'nec-310-16'];
+
+/** Shown in place of the aluminum result when 14 AWG is selected (also on the ampacity calculator). */
+export const NO_14_AWG_ALUMINUM_NOTE = 'NEC Table 310.16 lists aluminum from 12 AWG, so there is no 14 AWG aluminum result.';
 export const MEETS_TARGET_TITLE = 'Meets your voltage-drop target';
 export const ABOVE_TARGET_TITLE = 'Above your voltage-drop target';
 /** Shown in place of a material's figures when its drop is 100 % or more of the supply voltage. */
@@ -45,7 +53,7 @@ export function resistance75(key: SizeKey, material: Material): number | null {
   const data = conductor(key);
   if (!data) return null;
   // copper AWG: r75_cu_solid_ohm_per_1000ft_derived; copper kcmil: r75_cu_solid_equiv_ohm_per_1000ft_derived;
-  // aluminum: r75_al_ech19_ohm_per_1000ft_derived (sizes.ts maps the fields)
+  // aluminum: r75_al_ech19_ohm_per_1000ft_derived (src/lib/verified/awg.ts maps the fields)
   return material === 'Al' ? data.r75Al : data.r75Cu;
 }
 
@@ -81,15 +89,38 @@ export function voltageDrop(input: VoltageDropInput): VoltageDropResult | null {
   const r = resistance75(size, material);
   if (r === null || !voltsValid(volts, phase) || !(amps >= 0) || !(lengthFt >= 0)) return null;
   const vdVolts = (phaseFactor(phase) * amps * r * lengthFt) / 1000;
-  const conductors = phase === 'three' ? 3 : 2;
   return {
     ohmsPer1000ft: r,
     vdVolts,
     vdPct: (vdVolts / volts) * 100,
     loadVolts: volts - vdVolts,
-    powerLossW: (conductors * amps * amps * r * lengthFt) / 1000,
+    powerLossW: powerLossWatts(amps, r, lengthFt, phase),
   };
 }
+
+export interface SizeForDrop {
+  size: SizeKey;
+  result: VoltageDropResult;
+}
+
+/**
+ * From `input.size` up through Table 310.16 until the drop is at most `targetPct`, or to 2000 kcmil: the last size
+ * tried and its drop (above the target only when 2000 kcmil is too).
+ */
+export function sizeForDrop(input: VoltageDropInput, targetPct: number): SizeForDrop {
+  let size = input.size;
+  let result = voltageDrop(input);
+  if (!result) throw new Error(`No voltage drop for ${size} ${input.material}`);
+  while (result.vdPct > targetPct) {
+    const next = nextLargerSize(size);
+    if (!next) break;
+    size = next;
+    result = voltageDrop({ ...input, size });
+    if (!result) throw new Error(`No resistance for ${size} ${input.material}`);
+  }
+  return { size, result };
+}
+
 
 /** A drop of 100 % or more of the supply voltage: DROP_EXCEEDS_SUPPLY_MESSAGE replaces its figures. */
 export function dropExceedsSupply(result: VoltageDropResult): boolean {
@@ -101,7 +132,7 @@ export function dropExceedsSupply(result: VoltageDropResult): boolean {
  * null otherwise, and where the table has no 60 °C value.
  */
 export function ampacityExceeded(size: SizeKey, material: Material, amps: number): number | null {
-  const ampacity = tableAmpacity(size, material, 60);
+  const ampacity = table31016(size, columnKey(material, 60));
   return ampacity !== null && amps > ampacity ? ampacity : null;
 }
 

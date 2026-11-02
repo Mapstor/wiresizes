@@ -13,7 +13,7 @@ import {
   ohmsLawInputQuantities,
 } from '../src/lib/calculations/ohms-law';
 import { isSizingError, sizeConductor } from '../src/lib/calculations/conductor-sizing';
-import { formatSize } from '../src/lib/calculations/sizes';
+import { formatSize } from '../src/lib/verified/awg';
 import {
   maxLengthFt,
   RESISTANCE_INPUT_MESSAGES,

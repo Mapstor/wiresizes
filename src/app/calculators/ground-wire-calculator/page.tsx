@@ -3,10 +3,10 @@ import { GroundWireCalculator } from '@/components/calculators/GroundWireCalcula
 import { Shield, Calculator, TrendingUp, AlertCircle, BookOpen, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
-import table25066 from '../../../../data/verified/nec-250-66.json';
 import { TABLE_250_122_ROWS } from '@/lib/calculations/grounding';
 import { SCOPE_LINES } from '@/lib/calculations/service-lookup';
-import { formatSize } from '@/lib/calculations/sizes';
+import { formatSize } from '@/lib/verified/awg';
+import { TABLE_250_66_ROWS } from '@/lib/verified/nec-250-66';
 
 export const metadata: Metadata = {
   title: 'Ground Wire Calculator — NEC 250.122',
@@ -261,7 +261,7 @@ export default function GroundWireCalculatorPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                    {table25066.rows.map((row) => (
+                    {TABLE_250_66_ROWS.map((row) => (
                       <tr key={row.service_cu}>
                         <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.service_cu}</td>
                         <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.service_al_cca}</td>

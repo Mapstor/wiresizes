@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { formatEntered, formatFixed } from '@/lib/calculations/format';
-import { formatSize } from '@/lib/calculations/sizes';
+import { formatSize } from '@/lib/verified/awg';
 import { DEFAULT_VD_TARGET_PCT, formatVdPct, targetTitle } from '@/lib/calculations/voltage-drop';
 
 interface VoltageDropVisualProps {

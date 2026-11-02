@@ -5,6 +5,9 @@
 import { powerFactorValid, voltsValid, POWER_FACTOR_INVALID_MESSAGE, VOLTAGE_INVALID_MESSAGE } from './inputs';
 import type { Phase } from './inputs';
 
+export const ENGINE_ID = 'power';
+export const DOMAINS = ['power-definitions'];
+
 export type Circuit = Phase | 'dc';
 
 export type PowerError = 'value-invalid' | 'voltage-invalid' | 'power-factor-invalid';
