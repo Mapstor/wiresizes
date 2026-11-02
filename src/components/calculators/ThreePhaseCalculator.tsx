@@ -8,6 +8,7 @@ import { CalculatorLayout } from './CalculatorLayout';
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
+import { formatEntered, formatFixed } from '@/lib/calculations/format';
 import { Zap, AlertTriangle, Triangle, Calculator, RefreshCw } from 'lucide-react';
 import {
   fromCurrent,
@@ -116,15 +117,15 @@ export function ThreePhaseCalculator() {
       inputs: {
         'Voltage System': inputs.system,
         'Calculation Mode': THREE_PHASE_MODE_OPTIONS.find((m) => m.value === inputs.mode)?.label ?? inputs.mode,
-        'Power Factor': fieldNumber(inputs.pf).toString(),
+        'Power Factor': formatEntered(fieldNumber(inputs.pf)),
         ...(inputs.mode === 'power'
-          ? { 'Power (kW)': `${fieldNumber(inputs.kilowatts)} kW` }
-          : { 'Line Current': `${fieldNumber(inputs.amps)} A` }),
+          ? { 'Power (kW)': `${formatEntered(fieldNumber(inputs.kilowatts))} kW` }
+          : { 'Line Current': `${formatEntered(fieldNumber(inputs.amps))} A` }),
       },
       results: {
-        'Line Current': `${result.amps.toFixed(2)} A`,
-        'Power': `${(result.watts / 1000).toFixed(2)} kW`,
-        'Line Voltage': `${lineVolts(inputs.system)} V`,
+        'Line Current': `${formatFixed(result.amps, 2)} A`,
+        'Power': `${formatFixed(result.watts / 1000, 2)} kW`,
+        'Line Voltage': `${formatEntered(lineVolts(inputs.system))} V`,
       },
     });
   };
@@ -168,7 +169,7 @@ export function ThreePhaseCalculator() {
               />
 
               <div className="bg-neutral-50 rounded-lg p-3 text-sm text-neutral-600">
-                • Line Voltage: {lineVolts(inputs.system)}V
+                • Line Voltage: {formatEntered(lineVolts(inputs.system))} V
               </div>
 
               <Select
@@ -247,16 +248,16 @@ export function ThreePhaseCalculator() {
                 <div className="grid grid-cols-2 gap-4 text-center">
                   <div className="bg-blue-100 rounded-lg p-3">
                     <div className="text-blue-800 font-semibold">Line Current</div>
-                    <div className="text-2xl font-bold text-blue-900">{result.amps.toFixed(2)}A</div>
+                    <div className="text-2xl font-bold text-blue-900">{formatFixed(result.amps, 2)} A</div>
                   </div>
                   <div className="bg-green-100 rounded-lg p-3">
                     <div className="text-green-800 font-semibold">Power</div>
-                    <div className="text-2xl font-bold text-green-900">{(result.watts / 1000).toFixed(2)}kW</div>
+                    <div className="text-2xl font-bold text-green-900">{formatFixed(result.watts / 1000, 2)} kW</div>
                   </div>
                 </div>
                 <div className="mt-4 text-center text-sm text-neutral-600 flex items-center justify-center gap-2">
                   <Zap className="w-4 h-4" />
-                  {inputs.system} • {lineVolts(inputs.system)}V • PF: {fieldNumber(inputs.pf)}
+                  {inputs.system} • {formatEntered(lineVolts(inputs.system))} V • PF: {formatEntered(fieldNumber(inputs.pf))}
                 </div>
               </div>
             )}

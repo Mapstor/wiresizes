@@ -7,6 +7,7 @@
 // 6. if step 5 upsized, the EGC grows in proportion (250.122(B)): table EGC area × chosen area ÷ step-2 area,
 //    multiplied first, smallest Table 310.16 size at or above it, never smaller than the table EGC, not capped.
 import ratings from '../../../data/verified/nec-240-6-a.json';
+import { formatEntered, formatFixed } from './format';
 import {
   areaCmil,
   formatSize,
@@ -108,7 +109,7 @@ export const WIRE_SIZE_DEFAULTS = {
 };
 
 function amps(value: number): string {
-  return `${Number.isInteger(value) ? value : value.toFixed(1)} A`;
+  return `${Number.isInteger(value) ? formatEntered(value) : formatFixed(value, 1)} A`;
 }
 
 function cmil(value: number): string {
@@ -171,7 +172,7 @@ export function sizeConductor(input: SizeConductorInput): SizeConductorResult | 
   let vd = voltageDrop({ size, material, amps: loadA, lengthFt, volts, phase });
   if (!vd) throw new Error(`No resistance for ${size} ${metal}`);
   steps.push(
-    `Voltage drop with ${formatSize(size)} ${metal} at ${amps(loadA)} over ${lengthFt} ft one way, ${phase === 'three' ? 'three-phase' : 'single-phase'} ${volts} V (${vd.ohmsPer1000ft} Ω per 1000 ft at 75 °C): ${vd.vdVolts.toFixed(2)} V, ${vd.vdPct.toFixed(2)} %.`,
+    `Voltage drop with ${formatSize(size)} ${metal} at ${amps(loadA)} over ${formatEntered(lengthFt)} ft one way, ${phase === 'three' ? 'three-phase' : 'single-phase'} ${formatEntered(volts)} V (${formatEntered(vd.ohmsPer1000ft)} Ω per 1000 ft at 75 °C): ${formatFixed(vd.vdVolts, 2)} V, ${formatFixed(vd.vdPct, 2)} %.`,
   );
 
   // Step 5: step up until the drop meets the target or 2000 kcmil
@@ -185,11 +186,11 @@ export function sizeConductor(input: SizeConductorInput): SizeConductorResult | 
     }
     if (vd.vdPct <= target) {
       steps.push(
-        `Above your ${target} % target, so the size steps up to ${formatSize(size)}: ${vd.vdVolts.toFixed(2)} V, ${vd.vdPct.toFixed(2)} %.`,
+        `Above your ${target} % target, so the size steps up to ${formatSize(size)}: ${formatFixed(vd.vdVolts, 2)} V, ${formatFixed(vd.vdPct, 2)} %.`,
       );
     } else {
       steps.push(
-        `Even ${formatSize(size)}, the largest size in NEC Table 310.16, gives ${vd.vdVolts.toFixed(2)} V, ${vd.vdPct.toFixed(2)} %, above your ${target} % target.`,
+        `Even ${formatSize(size)}, the largest size in NEC Table 310.16, gives ${formatFixed(vd.vdVolts, 2)} V, ${formatFixed(vd.vdPct, 2)} %, above your ${target} % target.`,
       );
     }
   }

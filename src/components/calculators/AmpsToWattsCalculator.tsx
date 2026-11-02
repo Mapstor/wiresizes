@@ -16,6 +16,7 @@ import {
 import type { Circuit } from '@/lib/calculations/power';
 import { wattsToElectricalHorsepower } from '@/lib/calculations/conversions';
 import { fieldNumber } from '@/lib/calculations/fields';
+import { formatEntered, formatFixed } from '@/lib/calculations/format';
 import { focusResults, useFieldErrors } from '@/lib/hooks/useCalculatorForm';
 
 const DC_VOLTAGES = [12, 24, 48];
@@ -69,13 +70,15 @@ function withValidVoltage(inputs: Inputs): Inputs {
 }
 
 function formulaText(inputs: Inputs, volts: number, watts: number): string {
-  const amps = fieldNumber(inputs.amps);
-  if (inputs.powerType === 'dc') return `P = I × V = ${amps}A × ${volts}V = ${watts.toFixed(2)}W`;
-  const pf = fieldNumber(inputs.pf);
+  const amps = formatEntered(fieldNumber(inputs.amps));
+  const v = formatEntered(volts);
+  const w = formatFixed(watts, 2);
+  if (inputs.powerType === 'dc') return `P = I × V = ${amps} A × ${v} V = ${w} W`;
+  const pf = formatEntered(fieldNumber(inputs.pf));
   if (inputs.phaseType === 'single') {
-    return `P = I × V × PF = ${amps}A × ${volts}V × ${pf} = ${watts.toFixed(2)}W`;
+    return `P = I × V × PF = ${amps} A × ${v} V × ${pf} = ${w} W`;
   }
-  return `P = I × V × √3 × PF = ${amps}A × ${volts}V × 1.732 × ${pf} = ${watts.toFixed(2)}W`;
+  return `P = I × V × √3 × PF = ${amps} A × ${v} V × 1.732 × ${pf} = ${w} W`;
 }
 
 export default function AmpsToWattsCalculator() {
@@ -232,22 +235,22 @@ export default function AmpsToWattsCalculator() {
               {/* Real Power */}
               <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
                 <div className="text-sm text-blue-600 mb-1">Real Power</div>
-                <div className="text-2xl font-bold text-blue-900">{result.watts.toFixed(2)} W</div>
-                <div className="text-sm text-blue-700 mt-1">{(result.watts / 1000).toFixed(3)} kW</div>
+                <div className="text-2xl font-bold text-blue-900">{formatFixed(result.watts, 2)} W</div>
+                <div className="text-sm text-blue-700 mt-1">{formatFixed(result.watts / 1000, 3)} kW</div>
               </div>
 
               {/* Apparent Power */}
               <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
                 <div className="text-sm text-purple-600 mb-1">Apparent Power</div>
-                <div className="text-2xl font-bold text-purple-900">{result.va.toFixed(2)} VA</div>
-                <div className="text-sm text-purple-700 mt-1">{(result.va / 1000).toFixed(3)} kVA</div>
+                <div className="text-2xl font-bold text-purple-900">{formatFixed(result.va, 2)} VA</div>
+                <div className="text-sm text-purple-700 mt-1">{formatFixed(result.va / 1000, 3)} kVA</div>
               </div>
 
               {/* Electrical horsepower */}
               <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
                 <div className="text-sm text-orange-600 mb-1">Electrical horsepower (746 W)</div>
                 <div className="text-2xl font-bold text-orange-900">
-                  {wattsToElectricalHorsepower(result.watts).toFixed(2)} hp
+                  {formatFixed(wattsToElectricalHorsepower(result.watts), 2)} hp
                 </div>
               </div>
 
@@ -255,7 +258,7 @@ export default function AmpsToWattsCalculator() {
               {inputs.powerType === 'ac' && (
                 <div className="bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-lg p-4 border border-neutral-200">
                   <div className="text-sm text-neutral-600 mb-1">Power factor (PF = P/S)</div>
-                  <div className="text-2xl font-bold text-neutral-900">{result.pf.toFixed(2)}</div>
+                  <div className="text-2xl font-bold text-neutral-900">{formatFixed(result.pf, 2)}</div>
                 </div>
               )}
             </div>

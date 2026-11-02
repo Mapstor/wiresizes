@@ -8,6 +8,7 @@ import { CalculatorLayout } from './CalculatorLayout';
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
+import { formatEntered, formatFixed } from '@/lib/calculations/format';
 import { Calculator, RefreshCw } from 'lucide-react';
 import type { Phase } from '@/lib/calculations/inputs';
 import {
@@ -107,18 +108,18 @@ export function VoltsToAmpsCalculator() {
     print({
       title: 'Volts to Amps Calculation',
       inputs: {
-        'Voltage': `${fieldNumber(inputs.volts)} V`,
-        'Power': `${fieldNumber(inputs.watts)} W`,
+        'Voltage': `${formatEntered(fieldNumber(inputs.volts))} V`,
+        'Power': `${formatEntered(fieldNumber(inputs.watts))} W`,
         'Phase Configuration': phaseLabel(inputs.phase),
-        'Power Factor': fieldNumber(inputs.pf),
+        'Power Factor': formatEntered(fieldNumber(inputs.pf)),
       },
       results: {
-        'Current Draw': `${result.amps.toFixed(2)} A`,
-        'Real Power (P)': `${Math.round(result.watts).toLocaleString('en-US')} W`,
-        'Apparent Power (S)': `${Math.round(result.va).toLocaleString('en-US')} VA`,
-        'Reactive Power (Q)': `${Math.round(result.vars).toLocaleString('en-US')} VAR`,
-        'Power Factor': result.pf.toFixed(2),
-        ...Object.fromEntries(rows.map((row) => [`Current at ${row.volts} V`, `${row.amps.toFixed(1)} A`])),
+        'Current Draw': `${formatFixed(result.amps, 2)} A`,
+        'Real Power (P)': `${formatFixed(result.watts, 0)} W`,
+        'Apparent Power (S)': `${formatFixed(result.va, 0)} VA`,
+        'Reactive Power (Q)': `${formatFixed(result.vars, 0)} VAR`,
+        'Power Factor': formatFixed(result.pf, 2),
+        ...Object.fromEntries(rows.map((row) => [`Current at ${formatEntered(row.volts)} V`, `${formatFixed(row.amps, 1)} A`])),
       },
     });
   };
@@ -223,7 +224,7 @@ export function VoltsToAmpsCalculator() {
               <div className="text-center p-6 bg-primary-50 rounded-xl border-2 border-primary-200">
                 <div className="text-sm text-primary-600 font-medium mb-2">Current Draw</div>
                 <div className="text-2xl sm:text-4xl font-bold font-mono text-primary-700 break-words min-w-0">
-                  {calculated.result.amps.toFixed(2)}
+                  {formatFixed(calculated.result.amps, 2)}
                 </div>
                 <div className="text-xl font-medium text-primary-600 mt-1">Amps</div>
                 <div className="text-sm text-primary-500 mt-2">
@@ -238,7 +239,7 @@ export function VoltsToAmpsCalculator() {
                   <div className="bg-white rounded-lg p-3">
                     <div className="text-xs text-neutral-500">Real Power (P)</div>
                     <div className="text-sm sm:text-lg font-bold font-mono text-green-600 break-words">
-                      {Math.round(calculated.result.watts).toLocaleString('en-US')}
+                      {formatFixed(calculated.result.watts, 0)}
                     </div>
                     <div className="text-sm text-neutral-600">W</div>
                   </div>
@@ -246,7 +247,7 @@ export function VoltsToAmpsCalculator() {
                   <div className="bg-white rounded-lg p-3">
                     <div className="text-xs text-neutral-500">Apparent Power (S)</div>
                     <div className="text-sm sm:text-lg font-bold font-mono text-blue-600 break-words">
-                      {Math.round(calculated.result.va).toLocaleString('en-US')}
+                      {formatFixed(calculated.result.va, 0)}
                     </div>
                     <div className="text-sm text-neutral-600">VA</div>
                   </div>
@@ -254,7 +255,7 @@ export function VoltsToAmpsCalculator() {
                   <div className="bg-white rounded-lg p-3">
                     <div className="text-xs text-neutral-500">Reactive Power (Q)</div>
                     <div className="text-sm sm:text-lg font-bold font-mono text-orange-600 break-words">
-                      {Math.round(calculated.result.vars).toLocaleString('en-US')}
+                      {formatFixed(calculated.result.vars, 0)}
                     </div>
                     <div className="text-sm text-neutral-600">VAR</div>
                   </div>
@@ -262,7 +263,7 @@ export function VoltsToAmpsCalculator() {
                   <div className="bg-white rounded-lg p-3">
                     <div className="text-xs text-neutral-500">Power Factor</div>
                     <div className="text-sm sm:text-lg font-bold font-mono text-purple-600 break-words">
-                      {calculated.result.pf.toFixed(2)}
+                      {formatFixed(calculated.result.pf, 2)}
                     </div>
                   </div>
                 </div>
@@ -282,8 +283,8 @@ export function VoltsToAmpsCalculator() {
                     <tbody className="divide-y divide-neutral-200">
                       {calculated.rows.map((row) => (
                         <tr key={row.volts} className={fieldNumber(inputs.volts) === row.volts ? 'bg-primary-100' : ''}>
-                          <td className="p-1">{row.volts}V</td>
-                          <td className="p-1 font-mono">{row.amps.toFixed(1)}A</td>
+                          <td className="p-1">{formatEntered(row.volts)} V</td>
+                          <td className="p-1 font-mono">{formatFixed(row.amps, 1)} A</td>
                         </tr>
                       ))}
                     </tbody>

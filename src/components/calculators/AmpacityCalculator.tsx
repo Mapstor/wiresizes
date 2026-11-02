@@ -8,6 +8,7 @@ import { CalculatorLayout } from './CalculatorLayout';
 import { focusResults, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { buildQuery, choiceParam } from '@/lib/calculations/fields';
+import { formatEntered, formatUpTo } from '@/lib/calculations/format';
 import {
   ADJUSTMENT_BANDS,
   AMBIENT_ROWS,
@@ -36,7 +37,7 @@ const MATERIALS: { material: Material; key: 'copper' | 'aluminum'; label: string
 ];
 
 function amps(value: number): string {
-  return `${Number(value.toFixed(2))} A`;
+  return `${formatUpTo(value, 2)} A`;
 }
 
 interface Row {
@@ -52,7 +53,7 @@ function resultRows(result: AmpacityResult, column: AmpacityColumn): Row[] {
       label: 'Ambient correction, Table 310.15(B)(1)(1)',
       value: formatFactor(result.correctionFactor),
     },
-    { label: 'Adjustment, Table 310.15(C)(1)', value: `${result.adjustmentPercent} %` },
+    { label: 'Adjustment, Table 310.15(C)(1)', value: `${formatEntered(result.adjustmentPercent)} %` },
     { label: 'Ampacity', value: result.ampacity === null ? NOT_PERMITTED_MESSAGE : amps(result.ampacity) },
   ];
   if (result.ocpdLimit) rows.push({ label: 'NEC 240.4(D)', value: result.ocpdLimit });

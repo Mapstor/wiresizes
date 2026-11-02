@@ -1,5 +1,6 @@
 'use client';
 
+import { formatFixed } from '@/lib/calculations/format';
 import { diameterMm, formatSize } from '@/lib/calculations/sizes';
 
 interface WireVisualizationProps {
@@ -114,7 +115,7 @@ export function WireVisualization({
             {material}
           </div>
           <div className="text-xs text-neutral-400">
-            {diameter.toFixed(2)} mm
+            {formatFixed(diameter, 2)} mm
           </div>
         </div>
       )}

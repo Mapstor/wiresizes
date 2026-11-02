@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { formatEntered, formatFixed } from '@/lib/calculations/format';
 import { formatSize } from '@/lib/calculations/sizes';
 import { DEFAULT_VD_TARGET_PCT, formatVdPct, targetTitle } from '@/lib/calculations/voltage-drop';
 
@@ -101,7 +102,7 @@ export function VoltageDropVisual({
           PANEL
         </text>
         <text x="40" y="110" textAnchor="middle" fill="#1e40af" fontSize="12" fontWeight="bold">
-          {sourceVoltage}V
+          {formatEntered(sourceVoltage)} V
         </text>
 
         {/* Wire with gradient - responsive to distance and thickness */}
@@ -147,7 +148,7 @@ export function VoltageDropVisual({
 
         {/* Distance label */}
         <text x={midX} y="40" textAnchor="middle" fill="#737373" fontSize="10">
-          {distance} ft
+          {formatEntered(distance)} ft
         </text>
 
         {/* Voltage drop indicator - moved down and made bigger/bolder */}
@@ -169,7 +170,7 @@ export function VoltageDropVisual({
         </text>
         <text x={loadX + 30} y="110" textAnchor="middle" fontSize="12" fontWeight="bold"
           fill={textColor}>
-          {loadVoltage.toFixed(1)}V
+          {formatFixed(loadVoltage, 1)} V
         </text>
       </svg>
 

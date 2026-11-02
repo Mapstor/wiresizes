@@ -25,6 +25,7 @@ import { voltageOptions, voltsAfterPhaseChange } from '@/lib/calculations/inputs
 import type { Phase } from '@/lib/calculations/inputs';
 import { LENGTH_MAX_FT, LENGTH_MIN_FT, targetTitle, VD_TARGET_OPTIONS } from '@/lib/calculations/voltage-drop';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
+import { formatEntered, formatFixed } from '@/lib/calculations/format';
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { RefreshCw, Calculator } from 'lucide-react';
@@ -166,8 +167,8 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
     const notes: string[] = [];
     for (const { key, label, result } of outcome.results) {
       results[label] = `${formatSize(result.size)} (${targetTitle(result.meetsTarget)})`;
-      results[`${label} 60 °C ampacity`] = `${result.ampacity60} A`;
-      results[`${label} voltage drop`] = `${result.vdPct.toFixed(2)} % (${result.vdVolts.toFixed(2)} V)`;
+      results[`${label} 60 °C ampacity`] = `${formatEntered(result.ampacity60)} A`;
+      results[`${label} voltage drop`] = `${formatFixed(result.vdPct, 2)} % (${formatFixed(result.vdVolts, 2)} V)`;
       results[GROUND_WIRE_LABELS[key]] = result.egc ? formatSize(result.egc) : EGC_NONE_MESSAGE;
       notes.push(...materialNotes(result).map((note) => `${label}: ${note}`));
       notes.push(...result.steps.map((step, i) => `${label}, step ${i + 1}: ${step}`));
@@ -176,10 +177,10 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
     print({
       title: 'Wire Size Calculation',
       inputs: {
-        'Breaker or fuse rating': `${inputs.ocpdA} A`,
-        'Load current for voltage drop (A)': `${inputs.loadA.trim() === '' ? inputs.ocpdA : fieldNumber(inputs.loadA)} A`,
-        'Length (one-way)': `${fieldNumber(inputs.lengthFt)} ft`,
-        Voltage: `${inputs.volts} V`,
+        'Breaker or fuse rating': `${formatEntered(inputs.ocpdA)} A`,
+        'Load current for voltage drop (A)': `${formatEntered(inputs.loadA.trim() === '' ? inputs.ocpdA : fieldNumber(inputs.loadA))} A`,
+        'Length (one-way)': `${formatEntered(fieldNumber(inputs.lengthFt))} ft`,
+        Voltage: `${formatEntered(inputs.volts)} V`,
         Phase: inputs.phase === 'three' ? 'Three-Phase' : 'Single-Phase',
         'Voltage-drop target (your choice)': `${inputs.vdTargetPct} %`,
       },

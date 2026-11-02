@@ -3,6 +3,11 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { formatEntered, formatFixed, formatSignificant, formatUpTo } from '../src/lib/calculations/format';
+import { fromApparentPower, fromCurrent, fromRealPower, isPowerError } from '../src/lib/calculations/power';
+import type { PowerFailure, PowerResult } from '../src/lib/calculations/power';
+import { formatSi } from '../src/lib/calculations/ohms-law';
+import { isSizingError, sizeConductor } from '../src/lib/calculations/conductor-sizing';
+import { formatSize } from '../src/lib/calculations/sizes';
 import {
   maxLengthFt,
   RESISTANCE_INPUT_MESSAGES,
@@ -15,6 +20,8 @@ import {
   ampacityNote,
   DROP_EXCEEDS_SUPPLY_MESSAGE,
   dropExceedsSupply,
+  formatVdPct,
+  formatVdVolts,
   voltageDrop,
   WIRE_SIZE_CALCULATOR_LINK,
 } from '../src/lib/calculations/voltage-drop';
@@ -169,5 +176,49 @@ describe('number format', () => {
     const far = maxLengthFt('2000', 'Cu', 20, 100);
     assert.ok(far !== null && far > 1e6);
     assert.match(formatFixed(far, 1), /^\d{1,3}(,\d{3})+\.\d$/);
+  });
+});
+
+describe('number format in results (step 3)', () => {
+  const ok = (r: PowerResult | PowerFailure): PowerResult => {
+    assert.ok(!isPowerError(r));
+    return r;
+  };
+
+  it("chat's cases get thousands separators with the same decimals", () => {
+    // volts to amps: 10,000,000 W at 240 V, PF 1
+    assert.equal(formatFixed(ok(fromRealPower({ watts: 1e7, volts: 240, circuit: 'single', pf: 1 })).amps, 2), '41,666.67');
+    // kilowatts to amps: 10,000,000 kW at 480 V three-phase, PF 0.85
+    assert.equal(formatFixed(ok(fromRealPower({ watts: 1e10, volts: 480, circuit: 'three', pf: 0.85 })).amps, 2), '14,150,741.89');
+    // kVA to amps: 10,000,000 kVA at 480 V three-phase
+    assert.equal(formatFixed(ok(fromApparentPower({ va: 1e10, volts: 480, circuit: 'three', pf: 0.85 })).amps, 2), '12,028,130.61');
+    // amps to watts: 100 A at 240 V three-phase, PF 0.92
+    const w = ok(fromCurrent({ amps: 100, volts: 240, circuit: 'three', pf: 0.92 }));
+    assert.equal(formatFixed(w.watts, 2), '38,243.68');
+    assert.equal(formatFixed(w.va, 2), '41,569.22');
+  });
+
+  it('voltage drop figures group too', () => {
+    assert.equal(formatVdPct(1234.567), '1,234.57 %');
+    assert.equal(formatVdVolts(4.8561), '4.86 V');
+  });
+
+  it("Ohm's law: SI prefixes, 4 significant figures, no exponential notation past giga and nano", () => {
+    assert.equal(formatSi(0.0012, 'A'), '1.200 mA');
+    assert.equal(formatSi(999.96, 'V'), '1.000 kV');
+    assert.equal(formatSi(1.5e13, 'V'), '15,000 GV');
+    assert.equal(formatSi(1e-16, 'A'), '0.0000001000 nA');
+  });
+
+  it('wire size steps group lengths; kcmil sizes keep no separator', () => {
+    // chat's 320 px cases: 25 A, 1500 ft, 1 %, 120 V aluminum → 1500 kcmil; 400 A, 50 ft aluminum → 1250 kcmil
+    const result = sizeConductor({ ocpdA: 25, loadA: 25, lengthFt: 1500, volts: 120, phase: 'single', material: 'Al', vdTargetPct: 1 });
+    assert.ok(!isSizingError(result));
+    assert.equal(formatSize(result.size), '1500 kcmil');
+    assert.ok(result.steps.some((step) => step.includes('over 1,500 ft one way')), result.steps.join(' | '));
+    assert.ok(result.steps.every((step) => !/\d,\d{3} kcmil/.test(step) && !/e[+-]\d/.test(step)), result.steps.join(' | '));
+    const large = sizeConductor({ ocpdA: 400, lengthFt: 50, volts: 240, phase: 'single', material: 'Al' });
+    assert.ok(!isSizingError(large));
+    assert.equal(formatSize(large.size), '1250 kcmil');
   });
 });

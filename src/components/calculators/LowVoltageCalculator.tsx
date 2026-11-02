@@ -8,6 +8,7 @@ import { CalculatorLayout } from './CalculatorLayout';
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
+import { formatEntered, formatFixed, formatUpTo } from '@/lib/calculations/format';
 import { Cpu, Calculator, RefreshCw } from 'lucide-react';
 import {
   BASIS_LINE,
@@ -75,10 +76,10 @@ function inputsFromQuery(params: URLSearchParams): Inputs {
 
 function inputRows(inputs: Inputs): Row[] {
   return [
-    { label: 'Voltage', value: `${fieldNumber(inputs.volts)} V` },
-    { label: 'Number of Loads', value: String(fieldNumber(inputs.loads)) },
-    { label: 'Watts per Load', value: `${fieldNumber(inputs.wattsPerLoad)} W` },
-    { label: 'Distance (one way)', value: `${fieldNumber(inputs.lengthFt)} ft` },
+    { label: 'Voltage', value: `${formatEntered(fieldNumber(inputs.volts))} V` },
+    { label: 'Number of Loads', value: formatEntered(fieldNumber(inputs.loads)) },
+    { label: 'Watts per Load', value: `${formatEntered(fieldNumber(inputs.wattsPerLoad))} W` },
+    { label: 'Distance (one way)', value: `${formatEntered(fieldNumber(inputs.lengthFt))} ft` },
     { label: 'Voltage-drop target (your choice)', value: `${inputs.dropPct} %` },
     { label: 'Conductor temperature', value: DC_TEMPERATURE_OPTIONS.find((t) => t.value === inputs.tempC)?.label ?? '' },
   ];
@@ -98,9 +99,9 @@ function computeRows(inputs: Inputs): { rows: Row[]; resultSize: string | null; 
   });
   if ('error' in result) return { rows: [], resultSize: null, message: INPUT_INVALID_MESSAGE };
   const rows: Row[] = [
-    { label: 'Total load', value: `${Number(watts.toFixed(3))} W` },
-    { label: 'Current (I = W ÷ V)', value: `${Number(result.amps.toFixed(3))} A` },
-    { label: 'Required area (CM = 2 × K × I × L ÷ VD)', value: `${Math.round(result.requiredCmil).toLocaleString('en-US')} cmil` },
+    { label: 'Total load', value: `${formatUpTo(watts, 3)} W` },
+    { label: 'Current (I = W ÷ V)', value: `${formatUpTo(result.amps, 3)} A` },
+    { label: 'Required area (CM = 2 × K × I × L ÷ VD)', value: `${formatFixed(result.requiredCmil, 0)} cmil` },
     { label: 'Size for voltage drop', value: result.vdSize ? formatSize(result.vdSize) : '–' },
     { label: 'Size for current (60 °C column)', value: result.currentSize ? formatSize(result.currentSize) : '–' },
   ];

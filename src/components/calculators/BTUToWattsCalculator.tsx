@@ -8,6 +8,7 @@ import { CalculatorLayout } from './CalculatorLayout';
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
+import { formatUpTo } from '@/lib/calculations/format';
 import { Thermometer, Calculator, RefreshCw } from 'lucide-react';
 import {
   BTU_DEFAULTS,
@@ -36,16 +37,12 @@ function inputsFromQuery(params: URLSearchParams): Inputs {
   };
 }
 
-function format(value: number, digits: number): string {
-  return value.toLocaleString('en-US', { maximumFractionDigits: digits });
-}
-
 function resultRows(result: ThermalConversion): { label: string; value: string }[] {
   return [
-    { label: 'Btu/h', value: format(result.btuPerHour, 2) },
-    { label: 'Watts', value: `${format(result.watts, 2)} W` },
-    { label: 'Kilowatts', value: `${format(result.watts / 1000, 3)} kW` },
-    { label: 'Tons (Btu/h ÷ 12,000)', value: format(result.tons, 3) },
+    { label: 'Btu/h', value: formatUpTo(result.btuPerHour, 2) },
+    { label: 'Watts', value: `${formatUpTo(result.watts, 2)} W` },
+    { label: 'Kilowatts', value: `${formatUpTo(result.watts / 1000, 3)} kW` },
+    { label: 'Tons (Btu/h ÷ 12,000)', value: formatUpTo(result.tons, 3) },
   ];
 }
 
@@ -85,7 +82,7 @@ export function BTUToWattsCalculator() {
       title: 'BTU to Watts Calculation',
       inputs: {
         'Conversion': BTU_MODE_OPTIONS.find((o) => o.value === inputs.mode)?.label ?? inputs.mode,
-        [inputs.mode === 'btu-to-watts' ? 'Btu/h' : 'Watts']: format(value, 2),
+        [inputs.mode === 'btu-to-watts' ? 'Btu/h' : 'Watts']: formatUpTo(value, 2),
       },
       results: Object.fromEntries(resultRows(result).map((r) => [r.label, r.value])),
     });
@@ -132,7 +129,7 @@ export function BTUToWattsCalculator() {
             <div className="text-xs text-blue-700 space-y-1">
               <div>• 1 Btu/h = {W_PER_BTU_PER_H} W (NIST SP 811)</div>
               <div>• 1 ton = {BTU_PER_H_PER_TON.toLocaleString('en-US')} Btu/h</div>
-              <div>• 1 kW = {format(wattsToBtuPerHour(1000), 2)} Btu/h</div>
+              <div>• 1 kW = {formatUpTo(wattsToBtuPerHour(1000), 2)} Btu/h</div>
             </div>
           </div>
 

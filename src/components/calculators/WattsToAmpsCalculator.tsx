@@ -8,6 +8,7 @@ import { CalculatorLayout } from './CalculatorLayout';
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
+import { formatEntered, formatFixed } from '@/lib/calculations/format';
 import { Calculator, RefreshCw } from 'lucide-react';
 import { voltageOptions, voltsAfterPhaseChange } from '@/lib/calculations/inputs';
 import type { Phase } from '@/lib/calculations/inputs';
@@ -90,13 +91,13 @@ export function WattsToAmpsCalculator() {
     print({
       title: 'Watts to Amps Calculation',
       inputs: {
-        'Power (Watts)': `${watts} W`,
-        Voltage: `${inputs.volts} V`,
+        'Power (Watts)': `${formatEntered(watts)} W`,
+        Voltage: `${formatEntered(inputs.volts)} V`,
         Phase: inputs.phase === 'single' ? 'Single-Phase' : 'Three-Phase',
-        'Power Factor': pf,
+        'Power Factor': formatEntered(pf),
       },
       results: {
-        'Calculated Current': `${amps.toFixed(2)} A`,
+        'Calculated Current': `${formatFixed(amps, 2)} A`,
       },
     });
   };
@@ -171,7 +172,7 @@ export function WattsToAmpsCalculator() {
             <div className="text-center p-6 bg-primary-50 rounded-xl border-2 border-primary-200">
               <div className="text-sm text-primary-600 font-medium mb-2">Calculated Current</div>
               <div className="text-2xl sm:text-4xl font-bold font-mono text-primary-700 break-words min-w-0">
-                {amps.toFixed(2)}
+                {formatFixed(amps, 2)}
               </div>
               <div className="text-xl font-medium text-primary-600 mt-1">Amps</div>
             </div>

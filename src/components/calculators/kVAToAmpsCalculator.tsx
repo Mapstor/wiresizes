@@ -8,6 +8,7 @@ import { CalculatorLayout } from './CalculatorLayout';
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
+import { formatEntered, formatFixed, formatUpTo } from '@/lib/calculations/format';
 import { Zap, Calculator, RefreshCw } from 'lucide-react';
 import { voltageOptions, voltsAfterPhaseChange } from '@/lib/calculations/inputs';
 import type { Phase } from '@/lib/calculations/inputs';
@@ -166,24 +167,24 @@ export function KVAToAmpsCalculator() {
     print({
       title: 'kVA to Amps Calculation',
       inputs: {
-        'Apparent Power': `${kva} kVA`,
-        'Secondary Voltage': `${inputs.volts} V`,
+        'Apparent Power': `${formatEntered(kva)} kVA`,
+        'Secondary Voltage': `${formatEntered(inputs.volts)} V`,
         'Phase Configuration': phaseLabel(inputs.phase),
-        'Power Factor': fieldNumber(inputs.pf),
-        ...(inputs.isTransformer && { 'Primary Voltage': `${inputs.primaryVolts} V` }),
+        'Power Factor': formatEntered(fieldNumber(inputs.pf)),
+        ...(inputs.isTransformer && { 'Primary Voltage': `${formatEntered(inputs.primaryVolts)} V` }),
       },
       results: {
-        [`${inputs.isTransformer ? 'Secondary' : 'Load'} Current`]: `${result.amps.toFixed(2)} A`,
-        ...(primary && { 'Primary Current': `${primary.amps.toFixed(2)} A` }),
-        'Apparent Power (S)': `${kva} kVA`,
-        'Real Power (P)': `${(result.watts / 1000).toFixed(1)} kW`,
-        'Reactive Power (Q)': `${(result.vars / 1000).toFixed(1)} kVAR`,
-        'Power Factor': result.pf.toFixed(2),
+        [`${inputs.isTransformer ? 'Secondary' : 'Load'} Current`]: `${formatFixed(result.amps, 2)} A`,
+        ...(primary && { 'Primary Current': `${formatFixed(primary.amps, 2)} A` }),
+        'Apparent Power (S)': `${formatEntered(kva)} kVA`,
+        'Real Power (P)': `${formatFixed(result.watts / 1000, 1)} kW`,
+        'Reactive Power (Q)': `${formatFixed(result.vars / 1000, 1)} kVAR`,
+        'Power Factor': formatFixed(result.pf, 2),
         ...(primary && {
-          'Current Ratio': `1:${(result.amps / primary.amps).toFixed(2)}`,
-          'Line-to-line voltage ratio': `${Math.round((inputs.primaryVolts / inputs.volts) * 100) / 100}:1`,
+          'Current Ratio': `1:${formatFixed(result.amps / primary.amps, 2)}`,
+          'Line-to-line voltage ratio': `${formatUpTo(inputs.primaryVolts / inputs.volts, 2)}:1`,
         }),
-        ...Object.fromEntries(rows.map((row) => [`Current at ${row.volts} V`, `${row.amps.toFixed(1)} A`])),
+        ...Object.fromEntries(rows.map((row) => [`Current at ${formatEntered(row.volts)} V`, `${formatFixed(row.amps, 1)} A`])),
       },
     });
   };
@@ -345,11 +346,11 @@ export function KVAToAmpsCalculator() {
                   {inputs.isTransformer ? 'Secondary' : 'Load'} Current
                 </div>
                 <div className="text-2xl sm:text-4xl font-bold font-mono text-primary-700 break-words min-w-0">
-                  {calculated.result.amps.toFixed(2)}
+                  {formatFixed(calculated.result.amps, 2)}
                 </div>
                 <div className="text-xl font-medium text-primary-600 mt-1">Amps</div>
                 <div className="text-sm text-primary-500 mt-2">
-                  @ {inputs.volts}V {phaseLabel(inputs.phase)}
+                  @ {formatEntered(inputs.volts)} V {phaseLabel(inputs.phase)}
                 </div>
               </div>
 
@@ -362,11 +363,11 @@ export function KVAToAmpsCalculator() {
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold font-mono text-amber-700">
-                      {calculated.primary.amps.toFixed(2)}
+                      {formatFixed(calculated.primary.amps, 2)}
                     </div>
                     <div className="text-lg font-medium text-amber-600">Amps</div>
                     <div className="text-sm text-amber-600 mt-1">
-                      @ {inputs.primaryVolts}V Primary
+                      @ {formatEntered(inputs.primaryVolts)} V Primary
                     </div>
                   </div>
                 </div>
@@ -378,19 +379,19 @@ export function KVAToAmpsCalculator() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-blue-600">Apparent Power (S):</span>
-                    <span className="font-mono font-semibold">{fieldNumber(inputs.kva)} kVA</span>
+                    <span className="font-mono font-semibold">{formatEntered(fieldNumber(inputs.kva))} kVA</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-blue-600">Real Power (P):</span>
-                    <span className="font-mono font-semibold">{(calculated.result.watts / 1000).toFixed(1)} kW</span>
+                    <span className="font-mono font-semibold">{formatFixed(calculated.result.watts / 1000, 1)} kW</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-blue-600">Reactive Power (Q):</span>
-                    <span className="font-mono font-semibold">{(calculated.result.vars / 1000).toFixed(1)} kVAR</span>
+                    <span className="font-mono font-semibold">{formatFixed(calculated.result.vars / 1000, 1)} kVAR</span>
                   </div>
                   <div className="flex justify-between border-t border-blue-200 pt-2">
                     <span className="text-blue-600">Power Factor:</span>
-                    <span className="font-mono font-semibold">{calculated.result.pf.toFixed(2)}</span>
+                    <span className="font-mono font-semibold">{formatFixed(calculated.result.pf, 2)}</span>
                   </div>
                 </div>
               </div>
@@ -403,13 +404,13 @@ export function KVAToAmpsCalculator() {
                     <div className="flex justify-between">
                       <span className="text-neutral-600">Current Ratio:</span>
                       <span className="font-mono font-semibold">
-                        1:{(calculated.result.amps / calculated.primary.amps).toFixed(2)}
+                        1:{formatFixed(calculated.result.amps / calculated.primary.amps, 2)}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-neutral-600">Line-to-line voltage ratio:</span>
                       <span className="font-mono font-semibold">
-                        {Math.round((inputs.primaryVolts / inputs.volts) * 100) / 100}:1
+                        {formatUpTo(inputs.primaryVolts / inputs.volts, 2)}:1
                       </span>
                     </div>
                   </div>
@@ -430,8 +431,8 @@ export function KVAToAmpsCalculator() {
                     <tbody className="divide-y divide-purple-200">
                       {calculated.rows.map((row) => (
                         <tr key={row.volts} className={inputs.volts === row.volts ? 'bg-purple-100' : ''}>
-                          <td className="p-1">{row.volts}V</td>
-                          <td className="p-1 font-mono">{row.amps.toFixed(1)}A</td>
+                          <td className="p-1">{formatEntered(row.volts)} V</td>
+                          <td className="p-1 font-mono">{formatFixed(row.amps, 1)} A</td>
                         </tr>
                       ))}
                     </tbody>

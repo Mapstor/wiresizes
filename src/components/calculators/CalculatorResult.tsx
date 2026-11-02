@@ -1,5 +1,6 @@
 import { Check, AlertTriangle, X } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
+import { formatEntered, formatFixed } from '@/lib/calculations/format';
 import { conductor, formatSize } from '@/lib/calculations/sizes';
 import { targetTitle } from '@/lib/calculations/voltage-drop';
 
@@ -90,13 +91,13 @@ export function CalculatorResult({
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
           <div className="text-sm text-neutral-500">{ampacityLabel}</div>
-          <div className="font-mono font-semibold">{ampacity} A</div>
+          <div className="font-mono font-semibold">{formatEntered(ampacity)} A</div>
         </div>
         <div>
           <div className="text-sm text-neutral-500">Voltage Drop</div>
           <div className={`font-mono font-semibold ${config.vdColor}`}>
-            {voltageDropPercent.toFixed(2)} %
-            {voltageDropVolts !== undefined && ` (${voltageDropVolts.toFixed(2)} V)`}
+            {formatFixed(voltageDropPercent, 2)} %
+            {voltageDropVolts !== undefined && ` (${formatFixed(voltageDropVolts, 2)} V)`}
           </div>
         </div>
         <div className="col-span-2">

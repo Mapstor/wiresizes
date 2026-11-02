@@ -35,6 +35,7 @@ import {
 } from '@/lib/calculations/voltage-drop';
 import type { VoltageDropResult } from '@/lib/calculations/voltage-drop';
 import { fieldNumber } from '@/lib/calculations/fields';
+import { formatFixed } from '@/lib/calculations/format';
 import { focusResults, useFieldErrors } from '@/lib/hooks/useCalculatorForm';
 
 const WIRE_SIZE_OPTIONS = voltageDropSizes('Cu').map((key) => ({ value: key, label: formatSize(key) }));
@@ -330,11 +331,11 @@ export function VoltageDropCalculator() {
                               </div>
                               <div>
                                 <span className="text-neutral-500">End Voltage:</span>
-                                <p className="font-semibold font-mono">{result.loadVolts.toFixed(2)} V</p>
+                                <p className="font-semibold font-mono">{formatFixed(result.loadVolts, 2)} V</p>
                               </div>
                               <div>
                                 <span className="text-neutral-500">Power Loss:</span>
-                                <p className="font-semibold font-mono">{result.powerLossW.toFixed(0)} W</p>
+                                <p className="font-semibold font-mono">{formatFixed(result.powerLossW, 0)} W</p>
                               </div>
                             </>
                           )}

@@ -1,5 +1,6 @@
 // Ohm's law from any two of voltage, current, resistance and power: V = I × R, P = V × I = I² × R = V² ÷ R.
 // Values stay unrounded; display formats them to 4 significant figures with an SI prefix (12 V ÷ 10 kΩ = 1.200 mA).
+import { formatSignificant } from './format';
 
 export type OhmsLawMode = 'voltage' | 'current' | 'resistance' | 'power';
 
@@ -75,13 +76,10 @@ export function formatSi(value: number, unit: string): string {
   const magnitude = Math.abs(value);
   let index = PREFIXES.findIndex(([exp]) => magnitude >= 10 ** exp);
   if (index === -1) index = PREFIXES.length - 1;
-  let text = (value / 10 ** PREFIXES[index][0]).toPrecision(4);
   // rounding can carry to 1000 (999.96 → "1000"): use the next prefix up
-  if (Math.abs(Number(text)) >= 1000 && index > 0) {
-    index -= 1;
-    text = (value / 10 ** PREFIXES[index][0]).toPrecision(4);
-  }
-  return `${text} ${PREFIXES[index][1]}${unit}`;
+  if (Math.abs(Number((value / 10 ** PREFIXES[index][0]).toPrecision(4))) >= 1000 && index > 0) index -= 1;
+  // en-US grouping and no exponential notation beyond the largest and smallest prefix ("15,000 GV")
+  return `${formatSignificant(value / 10 ** PREFIXES[index][0], 4)} ${PREFIXES[index][1]}${unit}`;
 }
 
 export const OHMS_LAW_DEFAULTS = {

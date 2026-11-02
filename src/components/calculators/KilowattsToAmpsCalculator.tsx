@@ -8,6 +8,7 @@ import { CalculatorLayout } from './CalculatorLayout';
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
+import { formatEntered, formatFixed } from '@/lib/calculations/format';
 import { Calculator, RefreshCw } from 'lucide-react';
 import { voltageOptions, voltsAfterPhaseChange } from '@/lib/calculations/inputs';
 import type { Phase } from '@/lib/calculations/inputs';
@@ -106,18 +107,18 @@ export function KilowattsToAmpsCalculator() {
     print({
       title: 'Kilowatts to Amps Calculation',
       inputs: {
-        'Power': `${fieldNumber(inputs.kilowatts)} kW`,
-        'Voltage': `${inputs.volts} V`,
+        'Power': `${formatEntered(fieldNumber(inputs.kilowatts))} kW`,
+        'Voltage': `${formatEntered(inputs.volts)} V`,
         'Phase Configuration': phaseLabel(inputs.phase),
-        'Power Factor': fieldNumber(inputs.pf),
+        'Power Factor': formatEntered(fieldNumber(inputs.pf)),
       },
       results: {
-        'Load Current': `${result.amps.toFixed(2)} A`,
-        'Real Power (P)': `${fieldNumber(inputs.kilowatts)} kW`,
-        'Apparent Power (S)': `${(result.va / 1000).toFixed(1)} kVA`,
-        'Reactive Power (Q)': `${(result.vars / 1000).toFixed(1)} kVAR`,
-        'Power Factor': result.pf.toFixed(2),
-        ...Object.fromEntries(rows.map((row) => [`Current at ${row.volts} V`, `${row.amps.toFixed(1)} A`])),
+        'Load Current': `${formatFixed(result.amps, 2)} A`,
+        'Real Power (P)': `${formatEntered(fieldNumber(inputs.kilowatts))} kW`,
+        'Apparent Power (S)': `${formatFixed(result.va / 1000, 1)} kVA`,
+        'Reactive Power (Q)': `${formatFixed(result.vars / 1000, 1)} kVAR`,
+        'Power Factor': formatFixed(result.pf, 2),
+        ...Object.fromEntries(rows.map((row) => [`Current at ${formatEntered(row.volts)} V`, `${formatFixed(row.amps, 1)} A`])),
       },
     });
   };
@@ -215,11 +216,11 @@ export function KilowattsToAmpsCalculator() {
               <div className="text-center p-6 bg-primary-50 rounded-xl border-2 border-primary-200">
                 <div className="text-sm text-primary-600 font-medium mb-2">Load Current</div>
                 <div className="text-2xl sm:text-4xl font-bold font-mono text-primary-700 break-words min-w-0">
-                  {calculated.result.amps.toFixed(2)}
+                  {formatFixed(calculated.result.amps, 2)}
                 </div>
                 <div className="text-xl font-medium text-primary-600 mt-1">Amps</div>
                 <div className="text-sm text-primary-500 mt-2">
-                  {phaseLabel(inputs.phase)} @ {inputs.volts}V
+                  {phaseLabel(inputs.phase)} @ {formatEntered(inputs.volts)} V
                 </div>
               </div>
 
@@ -229,19 +230,19 @@ export function KilowattsToAmpsCalculator() {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-neutral-600">Real Power (P):</span>
-                    <span className="font-mono font-semibold">{fieldNumber(inputs.kilowatts)} kW</span>
+                    <span className="font-mono font-semibold">{formatEntered(fieldNumber(inputs.kilowatts))} kW</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-neutral-600">Apparent Power (S):</span>
-                    <span className="font-mono font-semibold">{(calculated.result.va / 1000).toFixed(1)} kVA</span>
+                    <span className="font-mono font-semibold">{formatFixed(calculated.result.va / 1000, 1)} kVA</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-neutral-600">Reactive Power (Q):</span>
-                    <span className="font-mono font-semibold">{(calculated.result.vars / 1000).toFixed(1)} kVAR</span>
+                    <span className="font-mono font-semibold">{formatFixed(calculated.result.vars / 1000, 1)} kVAR</span>
                   </div>
                   <div className="flex justify-between border-t border-neutral-300 pt-2">
                     <span className="text-neutral-600">Power Factor:</span>
-                    <span className="font-mono font-semibold">{calculated.result.pf.toFixed(2)}</span>
+                    <span className="font-mono font-semibold">{formatFixed(calculated.result.pf, 2)}</span>
                   </div>
                 </div>
               </div>
@@ -260,8 +261,8 @@ export function KilowattsToAmpsCalculator() {
                     <tbody className="divide-y divide-blue-200">
                       {calculated.rows.map((row) => (
                         <tr key={row.volts} className={inputs.volts === row.volts ? 'bg-blue-100' : ''}>
-                          <td className="p-1">{row.volts}V</td>
-                          <td className="p-1 font-mono">{row.amps.toFixed(1)}A</td>
+                          <td className="p-1">{formatEntered(row.volts)} V</td>
+                          <td className="p-1 font-mono">{formatFixed(row.amps, 1)} A</td>
                         </tr>
                       ))}
                     </tbody>

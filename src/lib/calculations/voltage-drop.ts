@@ -1,6 +1,7 @@
 // Voltage drop with DC resistance of solid conductors at 75 °C from data/verified/awg.json:
 // VD = k × I × R × L / 1000 (k = 2 single-phase, √3 three-phase; R in Ω per 1000 ft; L one way in ft),
 // % = VD ÷ volts × 100. Power lost in the conductors: 2·I²·R·L/1000 single-phase, 3·I²·R·L/1000 three-phase.
+import { formatFixed } from './format';
 import { conductor, formatSize, materialName, tableAmpacity, TABLE_310_16_SIZES } from './sizes';
 import type { Material, SizeKey } from './sizes';
 import { voltsValid } from './inputs';
@@ -31,12 +32,12 @@ export function targetTitle(meetsTarget: boolean): string {
 
 /** Voltage drop percent as the result panel shows it: "2.02 %". */
 export function formatVdPct(pct: number): string {
-  return `${pct.toFixed(2)} %`;
+  return `${formatFixed(pct, 2)} %`;
 }
 
 /** Voltage drop in volts as the result panel shows it: "4.86 V". */
 export function formatVdVolts(volts: number): string {
-  return `${volts.toFixed(2)} V`;
+  return `${formatFixed(volts, 2)} V`;
 }
 
 /** Ω per 1000 ft at 75 °C: copper AWG and kcmil, or aluminum EC-H19 (12 AWG and larger); null otherwise. */

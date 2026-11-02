@@ -7,6 +7,7 @@ import { CalculatorLayout } from './CalculatorLayout';
 import { focusResults, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { buildQuery, choiceParam } from '@/lib/calculations/fields';
+import { formatEntered } from '@/lib/calculations/format';
 import { Shield, AlertTriangle, Calculator, RefreshCw } from 'lucide-react';
 import {
   egcForOcpd,
@@ -43,12 +44,12 @@ export function GroundWireCalculator() {
     print({
       title: 'Equipment Grounding Conductor Calculation',
       inputs: {
-        'Overcurrent Device Rating': `${ocpdA} A`,
+        'Overcurrent Device Rating': `${formatEntered(ocpdA)} A`,
       },
       results: {
         [COPPER_LABEL]: formatSize(row.cu),
         [ALUMINUM_LABEL]: formatSize(row.alCca),
-        'NEC Table 250.122 row': `${row.rowA} A`,
+        'NEC Table 250.122 row': `${formatEntered(row.rowA)} A`,
       },
       notes: [PROPORTIONAL_NOTE],
     });
@@ -143,7 +144,7 @@ export function GroundWireCalculator() {
                   </div>
                 </div>
                 <div className="text-sm text-neutral-600 mt-4 text-center">
-                  Based on {ocpdA} A overcurrent device (NEC Table 250.122 row: {row.rowA} A)
+                  Based on {formatEntered(ocpdA)} A overcurrent device (NEC Table 250.122 row: {formatEntered(row.rowA)} A)
                 </div>
                 <p className="text-sm text-neutral-700 mt-3 text-center">{PROPORTIONAL_NOTE}</p>
               </div>
@@ -165,7 +166,7 @@ export function GroundWireCalculator() {
                     <tbody className="divide-y divide-neutral-200">
                       {TABLE_250_122_ROWS.map((r) => (
                         <tr key={r.rowA} className={r.rowA === row.rowA ? 'bg-green-100' : ''}>
-                          <td className="p-2">{r.rowA} A</td>
+                          <td className="p-2">{formatEntered(r.rowA)} A</td>
                           <td className="p-2 font-mono">{formatSize(r.cu)}</td>
                           <td className="p-2 font-mono">{formatSize(r.alCca)}</td>
                         </tr>
