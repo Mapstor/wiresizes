@@ -15,7 +15,7 @@ These waves rebuild pages whose data was not verified when WSZ-002 ran. A page i
 
 ## 2. Data and engines
 - New data files load through src/lib/verified (WSZ-003). Typed accessors go there and nowhere else.
-- New engines go in src/lib/engine/ with ENGINE_ID and DOMAINS, and their golden groups go in tests/golden.test.ts.
+- New engines go in src/lib/calculations/ with ENGINE_ID and DOMAINS (D-13), and their golden groups go in tests/golden.test.ts.
 - Values marked UNVERIFIED, do_not_publish, CONFLICTING or draft-only in a data file are never rendered. "Draft-only" means 2026-cycle draft text.
 - Values marked verified-sd2023 render as 2023 NEC (decision D-09), including those whose data file says the 2022 Technical Meeting and Standards Council record was not seen. 625.54 stays held.
 - A VERIFIED-other-edition value is rendered only with its edition named next to it.

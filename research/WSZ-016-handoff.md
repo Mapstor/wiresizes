@@ -432,3 +432,21 @@ DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID W
 - §1 Key paths: verified module, engines, components, gates, tests (rewrite the entry that names src/lib/calculations/ as the engine).
 Commit DEVLOG.md with the work. Don't push. End with the §6 entry, `git status --short` and `git log --oneline -3`.
 ```
+
+## 5. Chat answers (2026-11-02)
+
+1. Split: yes. WSZ-003a DATALAYER = steps 1–3, 6 and 7 plus the Q5 deletions. WSZ-003b GATES = steps 4, 5 and 8 plus the rendered-text fixes; chat writes it after 3a's browser check. registry.ts moves to 3b with `<Sources>` and `<AsOf>`, its first users.
+2. Running server: nobody needs it. 3a carries a PROCESSES line; rm -rf .next under it is fine; 3a serves its build on port 3000 once the port is free.
+3. Pack install: WSZ-003.next.txt is deleted in 3a (its text stays in the appendix). This file stays as the WSZ-016 record; chat adds it to the next pack's INSTALL.md exceptions.
+4. Pages reading data files: ground-wire-calculator moves to src/lib/verified in 3a. The two table guides move in WSZ-005, their rebuild, so an import change doesn't re-date them.
+5. Legacy sizing code: deleted in 3a with both barrels, the nine withdrawn components, DistanceTable.tsx and utils/formatters.ts. Those pages get new components from the engines in WSZ-009 to WSZ-011.
+6. Engine folder: src/lib/calculations/ stays (D-13); fields.ts, format.ts and inputs.ts stay there as helpers.
+7. motor-flc and breaker-sizing: both engines are built in 3a; the golden rule stays at 214 cases, 0 skipped.
+8. `<Val>` and `<Size>` may be used in 'use client' components; `<Sources>` and `<AsOf>` are server-only (D-15).
+9. Space before units: plain U+0020 site-wide; `<Val>` keeps value and unit on one line with white-space: nowrap (D-14).
+10. Poolsolver script: not needed; 3b writes check-rendered-text.mjs from the spec on build-output.mjs.
+11. Enforce lists: one per gate (D-15).
+12. Rendered-text gate: enforced site-wide from 3b, which fixes the number–unit spacing and the "Q:" joins and rewords the flagged words with wording chat gives from 3a's list. Those pages' visible text changes, so re-dating them (DEVLOG §4) is accurate.
+13. Overflow command: none (D-16).
+14. WSZ-004: the required-key checks go into check-structure.mjs as new numbered checks; no check-jsonld.mjs.
+15. WSZ-005: the next pack's page-specs.md homepage line reads: "The wire size calculator is live at /calculators/wire-size-calculator (WSZ-002). The homepage links to it near the top. The homepage title and H1 must not repeat the calculator's title (today both are 'Wire Size Calculator — NEC 310.16')."
