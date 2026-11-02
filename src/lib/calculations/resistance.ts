@@ -83,12 +83,46 @@ export const RESISTANCE_NOTES = [
   'Power loss: 2 × I² × R × L ÷ 1000 for DC or single-phase, 3 × I² × R × L ÷ 1000 for three-phase (R in Ω per 1000 ft, L one way in ft).',
 ];
 
-/** The message for an invalid input in each mode. */
-export const RESISTANCE_INPUT_MESSAGES: Record<ResistanceMode, string> = {
-  resistance: 'Enter a one-way distance greater than 0 ft.',
-  distance: 'Enter a loop resistance greater than 0 Ω.',
-  power: 'Enter a one-way distance and a current greater than 0.',
+export type ResistanceField = 'lengthFt' | 'tempF' | 'amps' | 'maxLoopOhms';
+
+export const DISTANCE_MIN_FT = 1;
+export const DISTANCE_MAX_FT = 5000;
+export const TEMPERATURE_MIN_F = -40;
+export const TEMPERATURE_MAX_F = 200;
+
+/** The message under each invalid field. */
+export const RESISTANCE_INPUT_MESSAGES: Record<ResistanceField, string> = {
+  lengthFt: 'Enter a one-way distance from 1 ft to 5000 ft.',
+  tempF: 'Enter a temperature from −40 °F to 200 °F.',
+  amps: 'Enter a current greater than 0 A.',
+  maxLoopOhms: 'Enter a loop resistance greater than 0 Ω.',
 };
+
+/** The fields each mode uses. */
+export function resistanceFields(mode: ResistanceMode): ResistanceField[] {
+  if (mode === 'distance') return ['tempF', 'maxLoopOhms'];
+  if (mode === 'power') return ['lengthFt', 'tempF', 'amps'];
+  return ['lengthFt', 'tempF'];
+}
+
+/** Whether a field's value is in its range: distance 1–5000 ft, temperature −40–200 °F, current and loop resistance above 0. */
+export function resistanceFieldValid(field: ResistanceField, value: number): boolean {
+  if (field === 'lengthFt') return value >= DISTANCE_MIN_FT && value <= DISTANCE_MAX_FT;
+  if (field === 'tempF') return value >= TEMPERATURE_MIN_F && value <= TEMPERATURE_MAX_F;
+  return Number.isFinite(value) && value > 0;
+}
+
+/** The message for each invalid field the mode uses (NaN, an empty field, is invalid). */
+export function resistanceInputErrors(
+  mode: ResistanceMode,
+  values: Record<ResistanceField, number>,
+): Partial<Record<ResistanceField, string>> {
+  const errors: Partial<Record<ResistanceField, string>> = {};
+  for (const field of resistanceFields(mode)) {
+    if (!resistanceFieldValid(field, values[field])) errors[field] = RESISTANCE_INPUT_MESSAGES[field];
+  }
+  return errors;
+}
 
 export const RESISTANCE_DEFAULTS = {
   mode: 'resistance' as ResistanceMode,

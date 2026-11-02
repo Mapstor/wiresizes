@@ -82,11 +82,12 @@ describe('WSZ-014 step 3 texts and formats', () => {
     assert.equal(al14.tableAmpacity, null);
   });
 
-  it('wire resistance: one message per mode', () => {
+  it('wire resistance: one message per field (WSZ-015 replaced the per-mode messages)', () => {
     assert.deepEqual(RESISTANCE_INPUT_MESSAGES, {
-      resistance: 'Enter a one-way distance greater than 0 ft.',
-      distance: 'Enter a loop resistance greater than 0 Ω.',
-      power: 'Enter a one-way distance and a current greater than 0.',
+      lengthFt: 'Enter a one-way distance from 1 ft to 5000 ft.',
+      tempF: 'Enter a temperature from −40 °F to 200 °F.',
+      amps: 'Enter a current greater than 0 A.',
+      maxLoopOhms: 'Enter a loop resistance greater than 0 Ω.',
     });
   });
 
