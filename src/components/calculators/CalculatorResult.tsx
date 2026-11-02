@@ -78,8 +78,8 @@ export function CalculatorResult({
       </div>
 
       {/* Main Result */}
-      <div className="flex items-baseline gap-3 mb-4">
-        <span className="text-4xl font-bold font-mono text-neutral-900">
+      <div className="flex flex-wrap items-baseline gap-3 mb-4">
+        <span className="text-3xl sm:text-4xl font-bold font-mono text-neutral-900">
           {formatSize(awg)}
         </span>
         <Badge variant={material === 'copper' ? 'warning' : 'default'}>
