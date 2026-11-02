@@ -12,6 +12,10 @@ import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/500.css';
 import './globals.css';
 
+// The commit a build came from (first 7 characters of Vercel's VERCEL_GIT_COMMIT_SHA), or "local": chat fetches a
+// page to confirm that production equals main.
+const BUILD = (process.env.VERCEL_GIT_COMMIT_SHA ?? '').slice(0, 7) || 'local';
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://wiresizes.com'),
   title: {
@@ -61,6 +65,9 @@ export const metadata: Metadata = {
     other: {
       'msvalidate.01': '57C407E8336C4915E2D28EEA649C8078',
     },
+  },
+  other: {
+    'x-build': BUILD,
   },
   icons: {
     icon: [

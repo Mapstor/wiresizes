@@ -2,10 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  typescript: {
-    // Skip TypeScript errors during production build
-    ignoreBuildErrors: true,
-  },
   output: 'standalone',
   // Tree-shake icon imports — without this, lucide-react ships every icon
   // even though we only use ~80 distinct ones.
