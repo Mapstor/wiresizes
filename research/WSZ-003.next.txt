@@ -1,0 +1,135 @@
+WSZ-003 DATALAYER — wiresizes.com: verified data module, calculation engines, golden tests, three build gates, zero type errors
+CHAT: (Q1) split this into WSZ-003a (steps 1–3, 6 and 7) and WSZ-003b (steps 4, 5 and 8), each with its own build and gate run (WSZ-016 handoff §1.8)?
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes", and the DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 shows WSZ-016 DRAFTCHECK as done. Otherwise stop.
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`. If origin/main has commits that main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+CHAT: (Q2) add WSZ-016's PROCESSES line ("never stop, kill or signal a process")? A `next start -p 3000 -H 0.0.0.0` (/tmp/serve.log, started about 10:12 UTC on 2026-11-02) listens on container port 3000, and step 9's `rm -rf .next` leaves it serving pages without their new CSS and JS (DEVLOG §4). Does anyone still need that server?
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
+CHAT: (Q3) INSTALL.md step 3 deletes every research/ file that a new pack lacks, except inventory-2026-10.md and wsz002-draft-review.md, and step 4's diff would list the extra files. Add research/WSZ-003.next.txt and research/WSZ-016-handoff.md to the next pack's exceptions, or delete them once WSZ-003 is final?
+
+Read first:
+- DEVLOG §0–§5 and the last 10 §6 entries
+- research/golden-cases.json
+- research/nec-sections-allowlist.csv
+- research/data-sources.csv
+- data/verified/*.json (read the notes in each file)
+- the pure modules WSZ-002 created in src/lib/calculations/ (including sizes.ts and conversions.ts), fields.ts (WSZ-014), format.ts (WSZ-015), src/lib/hooks/useCalculatorForm.ts and useShareLink.ts (WSZ-014), and tests/register.mjs
+- scripts/lib/build-output.mjs, scripts/check-banned.mjs and scripts/check-structure.mjs (WSZ-002, WSZ-014, WSZ-015)
+- .claude/skills/content-page/SKILL.md ("Rendering rules")
+- .claude/skills/data-sourcing/SKILL.md
+
+Tooling:
+- npm works in the box, but add no packages unless this prompt names one.
+- Tests use the WSZ-002 runner: `npm test`, which is node --experimental-strip-types with tests/register.mjs.
+- Engine code must use erasable TypeScript only: no enums, no namespaces, no parameter properties.
+
+1. Verified data module: one import point for every number on the site
+   - Create src/lib/verified/ and record it in DEVLOG §1 Key paths. It imports data/verified/*.json with TypeScript types and exposes:
+CHAT: (Q4) three pages also import data/verified/*.json directly: src/app/guides/nec-table-310-16/page.tsx:7-9, src/app/guides/awg-wire-size-chart/page.tsx:7,10 and src/app/calculators/ground-wire-calculator/page.tsx:6. Move them to src/lib/verified in this wave, or in their rebuild waves (WSZ-005, WSZ-008)?
+     · awgRow(size) and kcmilRow(size), taking nec-310-16.json keys. The size-key mapping and display formatting from WSZ-002's src/lib/calculations/sizes.ts move here; keep one copy.
+     · table31016(size, column). It replaces tableAmpacity (sizes.ts).
+     · correction(ambientRow, column). Returns null where the table has no factor. It replaces correctionFactor (ampacity.ts).
+     · adjustment(cccBand): a nec-310-15-C-1.json row key, as golden ccc_band and the derating input cccBand use. It replaces adjustmentPercent (ampacity.ts).
+     · table31012(ratingA). Returns null when the rating isn't a table row. Never interpolate. It replaces serviceConductors (service-lookup.ts).
+     · egc(ocpdA, material). Uses the first row not exceeded; returns null above 6000 A. It replaces egcSize (grounding.ts).
+     · egcProportional(egcSize, minSize, installedSize): the 250.122(B) method in nec-250-122.json. Multiply before dividing (WSZ-002's golden cases catch the other order). It replaces step 6 of sizeConductor (conductor-sizing.ts).
+     · gec(serviceConductorSize, material): Table 250.66, using area thresholds from awg.json. It replaces gecForServiceConductor (service-lookup.ts).
+     · max240_4D(size, material) → { max_ocpd_a, conditions, status } for any nec-240-4-d.json row, or null. It replaces WSZ-002's maxOcpd240_4D (ampacity.ts). The sizing engine uses a row only when conditions is null; pages render only what the allowlist permits.
+     · ocpdRatings(): Table 240.6(A). It replaces the direct nec-240-6-a.json reads in conductor-sizing.ts and grounding.ts.
+     · loadCalc2023: typed access to nec-220-2023.json.
+     · adoption(): verified rows only.
+   - Move every importer of src/lib/data/nec-tables.ts and src/lib/data/wire-properties.ts to the new module, then delete both files. Withdrawn pages keep their old components unused. No live route may import the old files. The importers are src/app/calculators/wire-size-calculator/page.tsx (NEC_310_16) and src/lib/calculations/wire-sizing.ts, which nine withdrawn components import (Range, Welder, WellPump, HotTub, AirConditioner, Dryer, CircuitBreaker, RVHookup and GarageSubpanel); src/lib/data/index.ts and src/lib/calculations/index.ts re-export them.
+CHAT: (Q5) rewire wire-sizing.ts onto src/lib/verified, or delete it with both index.ts files and the nine components? No route imports them, but tsc checks them, and step 6 needs 0 errors.
+   - registry.ts: parse research/data-sources.csv at build time with a small RFC 4180 parser (quoted fields contain commas). scripts/lib/build-output.mjs already has one (parseCsv); keep one copy. Expose attribution(domain) → { text, url, verified_date, status }. It throws during the build if a page asks for a domain whose status is not "verified".
+
+2. Engines in src/lib/engine/: pure functions, no React. Each module exports ENGINE_ID and DOMAINS (the registry domains it uses, all verified). Move WSZ-002's src/lib/calculations/* modules (ampacity, conductor-sizing, conversions, dc-sizing, grounding, inputs, ohms-law, power, resistance, service-lookup, sizes and voltage-drop) here and rebuild them on src/lib/verified. Don't write a second copy of any formula: today COPPER_ALPHA is in both dc-sizing.ts and resistance.ts, and the conductor power-loss formula in both voltage-drop.ts and resistance.ts.
+CHAT: (Q6) DEVLOG §4 ("Calculator logic goes in src/lib/calculations/*.ts") and D-11 (src/lib/calculations/format.ts) name the current folder, while research/held-waves-rules.md §2 names src/lib/engine/. Move the engines and revise D-11 and §4, or keep src/lib/calculations/ as the engine folder? Either way, do fields.ts and format.ts (form and display helpers, not engines) stay in src/lib/calculations/?
+   - Move these as they are (built in WSZ-002; their golden groups pass): dc-sizing, ampacity-arithmetic (ampacity.ts), service-lookup and conversions.
+   - awg-geometry: d = 0.005 in × 92^((36 − n)/39); area in cmil and mm²; step ratios.
+   - resistance: R(T) for copper and EC-H19 aluminum from the awg.json constants; per run, per 1000 ft and per km; loop resistance.
+   - voltage-drop: k × L × I × R / 1000 (k = 2 single-phase, √3 three-phase); parallel sets (areas add); smallest size for a target %.
+   - conductor-sizing (from WSZ-002): 60 °C column, 240.4(D), EGC by OCPD and material, voltage-drop upsizing, 250.122(B). Add optional inputs termination ('unknown' | '60' | '75') and wiringMethod ('cable' | 'conductors') that choose the column per the engine_rules in data/verified/nec-110-14c.json (cable always 60 °C; unknown → 60 °C at 100 A or less, 75 °C above; '75' only when the reader confirmed listed and identified terminations). The defaults ('unknown', 'cable') keep today's 60 °C results for every WSZ-002 golden case. Pages keep the 60 °C-only inputs until WSZ-009 adds the new ones. Golden group: wire-size-termination. For that group the result adds columnC (the column used), ampacity (the returned size's ampacity in that column) and limitedBy240_4D (true only when 240.4(D) moved the size above the first size whose column ampacity reaches the rating); golden keys column_c, ampacity, limited_by_240_4_D and egc map to them.
+     · terminationColumn(ocpdA, termination, wiringMethod) is exported on its own, for the ampacity tool.
+     · Derating inputs (optional): ambientRow (a Table 310.15(B)(1)(1) row key from nec-310-15-B-1-1.json) and cccBand (a Table 310.15(C)(1) row key, or null for 1–3 conductors). Start column: 90 °C for individual conductors, 60 °C for cable. Derated ampacity = start-column ampacity × the Table 310.15(B)(1)(1) factor for the start column × the Table 310.15(C)(1) percent, capped at the termination-column ampacity. The step-2 baseline becomes the smallest size whose derated ampacity is at least the rating, then 240.4(D); voltage-drop upsizing and the 250.122(B) scaling start from that baseline (increases needed for correction and adjustment never scale the EGC). Without derating inputs the results equal the plain mode. Golden group: wire-size-derated (result fields columnC, startColumnC, minSizeByAmpacity, deratedAmpacity, size, vdVolts, vdPct, meetsTarget, egc, egcUpsized, egcLargerThanConductor). Pages get these inputs in WSZ-009.
+   - power: kW ↔ A ↔ kVA for single- and three-phase with PF (in power.ts since WSZ-002); PF correction (kVAR = P × (tan φ1 − tan φ2); current reduction = 1 − PF1/PF2).
+   - load-calc-2023: the standard and optional dwelling methods and Table 220.55, from nec-220-2023.json. No page uses it until WSZ-010; it must still pass its golden cases (group load-calc-2023, 16 cases, and group load-calc-2023-standard, 1 case).
+
+3. Golden tests
+   - tests/golden.test.ts loads research/golden-cases.json and runs every case through the matching data function or engine, within each case's tolerance. The file's "count" field gives the number of cases; "exact" means equality.
+   - It fails if any group in the file has no test mapping.
+CHAT: (Q7) no step-2 engine covers group motor-flc (16 cases; registry domain nec-430-flc, verified) or group breaker-sizing (8 cases; nec-continuous-load and nec-240-ocpd, verified). Add both engines to step 2, or exempt the two groups until WSZ-011 and WSZ-009 (then the rule above and "0 skipped" change)?
+   - WSZ-002's tests/wsz002-calculators.test.ts stays, rewired to the engines, and so do tests/wsz014-calculator-ui.test.ts and tests/wsz015-retest.test.ts.
+
+4. Rendering components (server components)
+CHAT: (Q8) the 15 live calculators are 'use client' components whose default results are server-rendered (D-11), so gate b reads their numbers. May <Val> and <Size> be imported by 'use client' components (no registry or fs import), with only <Sources> and <AsOf> server-only?
+   - <Val v={number} unit="A" src="nec-310-16" digits={…}/> renders <span data-src="nec-310-16">20 A</span>. The non-breaking space and the units come from one formatter, src/lib/calculations/format.ts (D-11): US style, imperial first, metric in parentheses where both are shown.
+CHAT: (Q9) the calculators put a plain space (U+0020) before units, and the tests assert it ("4.86 V", tests/wsz015-retest.test.ts:209). Non-breaking or plain space, site-wide?
+   - Engine outputs use src="calc:<ENGINE_ID>".
+   - <Sources domains={[…]} /> renders registry attribution strings, each linked to its registry URL. Never hand-typed.
+   - <AsOf domain="…" /> renders "Data as of {Mon YYYY}" from verified_date.
+   - Size names (14 AWG, 4/0, 250 kcmil) are names, not measurements. Render them through <Size s="4/0"/>, which checks that the size exists in awg.json or nec-310-16.json.
+
+5. Gates (scripts/*.mjs, Node built-ins only)
+   Shared parsing: the HTML tokenizer in scripts/lib/build-output.mjs (tokenizeHtml, which tracks the open-element stack, with isJsonLd, visibleText, jsonLdStrings, htmlPages and withdrawnRoutes), which check-banned.mjs and check-structure.mjs already use; add the <noscript> skip there. It skips <style>, <noscript> and every <script> except type="application/ld+json"; gates a and c read those JSON-LD blocks as JSON strings. The Next.js RSC payload contains $-prefixed tokens and must never be scanned.
+   a. check-rendered-text.mjs. If a check-rendered-text.mjs from poolsolver exists on this machine (search ~ to depth 4), copy and extend it. Otherwise write it to the content-page "Rendering rules" spec.
+CHAT: (Q10) no copy is reachable from the box (`find ~ -maxdepth 4 -name check-rendered-text.mjs` finds nothing; only the repo is mounted). Does the owner put poolsolver's scripts/check-rendered-text.mjs into this repo before the run, or does CC write it from the spec?
+      What it scans:
+      · title, meta description, og:* and twitter:* tags;
+      · alt, title and aria-label attributes;
+      · visible text, SVG <text> and JSON-LD string values;
+      · llms.txt.
+      What it flags:
+      · spec vocabulary: hook, promise, wedge, information gain, fan-out, attack plan, ledger, registry, archetype, cluster, flagship, money query, engine, single-sourced, by construction, build pipeline, crawlable, crawler, LLM, citation-worthy, "cite us";
+      · status notes: "coming soon", "shipping later", "now shipped", "when … ships";
+      · self-praise: trusted, professional-grade, ultimate, comprehensive guide, rigorous, honest, exact, accurate (as self-description), compliant;
+      · UK spellings: colour, behaviour, metre, litre, centre, aluminium, analyse, modelling;
+      · joined words: a digit or a closing inline tag running straight into a letter.
+      Keep an allowlist file with a reason per entry.
+   b. check-number-trace.mjs. Every unit-bearing number in visible text must sit inside an element with data-src. That data-src must be a verified registry domain, or calc:<ENGINE_ID> whose DOMAINS are all verified.
+      · Units: A, amps, V, volts, kV, W, kW, kVA, kVAR, VA, Ω, ohms, °C, °F, %, ft, feet, in, inches, mm, mm², m, km, cmil, kcmil, lb, kg, hp, Btu/h, ton.
+      · A "$" amount counts as unit-bearing.
+      · Exempt: size names inside <Size>, years, dates and NEC section numbers.
+   c. check-nec-refs.mjs. Every NEC reference in rendered text ("Table 310.16", "310.12", "240.4(D)", "Article 120") must match a ref in research/nec-sections-allowlist.csv. A number followed by a unit is not a reference.
+   - Staged rollout: scripts/gates.config.json has:
+     · enforce: [routes] for gates b and c. Start with the WSZ-002 calculator routes whose numbers all come from engines now (wire-size, voltage-drop, ampacity, wire-resistance, low-voltage, ground-wire, service-entrance) if they pass. Otherwise start empty, and each rebuild wave adds its routes.
+CHAT: (Q11) one enforce list for both gates, or one per gate? Today none of the seven routes would pass gate b (the build has no data-src attribute; 22 to 161 unit-bearing numbers per route), while six would pass gate c (ground-wire shows "NEC Article 250" and "NEC 250.118").
+     · reportOnly: everything else.
+     Withdrawn (noindex) routes are skipped.
+   - Gate a enforces site-wide from now on: fix or allowlist what it finds. The "$" and banned-string checks from WSZ-002 also stay site-wide.
+CHAT: (Q12) on today's build gate a would flag about 458 numbers run into their unit in visible text ("240V", "15A", "1500W") on 25 of the 34 live pages, 30 FAQ "Q:" labels run into the question on 3 pages, and words in current copy: "accurate" 5, "comprehensive guide" 5, "exact" 4, and "promise" in the /terms meta description (research/trust-pages-copy.md:97) and public/llms.txt:43. Enforce site-wide in this wave (fix the spacing; allowlist or reword the words, and give the wording), or report-only until each page's rebuild? Every fixed page gets a new lastmod and dateModified (DEVLOG §4).
+   - package.json "postbuild" runs the three gates plus check-banned.mjs and check-structure.mjs. Report-only routes print a count; enforced routes fail the build.
+
+6. Type safety
+   - Fix every `npx tsc --noEmit` error. One is left: src/components/calculators/WellPumpCalculator.tsx:129, in a withdrawn component (WSZ-001 found 3).
+   - Then delete `typescript: { ignoreBuildErrors: true }` from next.config.ts (lines 5–8, with its comment), so the build type-checks.
+
+7. Build stamp: add <meta name="x-build" content={first 7 chars of process.env.VERCEL_GIT_COMMIT_SHA, or "local"}> to the root layout, so chat can confirm that production equals main by fetching a page.
+
+8. Layout check: the box has no Chromium, and npm can't download one through the firewall. Don't add a browser here. The owner's Mac already has scripts/check-overflow-local.mjs (puppeteer-core with the Mac Chrome path); list the exact command in DEVLOG §1 Commands.
+CHAT: (Q13) the script reads /tmp/wsaudit/urls.txt (not in the repo) and opens http://localhost:3001 at 375 px, but the box's server is the Mac's localhost:3022 (D-12), and scripts/check-overflow-320.mjs is the 320 px variant. Which command goes in §1 (script, URL list, host and port), or should this step make the script read its routes from the build and take a base URL argument?
+
+9. Verify
+   - `rm -rf .next && npm run build` (gates run in postbuild; the build now type-checks)
+   - `npm test`: all golden cases pass, 0 skipped
+   - `npx tsc --noEmit` reports 0 errors
+   - `python3 -I research/check_sources.py research/data-sources.csv research/page-map.csv`
+
+10. Commit "feat(wsz-003): verified data layer, engines, golden tests, rendered-text/number-trace/NEC-ref gates, strict types". Don't push.
+
+Definition of done (paste each output):
+- the golden test summary (passed = the file's count, 0 failed, 0 skipped)
+- gate output: gate a hits (must be 0 after fixes/allowlist); gates b and c per route (enforced routes 0, report-only counts listed)
+- the "$" and banned-string checks (0)
+- the build, tsc (0 errors) and check_sources result lines
+- `grep -rn "lib/data/nec-tables\|lib/data/wire-properties" src` (no output)
+- the x-build meta from one built HTML file
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-003 DATALAYER. Status is done only if the verification ran and passed. Skipped tests and UI behaviour count as unverified. Also record these chat notes:
+- §4 Gotchas:
+  · "Every unit-bearing number renders through <Val>/<Size> with data-src; gates b/c enforce per route via scripts/gates.config.json — add a route when its rebuild lands."
+  · "golden-cases.json and data/verified/*.json are generated in chat; regenerate, never hand-edit."
+  · "The build type-checks now; never re-add ignoreBuildErrors." It replaces the §4 line that starts "The build skips type checking" and the words "the build skips type checks" in §1 Stack.
+- §1 Key paths: verified module, engines, components, gates, tests (rewrite the entry that names src/lib/calculations/ as the engine).
+Commit DEVLOG.md with the work. Don't push. End with the §6 entry, `git status --short` and `git log --oneline -3`.
