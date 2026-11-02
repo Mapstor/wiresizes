@@ -5,21 +5,23 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { CalculatorLayout } from './CalculatorLayout';
-import { focusResults, useUrlState } from '@/lib/hooks/useCalculatorForm';
+import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
 import { Calculator, RefreshCw } from 'lucide-react';
 import {
+  checkOhmsLawInputs,
   formatSi,
   OHMS_LAW_DEFAULTS,
   OHMS_LAW_EMPTY_HINT,
   OHMS_LAW_EMPTY_TITLE,
   OHMS_LAW_MODE_OPTIONS,
+  OHMS_LAW_THREE_VALUES_MESSAGE,
+  ohmsLawInputQuantities,
   solveOhmsLaw,
 } from '@/lib/calculations/ohms-law';
-import type { OhmsLawMode, OhmsLawValues } from '@/lib/calculations/ohms-law';
+import type { OhmsLawMode, OhmsLawQuantity as Quantity, OhmsLawValues } from '@/lib/calculations/ohms-law';
 
-type Quantity = keyof OhmsLawValues;
 const QUANTITIES: Quantity[] = ['voltage', 'current', 'resistance', 'power'];
 
 interface Inputs {
@@ -63,9 +65,13 @@ export function OhmsLawCalculator() {
   const [inputs, setInputs] = useState<Inputs>(DEFAULT_INPUTS);
   const formRef = useRef<HTMLDivElement>(null);
   const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+  const fields = useFieldErrors();
   const { mode, values } = inputs;
+  // a filled field must be above 0, and at most two of the mode's three fields may be filled
+  const check = checkOhmsLawInputs(mode, values);
+  const invalid = Object.keys(check.errors).length > 0;
   // Values stay unrounded; display formats them to 4 significant figures
-  const results = solve(inputs);
+  const results = invalid || check.threeValues ? null : solve(inputs);
 
   const query = buildQuery({
     mode,
@@ -82,16 +88,22 @@ export function OhmsLawCalculator() {
   // a new mode starts from empty fields
   const setMode = (next: OhmsLawMode) => {
     markChanged();
+    fields.reset();
     setInputs({ mode: next, values: EMPTY_VALUES });
   };
 
   const handleCalculate = () => {
-    if (results) {
+    if (invalid) {
+      fields.revealAll(formRef.current);
+      return;
+    }
+    // a result, or three values: the results heading takes focus
+    if (results || check.threeValues) {
       focusResults(resultsHeadingRef.current);
       return;
     }
-    // fewer than two values: the empty-state lines stay, and the first field without a value takes focus
-    const first = QUANTITIES.find((q) => q !== mode && !usable(values[q]));
+    // fewer than two values: the empty-state lines stay, and the first empty field takes focus
+    const first = ohmsLawInputQuantities(mode).find((q) => values[q].trim() === '');
     if (first) formRef.current?.querySelector<HTMLInputElement>(`input[name="${first}"]`)?.focus();
   };
 
@@ -114,6 +126,7 @@ export function OhmsLawCalculator() {
 
   const handleReset = () => {
     markChanged();
+    fields.reset();
     setInputs(DEFAULT_INPUTS);
   };
 
@@ -146,6 +159,8 @@ export function OhmsLawCalculator() {
                 name="voltage"
                 value={values.voltage}
                 onChange={(e) => setValue('voltage', e.target.value)}
+                onBlur={() => fields.touch('voltage')}
+                error={fields.shown('voltage', check.errors.voltage)}
                 suffix="V"
                 min={0}
                 step={0.1}
@@ -160,6 +175,8 @@ export function OhmsLawCalculator() {
                 name="current"
                 value={values.current}
                 onChange={(e) => setValue('current', e.target.value)}
+                onBlur={() => fields.touch('current')}
+                error={fields.shown('current', check.errors.current)}
                 suffix="A"
                 min={0}
                 step={0.001}
@@ -174,6 +191,8 @@ export function OhmsLawCalculator() {
                 name="resistance"
                 value={values.resistance}
                 onChange={(e) => setValue('resistance', e.target.value)}
+                onBlur={() => fields.touch('resistance')}
+                error={fields.shown('resistance', check.errors.resistance)}
                 suffix="Ω"
                 min={0}
                 step={0.1}
@@ -188,6 +207,8 @@ export function OhmsLawCalculator() {
                 name="power"
                 value={values.power}
                 onChange={(e) => setValue('power', e.target.value)}
+                onBlur={() => fields.touch('power')}
+                error={fields.shown('power', check.errors.power)}
                 suffix="W"
                 min={0}
                 step={0.1}
@@ -281,6 +302,11 @@ export function OhmsLawCalculator() {
               </div>
 
             </>
+          ) : check.threeValues ? (
+            <div className="bg-neutral-50 border-2 border-dashed border-neutral-300 rounded-xl p-8 text-center">
+              <Calculator className="w-12 h-12 text-neutral-400 mx-auto mb-3" />
+              <p className="text-neutral-600">{OHMS_LAW_THREE_VALUES_MESSAGE}</p>
+            </div>
           ) : (
             <div className="bg-neutral-50 border-2 border-dashed border-neutral-300 rounded-xl p-8 text-center">
               <Calculator className="w-12 h-12 text-neutral-400 mx-auto mb-3" />

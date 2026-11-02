@@ -1,11 +1,17 @@
 // WSZ-015: the pure parts of the fixes from chat's re-test of the WSZ-014 build: the voltage-drop ampacity note and
-// the over-100 % guard, the wire resistance input ranges, and the number formatter.
+// the over-100 % guard, the wire resistance input ranges, the number formatter and Ohm's law's two-value rule.
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { formatEntered, formatFixed, formatSignificant, formatUpTo } from '../src/lib/calculations/format';
 import { fromApparentPower, fromCurrent, fromRealPower, isPowerError } from '../src/lib/calculations/power';
 import type { PowerFailure, PowerResult } from '../src/lib/calculations/power';
-import { formatSi } from '../src/lib/calculations/ohms-law';
+import {
+  checkOhmsLawInputs,
+  formatSi,
+  OHMS_LAW_THREE_VALUES_MESSAGE,
+  OHMS_LAW_VALUE_MESSAGE,
+  ohmsLawInputQuantities,
+} from '../src/lib/calculations/ohms-law';
 import { isSizingError, sizeConductor } from '../src/lib/calculations/conductor-sizing';
 import { formatSize } from '../src/lib/calculations/sizes';
 import {
@@ -220,5 +226,54 @@ describe('number format in results (step 3)', () => {
     const large = sizeConductor({ ocpdA: 400, lengthFt: 50, volts: 240, phase: 'single', material: 'Al' });
     assert.ok(!isSizingError(large));
     assert.equal(formatSize(large.size), '1250 kcmil');
+  });
+});
+
+describe("Ohm's law takes exactly two values", () => {
+  const texts = (patch: Partial<Record<'voltage' | 'current' | 'resistance' | 'power', string>>) => ({
+    voltage: '',
+    current: '',
+    resistance: '',
+    power: '',
+    ...patch,
+  });
+
+  it('the texts', () => {
+    assert.equal(OHMS_LAW_VALUE_MESSAGE, 'Enter a value greater than 0.');
+    assert.equal(OHMS_LAW_THREE_VALUES_MESSAGE, 'Enter two values and leave the third empty.');
+    assert.deepEqual(ohmsLawInputQuantities('voltage'), ['current', 'resistance', 'power']);
+  });
+
+  it('three values (5 A, 5 Ω, 5 W in Calculate Voltage): no result, no field message', () => {
+    assert.deepEqual(checkOhmsLawInputs('voltage', texts({ current: '5', resistance: '5', power: '5' })), {
+      errors: {},
+      threeValues: true,
+    });
+  });
+
+  it('−5 next to two valid values is invalid, and three values are still three', () => {
+    assert.deepEqual(checkOhmsLawInputs('voltage', texts({ current: '-5', resistance: '5', power: '5' })), {
+      errors: { current: OHMS_LAW_VALUE_MESSAGE },
+      threeValues: true,
+    });
+    assert.deepEqual(checkOhmsLawInputs('voltage', texts({ current: '-5', resistance: '5' })), {
+      errors: { current: OHMS_LAW_VALUE_MESSAGE },
+      threeValues: false,
+    });
+  });
+
+  it('0 is invalid; empty fields are not', () => {
+    assert.deepEqual(checkOhmsLawInputs('power', texts({ voltage: '0', current: '2' })), {
+      errors: { voltage: OHMS_LAW_VALUE_MESSAGE },
+      threeValues: false,
+    });
+    assert.deepEqual(checkOhmsLawInputs('power', texts({})), { errors: {}, threeValues: false });
+  });
+
+  it("two valid values pass; the mode's own quantity is not an input", () => {
+    assert.deepEqual(checkOhmsLawInputs('current', texts({ voltage: '12', resistance: '10000', current: '-1' })), {
+      errors: {},
+      threeValues: false,
+    });
   });
 });

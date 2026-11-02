@@ -1,5 +1,6 @@
 // Ohm's law from any two of voltage, current, resistance and power: V = I × R, P = V × I = I² × R = V² ÷ R.
 // Values stay unrounded; display formats them to 4 significant figures with an SI prefix (12 V ÷ 10 kΩ = 1.200 mA).
+import { fieldNumber } from './fields';
 import { formatSignificant } from './format';
 
 export type OhmsLawMode = 'voltage' | 'current' | 'resistance' | 'power';
@@ -13,6 +14,10 @@ export const OHMS_LAW_MODE_OPTIONS: { value: OhmsLawMode; label: string }[] = [
 
 export const OHMS_LAW_EMPTY_TITLE = 'Enter values to calculate';
 export const OHMS_LAW_EMPTY_HINT = 'Provide any two values to calculate the others';
+/** Under a filled field whose value is not a number greater than 0. */
+export const OHMS_LAW_VALUE_MESSAGE = 'Enter a value greater than 0.';
+/** In place of the result when all three inputs of the selected mode are filled. */
+export const OHMS_LAW_THREE_VALUES_MESSAGE = 'Enter two values and leave the third empty.';
 
 export interface OhmsLawValues {
   voltage: number;
@@ -21,7 +26,35 @@ export interface OhmsLawValues {
   power: number;
 }
 
-export type OhmsLawInputs = Partial<Record<keyof OhmsLawValues, number | null>>;
+export type OhmsLawQuantity = keyof OhmsLawValues;
+export type OhmsLawInputs = Partial<Record<OhmsLawQuantity, number | null>>;
+
+const QUANTITIES: OhmsLawQuantity[] = ['voltage', 'current', 'resistance', 'power'];
+
+/** The three quantities the mode takes as inputs: every quantity but the one it calculates. */
+export function ohmsLawInputQuantities(mode: OhmsLawMode): OhmsLawQuantity[] {
+  return QUANTITIES.filter((q) => q !== mode);
+}
+
+export interface OhmsLawCheck {
+  /** The message under each filled field whose value is not a number greater than 0. */
+  errors: Partial<Record<OhmsLawQuantity, string>>;
+  /** All three inputs of the mode are filled: no result. */
+  threeValues: boolean;
+}
+
+/** Checks the field texts of the mode's three inputs: each filled one must be above 0, and at most two may be filled. */
+export function checkOhmsLawInputs(mode: OhmsLawMode, texts: Record<OhmsLawQuantity, string>): OhmsLawCheck {
+  const errors: Partial<Record<OhmsLawQuantity, string>> = {};
+  let filled = 0;
+  for (const q of ohmsLawInputQuantities(mode)) {
+    if (texts[q].trim() === '') continue;
+    filled++;
+    const value = fieldNumber(texts[q]);
+    if (!(Number.isFinite(value) && value > 0)) errors[q] = OHMS_LAW_VALUE_MESSAGE;
+  }
+  return { errors, threeValues: filled === 3 };
+}
 
 /** Solves for every quantity from the first usable pair of inputs (values above 0), or null. */
 export function solveOhmsLaw(mode: OhmsLawMode, inputs: OhmsLawInputs): OhmsLawValues | null {
