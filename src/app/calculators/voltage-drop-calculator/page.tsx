@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { VoltageDropCalculator } from '@/components/calculators/VoltageDropCalculator';
 import { Calculator, Zap, BookOpen, Info, CheckCircle, XCircle, ArrowRight, Settings, Gauge, Battery, Lightbulb } from 'lucide-react';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
-import { formatVdPct, voltageDrop } from '@/lib/calculations/voltage-drop';
+import { DROP_EXCEEDS_SUPPLY_MESSAGE, dropExceedsSupply, formatVdPct, voltageDrop } from '@/lib/calculations/voltage-drop';
 
 export const metadata: Metadata = {
   title: 'Voltage Drop Calculator',
@@ -28,7 +28,8 @@ const QUICK_ANSWER_CIRCUITS = [
   rows: circuit.lengthsFt.map((lengthFt) => {
     const result = voltageDrop({ size: circuit.size, material: 'Cu', amps: circuit.amps, lengthFt, volts: circuit.volts, phase: 'single' });
     if (!result) throw new Error(`No voltage drop for ${circuit.size} AWG copper`);
-    return { lengthFt, pct: formatVdPct(result.vdPct) };
+    // a drop of 100 % or more of the supply voltage shows the calculator's message in place of the figure
+    return { lengthFt, pct: dropExceedsSupply(result) ? null : formatVdPct(result.vdPct) };
   }),
 }));
 
@@ -112,7 +113,7 @@ export default function VoltageDropCalculatorPage() {
                         <ul className="space-y-1 text-sm text-neutral-600">
                           {circuit.rows.map((row) => (
                             <li key={row.lengthFt} className="flex items-center gap-2">
-                              <span>{row.lengthFt} ft = {row.pct} drop</span>
+                              <span>{row.pct === null ? DROP_EXCEEDS_SUPPLY_MESSAGE : `${row.lengthFt} ft = ${row.pct} drop`}</span>
                             </li>
                           ))}
                         </ul>

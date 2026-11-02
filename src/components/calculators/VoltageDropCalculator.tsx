@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import Link from 'next/link';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
@@ -14,6 +15,10 @@ import { voltageOptions, voltsAfterPhaseChange } from '@/lib/calculations/inputs
 import type { Phase } from '@/lib/calculations/inputs';
 import {
   ALUMINUM_RESISTANCE_NOTE,
+  ampacityExceeded,
+  ampacityNote,
+  DROP_EXCEEDS_SUPPLY_MESSAGE,
+  dropExceedsSupply,
   formatVdPct,
   formatVdVolts,
   LENGTH_MAX_FT,
@@ -26,6 +31,7 @@ import {
   voltageDrop,
   voltageDropSizes,
   VOLTAGE_DROP_DEFAULTS,
+  WIRE_SIZE_CALCULATOR_LINK,
 } from '@/lib/calculations/voltage-drop';
 import type { VoltageDropResult } from '@/lib/calculations/voltage-drop';
 import { fieldNumber } from '@/lib/calculations/fields';
@@ -93,6 +99,23 @@ function calculate(inputs: Inputs): Results {
   return results;
 }
 
+/** Under a material's result when the current is above the size's 60 °C ampacity. */
+function AmpacityNote({ size, material, ampacity, className }: { size: string; material: Material; ampacity: number; className: string }) {
+  const note = ampacityNote(size, material, ampacity);
+  return (
+    <p className={`flex items-start gap-1.5 text-sm text-amber-700 ${className}`}>
+      <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+      <span>
+        {note.before}
+        <Link href={WIRE_SIZE_CALCULATOR_LINK.href} className="font-medium underline hover:text-amber-800">
+          {note.link}
+        </Link>
+        {note.after}
+      </span>
+    </p>
+  );
+}
+
 export function VoltageDropCalculator() {
   const [inputs, setInputs] = useState<Inputs>(DEFAULT_INPUTS);
   const formRef = useRef<HTMLDivElement>(null);
@@ -117,6 +140,7 @@ export function VoltageDropCalculator() {
 
   const copper = results?.find((r) => r.key === 'copper')?.result ?? null;
   const lengthFt = fieldNumber(inputs.lengthFt);
+  const amps = fieldNumber(inputs.amps);
 
   return (
     <CalculatorLayout
@@ -201,26 +225,34 @@ export function VoltageDropCalculator() {
 
           {/* Prominent Result Display: copper, then aluminum (no aluminum row for 14 AWG) */}
           {results && (
-            <div className="mt-6 p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border-2 border-green-200 shadow-lg space-y-4">
+            <div className="mt-6 p-4 bg-white rounded-lg border-2 border-neutral-200 shadow-lg space-y-4">
               {MATERIALS.map((m) => {
                 const result = results.find((r) => r.material === m.material)?.result ?? null;
                 const meets = result !== null && result.vdPct <= inputs.targetPct;
+                const ampacity = result ? ampacityExceeded(inputs.awg, m.material, amps) : null;
                 return (
                   <div key={m.key}>
                     <h3 className="text-sm font-medium text-neutral-700 mb-2">{VD_HEADLINE_LABELS[m.material]}</h3>
                     {result ? (
                       <>
-                        <div className="text-3xl font-bold">
-                          <span className={meets ? 'text-green-600' : 'text-amber-600'}>
-                            {formatVdPct(result.vdPct)}
-                          </span>
-                          <span className="text-lg font-medium text-neutral-600 ml-2">
-                            ({formatVdVolts(result.vdVolts)} drop)
-                          </span>
-                        </div>
+                        {dropExceedsSupply(result) ? (
+                          <p className="text-sm font-medium text-amber-700">{DROP_EXCEEDS_SUPPLY_MESSAGE}</p>
+                        ) : (
+                          <div className="text-3xl font-bold">
+                            <span className={meets ? 'text-green-600' : 'text-amber-600'}>
+                              {formatVdPct(result.vdPct)}
+                            </span>
+                            <span className="text-lg font-medium text-neutral-600 ml-2">
+                              ({formatVdVolts(result.vdVolts)} drop)
+                            </span>
+                          </div>
+                        )}
                         <p className="text-xs text-neutral-500 mt-1">
                           {targetTitle(meets)} ({inputs.targetPct} %)
                         </p>
+                        {ampacity !== null && (
+                          <AmpacityNote size={inputs.awg} material={m.material} ampacity={ampacity} className="mt-2" />
+                        )}
                       </>
                     ) : (
                       <p className="text-sm text-neutral-700">{NO_14_AWG_ALUMINUM_NOTE}</p>
@@ -239,20 +271,28 @@ export function VoltageDropCalculator() {
               <>
                 {/* Voltage Drop Visualization - Show copper by default */}
                 {copper && (
-                  <VoltageDropVisual
-                    sourceVoltage={inputs.voltage}
-                    loadVoltage={copper.loadVolts}
-                    dropPercent={copper.vdPct}
-                    distance={lengthFt}
-                    wireSize={inputs.awg}
-                    targetPct={inputs.targetPct}
-                  />
+                  dropExceedsSupply(copper) ? (
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
+                      <p className="text-sm font-medium text-amber-700">{DROP_EXCEEDS_SUPPLY_MESSAGE}</p>
+                    </div>
+                  ) : (
+                    <VoltageDropVisual
+                      sourceVoltage={inputs.voltage}
+                      loadVoltage={copper.loadVolts}
+                      dropPercent={copper.vdPct}
+                      distance={lengthFt}
+                      wireSize={inputs.awg}
+                      targetPct={inputs.targetPct}
+                    />
+                  )
                 )}
 
                 {/* Results for Both Materials */}
                 <div className="grid md:grid-cols-2 gap-4">
-                  {results.map(({ key, label, result }) => {
+                  {results.map(({ key, material, label, result }) => {
                     const meets = result.vdPct <= inputs.targetPct;
+                    const exceeds = dropExceedsSupply(result);
+                    const ampacity = ampacityExceeded(inputs.awg, material, amps);
                     return (
                       <div key={key} className="bg-white border border-neutral-200 rounded-lg p-4">
                         <div className="flex items-center justify-between mb-3">
@@ -268,26 +308,36 @@ export function VoltageDropCalculator() {
                             ></div>
                             {label}
                           </h3>
-                          <Badge variant={meets ? 'success' : 'warning'}>
-                            {meets ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
-                            {formatVdPct(result.vdPct)} Drop
-                          </Badge>
+                          {!exceeds && (
+                            <Badge variant={meets ? 'success' : 'warning'}>
+                              {meets ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
+                              {formatVdPct(result.vdPct)} Drop
+                            </Badge>
+                          )}
                         </div>
                         <p className="text-sm font-medium text-neutral-700 mb-3">{targetTitle(meets)}</p>
+                        {ampacity !== null && (
+                          <AmpacityNote size={inputs.awg} material={material} ampacity={ampacity} className="mb-3" />
+                        )}
+                        {exceeds && <p className="text-sm font-medium text-amber-700 mb-3">{DROP_EXCEEDS_SUPPLY_MESSAGE}</p>}
 
                         <div className="grid grid-cols-2 gap-3 text-sm">
-                          <div>
-                            <span className="text-neutral-500">Voltage Drop:</span>
-                            <p className="font-semibold font-mono">{formatVdVolts(result.vdVolts)}</p>
-                          </div>
-                          <div>
-                            <span className="text-neutral-500">End Voltage:</span>
-                            <p className="font-semibold font-mono">{result.loadVolts.toFixed(2)} V</p>
-                          </div>
-                          <div>
-                            <span className="text-neutral-500">Power Loss:</span>
-                            <p className="font-semibold font-mono">{result.powerLossW.toFixed(0)} W</p>
-                          </div>
+                          {!exceeds && (
+                            <>
+                              <div>
+                                <span className="text-neutral-500">Voltage Drop:</span>
+                                <p className="font-semibold font-mono">{formatVdVolts(result.vdVolts)}</p>
+                              </div>
+                              <div>
+                                <span className="text-neutral-500">End Voltage:</span>
+                                <p className="font-semibold font-mono">{result.loadVolts.toFixed(2)} V</p>
+                              </div>
+                              <div>
+                                <span className="text-neutral-500">Power Loss:</span>
+                                <p className="font-semibold font-mono">{result.powerLossW.toFixed(0)} W</p>
+                              </div>
+                            </>
+                          )}
                           <div>
                             <span className="text-neutral-500">Wire Size:</span>
                             <p className="font-semibold">{formatSize(inputs.awg)}</p>
