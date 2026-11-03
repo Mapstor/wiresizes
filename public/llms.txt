@@ -40,5 +40,5 @@
 - [About](https://wiresizes.com/about): Who writes wiresizes.com, which sources its numbers come from, how pages are checked, and the dated list of corrections.
 - [Contact](https://wiresizes.com/contact): Email address for corrections, questions about a page and privacy requests.
 - [Privacy notice](https://wiresizes.com/privacy): What wiresizes.com collects, which services process it, the legal basis, and how to use your data protection rights.
-- [Terms of use](https://wiresizes.com/terms): Who operates wiresizes.com, what its tables and calculators are for, and the limits of what they promise.
+- [Terms of use](https://wiresizes.com/terms): Who operates wiresizes.com, what its tables and calculators are for, and what they don't cover.
 - [Disclaimer](https://wiresizes.com/disclaimer): The limits of the tables and calculators on wiresizes.com, and who has the final word on an installation.

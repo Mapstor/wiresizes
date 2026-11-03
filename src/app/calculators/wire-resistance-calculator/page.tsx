@@ -41,7 +41,7 @@ const RESISTANCE_ROWS: ConductorData[] = TABLE_310_16_SIZES.slice(0, TABLE_310_1
 const wireResistanceFAQs = [
   {
     question: "How do I calculate the resistance of a wire?",
-    answer: "Wire resistance is calculated using R = ρL/A, where R is resistance, ρ (rho) is resistivity, L is length, and A is cross-sectional area. For practical calculations, use: R = (Resistance per 1000 feet × Length in feet) ÷ 1000. For example, 12 AWG copper has 1.93 ohms per 1000 feet at 75°C, so 100 feet = 0.193 ohms."
+    answer: "Wire resistance is calculated using R = ρL/A, where R is resistance, ρ (rho) is resistivity, L is length, and A is cross-sectional area. For practical calculations, use: R = (Resistance per 1000 feet × Length in feet) ÷ 1000. For example, 12 AWG copper has 1.93 ohms per 1000 feet at 75 °C, so 100 feet = 0.193 ohms."
   },
   {
     question: "What's the difference between resistance and impedance?",
@@ -49,7 +49,7 @@ const wireResistanceFAQs = [
   },
   {
     question: "How does temperature affect wire resistance?",
-    answer: "Wire resistance increases with temperature for copper and aluminum. The formula is: R₂ = R₁[1 + α(T₂ - T₁)], where α is the temperature coefficient (0.00393/°C for copper, 0.00403/°C for aluminum). For every 1°C increase, copper resistance increases by about 0.39%. At 75°C vs 20°C, resistance increases by approximately 22%."
+    answer: "Wire resistance increases with temperature for copper and aluminum. The formula is: R₂ = R₁[1 + α(T₂ - T₁)], where α is the temperature coefficient (0.00393/°C for copper, 0.00403/°C for aluminum). For every 1 °C increase, copper resistance increases by about 0.39 %. At 75 °C vs 20 °C, resistance increases by approximately 22 %."
   },
   {
     question: "Why is copper wire resistance lower than aluminum?",
@@ -86,7 +86,7 @@ export default function WireResistanceCalculatorPage() {
               <Zap className="h-12 w-12 text-purple-600 mb-4" />
               <p className="text-xl font-semibold mb-2">Precise Calculations</p>
               <p className="text-gray-600 dark:text-gray-400">
-                Accurate resistance calculations for copper and aluminum conductors at various temperatures.
+                Resistance of copper and aluminum conductors at the temperature you choose.
               </p>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
@@ -155,7 +155,7 @@ export default function WireResistanceCalculatorPage() {
                 <h4 className="text-xl font-semibold text-green-800 dark:text-green-300 mb-3">Material Properties</h4>
                 <div className="space-y-3 text-green-700 dark:text-green-300">
                   <div>
-                    <span className="font-medium">Copper Resistivity:</span> 1.72 × 10⁻⁸ Ω⋅m at 20°C
+                    <span className="font-medium">Copper Resistivity:</span> 1.72 × 10⁻⁸ Ω⋅m at 20 °C
                   </div>
                   <div>
                     <span className="font-medium">Temperature Coefficient:</span> Increases with temperature
@@ -238,7 +238,7 @@ export default function WireResistanceCalculatorPage() {
                   </p>
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Base Resistance (20°C):</span> 0.0490 Ω/1000ft
+                      <span className="font-medium">Base Resistance (20 °C):</span> 0.0490 Ω/1000 ft
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       <span className="font-medium">Temperature Coefficient:</span> 0.00393/°C
@@ -247,16 +247,16 @@ export default function WireResistanceCalculatorPage() {
                       <h4 className="font-medium text-gray-900 dark:text-white mb-2">Resistance vs Temperature:</h4>
                       <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
                         <div className="flex justify-between">
-                          <span>20°C:</span><span>0.0490 Ω/1000ft (100%)</span>
+                          <span>20 °C:</span><span>0.0490 Ω/1000 ft (100 %)</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>60°C:</span><span>0.0567 Ω/1000ft (116%)</span>
+                          <span>60 °C:</span><span>0.0567 Ω/1000 ft (116 %)</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>75°C:</span><span>0.0596 Ω/1000ft (122%)</span>
+                          <span>75 °C:</span><span>0.0596 Ω/1000 ft (122 %)</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>90°C:</span><span>0.0625 Ω/1000ft (128%)</span>
+                          <span>90 °C:</span><span>0.0625 Ω/1000 ft (128 %)</span>
                         </div>
                       </div>
                     </div>
@@ -340,10 +340,10 @@ export default function WireResistanceCalculatorPage() {
                   R₂ = R₁ × [1 + 0.00393(T₂ - T₁)]
                 </p>
                 <div className="text-xs text-blue-600 dark:text-blue-400 space-y-1">
-                  <div>• 0°C: 0.92× resistance at 20°C</div>
-                  <div>• 20°C: 1.00× reference temperature</div>
-                  <div>• 75°C: 1.22× resistance at 20°C</div>
-                  <div>• 90°C: 1.28× resistance at 20°C</div>
+                  <div>• 0 °C: 0.92× resistance at 20 °C</div>
+                  <div>• 20 °C: 1.00× reference temperature</div>
+                  <div>• 75 °C: 1.22× resistance at 20 °C</div>
+                  <div>• 90 °C: 1.28× resistance at 20 °C</div>
                 </div>
               </div>
               <div>
@@ -352,9 +352,9 @@ export default function WireResistanceCalculatorPage() {
                   R₂ = R₁ × [1 + 0.00403(T₂ - T₁)]
                 </p>
                 <div className="text-xs text-blue-600 dark:text-blue-400 space-y-1">
-                  <div>• 0°C: 0.92× resistance at 20°C</div>
-                  <div>• 20°C: 1.00× reference temperature</div>
-                  <div>• 75°C: 1.22× resistance at 20°C</div>
+                  <div>• 0 °C: 0.92× resistance at 20 °C</div>
+                  <div>• 20 °C: 1.00× reference temperature</div>
+                  <div>• 75 °C: 1.22× resistance at 20 °C</div>
                 </div>
               </div>
             </div>

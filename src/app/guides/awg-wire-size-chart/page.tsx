@@ -33,9 +33,9 @@ const AWG_CHART_ROWS = CHART_AWG_NAMES.map((name) => {
 });
 
 const OCPD_LIMIT_NOTE = `Limited by NEC 240.4(D) small conductor rule. Copper: ${['14', '12', '10']
-  .map((size) => `${size} AWG max ${maxOcpd240_4D(size, 'Cu')?.max_ocpd_a}A`)
+  .map((size) => `${size} AWG max ${maxOcpd240_4D(size, 'Cu')?.max_ocpd_a} A`)
   .join(', ')} protection. Aluminum: ${['12', '10']
-  .map((size) => `${size} AWG max ${maxOcpd240_4D(size, 'Al')?.max_ocpd_a}A`)
+  .map((size) => `${size} AWG max ${maxOcpd240_4D(size, 'Al')?.max_ocpd_a} A`)
   .join(', ')} protection.`;
 
 // AWG to mm² with the nearest IEC 60228 size, from data/verified/awg.json
@@ -127,21 +127,21 @@ export default function AWGWireSizeChartPage() {
                   <h3 className="font-semibold text-blue-900 mb-2">14 AWG</h3>
                   <ul className="text-sm space-y-1 text-blue-700">
                     <li>• Diameter: {diameterMm('14')?.toFixed(3)} mm</li>
-                    <li>• 15A circuits</li>
+                    <li>• 15 A circuits</li>
                   </ul>
                 </div>
                 <div className="bg-green-50 p-4 rounded-lg">
                   <h3 className="font-semibold text-green-900 mb-2">12 AWG</h3>
                   <ul className="text-sm space-y-1 text-green-700">
                     <li>• Diameter: {diameterMm('12')?.toFixed(3)} mm</li>
-                    <li>• 20A circuits</li>
+                    <li>• 20 A circuits</li>
                   </ul>
                 </div>
                 <div className="bg-amber-50 p-4 rounded-lg">
                   <h3 className="font-semibold text-amber-900 mb-2">10 AWG</h3>
                   <ul className="text-sm space-y-1 text-amber-700">
                     <li>• Diameter: {diameterMm('10')?.toFixed(3)} mm</li>
-                    <li>• 30A circuits</li>
+                    <li>• 30 A circuits</li>
                   </ul>
                 </div>
                 <div className="bg-purple-50 p-4 rounded-lg">
@@ -175,8 +175,8 @@ export default function AWGWireSizeChartPage() {
                       <th className="px-4 py-3 text-center">Diameter (inch)</th>
                       <th className="px-4 py-3 text-center">Area (mm²)</th>
                       <th className="px-4 py-3 text-center">Ω/1000 ft, solid annealed copper, 20 °C (NIST Handbook 100)</th>
-                      <th className="px-4 py-3 text-center">Cu Ampacity 75°C</th>
-                      <th className="px-4 py-3 text-center">Al Ampacity 75°C</th>
+                      <th className="px-4 py-3 text-center">Cu Ampacity 75 °C</th>
+                      <th className="px-4 py-3 text-center">Al Ampacity 75 °C</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-neutral-100">
@@ -292,7 +292,7 @@ export default function AWGWireSizeChartPage() {
                 className="bg-white/10 backdrop-blur rounded-lg p-4 hover:bg-white/20 transition-colors"
               >
                 <h3 className="font-semibold mb-2">Wire Size Calculator</h3>
-                <p className="text-sm text-blue-100">Calculate exact wire size for any load</p>
+                <p className="text-sm text-blue-100">Calculate the wire size for your load</p>
               </Link>
               
               <Link 
@@ -395,23 +395,23 @@ export default function AWGWireSizeChartPage() {
                   organizes by insulation temperature class:
                 </p>
                 <ul className="text-sm space-y-1 text-slate-700">
-                  <li><strong>60&deg;C:</strong> {INSULATION_TYPES.cu_60}</li>
-                  <li><strong>75&deg;C:</strong> {INSULATION_TYPES.cu_75}</li>
-                  <li><strong>90&deg;C:</strong> {INSULATION_TYPES.cu_90}</li>
+                  <li><strong>60 &deg;C:</strong> {INSULATION_TYPES.cu_60}</li>
+                  <li><strong>75 &deg;C:</strong> {INSULATION_TYPES.cu_75}</li>
+                  <li><strong>90 &deg;C:</strong> {INSULATION_TYPES.cu_90}</li>
                 </ul>
               </div>
             </div>
 
             {/* Wire ampacity vs OCPD distinction */}
             <div className="bg-amber-50 rounded-lg p-6 border border-amber-200">
-              <h3 className="text-lg font-bold text-amber-900 mb-3">Why 12 AWG ampacity is 25 A (75&deg;C column) but the breaker can&rsquo;t exceed 20 A</h3>
+              <h3 className="text-lg font-bold text-amber-900 mb-3">Why 12 AWG ampacity is 25 A (75 &deg;C column) but the breaker can&rsquo;t exceed 20 A</h3>
               <p className="text-sm text-slate-700 mb-2">
                 NEC 240.4(D) is the &ldquo;small-conductor rule&rdquo;: regardless of higher 310.16 ampacity, the OCPD on 14, 12, 10 AWG copper is capped:
               </p>
               <ul className="text-sm space-y-1 text-slate-700">
-                <li><strong>14 AWG:</strong> ampacity 20 A (75&deg;C), OCPD max <strong>15 A</strong></li>
-                <li><strong>12 AWG:</strong> ampacity 25 A (75&deg;C), OCPD max <strong>20 A</strong></li>
-                <li><strong>10 AWG:</strong> ampacity 35 A (75&deg;C), OCPD max <strong>30 A</strong></li>
+                <li><strong>14 AWG:</strong> ampacity 20 A (75 &deg;C), OCPD max <strong>15 A</strong></li>
+                <li><strong>12 AWG:</strong> ampacity 25 A (75 &deg;C), OCPD max <strong>20 A</strong></li>
+                <li><strong>10 AWG:</strong> ampacity 35 A (75 &deg;C), OCPD max <strong>30 A</strong></li>
               </ul>
             </div>
           </div>
@@ -423,15 +423,15 @@ export default function AWGWireSizeChartPage() {
         path="/guides/awg-wire-size-chart"
         name="AWG Wire Size Chart — Diameter, Cross-Section, Resistance, Ampacity"
         alternateName={['American Wire Gauge Reference', 'AWG to mm² Conversion Chart']}
-        description="AWG (American Wire Gauge) reference table from 18 AWG through 4/0 AWG. Per-row data: conductor diameter (mm, inch), cross-sectional area (mm²), DC resistance per 1000 ft at 20°C, and NEC 310.16 ampacity at 75°C for both copper and aluminum."
+        description="AWG (American Wire Gauge) reference table from 18 AWG through 4/0 AWG. Per-row data: conductor diameter (mm, inch), cross-sectional area (mm²), DC resistance per 1000 ft at 20 °C, and NEC 310.16 ampacity at 75 °C for both copper and aluminum."
         variableMeasured={[
           { name: 'AWG size', description: 'American Wire Gauge designation per ASTM B258' },
           { name: 'Conductor diameter (metric)', description: 'Bare conductor outside diameter', unitText: 'millimeter', unitCode: 'MMT' },
           { name: 'Conductor diameter (imperial)', description: 'Bare conductor outside diameter', unitText: 'inch', unitCode: 'INH' },
           { name: 'Cross-sectional area', description: 'Conductor cross-sectional area', unitText: 'square millimeter', unitCode: 'MMK' },
-          { name: 'DC resistance at 20°C', description: 'Direct-current resistance of uncoated copper conductor', unitText: 'ohm per 1000 foot' },
-          { name: 'Copper ampacity at 75°C', description: 'Allowable ampacity per NEC 310.16, copper conductor, 75°C insulation rating', unitText: 'ampere', unitCode: 'AMP' },
-          { name: 'Aluminum ampacity at 75°C', description: 'Allowable ampacity per NEC 310.16, aluminum conductor, 75°C insulation rating', unitText: 'ampere', unitCode: 'AMP' },
+          { name: 'DC resistance at 20 °C', description: 'Direct-current resistance of uncoated copper conductor', unitText: 'ohm per 1000 foot' },
+          { name: 'Copper ampacity at 75 °C', description: 'Allowable ampacity per NEC 310.16, copper conductor, 75 °C insulation rating', unitText: 'ampere', unitCode: 'AMP' },
+          { name: 'Aluminum ampacity at 75 °C', description: 'Allowable ampacity per NEC 310.16, aluminum conductor, 75 °C insulation rating', unitText: 'ampere', unitCode: 'AMP' },
         ]}
         keywords={['AWG chart', 'American Wire Gauge', 'wire size chart', 'AWG to mm2', 'wire diameter', 'wire resistance', 'wire ampacity', 'NEC 310.16']}
         citation="NFPA 70 (NEC) 2023 Article 310 Table 310.16; ASTM B258 — Standard Specification for Standard Nominal Diameters and Cross-Sectional Areas of AWG Sizes; NIST (NBS) Handbook 100, Copper Wire Tables, Table 5"

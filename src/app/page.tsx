@@ -49,25 +49,25 @@ const CALCULATOR_CATEGORIES = [
     calculators: [
       { name: 'Three Phase Calculator', slug: 'three-phase-calculator', desc: '3-phase power calculations' },
       { name: 'Service Entrance Calculator', slug: 'service-entrance-calculator', desc: 'Dwelling service conductors from Table 310.12' },
-      { name: 'Low Voltage Calculator', slug: 'low-voltage-calculator', desc: '12V/24V DC applications' },
+      { name: 'Low Voltage Calculator', slug: 'low-voltage-calculator', desc: '12 V/24 V DC applications' },
     ]
   }
 ];
 
 // NEC Table 310.12 (2023), 120/240 V single-phase dwelling services (data/verified/nec-310-12.json)
 const SERVICE_SIZES = [
-  { service: '100A', copper: '4 AWG', aluminum: '2 AWG' },
-  { service: '125A', copper: '2 AWG', aluminum: '1/0 AWG' },
-  { service: '150A', copper: '1 AWG', aluminum: '2/0 AWG' },
-  { service: '200A', copper: '2/0 AWG', aluminum: '4/0 AWG' },
+  { service: '100 A', copper: '4 AWG', aluminum: '2 AWG' },
+  { service: '125 A', copper: '2 AWG', aluminum: '1/0 AWG' },
+  { service: '150 A', copper: '1 AWG', aluminum: '2/0 AWG' },
+  { service: '200 A', copper: '2/0 AWG', aluminum: '4/0 AWG' },
 ];
 
 // NEC Table 250.66 for the Table 310.12 conductors above (data/verified/nec-250-66.json)
 const GROUNDING_CONDUCTORS = [
-  { service: '100A', copper: '8 AWG', aluminum: '6 AWG' },
-  { service: '125A', copper: '8 AWG', aluminum: '6 AWG' },
-  { service: '150A', copper: '6 AWG', aluminum: '4 AWG' },
-  { service: '200A', copper: '4 AWG', aluminum: '2 AWG' },
+  { service: '100 A', copper: '8 AWG', aluminum: '6 AWG' },
+  { service: '125 A', copper: '8 AWG', aluminum: '6 AWG' },
+  { service: '150 A', copper: '6 AWG', aluminum: '4 AWG' },
+  { service: '200 A', copper: '4 AWG', aluminum: '2 AWG' },
 ];
 
 // Organization and WebSite schema
@@ -210,19 +210,19 @@ export default function HomePage() {
             <h2 className="font-semibold text-neutral-900 mb-3">Quick Wire Size Lookup</h2>
             <div className="grid grid-cols-2 gap-2 sm:gap-3 text-xs">
               <div className="p-2 bg-neutral-50 rounded">
-                <div className="font-mono font-bold">15A Circuit</div>
+                <div className="font-mono font-bold">15 A Circuit</div>
                 <div className="text-neutral-600">14 AWG</div>
               </div>
               <div className="p-2 bg-neutral-50 rounded">
-                <div className="font-mono font-bold">20A Circuit</div>
+                <div className="font-mono font-bold">20 A Circuit</div>
                 <div className="text-neutral-600">12 AWG</div>
               </div>
               <div className="p-2 bg-neutral-50 rounded">
-                <div className="font-mono font-bold">30A Circuit</div>
+                <div className="font-mono font-bold">30 A Circuit</div>
                 <div className="text-neutral-600">10 AWG</div>
               </div>
               <div className="p-2 bg-neutral-50 rounded">
-                <div className="font-mono font-bold">40A Circuit</div>
+                <div className="font-mono font-bold">40 A Circuit</div>
                 <div className="text-neutral-600">8 AWG</div>
               </div>
             </div>

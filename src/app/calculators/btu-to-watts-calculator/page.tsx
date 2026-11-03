@@ -91,47 +91,47 @@ export default function BTUToWattsCalculatorPage() {
                   <tr className="border-b border-gray-100">
                     <td className="py-2 font-medium">0.75</td>
                     <td className="text-center">9,000</td>
-                    <td className="text-center">2,638W</td>
+                    <td className="text-center">2,638 W</td>
                   </tr>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 font-medium">1.0</td>
                     <td className="text-center">12,000</td>
-                    <td className="text-center">3,517W</td>
+                    <td className="text-center">3,517 W</td>
                   </tr>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 font-medium">1.5</td>
                     <td className="text-center">18,000</td>
-                    <td className="text-center">5,275W</td>
+                    <td className="text-center">5,275 W</td>
                   </tr>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 font-medium">2.0</td>
                     <td className="text-center">24,000</td>
-                    <td className="text-center">7,034W</td>
+                    <td className="text-center">7,034 W</td>
                   </tr>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 font-medium">2.5</td>
                     <td className="text-center">30,000</td>
-                    <td className="text-center">8,792W</td>
+                    <td className="text-center">8,792 W</td>
                   </tr>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 font-medium">3.0</td>
                     <td className="text-center">36,000</td>
-                    <td className="text-center">10,551W</td>
+                    <td className="text-center">10,551 W</td>
                   </tr>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 font-medium">3.5</td>
                     <td className="text-center">42,000</td>
-                    <td className="text-center">12,309W</td>
+                    <td className="text-center">12,309 W</td>
                   </tr>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 font-medium">4.0</td>
                     <td className="text-center">48,000</td>
-                    <td className="text-center">14,067W</td>
+                    <td className="text-center">14,067 W</td>
                   </tr>
                   <tr className="border-b border-gray-100">
                     <td className="py-2 font-medium">5.0</td>
                     <td className="text-center">60,000</td>
-                    <td className="text-center">17,584W</td>
+                    <td className="text-center">17,584 W</td>
                   </tr>
                 </tbody>
               </table>
@@ -155,7 +155,7 @@ export default function BTUToWattsCalculatorPage() {
               <div className="space-y-4">
                 <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded">
                   <h4 className="font-semibold mb-2">EER (Energy Efficiency Ratio)</h4>
-                  <p className="text-sm mb-2">BTU/hr cooling ÷ Watts input at 95°F</p>
+                  <p className="text-sm mb-2">BTU/hr cooling ÷ Watts input at 95 °F</p>
                 </div>
                 
                 <div className="p-3 bg-green-50 dark:bg-green-900/30 rounded">
@@ -217,8 +217,8 @@ export default function BTUToWattsCalculatorPage() {
             </h3>
             <p className="text-amber-800 dark:text-amber-200 text-sm leading-relaxed">
               BTU calculations are critical for proper HVAC system sizing. Undersized equipment won't maintain comfort, 
-              while oversized systems short-cycle, reducing efficiency and lifespan. Always perform Manual J load calculations for accurate 
-              sizing. Installation requires EPA 608 certification for refrigerant handling and electrical licensing for 
+              while oversized systems short-cycle, reducing efficiency and lifespan. Size the equipment from a Manual J load
+              calculation. Installation requires EPA 608 certification for refrigerant handling and electrical licensing for 
               power connections. Consult qualified HVAC professionals for system design and installation.
             </p>
           </div>

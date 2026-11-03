@@ -8,7 +8,7 @@ import { ArticleSchema } from '@/components/seo/ArticleSchema';
 const VOLTAGE_SYSTEMS = [
   {
     type: 'Single-Phase',
-    voltages: ['120V', '240V'],
+    voltages: ['120 V', '240 V'],
     phases: 1,
     waveform_description: 'Simple sinusoidal waveform',
     power_formula: 'P = V × I × PF',
@@ -19,7 +19,7 @@ const VOLTAGE_SYSTEMS = [
   },
   {
     type: 'Three-Phase',
-    voltages: ['208V', '240V', '480V', '600V'],
+    voltages: ['208 V', '240 V', '480 V', '600 V'],
     phases: 3,
     waveform_description: 'Three sinusoidal waves 120° apart',
     power_formula: 'P = √3 × V × I × PF',
@@ -32,32 +32,32 @@ const VOLTAGE_SYSTEMS = [
 
 const WIRING_CONFIGURATIONS = [
   {
-    name: 'Single-Phase 120V',
+    name: 'Single-Phase 120 V',
     wires: 2,
     description: 'Hot, Neutral',
     typical_use: 'Lighting, small appliances',
-    voltage: '120V'
+    voltage: '120 V'
   },
   {
-    name: 'Single-Phase 240V',
+    name: 'Single-Phase 240 V',
     wires: 3,
     description: 'Hot, Hot, Ground',
     typical_use: 'Water heaters, dryers, AC',
-    voltage: '240V'
+    voltage: '240 V'
   },
   {
     name: 'Three-Phase Wye (Y)',
     wires: 4,
     description: '3 Hot, Neutral',
     typical_use: 'Balanced loads, lighting',
-    voltage: '208V/120V, 480V/277V'
+    voltage: '208 V/120 V, 480 V/277 V'
   },
   {
     name: 'Three-Phase Delta (Δ)',
     wires: 3,
     description: '3 Hot wires only',
     typical_use: 'Motor loads, heating',
-    voltage: '240V, 480V'
+    voltage: '240 V, 480 V'
   }
 ];
 
@@ -70,7 +70,7 @@ interface GuideProps {
 export default function SingleVsThreePhaseGuide({ datePublished, dateModified }: GuideProps = {}) {
   const articleData = {
     headline: "Single vs Three Phase Systems",
-    description: "Understanding the fundamental differences between single-phase and three-phase electrical systems is crucial for proper system design. This comprehensive guide covers voltage configurations, power calculations and applications with interactive comparisons.",
+    description: "Understanding the fundamental differences between single-phase and three-phase electrical systems is crucial for proper system design. This guide covers voltage configurations, power calculations and applications with interactive comparisons.",
     url: "https://wiresizes.com/guides/single-vs-three-phase",
     datePublished,
     dateModified,
@@ -88,7 +88,7 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
           </div>
           <p className="text-xl text-gray-600 mb-6">
             Understanding the fundamental differences between single-phase and three-phase electrical systems 
-            is crucial for proper system design. This comprehensive guide covers voltage configurations, 
+            is crucial for proper system design. This guide covers voltage configurations, 
             power calculations and applications with interactive comparisons.
           </p>
           <div className="flex flex-wrap gap-4">
@@ -228,7 +228,7 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
                     />
                     
                     <text x="200" y="190" textAnchor="middle" className="text-xs fill-blue-600">
-                      Single sinusoidal wave (120V or 240V)
+                      Single sinusoidal wave (120 V or 240 V)
                     </text>
                   </svg>
                 </div>
@@ -373,7 +373,7 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
               <div className="grid lg:grid-cols-2 gap-8">
                 {/* Single-Phase Diagram */}
                 <div>
-                  <h4 className="font-medium text-blue-800 mb-4">Single-Phase 240V (Split-Phase)</h4>
+                  <h4 className="font-medium text-blue-800 mb-4">Single-Phase 240 V (Split-Phase)</h4>
                   <svg viewBox="0 0 400 300" className="w-full h-64 bg-white rounded border">
                     {/* Panel representation */}
                     <rect x="50" y="50" width="80" height="120" fill="#e5e7eb" stroke="#374151" strokeWidth="2" />
@@ -388,13 +388,13 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
                     <text x="290" y="125" textAnchor="middle" className="text-sm fill-gray-700">Load</text>
                     
                     {/* Labels */}
-                    <text x="190" y="75" textAnchor="middle" className="text-xs fill-red-600">L1 (Hot) 120V</text>
-                    <text x="190" y="135" textAnchor="middle" className="text-xs fill-black">L2 (Hot) 120V</text>
-                    <text x="350" y="125" className="text-xs fill-gray-600">240V Load</text>
+                    <text x="190" y="75" textAnchor="middle" className="text-xs fill-red-600">L1 (Hot) 120 V</text>
+                    <text x="190" y="135" textAnchor="middle" className="text-xs fill-black">L2 (Hot) 120 V</text>
+                    <text x="350" y="125" className="text-xs fill-gray-600">240 V Load</text>
                     
                     {/* Voltage indication */}
                     <text x="200" y="180" textAnchor="middle" className="text-sm font-semibold fill-blue-700">
-                      240V between L1 and L2
+                      240 V between L1 and L2
                     </text>
                   </svg>
                 </div>
@@ -425,10 +425,10 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
                     
                     {/* Voltage indication */}
                     <text x="200" y="220" textAnchor="middle" className="text-sm font-semibold fill-purple-700">
-                      208V/480V between phases
+                      208 V/480 V between phases
                     </text>
                     <text x="200" y="235" textAnchor="middle" className="text-xs fill-purple-600">
-                      120V/277V line to neutral
+                      120 V/277 V line to neutral
                     </text>
                   </svg>
                 </div>
@@ -438,8 +438,8 @@ export default function SingleVsThreePhaseGuide({ datePublished, dateModified }:
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <h5 className="font-semibold text-blue-800 mb-2">Single-Phase Notes:</h5>
                   <ul className="text-sm text-blue-700 space-y-1">
-                    <li>• Two hot wires (L1, L2) at 120V each to neutral</li>
-                    <li>• 240V available between hot wires</li>
+                    <li>• Two hot wires (L1, L2) at 120 V each to neutral</li>
+                    <li>• 240 V available between hot wires</li>
                     <li>• Neutral carries unbalanced current</li>
                     <li>• Ground wire always required for safety</li>
                   </ul>

@@ -206,13 +206,16 @@ export const VOLTS_TO_AMPS_COMPARISON_VOLTS = [120, 240, 480];
 
 export const AMPS_TO_WATTS_DEFAULTS = { amps: 20, volts: 120, circuit: 'single' as Circuit, pf: 0.9 };
 
-/** Three-phase systems by name, with the line-to-line voltage the converter uses. */
-export const THREE_PHASE_SYSTEMS: { system: string; lineVolts: number }[] = [
-  { system: '208Y/120V', lineVolts: 208 },
-  { system: '240Δ/120V', lineVolts: 240 },
-  { system: '480Y/277V', lineVolts: 480 },
-  { system: '480Δ', lineVolts: 480 },
-  { system: '600Y/347V', lineVolts: 600 },
+/**
+ * Three-phase systems by name (the form value and the URL parameter), with the label the page shows and the
+ * line-to-line voltage the converter uses.
+ */
+export const THREE_PHASE_SYSTEMS: { system: string; label: string; lineVolts: number }[] = [
+  { system: '208Y/120V', label: '208Y/120 V', lineVolts: 208 },
+  { system: '240Δ/120V', label: '240Δ/120 V', lineVolts: 240 },
+  { system: '480Y/277V', label: '480Y/277 V', lineVolts: 480 },
+  { system: '480Δ', label: '480Δ', lineVolts: 480 },
+  { system: '600Y/347V', label: '600Y/347 V', lineVolts: 600 },
 ];
 
 export type ThreePhaseMode = 'power' | 'current';

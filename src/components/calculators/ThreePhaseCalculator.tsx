@@ -61,6 +61,11 @@ function lineVolts(system: string): number {
   return THREE_PHASE_SYSTEMS.find((s) => s.system === system)?.lineVolts ?? 208;
 }
 
+/** The label a system name shows: "208Y/120 V" for the value "208Y/120V". */
+function systemLabel(system: string): string {
+  return THREE_PHASE_SYSTEMS.find((s) => s.system === system)?.label ?? system;
+}
+
 /** Balanced three-phase P ↔ I on line-to-line voltage; values are rounded for display only. */
 function calculate(inputs: Inputs): PowerResult | null {
   const base = { volts: lineVolts(inputs.system), circuit: 'three' as const, pf: fieldNumber(inputs.pf) };
@@ -115,7 +120,7 @@ export function ThreePhaseCalculator() {
     print({
       title: 'Three-Phase Calculation',
       inputs: {
-        'Voltage System': inputs.system,
+        'Voltage System': systemLabel(inputs.system),
         'Calculation Mode': THREE_PHASE_MODE_OPTIONS.find((m) => m.value === inputs.mode)?.label ?? inputs.mode,
         'Power Factor': formatEntered(fieldNumber(inputs.pf)),
         ...(inputs.mode === 'power'
@@ -165,7 +170,7 @@ export function ThreePhaseCalculator() {
                 label="Voltage System"
                 value={inputs.system}
                 onChange={(e) => update({ system: e.target.value })}
-                options={THREE_PHASE_SYSTEMS.map((s) => ({ value: s.system, label: s.system }))}
+                options={THREE_PHASE_SYSTEMS.map((s) => ({ value: s.system, label: s.label }))}
               />
 
               <div className="bg-neutral-50 rounded-lg p-3 text-sm text-neutral-600">
@@ -257,7 +262,7 @@ export function ThreePhaseCalculator() {
                 </div>
                 <div className="mt-4 text-center text-sm text-neutral-600 flex items-center justify-center gap-2">
                   <Zap className="w-4 h-4" />
-                  {inputs.system} • {formatEntered(lineVolts(inputs.system))} V • PF: {formatEntered(fieldNumber(inputs.pf))}
+                  {systemLabel(inputs.system)} • {formatEntered(lineVolts(inputs.system))} V • PF: {formatEntered(fieldNumber(inputs.pf))}
                 </div>
               </div>
             )}

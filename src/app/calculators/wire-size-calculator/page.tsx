@@ -95,11 +95,11 @@ const faqItems = [
   },
   {
     question: "How many amps can 12 gauge wire handle?",
-    answer: "12 AWG copper wire is rated for 25 amps at 75°C per NEC Table 310.16, but must be protected at 20 amps maximum per NEC 240.4(D)."
+    answer: "12 AWG copper wire is rated for 25 amps at 75 °C per NEC Table 310.16, but must be protected at 20 amps maximum per NEC 240.4(D)."
   },
   {
     question: "What size ground wire do I need?",
-    answer: "Equipment grounding conductor size is based on overcurrent device per NEC Table 250.122: 15A circuits need 14 AWG, 20A circuits need 12 AWG, 30-60A need 10 AWG, 100A needs 8 AWG, 200A needs 6 AWG copper ground."
+    answer: "Equipment grounding conductor size is based on overcurrent device per NEC Table 250.122: 15 A circuits need 14 AWG, 20 A circuits need 12 AWG, 30-60 A need 10 AWG, 100 A needs 8 AWG, 200 A needs 6 AWG copper ground."
   },
   {
     question: "What wire size for 200 amp service entrance?",
@@ -111,7 +111,7 @@ const faqItems = [
   },
   {
     question: "What affects wire ampacity ratings?",
-    answer: "Wire ampacity is affected by: conductor material (copper vs aluminum), insulation temperature rating (60/75/90°C), ambient temperature (derating required above 86°F), number of conductors in raceway (derating for heat), and installation method."
+    answer: "Wire ampacity is affected by: conductor material (copper vs aluminum), insulation temperature rating (60/75/90 °C), ambient temperature (derating required above 86 °F), number of conductors in raceway (derating for heat), and installation method."
   },
   {
     question: "What's the difference between stranded and solid wire?",
@@ -147,19 +147,19 @@ export default function WireSizeCalculatorPage() {
                       <ul className="space-y-1 text-sm text-neutral-600">
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span><strong>15A:</strong> 14 AWG copper</span>
+                          <span><strong>15 A:</strong> 14 AWG copper</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span><strong>20A:</strong> 12 AWG copper</span>
+                          <span><strong>20 A:</strong> 12 AWG copper</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span><strong>30A:</strong> 10 AWG copper</span>
+                          <span><strong>30 A:</strong> 10 AWG copper</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span><strong>50A:</strong> 6 AWG copper</span>
+                          <span><strong>50 A:</strong> 6 AWG copper</span>
                         </li>
                       </ul>
                     </div>
@@ -168,15 +168,15 @@ export default function WireSizeCalculatorPage() {
                       <ul className="space-y-1 text-sm text-neutral-600">
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span><strong>60A Sub:</strong> 4 AWG copper</span>
+                          <span><strong>60 A Sub:</strong> 4 AWG copper</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span><strong>100A Sub:</strong> 1 AWG copper</span>
+                          <span><strong>100 A Sub:</strong> 1 AWG copper</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span><strong>200A Service:</strong> 2/0 copper or 4/0 aluminum (dwelling service, Table 310.12)</span>
+                          <span><strong>200 A Service:</strong> 2/0 copper or 4/0 aluminum (dwelling service, Table 310.12)</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <AlertCircle className="w-4 h-4 text-amber-500" />
@@ -242,7 +242,7 @@ export default function WireSizeCalculatorPage() {
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                     <h4 className="font-semibold text-blue-900 mb-2">Table 310.16</h4>
                     <p className="text-sm text-blue-800">
-                      Primary ampacity table for conductors rated 0-2000V in raceway, cable, or earth.
+                      Primary ampacity table for conductors rated 0-2000 V in raceway, cable, or earth.
                       Most residential and commercial wiring references this table.
                     </p>
                   </div>
@@ -250,7 +250,7 @@ export default function WireSizeCalculatorPage() {
                   <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
                     <h4 className="font-semibold text-amber-900 mb-2">NEC 240.4(D)</h4>
                     <p className="text-sm text-amber-800">
-                      Small conductor rule: 14 AWG copper limited to 15A, 12 AWG copper to 20A, 10 AWG copper to 30A
+                      Small conductor rule: 14 AWG copper limited to 15 A, 12 AWG copper to 20 A, 10 AWG copper to 30 A
                       overcurrent protection.
                     </p>
                   </div>
@@ -279,12 +279,12 @@ export default function WireSizeCalculatorPage() {
                       <th colSpan={3} className="px-4 py-3 text-center font-medium text-neutral-700 border-l">Aluminum (Amps)</th>
                     </tr>
                     <tr className="bg-neutral-50 border-b border-neutral-200">
-                      <th className="px-3 py-2 text-center text-xs border-l">60°C</th>
-                      <th className="px-3 py-2 text-center text-xs">75°C</th>
-                      <th className="px-3 py-2 text-center text-xs">90°C</th>
-                      <th className="px-3 py-2 text-center text-xs border-l">60°C</th>
-                      <th className="px-3 py-2 text-center text-xs">75°C</th>
-                      <th className="px-3 py-2 text-center text-xs">90°C</th>
+                      <th className="px-3 py-2 text-center text-xs border-l">60 °C</th>
+                      <th className="px-3 py-2 text-center text-xs">75 °C</th>
+                      <th className="px-3 py-2 text-center text-xs">90 °C</th>
+                      <th className="px-3 py-2 text-center text-xs border-l">60 °C</th>
+                      <th className="px-3 py-2 text-center text-xs">75 °C</th>
+                      <th className="px-3 py-2 text-center text-xs">90 °C</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-neutral-100">
@@ -332,9 +332,9 @@ export default function WireSizeCalculatorPage() {
                   <thead>
                     <tr className="bg-neutral-50 border-b border-neutral-200">
                       <th className="px-4 py-3 text-left font-medium text-neutral-700">Ambient Temperature</th>
-                      <th className="px-4 py-3 text-center font-medium text-neutral-700">60°C Wire</th>
-                      <th className="px-4 py-3 text-center font-medium text-neutral-700">75°C Wire</th>
-                      <th className="px-4 py-3 text-center font-medium text-neutral-700">90°C Wire</th>
+                      <th className="px-4 py-3 text-center font-medium text-neutral-700">60 °C Wire</th>
+                      <th className="px-4 py-3 text-center font-medium text-neutral-700">75 °C Wire</th>
+                      <th className="px-4 py-3 text-center font-medium text-neutral-700">90 °C Wire</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-neutral-100">
@@ -417,15 +417,15 @@ export default function WireSizeCalculatorPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>4-6 conductors</span>
-                      <span className="font-mono font-semibold">80% ampacity</span>
+                      <span className="font-mono font-semibold">80 % ampacity</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span>7-9 conductors</span>
-                      <span className="font-mono font-semibold">70% ampacity</span>
+                      <span className="font-mono font-semibold">70 % ampacity</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span>10-20 conductors</span>
-                      <span className="font-mono font-semibold">50% ampacity</span>
+                      <span className="font-mono font-semibold">50 % ampacity</span>
                     </div>
                   </div>
                 </div>
@@ -529,7 +529,7 @@ export default function WireSizeCalculatorPage() {
               {faqItems.map((item, idx) => (
                 <div key={idx} className="bg-white p-4 rounded-lg border border-neutral-200">
                   <h3 className="font-semibold text-neutral-900 mb-2 flex items-start gap-2">
-                    <span className="text-blue-600 flex-shrink-0">Q:</span>
+                    <span className="text-blue-600 flex-shrink-0">Q: </span>
                     {item.question}
                   </h3>
                   <p className="text-sm text-neutral-600 leading-relaxed pl-6">

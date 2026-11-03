@@ -66,7 +66,7 @@ export default function AboutPage() {
         <ul className="list-disc pl-6 space-y-2">
           <li>
             October 25, 2026: Audited every page. Removed the unsourced claims the audit found, including user counts,
-            endorsements, expert reviews and response-time promises, and deleted or corrected the wrong values it
+            endorsements, expert reviews and response-time claims, and deleted or corrected the wrong values it
             found. Took 15 calculators offline until they are rebuilt from verified sources. Redirected 6 overlapping
             or retired pages to their closest page.
           </li>

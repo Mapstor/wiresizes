@@ -25,14 +25,14 @@ const ATTIC_ROW = AMBIENT_ROWS.find((row) => row.key === '41–45');
 export const metadata: Metadata = {
   title: 'Wire Size for 100 Amp Service',
   description: 'Wire size for a 100 A dwelling service: 4 AWG copper or 2 AWG aluminum (2023 NEC Table 310.12).',
-  keywords: '100 amp wire size, wire for 100 amp service, 100A electrical service, NEC 100 amp requirements',
+  keywords: '100 amp wire size, wire for 100 amp service, 100 A electrical service, NEC 100 amp requirements',
   alternates: { canonical: '/guides/wire-size-for-100-amp' },
 };
 
 // Article data for schema
 const articleData = {
   headline: '100 Amp Wire Size Guide',
-  description: 'Complete guide for 100 amp wire sizing. Learn correct wire sizes for 100A service entrance, copper vs aluminum, and NEC code requirements.',
+  description: 'Complete guide for 100 amp wire sizing. Learn correct wire sizes for 100 A service entrance, copper vs aluminum, and NEC code requirements.',
   url: 'https://wiresizes.com/guides/wire-size-for-100-amp',
   ...getArticleDates('src/app/guides/wire-size-for-100-amp/page.tsx'),
 };
@@ -50,7 +50,7 @@ const APPLICATIONS_100A = [
 
 // Installation requirements
 const INSTALLATION_REQUIREMENTS = [
-  { item: 'Main Breaker', spec: '100A 2-pole breaker', code: 'NEC 230.79' },
+  { item: 'Main Breaker', spec: '100 A 2-pole breaker', code: 'NEC 230.79' },
   { item: 'Wire Size (Copper)', spec: `${CU_100A} (100 A dwelling service)`, code: 'NEC Table 310.12' },
   { item: 'Wire Size (Aluminum)', spec: `${AL_100A} (100 A dwelling service)`, code: 'NEC Table 310.12' },
   { item: 'Equipment grounding conductor (main power feeder)', spec: `${EGC_CU_100A} copper`, code: 'NEC Table 250.122' },
@@ -68,7 +68,7 @@ export default function WireSizeFor100AmpPage() {
             <h1 className="text-4xl font-bold">100 Amp Wire Size Guide</h1>
           </div>
           <p className="text-xl text-blue-100">
-            Complete specifications for 100A service entrance
+            Complete specifications for 100 A service entrance
           </p>
           <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
@@ -180,7 +180,7 @@ export default function WireSizeFor100AmpPage() {
                   <div className="flex-shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">1</div>
                   <div>
                     <h3 className="font-semibold mb-1">Calculate Load Requirements</h3>
-                    <p className="text-gray-600">Verify that 100A is sufficient for your needs using NEC Article 220 load calculations.</p>
+                    <p className="text-gray-600">Verify that 100 A is sufficient for your needs using NEC Article 220 load calculations.</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
@@ -248,7 +248,7 @@ export default function WireSizeFor100AmpPage() {
                 <ul className="space-y-2 text-sm">
                   <li className="flex gap-2">
                     <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                    <span>Attics at {ATTIC_ROW?.key}°C ({ATTIC_ROW?.ambientF}°F): {ATTIC_ROW?.f_75} in the 75°C column (Table 310.15(B)(1)(1))</span>
+                    <span>Attics at {ATTIC_ROW?.key} °C ({ATTIC_ROW?.ambientF} °F): {ATTIC_ROW?.f_75} in the 75 °C column (Table 310.15(B)(1)(1))</span>
                   </li>
                   <li className="flex gap-2">
                     <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
@@ -287,7 +287,7 @@ export default function WireSizeFor100AmpPage() {
                 className="bg-white rounded-lg p-6 shadow-md hover:shadow-xl transition-shadow border-2 border-transparent hover:border-blue-500">
                 <Calculator className="w-8 h-8 text-blue-600 mb-3" />
                 <h3 className="font-semibold text-lg mb-2">Wire Size Calculator</h3>
-                <p className="text-sm text-gray-600 mb-4">Calculate exact wire size for any amperage</p>
+                <p className="text-sm text-gray-600 mb-4">Calculate the wire size for any amperage</p>
                 <span className="text-blue-600 font-semibold flex items-center gap-1">
                   Calculate Now <ArrowRight className="w-4 h-4" />
                 </span>

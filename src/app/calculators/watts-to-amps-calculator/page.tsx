@@ -23,35 +23,35 @@ const POWER_FORMULAS_TABLE = [
   { 
     systemType: 'Single-Phase AC', 
     formula: 'I = P ÷ (V × PF)', 
-    example: '1200W ÷ (120V × 1.0) = 10A', 
+    example: '1200 W ÷ (120 V × 1.0) = 10 A', 
     applications: 'Residential loads, small appliances',
     notes: 'Most common residential calculation'
   },
   { 
     systemType: 'Single-Phase DC', 
     formula: 'I = P ÷ V', 
-    example: '1200W ÷ 12V = 100A', 
+    example: '1200 W ÷ 12 V = 100 A', 
     applications: 'Battery systems, automotive, solar',
     notes: 'No power factor consideration'
   },
   { 
     systemType: 'Three-Phase Balanced', 
     formula: 'I = P ÷ (√3 × V × PF)', 
-    example: '10kW ÷ (1.73 × 480V × 0.85) = 14.2A', 
+    example: '10 kW ÷ (1.73 × 480 V × 0.85) = 14.2 A', 
     applications: 'Industrial motors, commercial loads',
     notes: 'V is line-to-line voltage'
   },
   { 
     systemType: 'Three-Phase Line Current', 
     formula: 'I_line = P ÷ (3 × V_phase × PF)', 
-    example: '10kW ÷ (3 × 277V × 0.85) = 14.2A', 
+    example: '10 kW ÷ (3 × 277 V × 0.85) = 14.2 A', 
     applications: 'Wye-connected loads',
     notes: 'V_phase = V_line ÷ √3'
   },
   { 
     systemType: 'Apparent Power (VA)', 
     formula: 'I = S ÷ V (single-phase)', 
-    example: '1500VA ÷ 120V = 12.5A', 
+    example: '1500 VA ÷ 120 V = 12.5 A', 
     applications: 'Transformers, reactive loads',
     notes: 'Includes reactive power component'
   }
@@ -60,19 +60,19 @@ const POWER_FORMULAS_TABLE = [
 const COMPREHENSIVE_FAQS = [
   {
     question: 'How do I convert 1500 watts to amps?',
-    answer: 'For single-phase: Amps = Watts ÷ Voltage. At 120V: 1500W ÷ 120V = 12.5A. At 240V: 1500W ÷ 240V = 6.25A. For three-phase: Amps = Watts ÷ (√3 × Voltage × Power Factor). Always check if power factor applies to your load type.'
+    answer: 'For single-phase: Amps = Watts ÷ Voltage. At 120 V: 1500 W ÷ 120 V = 12.5 A. At 240 V: 1500 W ÷ 240 V = 6.25 A. For three-phase: Amps = Watts ÷ (√3 × Voltage × Power Factor). Always check if power factor applies to your load type.'
   },
   {
     question: 'What is power factor and when do I use it?',
     answer: 'Power factor (PF) is the ratio of real power to apparent power, ranging from 0 to 1. Use PF for inductive loads like motors, fluorescent lights, and transformers. Resistive loads like heaters have PF = 1.0.'
   },
   {
-    question: 'Why do I get different amps at 120V vs 240V?',
-    answer: 'Same power at higher voltage requires lower current. This is why large appliances use 240V - it reduces current by half, allowing smaller wire sizes and reducing voltage drop. Example: 2400W load draws 20A at 120V but only 10A at 240V.'
+    question: 'Why do I get different amps at 120 V vs 240 V?',
+    answer: 'Same power at higher voltage requires lower current. This is why large appliances use 240 V - it reduces current by half, allowing smaller wire sizes and reducing voltage drop. Example: 2400 W load draws 20 A at 120 V but only 10 A at 240 V.'
   },
   {
     question: 'How do I calculate three-phase current?',
-    answer: 'Three-phase formula: I = P ÷ (√3 × V × PF). √3 = 1.732. Use line-to-line voltage (480V, 208V). Result is current per line.'
+    answer: 'Three-phase formula: I = P ÷ (√3 × V × PF). √3 = 1.732. Use line-to-line voltage (480 V, 208 V). Result is current per line.'
   },
   {
     question: 'What if my appliance shows both watts and amps?',
@@ -107,7 +107,7 @@ export default function WattsToAmpsCalculatorPage() {
                 </div>
                 <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
                   <div className="text-sm text-purple-100">Voltage Levels</div>
-                  <div className="font-semibold">120V - 480V Systems</div>
+                  <div className="font-semibold">120 V - 480 V Systems</div>
                 </div>
               </div>
             </div>
@@ -172,7 +172,7 @@ export default function WattsToAmpsCalculatorPage() {
               <ul className="text-sm text-blue-700 space-y-1">
                 <li>• I = Current in Amperes • P = Power in Watts • V = Voltage • PF = Power Factor</li>
                 <li>• √3 = 1.732 (square root of 3 for three-phase calculations)</li>
-                <li>• For three-phase, use line-to-line voltage (480V, 208V, etc.)</li>
+                <li>• For three-phase, use line-to-line voltage (480 V, 208 V, etc.)</li>
               </ul>
             </div>
           </div>

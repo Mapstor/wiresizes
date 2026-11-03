@@ -16,7 +16,7 @@ const SOURCE_DOMAINS = VOLTAGE_DROP_DOMAINS;
 
 export const metadata: Metadata = {
   title: 'Voltage Drop Calculator',
-  description: 'Single- and three-phase voltage drop per wire size and distance. Copper and aluminum at 75°C.',
+  description: 'Single- and three-phase voltage drop per wire size and distance. Copper and aluminum at 75 °C.',
   keywords: 'voltage drop calculator, electrical voltage drop, NEC voltage drop, wire voltage loss, voltage drop formula, copper wire voltage drop, aluminum wire voltage drop, voltage drop calculation, electrical wire calculator',
   alternates: { canonical: '/calculators/voltage-drop-calculator' },
 };
@@ -30,9 +30,9 @@ const webAppData = {
 
 // Quick answer: single-phase drop of solid copper at 75 °C from voltage-drop.ts, the calculator's own numbers
 const QUICK_ANSWER_CIRCUITS = [
-  { title: '12 AWG Copper at 120V, 20A:', size: '12', volts: 120, amps: 20, lengthsFt: [25, 50, 75, 100] },
-  { title: '10 AWG Copper at 240V, 30A:', size: '10', volts: 240, amps: 30, lengthsFt: [50, 100, 150, 200] },
-  { title: '6 AWG Copper at 240V, 50A:', size: '6', volts: 240, amps: 50, lengthsFt: [50, 100, 150, 200] },
+  { title: '12 AWG Copper at 120 V, 20 A:', size: '12', volts: 120, amps: 20, lengthsFt: [25, 50, 75, 100] },
+  { title: '10 AWG Copper at 240 V, 30 A:', size: '10', volts: 240, amps: 30, lengthsFt: [50, 100, 150, 200] },
+  { title: '6 AWG Copper at 240 V, 50 A:', size: '6', volts: 240, amps: 50, lengthsFt: [50, 100, 150, 200] },
 ].map((circuit) => ({
   title: circuit.title,
   rows: circuit.lengthsFt.map((lengthFt) => {
@@ -50,11 +50,11 @@ const faqItems = [
   },
   {
     question: "Why is my voltage drop so high with aluminum wire?",
-    answer: "Aluminum wire has approximately 61% of the conductivity of copper, meaning it has 64% more resistance. For the same ampacity, aluminum wire must be 1-2 sizes larger than copper to achieve similar voltage drop."
+    answer: "Aluminum wire has approximately 61 % of the conductivity of copper, meaning it has 64 % more resistance. For the same ampacity, aluminum wire must be 1-2 sizes larger than copper to achieve similar voltage drop."
   },
   {
-    question: "Does voltage drop affect 240V circuits?",
-    answer: "Yes, but the percentage impact is half that of 120V circuits. A 7.2V drop is 6% on a 120V circuit but only 3% on a 240V circuit. This is why 240V is preferred for long-distance, high-current applications."
+    question: "Does voltage drop affect 240 V circuits?",
+    answer: "Yes, but the percentage impact is half that of 120 V circuits. A 7.2 V drop is 6 % on a 120 V circuit but only 3 % on a 240 V circuit. This is why 240 V is preferred for long-distance, high-current applications."
   },
   {
     question: "Should I calculate voltage drop for LED lighting?",
@@ -69,12 +69,12 @@ const faqItems = [
     answer: "Voltage drop is one factor in wire sizing. You must also consider ampacity (NEC Table 310.16), overcurrent protection, and grounding requirements. Always use the larger wire size when multiple factors apply."
   },
   {
-    question: "Why does distance matter more at 12V than 120V?",
-    answer: "The same voltage drop has 10x more impact at 12V. A 1.2V drop is 1% at 120V but 10% at 12V. Low voltage systems require significantly larger conductors to maintain acceptable voltage drop percentages."
+    question: "Why does distance matter more at 12 V than 120 V?",
+    answer: "The same voltage drop has 10x more impact at 12 V. A 1.2 V drop is 1 % at 120 V but 10 % at 12 V. Low voltage systems require significantly larger conductors to maintain acceptable voltage drop percentages."
   },
   {
     question: "How does temperature affect voltage drop?",
-    answer: "Wire resistance increases about 0.4% per degree Celsius above 20°C. In a hot attic (50°C), resistance can be 12% higher than at room temperature, increasing voltage drop proportionally."
+    answer: "Wire resistance increases about 0.4 % per degree Celsius above 20 °C. In a hot attic (50 °C), resistance can be 12 % higher than at room temperature, increasing voltage drop proportionally."
   },
   {
     question: "How do I calculate voltage drop for DC circuits?",
@@ -374,7 +374,7 @@ export default function VoltageDropCalculatorPage() {
                     <ul className="text-sm space-y-1 text-blue-800">
                       <li>• MPPT controllers need minimum voltage</li>
                       <li>• Battery charging efficiency critical</li>
-                      <li>• Consider 48V systems for long runs</li>
+                      <li>• Consider 48 V systems for long runs</li>
                     </ul>
                   </div>
                 </div>
@@ -419,7 +419,7 @@ export default function VoltageDropCalculatorPage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <ArrowRight className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-                    <span>Use 240V for high-current or long-distance loads</span>
+                    <span>Use 240 V for high-current or long-distance loads</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <ArrowRight className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
@@ -495,7 +495,7 @@ export default function VoltageDropCalculatorPage() {
               {faqItems.map((item, idx) => (
                 <div key={idx} className="bg-white p-4 rounded-lg border border-neutral-200">
                   <h3 className="font-semibold text-neutral-900 mb-2 flex items-start gap-2">
-                    <span className="text-blue-600 flex-shrink-0">Q:</span>
+                    <span className="text-blue-600 flex-shrink-0">Q: </span>
                     {item.question}
                   </h3>
                   <p className="text-sm text-neutral-600 leading-relaxed pl-6">

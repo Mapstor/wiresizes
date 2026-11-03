@@ -27,11 +27,11 @@ const webAppData = {
 const COMPREHENSIVE_FAQS = [
   {
     question: 'What size wire do I need for 200 amp service entrance?',
-    answer: 'For 200A residential service entrance, NEC Table 310.12 allows 2/0 AWG copper or 4/0 AWG aluminum for dwelling services.'
+    answer: 'For 200 A residential service entrance, NEC Table 310.12 allows 2/0 AWG copper or 4/0 AWG aluminum for dwelling services.'
   },
   {
     question: 'What size ground wire for service entrance?',
-    answer: 'Grounding electrode conductor sizing per NEC Table 250.66: 100A service needs 8 AWG copper, 200A needs 4 AWG copper, 400A needs 1/0 AWG copper.'
+    answer: 'Grounding electrode conductor sizing per NEC Table 250.66: 100 A service needs 8 AWG copper, 200 A needs 4 AWG copper, 400 A needs 1/0 AWG copper.'
   },
 ];
 
@@ -57,7 +57,7 @@ export default function ServiceEntranceCalculatorPage() {
                 </div>
                 <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
                   <div className="text-sm text-purple-100">Service Range</div>
-                  <div className="font-semibold">100A to 400A</div>
+                  <div className="font-semibold">100 A to 400 A</div>
                 </div>
               </div>
             </div>

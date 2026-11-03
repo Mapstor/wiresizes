@@ -189,7 +189,7 @@ export function KVAToAmpsCalculator() {
     });
   };
 
-  const voltageSelectOptions = voltageOptions(inputs.phase).map((v) => ({ value: String(v), label: `${v}V` }));
+  const voltageSelectOptions = voltageOptions(inputs.phase).map((v) => ({ value: String(v), label: `${v} V` }));
 
   return (
     <CalculatorLayout

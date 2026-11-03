@@ -18,27 +18,27 @@ const POWER_TRIANGLE_DATA = [
 ];
 
 const VOLTAGE_SYSTEMS = [
-  { system: 'Single-Phase 120V', voltage: 120, phases: 1, applications: ['Residential outlets', 'Small appliances', 'Lighting'] },
-  { system: 'Single-Phase 240V', voltage: 240, phases: 1, applications: ['Water heaters', 'Dryers', 'AC units'] },
-  { system: 'Three-Phase 208V', voltage: 208, phases: 3, applications: ['Commercial lighting', 'Small motors', 'Office equipment'] },
-  { system: 'Three-Phase 480V', voltage: 480, phases: 3, applications: ['Industrial motors', 'Large HVAC', 'Manufacturing'] },
+  { system: 'Single-Phase 120 V', voltage: 120, phases: 1, applications: ['Residential outlets', 'Small appliances', 'Lighting'] },
+  { system: 'Single-Phase 240 V', voltage: 240, phases: 1, applications: ['Water heaters', 'Dryers', 'AC units'] },
+  { system: 'Three-Phase 208 V', voltage: 208, phases: 3, applications: ['Commercial lighting', 'Small motors', 'Office equipment'] },
+  { system: 'Three-Phase 480 V', voltage: 480, phases: 3, applications: ['Industrial motors', 'Large HVAC', 'Manufacturing'] },
 ];
 
 const CALCULATION_EXAMPLES = [
   {
     title: 'Residential Water Heater',
-    scenario: 'A 4500W electric water heater on a 240V circuit',
-    given: ['Power: 4500W', 'Voltage: 240V', 'Load Type: Resistive'],
-    solution: 'I = P ÷ V = 4500W ÷ 240V = 18.75A',
+    scenario: 'A 4500 W electric water heater on a 240 V circuit',
+    given: ['Power: 4500 W', 'Voltage: 240 V', 'Load Type: Resistive'],
+    solution: 'I = P ÷ V = 4500 W ÷ 240 V = 18.75 A',
     result: '18.75 Amps',
     powerFactor: 1.0,
     calculatorLink: '/calculators/watts-to-amps-calculator'
   },
   {
     title: 'Commercial LED Lighting',
-    scenario: '50A LED lighting circuit at 277V with 0.95 power factor',
-    given: ['Current: 50A', 'Voltage: 277V', 'Power Factor: 0.95'],
-    solution: 'P = I × V × PF = 50A × 277V × 0.95 = 13,158W',
+    scenario: '50 A LED lighting circuit at 277 V with 0.95 power factor',
+    given: ['Current: 50 A', 'Voltage: 277 V', 'Power Factor: 0.95'],
+    solution: 'P = I × V × PF = 50 A × 277 V × 0.95 = 13,158 W',
     result: '13.16 kW',
     powerFactor: 0.95,
     calculatorLink: '/calculators/amps-to-watts-calculator'
@@ -48,7 +48,7 @@ const CALCULATION_EXAMPLES = [
 // Article data for schema
 const articleData = {
   headline: "Electrical Power Calculations Guide",
-  description: "Master electrical power calculations with this comprehensive guide covering watts, amps, volts, power factor, single-phase and three-phase systems with interactive examples.",
+  description: "Master electrical power calculations with this guide covering watts, amps, volts, power factor, single-phase and three-phase systems with interactive examples.",
   url: "https://wiresizes.com/guides/electrical-power-calculations",
   ...getArticleDates('src/app/guides/electrical-power-calculations/page.tsx'),
 };
@@ -63,8 +63,7 @@ export default function ElectricalPowerCalculationsGuide() {
             Electrical Power Calculations Guide
           </h1>
           <p className="text-xl text-gray-600 mb-6">
-            Master the fundamental relationships between watts, amps, volts, and power factor. 
-            Learn to perform accurate electrical calculations for any system or application.
+            Master the fundamental relationships between watts, amps, volts, and power factor.
           </p>
           <div className="flex flex-wrap gap-4">
             <Link 
@@ -211,9 +210,9 @@ export default function ElectricalPowerCalculationsGuide() {
                     </span>
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-xs text-gray-600">
-                    <div>Real: {data.realPower}W</div>
-                    <div>Reactive: {data.reactivePower}VAR</div>
-                    <div>Apparent: {data.apparentPower}VA</div>
+                    <div>Real: {data.realPower} W</div>
+                    <div>Reactive: {data.reactivePower} VAR</div>
+                    <div>Apparent: {data.apparentPower} VA</div>
                   </div>
                 </div>
               ))}
@@ -229,7 +228,7 @@ export default function ElectricalPowerCalculationsGuide() {
           {VOLTAGE_SYSTEMS.map((system, index) => (
             <div key={index} className="border rounded-lg p-6 hover:shadow-lg transition-shadow">
               <div className="text-center mb-4">
-                <div className="text-2xl font-bold text-primary-600">{system.voltage}V</div>
+                <div className="text-2xl font-bold text-primary-600">{system.voltage} V</div>
                 <div className="text-sm text-gray-600">{system.phases === 1 ? 'Single' : 'Three'} Phase</div>
               </div>
               

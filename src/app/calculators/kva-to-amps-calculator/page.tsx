@@ -71,7 +71,7 @@ export default function KVAToAmpsCalculatorPage() {
         <div className="grid md:grid-cols-2 gap-8">
           {/* Single Phase Table */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-            <h3 className="text-xl font-bold mb-4 text-blue-600">Single-Phase @ 240V</h3>
+            <h3 className="text-xl font-bold mb-4 text-blue-600">Single-Phase @ 240 V</h3>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -120,7 +120,7 @@ export default function KVAToAmpsCalculatorPage() {
 
           {/* Three Phase Table */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-            <h3 className="text-xl font-bold mb-4 text-green-600">Three-Phase @ 480V</h3>
+            <h3 className="text-xl font-bold mb-4 text-green-600">Three-Phase @ 480 V</h3>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -200,7 +200,7 @@ export default function KVAToAmpsCalculatorPage() {
             </h3>
             <div className="space-y-2 text-sm">
               <p><strong>Scenario:</strong> 750 kVA transformer for commercial building</p>
-              <p><strong>Voltage:</strong> 480V, 3-phase</p>
+              <p><strong>Voltage:</strong> 480 V, 3-phase</p>
               <p><strong>Calculation:</strong></p>
               <div className="bg-white/70 dark:bg-gray-900/70 rounded p-3 font-mono text-xs">
                 I = 750 × 1000 / (480 × 1.732)<br/>
@@ -208,7 +208,7 @@ export default function KVAToAmpsCalculatorPage() {
                 I = 902.1 Amps
               </div>
               <p className="text-green-700 dark:text-green-400 font-semibold">
-                Result: 902.1A full load current
+                Result: 902.1 A full load current
               </p>
             </div>
           </div>
@@ -220,7 +220,7 @@ export default function KVAToAmpsCalculatorPage() {
             </h3>
             <div className="space-y-2 text-sm">
               <p><strong>Scenario:</strong> 2000 kVA standby generator</p>
-              <p><strong>Voltage:</strong> 480V, 3-phase</p>
+              <p><strong>Voltage:</strong> 480 V, 3-phase</p>
               <p><strong>Power Factor:</strong> 0.8 lagging</p>
               <p><strong>Calculation:</strong></p>
               <div className="bg-white/70 dark:bg-gray-900/70 rounded p-3 font-mono text-xs">
@@ -229,7 +229,7 @@ export default function KVAToAmpsCalculatorPage() {
                 I = 2405.6 Amps
               </div>
               <p className="text-green-700 dark:text-green-400 font-semibold">
-                Result: 2405.6A rated current
+                Result: 2405.6 A rated current
               </p>
               <p className="text-gray-700 dark:text-gray-300">
                 <strong>Real Power:</strong> 1600 kW @ 0.8 PF
@@ -244,7 +244,7 @@ export default function KVAToAmpsCalculatorPage() {
             </h3>
             <div className="space-y-2 text-sm">
               <p><strong>Scenario:</strong> 1500 kVA solar inverter</p>
-              <p><strong>AC Output:</strong> 480V, 3-phase</p>
+              <p><strong>AC Output:</strong> 480 V, 3-phase</p>
               <p><strong>Power Factor:</strong> 0.95 leading</p>
               <p><strong>AC Current:</strong></p>
               <div className="bg-white/70 dark:bg-gray-900/70 rounded p-3 font-mono text-xs">
@@ -253,7 +253,7 @@ export default function KVAToAmpsCalculatorPage() {
                 I = 1804.2 Amps
               </div>
               <p className="text-yellow-700 dark:text-yellow-400 font-semibold">
-                AC Output: 1804.2A
+                AC Output: 1804.2 A
               </p>
               <p className="text-gray-700 dark:text-gray-300">
                 <strong>Real Power:</strong> 1425 kW @ 0.95 PF

@@ -261,7 +261,7 @@ export default function GuidesHomePage() {
               The NEC Table 310.16 page is the
               canonical ampacity reference. The AWG wire size chart is
               the physical-properties reference (diameter, area, resistance).
-              The per-amperage guides (100A, 200A, EV charger) are
+              The per-amperage guides (100 A, 200 A, EV charger) are
               installation-specific. Power Calculations,
               Single-vs-Three-Phase, and Power Factor are theory references
               that support the practical guides.

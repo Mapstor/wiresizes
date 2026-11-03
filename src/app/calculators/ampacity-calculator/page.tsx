@@ -54,13 +54,13 @@ const FACTOR_7_TO_9 = formatFactor(adjustmentPercent('7–9') / 100);
 
 // Conduit fill adjustment factors
 const CONDUIT_FILL_FACTORS = [
-  { conductors: "3 or less", adjustment: "100%" },
-  { conductors: "4-6", adjustment: "80%" },
-  { conductors: "7-9", adjustment: "70%" },
-  { conductors: "10-20", adjustment: "50%" },
-  { conductors: "21-30", adjustment: "45%" },
-  { conductors: "31-40", adjustment: "40%" },
-  { conductors: "41+", adjustment: "35%" }
+  { conductors: "3 or less", adjustment: "100 %" },
+  { conductors: "4-6", adjustment: "80 %" },
+  { conductors: "7-9", adjustment: "70 %" },
+  { conductors: "10-20", adjustment: "50 %" },
+  { conductors: "21-30", adjustment: "45 %" },
+  { conductors: "31-40", adjustment: "40 %" },
+  { conductors: "41+", adjustment: "35 %" }
 ];
 
 // Special ampacity conditions
@@ -87,14 +87,14 @@ const SPECIAL_CONDITIONS = [
 
 // Wire insulation types and ratings
 const INSULATION_TYPES = [
-  { type: "TW", dryRating: "60°C", wetRating: "60°C" },
-  { type: "THW", dryRating: "75°C", wetRating: "75°C" },
-  { type: "THWN", dryRating: "75°C", wetRating: "75°C" },
-  { type: "THHN", dryRating: "90°C", wetRating: "—" },
-  { type: "THWN-2", dryRating: "90°C", wetRating: "90°C" },
-  { type: "XHHW", dryRating: "90°C", wetRating: "75°C" },
-  { type: "XHHW-2", dryRating: "90°C", wetRating: "90°C" },
-  { type: "USE-2", dryRating: "90°C", wetRating: "90°C" }
+  { type: "TW", dryRating: "60 °C", wetRating: "60 °C" },
+  { type: "THW", dryRating: "75 °C", wetRating: "75 °C" },
+  { type: "THWN", dryRating: "75 °C", wetRating: "75 °C" },
+  { type: "THHN", dryRating: "90 °C", wetRating: "—" },
+  { type: "THWN-2", dryRating: "90 °C", wetRating: "90 °C" },
+  { type: "XHHW", dryRating: "90 °C", wetRating: "75 °C" },
+  { type: "XHHW-2", dryRating: "90 °C", wetRating: "90 °C" },
+  { type: "USE-2", dryRating: "90 °C", wetRating: "90 °C" }
 ];
 
 // Common ampacity mistakes
@@ -102,7 +102,7 @@ const AMPACITY_MISTAKES = [
   {
     mistake: "Forgetting ambient temperature derating",
     consequence: "Wire insulation breakdown, fire hazard",
-    solution: "Apply temperature correction for ambients above 86°F"
+    solution: "Apply temperature correction for ambients above 86 °F"
   },
   {
     mistake: "Ignoring the adjustment for more than three current-carrying conductors",
@@ -126,15 +126,15 @@ const faqItems = [
   },
   {
     question: "How do I calculate ampacity for parallel conductors?",
-    answer: "Add the ampacities of individual conductors, then apply any derating factors. For example, two parallel 1/0 AWG copper (150A each at 75°C) = 300A total before derating. All parallel conductors must be identical."
+    answer: "Add the ampacities of individual conductors, then apply any derating factors. For example, two parallel 1/0 AWG copper (150 A each at 75 °C) = 300 A total before derating. All parallel conductors must be identical."
   },
   {
     question: "Does wire ampacity change with voltage?",
-    answer: "No, ampacity is independent of voltage. A 12 AWG wire has the same 25A ampacity (at 75°C) whether used for 120V or 480V. Voltage affects insulation requirements, not current capacity."
+    answer: "No, ampacity is independent of voltage. A 12 AWG wire has the same 25 A ampacity (at 75 °C) whether used for 120 V or 480 V. Voltage affects insulation requirements, not current capacity."
   },
   {
     question: "What's the ampacity of aluminum vs copper?",
-    answer: "Aluminum has about 61% of copper's conductivity. For the same ampacity, aluminum wire must be 1-2 sizes larger. Example: 1 AWG aluminum (100A) equals 3 AWG copper (100A) at 75°C."
+    answer: "Aluminum has about 61 % of copper's conductivity. For the same ampacity, aluminum wire must be 1-2 sizes larger. Example: 1 AWG aluminum (100 A) equals 3 AWG copper (100 A) at 75 °C."
   },
   {
     question: "Do I derate for conductors in separate conduits?",
@@ -142,7 +142,7 @@ const faqItems = [
   },
   {
     question: "How does wet location affect ampacity?",
-    answer: "Wet location doesn't directly reduce ampacity if using wet-rated insulation (THWN, XHHW). However, the wet rating temperature may be lower (75°C vs 90°C for XHHW), affecting available ampacity."
+    answer: "Wet location doesn't directly reduce ampacity if using wet-rated insulation (THWN, XHHW). However, the wet rating temperature may be lower (75 °C vs 90 °C for XHHW), affecting available ampacity."
   },
   {
     question: "What is ampacity correction vs adjustment?",
@@ -182,7 +182,7 @@ export default function AmpacityCalculatorPage() {
                         {COPPER_QUICK_REFERENCE.map((row) => (
                           <li key={row.size} className="flex justify-between">
                             <span><strong>{formatSize(row.size)}:</strong></span>
-                            <span className="font-mono">{row.ampacity}A{row.limited ? '*' : ''}</span>
+                            <span className="font-mono">{row.ampacity} A{row.limited ? '*' : ''}</span>
                           </li>
                         ))}
                       </ul>
@@ -193,7 +193,7 @@ export default function AmpacityCalculatorPage() {
                         {ALUMINUM_QUICK_REFERENCE.map((row) => (
                           <li key={row.size} className="flex justify-between">
                             <span><strong>{formatSize(row.size)}:</strong></span>
-                            <span className="font-mono">{row.ampacity}A{row.limited ? '*' : ''}</span>
+                            <span className="font-mono">{row.ampacity} A{row.limited ? '*' : ''}</span>
                           </li>
                         ))}
                       </ul>
@@ -203,11 +203,11 @@ export default function AmpacityCalculatorPage() {
                       <ul className="space-y-1 text-sm text-neutral-600">
                         <li className="flex items-center gap-2">
                           <Thermometer className="w-4 h-4 text-orange-500" />
-                          <span>104°F: × {FACTOR_104F}</span>
+                          <span>104 °F: × {FACTOR_104F}</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <Thermometer className="w-4 h-4 text-red-500" />
-                          <span>122°F: × {FACTOR_122F}</span>
+                          <span>122 °F: × {FACTOR_122F}</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <Activity className="w-4 h-4 text-blue-500" />
@@ -227,7 +227,7 @@ export default function AmpacityCalculatorPage() {
                   
                   <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
                     <p className="text-sm text-amber-800">
-                      <strong>Important:</strong> *Small conductor rule (NEC 240.4(D)) limits: 14 AWG copper to 15A, 12 AWG copper to 20A, 10 AWG copper to 30A, 12 AWG aluminum to 15A, 10 AWG aluminum to 25A maximum overcurrent protection. 
+                      <strong>Important:</strong> *Small conductor rule (NEC 240.4(D)) limits: 14 AWG copper to 15 A, 12 AWG copper to 20 A, 10 AWG copper to 30 A, 12 AWG aluminum to 15 A, 10 AWG aluminum to 25 A maximum overcurrent protection. 
                       Always apply derating factors for actual conditions.
                     </p>
                   </div>
@@ -319,9 +319,9 @@ export default function AmpacityCalculatorPage() {
                       <th colSpan={3} className="px-4 py-3 text-center font-medium text-neutral-700 border-l">Correction Factors for Conductor Temperature Rating</th>
                     </tr>
                     <tr className="bg-neutral-50 border-b border-neutral-200">
-                      <th className="px-3 py-2 text-center text-xs border-l">60°C</th>
-                      <th className="px-3 py-2 text-center text-xs">75°C</th>
-                      <th className="px-3 py-2 text-center text-xs">90°C</th>
+                      <th className="px-3 py-2 text-center text-xs border-l">60 °C</th>
+                      <th className="px-3 py-2 text-center text-xs">75 °C</th>
+                      <th className="px-3 py-2 text-center text-xs">90 °C</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-neutral-100">
@@ -378,8 +378,8 @@ export default function AmpacityCalculatorPage() {
                 <div className="space-y-3">
                   <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
                     <p className="text-sm text-amber-800">
-                      <strong>Example:</strong> Six 20A circuits in one conduit = 12 current-carrying conductors 
-                      (not counting grounds). Apply 50% derating factor.
+                      <strong>Example:</strong> Six 20 A circuits in one conduit = 12 current-carrying conductors 
+                      (not counting grounds). Apply 50 % derating factor.
                     </p>
                   </div>
                 </div>
@@ -501,7 +501,7 @@ export default function AmpacityCalculatorPage() {
               {faqItems.map((item, idx) => (
                 <div key={idx} className="bg-white p-4 rounded-lg border border-neutral-200">
                   <h3 className="font-semibold text-neutral-900 mb-2 flex items-start gap-2">
-                    <span className="text-blue-600 flex-shrink-0">Q:</span>
+                    <span className="text-blue-600 flex-shrink-0">Q: </span>
                     {item.question}
                   </h3>
                   <p className="text-sm text-neutral-600 leading-relaxed pl-6">

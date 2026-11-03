@@ -350,7 +350,7 @@ export default function WireSizeFor200AmpPage() {
               <div className="text-center">
                 <Calculator className="w-12 h-12 text-blue-600 mx-auto mb-4" />
                 <h2 className="text-2xl font-bold text-gray-900 mb-3">
-                  Need to Calculate Exact Wire Size?
+                  Need the Wire Size for Your Circuit?
                 </h2>
                 <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
                   Use our professional wire size calculator to verify the correct wire gauge for your specific 
@@ -412,19 +412,19 @@ export default function WireSizeFor200AmpPage() {
 
       {/* NEC 310.12 — the 83% dwelling-service rule */}
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-8 mt-8 mb-8">
-        <h2 className="text-2xl font-bold text-blue-900 mb-3">NEC 310.12 — The 83% Dwelling-Service Rule</h2>
+        <h2 className="text-2xl font-bold text-blue-900 mb-3">NEC 310.12 — The 83 % Dwelling-Service Rule</h2>
         <p className="text-slate-700 mb-4">
           The single most important section of the NEC for residential
           200-amp service sizing is <strong>NEC 310.12</strong>, often
-          called the &ldquo;83% rule.&rdquo;
+          called the &ldquo;83 % rule.&rdquo;
         </p>
 
         <div className="bg-white rounded-lg p-5 mb-4">
           <p className="text-sm text-slate-700">
             Specifically, Table 310.12 sizes service-entrance
             conductors and feeders that supply the entire load by allowing
-            them to be sized for <strong>83% of the service rating</strong> —
-            hence the &ldquo;83% rule&rdquo; nickname.
+            them to be sized for <strong>83 % of the service rating</strong> —
+            hence the &ldquo;83 % rule&rdquo; nickname.
           </p>
         </div>
 
@@ -457,7 +457,7 @@ export default function WireSizeFor200AmpPage() {
           <li><strong>Multi-family dwellings serving more than one unit:</strong> the main service feeder must use full Table 310.16 ampacity. Only individual dwelling-unit feeders inside the building qualify for 310.12.</li>
           <li><strong>Commercial / industrial occupancies:</strong> retail, office, warehouse, manufacturing all use straight 310.16.</li>
           <li><strong>Three-phase services:</strong> 310.12 explicitly applies to single-phase 120/240 V dwellings only; three-phase services revert to straight 310.16.</li>
-          <li><strong>208 Y / 120 V wye services:</strong> not covered by 310.12; multi-family buildings on 208 Y / 120 V cannot use the 83% allowance for the main service.</li>
+          <li><strong>208 Y / 120 V wye services:</strong> not covered by 310.12; multi-family buildings on 208 Y / 120 V cannot use the 83 % allowance for the main service.</li>
           <li><strong>Subpanel feeders that don&rsquo;t carry the entire service:</strong> only feeders supplying the entire dwelling load (typically the main service-entrance feeder from the meter to the main panel) qualify; downstream subpanels use full 310.16.</li>
         </ul>
       </div>

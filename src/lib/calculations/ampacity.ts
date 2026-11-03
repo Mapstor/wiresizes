@@ -105,9 +105,9 @@ export function calculateAmpacity(input: AmpacityInput): AmpacityResult {
 export const AMPACITY_SIZES: SizeKey[] = TABLE_310_16_SIZES.slice(TABLE_310_16_SIZES.indexOf('14'));
 
 export const COLUMN_OPTIONS: { value: AmpacityColumn; label: string }[] = [
-  { value: 60, label: '60°C (140°F)' },
-  { value: 75, label: '75°C (167°F)' },
-  { value: 90, label: '90°C (194°F)' },
+  { value: 60, label: '60 °C (140 °F)' },
+  { value: 75, label: '75 °C (167 °F)' },
+  { value: 90, label: '90 °C (194 °F)' },
 ];
 
 /** "26–30 °C (78–86 °F)"; "10 °C or less (50 °F or less)". */

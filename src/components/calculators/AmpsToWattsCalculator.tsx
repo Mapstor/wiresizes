@@ -110,7 +110,7 @@ export default function AmpsToWattsCalculator() {
   const choices = voltageChoices(inputs.powerType, inputs.phaseType);
   const allowCustom = !(inputs.powerType === 'ac' && inputs.phaseType === 'three');
   const voltageSelectOptions = [
-    ...choices.map((v) => ({ value: String(v), label: `${v}V ${inputs.powerType === 'dc' ? 'DC' : 'AC'}` })),
+    ...choices.map((v) => ({ value: String(v), label: `${v} V ${inputs.powerType === 'dc' ? 'DC' : 'AC'}` })),
     ...(allowCustom ? [{ value: CUSTOM, label: 'Custom Voltage...' }] : []),
   ];
 

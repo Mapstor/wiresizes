@@ -4,8 +4,8 @@ import { getArticleDates } from '@/lib/article-dates';
 
 export const metadata: Metadata = {
   title: 'Single Phase vs Three Phase',
-  description: '120/240V single-phase vs 208/480V three-phase: voltage configurations, motor performance and wiring complexity compared.',
-  keywords: 'single phase vs three phase, three phase power, 240V vs 480V, three-phase wiring, single phase 240V, three phase 208V, three phase calculator',
+  description: '120/240 V single-phase vs 208/480 V three-phase: voltage configurations, motor performance and wiring complexity compared.',
+  keywords: 'single phase vs three phase, three phase power, 240 V vs 480 V, three-phase wiring, single phase 240 V, three phase 208 V, three phase calculator',
   alternates: { canonical: '/guides/single-vs-three-phase' },
 };
 

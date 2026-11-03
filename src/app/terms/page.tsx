@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 // Copy from research/trust-pages-copy.md (/terms), rendered verbatim.
 const TITLE = 'Terms of use';
 const DESCRIPTION =
-  'Who operates wiresizes.com, what its tables and calculators are for, and the limits of what they promise.';
+  "Who operates wiresizes.com, what its tables and calculators are for, and what they don't cover.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },

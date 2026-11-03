@@ -169,15 +169,15 @@ export default function VoltsToAmpsCalculatorPage() {
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start">
                     <span className="text-blue-600 mr-2">▶</span>
-                    <span><strong>12V Systems:</strong> Automotive, RV, Marine</span>
+                    <span><strong>12 V Systems:</strong> Automotive, RV, Marine</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-green-600 mr-2">▶</span>
-                    <span><strong>24V Systems:</strong> Trucks, Industrial controls</span>
+                    <span><strong>24 V Systems:</strong> Trucks, Industrial controls</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-purple-600 mr-2">▶</span>
-                    <span><strong>48V Systems:</strong> Telecom, Data centers</span>
+                    <span><strong>48 V Systems:</strong> Telecom, Data centers</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-orange-600 mr-2">▶</span>
@@ -227,8 +227,8 @@ export default function VoltsToAmpsCalculatorPage() {
               </ul>
               <div className="mt-3 p-2 bg-white dark:bg-gray-900 rounded">
                 <p className="text-xs font-mono">
-                  Example: 10% voltage drop<br/>
-                  = 11% current increase
+                  Example: 10 % voltage drop<br/>
+                  = 11 % current increase
                 </p>
               </div>
             </div>
@@ -255,7 +255,7 @@ export default function VoltsToAmpsCalculatorPage() {
               </ul>
               <div className="mt-3 p-2 bg-white dark:bg-gray-900 rounded">
                 <p className="text-xs font-mono">
-                  Example: 10% overvoltage<br/>
+                  Example: 10 % overvoltage<br/>
                   = Reduced equipment life
                 </p>
               </div>

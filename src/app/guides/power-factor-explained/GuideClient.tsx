@@ -41,7 +41,7 @@ interface GuideProps {
 export default function PowerFactorExplainedGuide({ datePublished, dateModified }: GuideProps = {}) {
   const articleData = {
     headline: "Power Factor Explained",
-    description: "Understanding power factor is crucial for electrical efficiency. This comprehensive guide explains reactive power, apparent power, and power factor correction with interactive visualizations and real-world examples.",
+    description: "Understanding power factor is crucial for electrical efficiency. This guide explains reactive power, apparent power, and power factor correction with interactive visualizations and real-world examples.",
     url: "https://wiresizes.com/guides/power-factor-explained",
     datePublished,
     dateModified,
@@ -84,7 +84,7 @@ export default function PowerFactorExplainedGuide({ datePublished, dateModified 
           </div>
           <p className="text-xl text-gray-600 mb-6">
             Understanding power factor is crucial for electrical efficiency. 
-            This comprehensive guide explains reactive power, apparent power, and power factor correction 
+            This guide explains reactive power, apparent power, and power factor correction 
             with interactive visualizations and real-world examples.
           </p>
           <div className="flex flex-wrap gap-4">

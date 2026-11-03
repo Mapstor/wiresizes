@@ -147,7 +147,7 @@ export function VoltsToAmpsCalculator() {
             suffix="V"
             min={0}
             step={1}
-            hint="Line voltage (120V, 240V, 480V, etc.)"
+            hint="Line voltage (120 V, 240 V, 480 V, etc.)"
           />
 
           <Input

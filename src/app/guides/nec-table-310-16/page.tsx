@@ -13,7 +13,7 @@ import { serviceConductors } from '@/lib/calculations/service-lookup';
 
 export const metadata: Metadata = {
   title: 'NEC Table 310.16 — Conductor Ampacities',
-  description: 'Full NEC 2023 Table 310.16 ampacity for copper and aluminum at 60/75/90°C, plus ambient correction (Table 310.15(B)(1)(1)) and bundling (Table 310.15(C)(1)).',
+  description: 'Full NEC 2023 Table 310.16 ampacity for copper and aluminum at 60/75/90 °C, plus ambient correction (Table 310.15(B)(1)(1)) and bundling (Table 310.15(C)(1)).',
   keywords: 'NEC Table 310.16, ampacity table, wire ampacity, conductor ampacity, NEC 2023, electrical code, copper ampacity, aluminum ampacity',
   alternates: { canonical: '/guides/nec-table-310-16' },
 };
@@ -52,10 +52,10 @@ const BUNDLE_DERATING = [
 // Common Applications
 const SERVICE_200A = serviceConductors(200);
 const COMMON_APPLICATIONS = [
-  { circuit: '15A General Purpose', copper: '14 AWG', aluminum: '12 AWG', use: 'Lighting, receptacles' },
-  { circuit: '20A Kitchen/Bath', copper: '12 AWG', aluminum: '10 AWG', use: 'Small appliances, bathroom' },
+  { circuit: '15 A General Purpose', copper: '14 AWG', aluminum: '12 AWG', use: 'Lighting, receptacles' },
+  { circuit: '20 A Kitchen/Bath', copper: '12 AWG', aluminum: '10 AWG', use: 'Small appliances, bathroom' },
   {
-    circuit: '200A Dwelling Service (Table 310.12)',
+    circuit: '200 A Dwelling Service (Table 310.12)',
     copper: SERVICE_200A ? formatSize(SERVICE_200A.cu) : '—',
     aluminum: SERVICE_200A ? formatSize(SERVICE_200A.alCca) : '—',
     use: 'Main service entrance',
@@ -65,7 +65,7 @@ const COMMON_APPLICATIONS = [
 // Article data for schema
 const articleData = {
   headline: "NEC Table 310.16",
-  description: "Complete NEC Table 310.16 reference with copper and aluminum conductor ampacities at 60°C, 75°C, and 90°C. Derating factors and correction calculations.",
+  description: "Complete NEC Table 310.16 reference with copper and aluminum conductor ampacities at 60 °C, 75 °C, and 90 °C. Derating factors and correction calculations.",
   url: "https://wiresizes.com/guides/nec-table-310-16",
   ...getArticleDates('src/app/guides/nec-table-310-16/page.tsx'),
 };
@@ -94,7 +94,7 @@ export default function NECTable310_16Page() {
             </div>
             <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
               <span className="text-sm text-blue-100">Temperature Range</span>
-              <div className="text-xl font-bold">60°C - 90°C</div>
+              <div className="text-xl font-bold">60 °C - 90 °C</div>
             </div>
           </div>
         </div>
@@ -109,7 +109,7 @@ export default function NECTable310_16Page() {
               <h2 className="font-bold text-amber-900 mb-1">Critical Code Requirements</h2>
               <p className="text-sm text-amber-800">
                 This table is based on not more than three current-carrying conductors in raceway, cable, or earth 
-                (directly buried), based on an ambient temperature of 30°C (86°F). Adjustments required for different conditions.
+                (directly buried), based on an ambient temperature of 30 °C (86 °F). Adjustments required for different conditions.
               </p>
             </div>
           </div>
@@ -135,12 +135,12 @@ export default function NECTable310_16Page() {
                       <th colSpan={3} className="px-4 py-2 text-center bg-gray-600">Aluminum/Copper-Clad</th>
                     </tr>
                     <tr className="bg-gradient-to-r from-blue-500 to-blue-400 text-white">
-                      <th className="px-3 py-2 text-center border-r border-blue-300 bg-orange-500">60°C</th>
-                      <th className="px-3 py-2 text-center border-r border-blue-300 bg-orange-500">75°C</th>
-                      <th className="px-3 py-2 text-center border-r border-blue-400 bg-orange-500">90°C</th>
-                      <th className="px-3 py-2 text-center border-r border-gray-300 bg-gray-500">60°C</th>
-                      <th className="px-3 py-2 text-center border-r border-gray-300 bg-gray-500">75°C</th>
-                      <th className="px-3 py-2 text-center bg-gray-500">90°C</th>
+                      <th className="px-3 py-2 text-center border-r border-blue-300 bg-orange-500">60 °C</th>
+                      <th className="px-3 py-2 text-center border-r border-blue-300 bg-orange-500">75 °C</th>
+                      <th className="px-3 py-2 text-center border-r border-blue-400 bg-orange-500">90 °C</th>
+                      <th className="px-3 py-2 text-center border-r border-gray-300 bg-gray-500">60 °C</th>
+                      <th className="px-3 py-2 text-center border-r border-gray-300 bg-gray-500">75 °C</th>
+                      <th className="px-3 py-2 text-center bg-gray-500">90 °C</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
@@ -193,9 +193,9 @@ export default function NECTable310_16Page() {
                   <thead>
                     <tr className="bg-gradient-to-r from-red-600 to-orange-500 text-white">
                       <th className="px-4 py-3 text-left">Ambient Temperature</th>
-                      <th className="px-4 py-3 text-center">60°C</th>
-                      <th className="px-4 py-3 text-center">75°C</th>
-                      <th className="px-4 py-3 text-center">90°C</th>
+                      <th className="px-4 py-3 text-center">60 °C</th>
+                      <th className="px-4 py-3 text-center">75 °C</th>
+                      <th className="px-4 py-3 text-center">90 °C</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
@@ -219,7 +219,7 @@ export default function NECTable310_16Page() {
               </div>
               <div className="p-4 bg-red-50 border-t border-red-200">
                 <p className="text-sm text-red-800">
-                  <strong>Example:</strong> 12 AWG copper at 75°C = 25A. In 40°C ambient: 25A × 0.88 = 22A adjusted ampacity
+                  <strong>Example:</strong> 12 AWG copper at 75 °C = 25 A. In 40 °C ambient: 25 A × 0.88 = 22 A adjusted ampacity
                 </p>
               </div>
             </div>
@@ -371,8 +371,8 @@ export default function NECTable310_16Page() {
               <h3 className="text-xl font-bold text-blue-900 mb-3">Anatomy of NEC Table 310.16 — six columns, one row per AWG</h3>
               <p className="text-sm text-slate-700 mb-3">
                 The table organizes ampacities by conductor material (copper
-                or aluminum) and insulation temperature class (60&deg;C,
-                75&deg;C, or 90&deg;C).
+                or aluminum) and insulation temperature class (60 &deg;C,
+                75 &deg;C, or 90 &deg;C).
               </p>
             </div>
 
@@ -398,12 +398,12 @@ export default function NECTable310_16Page() {
         path="/guides/nec-table-310-16"
         name="NEC Table 310.16 — Allowable Ampacities of Insulated Conductors"
         alternateName={['NEC 310.16 Conductor Ampacity Table', 'NEC 2023 Table 310.16']}
-        description="Complete NEC 2023 Table 310.16 ampacity data for copper and aluminum conductors at 60°C, 75°C, and 90°C insulation temperatures, from 18 AWG through 2000 kcmil. Includes ambient-temperature correction factors per NEC Table 310.15(B)(1)(1) and conductor-bundling adjustment factors per NEC Table 310.15(C)(1)."
+        description="Complete NEC 2023 Table 310.16 ampacity data for copper and aluminum conductors at 60 °C, 75 °C, and 90 °C insulation temperatures, from 18 AWG through 2000 kcmil. Includes ambient-temperature correction factors per NEC Table 310.15(B)(1)(1) and conductor-bundling adjustment factors per NEC Table 310.15(C)(1)."
         variableMeasured={[
           { name: 'AWG / kcmil size', description: 'Conductor size designation (AWG for 18–4/0, kcmil thereafter)' },
           { name: 'Conductor material', description: 'Copper or aluminum / copper-clad aluminum' },
-          { name: 'Insulation temperature rating', description: '60°C, 75°C, or 90°C insulation system', unitText: 'degree Celsius', unitCode: 'CEL' },
-          { name: 'Allowable ampacity', description: 'Maximum continuous current per NEC 310.16 at 30°C ambient, ≤3 current-carrying conductors in raceway / cable / earth', unitText: 'ampere', unitCode: 'AMP' },
+          { name: 'Insulation temperature rating', description: '60 °C, 75 °C, or 90 °C insulation system', unitText: 'degree Celsius', unitCode: 'CEL' },
+          { name: 'Allowable ampacity', description: 'Maximum continuous current per NEC 310.16 at 30 °C ambient, ≤3 current-carrying conductors in raceway / cable / earth', unitText: 'ampere', unitCode: 'AMP' },
         ]}
         keywords={['NEC 310.16', 'wire ampacity', 'AWG ampacity table', 'electrical conductor capacity', 'copper ampacity', 'aluminum ampacity', 'NEC 2023', 'electrical code']}
         citation="NFPA 70 (National Electrical Code) 2023 edition, Article 310, Table 310.16"

@@ -126,7 +126,7 @@ export function WattsToAmpsCalculator() {
           />
           <Select
             label="Voltage"
-            options={voltageOptions(inputs.phase).map((v) => ({ value: String(v), label: `${v}V` }))}
+            options={voltageOptions(inputs.phase).map((v) => ({ value: String(v), label: `${v} V` }))}
             value={String(inputs.volts)}
             onChange={(e) => change({ volts: Number(e.target.value) })}
           />

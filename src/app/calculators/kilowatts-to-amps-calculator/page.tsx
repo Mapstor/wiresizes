@@ -29,15 +29,15 @@ const webAppData = {
 const kilowattsToAmpsFAQs = [
   {
     question: "How do I convert kilowatts to amps?",
-    answer: "To convert kilowatts to amps, use the formula: Amps = (kW × 1000) ÷ (Voltage × Power Factor) for single-phase, or Amps = (kW × 1000) ÷ (Voltage × √3 × Power Factor) for three-phase. For example, 5kW at 240V single-phase with 1.0 power factor: Amps = (5 × 1000) ÷ (240 × 1.0) = 20.8 amps."
+    answer: "To convert kilowatts to amps, use the formula: Amps = (kW × 1000) ÷ (Voltage × Power Factor) for single-phase, or Amps = (kW × 1000) ÷ (Voltage × √3 × Power Factor) for three-phase. For example, 5 kW at 240 V single-phase with 1.0 power factor: Amps = (5 × 1000) ÷ (240 × 1.0) = 20.8 amps."
   },
   {
     question: "What is power factor and why does it matter?",
-    answer: "Power factor is the ratio of real power (kW) to apparent power (kVA). A power factor of 1.0 means all power is useful (resistive loads), while lower values indicate reactive components. Poor power factor increases current requirements - a 10kW load at 0.8 PF requires 25% more current than at 1.0 PF."
+    answer: "Power factor is the ratio of real power (kW) to apparent power (kVA). A power factor of 1.0 means all power is useful (resistive loads), while lower values indicate reactive components. Poor power factor increases current requirements - a 10 kW load at 0.8 PF requires 25 % more current than at 1.0 PF."
   },
   {
     question: "How do I calculate amps for three-phase equipment?",
-    answer: "For three-phase systems, use: Amps = (kW × 1000) ÷ (Line Voltage × 1.732 × Power Factor). The 1.732 factor accounts for the √3 relationship in balanced three-phase systems. For example, a 15kW three-phase load at 480V with 0.85 PF: Amps = (15 × 1000) ÷ (480 × 1.732 × 0.85) = 21.2 amps per phase."
+    answer: "For three-phase systems, use: Amps = (kW × 1000) ÷ (Line Voltage × 1.732 × Power Factor). The 1.732 factor accounts for the √3 relationship in balanced three-phase systems. For example, a 15 kW three-phase load at 480 V with 0.85 PF: Amps = (15 × 1000) ÷ (480 × 1.732 × 0.85) = 21.2 amps per phase."
   },
   {
     question: "Why do I get different current values for line and phase currents?",
@@ -70,7 +70,7 @@ export default function KilowattsToAmpsCalculatorPage() {
               <Zap className="h-12 w-12 text-green-600 mb-4" />
               <p className="text-xl font-semibold mb-2">Real Power Conversion</p>
               <p className="text-gray-600 dark:text-gray-400">
-                Convert kilowatts (real power) to current requirements for accurate electrical design.
+                Convert kilowatts (real power) to amps for single-phase and three-phase circuits.
               </p>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
@@ -240,15 +240,15 @@ export default function KilowattsToAmpsCalculatorPage() {
                 <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                   <p className="font-medium text-gray-900 dark:text-white mb-2">Lighting Load:</p>
                   <p className="text-gray-700 dark:text-gray-300">
-                    25kW LED lighting system, 277V single-phase, 0.95 power factor
+                    25 kW LED lighting system, 277 V single-phase, 0.95 power factor
                   </p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Power:</span> 25kW (25,000 watts)
+                    <span className="font-medium">Power:</span> 25 kW (25,000 watts)
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Voltage:</span> 277V (277/480V system)
+                    <span className="font-medium">Voltage:</span> 277 V (277/480 V system)
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     <span className="font-medium">Power Factor:</span> 0.95 (LED drivers with PFC)
@@ -299,21 +299,21 @@ export default function KilowattsToAmpsCalculatorPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.00</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.00</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0%</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.95</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.05</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">5%</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.90</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.11</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">11%</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.85</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.18</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">18%</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.80</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.25</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">25%</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.75</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.33</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">33%</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.70</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.43</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">43%</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.60</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.67</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">67%</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.50</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">2.00</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">100%</td></tr>
+                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.00</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.00</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0 %</td></tr>
+                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.95</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.05</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">5 %</td></tr>
+                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.90</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.11</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">11 %</td></tr>
+                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.85</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.18</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">18 %</td></tr>
+                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.80</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.25</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">25 %</td></tr>
+                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.75</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.33</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">33 %</td></tr>
+                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.70</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.43</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">43 %</td></tr>
+                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.60</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.67</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">67 %</td></tr>
+                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.50</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">2.00</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">100 %</td></tr>
                   </tbody>
                 </table>
               </div>
               <div className="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg">
                 <p className="text-sm text-orange-800 dark:text-orange-300">
-                  <strong>Example:</strong> A 10kW load at 0.8 power factor requires 25% more current than 
+                  <strong>Example:</strong> A 10 kW load at 0.8 power factor requires 25 % more current than 
                   the same load at 1.0 power factor. This directly impacts conductor sizing and system losses.
                 </p>
               </div>

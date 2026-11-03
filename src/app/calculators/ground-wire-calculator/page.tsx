@@ -37,7 +37,7 @@ const webAppData = {
 const groundWireFAQs = [
   {
     question: "How do I determine the size of equipment grounding conductors?",
-    answer: "Equipment grounding conductor size is determined by the rating of the circuit overcurrent protective device using NEC Table 250.122. For example, if the circuit breaker is 60A, the equipment grounding conductor must be minimum 10 AWG copper or 8 AWG aluminum. This table provides minimum sizes - larger sizes may be used but are not required unless specified by other code sections."
+    answer: "Equipment grounding conductor size is determined by the rating of the circuit overcurrent protective device using NEC Table 250.122. For example, if the circuit breaker is 60 A, the equipment grounding conductor must be minimum 10 AWG copper or 8 AWG aluminum. This table provides minimum sizes - larger sizes may be used but are not required unless specified by other code sections."
   },
   {
     question: "What's the difference between grounding and bonding?",
@@ -231,7 +231,7 @@ export default function GroundWireCalculatorPage() {
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
                     {TABLE_250_122_ROWS.map((row) => (
                       <tr key={row.rowA}>
-                        <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.rowA}A</td>
+                        <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.rowA} A</td>
                         <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{formatSize(row.cu)}</td>
                         <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{formatSize(row.alCca)}</td>
                       </tr>

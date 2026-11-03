@@ -116,28 +116,28 @@ const REGIONAL_CODES = [
   {
     region: 'United States',
     standard: 'NEC (NFPA 70)',
-    voltage: '208V, 240V, 480V, 600V common',
+    voltage: '208 V, 240 V, 480 V, 600 V common',
     frequency: '60 Hz',
     notes: 'State and local amendments vary'
   },
   {
     region: 'Canada',
     standard: 'CEC (Canadian Electrical Code)',
-    voltage: '208V, 240V, 480V, 600V',
+    voltage: '208 V, 240 V, 480 V, 600 V',
     frequency: '60 Hz',
     notes: 'Similar to NEC with provincial variations'
   },
   {
     region: 'Europe',
     standard: 'IEC Standards',
-    voltage: '400V (230V phase-to-neutral)',
+    voltage: '400 V (230 V phase-to-neutral)',
     frequency: '50 Hz',
     notes: 'Different voltage levels and practices'
   },
   {
     region: 'Industrial International',
     standard: 'IEC 60364, local codes',
-    voltage: 'Various: 380V, 400V, 415V',
+    voltage: 'Various: 380 V, 400 V, 415 V',
     frequency: '50/60 Hz depending on region',
     notes: 'Harmonized standards but local adoption'
   }
@@ -146,7 +146,7 @@ const REGIONAL_CODES = [
 const COMPREHENSIVE_FAQS = [
   {
     question: 'What is the difference between line and phase voltage in 3-phase systems?',
-    answer: 'In a wye (Y) connected system, line voltage is √3 (1.732) times the phase voltage. For example, a 208Y/120V system has 208V line-to-line and 120V line-to-neutral. In a delta system, line and phase voltages are equal, but line current is √3 times phase current.'
+    answer: 'In a wye (Y) connected system, line voltage is √3 (1.732) times the phase voltage. For example, a 208Y/120 V system has 208 V line-to-line and 120 V line-to-neutral. In a delta system, line and phase voltages are equal, but line current is √3 times phase current.'
   },
   {
     question: 'Why is power factor important in 3-phase systems?',
@@ -185,7 +185,7 @@ export default function ThreePhaseCalculatorPage() {
               <div className="flex flex-wrap gap-4">
                 <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
                   <div className="text-sm text-red-100">Voltage Systems</div>
-                  <div className="font-semibold">208V, 480V, 600V</div>
+                  <div className="font-semibold">208 V, 480 V, 600 V</div>
                 </div>
                 <div className="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
                   <div className="text-sm text-red-100">Calculations</div>

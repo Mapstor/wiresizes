@@ -84,11 +84,11 @@ export default function NECCodeComplianceGuide() {
           <div className="grid md:grid-cols-2 gap-4 text-sm">
             <div>
               <h4 className="font-medium text-green-800">Standard Sizes (Table 240.6(A)):</h4>
-              <div className="font-mono text-green-700">10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100A...</div>
+              <div className="font-mono text-green-700">10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100 A...</div>
             </div>
             <div>
               <h4 className="font-medium text-green-800">Small Conductor Protection (240.4(D)):</h4>
-              <div className="text-green-700">14 AWG Cu: 15A max, 12 AWG Cu: 20A max, 10 AWG Cu: 30A max</div>
+              <div className="text-green-700">14 AWG Cu: 15 A max, 12 AWG Cu: 20 A max, 10 AWG Cu: 30 A max</div>
             </div>
           </div>
         </div>

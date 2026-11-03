@@ -33,7 +33,7 @@ Physics covers the measurement side of this site: conductor resistance, how it c
 Drafts are written with AI assistance. Pages are being rebuilt so that every figure traces to one of the sources above. Marko publishes every update, and when an error turns up he fixes it and adds a dated line to the list below.
 
 ### Corrections
-- {DATE}: Audited every page. Removed the unsourced claims the audit found, including user counts, endorsements, expert reviews and response-time promises, and deleted or corrected the wrong values it found. Took {N_WITHDRAWN} calculators offline until they are rebuilt from verified sources. Redirected {N_REDIRECTED} overlapping or retired pages to their closest page.
+- {DATE}: Audited every page. Removed the unsourced claims the audit found, including user counts, endorsements, expert reviews and response-time claims, and deleted or corrected the wrong values it found. Took {N_WITHDRAWN} calculators offline until they are rebuilt from verified sources. Redirected {N_REDIRECTED} overlapping or retired pages to their closest page.
 
 To report an error, email contact@wiresizes.com.
 
@@ -94,7 +94,7 @@ You can ask for access to your data, correction, erasure, restriction of process
 ## /terms
 
 Meta title: Terms of use
-Meta description: Who operates wiresizes.com, what its tables and calculators are for, and the limits of what they promise.
+Meta description: Who operates wiresizes.com, what its tables and calculators are for, and what they don't cover.
 
 ## Terms of use
 

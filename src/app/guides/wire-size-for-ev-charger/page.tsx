@@ -8,7 +8,7 @@ import { Car, Zap, AlertTriangle, Shield, Calculator } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Wire Size for EV Charger — Level 2',
-  description: 'Wire size for Level 2 EV chargers (NEC 625.42): 6 AWG cu standard for 50A.',
+  description: 'Wire size for Level 2 EV chargers (NEC 625.42): 6 AWG cu standard for 50 A.',
   keywords: 'EV charger wire size, electric vehicle charging, Level 2 charger wire, NEC 625, 50 amp EV circuit',
   alternates: {
     canonical: '/guides/wire-size-for-ev-charger'
@@ -73,7 +73,7 @@ export default function WireSizeForEVChargerPage() {
                       <h3 className="font-semibold text-gray-900">Level 1 Charging</h3>
                     </div>
                     <ul className="text-sm text-gray-700 space-y-1">
-                      <li>• 120V standard outlet</li>
+                      <li>• 120 V standard outlet</li>
                       <li>• 12-16 amp current</li>
                       <li>• 1.4-1.9 kW power</li>
                       <li>• No special wiring needed</li>
@@ -91,7 +91,7 @@ export default function WireSizeForEVChargerPage() {
                       <h3 className="font-semibold text-gray-900">Level 2 Charging</h3>
                     </div>
                     <ul className="text-sm text-gray-700 space-y-1">
-                      <li>• 240V dedicated circuit</li>
+                      <li>• 240 V dedicated circuit</li>
                       <li>• 16-80 amp current</li>
                       <li>• 3.8-19.2 kW power</li>
                       <li>• Professional installation</li>
@@ -109,7 +109,7 @@ export default function WireSizeForEVChargerPage() {
                       <h3 className="font-semibold text-gray-900">DC Fast Charging</h3>
                     </div>
                     <ul className="text-sm text-gray-700 space-y-1">
-                      <li>• 400-900V DC</li>
+                      <li>• 400-900 V DC</li>
                       <li>• 50-350+ kW power</li>
                       <li>• Commercial only</li>
                     </ul>
@@ -158,7 +158,7 @@ export default function WireSizeForEVChargerPage() {
                     <div>
                       <h4 className="font-medium text-gray-800 mb-2">Gen 3 Specifications</h4>
                       <ul className="text-sm text-gray-700 space-y-1">
-                        <li>• Max current: 48A (60A circuit)</li>
+                        <li>• Max current: 48 A (60 A circuit)</li>
                         <li>• Power output: 11.5 kW</li>
                       </ul>
                     </div>
@@ -171,7 +171,7 @@ export default function WireSizeForEVChargerPage() {
                     <div>
                       <h4 className="font-medium text-gray-800 mb-2">Standard Installation</h4>
                       <ul className="text-sm text-gray-700 space-y-1">
-                        <li>• 50A circuit</li>
+                        <li>• 50 A circuit</li>
                         <li>• 6 AWG copper wire</li>
                         <li>• 4-wire connection (2 hots, neutral, ground)</li>
                       </ul>
@@ -185,7 +185,7 @@ export default function WireSizeForEVChargerPage() {
                     <div>
                       <h4 className="font-medium text-gray-800 mb-2">Specifications</h4>
                       <ul className="text-sm text-gray-700 space-y-1">
-                        <li>• Adjustable: 16-50A</li>
+                        <li>• Adjustable: 16-50 A</li>
                       </ul>
                     </div>
                   </div>
@@ -252,8 +252,7 @@ export default function WireSizeForEVChargerPage() {
                   Calculate Your EV Charger Wire Size
                 </h2>
                 <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-                  Use our specialized calculators to determine the exact wire size needed for your EV charger 
-                  installation, including voltage drop calculations for long runs.
+                  Use the wire size calculator for your charger circuit and the voltage drop calculator for long runs.
                 </p>
                 <div className="flex gap-4 justify-center flex-wrap">
                   <Link 
@@ -286,7 +285,7 @@ export default function WireSizeForEVChargerPage() {
               <div className="grid md:grid-cols-3 gap-6">
                 <Link href="/guides/wire-size-for-200-amp" className="bg-white rounded-lg p-4 hover:shadow-lg transition-shadow">
                   <h3 className="font-semibold text-blue-600 mb-2">200 Amp Service Guide</h3>
-                  <p className="text-sm text-gray-600">Upgrading to 200A service for EV charging and modern homes.</p>
+                  <p className="text-sm text-gray-600">Upgrading to 200 A service for EV charging and modern homes.</p>
                 </Link>
                 <Link href="/guides/nec-code-compliance" className="bg-white rounded-lg p-4 hover:shadow-lg transition-shadow">
                   <h3 className="font-semibold text-blue-600 mb-2">NEC Code Compliance</h3>

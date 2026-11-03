@@ -346,7 +346,7 @@ export default function CalculatorsPage() {
               <FileText className="w-8 h-8 text-blue-600 mb-3" />
               <h3 className="font-semibold text-gray-900 mb-2">Wire Sizing Guides</h3>
               <p className="text-sm text-gray-600 mb-3">
-                Comprehensive guides for common wire sizing scenarios and installations
+                Guides for common wire sizing scenarios and installations
               </p>
               <span className="text-blue-600 text-sm font-medium">View All Guides →</span>
             </Link>

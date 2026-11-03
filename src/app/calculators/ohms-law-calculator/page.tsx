@@ -33,7 +33,7 @@ const ohmsLawFAQs = [
   },
   {
     question: "How do I calculate power using Ohm's Law?",
-    answer: "Power can be calculated using three formulas: P = V × I (power = voltage × current), P = I² × R (power = current squared × resistance), or P = V² ÷ R (power = voltage squared ÷ resistance). Choose the formula based on which values you know. For example, if you know voltage (120V) and current (10A), then P = 120 × 10 = 1200 watts."
+    answer: "Power can be calculated using three formulas: P = V × I (power = voltage × current), P = I² × R (power = current squared × resistance), or P = V² ÷ R (power = voltage squared ÷ resistance). Choose the formula based on which values you know. For example, if you know voltage (120 V) and current (10 A), then P = 120 × 10 = 1200 watts."
   },
   {
     question: "Does Ohm's Law apply to AC circuits?",
@@ -236,26 +236,26 @@ export default function OhmsLawCalculatorPage() {
                 <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                   <p className="font-medium text-gray-900 dark:text-white mb-2">Given Values:</p>
                   <p className="text-gray-700 dark:text-gray-300">
-                    1500W heater element operating at 240V
+                    1500 W heater element operating at 240 V
                   </p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Known:</span> P = 1500W, V = 240V
+                    <span className="font-medium">Known:</span> P = 1500 W, V = 240 V
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Find Current:</span> I = P ÷ V = 1500W ÷ 240V = 6.25A
+                    <span className="font-medium">Find Current:</span> I = P ÷ V = 1500 W ÷ 240 V = 6.25 A
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Find Resistance:</span> R = V² ÷ P = 240² ÷ 1500 = 38.4Ω
+                    <span className="font-medium">Find Resistance:</span> R = V² ÷ P = 240² ÷ 1500 = 38.4 Ω
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Verification:</span> P = I² × R = 6.25² × 38.4 = 1500W ✓
+                    <span className="font-medium">Verification:</span> P = I² × R = 6.25² × 38.4 = 1500 W ✓
                   </p>
                 </div>
                 <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
                   <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: Element draws 6.25A and has 38.4Ω resistance
+                    Result: Element draws 6.25 A and has 38.4 Ω resistance
                   </p>
                 </div>
               </div>
@@ -275,32 +275,32 @@ export default function OhmsLawCalculatorPage() {
                 <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                   <p className="font-medium text-gray-900 dark:text-white mb-2">Design Requirement:</p>
                   <p className="text-gray-700 dark:text-gray-300">
-                    LED (3.2V forward voltage, 20mA) powered from 12V supply
+                    LED (3.2 V forward voltage, 20 mA) powered from 12 V supply
                   </p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Supply Voltage:</span> 12V
+                    <span className="font-medium">Supply Voltage:</span> 12 V
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">LED Voltage Drop:</span> 3.2V
+                    <span className="font-medium">LED Voltage Drop:</span> 3.2 V
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Resistor Voltage:</span> 12V - 3.2V = 8.8V
+                    <span className="font-medium">Resistor Voltage:</span> 12 V - 3.2 V = 8.8 V
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Required Current:</span> 20mA = 0.02A
+                    <span className="font-medium">Required Current:</span> 20 mA = 0.02 A
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Resistor Value:</span> R = V ÷ I = 8.8V ÷ 0.02A = 440Ω
+                    <span className="font-medium">Resistor Value:</span> R = V ÷ I = 8.8 V ÷ 0.02 A = 440 Ω
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Power Rating:</span> P = I² × R = 0.02² × 440 = 0.176W
+                    <span className="font-medium">Power Rating:</span> P = I² × R = 0.02² × 440 = 0.176 W
                   </p>
                 </div>
                 <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
                   <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: Use 470Ω resistor (next standard value), 1/4W rating
+                    Result: Use 470 Ω resistor (next standard value), 1/4 W rating
                   </p>
                 </div>
               </div>
@@ -325,21 +325,21 @@ export default function OhmsLawCalculatorPage() {
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Test Voltage:</span> 24V DC applied to winding
+                    <span className="font-medium">Test Voltage:</span> 24 V DC applied to winding
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Measured Current:</span> 8.5A
+                    <span className="font-medium">Measured Current:</span> 8.5 A
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Winding Resistance:</span> R = V ÷ I = 24V ÷ 8.5A = 2.82Ω
+                    <span className="font-medium">Winding Resistance:</span> R = V ÷ I = 24 V ÷ 8.5 A = 2.82 Ω
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Test Power:</span> P = V × I = 24V × 8.5A = 204W
+                    <span className="font-medium">Test Power:</span> P = V × I = 24 V × 8.5 A = 204 W
                   </p>
                 </div>
                 <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
                   <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: Winding resistance 2.82Ω cold
+                    Result: Winding resistance 2.82 Ω cold
                   </p>
                 </div>
               </div>
@@ -359,32 +359,32 @@ export default function OhmsLawCalculatorPage() {
                 <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                   <p className="font-medium text-gray-900 dark:text-white mb-2">Circuit Design:</p>
                   <p className="text-gray-700 dark:text-gray-300">
-                    Create 5V output from 12V supply using voltage divider
+                    Create 5 V output from 12 V supply using voltage divider
                   </p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Input Voltage:</span> 12V
+                    <span className="font-medium">Input Voltage:</span> 12 V
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Output Voltage:</span> 5V desired
+                    <span className="font-medium">Output Voltage:</span> 5 V desired
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Voltage Ratio:</span> 5V ÷ 12V = 0.417
+                    <span className="font-medium">Voltage Ratio:</span> 5 V ÷ 12 V = 0.417
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Using R1 = 10kΩ (top):</span> R2 = R1 × (Vout ÷ (Vin - Vout))
+                    <span className="font-medium">Using R1 = 10 kΩ (top):</span> R2 = R1 × (Vout ÷ (Vin - Vout))
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">R2 Calculation:</span> R2 = 10kΩ × (5V ÷ 7V) = 7.14kΩ
+                    <span className="font-medium">R2 Calculation:</span> R2 = 10 kΩ × (5 V ÷ 7 V) = 7.14 kΩ
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Total Current:</span> I = 12V ÷ 17.14kΩ = 0.7mA
+                    <span className="font-medium">Total Current:</span> I = 12 V ÷ 17.14 kΩ = 0.7 mA
                   </p>
                 </div>
                 <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
                   <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: Use 10kΩ and 6.8kΩ resistors (standard values) for ~4.85V output
+                    Result: Use 10 kΩ and 6.8 kΩ resistors (standard values) for ~4.85 V output
                   </p>
                 </div>
               </div>
@@ -404,20 +404,20 @@ export default function OhmsLawCalculatorPage() {
                 <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                   <p className="font-medium text-gray-900 dark:text-white mb-2">Design Requirements:</p>
                   <p className="text-gray-700 dark:text-gray-300 mb-4">
-                    5V regulated output, 2A maximum current, input voltage 12V
+                    5 V regulated output, 2 A maximum current, input voltage 12 V
                   </p>
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Input Voltage:</span> 12V
+                      <span className="font-medium">Input Voltage:</span> 12 V
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Output Voltage:</span> 5V
+                      <span className="font-medium">Output Voltage:</span> 5 V
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Maximum Current:</span> 2A
+                      <span className="font-medium">Maximum Current:</span> 2 A
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Voltage Drop Across Regulator:</span> 12V - 5V = 7V
+                      <span className="font-medium">Voltage Drop Across Regulator:</span> 12 V - 5 V = 7 V
                     </p>
                   </div>
                 </div>
@@ -425,16 +425,16 @@ export default function OhmsLawCalculatorPage() {
                   <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
                     <h4 className="font-medium text-blue-800 dark:text-blue-300 mb-2">Power Calculations:</h4>
                     <p className="text-sm text-blue-700 dark:text-blue-300">
-                      Output Power: P = V × I = 5V × 2A = 10W<br/>
-                      Regulator Dissipation: P = 7V × 2A = 14W<br/>
-                      Total Input Power: 10W + 14W = 24W<br/>
-                      Efficiency: 10W ÷ 24W = 41.7%
+                      Output Power: P = V × I = 5 V × 2 A = 10 W<br/>
+                      Regulator Dissipation: P = 7 V × 2 A = 14 W<br/>
+                      Total Input Power: 10 W + 14 W = 24 W<br/>
+                      Efficiency: 10 W ÷ 24 W = 41.7 %
                     </p>
                   </div>
                   <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
                     <h4 className="font-medium text-red-800 dark:text-red-300 mb-2">Thermal Considerations:</h4>
                     <p className="text-sm text-red-700 dark:text-red-300">
-                      Heat sink required for 14W dissipation<br/>
+                      Heat sink required for 14 W dissipation<br/>
                       Thermal resistance calculation needed<br/>
                       Consider switching regulator for higher efficiency
                     </p>
@@ -483,13 +483,13 @@ export default function OhmsLawCalculatorPage() {
               <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
                 <h4 className="font-medium text-blue-800 dark:text-blue-300 mb-2">Series Example:</h4>
                 <p className="text-sm text-blue-700 dark:text-blue-300">
-                  Three resistors: 10Ω, 20Ω, 30Ω in series with 12V supply:<br/>
-                  • R_total = 10 + 20 + 30 = 60Ω<br/>
-                  • I = 12V ÷ 60Ω = 0.2A<br/>
-                  • V1 = 0.2A × 10Ω = 2V<br/>
-                  • V2 = 0.2A × 20Ω = 4V<br/>
-                  • V3 = 0.2A × 30Ω = 6V<br/>
-                  • Total: 2V + 4V + 6V = 12V ✓
+                  Three resistors: 10 Ω, 20 Ω, 30 Ω in series with 12 V supply:<br/>
+                  • R_total = 10 + 20 + 30 = 60 Ω<br/>
+                  • I = 12 V ÷ 60 Ω = 0.2 A<br/>
+                  • V1 = 0.2 A × 10 Ω = 2 V<br/>
+                  • V2 = 0.2 A × 20 Ω = 4 V<br/>
+                  • V3 = 0.2 A × 30 Ω = 6 V<br/>
+                  • Total: 2 V + 4 V + 6 V = 12 V ✓
                 </p>
               </div>
             </div>
@@ -523,13 +523,13 @@ export default function OhmsLawCalculatorPage() {
               <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
                 <h4 className="font-medium text-green-800 dark:text-green-300 mb-2">Parallel Example:</h4>
                 <p className="text-sm text-green-700 dark:text-green-300">
-                  Three resistors: 10Ω, 20Ω, 30Ω in parallel with 12V supply:<br/>
+                  Three resistors: 10 Ω, 20 Ω, 30 Ω in parallel with 12 V supply:<br/>
                   • 1/R_total = 1/10 + 1/20 + 1/30 = 0.183<br/>
-                  • R_total = 5.45Ω<br/>
-                  • I1 = 12V ÷ 10Ω = 1.2A<br/>
-                  • I2 = 12V ÷ 20Ω = 0.6A<br/>
-                  • I3 = 12V ÷ 30Ω = 0.4A<br/>
-                  • I_total = 1.2 + 0.6 + 0.4 = 2.2A
+                  • R_total = 5.45 Ω<br/>
+                  • I1 = 12 V ÷ 10 Ω = 1.2 A<br/>
+                  • I2 = 12 V ÷ 20 Ω = 0.6 A<br/>
+                  • I3 = 12 V ÷ 30 Ω = 0.4 A<br/>
+                  • I_total = 1.2 + 0.6 + 0.4 = 2.2 A
                 </p>
               </div>
             </div>

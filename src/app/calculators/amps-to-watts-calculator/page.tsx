@@ -22,33 +22,33 @@ const webAppData = {
 const AMPS_TO_WATTS_EXAMPLES = [
   {
     title: 'Residential Circuit Analysis',
-    scenario: '15A circuit at 120V, PF=1.0 (resistive)',
-    calculation: 'Single-Phase: P = V × I × PF\nPower = 120V × 15A × 1.0 = 1800W\nTypical loads: Lighting, general receptacles',
-    result: '1800W maximum',
+    scenario: '15 A circuit at 120 V, PF=1.0 (resistive)',
+    calculation: 'Single-Phase: P = V × I × PF\nPower = 120 V × 15 A × 1.0 = 1800 W\nTypical loads: Lighting, general receptacles',
+    result: '1800 W maximum',
     usableCapacity: '',
     application: 'General lighting and receptacle circuits'
   },
   {
     title: 'Electric Range Circuit',
-    scenario: '40A at 240V, PF=1.0 (heating elements)',
-    calculation: 'Resistive Load: P = V × I\nPower = 240V × 40A = 9600W = 9.6kW\nHeat output: ~32,760 BTU/hr',
-    result: '9600W (9.6kW)',
+    scenario: '40 A at 240 V, PF=1.0 (heating elements)',
+    calculation: 'Resistive Load: P = V × I\nPower = 240 V × 40 A = 9600 W = 9.6 kW\nHeat output: ~32,760 BTU/hr',
+    result: '9600 W (9.6 kW)',
     usableCapacity: '32,760 BTU/hr heating',
     application: 'Electric ranges, cooktops, ovens'
   },
   {
     title: 'EV Charger Load',
-    scenario: '32A at 240V, PF=1.0 (continuous)',
-    calculation: 'EVSE Power: P = V × I\nPower = 240V × 32A = 7680W = 7.68kW',
-    result: '7680W (7.68kW)',
+    scenario: '32 A at 240 V, PF=1.0 (continuous)',
+    calculation: 'EVSE Power: P = V × I\nPower = 240 V × 32 A = 7680 W = 7.68 kW',
+    result: '7680 W (7.68 kW)',
     usableCapacity: '',
     application: 'Level 2 EV charging stations'
   },
   {
     title: 'LED Lighting System',
-    scenario: '8A at 120V, PF=0.95',
-    calculation: 'LED Power: P = V × I × PF\nPower = 120V × 8A × 0.95 = 912W',
-    result: '912W',
+    scenario: '8 A at 120 V, PF=0.95',
+    calculation: 'LED Power: P = V × I × PF\nPower = 120 V × 8 A × 0.95 = 912 W',
+    result: '912 W',
     usableCapacity: '',
     application: 'Commercial LED lighting systems'
   }
@@ -58,14 +58,14 @@ const POWER_CALCULATION_FORMULAS = [
   {
     system: 'Single-Phase AC',
     formula: 'P = V × I × PF',
-    example: '120V × 10A × 1.0 = 1200W',
+    example: '120 V × 10 A × 1.0 = 1200 W',
     when: 'Most residential circuits',
     notes: 'PF = 1.0 for resistive loads'
   },
   {
     system: 'Single-Phase DC',
     formula: 'P = V × I',
-    example: '12V × 50A = 600W',
+    example: '12 V × 50 A = 600 W',
     when: 'Battery systems, automotive',
     notes: 'No power factor in DC systems'
   },
@@ -79,7 +79,7 @@ const POWER_CALCULATION_FORMULAS = [
   {
     system: 'Apparent Power (VA)',
     formula: 'S = V × I',
-    example: '240V × 15A = 3600VA',
+    example: '240 V × 15 A = 3600 VA',
     when: 'Transformer sizing',
     notes: 'Includes reactive power'
   }
@@ -104,7 +104,7 @@ const ADVANCED_CALCULATIONS = [
     title: 'Power Factor Correction Sizing',
     description: 'Calculate capacitor size needed to improve power factor',
     formula: 'kVAR = kW × (tan θ₁ - tan θ₂)',
-    example: 'Improve 100kW load from PF=0.8 to PF=0.95: kVAR = 100 × (0.75 - 0.33) = 42 kVAR',
+    example: 'Improve 100 kW load from PF=0.8 to PF=0.95: kVAR = 100 × (0.75 - 0.33) = 42 kVAR',
     applications: ['Motor installations', 'Industrial facilities', 'Commercial buildings'],
     considerations: 'Over-correction can cause leading power factor issues'
   },
@@ -112,7 +112,7 @@ const ADVANCED_CALCULATIONS = [
     title: 'Load Growth Planning',
     description: 'Plan for future electrical load increases',
     formula: 'Future Load = Current Load × (1 + growth rate)^years',
-    example: '200kW current, 3% annual growth, 10 years: 200kW × (1.03)^10 = 269kW',
+    example: '200 kW current, 3 % annual growth, 10 years: 200 kW × (1.03)^10 = 269 kW',
     applications: ['Service upgrades', 'New construction', 'Industrial expansion'],
     considerations: 'Consider efficiency improvements, technology changes, business growth'
   }
@@ -121,11 +121,11 @@ const ADVANCED_CALCULATIONS = [
 const COMPREHENSIVE_FAQS = [
   {
     question: 'How do I convert 20 amps to watts?',
-    answer: 'For single-phase: Watts = Voltage × Amps × Power Factor. At 120V: 20A × 120V × 1.0 = 2400W. At 240V: 20A × 240V × 1.0 = 4800W. For motors or reactive loads, include the appropriate power factor.'
+    answer: 'For single-phase: Watts = Voltage × Amps × Power Factor. At 120 V: 20 A × 120 V × 1.0 = 2400 W. At 240 V: 20 A × 240 V × 1.0 = 4800 W. For motors or reactive loads, include the appropriate power factor.'
   },
   {
     question: 'How many watts can a 30 amp breaker handle?',
-    answer: 'At 240V: 30A × 240V = 7200W maximum. At 120V: 30A × 120V = 3600W maximum. The voltage depends on whether it\'s a single or double-pole breaker.'
+    answer: 'At 240 V: 30 A × 240 V = 7200 W maximum. At 120 V: 30 A × 120 V = 3600 W maximum. The voltage depends on whether it\'s a single or double-pole breaker.'
   },
   {
     question: 'Do I need to consider power factor?',
@@ -141,7 +141,7 @@ const COMPREHENSIVE_FAQS = [
   },
   {
     question: 'Can I add watts from multiple circuits?',
-    answer: 'Yes, but consider demand factors. Not all loads operate simultaneously. NEC provides demand factors for different load types. For accurate service sizing, use load calculation methods in NEC Article 220 rather than simple addition.'
+    answer: 'Yes, but consider demand factors. Not all loads operate simultaneously. NEC provides demand factors for different load types. To size a service, use the load calculation methods in NEC Article 220 rather than simple addition.'
   },
   {
     question: 'Why does my motor draw more amps than calculated?',

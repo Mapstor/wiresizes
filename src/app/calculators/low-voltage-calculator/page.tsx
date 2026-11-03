@@ -11,11 +11,11 @@ import { DOMAINS as VOLTAGE_DROP_DOMAINS } from '@/lib/calculations/voltage-drop
 const SOURCE_DOMAINS = [...DC_SIZING_DOMAINS, ...VOLTAGE_DROP_DOMAINS];
 
 export const metadata: Metadata = {
-  title: 'Low Voltage Calculator — 12V / 24V DC',
+  title: 'Low Voltage Calculator — 12 V / 24 V DC',
   description: 'Wire size for 12 V and 24 V DC circuits from voltage drop and current: copper, NEC Table 310.16, 60 °C column.',
   keywords: 'low voltage calculator, 12v wire size, 24v dc calculator',
   openGraph: {
-    title: 'Low Voltage Calculator - 12V 24V DC Wire Size Calculator',
+    title: 'Low Voltage Calculator - 12 V 24 V DC Wire Size Calculator',
     description: 'Wire size for 12 V and 24 V DC circuits from voltage drop and current: copper, NEC Table 310.16, 60 °C column.',
     type: 'website',
     url: 'https://wiresizes.com/calculators/low-voltage-calculator',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Low Voltage Calculator - 12V 24V DC Wire Size Calculator',
+    title: 'Low Voltage Calculator - 12 V 24 V DC Wire Size Calculator',
     description: 'Wire size for 12 V and 24 V DC circuits from voltage drop and current: copper, NEC Table 310.16, 60 °C column.',
     images: ['/twitter-image']
   },
@@ -42,7 +42,7 @@ const webAppData = {
 const lowVoltageFAQs = [
   {
     question: "Why are wire sizes larger in low voltage DC systems?",
-    answer: "Low voltage DC systems carry much higher current for the same power level. Power = Voltage × Current, so at 12V instead of 120V, you need 10 times the current. For example, a 120W load requires 10A at 12V but only 1A at 120V. Higher current requires larger conductors to prevent excessive voltage drop and heat."
+    answer: "Low voltage DC systems carry much higher current for the same power level. Power = Voltage × Current, so at 12 V instead of 120 V, you need 10 times the current. For example, a 120 W load requires 10 A at 12 V but only 1 A at 120 V. Higher current requires larger conductors to prevent excessive voltage drop and heat."
   },
 ];
 
@@ -62,7 +62,7 @@ export default function LowVoltageCalculatorPage() {
               Low Voltage Calculator
             </h1>
             <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-              Calculate wire sizes for 12V and 24V DC systems.
+              Calculate wire sizes for 12 V and 24 V DC systems.
             </p>
           </div>
         </div>
@@ -99,8 +99,8 @@ export default function LowVoltageCalculatorPage() {
                   Low voltage systems require much higher current to deliver the same power:
                 </p>
                 <ul className="list-disc pl-4 space-y-1 text-blue-700 dark:text-blue-300 text-sm">
-                  <li>120W load at 12V = 10A current</li>
-                  <li>120W load at 120V = 1A current</li>
+                  <li>120 W load at 12 V = 10 A current</li>
+                  <li>120 W load at 120 V = 1 A current</li>
                   <li>Higher current = larger wire requirements</li>
                   <li>More critical voltage drop considerations</li>
                 </ul>
@@ -112,8 +112,8 @@ export default function LowVoltageCalculatorPage() {
                   Small voltage drops have large percentage impacts:
                 </p>
                 <ul className="list-disc pl-4 space-y-1 text-green-700 dark:text-green-300 text-sm">
-                  <li>1V drop in 12V system = 8.3% loss</li>
-                  <li>1V drop in 120V system = 0.83% loss</li>
+                  <li>1 V drop in 12 V system = 8.3 % loss</li>
+                  <li>1 V drop in 120 V system = 0.83 % loss</li>
                   <li>Critical for equipment operation</li>
                   <li>Affects battery life and performance</li>
                 </ul>
