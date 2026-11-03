@@ -63,11 +63,11 @@ const WIRING_CONFIGURATIONS = [
 
 // Article data for schema
 interface GuideProps {
-  datePublished?: string;
-  dateModified?: string;
+  datePublished: string;
+  dateModified: string;
 }
 
-export default function SingleVsThreePhaseGuide({ datePublished, dateModified }: GuideProps = {}) {
+export default function SingleVsThreePhaseGuide({ datePublished, dateModified }: GuideProps) {
   const articleData = {
     headline: "Single vs Three Phase Systems",
     description: "Understanding the fundamental differences between single-phase and three-phase electrical systems is crucial for proper system design. This guide covers voltage configurations, power calculations and applications with interactive comparisons.",

@@ -34,11 +34,11 @@ const CORRECTION_METHODS = [
 
 // Article data for schema
 interface GuideProps {
-  datePublished?: string;
-  dateModified?: string;
+  datePublished: string;
+  dateModified: string;
 }
 
-export default function PowerFactorExplainedGuide({ datePublished, dateModified }: GuideProps = {}) {
+export default function PowerFactorExplainedGuide({ datePublished, dateModified }: GuideProps) {
   const articleData = {
     headline: "Power Factor Explained",
     description: "Understanding power factor is crucial for electrical efficiency. This guide explains reactive power, apparent power, and power factor correction with interactive visualizations and real-world examples.",

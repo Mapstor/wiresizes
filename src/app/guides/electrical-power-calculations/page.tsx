@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Calculator, Zap, BarChart3, Target, TrendingUp, CheckCircle, ArrowRight, ExternalLink } from 'lucide-react';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
-import { getArticleDates } from '@/lib/article-dates';
+import { articleDates } from '@/lib/page-dates';
 
 export const metadata = {
   title: 'Electrical Power Calculations — W, A, V, PF',
@@ -50,7 +50,7 @@ const articleData = {
   headline: "Electrical Power Calculations Guide",
   description: "Master electrical power calculations with this guide covering watts, amps, volts, power factor, single-phase and three-phase systems with interactive examples.",
   url: "https://wiresizes.com/guides/electrical-power-calculations",
-  ...getArticleDates('src/app/guides/electrical-power-calculations/page.tsx'),
+  ...articleDates('/guides/electrical-power-calculations'),
 };
 
 export default function ElectricalPowerCalculationsGuide() {

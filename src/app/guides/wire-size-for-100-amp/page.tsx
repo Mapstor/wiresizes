@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { Zap, Calculator, AlertTriangle, CheckCircle, TrendingUp, Home, Wrench, Thermometer, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
-import { getArticleDates } from '@/lib/article-dates';
+import { articleDates } from '@/lib/page-dates';
 import { formatSize } from '@/lib/calculations/sizes';
 import { gecForServiceConductor, serviceConductors } from '@/lib/calculations/service-lookup';
 import { egcForOcpd } from '@/lib/calculations/grounding';
@@ -34,7 +34,7 @@ const articleData = {
   headline: '100 Amp Wire Size Guide',
   description: 'Complete guide for 100 amp wire sizing. Learn correct wire sizes for 100 A service entrance, copper vs aluminum, and NEC code requirements.',
   url: 'https://wiresizes.com/guides/wire-size-for-100-amp',
-  ...getArticleDates('src/app/guides/wire-size-for-100-amp/page.tsx'),
+  ...articleDates('/guides/wire-size-for-100-amp'),
 };
 
 // Common 100A applications

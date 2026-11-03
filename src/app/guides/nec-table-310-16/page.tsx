@@ -3,7 +3,7 @@ import { FileText, Calculator, AlertTriangle, CheckCircle, Thermometer, BookOpen
 import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { DatasetSchema } from '@/components/seo/DatasetSchema';
-import { getArticleDates } from '@/lib/article-dates';
+import { articleDates } from '@/lib/page-dates';
 import table31016 from '../../../../data/verified/nec-310-16.json';
 import corrections from '../../../../data/verified/nec-310-15-B-1-1.json';
 import ratings from '../../../../data/verified/nec-240-6-a.json';
@@ -67,7 +67,7 @@ const articleData = {
   headline: "NEC Table 310.16",
   description: "Complete NEC Table 310.16 reference with copper and aluminum conductor ampacities at 60 °C, 75 °C, and 90 °C. Derating factors and correction calculations.",
   url: "https://wiresizes.com/guides/nec-table-310-16",
-  ...getArticleDates('src/app/guides/nec-table-310-16/page.tsx'),
+  ...articleDates('/guides/nec-table-310-16'),
 };
 
 export default function NECTable310_16Page() {

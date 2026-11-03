@@ -1,61 +1,12 @@
 import type { MetadataRoute } from 'next';
-import { execSync } from 'node:child_process';
-import { statSync } from 'node:fs';
-import { join } from 'node:path';
+import { pageDates } from '@/lib/page-dates';
 
 const baseUrl = 'https://wiresizes.com';
 
-// Returns the last meaningful content modification date for a page.
-//
-// Strategy (in order):
-//   1. git log -1 on the page.tsx (and GuideClient.tsx if it exists).
-//      This survives Vercel checkouts which reset file mtimes.
-//   2. fs.statSync mtime — works locally, may be checkout time on Vercel.
-//   3. Build time — last-resort fallback.
-//
-// Per-file dates give Google a meaningful crawl-priority signal: pages
-// that haven't changed in months don't need to be re-crawled aggressively.
-const cache = new Map<string, Date>();
-
-function gitLastModified(file: string): Date | null {
-  try {
-    const out = execSync(`git log -1 --format=%aI -- "${file}"`, {
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore'],
-    }).trim();
-    if (!out) return null;
-    return new Date(out);
-  } catch {
-    return null;
-  }
-}
-
-function lastmod(routePath: string): Date {
-  if (cache.has(routePath)) return cache.get(routePath)!;
-  const root = process.cwd();
-  const pageFile = join(root, 'src', 'app', routePath, 'page.tsx');
-  const guideClientFile = join(root, 'src', 'app', routePath, 'GuideClient.tsx');
-
-  // For use-client guides, the actual content lives in GuideClient.tsx;
-  // page.tsx is just a thin wrapper. Take the latest mtime of the two.
-  const candidates: Date[] = [];
-  for (const file of [pageFile, guideClientFile]) {
-    const git = gitLastModified(file);
-    if (git) {
-      candidates.push(git);
-      continue;
-    }
-    try {
-      candidates.push(statSync(file).mtime);
-    } catch {
-      // file doesn't exist (e.g., GuideClient.tsx for non-client guides)
-    }
-  }
-  const result = candidates.length
-    ? new Date(Math.max(...candidates.map((d) => d.getTime())))
-    : new Date();
-  cache.set(routePath, result);
-  return result;
+// lastmod is the route's modified date in src/data/page-dates.json, as YYYY-MM-DD (D-17): the day its last body-text
+// change went live. A route without an entry fails the build.
+function lastmod(routePath: string): string {
+  return pageDates(routePath).modified;
 }
 
 const calculators = [

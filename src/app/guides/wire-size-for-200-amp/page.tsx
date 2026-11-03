@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArticleFAQSchema } from '@/components/seo/ArticleFAQSchema'
-import { getArticleDates } from '@/lib/article-dates';
+import { ArticleSchema } from '@/components/seo/ArticleSchema'
+import { articleDates } from '@/lib/page-dates';
 import { formatSize, tableAmpacity } from '@/lib/calculations/sizes';
 import { serviceConductors, TABLE_310_12_ROWS } from '@/lib/calculations/service-lookup';
 
@@ -26,7 +26,7 @@ const articleData = {
   headline: 'Wire Size for 200 Amp Service',
   description: 'Complete guide to wire sizing for 200 amp electrical service. Learn NEC requirements, copper vs aluminum options, installation tips, and safety considerations.',
   url: 'https://wiresizes.com/guides/wire-size-for-200-amp',
-  ...getArticleDates('src/app/guides/wire-size-for-200-amp/page.tsx'),
+  ...articleDates('/guides/wire-size-for-200-amp'),
 }
 
 const faqs = [
@@ -462,7 +462,7 @@ export default function WireSizeFor200AmpPage() {
         </ul>
       </div>
 
-      <ArticleFAQSchema article={articleData} />
+      <ArticleSchema article={articleData} />
     </div>
   )
 }

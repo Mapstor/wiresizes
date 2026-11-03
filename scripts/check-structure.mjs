@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// WSZ-002 gate: structural checks on the Next.js build output (checks 11–15 added in WSZ-014, 16 in WSZ-015). Node built-ins only.
+// WSZ-002 gate: structural checks on the Next.js build output (checks 11–15 added in WSZ-014, 16 in WSZ-015, 17 onward in
+// WSZ-004a). Node built-ins only.
 // Run after `rm -rf .next && npm run build`. Prints a PASS/FAIL line per check and exits 1 on any FAIL.
 
 import { readFileSync, existsSync } from 'node:fs';
@@ -440,6 +441,122 @@ function mainLinks(page) {
     failures,
     `${counted.length} pages${skipped ? `; ${GLOBAL_ERROR_ROUTE} not counted (Next.js's built-in root error page, without the site layout)` : ''}`,
   );
+}
+
+// ── WSZ-004a ────────────────────────────────────────────────────────────────
+// Page dates (D-17): src/data/page-dates.json holds { "/route": { published, modified } } for every live route.
+const PAGE_DATES_FILE = join(repoRoot, 'src', 'data', 'page-dates.json');
+const pageDates = JSON.parse(readFileSync(PAGE_DATES_FILE, 'utf8'));
+const NOT_ROUTES = new Set([NOT_FOUND_ROUTE, '/_global-error']);
+const LIVE_ROUTES = livePages.map((p) => p.route).filter((r) => !NOT_ROUTES.has(r));
+
+/** Whether a string is a real calendar day written YYYY-MM-DD. */
+function isCalendarDate(value) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value ?? '');
+  if (!m) return false;
+  const [year, month, day] = [Number(m[1]), Number(m[2]), Number(m[3])];
+  const leap = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+  const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+  return days !== undefined && day >= 1 && day <= days;
+}
+
+// The latest calendar day anywhere on Earth right now (UTC+14): a date set on the owner's local day is never "after
+// today" on a build machine that runs on UTC.
+const TODAY = new Date(Date.now() + 14 * 3600 * 1000).toISOString().slice(0, 10);
+
+/** Every JSON-LD object with an @type on a page: [{ node, types, block }] (block = index of its <script>). */
+function jsonLdNodes(page) {
+  const out = [];
+  let block = 0;
+  for (const e of page.events) {
+    if (!isJsonLd(e)) continue;
+    let data;
+    try {
+      data = JSON.parse(e.body);
+    } catch {
+      block++;
+      continue;
+    }
+    const walk = (node) => {
+      if (Array.isArray(node)) node.forEach(walk);
+      else if (node && typeof node === 'object') {
+        const types = [].concat(node['@type'] ?? []);
+        if (types.length) out.push({ node, types, block });
+        Object.values(node).forEach(walk);
+      }
+    };
+    walk(data);
+    block++;
+  }
+  return out;
+}
+
+// 17. page-dates.json: one entry per live route, real dates, published ≤ modified ≤ today
+{
+  const failures = [];
+  const live = new Set(LIVE_ROUTES);
+  for (const route of LIVE_ROUTES) if (!(route in pageDates)) failures.push(`${route}: no entry`);
+  for (const [route, dates] of Object.entries(pageDates)) {
+    if (!live.has(route)) failures.push(`${route}: not a live route`);
+    const { published, modified } = dates ?? {};
+    if (!isCalendarDate(published)) failures.push(`${route}: published ${JSON.stringify(published)} is not a YYYY-MM-DD date`);
+    if (!isCalendarDate(modified)) failures.push(`${route}: modified ${JSON.stringify(modified)} is not a YYYY-MM-DD date`);
+    if (Object.keys(dates ?? {}).sort().join() !== 'modified,published') failures.push(`${route}: keys ${Object.keys(dates ?? {}).join(', ')}`);
+    if (isCalendarDate(published) && isCalendarDate(modified) && published > modified) failures.push(`${route}: published ${published} after modified ${modified}`);
+    if (isCalendarDate(modified) && modified > TODAY) failures.push(`${route}: modified ${modified} after today (${TODAY})`);
+  }
+  check(
+    'src/data/page-dates.json has one entry per live route, with real YYYY-MM-DD dates and published ≤ modified ≤ today',
+    failures,
+    `${Object.keys(pageDates).length} entries, ${LIVE_ROUTES.length} live routes, today ${TODAY}`,
+  );
+}
+
+// 18. Article and Dataset JSON-LD dates equal the route's page-dates.json dates
+{
+  const failures = [];
+  const counts = { Article: 0, Dataset: 0 };
+  for (const page of livePages) {
+    for (const { node, types } of jsonLdNodes(page)) {
+      const type = types.find((t) => t === 'Article' || t === 'Dataset');
+      if (!type) continue;
+      counts[type]++;
+      const dates = pageDates[page.route];
+      if (!dates) {
+        failures.push(`${page.route}: ${type} on a route without page dates`);
+        continue;
+      }
+      if (node.datePublished !== dates.published) failures.push(`${page.route}: ${type} datePublished ${node.datePublished}, page-dates.json ${dates.published}`);
+      if (node.dateModified !== dates.modified) failures.push(`${page.route}: ${type} dateModified ${node.dateModified}, page-dates.json ${dates.modified}`);
+    }
+  }
+  for (const route of LIVE_GUIDES) {
+    const n = jsonLdNodes(pageByRoute.get(route)).filter((x) => x.types.includes('Article')).length;
+    if (n !== 1) failures.push(`${route}: ${n} Article nodes, expected 1`);
+  }
+  check(
+    'each live guide has one Article; every Article and Dataset carries datePublished and dateModified equal to page-dates.json',
+    failures,
+    `${counts.Article} Article, ${counts.Dataset} Dataset nodes`,
+  );
+}
+
+// 19. Every sitemap.xml <url> has a lastmod equal to its route's page-dates.json modified date
+{
+  const failures = [];
+  const urls = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map((m) => m[1]);
+  const seen = new Set();
+  for (const body of urls) {
+    const loc = /<loc>\s*([^<\s]+)\s*<\/loc>/.exec(body)?.[1] ?? '';
+    const lastmod = /<lastmod>\s*([^<\s]+)\s*<\/lastmod>/.exec(body)?.[1];
+    const route = normalizePath(loc);
+    seen.add(route);
+    const dates = pageDates[route];
+    if (!dates) failures.push(`${loc}: no page-dates.json entry`);
+    else if (lastmod !== dates.modified) failures.push(`${loc}: lastmod ${lastmod ?? '(none)'}, page-dates.json modified ${dates.modified}`);
+  }
+  for (const route of Object.keys(pageDates)) if (!seen.has(route)) failures.push(`${route}: in page-dates.json, not in sitemap.xml`);
+  check('every sitemap.xml <url> has a <lastmod> equal to its page-dates.json modified date, and the sitemap lists every dated route', failures, `${urls.length} URLs`);
 }
 
 const failed = results.filter((r) => r.failures.length > 0).length;

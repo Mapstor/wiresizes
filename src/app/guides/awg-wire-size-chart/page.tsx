@@ -3,7 +3,7 @@ import { Table, Gauge, Calculator, Info, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { DatasetSchema } from '@/components/seo/DatasetSchema';
-import { getArticleDates } from '@/lib/article-dates';
+import { articleDates } from '@/lib/page-dates';
 import awgData from '../../../../data/verified/awg.json';
 import { diameterMm, sizeKeyFromAwgName, tableAmpacity } from '@/lib/calculations/sizes';
 import { maxOcpd240_4D } from '@/lib/calculations/ampacity';
@@ -77,7 +77,7 @@ const articleData = {
   headline: "AWG Wire Size Chart & Reference Guide",
   description: DESCRIPTION,
   url: "https://wiresizes.com/guides/awg-wire-size-chart",
-  ...getArticleDates('src/app/guides/awg-wire-size-chart/page.tsx'),
+  ...articleDates('/guides/awg-wire-size-chart'),
 };
 
 export default function AWGWireSizeChartPage() {

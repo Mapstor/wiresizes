@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
-import { ArticleFAQSchema } from '@/components/seo/ArticleFAQSchema'
-import { getArticleDates } from '@/lib/article-dates';
+import { ArticleSchema } from '@/components/seo/ArticleSchema'
+import { articleDates } from '@/lib/page-dates';
 
 import { Car, Zap, AlertTriangle, Shield, Calculator } from 'lucide-react'
 
@@ -20,7 +20,7 @@ const articleData = {
   headline: 'EV Charger Wire Size Guide',
   description: 'Complete guide to wire sizing for EV chargers. Learn NEC Article 625 requirements for Level 1, Level 2, and DC fast charging installations with safety tips.',
   url: 'https://wiresizes.com/guides/wire-size-for-ev-charger',
-  ...getArticleDates('src/app/guides/wire-size-for-ev-charger/page.tsx'),
+  ...articleDates('/guides/wire-size-for-ev-charger'),
 }
 
 const faqs = [
@@ -301,7 +301,7 @@ export default function WireSizeForEVChargerPage() {
         </div>
       </div>
 
-      <ArticleFAQSchema article={articleData} />
+      <ArticleSchema article={articleData} />
     </div>
   )
 }

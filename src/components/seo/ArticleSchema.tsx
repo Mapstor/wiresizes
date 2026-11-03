@@ -4,17 +4,15 @@ interface ArticleData {
   headline: string;
   description: string;
   url: string;
-  /** ISO date (YYYY-MM-DD). Use getArticleDates() for git-derived values. */
-  datePublished?: string;
-  /** ISO date (YYYY-MM-DD). Use getArticleDates() for git-derived values. */
-  dateModified?: string;
+  /** YYYY-MM-DD, from src/data/page-dates.json (articleDates() in src/lib/page-dates.ts). */
+  datePublished: string;
+  /** YYYY-MM-DD, from src/data/page-dates.json (articleDates() in src/lib/page-dates.ts). */
+  dateModified: string;
 }
 
 interface ArticleSchemaProps {
   article: ArticleData;
 }
-
-const FALLBACK_DATE = '2026-01-01';
 
 export function ArticleSchema({ article }: ArticleSchemaProps) {
   const articleSchema = {
@@ -46,8 +44,8 @@ export function ArticleSchema({ article }: ArticleSchemaProps) {
         height: 512
       }
     },
-    datePublished: article.datePublished ?? FALLBACK_DATE,
-    dateModified: article.dateModified ?? article.datePublished ?? FALLBACK_DATE,
+    datePublished: article.datePublished,
+    dateModified: article.dateModified,
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': article.url
