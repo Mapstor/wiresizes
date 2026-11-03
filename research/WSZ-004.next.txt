@@ -1,0 +1,123 @@
+WSZ-004 TRUSTFRAME — wiresizes.com: byline and real dates on every page, Person/Organization schema, /methodology built from the registry, corrections log, footer
+CHAT: (Q1) Split WSZ-004 into WSZ-004a TRUSTFRAME (steps 1–4 and 6, without the Methodology link) and WSZ-004b METHODOLOGY (step 5, the footer and /about links to /methodology, its sitemap entry and its enforce lists), each with its own build, gate run, DEVLOG entry and D-16 check (WSZ-017 handoff §1.11)?
+
+REPO GUARD: `git remote get-url origin` must contain "wiresizes", and the DEVLOG.md §1 domain must be wiresizes.com. Otherwise stop.
+PRECONDITION: DEVLOG §6 shows WSZ-017 DRAFTCHECK as done. Otherwise stop.
+CHAT: (Q2) Should the PRECONDITION also require that the owner pushed WSZ-003b, WSZ-003c and WSZ-017 (`git log --oneline origin/main..main` prints nothing after the fetch) and that chat's browser check of the WSZ-003c build is done? And add WSZ-017's PROCESSES line ("never stop, kill or signal a process")? The watcher started at 11:27:48 UTC on 2026-11-03 serves the WSZ-003c build on container port 3000 from about 16:39 to about 22:39 UTC, and step 8's `rm -rf .next` under it leaves its pages without CSS and JS (DEVLOG §4). Does this wave wait for that server to end, and serve its own build on container port 3000 with -H 0.0.0.0 for chat's D-16 check (D-12)?
+SYNC: `git fetch origin`, then `git log --oneline main..origin/main`. If origin/main has commits that main lacks, stop and report.
+COMMIT IDENTITY: `git -c user.name="Mapstor" -c user.email="your-email@example.com" commit ...`.
+PACK SYNC: if the repo root holds a wsz-pack-vN/ folder whose N is higher than research/PACK_VERSION, install it first per its research/INSTALL.md (its own commit), then continue with this prompt.
+CHAT: (Q3) A pack v5 would overwrite four research files the box edited since v4 (held-waves-rules.md in WSZ-003a, trust-pages-copy.md in WSZ-003b, nec-sections-allowlist.csv and wsz002-banned-strings.txt in WSZ-003c) and delete WSZ-016-handoff.md, WSZ-003b-report.md, WSZ-017-handoff.md and WSZ-004.next.txt (INSTALL.md steps 2 and 3). Does v5 carry the four edits (and WSZ-016 answer 15's page-specs.md line) and list the four reports as exceptions?
+
+Read first:
+- DEVLOG §0–§5 and the last 10 §6 entries
+- research/WSZ-017-handoff.md (this draft checked against the code at 689a764)
+- research/trust-frame-spec.md (the spec for this wave)
+- research/trust-pages-copy.md (the WSZ-002 text now live on /about, /contact, /privacy, /terms, /disclaimer; WSZ-003b reworded one word of the /about Corrections line, 74ac215)
+- research/data-sources.csv (the registry /methodology is generated from)
+- .claude/skills/raptive-ready/SKILL.md ("Trust and author-identity standard (every site)")
+- .claude/skills/seo-visibility/SKILL.md (schema guidance: "Technical rules" 4 and 5)
+- .claude/skills/anti-slop-prose/SKILL.md
+- the code this wave changes or builds on: src/lib/article-dates.ts, src/app/sitemap.ts, src/components/seo/ (ArticleSchema, ArticleFAQSchema, CombinedSchema, DatasetSchema, BasicPageSchema), src/app/page.tsx (Organization and WebSite JSON-LD), src/app/layout.tsx, src/components/layout/Footer.tsx, src/app/about/page.tsx, src/lib/verified/registry.ts and csv.mjs, src/components/content/Sources.tsx and AsOf.tsx, scripts/check-structure.mjs, scripts/gates.config.json, scripts/lib/build-output.mjs and gate-rules.mjs
+
+1. Real dates
+   - scripts/update-page-dates.mjs takes, for each live route, the last commit date: `git log -1 --format=%cs -- <the route's files and the data/verified/*.json files it reaches through src/lib/verified (D-13)>`. It writes the dates to src/data/page-dates.json (src/data/ holds only .gitkeep; tsconfig maps @/data/* to it).
+   CHAT: (Q5a) Which files are "the route's files": the page file and GuideClient.tsx only (today's sitemap), plus the calculator component, the engines, the src/lib/verified modules and the data files they reach, research/data-sources.csv (it prints the Sources text), shared components such as format.ts and the Footer? Every reading gives 2026-11-03 for 29 of the 32 routes today (handoff §2.4).
+   CHAT: (Q5b) Which commits don't count as content changes? This wave's byline and schema edits touch every content and tool page and would date all of them to WSZ-004 (DEVLOG §4); so would WSZ-003a's import moves and WSZ-005's move of the two table guides to src/lib/verified. A list of commit hashes the script skips?
+   CHAT: (Q4) Which datePublished does each route get (handoff §2.3), or none, and where does it live: a `published` field in page-dates.json, or a hand-set list?
+   - It runs in the box before each content commit. Vercel builds use a shallow clone, so git dates there can't be trusted.
+   CHAT: (Q5c) Run before the commit, `git log -1` can't see the commit being made, so a page changed in it keeps its old date. Date the files with uncommitted changes as today, or run the script after the commit and commit page-dates.json on its own?
+   - src/app/sitemap.ts: lastmod reads page-dates.json. Delete its execSync git and mtime fallbacks (sitemap.ts:2-3 and 20-59, with the build-time `new Date()` at :54-56). Never use the build time as a content date.
+   - The same goes for schema and visible dates: delete src/lib/article-dates.ts (git at build time on Vercel's shallow clone, then file mtime, then a made-up '2026-01-01') and the FALLBACK_DATE constants in src/components/seo/ArticleSchema.tsx and ArticleFAQSchema.tsx (:17 and :49-50 in each). Its callers: getArticleDates in the seven guide page.tsx files and, with the GuideClient.tsx path, in single-vs-three-phase/page.tsx:13 and power-factor-explained/page.tsx:13; DatasetSchema prints the same dates on the two table guides (nec-table-310-16/page.tsx:411-412, awg-wire-size-chart/page.tsx:439-440). Every date comes from page-dates.json; where it has none, the page and its schema show none.
+   CHAT: (Q5d) Do the visible "Last updated: October 25, 2026" lines on /privacy and /terms (privacy/page.tsx:33, terms/page.tsx:33) come from page-dates.json, or stay hand-set and change only with the notice? /terms' file changed on 2026-11-03 for its meta description only.
+   - Add an npm script "dates".
+
+2. Byline block, visible on every content and tool page: above the fold on guides, below the tool on tool pages.
+   CHAT: (Q6) Which routes get the byline: the 24 content and tool pages (15 calculators, 9 guides), or also /, /calculators, /guides, the five trust pages and /methodology? Step 8 checks "every live page" (32 routes now). The {date} format: "October 25, 2026", like /privacy, /terms and the /about Corrections? Does step 8's byline check become a numbered check-structure check, like the JSON-LD checks?
+   - Text: "By Marko Visic, BSc Physics · Updated {date} · Sources below". The name links to /about.
+   CHAT: (Q7) Only the seven calculators WSZ-003b gave a Sources section have one; the eight converters and nine guides have none, so "Sources below" would be false on 17 pages. Drop " · Sources below" there, or give those pages <Sources> in this wave (the converters' engines name power-definitions and nist-sp811-conversions; the guides' domains are chat's call)?
+   - "Reviewed" never appears unless DEVLOG logs a dated review.
+   - Withdrawn pages get no byline (the 15 routes in research/wsz002-withdrawals.csv, which render WithdrawnTool.tsx).
+
+3. Schema (JSON-LD, site level plus per page)
+   - Organization: name and legalName "Moving Data Systems d.o.o.", url https://wiresizes.com, address (PostalAddress: Smolnik 62, 2342 Ruše, SI), vatID "SI94001154", no sameAs unless a real profile exists. It replaces the Organization "WireSizes.com" in src/app/page.tsx:74-88 (with "sameAs": [] at :87) and the Organization that ArticleSchema.tsx and ArticleFAQSchema.tsx print inline as author and publisher (:31-48). Keep its @id https://wiresizes.com/#organization, which WebSite (page.tsx:90-101), DatasetSchema (:68) and BasicPageSchema reference, and print the node on every page that references it.
+   CHAT: (Q13) /icon.svg is served from src/app/icon.svg (32×32, #0ea5e9), which takes the path over public/icon.svg (512, #2563eb). The manifest lists /icon.svg, and the Organization and Article logos declare it as 512×512. Which design is the site icon, for the two manifest PNGs and the logo?
+   - Person: Marko Visic.
+     · alumniOf: CollegeOrUniversity "University of Ljubljana, Faculty of Mathematics and Physics"
+     · hasCredential: EducationalOccupationalCredential "BSc Physics"
+     · knowsAbout: ["conductor resistance", "electrical units and conversions", "wire gauge geometry"]
+     · sameAs: https://www.linkedin.com/in/marko-visic/
+     (check-structure 4 checks url, @id, item, logo and image values: an off-site url on alumniOf would fail it; sameAs isn't checked.)
+   - Article or WebPage on content pages:
+     · author → Person; publisher → Organization
+     · datePublished only if git shows a real first-publish date
+     CHAT: (Q4) see step 1.
+     · dateModified from page-dates.json
+   CHAT: (Q14) The root metadata names "WireSizes.com" as author, creator and publisher on every page (layout.tsx:35-37), and the site name is "WireSizes.com" in titles, og:site_name, the WebSite node, the footer logo and the manifest, but "wiresizes.com" in the trust copy. Change author and creator to Marko Visic and publisher to Moving Data Systems d.o.o. in this wave, and which spelling does the site name take? Do the calculators' WebApplication nodes (CombinedSchema.tsx:14-27) get author → Person and publisher → Organization to match their byline?
+   - BreadcrumbList on every non-home page. Missing on /about, /contact, /privacy, /terms and /disclaimer (no JSON-LD since 699de9a) and on the new /methodology; src/components/seo/BasicPageSchema.tsx (WebPage + BreadcrumbList) has no user.
+   - New numbered checks in scripts/check-structure.mjs (17 onward; postbuild already runs it) validate the shape: required keys are present (the fields this step lists). No scripts/check-jsonld.mjs (WSZ-016 answer 14). Check 4 already holds every url, @id, item, logo and image value to https://wiresizes.com, and check 5 fails on FAQPage, HowTo, SearchAction, Review and aggregateRating.
+
+4. /about: keep the WSZ-002 text and add three things:
+   - a visible rel="me" link to the LinkedIn profile;
+   - the Corrections section, rendered as a dated list from src/data/corrections.json. Move the WSZ-002 line into that file; each later wave appends one line (today the line is hand-typed at about/page.tsx:65-73);
+   - a link to /methodology in "Where the numbers come from" (about/page.tsx:47-56).
+   CHAT: (Q8) The rel="me" link's text and place (for example in "Who runs this site"), and the sentence that links /methodology? And trust-frame-spec.md:22 (/about item 3, "Which NEC edition", linking /guides/nec-code-compliance) is neither live nor drafted: add it now with chat's text, or leave it to WSZ-005's editions page?
+   CHAT: (Q9) Besides the WSZ-002 line, does corrections.json get dated lines for later waves that changed what readers saw, such as WSZ-014 (results that no longer matched the inputs on 14 tools), WSZ-015 (the voltage drop guard and number formats) or WSZ-003b and c (unit spacing and wording)? If so, chat gives the dates and text.
+   CHAT: (Q15) raptive-ready (SKILL.md:31) asks for all of the author's credentials on the About page; trust-frame-spec.md:8 and D-03 show the physics credential only (the spec names a pharmacy degree it leaves off). Keep /about as it is?
+
+5. /methodology (new page; add it to the sitemap and the footer: staticPages in src/app/sitemap.ts, sitePages in src/components/layout/Footer.tsx:46-52)
+   - Generated from research/data-sources.csv through src/lib/verified/registry.ts (server only; the one CSV parser is src/lib/verified/csv.mjs; attribution() throws on rows that aren't verified, so the GAP and candidate rows need a new accessor there): one section per verified domain, giving:
+     · what it is;
+     · publisher;
+     · edition or date (the registry has no edition column: the edition is in the source and attribution text);
+     · deep link;
+     · retrieved date (verified_date, as monthOf() in src/components/content/AsOf.tsx shows it);
+     · what the site calculates from it, with the formula in plain notation;
+     · known limits, rewritten for readers from the coverage and notes fields.
+   CHAT: (Q10) One section per verified domain (32, of which 21 feed no live page today, so "what the site calculates from it" is empty), or only the domains live pages use (about 10)? And nec-110-14c: its attribution prints "110.14(C)", which check-structure 7 fails and WSZ-003b answer 1 keeps off pages until WSZ-009. Leave it out until then?
+   CHAT: (Q11) Who writes "what it is", "what the site calculates" (with the formulas), "known limits" and the "Not covered yet" list: CC from the registry fields and the engines, as drafted (with the anti-slop pass), or chat, as with trust-pages-copy.md?
+   - A short "Not covered yet" section lists, in plain words, the topics whose sources are still open (from the GAP and candidate rows). No status words, no build talk. (check-structure 7 fails on "110.14(C)" and "334.80", which nec-cable-rules and nec-misc-installation hold; gate a fails on "registry", "engine" and status notes site-wide; gate c on NEC references outside research/nec-sections-allowlist.csv.)
+   - Formulas published here (engines in src/lib/calculations, D-13):
+     · AWG diameter definition (awg-geometry.ts; awg.json definition.formula)
+     · R(T) for copper and aluminum (resistance.ts)
+     · voltage drop (single- and three-phase) (voltage-drop.ts)
+     · DC circular mils (dc-sizing.ts)
+     · ampacity correction and adjustment arithmetic (ampacity.ts)
+     · the 60 °C sizing method with 240.4(D) and the 250.122(B) proportional ground (conductor-sizing.ts)
+     · power and PF correction (power.ts)
+     Every unit-bearing number renders through <Val> with data-src (DEVLOG §4).
+   - Attribution strings come from the registry, never hand-typed (attribution() and attributionParts() in registry.ts, as <Sources> uses them).
+   CHAT: (Q12a) nec-continuous-load's attribution cites 210.19(A), 210.20(A), 215.2(A) and 230.42(A), and doe-efficiency-standards' cites 430.32(c) (10 CFR, which the gate reads as NEC); none is on the allowlist, and the coverage and notes text of 20 rows cites more (625.54, held, among them). With /methodology in necRefs.enforce, printing them fails the build. Extend the allowlist or reword the attributions in the next pack, leave those domains off the page, or keep /methodology out of necRefs.enforce?
+
+6. Footer and housekeeping
+   - Footer: About · Methodology · Contact · Privacy · Terms · Disclaimer, plus the NFPA trademark notice. All but Methodology are there (sitePages, Footer.tsx:46-52; notice :208-211): add Methodology after About, and keep the "Cookie settings" button (:204-206, D-10).
+   - public/manifest.json lists /icons/icon-192.png and /icons/icon-512.png, which don't exist. Remove those two entries, or generate the PNGs from public/icon.svg if that needs no new dependency. (public/manifest.json:16-25; public/icons/ holds only .gitkeep; next/og, part of next, renders PNGs.)
+   CHAT: (Q13) see step 3.
+   - Check that the favicon set and the custom 404 page work (report).
+
+7. Prose: run anti-slop-prose on every new or changed sentence in this wave and report the fix count.
+
+8. Verify
+   - `npm run dates`
+   - `rm -rf .next && npm run build` (all gates; add /methodology to necRefs.enforce in scripts/gates.config.json, which already holds /about, /contact, /privacy, /terms and /disclaimer; D-15: one list per gate, and gate a is enforced site-wide)
+   CHAT: (Q12b) numberTrace.enforce is empty, and every page counts "100 Amp" and "200 Amp" from the footer's guide links (Footer.tsx:31-32), so /about, /contact, /privacy, /terms, /disclaimer and /methodology would fail it as drafted; /methodology's formulas need data-src too, and WSZ-005 step 7's corrections line puts "250–2000 kcmil" on /about. Reword or trace the footer links, let gate b skip them, or leave these pages out of numberTrace.enforce for now?
+   CHAT: (Q2) see the header: the server on port 3000.
+   - `npm test`
+   - `npx tsc --noEmit` (0 errors)
+   - `node scripts/check-structure.mjs` (its new required-key checks; it replaces check-jsonld.mjs)
+   - a script that confirms every live page's HTML contains the byline text and an "Updated" date equal to page-dates.json
+   CHAT: (Q6) see step 2.
+   - Layout at 320 and 390 px: chat's browser check (D-16); in the box it stays unverified.
+   CHAT: (Q16) The devlog skill asks a design prompt to name an Impeccable command (§1 lists Impeccable; D-07: skill text only, launcher not run). Which command for the byline block and /methodology?
+   CHAT: (Q17) Add `node scripts/snapshot-pages.mjs` before and after, with a `diff -r` that may differ only in the byline, JSON-LD, footer, /about and the new /methodology?
+
+9. Commit "feat(wsz-004): byline, dates, schema, methodology, corrections log". Don't push.
+
+Definition of done (paste each output):
+- the byline/date script result (live pages checked = live route count)
+- the check-structure result (its new JSON-LD checks)
+- the gate results with the enforced routes
+- the test and tsc lines
+- the /methodology section list
+
+DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-004 TRUSTFRAME. Mark it done only if the verification ran and passed. Skipped tests and UI behaviour count as unverified. Also record this chat note under §4 Gotchas: "Run `npm run dates` before every content commit; append a line to src/data/corrections.json for every substantive correction." It replaces the §4 line that starts "Sitemap lastmod and Article dates come from `git log` at build"; rewrite the §1 Key paths entry "dates src/lib/article-dates.ts", and close §5's datePublished line and "[P3] WSZ-004 trust frame + /methodology". Commit DEVLOG.md with the work, and don't push. End with the §6 entry, `git status --short` and `git log --oneline -3`.
