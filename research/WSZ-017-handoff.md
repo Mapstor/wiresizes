@@ -512,3 +512,24 @@ Definition of done (paste each output):
 
 DEVLOG (last step): update DEVLOG.md per .claude/skills/devlog/SKILL.md for ID WSZ-004 TRUSTFRAME. Mark it done only if the verification ran and passed. Skipped tests and UI behaviour count as unverified. Also record this chat note under §4 Gotchas: "Run `npm run dates` before every content commit; append a line to src/data/corrections.json for every substantive correction." It replaces the §4 line that starts "Sitemap lastmod and Article dates come from `git log` at build"; rewrite the §1 Key paths entry "dates src/lib/article-dates.ts", and close §5's datePublished line and "[P3] WSZ-004 trust frame + /methodology". Commit DEVLOG.md with the work, and don't push. End with the §6 entry, `git status --short` and `git log --oneline -3`.
 ```
+
+## 7. Chat answers (2026-11-03)
+
+1. Split: yes. WSZ-004a TRUSTFRAME is steps 1–4 and 6. WSZ-004b METHODOLOGY is step 5, with the /about and footer links to /methodology, its sitemap entry and enforce lists, and chat-written copy.
+2. Header: the precondition requires the owner's push through af00b7c and chat's browser check of the WSZ-003c build, and the wave carries the PROCESSES line and serves through the watcher when port 3000 is busy.
+3. Pack: v5 carries the box's edits to held-waves-rules.md, trust-pages-copy.md, nec-sections-allowlist.csv and wsz002-banned-strings.txt, plus WSZ-016 answer 15's page-specs.md line. Its INSTALL.md deletes only files the v4 manifest listed, so handoffs, reports and .next.txt files stay.
+4. datePublished: 2026-02-22 on every live route, in src/data/page-dates.json. 6f58c08 added the pages that day and a676ef4 deployed them. The Wayback Machine has no capture of the current site; its 2005–2021 captures of the domain belong to earlier owners.
+5. Date rule (D-17): (a) what counts is the route's body text, as the snapshot comparison shows, not a file list. (b) Metadata, template, schema, byline, style and refactor changes don't count. (c) The date is the day the change went live, the owner's push day; a wave sets it in the same commit, and git reflog shows past pushes. (d) The "Last updated" lines on /privacy and /terms read page-dates.json, so they show November 2, 2026, when that text went live.
+6. Byline: the 24 content and tool pages (and /methodology); "Updated November 3, 2026" style; checked in check-structure.
+7. "Sources below": only where `<Sources>` renders. WSZ-004a adds Sources to the eight converters, so all 15 calculators have it; the guides get theirs in their rebuild waves.
+8. /about: the rel="me" line "Marko Visic on LinkedIn" at the end of "Who runs this site". The /methodology sentence comes in WSZ-004b. "Which NEC edition" waits for WSZ-005's editions page.
+9. Corrections: one line, the WSZ-002 audit, dated November 2, 2026, the day it went live. WSZ-014 and WSZ-015 fixed problems that never reached readers, because they went live together with WSZ-002 on that day. WSZ-003b and c changed style, not facts.
+10. /methodology covers only the verified domains live pages use, plus a chat-written "Not covered yet" list. nec-110-14c stays off until WSZ-009.
+11. Chat writes the /methodology copy, as it did trust-pages-copy.md.
+12. (a) nec-continuous-load and doe-efficiency-standards serve no live page, so answer 10 keeps them off /methodology. (b) Gate b skips `[data-name]` page names (D-20); the trust pages, /_not-found and /_global-error join numberTrace.enforce.
+13. The site icon is public/icon.svg (#2563eb), the design of the apple-touch and favicon PNGs. src/app/icon.svg (#0ea5e9) goes. The manifest PNGs and favicon.ico derive from public/icon.svg; favicon.ico is the default Next.js triangle today.
+14. Root metadata: author and creator Marko Visic, publisher Moving Data Systems d.o.o. The site name stays "WireSizes.com", and prose naming the domain keeps "wiresizes.com". The calculators' WebApplication nodes get author and publisher.
+15. Credentials: /about stays as D-03 has it (physics only).
+16. Impeccable: follow the installed skill text for the byline and /methodology, and name the sections used in the DEVLOG.
+17. Snapshot: yes, before and after, with the allowed differences listed in the wave.
+18. `wire-shadow`: WSZ-009, which rebuilds the wire size calculator page.
