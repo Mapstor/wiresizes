@@ -1,6 +1,14 @@
 {
   "numberTrace": {
-    "enforce": []
+    "enforce": [
+      "/_global-error",
+      "/_not-found",
+      "/about",
+      "/contact",
+      "/disclaimer",
+      "/privacy",
+      "/terms"
+    ]
   },
   "necRefs": {
     "enforce": [

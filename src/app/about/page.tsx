@@ -1,7 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
+import CORRECTIONS from '@/data/corrections.json';
+import { AUTHOR_LINKEDIN } from '@/lib/identity';
+import { formatDate } from '@/lib/page-dates';
 
-// Copy from research/trust-pages-copy.md (/about), rendered verbatim.
+// Copy from research/trust-pages-copy.md (/about), rendered verbatim. WSZ-004a: the rel="me" LinkedIn line, and the
+// Corrections list from src/data/corrections.json (one dated line per error readers could see on the live site, dated
+// the day its fix went live).
 const TITLE = 'About wiresizes.com';
 const DESCRIPTION =
   'Who writes wiresizes.com, which sources its numbers come from, how pages are checked, and the dated list of corrections.';
@@ -43,6 +49,11 @@ export default function AboutPage() {
           not a licensed electrician or engineer, so the site reports what the code and the measurement standards say
           and does not give opinions on code questions.
         </p>
+        <p>
+          <a href={AUTHOR_LINKEDIN} rel="me" className="text-blue-600 hover:underline">
+            Marko Visic on LinkedIn
+          </a>
+        </p>
 
         <h2 className="text-2xl font-semibold text-gray-900 pt-4">Where the numbers come from</h2>
         <ul className="list-disc pl-6 space-y-2">
@@ -64,12 +75,11 @@ export default function AboutPage() {
 
         <h2 className="text-2xl font-semibold text-gray-900 pt-4">Corrections</h2>
         <ul className="list-disc pl-6 space-y-2">
-          <li>
-            October 25, 2026: Audited every page. Removed the unsourced claims the audit found, including user counts,
-            endorsements, expert reviews and response-time claims, and deleted or corrected the wrong values it
-            found. Took 15 calculators offline until they are rebuilt from verified sources. Redirected 6 overlapping
-            or retired pages to their closest page.
-          </li>
+          {CORRECTIONS.map((correction) => (
+            <li key={`${correction.date} ${correction.text}`}>
+              <time dateTime={correction.date}>{formatDate(correction.date)}</time>: {correction.text}
+            </li>
+          ))}
         </ul>
         <p>To report an error, email contact@wiresizes.com.</p>
 
@@ -83,6 +93,7 @@ export default function AboutPage() {
           lists what the site collects.
         </p>
       </div>
+      <BasicPageSchema path="/about" name={TITLE} description={DESCRIPTION} />
     </div>
   );
 }

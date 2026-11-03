@@ -3,6 +3,11 @@ import { WattsToAmpsCalculator } from '@/components/calculators/WattsToAmpsCalcu
 import { Zap, Calculator, AlertTriangle, Settings, Target, BookOpen, Users, TrendingUp, Power } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import { Byline } from '@/components/content/Byline';
+import { Sources } from '@/components/content/Sources';
+import { DOMAINS as POWER_DOMAINS } from '@/lib/calculations/power';
+
+const SOURCE_DOMAINS = POWER_DOMAINS;
 
 export const metadata: Metadata = {
   title: 'Watts to Amps Calculator — W → A',
@@ -129,7 +134,10 @@ export default function WattsToAmpsCalculatorPage() {
           </div>
 
           {/* Main Calculator */}
-          <WattsToAmpsCalculator />
+          <div>
+            <WattsToAmpsCalculator />
+            <Byline route="/calculators/watts-to-amps-calculator" sources className="mt-4 text-sm text-gray-600" />
+          </div>
 
           {/* Power Formulas Table */}
           <div className="bg-white rounded-xl shadow-lg p-8">
@@ -199,6 +207,17 @@ export default function WattsToAmpsCalculatorPage() {
             </div>
           </div>
 
+          {/* Sources */}
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <Sources
+              domains={SOURCE_DOMAINS}
+              headingClassName="text-2xl font-bold text-gray-900 mb-6"
+              listClassName="space-y-2 text-sm text-gray-700"
+              linkClassName="text-blue-600 hover:underline"
+              noteClassName="mt-4 text-sm text-gray-600"
+            />
+          </div>
+
           {/* Related Tools */}
           <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-8">
             <div className="text-center mb-8">
@@ -208,32 +227,32 @@ export default function WattsToAmpsCalculatorPage() {
             <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
               <Link href="/calculators/amps-to-watts-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
                 <Power className="w-8 h-8 text-purple-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 text-sm">Amps to Watts</h3>
+                <h3 data-name="" className="font-semibold text-gray-900 text-sm">Amps to Watts</h3>
                 <p className="text-xs text-gray-600">Reverse calculation</p>
               </Link>
               
               <Link href="/calculators/wire-size-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
                 <Zap className="w-8 h-8 text-blue-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 text-sm">Wire Sizing</h3>
+                <h3 data-name="" className="font-semibold text-gray-900 text-sm">Wire Sizing</h3>
                 <p className="text-xs text-gray-600">Calculate AWG size</p>
               </Link>
               
               <Link href="/calculators/voltage-drop-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
                 <TrendingUp className="w-8 h-8 text-yellow-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 text-sm">Voltage Drop</h3>
+                <h3 data-name="" className="font-semibold text-gray-900 text-sm">Voltage Drop</h3>
                 <p className="text-xs text-gray-600">Check voltage loss</p>
               </Link>
               
               <Link href="/calculators/three-phase-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
                 <Settings className="w-8 h-8 text-red-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 text-sm">3-Phase Power</h3>
+                <h3 data-name="" className="font-semibold text-gray-900 text-sm">3-Phase Power</h3>
                 <p className="text-xs text-gray-600">Industrial loads</p>
               </Link>
               
               
               <Link href="/calculators/ampacity-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
                 <Target className="w-8 h-8 text-orange-600 mb-2" />
-                <h3 className="font-semibold text-gray-900 text-sm">Ampacity</h3>
+                <h3 data-name="" className="font-semibold text-gray-900 text-sm">Ampacity</h3>
                 <p className="text-xs text-gray-600">Wire capacity</p>
               </Link>
             </div>

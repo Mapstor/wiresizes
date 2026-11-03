@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import GuideClient from './GuideClient';
 import { articleDates } from '@/lib/page-dates';
+import { Byline } from '@/components/content/Byline';
 
 export const metadata: Metadata = {
   title: 'Single Phase vs Three Phase',
@@ -10,5 +11,10 @@ export const metadata: Metadata = {
 };
 
 export default function SingleVsThreePhasePage() {
-  return <GuideClient {...articleDates('/guides/single-vs-three-phase')} />;
+  return (
+    <GuideClient
+      {...articleDates('/guides/single-vs-three-phase')}
+      byline={<Byline route="/guides/single-vs-three-phase" className="mb-4 text-sm text-gray-600" />}
+    />
+  );
 }

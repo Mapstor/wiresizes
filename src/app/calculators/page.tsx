@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { ORGANIZATION, ORGANIZATION_REF } from '@/lib/identity';
 import {
   Calculator,
   Zap,
@@ -197,7 +198,7 @@ const calculatorsCollectionSchema = {
       name: 'Electrical Calculators',
       description: 'Electrical calculators for wire sizing, voltage drop and ampacity.',
       isPartOf: { '@id': 'https://wiresizes.com/#website' },
-      publisher: { '@id': 'https://wiresizes.com/#organization' },
+      publisher: ORGANIZATION_REF,
       inLanguage: 'en-US',
       breadcrumb: { '@id': 'https://wiresizes.com/calculators#breadcrumb' },
       mainEntity: { '@id': 'https://wiresizes.com/calculators#calculator-list' },
@@ -223,6 +224,7 @@ const calculatorsCollectionSchema = {
         { '@type': 'ListItem', position: 2, name: 'Calculators', item: 'https://wiresizes.com/calculators' },
       ],
     },
+    ORGANIZATION,
   ],
 };
 

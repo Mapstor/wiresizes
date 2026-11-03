@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { VoltageDropCalculator } from '@/components/calculators/VoltageDropCalculator';
 import { Calculator, Zap, BookOpen, Info, CheckCircle, XCircle, ArrowRight, Settings, Gauge, Battery, Lightbulb } from 'lucide-react';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import { Byline } from '@/components/content/Byline';
 import { Sources } from '@/components/content/Sources';
 import {
   DOMAINS as VOLTAGE_DROP_DOMAINS,
@@ -146,6 +147,7 @@ export default function VoltageDropCalculatorPage() {
         <div className="container">
           <div className="max-w-6xl mx-auto">
             <VoltageDropCalculator />
+            <Byline route="/calculators/voltage-drop-calculator" sources className="mt-4 text-sm text-neutral-600" />
           </div>
         </div>
       </section>
@@ -534,15 +536,15 @@ export default function VoltageDropCalculatorPage() {
             
             <div className="grid md:grid-cols-3 gap-4 mb-8">
               <a href="/calculators/wire-size-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 className="font-semibold text-neutral-900 mb-1">Wire Size Calculator</h3>
+                <h3 data-name="" className="font-semibold text-neutral-900 mb-1">Wire Size Calculator</h3>
                 <p className="text-sm text-neutral-600">Calculate proper AWG wire size for your electrical load and distance</p>
               </a>
               <a href="/calculators/ampacity-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 className="font-semibold text-neutral-900 mb-1">Ampacity Calculator</h3>
+                <h3 data-name="" className="font-semibold text-neutral-900 mb-1">Ampacity Calculator</h3>
                 <p className="text-sm text-neutral-600">Find current carrying capacity with temperature and fill derating</p>
               </a>
               <a href="/calculators/three-phase-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 className="font-semibold text-neutral-900 mb-1">Three Phase Calculator</h3>
+                <h3 data-name="" className="font-semibold text-neutral-900 mb-1">Three Phase Calculator</h3>
                 <p className="text-sm text-neutral-600">Calculate three-phase power and current</p>
               </a>
             </div>

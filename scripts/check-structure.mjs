@@ -512,15 +512,54 @@ function jsonLdNodes(page) {
   );
 }
 
-// 18. Article and Dataset JSON-LD dates equal the route's page-dates.json dates
+// The identity nodes (src/lib/identity.ts) and the values check 22 requires of them (research/trust-frame-spec.md).
+const ORGANIZATION_ID = `${SITE_ORIGIN}/#organization`;
+const PERSON_ID = `${SITE_ORIGIN}/about#marko-visic`;
+const REQUIRED = {
+  [ORGANIZATION_ID]: {
+    '@type': 'Organization',
+    name: 'Moving Data Systems d.o.o.',
+    legalName: 'Moving Data Systems d.o.o.',
+    url: SITE_ORIGIN,
+    address: { '@type': 'PostalAddress', streetAddress: 'Smolnik 62', postalCode: '2342', addressLocality: 'Ruše', addressCountry: 'SI' },
+    vatID: 'SI94001154',
+    logo: { '@type': 'ImageObject', url: `${SITE_ORIGIN}/icons/icon-512.png`, width: 512, height: 512 },
+  },
+  [PERSON_ID]: {
+    '@type': 'Person',
+    name: 'Marko Visic',
+    url: `${SITE_ORIGIN}/about`,
+    alumniOf: { '@type': 'CollegeOrUniversity', name: 'University of Ljubljana, Faculty of Mathematics and Physics' },
+    hasCredential: { '@type': 'EducationalOccupationalCredential', credentialCategory: 'degree', name: 'BSc Physics' },
+    knowsAbout: ['conductor resistance', 'electrical units and conversions', 'wire gauge geometry'],
+    sameAs: ['https://www.linkedin.com/in/marko-visic/'],
+  },
+};
+const isRef = (value, id) =>
+  value !== null && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 1 && value['@id'] === id;
+/** JSON with object keys sorted, so two values compare equal whatever their key order. */
+const canon = (value) =>
+  JSON.stringify(value, (_, v) =>
+    v && typeof v === 'object' && !Array.isArray(v) ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => (a < b ? -1 : 1))) : v,
+  );
+
+// 18. Article, Dataset and WebApplication: author → the Person, publisher → the Organization; Article and Dataset
+//     dates equal the route's page-dates.json dates. One Article per live guide, one WebApplication per live calculator,
+//     Datasets on the two table guides.
 {
+  const DATASET_ROUTES = ['/guides/awg-wire-size-chart', '/guides/nec-table-310-16'];
   const failures = [];
-  const counts = { Article: 0, Dataset: 0 };
+  const counts = { Article: 0, Dataset: 0, WebApplication: 0 };
+  const perRoute = new Map();
   for (const page of livePages) {
     for (const { node, types } of jsonLdNodes(page)) {
-      const type = types.find((t) => t === 'Article' || t === 'Dataset');
+      const type = types.find((t) => t in counts);
       if (!type) continue;
       counts[type]++;
+      perRoute.set(`${page.route} ${type}`, (perRoute.get(`${page.route} ${type}`) ?? 0) + 1);
+      if (!isRef(node.author, PERSON_ID)) failures.push(`${page.route}: ${type} author ${JSON.stringify(node.author)}, expected {"@id":"${PERSON_ID}"}`);
+      if (!isRef(node.publisher, ORGANIZATION_ID)) failures.push(`${page.route}: ${type} publisher ${JSON.stringify(node.publisher)}, expected {"@id":"${ORGANIZATION_ID}"}`);
+      if (type === 'WebApplication') continue;
       const dates = pageDates[page.route];
       if (!dates) {
         failures.push(`${page.route}: ${type} on a route without page dates`);
@@ -530,14 +569,20 @@ function jsonLdNodes(page) {
       if (node.dateModified !== dates.modified) failures.push(`${page.route}: ${type} dateModified ${node.dateModified}, page-dates.json ${dates.modified}`);
     }
   }
-  for (const route of LIVE_GUIDES) {
-    const n = jsonLdNodes(pageByRoute.get(route)).filter((x) => x.types.includes('Article')).length;
-    if (n !== 1) failures.push(`${route}: ${n} Article nodes, expected 1`);
-  }
+  const expectOne = (routes, type) => {
+    for (const route of routes) {
+      const n = perRoute.get(`${route} ${type}`) ?? 0;
+      if (n !== 1) failures.push(`${route}: ${n} ${type} nodes, expected 1`);
+    }
+  };
+  expectOne(LIVE_GUIDES, 'Article');
+  expectOne(LIVE_CALCULATORS, 'WebApplication');
+  expectOne(DATASET_ROUTES, 'Dataset');
+  if (counts.Dataset !== DATASET_ROUTES.length) failures.push(`${counts.Dataset} Dataset nodes, expected ${DATASET_ROUTES.length}`);
   check(
-    'each live guide has one Article; every Article and Dataset carries datePublished and dateModified equal to page-dates.json',
+    'every Article, Dataset and WebApplication has author → the Person and publisher → the Organization; Article and Dataset dates equal page-dates.json',
     failures,
-    `${counts.Article} Article, ${counts.Dataset} Dataset nodes`,
+    `${counts.Article} Article, ${counts.Dataset} Dataset, ${counts.WebApplication} WebApplication nodes`,
   );
 }
 
@@ -557,6 +602,158 @@ function jsonLdNodes(page) {
   }
   for (const route of Object.keys(pageDates)) if (!seen.has(route)) failures.push(`${route}: in page-dates.json, not in sitemap.xml`);
   check('every sitemap.xml <url> has a <lastmod> equal to its page-dates.json modified date, and the sitemap lists every dated route', failures, `${urls.length} URLs`);
+}
+
+/** The events inside the element that opens at events[at], up to its matching close. */
+function elementEvents(events, at) {
+  const name = events[at].name;
+  const out = [];
+  let depth = 1;
+  for (let k = at + 1; k < events.length; k++) {
+    const e = events[k];
+    if (e.type === 'open' && e.name === name) depth++;
+    else if (e.type === 'close' && e.name === name && --depth === 0) break;
+    out.push(e);
+  }
+  return out;
+}
+
+/** Text events joined as the reader sees them (no space at tag boundaries), whitespace collapsed. */
+const joinedText = (events) =>
+  events
+    .filter((e) => e.type === 'text')
+    .map((e) => e.value)
+    .join('')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const usDate = (iso) => `${MONTHS[Number(iso.slice(5, 7)) - 1]} ${Number(iso.slice(8, 10))}, ${iso.slice(0, 4)}`;
+
+// 20. The byline (D-18): exactly the 24 content and tool routes render one [data-byline] block, "By Marko Visic, BSc
+//     Physics · Updated {Month D, YYYY}" with the name linked to /about and the date = page-dates.json modified;
+//     " · Sources below", linked to #sources, appears exactly where the page renders <Sources> (its h2#sources).
+{
+  const BYLINE_ROUTES = new Set([...LIVE_CALCULATORS, ...LIVE_GUIDES]);
+  const failures = [];
+  let bylines = 0;
+  let withSources = 0;
+  for (const page of pages) {
+    const starts = [];
+    page.events.forEach((e, i) => {
+      if (e.type === 'open' && e.attrs['data-byline'] !== undefined) starts.push(i);
+    });
+    const expected = BYLINE_ROUTES.has(page.route) ? 1 : 0;
+    if (starts.length !== expected) failures.push(`${page.route}: ${starts.length} [data-byline] blocks, expected ${expected}`);
+    const sourcesHeading = page.events.findIndex((e) => e.type === 'open' && e.name === 'h2' && e.attrs.id === 'sources');
+    const hasSources = sourcesHeading !== -1 && joinedText(elementEvents(page.events, sourcesHeading)) === 'Sources';
+    const sourcesBelow = (visibleText(page.events).match(/Sources below/g) ?? []).length;
+    const bylineHasSources = starts.length === 1 && hasSources;
+    if (sourcesBelow !== (bylineHasSources ? 1 : 0)) {
+      failures.push(`${page.route}: "Sources below" ${sourcesBelow}×, page ${hasSources ? 'renders' : 'does not render'} <Sources>`);
+    }
+    for (const at of starts) {
+      bylines++;
+      const inner = elementEvents(page.events, at);
+      const dates = pageDates[page.route];
+      if (!dates) {
+        failures.push(`${page.route}: byline on a route without page dates`);
+        continue;
+      }
+      const expectedText = `By Marko Visic, BSc Physics · Updated ${usDate(dates.modified)}${hasSources ? ' · Sources below' : ''}`;
+      const text = joinedText(inner);
+      if (text !== expectedText) failures.push(`${page.route}: byline "${text}", expected "${expectedText}"`);
+      const links = inner.filter((e) => e.type === 'open' && e.name === 'a').map((e) => e.attrs.href);
+      const expectedLinks = hasSources ? ['/about', '#sources'] : ['/about'];
+      if (links.join(' ') !== expectedLinks.join(' ')) failures.push(`${page.route}: byline links ${links.join(', ')}, expected ${expectedLinks.join(', ')}`);
+      const times = inner.filter((e) => e.type === 'open' && e.name === 'time').map((e) => e.attrs.datetime);
+      if (times.join(' ') !== dates.modified) failures.push(`${page.route}: byline <time datetime> ${times.join(', ')}, page-dates.json modified ${dates.modified}`);
+      if (hasSources) withSources++;
+    }
+  }
+  check(
+    'exactly the 15 live calculators and 9 live guides render one byline (name → /about, Updated = page-dates.json modified); "Sources below" only beside a rendered <Sources>',
+    failures,
+    `${bylines} bylines, ${withSources} with "Sources below"`,
+  );
+}
+
+// 21. Every live route but the home page has a BreadcrumbList that starts at Home and ends at the page
+{
+  const failures = [];
+  let lists = 0;
+  for (const route of LIVE_ROUTES) {
+    if (route === '/') continue;
+    const found = jsonLdNodes(pageByRoute.get(route)).filter((x) => x.types.includes('BreadcrumbList'));
+    if (found.length === 0) failures.push(`${route}: no BreadcrumbList`);
+    for (const { node } of found) {
+      lists++;
+      const items = [].concat(node.itemListElement ?? []);
+      if (items[0]?.item !== SITE_ORIGIN) failures.push(`${route}: BreadcrumbList starts at ${items[0]?.item}`);
+      if (items[items.length - 1]?.item !== `${SITE_ORIGIN}${route}`) failures.push(`${route}: BreadcrumbList ends at ${items[items.length - 1]?.item}`);
+      items.forEach((item, i) => {
+        if (item.position !== i + 1) failures.push(`${route}: BreadcrumbList item ${i + 1} has position ${item.position}`);
+      });
+    }
+  }
+  check('every live route but / has a BreadcrumbList from Home to the page', failures, `${LIVE_ROUTES.length - 1} routes, ${lists} lists`);
+}
+
+// 22. The Organization and the Person carry their required keys; every JSON-LD block that references one by @id prints it
+//     in the same block; every printed copy is identical; no other Organization or Person node.
+{
+  const failures = [];
+  const copies = new Map();
+  let printedCount = 0;
+  let refCount = 0;
+  for (const page of pages) {
+    let block = 0;
+    for (const e of page.events) {
+      if (!isJsonLd(e)) continue;
+      block++;
+      let data;
+      try {
+        data = JSON.parse(e.body);
+      } catch {
+        continue;
+      }
+      const printed = new Map();
+      const referenced = new Set();
+      const walk = (node) => {
+        if (Array.isArray(node)) return node.forEach(walk);
+        if (!node || typeof node !== 'object') return;
+        const id = node['@id'];
+        const types = [].concat(node['@type'] ?? []);
+        if (types.includes('Organization') || types.includes('Person')) {
+          if (!Object.hasOwn(REQUIRED, id)) failures.push(`${page.route}: ${types.join('/')} node with @id ${id ?? '(none)'}`);
+          else printed.set(id, node);
+        }
+        if (Object.hasOwn(REQUIRED, id) && Object.keys(node).length === 1) referenced.add(id);
+        Object.values(node).forEach(walk);
+      };
+      walk(data);
+      for (const [id, node] of printed) {
+        printedCount++;
+        for (const [key, value] of Object.entries(REQUIRED[id])) {
+          if (canon(node[key]) !== canon(value)) failures.push(`${page.route}: ${id} ${key} is ${JSON.stringify(node[key])}`);
+        }
+        if (id === ORGANIZATION_ID && 'sameAs' in node) failures.push(`${page.route}: the Organization has sameAs`);
+        const json = canon(node);
+        if (!copies.has(id)) copies.set(id, json);
+        else if (copies.get(id) !== json) failures.push(`${page.route}: ${id} differs from its first printed copy`);
+      }
+      for (const id of referenced) {
+        refCount++;
+        if (!printed.has(id)) failures.push(`${page.route}: JSON-LD block ${block} references ${id} without printing it`);
+      }
+    }
+  }
+  for (const id of Object.keys(REQUIRED)) if (!copies.has(id)) failures.push(`no page prints ${id}`);
+  check(
+    'the Organization and the Person carry their required keys, and every JSON-LD block that references one prints it',
+    failures,
+    `${printedCount} printed nodes, ${refCount} block references`,
+  );
 }
 
 const failed = results.filter((r) => r.failures.length > 0).length;

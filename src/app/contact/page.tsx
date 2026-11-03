@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
 
 // Copy from research/trust-pages-copy.md (/contact), rendered verbatim.
 const TITLE = 'Contact wiresizes.com';
@@ -46,6 +47,7 @@ export default function ContactPage() {
           9041273000, VAT ID SI94001154.
         </p>
       </div>
+      <BasicPageSchema path="/contact" name={TITLE} description={DESCRIPTION} />
     </div>
   );
 }

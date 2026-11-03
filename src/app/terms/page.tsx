@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { formatDate, pageDates } from '@/lib/page-dates';
+import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
 
 // Copy from research/trust-pages-copy.md (/terms), rendered verbatim.
 const TITLE = 'Terms of use';
@@ -73,6 +74,7 @@ export default function TermsPage() {
         <h2 className="text-2xl font-semibold text-gray-900 pt-4">Governing law</h2>
         <p>These terms are governed by the law of the Republic of Slovenia.</p>
       </div>
+      <BasicPageSchema path="/terms" name={TITLE} description={DESCRIPTION} />
     </div>
   );
 }

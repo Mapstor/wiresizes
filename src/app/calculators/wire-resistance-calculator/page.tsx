@@ -3,6 +3,7 @@ import { WireResistanceCalculator } from '@/components/calculators/WireResistanc
 import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import { Byline } from '@/components/content/Byline';
 import { conductor, formatSize, TABLE_310_16_SIZES } from '@/lib/calculations/sizes';
 import type { ConductorData } from '@/lib/calculations/sizes';
 import { Sources } from '@/components/content/Sources';
@@ -110,6 +111,7 @@ export default function WireResistanceCalculatorPage() {
       {/* Calculator Component */}
       <section className="mb-16">
         <WireResistanceCalculator />
+        <Byline route="/calculators/wire-resistance-calculator" sources className="mt-4 text-sm text-gray-600 dark:text-gray-400" linkClassName="text-blue-600 hover:underline dark:text-blue-300" />
       </section>
 
       {/* Understanding Wire Resistance */}
@@ -580,7 +582,7 @@ export default function WireResistanceCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <TrendingUp className="h-6 w-6 text-blue-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Voltage Drop Calculator</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Voltage Drop Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Calculate voltage drop using wire resistance values
@@ -593,7 +595,7 @@ export default function WireResistanceCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <Calculator className="h-6 w-6 text-green-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Ohm&apos;s Law Calculator</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Ohm&apos;s Law Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Apply Ohm&apos;s law with resistance calculations
@@ -606,7 +608,7 @@ export default function WireResistanceCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <Zap className="h-6 w-6 text-purple-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Wire Size Calculator</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Wire Size Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Size conductors based on resistance requirements
@@ -619,7 +621,7 @@ export default function WireResistanceCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <Settings className="h-6 w-6 text-orange-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Ampacity Calculator</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Ampacity Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Determine current capacity with heating effects
@@ -632,7 +634,7 @@ export default function WireResistanceCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <AlertCircle className="h-6 w-6 text-red-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Three Phase Calculator</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Three Phase Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Three-phase power and resistance calculations
@@ -645,7 +647,7 @@ export default function WireResistanceCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <BookOpen className="h-6 w-6 text-yellow-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Low Voltage Calculator</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Low Voltage Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 DC resistance calculations for low voltage systems

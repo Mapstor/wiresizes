@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
 import { ArticleSchema } from '@/components/seo/ArticleSchema'
 import { articleDates } from '@/lib/page-dates';
+import { Byline } from '@/components/content/Byline';
 
 import { Car, Zap, AlertTriangle, Shield, Calculator } from 'lucide-react'
 
@@ -43,6 +44,7 @@ export default function WireSizeForEVChargerPage() {
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               EV Charger Wire Size Guide
             </h1>
+            <Byline route="/guides/wire-size-for-ev-charger" className="mb-4 text-sm text-gray-600" />
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Complete guide to selecting the right wire size for electric vehicle charging stations, 
               from Level 1 to DC fast charging, following NEC Article 625 requirements.
@@ -284,15 +286,15 @@ export default function WireSizeForEVChargerPage() {
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Related Resources</h2>
               <div className="grid md:grid-cols-3 gap-6">
                 <Link href="/guides/wire-size-for-200-amp" className="bg-white rounded-lg p-4 hover:shadow-lg transition-shadow">
-                  <h3 className="font-semibold text-blue-600 mb-2">200 Amp Service Guide</h3>
+                  <h3 data-name="" className="font-semibold text-blue-600 mb-2">200 Amp Service Guide</h3>
                   <p className="text-sm text-gray-600">Upgrading to 200 A service for EV charging and modern homes.</p>
                 </Link>
                 <Link href="/guides/nec-code-compliance" className="bg-white rounded-lg p-4 hover:shadow-lg transition-shadow">
-                  <h3 className="font-semibold text-blue-600 mb-2">NEC Code Compliance</h3>
+                  <h3 data-name="" className="font-semibold text-blue-600 mb-2">NEC Code Compliance</h3>
                   <p className="text-sm text-gray-600">Understanding electrical code requirements for safe installations.</p>
                 </Link>
                 <Link href="/calculators/voltage-drop-calculator" className="bg-white rounded-lg p-4 hover:shadow-lg transition-shadow">
-                  <h3 className="font-semibold text-blue-600 mb-2">Voltage Drop Calculator</h3>
+                  <h3 data-name="" className="font-semibold text-blue-600 mb-2">Voltage Drop Calculator</h3>
                   <p className="text-sm text-gray-600">Calculate voltage drop for long wire runs to EV chargers.</p>
                 </Link>
               </div>

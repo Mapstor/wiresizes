@@ -3,6 +3,9 @@
 // in Google Dataset Search and signals to AI assistants that the page
 // is a citable data source.
 // https://schema.org/Dataset
+// WSZ-004a: author → the Person, publisher → the Organization (src/lib/identity.ts), printed in the same graph; dates
+// from src/data/page-dates.json.
+import { ORGANIZATION, ORGANIZATION_REF, PERSON, PERSON_REF } from '@/lib/identity';
 
 /**
  * One variable / column the dataset publishes. Use the structured form
@@ -34,10 +37,10 @@ interface DatasetSchemaProps {
   keywords?: string[];
   /** Citation to the upstream authoritative source (e.g., NFPA 70). */
   citation?: string;
-  /** ISO date the dataset was first published, YYYY-MM-DD. */
-  datePublished?: string;
-  /** ISO date the dataset was last revised, YYYY-MM-DD. */
-  dateModified?: string;
+  /** YYYY-MM-DD, the route's published date in src/data/page-dates.json. */
+  datePublished: string;
+  /** YYYY-MM-DD, the route's modified date in src/data/page-dates.json. */
+  dateModified: string;
   /** Coverage area (e.g., "United States"). */
   spatialCoverage?: string;
 }
@@ -57,31 +60,36 @@ export function DatasetSchema({
   spatialCoverage,
 }: DatasetSchemaProps) {
   const url = `${ORIGIN}${path}`;
-  const schema: Record<string, unknown> = {
-    '@context': 'https://schema.org',
+  const dataset: Record<string, unknown> = {
     '@type': 'Dataset',
     '@id': `${url}#dataset`,
     name,
     description,
     url,
     isAccessibleForFree: true,
-    publisher: { '@id': `${ORIGIN}/#organization` },
+    author: PERSON_REF,
+    publisher: ORGANIZATION_REF,
     inLanguage: 'en-US',
+    datePublished,
+    dateModified,
   };
 
-  if (alternateName) schema.alternateName = alternateName;
+  if (alternateName) dataset.alternateName = alternateName;
   if (variableMeasured) {
-    schema.variableMeasured = variableMeasured.map((v) =>
+    dataset.variableMeasured = variableMeasured.map((v) =>
       typeof v === 'string' ? v : { '@type': 'PropertyValue', ...v },
     );
   }
-  if (keywords) schema.keywords = keywords;
-  if (citation) schema.citation = citation;
-  if (datePublished) schema.datePublished = datePublished;
-  if (dateModified) schema.dateModified = dateModified;
+  if (keywords) dataset.keywords = keywords;
+  if (citation) dataset.citation = citation;
   if (spatialCoverage) {
-    schema.spatialCoverage = { '@type': 'Place', name: spatialCoverage };
+    dataset.spatialCoverage = { '@type': 'Place', name: spatialCoverage };
   }
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [dataset, PERSON, ORGANIZATION],
+  };
 
   return (
     <script

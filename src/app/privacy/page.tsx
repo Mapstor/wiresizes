@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { formatDate, pageDates } from '@/lib/page-dates';
+import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
 
 // Copy from research/trust-pages-copy.md (/privacy), rendered verbatim.
 const TITLE = 'Privacy notice';
@@ -96,6 +97,7 @@ export default function PrivacyPage() {
           protection authority where you live.
         </p>
       </div>
+      <BasicPageSchema path="/privacy" name={TITLE} description={DESCRIPTION} />
     </div>
   );
 }

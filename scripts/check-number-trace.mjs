@@ -5,7 +5,8 @@
 //
 // Units (scripts/lib/gate-rules.mjs): A, amps, V, volts, kV, W, kW, kVA, kVAR, VA, Ω, ohms, °C, °F, %, ft, feet, in,
 // inches, mm, mm², m, km, cmil, kcmil, lb, kg, hp, Btu/h, ton; a "$" amount counts too. Exempt: text inside
-// [data-size] (size names, <Size>); years, dates and NEC section numbers carry no unit, so they never count.
+// [data-size] (size names, <Size>) and [data-name] (page names in navigation and related links, D-20); years, dates and
+// NEC section numbers carry no unit, so they never count.
 // Engines: the ENGINE_ID and DOMAINS exports of src/lib/calculations/*.ts.
 // Prints the count per route. Fails only for routes in scripts/gates.config.json numberTrace.enforce; a route joins
 // that list when its rebuild wave has wired every number.

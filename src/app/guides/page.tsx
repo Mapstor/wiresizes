@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { ORGANIZATION, ORGANIZATION_REF } from '@/lib/identity';
 import { Calculator, Zap, Target, BarChart3, Table, FileText, Home, Car } from 'lucide-react';
 
 const TITLE = 'Electrical Guides — NEC, AWG';
@@ -113,7 +114,7 @@ const guidesCollectionSchema = {
       name: 'Electrical Guides',
       description: DESCRIPTION,
       isPartOf: { '@id': 'https://wiresizes.com/#website' },
-      publisher: { '@id': 'https://wiresizes.com/#organization' },
+      publisher: ORGANIZATION_REF,
       inLanguage: 'en-US',
       breadcrumb: { '@id': 'https://wiresizes.com/guides#breadcrumb' },
       mainEntity: { '@id': 'https://wiresizes.com/guides#guide-list' },
@@ -139,6 +140,7 @@ const guidesCollectionSchema = {
         { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://wiresizes.com/guides' },
       ],
     },
+    ORGANIZATION,
   ],
 };
 

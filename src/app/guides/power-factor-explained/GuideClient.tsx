@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useId } from 'react';
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { BarChart3, Zap, TrendingUp, AlertTriangle, CheckCircle, Calculator, Activity, Eye, ArrowRight, Settings } from 'lucide-react';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
@@ -36,9 +37,11 @@ const CORRECTION_METHODS = [
 interface GuideProps {
   datePublished: string;
   dateModified: string;
+  /** The byline, rendered by the server page.tsx (D-18). */
+  byline: ReactNode;
 }
 
-export default function PowerFactorExplainedGuide({ datePublished, dateModified }: GuideProps) {
+export default function PowerFactorExplainedGuide({ datePublished, dateModified, byline }: GuideProps) {
   const articleData = {
     headline: "Power Factor Explained",
     description: "Understanding power factor is crucial for electrical efficiency. This guide explains reactive power, apparent power, and power factor correction with interactive visualizations and real-world examples.",
@@ -82,6 +85,7 @@ export default function PowerFactorExplainedGuide({ datePublished, dateModified 
             <BarChart3 className="w-10 h-10 text-green-600" />
             <h1 className="text-4xl font-bold text-gray-900">Power Factor Explained</h1>
           </div>
+          {byline}
           <p className="text-xl text-gray-600 mb-6">
             Understanding power factor is crucial for electrical efficiency. 
             This guide explains reactive power, apparent power, and power factor correction 
@@ -505,7 +509,7 @@ export default function PowerFactorExplainedGuide({ datePublished, dateModified 
                 <div className={`w-12 h-12 bg-${calc.color}-100 rounded-lg flex items-center justify-center mb-4`}>
                   <IconComponent className={`w-6 h-6 text-${calc.color}-600`} />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">{calc.name}</h3>
+                <h3 data-name="" className="font-semibold text-gray-900 mb-2">{calc.name}</h3>
                 <p className="text-sm text-gray-600 mb-3">{calc.description}</p>
                 <div className={`text-${calc.color}-600 text-sm flex items-center gap-1`}>
                   Try Calculator <ArrowRight className="w-4 h-4" />
@@ -520,20 +524,23 @@ export default function PowerFactorExplainedGuide({ datePublished, dateModified 
       <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border p-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Master Electrical Efficiency</h2>
         <div className="flex flex-wrap gap-4">
-          <Link 
+          <Link
+            data-name=""
             href="/guides/electrical-power-calculations"
             className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center gap-2"
           >
             <ArrowRight className="w-5 h-5" />
             Power Calculations Guide
           </Link>
-          <Link 
+          <Link
+            data-name=""
             href="/guides/single-vs-three-phase"
             className="border border-green-600 text-green-700 px-6 py-3 rounded-lg font-medium hover:bg-green-50 transition-colors"
           >
             Three-Phase Systems
           </Link>
-          <Link 
+          <Link
+            data-name=""
             href="/calculators/wire-size-calculator"
             className="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors"
           >

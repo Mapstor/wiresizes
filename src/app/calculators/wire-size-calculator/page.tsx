@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { WireSizeCalculator } from '@/components/calculators/WireSizeCalculator';
 import { AlertTriangle, Calculator, Zap, BookOpen, Info, CheckCircle, ArrowRight, Gauge, AlertCircle, Shield, Lightbulb, Wrench } from 'lucide-react';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import { Byline } from '@/components/content/Byline';
 import { Sources } from '@/components/content/Sources';
 import { AMBIENT_ROWS, ambientLabel, DOMAINS as AMPACITY_DOMAINS } from '@/lib/calculations/ampacity';
 import { DOMAINS as SIZING_DOMAINS } from '@/lib/calculations/conductor-sizing';
@@ -204,6 +205,7 @@ export default function WireSizeCalculatorPage() {
         <div className="container">
           <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
             <WireSizeCalculator />
+            <Byline route="/calculators/wire-size-calculator" sources className="mt-4 text-sm text-neutral-600" />
           </div>
         </div>
       </section>
@@ -568,15 +570,15 @@ export default function WireSizeCalculatorPage() {
             
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
               <a href="/calculators/voltage-drop-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 className="font-semibold text-neutral-900 mb-1">Voltage Drop Calculator</h3>
+                <h3 data-name="" className="font-semibold text-neutral-900 mb-1">Voltage Drop Calculator</h3>
                 <p className="text-sm text-neutral-600">Calculate voltage loss over distance for any wire size</p>
               </a>
               <a href="/calculators/ampacity-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 className="font-semibold text-neutral-900 mb-1">Ampacity Calculator</h3>
+                <h3 data-name="" className="font-semibold text-neutral-900 mb-1">Ampacity Calculator</h3>
                 <p className="text-sm text-neutral-600">Find current carrying capacity with derating factors</p>
               </a>
               <a href="/calculators/ground-wire-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 className="font-semibold text-neutral-900 mb-1">Ground Wire Calculator</h3>
+                <h3 data-name="" className="font-semibold text-neutral-900 mb-1">Ground Wire Calculator</h3>
                 <p className="text-sm text-neutral-600">Size equipment grounding conductors per NEC 250.122</p>
               </a>
             </div>

@@ -107,7 +107,7 @@ export default function GuidesLayout({
                       className={`flex items-center gap-3 p-3 rounded-lg transition-colors hover:bg-${guide.color}-50 hover:text-${guide.color}-700`}
                     >
                       <IconComponent className={`w-5 h-5 text-${guide.color}-600`} />
-                      <span className="text-sm font-medium">{guide.title}</span>
+                      <span className="text-sm font-medium" data-name="">{guide.title}</span>
                     </Link>
                   );
                 })}
@@ -118,24 +118,28 @@ export default function GuidesLayout({
                 <h3 className="font-semibold text-gray-900 mb-4">Quick Calculators</h3>
                 <div className="space-y-2">
                   <Link
+                    data-name=""
                     href="/calculators/wire-size-calculator"
                     className="block text-sm text-primary-600 hover:text-primary-700 p-2 rounded hover:bg-primary-50"
                   >
                     Wire Size Calculator
                   </Link>
                   <Link
+                    data-name=""
                     href="/calculators/voltage-drop-calculator"
                     className="block text-sm text-primary-600 hover:text-primary-700 p-2 rounded hover:bg-primary-50"
                   >
                     Voltage Drop Calculator
                   </Link>
                   <Link
+                    data-name=""
                     href="/calculators/amps-to-watts-calculator"
                     className="block text-sm text-primary-600 hover:text-primary-700 p-2 rounded hover:bg-primary-50"
                   >
                     Amps to Watts Calculator
                   </Link>
                   <Link
+                    data-name=""
                     href="/calculators"
                     className="block text-sm font-medium text-gray-700 hover:text-primary-700 p-2 rounded hover:bg-gray-50"
                   >

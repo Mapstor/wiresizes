@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { DatasetSchema } from '@/components/seo/DatasetSchema';
 import { articleDates } from '@/lib/page-dates';
+import { Byline } from '@/components/content/Byline';
 import awgData from '../../../../data/verified/awg.json';
 import { diameterMm, sizeKeyFromAwgName, tableAmpacity } from '@/lib/calculations/sizes';
 import { maxOcpd240_4D } from '@/lib/calculations/ampacity';
@@ -90,6 +91,7 @@ export default function AWGWireSizeChartPage() {
             <h1 className="text-4xl font-bold mb-4">
               AWG Wire Size Chart & Reference Guide
             </h1>
+            <Byline route="/guides/awg-wire-size-chart" className="mb-4 text-sm text-blue-100" linkClassName="text-white underline" />
             <p className="text-xl text-blue-100 mb-6">
               American Wire Gauge (AWG) reference table with diameters, resistance, ampacity and the nearest metric sizes, 18 AWG to 4/0.
             </p>
@@ -291,7 +293,7 @@ export default function AWGWireSizeChartPage() {
                 href="/calculators/wire-size-calculator"
                 className="bg-white/10 backdrop-blur rounded-lg p-4 hover:bg-white/20 transition-colors"
               >
-                <h3 className="font-semibold mb-2">Wire Size Calculator</h3>
+                <h3 data-name="" className="font-semibold mb-2">Wire Size Calculator</h3>
                 <p className="text-sm text-blue-100">Calculate the wire size for your load</p>
               </Link>
               
@@ -299,7 +301,7 @@ export default function AWGWireSizeChartPage() {
                 href="/calculators/voltage-drop-calculator"
                 className="bg-white/10 backdrop-blur rounded-lg p-4 hover:bg-white/20 transition-colors"
               >
-                <h3 className="font-semibold mb-2">Voltage Drop Calculator</h3>
+                <h3 data-name="" className="font-semibold mb-2">Voltage Drop Calculator</h3>
                 <p className="text-sm text-blue-100">Check voltage loss over distance</p>
               </Link>
               
@@ -307,7 +309,7 @@ export default function AWGWireSizeChartPage() {
                 href="/calculators/ampacity-calculator"
                 className="bg-white/10 backdrop-blur rounded-lg p-4 hover:bg-white/20 transition-colors"
               >
-                <h3 className="font-semibold mb-2">Ampacity Calculator</h3>
+                <h3 data-name="" className="font-semibold mb-2">Ampacity Calculator</h3>
                 <p className="text-sm text-blue-100">Derate wire for temperature & fill</p>
               </Link>
               
@@ -315,7 +317,7 @@ export default function AWGWireSizeChartPage() {
                 href="/guides/nec-table-310-16"
                 className="bg-white/10 backdrop-blur rounded-lg p-4 hover:bg-white/20 transition-colors"
               >
-                <h3 className="font-semibold mb-2">NEC Table 310.16</h3>
+                <h3 data-name="" className="font-semibold mb-2">NEC Table 310.16</h3>
                 <p className="text-sm text-blue-100">Complete ampacity reference table</p>
               </Link>
             </div>

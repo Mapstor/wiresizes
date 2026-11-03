@@ -1,10 +1,14 @@
 // WSZ-004a: page dates from src/data/page-dates.json (D-17), formatted from their YYYY-MM-DD strings, and the sitemap
-// that reads them.
+// that reads them; the identity nodes; the /about corrections file; gate b skipping page names (D-20).
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import PAGE_DATES from '../src/data/page-dates.json';
+import CORRECTIONS from '../src/data/corrections.json';
 import { articleDates, formatDate, pageDates } from '../src/lib/page-dates';
 import sitemap from '../src/app/sitemap';
+import { AUTHOR_CREDENTIAL, AUTHOR_NAME, ORGANIZATION, ORGANIZATION_REF, PERSON, PERSON_REF } from '../src/lib/identity';
+import { tokenizeHtml } from '../scripts/lib/build-output.mjs';
+import { traceNumbers } from '../scripts/lib/gate-rules.mjs';
 
 const DATES = PAGE_DATES as Record<string, { published: string; modified: string }>;
 
@@ -49,5 +53,57 @@ describe('page dates', () => {
       const route = entry.url.replace(/^https:\/\/wiresizes\.com/, '') || '/';
       assert.equal(entry.lastModified, DATES[route].modified, route);
     }
+  });
+});
+
+describe('identity nodes', () => {
+  it('the Organization is the publisher with its address and VAT ID, and no sameAs', () => {
+    assert.equal(ORGANIZATION['@id'], 'https://wiresizes.com/#organization');
+    assert.equal(ORGANIZATION.name, 'Moving Data Systems d.o.o.');
+    assert.equal(ORGANIZATION.legalName, 'Moving Data Systems d.o.o.');
+    assert.equal(ORGANIZATION.url, 'https://wiresizes.com');
+    assert.deepEqual(ORGANIZATION.address, {
+      '@type': 'PostalAddress', streetAddress: 'Smolnik 62', postalCode: '2342', addressLocality: 'Ruše', addressCountry: 'SI',
+    });
+    assert.equal(ORGANIZATION.vatID, 'SI94001154');
+    assert.deepEqual(ORGANIZATION.logo, { '@type': 'ImageObject', url: 'https://wiresizes.com/icons/icon-512.png', width: 512, height: 512 });
+    assert.ok(!('sameAs' in ORGANIZATION));
+  });
+
+  it('the Person is the author with the physics credential only (D-03) and the LinkedIn profile', () => {
+    assert.equal(PERSON['@id'], 'https://wiresizes.com/about#marko-visic');
+    assert.equal(PERSON.name, 'Marko Visic');
+    assert.equal(PERSON.url, 'https://wiresizes.com/about');
+    assert.deepEqual(PERSON.alumniOf, { '@type': 'CollegeOrUniversity', name: 'University of Ljubljana, Faculty of Mathematics and Physics' });
+    assert.deepEqual(PERSON.hasCredential, { '@type': 'EducationalOccupationalCredential', credentialCategory: 'degree', name: 'BSc Physics' });
+    assert.deepEqual(PERSON.knowsAbout, ['conductor resistance', 'electrical units and conversions', 'wire gauge geometry']);
+    assert.deepEqual(PERSON.sameAs, ['https://www.linkedin.com/in/marko-visic/']);
+    assert.deepEqual(PERSON_REF, { '@id': PERSON['@id'] });
+    assert.deepEqual(ORGANIZATION_REF, { '@id': ORGANIZATION['@id'] });
+    assert.equal(`By ${AUTHOR_NAME}, ${AUTHOR_CREDENTIAL}`, 'By Marko Visic, BSc Physics');
+  });
+});
+
+describe('corrections', () => {
+  it('each line has a YYYY-MM-DD date and text; the first is the audit, dated the day it went live', () => {
+    assert.ok(CORRECTIONS.length >= 1);
+    for (const { date, text } of CORRECTIONS) {
+      assert.doesNotThrow(() => formatDate(date), date);
+      assert.ok(text.length > 0 && !/^\s|\s$/.test(text), text);
+    }
+    assert.equal(CORRECTIONS[0].date, '2026-11-02');
+    assert.match(CORRECTIONS[0].text, /^Audited every page\. /);
+    assert.equal(`${formatDate(CORRECTIONS[0].date)}: ${CORRECTIONS[0].text}`.slice(0, 38), 'November 2, 2026: Audited every page. ');
+  });
+});
+
+describe('gate b skips page names', () => {
+  it('numbers inside [data-name] do not count; descriptions beside them do', () => {
+    const html =
+      '<html><body><a href="/guides/wire-size-for-100-amp"><span data-name="">Wire Size for 100 Amp</span></a>' +
+      '<a href="/guides/wire-size-for-200-amp"><h3 data-name="">200 Amp Service Guide</h3><p>Upgrading to 200 A service.</p></a>' +
+      '<p>A 30 A circuit</p></body></html>';
+    const found = traceNumbers(tokenizeHtml(html), () => false).map((n: { match: string }) => n.match);
+    assert.deepEqual(found, ['200 A', '30 A']);
   });
 });

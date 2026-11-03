@@ -4,6 +4,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Consent } from '@/components/analytics/Consent';
+import { AUTHOR_NAME, AUTHOR_URL, PUBLISHER_NAME } from '@/lib/identity';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
@@ -32,9 +33,9 @@ export const metadata: Metadata = {
     'NEC wire size',
     'ampacity calculator',
   ],
-  authors: [{ name: 'WireSizes.com' }],
-  creator: 'WireSizes.com',
-  publisher: 'WireSizes.com',
+  authors: [{ name: AUTHOR_NAME, url: AUTHOR_URL }],
+  creator: AUTHOR_NAME,
+  publisher: PUBLISHER_NAME,
   robots: {
     index: true,
     follow: true,

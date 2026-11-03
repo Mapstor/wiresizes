@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArticleSchema } from '@/components/seo/ArticleSchema'
 import { articleDates } from '@/lib/page-dates';
+import { Byline } from '@/components/content/Byline';
 import { formatSize, tableAmpacity } from '@/lib/calculations/sizes';
 import { serviceConductors, TABLE_310_12_ROWS } from '@/lib/calculations/service-lookup';
 
@@ -54,6 +55,7 @@ export default function WireSizeFor200AmpPage() {
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               Wire Size for 200 Amp Service
             </h1>
+            <Byline route="/guides/wire-size-for-200-amp" className="mb-4 text-sm text-gray-600" />
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Complete guide to selecting and installing the correct wire size for 200 amp electrical service 
               per 2023 NEC requirements.
@@ -393,15 +395,15 @@ export default function WireSizeFor200AmpPage() {
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Related Guides</h2>
               <div className="grid md:grid-cols-3 gap-6">
                 <Link href="/guides/wire-size-for-100-amp" className="bg-white rounded-lg p-4 hover:shadow-lg transition-shadow">
-                  <h3 className="font-semibold text-blue-600 mb-2">Wire Size for 100 Amp Service</h3>
+                  <h3 data-name="" className="font-semibold text-blue-600 mb-2">Wire Size for 100 Amp Service</h3>
                   <p className="text-sm text-gray-600">Learn about sizing requirements for 100 amp electrical service.</p>
                 </Link>
                 <Link href="/guides/wire-size-for-ev-charger" className="bg-white rounded-lg p-4 hover:shadow-lg transition-shadow">
-                  <h3 className="font-semibold text-blue-600 mb-2">EV Charger Wire Sizing</h3>
+                  <h3 data-name="" className="font-semibold text-blue-600 mb-2">EV Charger Wire Sizing</h3>
                   <p className="text-sm text-gray-600">Complete guide to wire sizing for electric vehicle charging stations.</p>
                 </Link>
                 <Link href="/guides/nec-table-310-16" className="bg-white rounded-lg p-4 hover:shadow-lg transition-shadow">
-                  <h3 className="font-semibold text-blue-600 mb-2">NEC Table 310.16 Guide</h3>
+                  <h3 data-name="" className="font-semibold text-blue-600 mb-2">NEC Table 310.16 Guide</h3>
                   <p className="text-sm text-gray-600">Understanding ampacity tables and temperature ratings.</p>
                 </Link>
               </div>

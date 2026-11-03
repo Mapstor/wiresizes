@@ -1,4 +1,5 @@
 import { generateBreadcrumbSchema } from '@/utils/breadcrumbs';
+import { ORGANIZATION, ORGANIZATION_REF, PERSON, PERSON_REF } from '@/lib/identity';
 
 interface ArticleData {
   headline: string;
@@ -26,24 +27,8 @@ export function ArticleSchema({ article }: ArticleSchemaProps) {
       width: 1200,
       height: 630
     },
-    author: {
-      '@type': 'Organization',
-      '@id': 'https://wiresizes.com/#organization',
-      name: 'WireSizes.com',
-      url: 'https://wiresizes.com'
-    },
-    publisher: {
-      '@type': 'Organization',
-      '@id': 'https://wiresizes.com/#organization',
-      name: 'WireSizes.com',
-      url: 'https://wiresizes.com',
-      logo: {
-        '@type': 'ImageObject',
-        url: 'https://wiresizes.com/icon.svg',
-        width: 512,
-        height: 512
-      }
-    },
+    author: PERSON_REF,
+    publisher: ORGANIZATION_REF,
     datePublished: article.datePublished,
     dateModified: article.dateModified,
     mainEntityOfPage: {
@@ -56,7 +41,7 @@ export function ArticleSchema({ article }: ArticleSchemaProps) {
 
   const combinedSchema = {
     '@context': 'https://schema.org',
-    '@graph': [articleSchema, breadcrumbSchema]
+    '@graph': [articleSchema, breadcrumbSchema, PERSON, ORGANIZATION]
   };
 
   return (

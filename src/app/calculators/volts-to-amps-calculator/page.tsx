@@ -3,6 +3,11 @@ import { VoltsToAmpsCalculator } from '@/components/calculators/VoltsToAmpsCalcu
 import { Zap, Calculator, TrendingUp, AlertCircle, Battery } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import { Byline } from '@/components/content/Byline';
+import { Sources } from '@/components/content/Sources';
+import { DOMAINS as POWER_DOMAINS } from '@/lib/calculations/power';
+
+const SOURCE_DOMAINS = POWER_DOMAINS;
 
 export const metadata: Metadata = {
   title: 'Volts to Amps Calculator — V → A',
@@ -66,6 +71,7 @@ export default function VoltsToAmpsCalculatorPage() {
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
           <VoltsToAmpsCalculator />
         </div>
+        <Byline route="/calculators/volts-to-amps-calculator" sources className="mt-4 text-sm text-gray-600 dark:text-gray-400" linkClassName="text-blue-600 hover:underline dark:text-blue-300" />
       </section>
 
       {/* Ohm's Law Section */}
@@ -264,6 +270,19 @@ export default function VoltsToAmpsCalculatorPage() {
         </div>
       </section>
 
+      {/* Sources */}
+      <section className="mb-12">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+          <Sources
+            domains={SOURCE_DOMAINS}
+            headingClassName="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
+            listClassName="space-y-2 text-gray-700 dark:text-gray-300"
+            linkClassName="text-blue-600 hover:underline dark:text-blue-300"
+            noteClassName="mt-4 text-sm text-gray-600 dark:text-gray-400"
+          />
+        </div>
+      </section>
+
       {/* Related Calculators */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
@@ -273,25 +292,25 @@ export default function VoltsToAmpsCalculatorPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link href="/calculators/amps-to-watts-calculator" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
             <Zap className="h-8 w-8 text-yellow-600 mb-2" />
-            <h3 className="font-semibold mb-1">Amps to Watts</h3>
+            <h3 data-name="" className="font-semibold mb-1">Amps to Watts</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Convert current to power</p>
           </Link>
           
           <Link href="/calculators/watts-to-amps-calculator" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
             <Calculator className="h-8 w-8 text-blue-600 mb-2" />
-            <h3 className="font-semibold mb-1">Watts to Amps</h3>
+            <h3 data-name="" className="font-semibold mb-1">Watts to Amps</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Power to current converter</p>
           </Link>
           
           <Link href="/calculators/ohms-law-calculator" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
             <Battery className="h-8 w-8 text-green-600 mb-2" />
-            <h3 className="font-semibold mb-1">Ohm's Law</h3>
+            <h3 data-name="" className="font-semibold mb-1">Ohm's Law</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Complete V-I-R-P calculator</p>
           </Link>
           
           <Link href="/calculators/voltage-drop-calculator" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
             <TrendingUp className="h-8 w-8 text-purple-600 mb-2" />
-            <h3 className="font-semibold mb-1">Voltage Drop</h3>
+            <h3 data-name="" className="font-semibold mb-1">Voltage Drop</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Calculate circuit voltage loss</p>
           </Link>
         </div>

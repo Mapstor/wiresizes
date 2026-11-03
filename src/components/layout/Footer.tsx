@@ -67,7 +67,7 @@ export function Footer() {
             <div className="p-2 bg-yellow-400/20 rounded-lg">
               <Zap className="w-8 h-8" />
             </div>
-            <span>WireSizes.com</span>
+            <span data-name="">WireSizes.com</span>
           </Link>
           <p className="text-neutral-300 text-lg max-w-2xl leading-relaxed">
             Wire gauge charts, NEC table values and calculators for sizing conductors.
@@ -88,6 +88,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link 
                     href={link.href}
+                    data-name=""
                     className={`text-neutral-300 hover:text-blue-400 text-sm transition-colors flex items-center gap-1 ${
                       link.isViewAll ? 'font-semibold mt-3 text-blue-300' : ''
                     }`}
@@ -111,6 +112,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link 
                     href={link.href}
+                    data-name=""
                     className={`text-neutral-300 hover:text-yellow-400 text-sm transition-colors flex items-center gap-1 ${
                       link.isViewAll ? 'font-semibold mt-3 text-yellow-300' : ''
                     }`}
@@ -134,6 +136,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link 
                     href={link.href}
+                    data-name=""
                     className={`text-neutral-300 hover:text-purple-400 text-sm transition-colors flex items-center gap-1 ${
                       link.isViewAll ? 'font-semibold mt-3 text-purple-300' : ''
                     }`}
@@ -157,6 +160,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link 
                     href={link.href}
+                    data-name=""
                     className={`text-neutral-300 hover:text-orange-400 text-sm transition-colors flex items-center gap-1 ${
                       link.isViewAll ? 'font-semibold mt-3 text-orange-300' : ''
                     }`}
@@ -180,6 +184,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link 
                     href={link.href}
+                    data-name=""
                     className="text-neutral-300 hover:text-red-400 text-sm transition-colors"
                   >
                     {link.name}
@@ -196,7 +201,7 @@ export function Footer() {
           <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
             {sitePages.map((page) => (
               <li key={page.href}>
-                <Link href={page.href} className="text-neutral-300 hover:text-blue-400 transition-colors">
+                <Link href={page.href} data-name="" className="text-neutral-300 hover:text-blue-400 transition-colors">
                   {page.name}
                 </Link>
               </li>

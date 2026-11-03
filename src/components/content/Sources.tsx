@@ -3,7 +3,9 @@
 // every item was retrieved in the month its verified_date falls in, the items drop their " — retrieved {Mon YYYY}"
 // segment and one line "Retrieved {Mon YYYY}." follows the list; otherwise each item keeps its own segment. Each item
 // carries data-src={domain}, so the numbers in its text trace to it. Server only (registry.ts). The page wraps it in
-// its own secondary-section markup and passes that section's classes.
+// its own secondary-section markup and passes that section's classes. The heading is #sources, the target of the
+// byline's "Sources below" (WSZ-004a); scroll-mt-20 keeps it clear of the sticky header.
+import { clsx } from 'clsx';
 import { attribution, attributionParts } from '@/lib/verified/registry';
 import { monthOf } from './AsOf';
 
@@ -27,7 +29,9 @@ export function Sources({ domains, headingClassName, listClassName, linkClassNam
   const oneMonth = retrieved !== null && items.every((item) => item.retrieved === retrieved && monthOf(item.verified_date) === retrieved);
   return (
     <>
-      <h2 className={headingClassName}>Sources</h2>
+      <h2 id="sources" className={clsx('scroll-mt-20', headingClassName)}>
+        Sources
+      </h2>
       <ul className={listClassName}>
         {items.map((item) => (
           <li key={item.domain} data-src={item.domain}>
