@@ -1,5 +1,6 @@
-// Shared helpers for the build gates (scripts/check-banned.mjs, scripts/check-structure.mjs).
-// Node built-ins only. Reads the Next.js build output in .next/server/app after `npm run build`.
+// Shared helpers for the build gates (scripts/check-banned.mjs, scripts/check-structure.mjs, and since WSZ-003b
+// check-rendered-text.mjs, check-number-trace.mjs and check-nec-refs.mjs). Node built-ins only. Reads the Next.js build
+// output in .next/server/app after `npm run build`.
 
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join, relative, dirname, sep } from 'node:path';
@@ -92,16 +93,19 @@ function parseAttributes(tagSource, nameLength) {
 // Tokenizes HTML into events, tracking the open-element stack:
 //   { type: 'open', name, attrs, parent, stack }   (stack = ancestor names, outermost first)
 //   { type: 'close', name }
-//   { type: 'text', value, stack }                  (entities decoded)
-//   { type: 'raw', name: 'script' | 'style', attrs, body }
-// HTML comments are dropped without a boundary, so React's "$<!-- -->12" reads "$12".
+//   { type: 'text', value, stack, ancestors }       (entities decoded; ancestors = [{ name, attrs }], outermost first)
+//   { type: 'raw', name: 'script' | 'style' | 'noscript', attrs, body }
+// HTML comments are dropped without a boundary, so React's "$<!-- -->12" reads "$12". <script>, <style> and
+// <noscript> bodies are raw events, never text: the gates read JSON-LD scripts as JSON (isJsonLd, jsonLdStrings) and
+// skip the rest, the Next.js RSC payload included.
 export function tokenizeHtml(html) {
   const events = [];
   const stack = [];
+  const ancestors = [];
   const n = html.length;
   let i = 0;
   const pushText = (value) => {
-    if (value) events.push({ type: 'text', value: decodeEntities(value), stack: stack.slice() });
+    if (value) events.push({ type: 'text', value: decodeEntities(value), stack: stack.slice(), ancestors: ancestors.slice() });
   };
   while (i < n) {
     const lt = html.indexOf('<', i);
@@ -142,12 +146,15 @@ export function tokenizeHtml(html) {
     const name = m[2].toLowerCase();
     if (m[1] === '/') {
       const at = stack.lastIndexOf(name);
-      if (at !== -1) stack.length = at;
+      if (at !== -1) {
+        stack.length = at;
+        ancestors.length = at;
+      }
       events.push({ type: 'close', name });
       continue;
     }
     const attrs = parseAttributes(tagSource, m[2].length);
-    if (name === 'script' || name === 'style') {
+    if (name === 'script' || name === 'style' || name === 'noscript') {
       const closeRe = new RegExp(`</${name}\\s*>`, 'i');
       const rest = html.slice(i);
       const cm = closeRe.exec(rest);
@@ -158,7 +165,10 @@ export function tokenizeHtml(html) {
     }
     const selfClosing = tagSource.endsWith('/>');
     events.push({ type: 'open', name, attrs, parent: stack[stack.length - 1] ?? null, stack: stack.slice() });
-    if (!VOID_ELEMENTS.has(name) && !selfClosing) stack.push(name);
+    if (!VOID_ELEMENTS.has(name) && !selfClosing) {
+      stack.push(name);
+      ancestors.push({ name, attrs });
+    }
   }
   return events;
 }
@@ -191,4 +201,64 @@ export function jsonLdStrings(body) {
     out.push(body);
   }
   return out;
+}
+
+// ── WSZ-003b gates ──────────────────────────────────────────────────────────
+
+// Live prerendered pages: htmlPages() without the withdrawn routes.
+export function livePages() {
+  const withdrawn = new Set(withdrawnRoutes());
+  return htmlPages().filter((p) => !withdrawn.has(p.route));
+}
+
+// The rendered texts of a page outside its visible text, for the text gates: <title>, the meta description, og:* and
+// twitter:* meta tags, alt, title and aria-label attributes, and JSON-LD string values: [{ part, text }].
+export function pageTexts(events) {
+  const out = [];
+  let inTitle = false;
+  let title = '';
+  for (const e of events) {
+    if (e.type === 'open' && e.name === 'title' && !e.stack.includes('svg')) {
+      inTitle = true;
+      title = '';
+    } else if (e.type === 'close' && e.name === 'title' && inTitle) {
+      inTitle = false;
+      out.push({ part: '<title>', text: title });
+    } else if (e.type === 'text' && inTitle) title += e.value;
+    if (e.type === 'open') {
+      const name = (e.attrs.name ?? '').toLowerCase();
+      const property = (e.attrs.property ?? '').toLowerCase();
+      if (e.name === 'meta' && (name === 'description' || name.startsWith('twitter:') || property.startsWith('og:'))) {
+        out.push({ part: `<meta ${name || property}>`, text: e.attrs.content ?? '' });
+      }
+      for (const attr of ['alt', 'title', 'aria-label']) if (e.attrs[attr]) out.push({ part: `<${e.name} ${attr}>`, text: e.attrs[attr] });
+    } else if (isJsonLd(e)) {
+      for (const s of jsonLdStrings(e.body)) out.push({ part: 'JSON-LD', text: s });
+    }
+  }
+  return out;
+}
+
+// research/data-sources.csv rows by domain.
+export function registryRows() {
+  const csv = readFileSync(join(repoRoot, 'research', 'data-sources.csv'), 'utf8');
+  return new Map(parseCsv(csv).map((row) => [row.domain, row]));
+}
+
+// ENGINE_ID → DOMAINS of every engine in src/lib/calculations (the modules that export both), read from the source.
+export function engineDomains() {
+  const dir = join(repoRoot, 'src', 'lib', 'calculations');
+  const engines = new Map();
+  for (const file of walkFiles(dir, (f) => f.endsWith('.ts'))) {
+    const src = readFileSync(file, 'utf8');
+    const id = /export const ENGINE_ID = '([^']+)'/.exec(src);
+    const domains = /export const DOMAINS = \[([\s\S]*?)\]/.exec(src);
+    if (id && domains) engines.set(id[1], [...domains[1].matchAll(/'([^']+)'/g)].map((m) => m[1]));
+  }
+  return engines;
+}
+
+// scripts/gates.config.json: { numberTrace: { enforce: [routes] }, necRefs: { enforce: [routes] } }.
+export function gatesConfig() {
+  return JSON.parse(readFileSync(join(repoRoot, 'scripts', 'gates.config.json'), 'utf8'));
 }

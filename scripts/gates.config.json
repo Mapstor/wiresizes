@@ -1,0 +1,34 @@
+{
+  "numberTrace": {
+    "enforce": []
+  },
+  "necRefs": {
+    "enforce": [
+      "/",
+      "/_global-error",
+      "/_not-found",
+      "/about",
+      "/calculators",
+      "/calculators/ampacity-calculator",
+      "/calculators/amps-to-watts-calculator",
+      "/calculators/btu-to-watts-calculator",
+      "/calculators/kilowatts-to-amps-calculator",
+      "/calculators/kva-to-amps-calculator",
+      "/calculators/low-voltage-calculator",
+      "/calculators/ohms-law-calculator",
+      "/calculators/three-phase-calculator",
+      "/calculators/voltage-drop-calculator",
+      "/calculators/volts-to-amps-calculator",
+      "/calculators/watts-to-amps-calculator",
+      "/calculators/wire-resistance-calculator",
+      "/contact",
+      "/disclaimer",
+      "/guides",
+      "/guides/electrical-power-calculations",
+      "/guides/power-factor-explained",
+      "/guides/wire-size-for-200-amp",
+      "/privacy",
+      "/terms"
+    ]
+  }
+}

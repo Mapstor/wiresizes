@@ -1,0 +1,15 @@
+# Exceptions to scripts/check-rendered-text.mjs (WSZ-003b gate a), one per line:
+#   <route or file> | <matched text> | <reason>
+# The route is a live page ("/about") or a file path ("public/llms.txt"); "*" matches every page and file. The matched
+# text is compared without regard to case. Every line needs a reason; a line that matches nothing is printed.
+
+# designations, not a number and a unit
+/calculators/three-phase-calculator | 240Δ/120 | delta system designation (240 V delta, 120 V center tap), named like the wye designations the gate excepts ("208Y/120")
+/calculators/three-phase-calculator | 480Δ | delta system designation (480 V delta), named like the wye designations the gate excepts
+/calculators/watts-to-amps-calculator | 1Φ | phase-count notation: 1Φ is single-phase, a symbol name, not a number and a unit
+/calculators/watts-to-amps-calculator | 3Φ | phase-count notation: 3Φ is three-phase, a symbol name, not a number and a unit
+/guides/wire-size-for-ev-charger | §30C | section 30C of the Internal Revenue Code (the IRS credit's name)
+/privacy | _ga_T871GVJZE2 | the name of Google Analytics' session cookie, which the privacy notice must name exactly
+
+# pending chat wording
+/calculators/voltage-drop-calculator | 10x | a multiplier ("10x more impact"), not a number and a unit: pending chat wording
