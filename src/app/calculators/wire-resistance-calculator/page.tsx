@@ -5,7 +5,11 @@ import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 import { conductor, formatSize, TABLE_310_16_SIZES } from '@/lib/calculations/sizes';
 import type { ConductorData } from '@/lib/calculations/sizes';
-import { RESISTANCE_NOTES } from '@/lib/calculations/resistance';
+import { Sources } from '@/components/content/Sources';
+import { DOMAINS as RESISTANCE_DOMAINS, RESISTANCE_NOTES } from '@/lib/calculations/resistance';
+
+// Sources: the domains of the engines this page uses
+const SOURCE_DOMAINS = RESISTANCE_DOMAINS;
 
 export const metadata: Metadata = {
   title: 'Wire Resistance Calculator — Ω / 1000 ft',
@@ -547,6 +551,19 @@ export default function WireResistanceCalculatorPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Sources */}
+      <section className="mb-16">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+          <Sources
+            domains={SOURCE_DOMAINS}
+            headingClassName="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center"
+            listClassName="space-y-2 text-gray-700 dark:text-gray-300"
+            linkClassName="text-blue-600 hover:underline dark:text-blue-300"
+            noteClassName="mt-4 text-sm text-gray-600 dark:text-gray-400"
+          />
         </div>
       </section>
 

@@ -4,7 +4,9 @@ import { useRef, useState } from 'react';
 import { Building, Calculator, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
-import { formatSize } from '@/lib/verified/awg';
+import { Val } from '@/components/content/Val';
+import { ValText } from '@/components/content/ValText';
+import type { TextPart } from '@/lib/calculations/format';
 import {
   NO_ROW_MESSAGE,
   SCOPE_LINES,
@@ -18,27 +20,38 @@ import { focusResults } from '@/lib/hooks/useCalculatorForm';
 const RATING_OPTIONS = SERVICE_RATINGS.map((a) => ({ value: String(a), label: `${a} A` }));
 
 interface Row {
-  label: string;
-  value: string;
+  key: string;
+  label: TextPart[];
+  value: TextPart[];
 }
 
 /** Result lines for the panel (and any copy of it). */
 function resultRows(result: ServiceLookupResult): { conductors: Row[]; gec: Row[] } {
   return {
     conductors: [
-      { label: 'Copper', value: formatSize(result.cu) },
-      { label: 'Aluminum or copper-clad aluminum', value: formatSize(result.alCca) },
+      { key: 'cu', label: ['Copper'], value: [{ size: result.cu }] },
+      { key: 'al', label: ['Aluminum or copper-clad aluminum'], value: [{ size: result.alCca }] },
     ],
     gec: [
-      { label: `For ${formatSize(result.cu)} copper service conductors: copper`, value: formatSize(result.gecForCuService.cu) },
       {
-        label: `For ${formatSize(result.cu)} copper service conductors: aluminum or copper-clad aluminum`,
-        value: formatSize(result.gecForCuService.alCca),
+        key: 'cu-service-cu',
+        label: ['For ', { size: result.cu }, ' copper service conductors: copper'],
+        value: [{ size: result.gecForCuService.cu }],
       },
-      { label: `For ${formatSize(result.alCca)} aluminum service conductors: copper`, value: formatSize(result.gecForAlService.cu) },
       {
-        label: `For ${formatSize(result.alCca)} aluminum service conductors: aluminum or copper-clad aluminum`,
-        value: formatSize(result.gecForAlService.alCca),
+        key: 'cu-service-al',
+        label: ['For ', { size: result.cu }, ' copper service conductors: aluminum or copper-clad aluminum'],
+        value: [{ size: result.gecForCuService.alCca }],
+      },
+      {
+        key: 'al-service-cu',
+        label: ['For ', { size: result.alCca }, ' aluminum service conductors: copper'],
+        value: [{ size: result.gecForAlService.cu }],
+      },
+      {
+        key: 'al-service-al',
+        label: ['For ', { size: result.alCca }, ' aluminum service conductors: aluminum or copper-clad aluminum'],
+        value: [{ size: result.gecForAlService.alCca }],
       },
     ],
   };
@@ -97,16 +110,22 @@ export default function ServiceEntranceCalculator() {
             <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
               <div className="flex items-center gap-2">
                 <Building className="w-5 h-5 text-blue-600" />
-                <h3 className="text-lg font-semibold text-gray-900">{ratingA} A, 120/240 V dwelling</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  <Val v={ratingA} unit="A" src="input" />, 120/240 V dwelling
+                </h3>
               </div>
 
               <div>
                 <div className="text-sm font-medium text-gray-700 mb-2">Service conductors, NEC Table 310.12</div>
                 <dl className="grid sm:grid-cols-2 gap-4">
                   {rows.conductors.map((row) => (
-                    <div key={row.label} className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                      <dt className="text-sm text-blue-700">{row.label}</dt>
-                      <dd className="text-2xl font-bold text-blue-900 font-mono">{row.value}</dd>
+                    <div key={row.key} className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                      <dt className="text-sm text-blue-700">
+                        <ValText parts={row.label} />
+                      </dt>
+                      <dd className="text-2xl font-bold text-blue-900 font-mono">
+                        <ValText parts={row.value} />
+                      </dd>
                     </div>
                   ))}
                 </dl>
@@ -116,9 +135,13 @@ export default function ServiceEntranceCalculator() {
                 <div className="text-sm font-medium text-gray-700 mb-2">Grounding electrode conductor, NEC Table 250.66</div>
                 <dl className="space-y-2 text-sm">
                   {rows.gec.map((row) => (
-                    <div key={row.label} className="flex justify-between gap-4 border-b border-gray-100 pb-2">
-                      <dt className="text-gray-600">{row.label}</dt>
-                      <dd className="font-mono font-semibold">{row.value}</dd>
+                    <div key={row.key} className="flex justify-between gap-4 border-b border-gray-100 pb-2">
+                      <dt className="text-gray-600">
+                        <ValText parts={row.label} />
+                      </dt>
+                      <dd className="font-mono font-semibold">
+                        <ValText parts={row.value} />
+                      </dd>
                     </div>
                   ))}
                 </dl>

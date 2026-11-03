@@ -1,8 +1,11 @@
 import { Check, AlertTriangle, X } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
-import { formatEntered, formatFixed } from '@/lib/calculations/format';
-import { conductor, formatSize } from '@/lib/verified/awg';
-import { targetTitle } from '@/lib/calculations/voltage-drop';
+import { Val } from '@/components/content/Val';
+import { Size } from '@/components/content/Size';
+import { ValText } from '@/components/content/ValText';
+import type { TextPart } from '@/lib/calculations/format';
+import { conductor } from '@/lib/verified/awg';
+import { targetTitle, VD_FORMAT } from '@/lib/calculations/voltage-drop';
 
 interface CalculatorResultProps {
   awg: string;
@@ -21,8 +24,10 @@ interface CalculatorResultProps {
   ampacityLabel?: string;
   /** Shown in place of the ground wire size, e.g. when no Table 310.16 size is large enough. */
   groundWireMessage?: string;
-  /** Plain-language steps behind the result. */
-  steps?: string[];
+  /** Plain-language steps behind the result, in text parts. */
+  stepParts?: TextPart[][];
+  /** Where the ampacity and voltage drop come from: calc:<ENGINE_ID> of the engine that returned them. */
+  valueSrc: string;
   /** Error message: renders an error state instead of a result. */
   error?: string;
 }
@@ -45,7 +50,8 @@ export function CalculatorResult({
   voltageDropVolts,
   ampacityLabel = 'Ampacity',
   groundWireMessage,
-  steps = [],
+  stepParts = [],
+  valueSrc,
   error,
 }: CalculatorResultProps) {
   const materialLabel = material === 'copper' ? 'Copper' : 'Aluminum';
@@ -80,7 +86,7 @@ export function CalculatorResult({
       {/* Main Result */}
       <div className="flex flex-wrap items-baseline gap-3 mb-4">
         <span className="text-3xl sm:text-4xl font-bold font-mono text-neutral-900">
-          {formatSize(awg)}
+          <Size s={awg} />
         </span>
         <Badge variant={material === 'copper' ? 'warning' : 'default'}>
           {materialLabel}
@@ -91,19 +97,26 @@ export function CalculatorResult({
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
           <div className="text-sm text-neutral-500">{ampacityLabel}</div>
-          <div className="font-mono font-semibold">{formatEntered(ampacity)} A</div>
+          <div className="font-mono font-semibold">
+            <Val v={ampacity} unit="A" src={valueSrc} />
+          </div>
         </div>
         <div>
           <div className="text-sm text-neutral-500">Voltage Drop</div>
           <div className={`font-mono font-semibold ${config.vdColor}`}>
-            {formatFixed(voltageDropPercent, 2)} %
-            {voltageDropVolts !== undefined && ` (${formatFixed(voltageDropVolts, 2)} V)`}
+            <Val v={voltageDropPercent} unit="%" format={VD_FORMAT} src={valueSrc} />
+            {voltageDropVolts !== undefined && (
+              <>
+                {' ('}
+                <Val v={voltageDropVolts} unit="V" format={VD_FORMAT} src={valueSrc} />)
+              </>
+            )}
           </div>
         </div>
         <div className="col-span-2">
           <div className="text-sm text-neutral-500">{GROUND_WIRE_LABELS[material]}</div>
           <div className={groundWireKnown ? 'font-mono font-semibold' : 'text-sm font-medium text-neutral-800'}>
-            {groundWireKnown ? formatSize(groundWire) : (groundWireMessage ?? '–')}
+            {groundWireKnown ? <Size s={groundWire} /> : (groundWireMessage ?? '–')}
           </div>
         </div>
         {necReference && (
@@ -127,12 +140,14 @@ export function CalculatorResult({
       )}
 
       {/* Steps */}
-      {steps.length > 0 && (
+      {stepParts.length > 0 && (
         <div className="mt-4 pt-4 border-t border-neutral-200">
           <div className="text-sm font-medium text-neutral-700 mb-2">Steps:</div>
           <ol className="text-sm text-neutral-700 space-y-1 list-decimal pl-5">
-            {steps.map((step, index) => (
-              <li key={index}>{step}</li>
+            {stepParts.map((parts, index) => (
+              <li key={index}>
+                <ValText parts={parts} />
+              </li>
             ))}
           </ol>
         </div>

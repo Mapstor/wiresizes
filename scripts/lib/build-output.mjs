@@ -4,6 +4,10 @@
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join, relative, dirname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parseCsv } from '../../src/lib/verified/csv.mjs';
+
+// The repo's one CSV parser lives beside the site's source registry (src/lib/verified/registry.ts).
+export { parseCsv };
 
 export const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 export const appOutDir = join(repoRoot, '.next', 'server', 'app');
@@ -33,41 +37,6 @@ export function htmlPages() {
     const r = relative(appOutDir, file).split(sep).join('/').replace(/\.html$/, '');
     return { file, route: r === 'index' ? '/' : '/' + r };
   });
-}
-
-// Minimal RFC 4180 CSV parser (quoted fields may contain commas, quotes and newlines).
-export function parseCsv(text) {
-  const rows = [];
-  let row = [];
-  let field = '';
-  let quoted = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (quoted) {
-      if (c === '"') {
-        if (text[i + 1] === '"') {
-          field += '"';
-          i++;
-        } else quoted = false;
-      } else field += c;
-    } else if (c === '"') quoted = true;
-    else if (c === ',') {
-      row.push(field);
-      field = '';
-    } else if (c === '\n' || c === '\r') {
-      if (c === '\r' && text[i + 1] === '\n') i++;
-      row.push(field);
-      rows.push(row);
-      row = [];
-      field = '';
-    } else field += c;
-  }
-  if (field !== '' || row.length) {
-    row.push(field);
-    rows.push(row);
-  }
-  const [header, ...body] = rows.filter((r) => r.length > 1 || r[0] !== '');
-  return body.map((r) => Object.fromEntries(header.map((h, k) => [h.replace(/^﻿/, ''), r[k] ?? ''])));
 }
 
 export function withdrawnRoutes() {

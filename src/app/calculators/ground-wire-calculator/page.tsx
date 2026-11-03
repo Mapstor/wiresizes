@@ -3,10 +3,14 @@ import { GroundWireCalculator } from '@/components/calculators/GroundWireCalcula
 import { Shield, Calculator, TrendingUp, AlertCircle, BookOpen, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
-import { TABLE_250_122_ROWS } from '@/lib/calculations/grounding';
-import { SCOPE_LINES } from '@/lib/calculations/service-lookup';
+import { Sources } from '@/components/content/Sources';
+import { DOMAINS as GROUNDING_DOMAINS, TABLE_250_122_ROWS } from '@/lib/calculations/grounding';
+import { DOMAINS as SERVICE_LOOKUP_DOMAINS, SCOPE_LINES } from '@/lib/calculations/service-lookup';
 import { formatSize } from '@/lib/verified/awg';
 import { TABLE_250_66_ROWS } from '@/lib/verified/nec-250-66';
+
+// Sources: the domains of the engines this page uses
+const SOURCE_DOMAINS = [...GROUNDING_DOMAINS, ...SERVICE_LOOKUP_DOMAINS];
 
 export const metadata: Metadata = {
   title: 'Ground Wire Calculator — NEC 250.122',
@@ -533,6 +537,19 @@ export default function GroundWireCalculatorPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Sources */}
+      <section className="mb-16">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+          <Sources
+            domains={SOURCE_DOMAINS}
+            headingClassName="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center"
+            listClassName="space-y-2 text-gray-700 dark:text-gray-300"
+            linkClassName="text-blue-600 hover:underline dark:text-blue-300"
+            noteClassName="mt-4 text-sm text-gray-600 dark:text-gray-400"
+          />
         </div>
       </section>
 

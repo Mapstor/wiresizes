@@ -7,8 +7,11 @@ import { max240_4D } from '../verified/nec-240-4-d';
 import { columnKey, table31016, TABLE_310_16_SIZES } from '../verified/nec-310-16';
 import type { AmpacityColumn } from '../verified/nec-310-16';
 import type { Material, SizeKey } from '../verified/awg';
+import { partsText } from './format';
+import type { TextPart } from './format';
 
 export const ENGINE_ID = 'ampacity';
+const CALC = `calc:${ENGINE_ID}`;
 export const DOMAINS = ['nec-310-16', 'nec-310-15-corrections', 'nec-240-4-d'];
 
 export { AMBIENT_ROWS } from '../verified/nec-310-15-B-1-1';
@@ -41,14 +44,25 @@ export function correctedAmpacity(tableA: number, factor: number, percent: numbe
   return (tableA * factor * percent) / 100;
 }
 
-export function ocpdLimitLabel(maxOcpdA: number): string {
-  return `Overcurrent protection limited to ${maxOcpdA} A (NEC 240.4(D))`;
+/** "Overcurrent protection limited to 20 A (NEC 240.4(D))" in parts. */
+export function ocpdLimitParts(maxOcpdA: number): TextPart[] {
+  return ['Overcurrent protection limited to ', { v: maxOcpdA, unit: 'A', src: CALC }, ' (NEC 240.4(D))'];
 }
 
-/** The 240.4(D) label shown beside a result: the rows without conditions (14, 12 and 10 AWG copper, 12 and 10 AWG aluminum). */
-export function displayedOcpdLimit(size: SizeKey, material: Material): string | null {
+export function ocpdLimitLabel(maxOcpdA: number): string {
+  return partsText(ocpdLimitParts(maxOcpdA));
+}
+
+/** The 240.4(D) limit shown beside a result: the rows without conditions (14, 12 and 10 AWG copper, 12 and 10 AWG aluminum). */
+export function displayedOcpdLimitA(size: SizeKey, material: Material): number | null {
   const row = max240_4D(size, material);
-  return row && row.conditions === null ? ocpdLimitLabel(row.max_ocpd_a) : null;
+  return row && row.conditions === null ? row.max_ocpd_a : null;
+}
+
+/** displayedOcpdLimitA as the label shown beside a result. */
+export function displayedOcpdLimit(size: SizeKey, material: Material): string | null {
+  const limitA = displayedOcpdLimitA(size, material);
+  return limitA === null ? null : ocpdLimitLabel(limitA);
 }
 
 export interface AmpacityInput {
@@ -67,6 +81,8 @@ export interface AmpacityResult {
   ampacity: number | null;
   notPermitted: boolean;
   ocpdLimit: string | null;
+  /** The 240.4(D) limit behind ocpdLimit, in amperes. */
+  ocpdLimitA: number | null;
 }
 
 export function calculateAmpacity(input: AmpacityInput): AmpacityResult {
@@ -81,6 +97,7 @@ export function calculateAmpacity(input: AmpacityInput): AmpacityResult {
     ampacity: base === null || factor === null ? null : correctedAmpacity(base, factor, percent),
     notPermitted,
     ocpdLimit: displayedOcpdLimit(input.size, input.material),
+    ocpdLimitA: displayedOcpdLimitA(input.size, input.material),
   };
 }
 

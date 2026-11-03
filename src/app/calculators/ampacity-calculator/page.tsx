@@ -2,16 +2,22 @@ import { Metadata } from 'next';
 import { AmpacityCalculator } from '@/components/calculators/AmpacityCalculator';
 import { AlertTriangle, Calculator, Thermometer, BookOpen, Info, CheckCircle, ArrowRight, Gauge, AlertCircle, Shield, Activity } from 'lucide-react';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import { Sources } from '@/components/content/Sources';
 import {
   AMBIENT_ROWS,
   ambientLabel,
   adjustmentPercent,
   correctionFactor,
+  DOMAINS as AMPACITY_DOMAINS,
   formatFactor,
   maxOcpd240_4D,
 } from '@/lib/calculations/ampacity';
+import { DOMAINS as VOLTAGE_DROP_DOMAINS } from '@/lib/calculations/voltage-drop';
 import { formatSize, tableAmpacity } from '@/lib/calculations/sizes';
 import type { Material, SizeKey } from '@/lib/calculations/sizes';
+
+// Sources: the domains of the engines this page uses (the calculator shows voltage-drop.ts's 14 AWG aluminum note)
+const SOURCE_DOMAINS = [...AMPACITY_DOMAINS, ...VOLTAGE_DROP_DOMAINS];
 
 export const metadata: Metadata = {
   title: 'Ampacity Calculator — NEC Table 310.16',
@@ -505,6 +511,21 @@ export default function AmpacityCalculatorPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Sources */}
+      <section className="py-8">
+        <div className="container">
+          <div className="max-w-6xl mx-auto">
+            <Sources
+              domains={SOURCE_DOMAINS}
+              headingClassName="text-2xl font-bold text-neutral-900 mb-6"
+              listClassName="space-y-2 text-sm text-neutral-600"
+              linkClassName="text-blue-600 hover:underline"
+              noteClassName="mt-4 text-sm text-neutral-600"
+            />
           </div>
         </div>
       </section>

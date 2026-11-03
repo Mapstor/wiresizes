@@ -2,8 +2,15 @@ import { Metadata } from 'next';
 import { WireSizeCalculator } from '@/components/calculators/WireSizeCalculator';
 import { AlertTriangle, Calculator, Zap, BookOpen, Info, CheckCircle, ArrowRight, Gauge, AlertCircle, Shield, Lightbulb, Wrench } from 'lucide-react';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
-import { AMBIENT_ROWS, ambientLabel } from '@/lib/calculations/ampacity';
+import { Sources } from '@/components/content/Sources';
+import { AMBIENT_ROWS, ambientLabel, DOMAINS as AMPACITY_DOMAINS } from '@/lib/calculations/ampacity';
+import { DOMAINS as SIZING_DOMAINS } from '@/lib/calculations/conductor-sizing';
+import { DOMAINS as VOLTAGE_DROP_DOMAINS } from '@/lib/calculations/voltage-drop';
 import { TABLE_310_16_ROWS } from '@/lib/verified/nec-310-16';
+
+// Sources: the domains of the engines this page uses. nec-110-14c (the 110.14(C) termination rules) stays off the
+// page until WSZ-009 adds the termination inputs: its attribution prints "110.14(C)", which check-structure 7 fails.
+const SOURCE_DOMAINS = [...SIZING_DOMAINS, ...VOLTAGE_DROP_DOMAINS, ...AMPACITY_DOMAINS].filter((domain) => domain !== 'nec-110-14c');
 
 export const metadata: Metadata = {
   title: 'Wire Size Calculator — AWG / NEC 310.16',
@@ -532,6 +539,21 @@ export default function WireSizeCalculatorPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Sources */}
+      <section className="py-8">
+        <div className="container">
+          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
+            <Sources
+              domains={SOURCE_DOMAINS}
+              headingClassName="text-2xl font-bold text-neutral-900 mb-6"
+              listClassName="space-y-2 text-sm text-neutral-600"
+              linkClassName="text-blue-600 hover:underline"
+              noteClassName="mt-4 text-sm text-neutral-600"
+            />
           </div>
         </div>
       </section>

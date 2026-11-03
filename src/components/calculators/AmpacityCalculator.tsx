@@ -5,10 +5,13 @@ import { Calculator, RotateCcw } from 'lucide-react';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { CalculatorLayout } from './CalculatorLayout';
+import { Size } from '@/components/content/Size';
+import { ValText } from '@/components/content/ValText';
 import { focusResults, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { buildQuery, choiceParam } from '@/lib/calculations/fields';
-import { formatEntered, formatUpTo } from '@/lib/calculations/format';
+import { partsText } from '@/lib/calculations/format';
+import type { TextPart, ValueFormat } from '@/lib/calculations/format';
 import {
   ADJUSTMENT_BANDS,
   AMBIENT_ROWS,
@@ -19,11 +22,13 @@ import {
   bandLabel,
   calculateAmpacity,
   COLUMN_OPTIONS,
+  ENGINE_ID,
   formatFactor,
   NOT_PERMITTED_MESSAGE,
+  ocpdLimitParts,
 } from '@/lib/calculations/ampacity';
 import type { AmpacityInput, AmpacityResult } from '@/lib/calculations/ampacity';
-import { NO_14_AWG_ALUMINUM_NOTE } from '@/lib/calculations/voltage-drop';
+import { NO_14_AWG_ALUMINUM_NOTE, NO_14_AWG_ALUMINUM_NOTE_PARTS } from '@/lib/calculations/voltage-drop';
 import { formatSize } from '@/lib/verified/awg';
 import type { Material } from '@/lib/verified/awg';
 import type { AmpacityColumn } from '@/lib/verified/nec-310-16';
@@ -38,27 +43,37 @@ const MATERIALS: { material: Material; key: 'copper' | 'aluminum'; label: string
   { material: 'Al', key: 'aluminum', label: 'Aluminum Conductor' },
 ];
 
-function amps(value: number): string {
-  return `${formatUpTo(value, 2)} A`;
-}
+const CALC = `calc:${ENGINE_ID}`;
+/** Ampacities with at most two decimals. */
+const AMPS: ValueFormat = { upTo: 2 };
 
 interface Row {
-  label: string;
-  value: string;
+  key: 'table' | 'correction' | 'adjustment' | 'ampacity' | 'ocpd';
+  label: TextPart[];
+  value: TextPart[];
 }
 
-/** The lines the result panel shows for one material, also used for print. */
+/** The lines the result panel shows for one material, also used for print (partsText). */
 function resultRows(result: AmpacityResult, column: AmpacityColumn): Row[] {
   const rows: Row[] = [
-    { label: `NEC Table 310.16, ${column} °C column`, value: amps(result.tableAmpacity as number) },
     {
-      label: 'Ambient correction, Table 310.15(B)(1)(1)',
-      value: formatFactor(result.correctionFactor),
+      key: 'table',
+      label: ['NEC Table 310.16, ', { v: column, unit: '°C', src: 'input' }, ' column'],
+      value: [{ v: result.tableAmpacity as number, unit: 'A', src: CALC, format: AMPS }],
     },
-    { label: 'Adjustment, Table 310.15(C)(1)', value: `${formatEntered(result.adjustmentPercent)} %` },
-    { label: 'Ampacity', value: result.ampacity === null ? NOT_PERMITTED_MESSAGE : amps(result.ampacity) },
+    {
+      key: 'correction',
+      label: ['Ambient correction, Table 310.15(B)(1)(1)'],
+      value: [formatFactor(result.correctionFactor)],
+    },
+    { key: 'adjustment', label: ['Adjustment, Table 310.15(C)(1)'], value: [{ v: result.adjustmentPercent, unit: '%', src: CALC }] },
+    {
+      key: 'ampacity',
+      label: ['Ampacity'],
+      value: result.ampacity === null ? [NOT_PERMITTED_MESSAGE] : [{ v: result.ampacity, unit: 'A', src: CALC, format: AMPS }],
+    },
   ];
-  if (result.ocpdLimit) rows.push({ label: 'NEC 240.4(D)', value: result.ocpdLimit });
+  if (result.ocpdLimitA !== null) rows.push({ key: 'ocpd', label: ['NEC 240.4(D)'], value: ocpdLimitParts(result.ocpdLimitA) });
   return rows;
 }
 
@@ -112,7 +127,7 @@ export function AmpacityCalculator() {
   const handlePrint = () => {
     const printed: Record<string, string> = {};
     for (const { label, result } of results) {
-      for (const row of resultRows(result, inputs.column)) printed[`${label}: ${row.label}`] = row.value;
+      for (const row of resultRows(result, inputs.column)) printed[`${label}: ${partsText(row.label)}`] = partsText(row.value);
     }
     const notes = [`NEC References: ${AMPACITY_NEC_REFERENCES}`];
     if (noAluminum) notes.unshift(NO_14_AWG_ALUMINUM_NOTE);
@@ -204,14 +219,16 @@ export function AmpacityCalculator() {
                         key === 'copper' ? 'from-copper-400 to-copper-600' : 'from-aluminum-300 to-aluminum-500'
                       }`}
                     ></div>
-                    {label}: {formatSize(inputs.size)}
+                    {label}: <Size s={inputs.size} />
                   </h3>
                   <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                     {resultRows(result, inputs.column).map((row) => (
-                      <div key={row.label}>
-                        <dt className="text-neutral-600">{row.label}:</dt>
-                        <dd className={row.label === 'Ampacity' ? 'font-mono font-semibold text-lg' : 'font-mono'}>
-                          {row.value}
+                      <div key={row.key}>
+                        <dt className="text-neutral-600">
+                          <ValText parts={row.label} />:
+                        </dt>
+                        <dd className={row.key === 'ampacity' ? 'font-mono font-semibold text-lg' : 'font-mono'}>
+                          <ValText parts={row.value} />
                         </dd>
                       </div>
                     ))}
@@ -221,7 +238,9 @@ export function AmpacityCalculator() {
 
               {noAluminum && (
                 <div className="border rounded-lg p-4 bg-aluminum-50 border-aluminum-200">
-                  <p className="text-sm text-neutral-700">{NO_14_AWG_ALUMINUM_NOTE}</p>
+                  <p className="text-sm text-neutral-700">
+                    <ValText parts={NO_14_AWG_ALUMINUM_NOTE_PARTS} />
+                  </p>
                 </div>
               )}
 

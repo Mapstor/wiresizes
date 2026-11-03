@@ -5,16 +5,20 @@ import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { Input } from '@/components/ui/Input';
 import { CalculatorLayout } from './CalculatorLayout';
+import { Size } from '@/components/content/Size';
+import { ValText } from '@/components/content/ValText';
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
-import { formatEntered, formatFixed, formatUpTo } from '@/lib/calculations/format';
+import { formatEntered, partsText } from '@/lib/calculations/format';
+import type { TextPart } from '@/lib/calculations/format';
 import { Cpu, Calculator, RefreshCw } from 'lucide-react';
 import {
   BASIS_LINE,
   DC_SIZING_DEFAULTS,
   DC_TEMPERATURE_OPTIONS,
   dcSizing,
+  ENGINE_ID,
   GOVERNS_LABELS,
   INPUT_INVALID_MESSAGE,
   NO_SIZE_MESSAGE,
@@ -37,9 +41,11 @@ interface Inputs {
   tempC: number;
 }
 
+const CALC = `calc:${ENGINE_ID}`;
+
 interface Row {
   label: string;
-  value: string;
+  value: TextPart[];
 }
 
 const DEFAULT_INPUTS: Inputs = {
@@ -74,14 +80,15 @@ function inputsFromQuery(params: URLSearchParams): Inputs {
   };
 }
 
+/** The inputs as the print payload lists them. */
 function inputRows(inputs: Inputs): Row[] {
   return [
-    { label: 'Voltage', value: `${formatEntered(fieldNumber(inputs.volts))} V` },
-    { label: 'Number of Loads', value: formatEntered(fieldNumber(inputs.loads)) },
-    { label: 'Watts per Load', value: `${formatEntered(fieldNumber(inputs.wattsPerLoad))} W` },
-    { label: 'Distance (one way)', value: `${formatEntered(fieldNumber(inputs.lengthFt))} ft` },
-    { label: 'Voltage-drop target (your choice)', value: `${inputs.dropPct} %` },
-    { label: 'Conductor temperature', value: DC_TEMPERATURE_OPTIONS.find((t) => t.value === inputs.tempC)?.label ?? '' },
+    { label: 'Voltage', value: [{ v: fieldNumber(inputs.volts), unit: 'V', src: 'input' }] },
+    { label: 'Number of Loads', value: [formatEntered(fieldNumber(inputs.loads))] },
+    { label: 'Watts per Load', value: [{ v: fieldNumber(inputs.wattsPerLoad), unit: 'W', src: 'input' }] },
+    { label: 'Distance (one way)', value: [{ v: fieldNumber(inputs.lengthFt), unit: 'ft', src: 'input' }] },
+    { label: 'Voltage-drop target (your choice)', value: [{ v: inputs.dropPct, unit: '%', src: 'input' }] },
+    { label: 'Conductor temperature', value: [DC_TEMPERATURE_OPTIONS.find((t) => t.value === inputs.tempC)?.label ?? ''] },
   ];
 }
 
@@ -99,14 +106,15 @@ function computeRows(inputs: Inputs): { rows: Row[]; resultSize: string | null; 
   });
   if ('error' in result) return { rows: [], resultSize: null, message: INPUT_INVALID_MESSAGE };
   const rows: Row[] = [
-    { label: 'Total load', value: `${formatUpTo(watts, 3)} W` },
-    { label: 'Current (I = W ÷ V)', value: `${formatUpTo(result.amps, 3)} A` },
-    { label: 'Required area (CM = 2 × K × I × L ÷ VD)', value: `${formatFixed(result.requiredCmil, 0)} cmil` },
-    { label: 'Size for voltage drop', value: result.vdSize ? formatSize(result.vdSize) : '–' },
-    { label: 'Size for current (60 °C column)', value: result.currentSize ? formatSize(result.currentSize) : '–' },
+    // the reader's loads × watts per load
+    { label: 'Total load', value: [{ v: watts, unit: 'W', src: 'input', format: { upTo: 3 } }] },
+    { label: 'Current (I = W ÷ V)', value: [{ v: result.amps, unit: 'A', src: CALC, format: { upTo: 3 } }] },
+    { label: 'Required area (CM = 2 × K × I × L ÷ VD)', value: [{ v: result.requiredCmil, unit: 'cmil', src: CALC, format: { fixed: 0 } }] },
+    { label: 'Size for voltage drop', value: [result.vdSize ? { size: result.vdSize } : '–'] },
+    { label: 'Size for current (60 °C column)', value: [result.currentSize ? { size: result.currentSize } : '–'] },
   ];
   if (!result.resultSize || !result.governs) return { rows, resultSize: null, message: NO_SIZE_MESSAGE };
-  rows.push({ label: 'Governs', value: GOVERNS_LABELS[result.governs] });
+  rows.push({ label: 'Governs', value: [GOVERNS_LABELS[result.governs]] });
   return { rows, resultSize: result.resultSize, message: null };
 }
 
@@ -151,10 +159,10 @@ export function LowVoltageCalculator() {
     if (!computed || computed.rows.length === 0) return;
     const results: Record<string, string> = {};
     if (computed.resultSize) results['Copper wire size'] = formatSize(computed.resultSize);
-    for (const row of computed.rows) results[row.label] = row.value;
+    for (const row of computed.rows) results[row.label] = partsText(row.value, formatSize);
     print({
       title: 'Low Voltage Circuit Calculation',
-      inputs: Object.fromEntries(inputRows(inputs).map((r) => [r.label, r.value])),
+      inputs: Object.fromEntries(inputRows(inputs).map((r) => [r.label, partsText(r.value)])),
       results,
       notes: computed.message ? [computed.message, BASIS_LINE] : [BASIS_LINE],
     });
@@ -262,7 +270,9 @@ export function LowVoltageCalculator() {
                 {computed.resultSize ? (
                   <div className="bg-blue-100 rounded-lg p-3 text-center">
                     <div className="text-blue-800 font-semibold">Copper wire size</div>
-                    <div className="text-2xl font-bold text-blue-900">{formatSize(computed.resultSize)}</div>
+                    <div className="text-2xl font-bold text-blue-900">
+                      <Size s={computed.resultSize} />
+                    </div>
                   </div>
                 ) : (
                   <div className="rounded-lg p-4 bg-red-50 border border-red-200 text-sm text-red-700" role="alert">
@@ -275,7 +285,9 @@ export function LowVoltageCalculator() {
                     {computed.rows.map((row) => (
                       <div key={row.label} className="flex justify-between gap-4">
                         <dt>{row.label}:</dt>
-                        <dd className="font-mono">{row.value}</dd>
+                        <dd className="font-mono">
+                          <ValText parts={row.value} />
+                        </dd>
                       </div>
                     ))}
                   </dl>

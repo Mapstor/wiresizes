@@ -8,6 +8,9 @@ import { Button } from '@/components/ui/Button';
 import { CalculatorLayout } from './CalculatorLayout';
 import { VoltageDropVisual } from '@/components/visualizations/VoltageDropVisual';
 import { Badge } from '@/components/ui/Badge';
+import { Val } from '@/components/content/Val';
+import { Size } from '@/components/content/Size';
+import { ValText } from '@/components/content/ValText';
 import { AlertCircle, CheckCircle2, Calculator, RotateCcw } from 'lucide-react';
 import { formatSize } from '@/lib/verified/awg';
 import type { Material } from '@/lib/verified/awg';
@@ -19,13 +22,13 @@ import {
   ampacityNote,
   DROP_EXCEEDS_SUPPLY_MESSAGE,
   dropExceedsSupply,
-  formatVdPct,
-  formatVdVolts,
+  ENGINE_ID,
   LENGTH_MAX_FT,
   LENGTH_MIN_FT,
-  NO_14_AWG_ALUMINUM_NOTE,
+  NO_14_AWG_ALUMINUM_NOTE_PARTS,
   RESISTANCE_BASIS_LABEL,
   targetTitle,
+  VD_FORMAT,
   VD_HEADLINE_LABELS,
   VD_INPUT_INVALID_MESSAGE,
   VD_TARGET_OPTIONS,
@@ -36,8 +39,9 @@ import {
 } from '@/lib/calculations/voltage-drop';
 import type { VoltageDropResult } from '@/lib/calculations/voltage-drop';
 import { fieldNumber } from '@/lib/calculations/fields';
-import { formatFixed } from '@/lib/calculations/format';
 import { focusResults, useFieldErrors } from '@/lib/hooks/useCalculatorForm';
+
+const CALC = `calc:${ENGINE_ID}`;
 
 const WIRE_SIZE_OPTIONS = voltageDropSizes('Cu').map((key) => ({ value: key, label: formatSize(key) }));
 const TARGET_OPTIONS = VD_TARGET_OPTIONS.map((pct) => ({ value: String(pct), label: `${pct} %` }));
@@ -108,7 +112,7 @@ function AmpacityNote({ size, material, ampacity, className }: { size: string; m
     <p className={`flex items-start gap-1.5 text-sm text-amber-700 ${className}`}>
       <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
       <span>
-        {note.before}
+        <ValText parts={note.beforeParts} />
         <Link href={WIRE_SIZE_CALCULATOR_LINK.href} className="font-medium underline hover:text-amber-800">
           {note.link}
         </Link>
@@ -242,22 +246,24 @@ export function VoltageDropCalculator() {
                         ) : (
                           <div className="text-3xl font-bold">
                             <span className={meets ? 'text-green-600' : 'text-amber-600'}>
-                              {formatVdPct(result.vdPct)}
+                              <Val v={result.vdPct} unit="%" format={VD_FORMAT} src={CALC} />
                             </span>
                             <span className="text-lg font-medium text-neutral-600 ml-2">
-                              ({formatVdVolts(result.vdVolts)} drop)
+                              (<Val v={result.vdVolts} unit="V" format={VD_FORMAT} src={CALC} /> drop)
                             </span>
                           </div>
                         )}
                         <p className="text-xs text-neutral-500 mt-1">
-                          {targetTitle(meets)} ({inputs.targetPct} %)
+                          {targetTitle(meets)} (<Val v={inputs.targetPct} unit="%" src="input" />)
                         </p>
                         {ampacity !== null && (
                           <AmpacityNote size={inputs.awg} material={m.material} ampacity={ampacity} className="mt-2" />
                         )}
                       </>
                     ) : (
-                      <p className="text-sm text-neutral-700">{NO_14_AWG_ALUMINUM_NOTE}</p>
+                      <p className="text-sm text-neutral-700">
+                        <ValText parts={NO_14_AWG_ALUMINUM_NOTE_PARTS} />
+                      </p>
                     )}
                   </div>
                 );
@@ -313,7 +319,7 @@ export function VoltageDropCalculator() {
                           {!exceeds && (
                             <Badge variant={meets ? 'success' : 'warning'}>
                               {meets ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
-                              {formatVdPct(result.vdPct)} Drop
+                              <Val v={result.vdPct} unit="%" format={VD_FORMAT} src={CALC} /> Drop
                             </Badge>
                           )}
                         </div>
@@ -328,21 +334,29 @@ export function VoltageDropCalculator() {
                             <>
                               <div>
                                 <span className="text-neutral-500">Voltage Drop:</span>
-                                <p className="font-semibold font-mono">{formatVdVolts(result.vdVolts)}</p>
+                                <p className="font-semibold font-mono">
+                                  <Val v={result.vdVolts} unit="V" format={VD_FORMAT} src={CALC} />
+                                </p>
                               </div>
                               <div>
                                 <span className="text-neutral-500">End Voltage:</span>
-                                <p className="font-semibold font-mono">{formatFixed(result.loadVolts, 2)} V</p>
+                                <p className="font-semibold font-mono">
+                                  <Val v={result.loadVolts} unit="V" format={{ fixed: 2 }} src={CALC} />
+                                </p>
                               </div>
                               <div>
                                 <span className="text-neutral-500">Power Loss:</span>
-                                <p className="font-semibold font-mono">{formatFixed(result.powerLossW, 0)} W</p>
+                                <p className="font-semibold font-mono">
+                                  <Val v={result.powerLossW} unit="W" format={{ fixed: 0 }} src={CALC} />
+                                </p>
                               </div>
                             </>
                           )}
                           <div>
                             <span className="text-neutral-500">Wire Size:</span>
-                            <p className="font-semibold">{formatSize(inputs.awg)}</p>
+                            <p className="font-semibold">
+                              <Size s={inputs.awg} />
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -350,7 +364,9 @@ export function VoltageDropCalculator() {
                   })}
                   {!results.some((r) => r.material === 'Al') && (
                     <div className="bg-white border border-neutral-200 rounded-lg p-4">
-                      <p className="text-sm text-neutral-700">{NO_14_AWG_ALUMINUM_NOTE}</p>
+                      <p className="text-sm text-neutral-700">
+                        <ValText parts={NO_14_AWG_ALUMINUM_NOTE_PARTS} />
+                      </p>
                     </div>
                   )}
                 </div>

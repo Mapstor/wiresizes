@@ -1,7 +1,8 @@
 'use client';
 
-import { formatFixed } from '@/lib/calculations/format';
-import { diameterMm, formatSize } from '@/lib/verified/awg';
+import { Val } from '@/components/content/Val';
+import { Size } from '@/components/content/Size';
+import { diameterMm } from '@/lib/verified/awg';
 
 interface WireVisualizationProps {
   awg: string;
@@ -109,13 +110,13 @@ export function WireVisualization({
       {showLabel && (
         <div className="text-center">
           <div className="font-mono text-lg font-bold text-neutral-900">
-            {formatSize(awg)}
+            <Size s={awg} />
           </div>
           <div className="text-sm text-neutral-500 capitalize">
             {material}
           </div>
           <div className="text-xs text-neutral-400">
-            {formatFixed(diameter, 2)} mm
+            <Val v={diameter} unit="mm" format={{ fixed: 2 }} src="awg-geometry" />
           </div>
         </div>
       )}

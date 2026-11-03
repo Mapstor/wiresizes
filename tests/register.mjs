@@ -2,6 +2,7 @@
 // - "@/..." resolves to src/...
 // - extensionless relative and "@/..." specifiers try .ts, .tsx, then /index.ts
 // - .json files load as ES modules (default export = the parsed JSON)
+// - "server-only" loads as an empty module (Next.js handles that import in its compiler; there is no package)
 // Node strips types but does not compile them: modules loaded here must use erasable TypeScript only.
 import { register } from 'node:module';
 import { isMainThread } from 'node:worker_threads';
@@ -43,6 +44,7 @@ function resolveLocal(specifier, parentURL) {
 }
 
 export async function resolve(specifier, context, nextResolve) {
+  if (specifier === 'server-only') return { url: 'data:text/javascript,export {};', shortCircuit: true };
   const local = resolveLocal(specifier, context.parentURL);
   if (local) {
     return nextResolve(local, context);

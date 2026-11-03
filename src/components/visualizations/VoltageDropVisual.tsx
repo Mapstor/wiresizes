@@ -1,9 +1,11 @@
 'use client';
 
 import { useMemo } from 'react';
-import { formatEntered, formatFixed } from '@/lib/calculations/format';
-import { formatSize } from '@/lib/verified/awg';
-import { DEFAULT_VD_TARGET_PCT, formatVdPct, targetTitle } from '@/lib/calculations/voltage-drop';
+import { Val } from '@/components/content/Val';
+import { Size } from '@/components/content/Size';
+import { DEFAULT_VD_TARGET_PCT, ENGINE_ID, targetTitle, VD_FORMAT } from '@/lib/calculations/voltage-drop';
+
+const CALC = `calc:${ENGINE_ID}`;
 
 interface VoltageDropVisualProps {
   sourceVoltage: number;
@@ -102,7 +104,7 @@ export function VoltageDropVisual({
           PANEL
         </text>
         <text x="40" y="110" textAnchor="middle" fill="#1e40af" fontSize="12" fontWeight="bold">
-          {formatEntered(sourceVoltage)} V
+          <Val v={sourceVoltage} unit="V" src="input" svg />
         </text>
 
         {/* Wire with gradient - responsive to distance and thickness */}
@@ -124,7 +126,7 @@ export function VoltageDropVisual({
           fontSize="9"
           fontWeight="600"
         >
-          {formatSize(wireSize)}
+          <Size s={wireSize} svg />
         </text>
         
         {/* Animated electrons showing current flow - adjust to wire thickness */}
@@ -148,7 +150,7 @@ export function VoltageDropVisual({
 
         {/* Distance label */}
         <text x={midX} y="40" textAnchor="middle" fill="#737373" fontSize="10">
-          {formatEntered(distance)} ft
+          <Val v={distance} unit="ft" src="input" svg />
         </text>
 
         {/* Voltage drop indicator - moved down and made bigger/bolder */}
@@ -160,7 +162,7 @@ export function VoltageDropVisual({
           fontWeight="800"
           fill={textColor}
         >
-          {formatVdPct(dropPercent)} drop
+          <Val v={dropPercent} unit="%" format={VD_FORMAT} src={CALC} svg /> drop
         </text>
 
         {/* Load (end) - position based on wire length */}
@@ -170,7 +172,7 @@ export function VoltageDropVisual({
         </text>
         <text x={loadX + 30} y="110" textAnchor="middle" fontSize="12" fontWeight="bold"
           fill={textColor}>
-          {formatFixed(loadVoltage, 1)} V
+          <Val v={loadVoltage} unit="V" format={{ fixed: 1 }} src={CALC} svg />
         </text>
       </svg>
 
@@ -178,7 +180,7 @@ export function VoltageDropVisual({
       <div className={`mt-4 p-3 rounded-lg text-center ${
         meetsTarget ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700'
       }`}>
-        {targetTitle(meetsTarget)} ({targetPct} %)
+        {targetTitle(meetsTarget)} (<Val v={targetPct} unit="%" src="input" />)
       </div>
     </div>
   );

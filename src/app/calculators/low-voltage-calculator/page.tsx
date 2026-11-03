@@ -3,6 +3,12 @@ import { LowVoltageCalculator } from '@/components/calculators/LowVoltageCalcula
 import { Battery, Calculator, TrendingUp, AlertCircle, BookOpen, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import { Sources } from '@/components/content/Sources';
+import { DOMAINS as DC_SIZING_DOMAINS } from '@/lib/calculations/dc-sizing';
+import { DOMAINS as VOLTAGE_DROP_DOMAINS } from '@/lib/calculations/voltage-drop';
+
+// Sources: the domains of the engines this page uses (the calculator's targets come from voltage-drop.ts)
+const SOURCE_DOMAINS = [...DC_SIZING_DOMAINS, ...VOLTAGE_DROP_DOMAINS];
 
 export const metadata: Metadata = {
   title: 'Low Voltage Calculator — 12V / 24V DC',
@@ -240,6 +246,19 @@ export default function LowVoltageCalculatorPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Sources */}
+      <section className="mb-16">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+          <Sources
+            domains={SOURCE_DOMAINS}
+            headingClassName="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center"
+            listClassName="space-y-2 text-gray-700 dark:text-gray-300"
+            linkClassName="text-blue-600 hover:underline dark:text-blue-300"
+            noteClassName="mt-4 text-sm text-gray-600 dark:text-gray-400"
+          />
         </div>
       </section>
 

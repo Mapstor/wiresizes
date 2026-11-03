@@ -12,8 +12,10 @@
 //    step-2 area, multiplied first, smallest Table 310.16 size at or above it, never smaller than the table EGC, not
 //    capped. It starts from the step-2 size, so increases needed for correction and adjustment never scale the EGC.
 // Without the optional inputs (termination 'unknown', wiring method 'cable', no derating) the results are the 60 °C
-// results of WSZ-002. steps[] explains each step, except in the derating mode, whose text WSZ-009 writes.
-import { formatEntered, formatFixed, materialName } from './format';
+// results of WSZ-002. steps[] explains each step, except in the derating mode, whose text WSZ-009 writes; stepParts
+// holds the same sentences in parts, so the result panel renders their numbers through <Val> and sizes through <Size>.
+import { materialName, partsText } from './format';
+import type { TextPart, ValuePart } from './format';
 import { areaCmil, formatSize } from '../verified/awg';
 import type { Material, SizeKey } from '../verified/awg';
 import { AMPACITY_COLUMNS, columnKey, nextLargerSize, table31016, TABLE_310_16_SIZES } from '../verified/nec-310-16';
@@ -28,11 +30,12 @@ import type { EgcProportional } from '../verified/nec-250-122';
 import { TERMINATION_RULES } from '../verified/nec-110-14c';
 import { voltsValid } from './inputs';
 import type { Phase } from './inputs';
-import { DEFAULT_VD_TARGET_PCT, LENGTH_MAX_FT, LENGTH_MIN_FT, sizeForDrop, voltageDrop } from './voltage-drop';
+import { DEFAULT_VD_TARGET_PCT, LENGTH_MAX_FT, LENGTH_MIN_FT, sizeForDrop, VD_FORMAT, voltageDrop } from './voltage-drop';
 import type { SizeForDrop, VoltageDropResult } from './voltage-drop';
 import { correctedAmpacity } from './ampacity';
 
 export const ENGINE_ID = 'conductor-sizing';
+const CALC = `calc:${ENGINE_ID}`;
 export const DOMAINS = [
   'nec-310-16',
   'nec-240-4-d',
@@ -234,6 +237,8 @@ export interface SizeConductorResult {
   egcLargerThanConductor: boolean;
   /** Each step in words; empty in the derating mode. */
   steps: string[];
+  /** steps[] in parts: steps[k] is partsText(stepParts[k], formatSize). */
+  stepParts: TextPart[][];
 }
 
 export interface SizeConductorError {
@@ -253,15 +258,17 @@ export const WIRE_SIZE_DEFAULTS = {
   vdTargetPct: DEFAULT_VD_TARGET_PCT,
 };
 
-function amps(value: number): string {
-  return `${Number.isInteger(value) ? formatEntered(value) : formatFixed(value, 1)} A`;
+/** A current: whole amperes as entered, others with one decimal. */
+function amps(value: number, src: string): ValuePart {
+  return { v: value, unit: 'A', src, format: Number.isInteger(value) ? undefined : { fixed: 1 } };
 }
 
-function cmil(value: number): string {
-  return `${Math.round(value).toLocaleString('en-US')} cmil`;
+/** An area in whole circular mils. */
+function cmil(value: number): ValuePart {
+  return { v: Math.round(value), unit: 'cmil', src: CALC };
 }
 
-/** steps[] of the plain and termination modes. */
+/** stepParts of the plain and termination modes. */
 function explain(
   input: SizeConductorInput,
   loadA: number,
@@ -270,37 +277,80 @@ function explain(
   atMinimum: VoltageDropResult,
   steppedUp: SizeForDrop | null,
   proportional: EgcProportional | null,
-): string[] {
+): TextPart[][] {
   const { ocpdA, lengthFt, volts, phase, material } = input;
   const metal = materialName(material);
   const tableEgc = minimum.egc as SizeKey;
-  const steps = [
-    `Smallest ${metal} size with a ${minimum.columnC} °C ampacity of at least ${amps(ocpdA)} in NEC Table 310.16: ${formatSize(minimum.firstSize)} (${amps(table31016(minimum.firstSize, columnKey(material, minimum.columnC)) as number)}).`,
+  const rating = amps(ocpdA, 'input');
+  const drop = (vd: VoltageDropResult): TextPart[] => [
+    { v: vd.vdVolts, unit: 'V', src: CALC, format: VD_FORMAT },
+    ', ',
+    { v: vd.vdPct, unit: '%', src: CALC, format: VD_FORMAT },
+  ];
+  const yourTarget: ValuePart = { v: target, unit: '%', src: 'input' };
+  const steps: TextPart[][] = [
+    [
+      `Smallest ${metal} size with a `,
+      { v: minimum.columnC, unit: '°C', src: CALC },
+      ' ampacity of at least ',
+      rating,
+      ' in NEC Table 310.16: ',
+      { size: minimum.firstSize },
+      ' (',
+      amps(table31016(minimum.firstSize, columnKey(material, minimum.columnC)) as number, CALC),
+      ').',
+    ],
   ];
   for (const limit of minimum.limits240_4D) {
+    const limitText: TextPart[] = ['NEC 240.4(D) limits ', { size: limit.size }, ` ${metal} to `, amps(limit.maxOcpdA, CALC)];
     steps.push(
       limit.movedTo === null
-        ? `NEC 240.4(D) limits ${formatSize(limit.size)} ${metal} to ${amps(limit.maxOcpdA)} overcurrent protection; ${amps(ocpdA)} is within that limit.`
-        : `NEC 240.4(D) limits ${formatSize(limit.size)} ${metal} to ${amps(limit.maxOcpdA)} overcurrent protection, so the size moves up to ${formatSize(limit.movedTo)}.`,
+        ? [...limitText, ' overcurrent protection; ', rating, ' is within that limit.']
+        : [...limitText, ' overcurrent protection, so the size moves up to ', { size: limit.movedTo }, '.'],
     );
   }
-  steps.push(
-    `Ground wire for a ${amps(ocpdA)} breaker or fuse, NEC Table 250.122 (${material === 'Cu' ? 'copper' : 'aluminum or copper-clad aluminum'} column): ${formatSize(tableEgc)}.`,
-  );
-  steps.push(
-    `Voltage drop with ${formatSize(minimum.size)} ${metal} at ${amps(loadA)} over ${formatEntered(lengthFt)} ft one way, ${phase === 'three' ? 'three-phase' : 'single-phase'} ${formatEntered(volts)} V (${formatEntered(atMinimum.ohmsPer1000ft)} Ω per 1000 ft at 75 °C): ${formatFixed(atMinimum.vdVolts, 2)} V, ${formatFixed(atMinimum.vdPct, 2)} %.`,
-  );
+  steps.push([
+    'Ground wire for a ',
+    rating,
+    ` breaker or fuse, NEC Table 250.122 (${material === 'Cu' ? 'copper' : 'aluminum or copper-clad aluminum'} column): `,
+    { size: tableEgc },
+    '.',
+  ]);
+  steps.push([
+    'Voltage drop with ',
+    { size: minimum.size },
+    ` ${metal} at `,
+    amps(loadA, 'input'),
+    ' over ',
+    { v: lengthFt, unit: 'ft', src: 'input' },
+    ` one way, ${phase === 'three' ? 'three-phase' : 'single-phase'} `,
+    { v: volts, unit: 'V', src: 'input' },
+    ' (',
+    { v: atMinimum.ohmsPer1000ft, unit: 'Ω per 1000 ft at 75 °C', src: CALC },
+    '): ',
+    ...drop(atMinimum),
+    '.',
+  ]);
   if (steppedUp) {
     const { size, result: vd } = steppedUp;
     steps.push(
       vd.vdPct <= target
-        ? `Above your ${target} % target, so the size steps up to ${formatSize(size)}: ${formatFixed(vd.vdVolts, 2)} V, ${formatFixed(vd.vdPct, 2)} %.`
-        : `Even ${formatSize(size)}, the largest size in NEC Table 310.16, gives ${formatFixed(vd.vdVolts, 2)} V, ${formatFixed(vd.vdPct, 2)} %, above your ${target} % target.`,
+        ? ['Above your ', yourTarget, ' target, so the size steps up to ', { size }, ': ', ...drop(vd), '.']
+        : ['Even ', { size }, ', the largest size in NEC Table 310.16, gives ', ...drop(vd), ', above your ', yourTarget, ' target.'],
     );
   }
   if (steppedUp && proportional) {
-    const formula = `Ground wire increased in proportion to the larger conductors (NEC 250.122(B)): ${cmil(areaCmil(tableEgc))} × ${cmil(areaCmil(steppedUp.size))} ÷ ${cmil(areaCmil(minimum.size))} = ${cmil(proportional.requiredCmil)}`;
-    steps.push(proportional.egc ? `${formula}, so ${formatSize(proportional.egc)}.` : `${formula}. ${EGC_NONE_MESSAGE}`);
+    const formula: TextPart[] = [
+      'Ground wire increased in proportion to the larger conductors (NEC 250.122(B)): ',
+      cmil(areaCmil(tableEgc)),
+      ' × ',
+      cmil(areaCmil(steppedUp.size)),
+      ' ÷ ',
+      cmil(areaCmil(minimum.size)),
+      ' = ',
+      cmil(proportional.requiredCmil),
+    ];
+    steps.push(proportional.egc ? [...formula, ', so ', { size: proportional.egc }, '.'] : [...formula, `. ${EGC_NONE_MESSAGE}`]);
   }
   return steps;
 }
@@ -338,6 +388,8 @@ export function sizeConductor(input: SizeConductorInput): SizeConductorResult | 
   const egc = proportional ? proportional.egc : tableEgc;
   const egcUpsized = egc === null || areaCmil(egc) > areaCmil(tableEgc);
   const egcLargerThanConductor = egc === null || areaCmil(egc) > areaCmil(size);
+  const stepParts =
+    minimum.startColumnC === null ? explain(input, loadA, target, minimum, atMinimum, steppedUp, proportional) : [];
 
   return {
     size,
@@ -354,7 +406,7 @@ export function sizeConductor(input: SizeConductorInput): SizeConductorResult | 
     egc,
     egcUpsized,
     egcLargerThanConductor,
-    steps:
-      minimum.startColumnC === null ? explain(input, loadA, target, minimum, atMinimum, steppedUp, proportional) : [],
+    steps: stepParts.map((parts) => partsText(parts, formatSize)),
+    stepParts,
   };
 }

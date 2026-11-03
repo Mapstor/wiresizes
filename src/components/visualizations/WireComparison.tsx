@@ -1,6 +1,6 @@
 'use client';
 
-import { formatEntered } from '@/lib/calculations/format';
+import { Val } from '@/components/content/Val';
 import { WireVisualization } from './WireVisualization';
 
 interface WireComparisonProps {
@@ -13,7 +13,7 @@ export function WireComparison({ copperAwg, aluminumAwg, amps }: WireComparisonP
   return (
     <div className="bg-neutral-50 rounded-xl p-6">
       <h3 className="text-lg font-semibold text-neutral-900 text-center mb-6">
-        Wire Size Comparison for {formatEntered(amps)} A
+        Wire Size Comparison for <Val v={amps} unit="A" src="input" />
       </h3>
       
       <div className="flex flex-col sm:flex-row justify-center items-center sm:items-end gap-4 sm:gap-8 md:gap-16">

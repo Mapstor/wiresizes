@@ -2,19 +2,29 @@
 // VD = k × I × R × L / 1000 (k = 2 single-phase, √3 three-phase; R in Ω per 1000 ft; L one way in ft),
 // % = VD ÷ volts × 100. Parallel sets: the areas add, so R divides by the number of sets. Power lost in the
 // conductors: resistance.ts. Size search: from a size up through Table 310.16 until the drop meets the target.
-import { formatFixed, materialName } from './format';
+import { materialName, partsText, withUnit } from './format';
+import type { TextPart, ValueFormat } from './format';
 import { areaCmil, conductor, formatSize } from '../verified/awg';
 import type { Material, SizeKey } from '../verified/awg';
 import { columnKey, nextLargerSize, smallestSizeWithArea, table31016, TABLE_310_16_SIZES } from '../verified/nec-310-16';
+import type { AmpacityColumn } from '../verified/nec-310-16';
 import { voltsValid } from './inputs';
 import type { Phase } from './inputs';
 import { powerLossWatts } from './resistance';
 
 export const ENGINE_ID = 'voltage-drop';
+const CALC = `calc:${ENGINE_ID}`;
 export const DOMAINS = ['conductor-resistance-20c', 'nec-310-16', 'awg-geometry'];
 
-/** Shown in place of the aluminum result when 14 AWG is selected (also on the ampacity calculator). */
-export const NO_14_AWG_ALUMINUM_NOTE = 'NEC Table 310.16 lists aluminum from 12 AWG, so there is no 14 AWG aluminum result.';
+/** Shown in place of the aluminum result when 14 AWG is selected (also on the ampacity calculator), in parts. */
+export const NO_14_AWG_ALUMINUM_NOTE_PARTS: TextPart[] = [
+  'NEC Table 310.16 lists aluminum from ',
+  { size: '12' },
+  ', so there is no ',
+  { size: '14' },
+  ' aluminum result.',
+];
+export const NO_14_AWG_ALUMINUM_NOTE = partsText(NO_14_AWG_ALUMINUM_NOTE_PARTS, formatSize);
 export const MEETS_TARGET_TITLE = 'Meets your voltage-drop target';
 export const ABOVE_TARGET_TITLE = 'Above your voltage-drop target';
 /** Shown in place of a material's figures when its drop is 100 % or more of the supply voltage. */
@@ -38,14 +48,17 @@ export function targetTitle(meetsTarget: boolean): string {
   return meetsTarget ? MEETS_TARGET_TITLE : ABOVE_TARGET_TITLE;
 }
 
+/** Voltage drop in volts and percent as the result panels show it: two decimals. */
+export const VD_FORMAT: ValueFormat = { fixed: 2 };
+
 /** Voltage drop percent as the result panel shows it: "2.02 %". */
 export function formatVdPct(pct: number): string {
-  return `${formatFixed(pct, 2)} %`;
+  return withUnit(pct, '%', VD_FORMAT);
 }
 
 /** Voltage drop in volts as the result panel shows it: "4.86 V". */
 export function formatVdVolts(volts: number): string {
-  return `${formatFixed(volts, 2)} V`;
+  return withUnit(volts, 'V', VD_FORMAT);
 }
 
 /** Ω per 1000 ft at 75 °C: copper AWG and kcmil, or aluminum EC-H19 (12 AWG and larger); null otherwise. */
@@ -148,19 +161,39 @@ export function dropExceedsSupply(result: VoltageDropResult): boolean {
   return result.vdPct >= 100;
 }
 
+/** The Table 310.16 column the ampacity note compares the current with. */
+export const AMPACITY_NOTE_COLUMN: AmpacityColumn = 60;
+
 /**
  * The 60 °C ampacity of the size and material in NEC Table 310.16 (cu_60 or al_60) when `amps` is above it;
  * null otherwise, and where the table has no 60 °C value.
  */
 export function ampacityExceeded(size: SizeKey, material: Material, amps: number): number | null {
-  const ampacity = table31016(size, columnKey(material, 60));
+  const ampacity = table31016(size, columnKey(material, AMPACITY_NOTE_COLUMN));
   return ampacity !== null && amps > ampacity ? ampacity : null;
 }
 
-/** The note under a material's result when the current is above its 60 °C ampacity: before + link + after. */
-export function ampacityNote(size: SizeKey, material: Material, ampacity: number): { before: string; link: string; after: string } {
+/**
+ * The note under a material's result when the current is above its 60 °C ampacity: before + link + after.
+ * beforeParts is `before` in parts (before = partsText(beforeParts, formatSize)).
+ */
+export function ampacityNote(
+  size: SizeKey,
+  material: Material,
+  ampacity: number,
+): { before: string; beforeParts: TextPart[]; link: string; after: string } {
+  const beforeParts: TextPart[] = [
+    'This current is more than the ',
+    { v: AMPACITY_NOTE_COLUMN, unit: '°C', src: CALC },
+    ' ampacity of ',
+    { size },
+    ` ${materialName(material)} (`,
+    { v: ampacity, unit: 'A', src: CALC },
+    ', NEC Table 310.16). Choose the size with the ',
+  ];
   return {
-    before: `This current is more than the 60 °C ampacity of ${formatSize(size)} ${materialName(material)} (${ampacity} A, NEC Table 310.16). Choose the size with the `,
+    before: partsText(beforeParts, formatSize),
+    beforeParts,
     link: WIRE_SIZE_CALCULATOR_LINK.text,
     after: ' first.',
   };

@@ -5,12 +5,16 @@ import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { Input } from '@/components/ui/Input';
 import { CalculatorLayout } from './CalculatorLayout';
+import { Val } from '@/components/content/Val';
+import { Size } from '@/components/content/Size';
+import { ValText } from '@/components/content/ValText';
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
 import { Activity, AlertTriangle, Info, Thermometer, Calculator, RefreshCw } from 'lucide-react';
-import { formatEntered, formatFixed, formatSignificant, formatUpTo } from '@/lib/calculations/format';
+import { formatFixed, partsText } from '@/lib/calculations/format';
 import { materialName } from '@/lib/calculations/format';
+import type { TextPart, ValueFormat, ValuePart } from '@/lib/calculations/format';
 import { diameterMm, formatSize } from '@/lib/verified/awg';
 import type { Material, SizeKey } from '@/lib/verified/awg';
 import {
@@ -18,6 +22,7 @@ import {
   CIRCUIT_OPTIONS,
   DISTANCE_MAX_FT,
   DISTANCE_MIN_FT,
+  ENGINE_ID,
   fahrenheitToCelsius,
   maxLengthFt,
   powerLossWatts,
@@ -65,9 +70,13 @@ const MATERIAL_OPTIONS: { value: Material; label: string }[] = [
   { value: 'Al', label: 'Aluminum' },
 ];
 
+const CALC = `calc:${ENGINE_ID}`;
+/** Resistances and power losses: four significant figures. */
+const SIG4: ValueFormat = { sig: 4 };
+
 interface Row {
   label: string;
-  value: string;
+  value: TextPart[];
 }
 
 /** The message for each invalid field of the current mode. */
@@ -95,12 +104,14 @@ function inputsFromQuery(params: URLSearchParams): Inputs {
   };
 }
 
-function sig(value: number): string {
-  return formatSignificant(value, 4);
+/** The temperature in °C, one decimal at most. */
+function celsius(tempF: number): ValuePart {
+  return { v: fahrenheitToCelsius(tempF), unit: '°C', src: CALC, format: { upTo: 1 } };
 }
 
-function celsius(tempF: number): string {
-  return `${formatUpTo(fahrenheitToCelsius(tempF), 1)} °C`;
+/** A value of this engine with four significant figures. */
+function sig(value: number, unit: string): ValuePart {
+  return { v: value, unit, src: CALC, format: SIG4 };
 }
 
 /** The result lines for the current mode (shown on screen and printed); valid inputs only. */
@@ -109,23 +120,23 @@ function computeRows(inputs: Inputs): Row[] {
   const lengthFt = fieldNumber(inputs.lengthFt);
   const perThousand = resistanceAt(inputs.size, inputs.material, tempC);
   if (perThousand === null) return [];
-  const rows: Row[] = [{ label: 'Resistance per 1000 ft', value: `${sig(perThousand)} Ω` }];
+  const rows: Row[] = [{ label: 'Resistance per 1000 ft', value: [sig(perThousand, 'Ω')] }];
 
   if (inputs.mode === 'distance') {
     const maxFt = maxLengthFt(inputs.size, inputs.material, tempC, fieldNumber(inputs.maxLoopOhms));
-    if (maxFt !== null) rows.push({ label: 'Maximum distance (one way)', value: `${formatFixed(maxFt, 1)} ft` });
+    if (maxFt !== null) rows.push({ label: 'Maximum distance (one way)', value: [{ v: maxFt, unit: 'ft', src: CALC, format: { fixed: 1 } }] });
     return rows;
   }
 
   const wire = wireResistance(inputs.size, inputs.material, lengthFt, tempC);
   if (!wire) return rows;
-  rows.push({ label: 'One conductor', value: `${sig(wire.conductorOhms)} Ω` });
-  rows.push({ label: 'Loop (out and back)', value: `${sig(wire.loopOhms)} Ω` });
+  rows.push({ label: 'One conductor', value: [sig(wire.conductorOhms, 'Ω')] });
+  rows.push({ label: 'Loop (out and back)', value: [sig(wire.loopOhms, 'Ω')] });
 
   if (inputs.mode === 'power') {
     rows.push({
       label: 'Power loss',
-      value: `${sig(powerLossWatts(fieldNumber(inputs.amps), wire.ohmsPer1000ft, lengthFt, inputs.circuit))} W`,
+      value: [sig(powerLossWatts(fieldNumber(inputs.amps), wire.ohmsPer1000ft, lengthFt, inputs.circuit), 'W')],
     });
   }
   return rows;
@@ -135,16 +146,20 @@ function computeRows(inputs: Inputs): Row[] {
 function inputRows(inputs: Inputs): Row[] {
   const tempF = fieldNumber(inputs.tempF);
   const rows: Row[] = [
-    { label: 'Calculation Mode', value: RESISTANCE_MODE_OPTIONS.find((m) => m.value === inputs.mode)?.label ?? '' },
-    { label: 'Wire Size', value: formatSize(inputs.size) },
-    { label: 'Wire Material', value: materialName(inputs.material) },
-    { label: 'Temperature', value: `${formatEntered(tempF)} °F (${celsius(tempF)})` },
+    { label: 'Calculation Mode', value: [RESISTANCE_MODE_OPTIONS.find((m) => m.value === inputs.mode)?.label ?? ''] },
+    { label: 'Wire Size', value: [{ size: inputs.size }] },
+    { label: 'Wire Material', value: [materialName(inputs.material)] },
+    { label: 'Temperature', value: [{ v: tempF, unit: '°F', src: 'input' }, ' (', celsius(tempF), ')'] },
   ];
-  if (inputs.mode !== 'distance') rows.push({ label: 'Distance (one way)', value: `${formatEntered(fieldNumber(inputs.lengthFt))} ft` });
-  if (inputs.mode === 'distance') rows.push({ label: 'Maximum loop resistance (out and back)', value: `${formatEntered(fieldNumber(inputs.maxLoopOhms))} Ω` });
+  if (inputs.mode !== 'distance') {
+    rows.push({ label: 'Distance (one way)', value: [{ v: fieldNumber(inputs.lengthFt), unit: 'ft', src: 'input' }] });
+  }
+  if (inputs.mode === 'distance') {
+    rows.push({ label: 'Maximum loop resistance (out and back)', value: [{ v: fieldNumber(inputs.maxLoopOhms), unit: 'Ω', src: 'input' }] });
+  }
   if (inputs.mode === 'power') {
-    rows.push({ label: 'Current', value: `${formatEntered(fieldNumber(inputs.amps))} A` });
-    rows.push({ label: 'Circuit Type', value: CIRCUIT_OPTIONS.find((c) => c.value === inputs.circuit)?.label ?? '' });
+    rows.push({ label: 'Current', value: [{ v: fieldNumber(inputs.amps), unit: 'A', src: 'input' }] });
+    rows.push({ label: 'Circuit Type', value: [CIRCUIT_OPTIONS.find((c) => c.value === inputs.circuit)?.label ?? ''] });
   }
   return rows;
 }
@@ -191,8 +206,8 @@ export function WireResistanceCalculator() {
     if (!valid) return;
     print({
       title: 'Wire Resistance Calculation',
-      inputs: Object.fromEntries(inputRows(inputs).map((r) => [r.label, r.value])),
-      results: Object.fromEntries(rows.map((r) => [r.label, r.value])),
+      inputs: Object.fromEntries(inputRows(inputs).map((r) => [r.label, partsText(r.value, formatSize)])),
+      results: Object.fromEntries(rows.map((r) => [r.label, partsText(r.value)])),
       notes: RESISTANCE_NOTES,
     });
   };
@@ -293,7 +308,7 @@ export function WireResistanceCalculator() {
                   suffix="°F"
                   min={TEMPERATURE_MIN_F}
                   max={TEMPERATURE_MAX_F}
-                  hint={tempValid ? celsius(tempF) : undefined}
+                  hint={tempValid ? partsText([celsius(tempF)]) : undefined}
                 />
               </div>
 
@@ -341,12 +356,22 @@ export function WireResistanceCalculator() {
                     Selected Wire Properties
                   </div>
                   <div className="text-sm text-neutral-600 space-y-1">
-                    <div>• Wire Size: {formatSize(inputs.size)}</div>
-                    {diameter !== null && <div>• Diameter: {formatUpTo(diameter, 3)} mm</div>}
-                    <div>• Resistance at 20 °C: {formatEntered(base)} Ω/1000 ft</div>
+                    <div>
+                      • Wire Size: <Size s={inputs.size} />
+                    </div>
+                    {diameter !== null && (
+                      <div>
+                        • Diameter: <Val v={diameter} unit="mm" format={{ upTo: 3 }} src="awg-geometry" />
+                      </div>
+                    )}
+                    <div>
+                      • Resistance at 20 °C: <Val v={base} unit="Ω/1000 ft" src={CALC} />
+                    </div>
                     {tempValid && <div>• Temperature Factor: {formatFixed(factor, 4)}</div>}
                     {tempValid && (
-                      <div>• Resistance at {formatEntered(tempF)} °F ({celsius(tempF)}): {sig(base * factor)} Ω/1000 ft</div>
+                      <div>
+                        • Resistance at <ValText parts={[{ v: tempF, unit: '°F', src: 'input' }, ' (', celsius(tempF), '): ', sig(base * factor, 'Ω/1000 ft')]} />
+                      </div>
                     )}
                   </div>
                 </div>
@@ -394,7 +419,9 @@ export function WireResistanceCalculator() {
                       {rows.map((row) => (
                         <div key={row.label} className="flex justify-between gap-4">
                           <dt>{row.label}:</dt>
-                          <dd className="font-mono font-semibold">{row.value}</dd>
+                          <dd className="font-mono font-semibold">
+                            <ValText parts={row.value} />
+                          </dd>
                         </div>
                       ))}
                     </dl>
@@ -402,7 +429,9 @@ export function WireResistanceCalculator() {
                       {inputRows(inputs).map((row) => (
                         <div key={row.label} className="flex justify-between gap-4">
                           <span>{row.label}:</span>
-                          <span>{row.value}</span>
+                          <span>
+                            <ValText parts={row.value} />
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -417,8 +446,9 @@ export function WireResistanceCalculator() {
               <div className="text-sm">
                 <div className="font-medium text-amber-800 mb-1">Temperature Effects</div>
                 <div className="text-amber-700">
-                  Wire resistance increases with temperature. At {formatEntered(tempF)} °F ({celsius(tempF)}), the
-                  resistance factor is {formatFixed(factor, 4)} compared to the 20 °C (68 °F) reference.
+                  Wire resistance increases with temperature. At{' '}
+                  <ValText parts={[{ v: tempF, unit: '°F', src: 'input' }, ' (', celsius(tempF), ')']} />, the resistance
+                  factor is {formatFixed(factor, 4)} compared to the 20 °C (68 °F) reference.
                   High temperatures reduce current-carrying capacity and increase power losses.
                 </div>
               </div>

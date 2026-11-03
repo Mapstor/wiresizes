@@ -2,7 +2,17 @@ import { Metadata } from 'next';
 import { VoltageDropCalculator } from '@/components/calculators/VoltageDropCalculator';
 import { Calculator, Zap, BookOpen, Info, CheckCircle, XCircle, ArrowRight, Settings, Gauge, Battery, Lightbulb } from 'lucide-react';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
-import { DROP_EXCEEDS_SUPPLY_MESSAGE, dropExceedsSupply, formatVdPct, voltageDrop } from '@/lib/calculations/voltage-drop';
+import { Sources } from '@/components/content/Sources';
+import {
+  DOMAINS as VOLTAGE_DROP_DOMAINS,
+  DROP_EXCEEDS_SUPPLY_MESSAGE,
+  dropExceedsSupply,
+  formatVdPct,
+  voltageDrop,
+} from '@/lib/calculations/voltage-drop';
+
+// Sources: the domains of the engines this page uses
+const SOURCE_DOMAINS = VOLTAGE_DROP_DOMAINS;
 
 export const metadata: Metadata = {
   title: 'Voltage Drop Calculator',
@@ -495,6 +505,21 @@ export default function VoltageDropCalculatorPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Sources */}
+      <section className="py-8">
+        <div className="container">
+          <div className="max-w-6xl mx-auto">
+            <Sources
+              domains={SOURCE_DOMAINS}
+              headingClassName="text-2xl font-bold text-neutral-900 mb-6"
+              listClassName="space-y-2 text-sm text-neutral-600"
+              linkClassName="text-blue-600 hover:underline"
+              noteClassName="mt-4 text-sm text-neutral-600"
+            />
           </div>
         </div>
       </section>

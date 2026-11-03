@@ -4,6 +4,8 @@ import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { CalculatorLayout } from './CalculatorLayout';
+import { Val } from '@/components/content/Val';
+import { Size } from '@/components/content/Size';
 import { focusResults, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { usePrintExport } from '@/lib/hooks/usePrintExport';
 import { buildQuery, choiceParam } from '@/lib/calculations/fields';
@@ -11,6 +13,7 @@ import { formatEntered } from '@/lib/calculations/format';
 import { Shield, AlertTriangle, Calculator, RefreshCw } from 'lucide-react';
 import {
   egcForOcpd,
+  ENGINE_ID,
   GROUND_WIRE_DEFAULTS,
   GROUND_WIRE_RATINGS,
   PROPORTIONAL_NOTE,
@@ -19,6 +22,7 @@ import {
 import { formatSize } from '@/lib/verified/awg';
 
 const RATING_OPTIONS = GROUND_WIRE_RATINGS.map((a) => ({ value: String(a), label: `${a} A` }));
+const CALC = `calc:${ENGINE_ID}`;
 const COPPER_LABEL = 'Copper';
 const ALUMINUM_LABEL = 'Aluminum or copper-clad aluminum';
 
@@ -133,18 +137,19 @@ export function GroundWireCalculator() {
                   <div>
                     <div className="text-sm text-neutral-600">{COPPER_LABEL}</div>
                     <div className="text-2xl sm:text-4xl font-bold font-mono text-green-700 break-words min-w-0">
-                      {formatSize(row.cu)}
+                      <Size s={row.cu} />
                     </div>
                   </div>
                   <div>
                     <div className="text-sm text-neutral-600">{ALUMINUM_LABEL}</div>
                     <div className="text-2xl sm:text-4xl font-bold font-mono text-green-700 break-words min-w-0">
-                      {formatSize(row.alCca)}
+                      <Size s={row.alCca} />
                     </div>
                   </div>
                 </div>
                 <div className="text-sm text-neutral-600 mt-4 text-center">
-                  Based on {formatEntered(ocpdA)} A overcurrent device (NEC Table 250.122 row: {formatEntered(row.rowA)} A)
+                  Based on <Val v={ocpdA} unit="A" src="input" /> overcurrent device (NEC Table 250.122 row:{' '}
+                  <Val v={row.rowA} unit="A" src={CALC} />)
                 </div>
                 <p className="text-sm text-neutral-700 mt-3 text-center">{PROPORTIONAL_NOTE}</p>
               </div>
@@ -166,9 +171,15 @@ export function GroundWireCalculator() {
                     <tbody className="divide-y divide-neutral-200">
                       {TABLE_250_122_ROWS.map((r) => (
                         <tr key={r.rowA} className={r.rowA === row.rowA ? 'bg-green-100' : ''}>
-                          <td className="p-2">{formatEntered(r.rowA)} A</td>
-                          <td className="p-2 font-mono">{formatSize(r.cu)}</td>
-                          <td className="p-2 font-mono">{formatSize(r.alCca)}</td>
+                          <td className="p-2">
+                            <Val v={r.rowA} unit="A" src={CALC} />
+                          </td>
+                          <td className="p-2 font-mono">
+                            <Size s={r.cu} />
+                          </td>
+                          <td className="p-2 font-mono">
+                            <Size s={r.alCca} />
+                          </td>
                         </tr>
                       ))}
                     </tbody>

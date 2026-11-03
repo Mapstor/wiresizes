@@ -3,6 +3,11 @@ import ServiceEntranceCalculator from '@/components/calculators/ServiceEntranceC
 import { Building, Shield, Zap, Calculator, Users } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import { Sources } from '@/components/content/Sources';
+import { DOMAINS as SERVICE_LOOKUP_DOMAINS } from '@/lib/calculations/service-lookup';
+
+// Sources: the domains of the engines this page uses
+const SOURCE_DOMAINS = SERVICE_LOOKUP_DOMAINS;
 
 export const metadata: Metadata = {
   title: 'Service Entrance — NEC 310.12',
@@ -81,6 +86,17 @@ export default function ServiceEntranceCalculatorPage() {
                 </details>
               ))}
             </div>
+          </div>
+
+          {/* Sources */}
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <Sources
+              domains={SOURCE_DOMAINS}
+              headingClassName="text-2xl font-bold text-gray-900 mb-6"
+              listClassName="space-y-2 text-sm text-gray-700"
+              linkClassName="text-blue-600 hover:underline"
+              noteClassName="mt-4 text-sm text-gray-600"
+            />
           </div>
 
           {/* Related Tools */}

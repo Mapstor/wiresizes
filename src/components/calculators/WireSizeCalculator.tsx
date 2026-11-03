@@ -12,6 +12,7 @@ import {
   EGC_LARGER_THAN_CONDUCTOR_NOTE,
   EGC_NONE_MESSAGE,
   EGC_UPSIZED_NOTE,
+  ENGINE_ID,
   isSizingError,
   sizeConductor,
   SIZING_ERROR_MESSAGES,
@@ -328,7 +329,8 @@ export function WireSizeCalculator({ enableUrlSharing = true }: WireSizeCalculat
                         isCompliant={result.meetsTarget}
                         meetsTarget={result.meetsTarget}
                         warnings={materialNotes(result)}
-                        steps={result.steps}
+                        stepParts={result.stepParts}
+                        valueSrc={`calc:${ENGINE_ID}`}
                       />
                     </div>
                   ))}
