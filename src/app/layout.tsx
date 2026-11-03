@@ -70,15 +70,15 @@ export const metadata: Metadata = {
   other: {
     'x-build': BUILD,
   },
+  // Each icon link once (D-19): /favicon.ico comes from src/app/favicon.ico, which Next.js links itself; /icon.svg is
+  // public/icon.svg, the site icon.
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/icon.svg', type: 'image/svg+xml' },
       { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon.ico', sizes: 'any' },
     ],
-    shortcut: '/favicon.svg',
     apple: '/apple-touch-icon.png',
   },
 };
@@ -91,13 +91,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Explicit Favicon Links for Better Compatibility */}
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
-        <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        
         {/* Manifest */}
         <link rel="manifest" href="/manifest.json" />
       </head>

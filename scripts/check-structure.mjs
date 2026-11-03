@@ -4,6 +4,7 @@
 // Run after `rm -rf .next && npm run build`. Prints a PASS/FAIL line per check and exits 1 on any FAIL.
 
 import { readFileSync, existsSync } from 'node:fs';
+import { inflateSync } from 'node:zlib';
 import { join, relative, sep } from 'node:path';
 import {
   repoRoot, appOutDir, rel, htmlPages, withdrawnRoutes, configRedirects, tokenizeHtml, isJsonLd, visibleText,
@@ -753,6 +754,97 @@ const usDate = (iso) => `${MONTHS[Number(iso.slice(5, 7)) - 1]} ${Number(iso.sli
     'the Organization and the Person carry their required keys, and every JSON-LD block that references one prints it',
     failures,
     `${printedCount} printed nodes, ${refCount} block references`,
+  );
+}
+
+// 23. Site icon (D-19): every page links each icon once; the Organization logo and the manifest icons are files under
+//     public/ at their declared sizes; /favicon.ico (src/app/favicon.ico, as built) holds 16, 32 and 48 px PNG images
+//     that decode; src/app/icon.svg and public/favicon.ico are gone.
+{
+  /** Width and height of a PNG after inflating its image data to the size IHDR implies (throws when it does not). */
+  const decodePng = (buf) => {
+    if (buf.length < 33 || buf.readUInt32BE(0) !== 0x89504e47 || buf.readUInt32BE(4) !== 0x0d0a1a0a) throw new Error('no PNG signature');
+    let at = 8;
+    let ihdr = null;
+    const idat = [];
+    while (at + 8 <= buf.length) {
+      const length = buf.readUInt32BE(at);
+      const type = buf.toString('latin1', at + 4, at + 8);
+      const data = buf.subarray(at + 8, at + 8 + length);
+      if (type === 'IHDR') ihdr = { width: data.readUInt32BE(0), height: data.readUInt32BE(4), depth: data[8], color: data[9], interlace: data[12] };
+      if (type === 'IDAT') idat.push(data);
+      at += 12 + length;
+      if (type === 'IEND') break;
+    }
+    if (!ihdr || idat.length === 0) throw new Error('no IHDR or IDAT');
+    const channels = { 0: 1, 2: 3, 3: 1, 4: 2, 6: 4 }[ihdr.color];
+    const raw = inflateSync(Buffer.concat(idat));
+    const expected = ihdr.height * (1 + Math.ceil((ihdr.width * ihdr.depth * channels) / 8));
+    if (ihdr.interlace === 0 && raw.length !== expected) throw new Error(`image data ${raw.length} bytes, expected ${expected}`);
+    return { width: ihdr.width, height: ihdr.height };
+  };
+  const failures = [];
+  let iconLinks = 0;
+  for (const page of pages) {
+    const seen = new Set();
+    for (const e of page.events) {
+      if (e.type !== 'open' || e.name !== 'link' || !/(^|\s)(icon|apple-touch-icon)(\s|$)/.test(e.attrs.rel ?? '')) continue;
+      iconLinks++;
+      const href = (e.attrs.href ?? '').replace(/\?.*$/, '');
+      if (seen.has(href)) failures.push(`${page.route}: icon link ${href} twice`);
+      seen.add(href);
+    }
+  }
+  const publicFile = (url) => join(repoRoot, 'public', url.replace(SITE_ORIGIN, '').replace(/^\//, ''));
+  const expectPng = (url, width, height, what) => {
+    const file = publicFile(url);
+    if (!existsSync(file)) return failures.push(`${what} ${url}: no file at ${rel(file)}`);
+    try {
+      const size = decodePng(readFileSync(file));
+      if (size.width !== width || size.height !== height) failures.push(`${what} ${url}: ${size.width}×${size.height}, declared ${width}×${height}`);
+    } catch (err) {
+      failures.push(`${what} ${url}: ${err.message}`);
+    }
+  };
+  const logo = REQUIRED[ORGANIZATION_ID].logo;
+  expectPng(logo.url, logo.width, logo.height, 'Organization logo');
+  const manifest = JSON.parse(readFileSync(join(repoRoot, 'public', 'manifest.json'), 'utf8'));
+  for (const icon of manifest.icons ?? []) {
+    if (icon.type === 'image/png') {
+      const [w, h] = (icon.sizes ?? '').split('x').map(Number);
+      expectPng(icon.src, w, h, 'manifest icon');
+    } else if (!existsSync(publicFile(icon.src))) failures.push(`manifest icon ${icon.src}: no file under public/`);
+  }
+  const icoSizes = (buf) => {
+    if (buf.readUInt16LE(0) !== 0 || buf.readUInt16LE(2) !== 1) throw new Error('not an ICO');
+    const sizes = [];
+    for (let i = 0; i < buf.readUInt16LE(4); i++) {
+      const entry = 6 + 16 * i;
+      const png = buf.subarray(buf.readUInt32LE(entry + 12), buf.readUInt32LE(entry + 12) + buf.readUInt32LE(entry + 8));
+      const { width, height } = decodePng(png);
+      const declared = buf[entry] || 256;
+      if (width !== declared || height !== (buf[entry + 1] || 256)) throw new Error(`entry ${i} declares ${declared} px, image is ${width}×${height}`);
+      sizes.push(width);
+    }
+    return sizes;
+  };
+  const icoSource = join(repoRoot, 'src', 'app', 'favicon.ico');
+  const icoBuilt = join(appOutDir, 'favicon.ico.body');
+  try {
+    const source = readFileSync(icoSource);
+    const sizes = icoSizes(source);
+    if (sizes.join(',') !== '16,32,48') failures.push(`${rel(icoSource)}: images ${sizes.join(', ')} px, expected 16, 32, 48`);
+    if (!existsSync(icoBuilt) || !readFileSync(icoBuilt).equals(source)) failures.push(`${rel(icoBuilt)} is not ${rel(icoSource)}`);
+  } catch (err) {
+    failures.push(`${rel(icoSource)}: ${err.message}`);
+  }
+  for (const gone of [join(repoRoot, 'src', 'app', 'icon.svg'), join(repoRoot, 'public', 'favicon.ico')]) {
+    if (existsSync(gone)) failures.push(`${rel(gone)} exists (D-19: /icon.svg is public/icon.svg, /favicon.ico is src/app/favicon.ico)`);
+  }
+  check(
+    'each icon link once per page; the Organization logo and manifest icons decode at their declared sizes; /favicon.ico holds 16, 32 and 48 px PNG images',
+    failures,
+    `${iconLinks} icon links on ${pages.length} pages, ${(manifest.icons ?? []).length} manifest icons`,
   );
 }
 
