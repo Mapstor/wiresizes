@@ -373,3 +373,85 @@ tests/wsz003b-registry.test.ts (7) and tests/wsz003b-gates.test.ts (55): 331 tes
 7. **Gate b scope on the calculators.** Form option labels and the fixed prose of the result panels (section 2) are
    counted but outside step 4. Should their rebuild waves wire them (options can carry `data-src`/`data-size` on
    `<option>`)? DEVLOG §5 has a line for this.
+
+## 11. Chat answers (2026-11-03)
+
+1. nec-110-14c stays out of the wire size Sources until WSZ-009 adds the termination inputs; the page's results don't use it before then.
+2. "Article 250" joins the NEC allowlist (WSZ-003c step 4); gate c keeps reading registry text.
+3. "Article 310" joins it too.
+4. The sentence is deleted (WSZ-003c step 3).
+5. Input option lists, ranges and defaults stay in code as design constants. Typed text that repeats data (the α values, "about 64 %", the temperatures in the basis lines) renders from src/lib/verified, and °F equivalents are computed from °C, in each calculator's rebuild wave.
+6. Yes: the spaced forms were added (WSZ-003c step 5).
+7. Yes: each calculator's rebuild wave wires its option labels (data-src or data-size on the `<option>`) and the fixed result-panel text.
+
+## 12. WSZ-003c fixes (2026-11-03)
+
+Commits 4bfdffd (step 1 to 3), 37985a6 (steps 4 to 6). Chat's browser check found the 320 px overflow on two pages;
+these are the places step 1's two patterns applied, found by reading every `<Val>`, `<Size>` and `<ValText>` use and
+the element around it in the seven calculators.
+
+A `<Val>` unit is a unit symbol only. src/lib/calculations/format.ts holds UNIT_SYMBOLS (A, V, W, kW, kVA, VA, kVAR, Ω,
+%, °C, °F, ft, in, mm, mm², cmil, kcmil, lb, hp, Btu/h) as the type of `<Val unit>` and of a text part's unit, and
+withUnit throws for anything else, so a wrong unit fails the type check, the build and the tests. Three units held
+more than a symbol:
+- src/lib/calculations/conductor-sizing.ts (wire size steps): "1.934 Ω per 1000 ft at 75 °C" was one nowrap span
+  (the 20 px overflow). It is now "1.934 Ω" + " per 1000 ft at " + "75 °C" (RESISTANCE_TEMP_C, new in voltage-drop.ts:
+  the 75 °C of the awg.json resistances voltageDrop uses).
+- src/components/calculators/WireResistanceCalculator.tsx, "Resistance at 20 °C": "1.59 Ω/1000 ft" is now "1.59 Ω" +
+  "/1000 ft".
+- the same file, "Resistance at 68 °F (20 °C)": "1.588 Ω/1000 ft" is now "1.588 Ω" + "/1000 ft" (its `sig` helper
+  takes a unit symbol).
+
+Mixed text in a flex container, now in one inline wrapper:
+- src/components/calculators/VoltageDropCalculator.tsx, the result badge (inline-flex): "2.02 % Drop" (the 28 px
+  overflow).
+- src/components/calculators/AmpacityCalculator.tsx, the result heading (flex, gap-2): "Copper Conductor: 12 AWG".
+  The gap had replaced the space before the size since WSZ-003b.
+Every other use sits in a block, `li`, `dt`, `dd`, `td` or SVG `<text>`, or already had a wrapper (the voltage drop
+ampacity note). The visible text is unchanged (step 7). Layout at 320 and 390 px: chat's check (D-16).
+
+Field ids: every field of the 15 live calculators is an `<Input>` or `<Select>` (src/components/ui), which take the
+note id (`${id}-note`) and the control's aria-describedby from one useId (or the id prop) in the same render. In the
+built HTML, 62 controls and 8 notes: every aria-describedby names its own control's note, every note has its control,
+no field uses two ids, nothing to fix. The amps-to-watts Current field is a plain `<Input>` with a hint. One duplicate
+id, not a field: the SVG filter `wire-shadow` in src/components/visualizations/WireVisualization.tsx, defined by
+both wire visuals on the wire size page since February 2026 (left for the wire size rebuild, DEVLOG §5).
+
+Sources (step 2): each item shows the registry attribution without "Source: " and, since every item on the seven
+pages was retrieved in October 2026 (its verified_date month), without " — retrieved Oct 2026"; one line "Retrieved
+Oct 2026." follows the list in place of "Data as of". attributionParts (src/lib/verified/registry.ts) does the
+transform inside `<Sources>`. `<AsOf>` stays for datasets.
+
+Gate c after step 4 (two rows added to research/nec-sections-allowlist.csv): 28 enforced routes, 0 hits on them:
+/, /_global-error, /_not-found, /about, /calculators, /calculators/ampacity-calculator,
+/calculators/amps-to-watts-calculator, /calculators/btu-to-watts-calculator, /calculators/kilowatts-to-amps-calculator,
+/calculators/kva-to-amps-calculator, /calculators/low-voltage-calculator, /calculators/ohms-law-calculator,
+/calculators/service-entrance-calculator, /calculators/three-phase-calculator, /calculators/voltage-drop-calculator,
+/calculators/volts-to-amps-calculator, /calculators/watts-to-amps-calculator, /calculators/wire-resistance-calculator,
+/calculators/wire-size-calculator, /contact, /disclaimer, /guides, /guides/awg-wire-size-chart,
+/guides/electrical-power-calculations, /guides/power-factor-explained, /guides/wire-size-for-200-amp, /privacy, /terms.
+Report-only, as chat expected:
+
+| Route | Hits | References outside the allowlist |
+|---|---:|---|
+| /calculators/ground-wire-calculator | 1 | 250.118 |
+| /guides/nec-code-compliance | 8 | 240.4, 250.50, 250.52(A)(1), 250.52(A)(3), 250.52(A)(4), 250.52(A)(5), 250.118, 210.8 |
+| /guides/nec-table-310-16 | 2 | 310.17, 310.21 |
+| /guides/single-vs-three-phase | 1 | 220.61(C) |
+| /guides/wire-size-for-100-amp | 1 | 230.79 |
+| /guides/wire-size-for-ev-charger | 4 | Article 625 ×3 (text), Article 625 (JSON-LD) |
+
+Steps 5 and 6: research/wsz002-banned-strings.txt has the spaced forms of the 15 phrases beside the joined forms (14
+lines added: "408 V" was already listed; 137 phrases). Deleted src/components/ui/VoltageInput.tsx and
+src/lib/utils/validators.ts, which nothing imported, with src/lib/utils/index.ts, whose one line re-exported
+validators.ts.
+
+Verification on the build of 37985a6 (`rm -rf .next && npm run build`, postbuild included): check-banned 0 hits and 0
+dialog calls; check-structure 16/16; check-rendered-text 0 hits (6 allowlist lines); check-number-trace 0 on enforced
+routes (107 traced, 1,324 untraced: "1000 ft" in "per 1000 ft at" is now text, and the deleted sentence's "12 V" is
+gone); check-nec-refs 0 on its 28 enforced routes. `npx tsc --noEmit` 0 errors; `npm test` 336 pass, 0 fail, 0 skipped
+(golden 214 of 214); check_sources RESULT: OK (13 warnings). Snapshot /tmp/wsz003c/before (4dadbbc) against after: 7
+files differ (the seven calculators). Normalized as in WSZ-003b (runs joined per block): 68 lines in those 7 files,
+and the before text with step 2's transform and step 3's deletion applied equals the after text on all 7, so nothing
+else changed. Form values, option values, links, ids and aria-describedby: the same 2,515 elements on all 49 pages.
+The wire size steps match 4dadbbc's text over 13,248 sizing cases.
