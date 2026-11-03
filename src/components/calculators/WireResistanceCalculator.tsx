@@ -14,7 +14,7 @@ import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calcula
 import { Activity, AlertTriangle, Info, Thermometer, Calculator, RefreshCw } from 'lucide-react';
 import { formatFixed, partsText } from '@/lib/calculations/format';
 import { materialName } from '@/lib/calculations/format';
-import type { TextPart, ValueFormat, ValuePart } from '@/lib/calculations/format';
+import type { TextPart, UnitSymbol, ValueFormat, ValuePart } from '@/lib/calculations/format';
 import { diameterMm, formatSize } from '@/lib/verified/awg';
 import type { Material, SizeKey } from '@/lib/verified/awg';
 import {
@@ -110,7 +110,7 @@ function celsius(tempF: number): ValuePart {
 }
 
 /** A value of this engine with four significant figures. */
-function sig(value: number, unit: string): ValuePart {
+function sig(value: number, unit: UnitSymbol): ValuePart {
   return { v: value, unit, src: CALC, format: SIG4 };
 }
 
@@ -365,12 +365,13 @@ export function WireResistanceCalculator() {
                       </div>
                     )}
                     <div>
-                      • Resistance at 20 °C: <Val v={base} unit="Ω/1000 ft" src={CALC} />
+                      • Resistance at 20 °C: <Val v={base} unit="Ω" src={CALC} />
+                      /1000 ft
                     </div>
                     {tempValid && <div>• Temperature Factor: {formatFixed(factor, 4)}</div>}
                     {tempValid && (
                       <div>
-                        • Resistance at <ValText parts={[{ v: tempF, unit: '°F', src: 'input' }, ' (', celsius(tempF), '): ', sig(base * factor, 'Ω/1000 ft')]} />
+                        • Resistance at <ValText parts={[{ v: tempF, unit: '°F', src: 'input' }, ' (', celsius(tempF), '): ', sig(base * factor, 'Ω'), '/1000 ft']} />
                       </div>
                     )}
                   </div>

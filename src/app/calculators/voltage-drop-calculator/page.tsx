@@ -70,7 +70,7 @@ const faqItems = [
   },
   {
     question: "Why does distance matter more at 12 V than 120 V?",
-    answer: "The same voltage drop has 10x more impact at 12 V. A 1.2 V drop is 1 % at 120 V but 10 % at 12 V. Low voltage systems require significantly larger conductors to maintain acceptable voltage drop percentages."
+    answer: "A 1.2 V drop is 1 % at 120 V but 10 % at 12 V. Low voltage systems require significantly larger conductors to maintain acceptable voltage drop percentages."
   },
   {
     question: "How does temperature affect voltage drop?",

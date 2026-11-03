@@ -10,6 +10,3 @@
 /calculators/watts-to-amps-calculator | 3Φ | phase-count notation: 3Φ is three-phase, a symbol name, not a number and a unit
 /guides/wire-size-for-ev-charger | §30C | section 30C of the Internal Revenue Code (the IRS credit's name)
 /privacy | _ga_T871GVJZE2 | the name of Google Analytics' session cookie, which the privacy notice must name exactly
-
-# pending chat wording
-/calculators/voltage-drop-calculator | 10x | a multiplier ("10x more impact"), not a number and a unit: pending chat wording

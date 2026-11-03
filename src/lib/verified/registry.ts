@@ -25,6 +25,18 @@ function registryRows(): Map<string, Record<string, string>> {
   return rows;
 }
 
+/**
+ * An attribution as a Sources item shows it (WSZ-003c): `full` is the text without its leading "Source: "; `short` also
+ * drops the " — retrieved {Mon YYYY}" segment, keeping any text after it; `retrieved` is that month, or null when the
+ * text has no such segment (then short = full).
+ */
+export function attributionParts(text: string): { full: string; short: string; retrieved: string | null } {
+  const full = text.replace(/^Source:\s*/, '');
+  const segment = / — retrieved ([A-Z][a-z]{2} \d{4})/.exec(full);
+  if (!segment) return { full, short: full, retrieved: null };
+  return { full, short: full.slice(0, segment.index) + full.slice(segment.index + segment[0].length), retrieved: segment[1] };
+}
+
 /** A verified domain's attribution. Throws, and so fails the build, for a domain that is missing or not verified. */
 export function attribution(domain: string): Attribution {
   const row = registryRows().get(domain);

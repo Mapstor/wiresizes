@@ -30,7 +30,7 @@ import type { EgcProportional } from '../verified/nec-250-122';
 import { TERMINATION_RULES } from '../verified/nec-110-14c';
 import { voltsValid } from './inputs';
 import type { Phase } from './inputs';
-import { DEFAULT_VD_TARGET_PCT, LENGTH_MAX_FT, LENGTH_MIN_FT, sizeForDrop, VD_FORMAT, voltageDrop } from './voltage-drop';
+import { DEFAULT_VD_TARGET_PCT, LENGTH_MAX_FT, LENGTH_MIN_FT, RESISTANCE_TEMP_C, sizeForDrop, VD_FORMAT, voltageDrop } from './voltage-drop';
 import type { SizeForDrop, VoltageDropResult } from './voltage-drop';
 import { correctedAmpacity } from './ampacity';
 
@@ -326,7 +326,9 @@ function explain(
     ` one way, ${phase === 'three' ? 'three-phase' : 'single-phase'} `,
     { v: volts, unit: 'V', src: 'input' },
     ' (',
-    { v: atMinimum.ohmsPer1000ft, unit: 'Ω per 1000 ft at 75 °C', src: CALC },
+    { v: atMinimum.ohmsPer1000ft, unit: 'Ω', src: CALC },
+    ' per 1000 ft at ',
+    { v: RESISTANCE_TEMP_C, unit: '°C', src: CALC },
     '): ',
     ...drop(atMinimum),
     '.',

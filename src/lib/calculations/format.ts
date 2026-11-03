@@ -55,8 +55,20 @@ export function formatValue(value: number, format?: ValueFormat): string {
   return formatSignificant(value, format.sig);
 }
 
-/** The number, a plain space (U+0020) and the unit: withUnit(4.8561, 'V', { fixed: 2 }) → "4.86 V" (D-14). */
-export function withUnit(value: number, unit: string, format?: ValueFormat): string {
+/**
+ * The unit symbols a value may carry. <Val> keeps the number and its symbol on one line, so the symbol is all it
+ * holds: words and context ("per 1000 ft at") stay outside as text that can wrap (WSZ-003c).
+ */
+export const UNIT_SYMBOLS = ['A', 'V', 'W', 'kW', 'kVA', 'VA', 'kVAR', 'Ω', '%', '°C', '°F', 'ft', 'in', 'mm', 'mm²', 'cmil', 'kcmil', 'lb', 'hp', 'Btu/h'] as const;
+export type UnitSymbol = (typeof UNIT_SYMBOLS)[number];
+const UNIT_SYMBOL_SET = new Set<string>(UNIT_SYMBOLS);
+
+/**
+ * The number, a plain space (U+0020) and the unit symbol: withUnit(4.8561, 'V', { fixed: 2 }) → "4.86 V" (D-14).
+ * Throws for anything but a unit symbol, so a wrong unit fails the build and the tests.
+ */
+export function withUnit(value: number, unit: UnitSymbol, format?: ValueFormat): string {
+  if (!UNIT_SYMBOL_SET.has(unit)) throw new Error(`withUnit: "${unit}" is not a unit symbol (format.ts UNIT_SYMBOLS)`);
   return `${formatValue(value, format)} ${unit}`;
 }
 
@@ -71,7 +83,7 @@ export function materialName(material: Material): string {
  */
 export interface ValuePart {
   v: number;
-  unit: string;
+  unit: UnitSymbol;
   src: string;
   format?: ValueFormat;
 }

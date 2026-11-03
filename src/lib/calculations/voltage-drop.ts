@@ -39,6 +39,9 @@ export const VD_INPUT_INVALID_MESSAGE = 'Enter a current of 0 A or more and a on
 /** Labels of the copper and aluminum lines under the voltage drop inputs. */
 export const VD_HEADLINE_LABELS = { Cu: 'Copper:', Al: 'Aluminum:' };
 
+/** The conductor temperature of the resistances voltageDrop uses: awg.json's 75 °C values (r75_*). */
+export const RESISTANCE_TEMP_C = 75;
+
 export const VD_TARGET_OPTIONS = [1, 2, 3, 4, 5];
 export const DEFAULT_VD_TARGET_PCT = 3;
 export const LENGTH_MIN_FT = 0;

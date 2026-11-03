@@ -1,9 +1,11 @@
-// A page's Sources: under the heading "Sources", one item per data domain, the registry's attribution text linked to
-// its registry URL (never hand-typed), then <AsOf>: one line when every domain was verified in the same month,
-// otherwise the month under each item. Each item carries data-src={domain}, so the numbers in its text trace to it.
-// Server only (registry.ts). The page wraps it in its own secondary-section markup and passes that section's classes.
-import { attribution } from '@/lib/verified/registry';
-import { AsOf } from './AsOf';
+// A page's Sources: under the heading "Sources", one item per data domain, the registry's attribution text without its
+// leading "Source: ", linked to its registry URL (never retyped: attributionParts transforms the registry text). When
+// every item was retrieved in the month its verified_date falls in, the items drop their " — retrieved {Mon YYYY}"
+// segment and one line "Retrieved {Mon YYYY}." follows the list; otherwise each item keeps its own segment. Each item
+// carries data-src={domain}, so the numbers in its text trace to it. Server only (registry.ts). The page wraps it in
+// its own secondary-section markup and passes that section's classes.
+import { attribution, attributionParts } from '@/lib/verified/registry';
+import { monthOf } from './AsOf';
 
 interface SourcesProps {
   /** Registry domains, in order; repeats are dropped. */
@@ -11,14 +13,18 @@ interface SourcesProps {
   headingClassName?: string;
   listClassName?: string;
   linkClassName?: string;
-  /** The "Data as of" line. */
+  /** The "Retrieved" line. */
   noteClassName?: string;
 }
 
 export function Sources({ domains, headingClassName, listClassName, linkClassName, noteClassName }: SourcesProps) {
-  const items = [...new Set(domains)].map((domain) => ({ domain, ...attribution(domain) }));
+  const items = [...new Set(domains)].map((domain) => {
+    const { text, url, verified_date } = attribution(domain);
+    return { domain, url, verified_date, ...attributionParts(text) };
+  });
   if (items.length === 0) throw new Error('<Sources> needs at least one domain');
-  const oneMonth = new Set(items.map((item) => item.verified_date.slice(0, 7))).size === 1;
+  const retrieved = items[0].retrieved;
+  const oneMonth = retrieved !== null && items.every((item) => item.retrieved === retrieved && monthOf(item.verified_date) === retrieved);
   return (
     <>
       <h2 className={headingClassName}>Sources</h2>
@@ -26,13 +32,16 @@ export function Sources({ domains, headingClassName, listClassName, linkClassNam
         {items.map((item) => (
           <li key={item.domain} data-src={item.domain}>
             <a href={item.url} className={linkClassName}>
-              {item.text}
+              {oneMonth ? item.short : item.full}
             </a>
-            {!oneMonth && <AsOf domain={item.domain} className={noteClassName} />}
           </li>
         ))}
       </ul>
-      {oneMonth && <AsOf domain={items[0].domain} className={noteClassName} />}
+      {oneMonth && (
+        <p className={noteClassName}>
+          Retrieved <time dateTime={items[0].verified_date.slice(0, 7)}>{retrieved}</time>.
+        </p>
+      )}
     </>
   );
 }

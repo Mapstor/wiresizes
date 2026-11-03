@@ -219,7 +219,10 @@ export function AmpacityCalculator() {
                         key === 'copper' ? 'from-copper-400 to-copper-600' : 'from-aluminum-300 to-aluminum-500'
                       }`}
                     ></div>
-                    {label}: <Size s={inputs.size} />
+                    {/* one inline wrapper: the heading is a flex container, and the text must stay one item */}
+                    <span>
+                      {label}: <Size s={inputs.size} />
+                    </span>
                   </h3>
                   <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                     {resultRows(result, inputs.column).map((row) => (

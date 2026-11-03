@@ -1,14 +1,16 @@
 // A number with its unit and its source: <Val v={20} unit="A" src="calc:conductor-sizing" /> renders
 // <span data-src="calc:conductor-sizing" class="whitespace-nowrap">20 A</span>. The number comes from
 // src/lib/calculations/format.ts, a plain space separates it from the unit, and nowrap keeps the two on one line
-// (D-14). src is a verified registry domain, calc:<ENGINE_ID> for an engine output, or "input" for a value the reader
+// (D-14). The unit is a unit symbol only (format.ts UNIT_SYMBOLS; anything else throws): words stay outside the span,
+// and in a flex or grid container the text around it sits in one inline wrapper, so the line can still wrap.
+// src is a verified registry domain, calc:<ENGINE_ID> for an engine output, or "input" for a value the reader
 // entered that the page repeats back (D-15). No registry or fs import: client and server components both use it.
 import { withUnit } from '@/lib/calculations/format';
-import type { ValueFormat } from '@/lib/calculations/format';
+import type { UnitSymbol, ValueFormat } from '@/lib/calculations/format';
 
 interface ValProps {
   v: number;
-  unit: string;
+  unit: UnitSymbol;
   src: string;
   /** How the number is written; as entered (grouped, unrounded) when left out. */
   format?: ValueFormat;

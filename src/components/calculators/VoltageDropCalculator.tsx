@@ -319,7 +319,10 @@ export function VoltageDropCalculator() {
                           {!exceeds && (
                             <Badge variant={meets ? 'success' : 'warning'}>
                               {meets ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
-                              <Val v={result.vdPct} unit="%" format={VD_FORMAT} src={CALC} /> Drop
+                              {/* one inline wrapper: the badge is inline-flex, and the text must stay one item that wraps */}
+                              <span>
+                                <Val v={result.vdPct} unit="%" format={VD_FORMAT} src={CALC} /> Drop
+                              </span>
                             </Badge>
                           )}
                         </div>
