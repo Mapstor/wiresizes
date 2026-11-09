@@ -47,4 +47,6 @@ next-env.d.ts
 .claude/*
 !.claude/skills/
 !.claude/agents/
+!.claude/settings.json
 .claude/skills/impeccable/scripts/data/font-index.json
+.claude/skills/impeccable/scripts/bin/
