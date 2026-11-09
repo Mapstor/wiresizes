@@ -8,7 +8,9 @@
     "postbuild": "node scripts/check-banned.mjs && node scripts/check-structure.mjs && node scripts/check-rendered-text.mjs && node scripts/check-number-trace.mjs && node scripts/check-nec-refs.mjs",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --import ./tests/register.mjs --test \"tests/**/*.test.ts\""
+    "test": "node --experimental-strip-types --import ./tests/register.mjs --test \"tests/**/*.test.ts\"",
+    "qa:tracker": "node scripts/qa/tracker-baseline.mjs",
+    "progress": "node scripts/qa/progress.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",
