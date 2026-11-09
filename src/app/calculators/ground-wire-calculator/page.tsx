@@ -93,7 +93,7 @@ export default function GroundWireCalculatorPage() {
       {/* Calculator Component */}
       <section className="mb-16">
         <GroundWireCalculator />
-        <Byline route="/calculators/ground-wire-calculator" sources className="mt-4 text-sm text-gray-600 dark:text-gray-400" linkClassName="text-blue-600 hover:underline dark:text-blue-300" />
+        <Byline route="/calculators/ground-wire-calculator" sources className="mt-4 px-6 text-sm text-gray-600 dark:text-gray-400" linkClassName="text-blue-600 hover:underline dark:text-blue-300" />
       </section>
 
       {/* Understanding Grounding Systems */}

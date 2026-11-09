@@ -4,6 +4,7 @@
 // the page passes the text and link classes of the surface it sits on. data-byline marks it for check-structure 20.
 // A client component (GuideClient.tsx) gets it as a prop from its server page.tsx, so it is in the server HTML.
 import Link from 'next/link';
+import { clsx } from 'clsx';
 import { AUTHOR_CREDENTIAL, AUTHOR_NAME } from '@/lib/identity';
 import { formatDate, pageDates } from '@/lib/page-dates';
 
@@ -16,6 +17,10 @@ interface BylineProps {
   linkClassName?: string;
 }
 
+// Byline links are always underlined: blue-600 next to the gray-600 byline text is 1.46:1, so colour alone does not
+// mark them as links (WCAG 1.4.1, WSZ-019).
+const LINK_BASE = 'underline underline-offset-2';
+
 export function Byline({
   route,
   sources = false,
@@ -26,14 +31,14 @@ export function Byline({
   return (
     <p data-byline="" className={className}>
       By{' '}
-      <Link href="/about" className={linkClassName}>
+      <Link href="/about" className={clsx(LINK_BASE, linkClassName)}>
         {AUTHOR_NAME}
       </Link>
       , {AUTHOR_CREDENTIAL} · Updated <time dateTime={modified}>{formatDate(modified)}</time>
       {sources && (
         <>
           {' · '}
-          <a href="#sources" className={linkClassName}>
+          <a href="#sources" className={clsx(LINK_BASE, linkClassName)}>
             Sources below
           </a>
         </>

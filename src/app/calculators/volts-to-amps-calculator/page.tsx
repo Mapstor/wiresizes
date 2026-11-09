@@ -71,7 +71,7 @@ export default function VoltsToAmpsCalculatorPage() {
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
           <VoltsToAmpsCalculator />
         </div>
-        <Byline route="/calculators/volts-to-amps-calculator" sources className="mt-4 text-sm text-gray-600 dark:text-gray-400" linkClassName="text-blue-600 hover:underline dark:text-blue-300" />
+        <Byline route="/calculators/volts-to-amps-calculator" sources className="mt-4 px-8 text-sm text-gray-600 dark:text-gray-400" linkClassName="text-blue-600 hover:underline dark:text-blue-300" />
       </section>
 
       {/* Ohm's Law Section */}

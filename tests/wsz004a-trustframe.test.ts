@@ -33,10 +33,14 @@ describe('page dates', () => {
   });
 
   it('the legal pages keep the day WSZ-002 went live; every other route the day of its last body-text change', () => {
-    for (const route of ['/contact', '/privacy', '/terms', '/disclaimer']) assert.equal(DATES[route].modified, '2026-11-02', route);
+    const legal = ['/contact', '/privacy', '/terms', '/disclaimer'];
+    for (const route of legal) assert.equal(DATES[route].modified, '2026-11-02', route);
     for (const [route, { modified }] of Object.entries(DATES)) {
-      if (!['/contact', '/privacy', '/terms', '/disclaimer'].includes(route)) assert.equal(modified, '2026-11-03', route);
+      if (!legal.includes(route)) assert.ok(modified >= '2026-11-03', route);
     }
+    // WSZ-004a changed the body text of /about and the eight converters (Sources sections); it goes live with WSZ-019
+    const wsz004a = ['/about', ...['amps-to-watts', 'btu-to-watts', 'kilowatts-to-amps', 'kva-to-amps', 'ohms-law', 'three-phase', 'volts-to-amps', 'watts-to-amps'].map((s) => `/calculators/${s}-calculator`)];
+    for (const route of wsz004a) assert.ok(DATES[route].modified >= '2026-11-09', route);
   });
 
   it('pageDates and articleDates read the file, and an unknown route throws', () => {

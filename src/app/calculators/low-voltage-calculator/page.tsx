@@ -72,7 +72,7 @@ export default function LowVoltageCalculatorPage() {
       {/* Calculator Component */}
       <section className="mb-16">
         <LowVoltageCalculator />
-        <Byline route="/calculators/low-voltage-calculator" sources className="mt-4 text-sm text-gray-600 dark:text-gray-400" linkClassName="text-blue-600 hover:underline dark:text-blue-300" />
+        <Byline route="/calculators/low-voltage-calculator" sources className="mt-4 px-6 text-sm text-gray-600 dark:text-gray-400" linkClassName="text-blue-600 hover:underline dark:text-blue-300" />
       </section>
 
       {/* Understanding Low Voltage Systems */}
