@@ -13,7 +13,7 @@
 //   verified, or input; gate b's rule in scripts/lib/gate-rules.mjs) and not a size name inside [data-size].
 //   Unlike gate b it also counts numbers without a unit: sizes in plain text, table cells, factors. Not counted:
 //   years 1900–2099 without a unit, NEC references as gate c reads them, standard designations (NFPA 70, UL 1561,
-//   NEMA 14-50). A value taken from data/verified but rendered without data-src counts until its wave wires it,
+//   NEMA 14-50), dates inside <time> (the byline's "Updated" date, WSZ-019). A value taken from data/verified but rendered without data-src counts until its wave wires it,
 //   so this measures numbers left to cite, not proof that a number is wrong.
 // - prose_auto = AI-writing tells per 1,000 words (same rules as portfolio-qa prose-score.mjs):
 //   lexical tells in the main text plus em dashes in body paragraphs beyond 1 per 300 words.
@@ -102,7 +102,7 @@ const uncited = (html) => {
   // nearest data-src and whether a [data-size] encloses it
   let text = '';
   const where = [];
-  const NONE = { src: null, size: false };
+  const NONE = { src: null, size: false, time: false };
   const push = (c, info) => { text += c; where.push(info); };
   for (const e of tokenizeHtml(html)) {
     if (e.type !== 'text') { if (text && !text.endsWith(' ')) push(' ', NONE); continue; }
@@ -113,7 +113,7 @@ const uncited = (html) => {
       if (attrs['data-size'] !== undefined) size = true;
       if (src === null && attrs['data-src'] !== undefined) src = attrs['data-src'];
     }
-    const info = { src, size };
+    const info = { src, size, time: e.stack.includes('time') };
     for (const c of e.value) {
       if (/[ \t\n\r\f]/u.test(c)) { if (text && !text.endsWith(' ')) push(' ', info); } else push(c, info);
     }
@@ -123,7 +123,7 @@ const uncited = (html) => {
     ...[...text.matchAll(STANDARD_RE)].map((m) => [m.index, m.index + m[0].length]),
   ];
   const inside = (spans, at) => spans.some(([s, e]) => at >= s && at < e);
-  const counts = (at) => !where[at].size && !cites(where[at].src);
+  const counts = (at) => !where[at].size && !where[at].time && !cites(where[at].src);
   // unit-bearing numbers and $ amounts exactly as gate b finds them, then every other number
   const units = unitNumbers(text);
   const unit = units.filter((n) => counts(n.index)).length;
