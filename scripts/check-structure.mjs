@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// WSZ-002 gate: structural checks on the Next.js build output (checks 11–15 added in WSZ-014, 16 in WSZ-015, 17 onward in
-// WSZ-004a). Node built-ins only.
+// WSZ-002 gate: structural checks on the Next.js build output (checks 11–15 added in WSZ-014, 16 in WSZ-015, 17–23 in
+// WSZ-004a, 24 in WSZ-004b). Node built-ins only.
 // Run after `rm -rf .next && npm run build`. Prints a PASS/FAIL line per check and exits 1 on any FAIL.
 
 import { readFileSync, existsSync } from 'node:fs';
@@ -578,10 +578,29 @@ const canon = (value) =>
   expectOne(LIVE_CALCULATORS, 'WebApplication');
   expectOne(DATASET_ROUTES, 'Dataset');
   if (counts.Dataset !== DATASET_ROUTES.length) failures.push(`${counts.Dataset} Dataset nodes, expected ${DATASET_ROUTES.length}`);
+  // WSZ-004b: a page with a byline but no Article (/methodology) has one WebPage with the same author, publisher and dates
+  const AUTHORED_WEBPAGE_ROUTES = ['/methodology'];
+  let authoredWebPages = 0;
+  for (const route of AUTHORED_WEBPAGE_ROUTES) {
+    const page = pageByRoute.get(route);
+    const nodes = page ? jsonLdNodes(page).filter((x) => x.types.includes('WebPage')) : [];
+    if (nodes.length !== 1) failures.push(`${route}: ${nodes.length} WebPage nodes, expected 1`);
+    for (const { node } of nodes) {
+      authoredWebPages++;
+      if (!isRef(node.author, PERSON_ID)) failures.push(`${route}: WebPage author ${JSON.stringify(node.author)}, expected {"@id":"${PERSON_ID}"}`);
+      if (!isRef(node.publisher, ORGANIZATION_ID)) failures.push(`${route}: WebPage publisher ${JSON.stringify(node.publisher)}, expected {"@id":"${ORGANIZATION_ID}"}`);
+      const dates = pageDates[route];
+      if (!dates) failures.push(`${route}: WebPage on a route without page dates`);
+      else {
+        if (node.datePublished !== dates.published) failures.push(`${route}: WebPage datePublished ${node.datePublished}, page-dates.json ${dates.published}`);
+        if (node.dateModified !== dates.modified) failures.push(`${route}: WebPage dateModified ${node.dateModified}, page-dates.json ${dates.modified}`);
+      }
+    }
+  }
   check(
-    'every Article, Dataset and WebApplication has author → the Person and publisher → the Organization; Article and Dataset dates equal page-dates.json',
+    'every Article, Dataset and WebApplication, and the WebPage of /methodology, has author → the Person and publisher → the Organization; Article, Dataset and that WebPage carry the page-dates.json dates',
     failures,
-    `${counts.Article} Article, ${counts.Dataset} Dataset, ${counts.WebApplication} WebApplication nodes`,
+    `${counts.Article} Article, ${counts.Dataset} Dataset, ${counts.WebApplication} WebApplication, ${authoredWebPages} authored WebPage nodes`,
   );
 }
 
@@ -629,11 +648,12 @@ const joinedText = (events) =>
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const usDate = (iso) => `${MONTHS[Number(iso.slice(5, 7)) - 1]} ${Number(iso.slice(8, 10))}, ${iso.slice(0, 4)}`;
 
-// 20. The byline (D-18): exactly the 24 content and tool routes render one [data-byline] block, "By Marko Visic, BSc
-//     Physics · Updated {Month D, YYYY}" with the name linked to /about and the date = page-dates.json modified;
-//     " · Sources below", linked to #sources, appears exactly where the page renders <Sources> (its h2#sources).
+// 20. The byline (D-18): exactly the 24 content and tool routes and /methodology (WSZ-004b) render one [data-byline]
+//     block, "By Marko Visic, BSc Physics · Updated {Month D, YYYY}" with the name linked to /about and the date =
+//     page-dates.json modified; " · Sources below", linked to #sources, appears exactly where the page renders
+//     <Sources> (its h2#sources).
 {
-  const BYLINE_ROUTES = new Set([...LIVE_CALCULATORS, ...LIVE_GUIDES]);
+  const BYLINE_ROUTES = new Set([...LIVE_CALCULATORS, ...LIVE_GUIDES, '/methodology']);
   const failures = [];
   let bylines = 0;
   let withSources = 0;
@@ -671,7 +691,7 @@ const usDate = (iso) => `${MONTHS[Number(iso.slice(5, 7)) - 1]} ${Number(iso.sli
     }
   }
   check(
-    'exactly the 15 live calculators and 9 live guides render one byline (name → /about, Updated = page-dates.json modified); "Sources below" only beside a rendered <Sources>',
+    'exactly the 15 live calculators, the 9 live guides and /methodology render one byline (name → /about, Updated = page-dates.json modified); "Sources below" only beside a rendered <Sources>',
     failures,
     `${bylines} bylines, ${withSources} with "Sources below"`,
   );
@@ -843,6 +863,65 @@ const usDate = (iso) => `${MONTHS[Number(iso.slice(5, 7)) - 1]} ${Number(iso.sli
     'each icon link once per page; the Organization logo and manifest icons decode at their declared sizes; /favicon.ico holds 16, 32 and 48 px PNG images',
     failures,
     `${iconLinks} icon links on ${pages.length} pages, ${(manifest.icons ?? []).length} manifest icons`,
+  );
+}
+
+// ── WSZ-004b ────────────────────────────────────────────────────────────────
+// 24. /methodology covers exactly the source domains that live pages list under Sources (WSZ-017 answer 10): one
+//     section[data-src=<domain>] per domain, whose [data-cited-on] links are exactly the live pages that list it. A
+//     domain added to or dropped from a page's Sources fails here until src/lib/methodology.ts follows.
+{
+  const METHODOLOGY = '/methodology';
+  const failures = [];
+  /** domain → the routes whose Sources list it */
+  const cited = new Map();
+  for (const page of livePages) {
+    if (page.route === METHODOLOGY) continue;
+    const heading = page.events.findIndex((e) => e.type === 'open' && e.name === 'h2' && e.attrs.id === 'sources');
+    if (heading === -1) continue;
+    const list = page.events.findIndex((e, k) => k > heading && e.type === 'open' && e.name === 'ul');
+    if (list === -1) {
+      failures.push(`${page.route}: h2#sources without a list`);
+      continue;
+    }
+    for (const e of elementEvents(page.events, list)) {
+      if (e.type !== 'open' || e.name !== 'li' || e.attrs['data-src'] === undefined) continue;
+      if (!cited.has(e.attrs['data-src'])) cited.set(e.attrs['data-src'], new Set());
+      cited.get(e.attrs['data-src']).add(page.route);
+    }
+  }
+  /** domain → the routes its /methodology section cites */
+  const sections = new Map();
+  const page = pageByRoute.get(METHODOLOGY);
+  if (!page) failures.push(`${METHODOLOGY}: no prerendered page`);
+  else {
+    page.events.forEach((e, at) => {
+      if (e.type !== 'open' || e.name !== 'section') return;
+      const domain = e.attrs['data-src'];
+      if (domain === undefined || domain === 'input' || domain.startsWith('calc:')) return;
+      if (sections.has(domain)) failures.push(`${METHODOLOGY}: two sections for ${domain}`);
+      const inner = elementEvents(page.events, at);
+      const list = inner.findIndex((x) => x.type === 'open' && x.name === 'dd' && x.attrs['data-cited-on'] !== undefined);
+      const routes = new Set();
+      if (list === -1) failures.push(`${METHODOLOGY}: the ${domain} section has no [data-cited-on] list`);
+      else for (const x of elementEvents(inner, list)) if (x.type === 'open' && x.name === 'a') routes.add(normalizePath(x.attrs.href ?? ''));
+      sections.set(domain, routes);
+    });
+  }
+  for (const [domain, routes] of cited) {
+    const listed = sections.get(domain);
+    if (!listed) {
+      failures.push(`${METHODOLOGY}: no section for ${domain}, which ${[...routes].join(', ')} list under Sources`);
+      continue;
+    }
+    for (const route of routes) if (!listed.has(route)) failures.push(`${METHODOLOGY}: the ${domain} section does not cite ${route}, which lists it under Sources`);
+    for (const route of listed) if (!routes.has(route)) failures.push(`${METHODOLOGY}: the ${domain} section cites ${route}, whose Sources do not list ${domain}`);
+  }
+  for (const domain of sections.keys()) if (!cited.has(domain)) failures.push(`${METHODOLOGY}: a section for ${domain}, which no live page lists under Sources`);
+  check(
+    '/methodology has one section per source domain that live pages list under Sources, citing exactly those pages',
+    failures,
+    `${sections.size} sections, ${cited.size} domains cited by ${new Set([...cited.values()].flatMap((s) => [...s])).size} pages`,
   );
 }
 

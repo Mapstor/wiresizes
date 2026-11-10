@@ -9,6 +9,20 @@ export interface Limit240_4D {
   status: string;
 }
 
+export interface Row240_4D extends Limit240_4D {
+  size: SizeKey;
+  material: Material | 'CCA';
+}
+
+/** Every row as the file holds it, conditional rows included, in file order. */
+export const ROWS_240_4_D: Row240_4D[] = table.rows.map((r) => ({
+  size: r.size,
+  material: r.material as Material | 'CCA',
+  max_ocpd_a: r.max_ocpd_a,
+  conditions: r.conditions,
+  status: r.status,
+}));
+
 /** The row for a size and material (Cu, Al or CCA), conditional rows included, or null. */
 export function max240_4D(key: SizeKey, material: Material | 'CCA'): Limit240_4D | null {
   const row = table.rows.find((r) => r.size === key && r.material === material);

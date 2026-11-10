@@ -23,10 +23,13 @@ describe('page dates', () => {
     }
   });
 
-  it('every route was published on 2026-02-22 and modified on or after it', () => {
-    assert.equal(Object.keys(DATES).length, 32);
+  // Routes added after the launch, with the day each went live (D-17); WSZ-004b added /methodology
+  const ADDED_LATER: Record<string, string> = { '/methodology': '2026-11-10' };
+
+  it('every route was published on 2026-02-22, or on the day it was added, and modified on or after it', () => {
+    assert.equal(Object.keys(DATES).length, 33);
     for (const [route, { published, modified }] of Object.entries(DATES)) {
-      assert.equal(published, '2026-02-22', route);
+      assert.equal(published, ADDED_LATER[route] ?? '2026-02-22', route);
       assert.match(modified, /^\d{4}-\d{2}-\d{2}$/, route);
       assert.ok(modified >= published, route);
     }

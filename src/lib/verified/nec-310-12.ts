@@ -20,3 +20,20 @@ export const TABLE_310_12_ROWS: ServiceRow[] = table.rows.map((row) => ({
 export function table31012(ratingA: number): ServiceRow | null {
   return TABLE_310_12_ROWS.find((row) => row.ratingA === ratingA) ?? null;
 }
+
+function rulePercent(prefix: string): number {
+  const rule = table.rules_seen.find((r) => r.startsWith(prefix));
+  const match = rule === undefined ? null : /not less than (\d+) percent of the/.exec(rule);
+  if (!match) throw new Error(`nec-310-12.json: no "not less than N percent" in the ${prefix} rule`);
+  return Number(match[1]);
+}
+
+/**
+ * 310.12(A) and (B), which the table applies: a dwelling service or main power feeder conductor needs an ampacity of
+ * at least this percent of the service or feeder rating (83). Read from rules_seen; the two rules must agree.
+ */
+export const SERVICE_AMPACITY_PERCENT = rulePercent('310.12(A)');
+
+if (rulePercent('310.12(B)') !== SERVICE_AMPACITY_PERCENT) {
+  throw new Error('nec-310-12.json: the 310.12(A) and 310.12(B) rules give different percents');
+}

@@ -45,6 +45,7 @@ const footerLinks = {
 
 const sitePages = [
   { name: 'About', href: '/about' },
+  { name: 'Methodology', href: '/methodology' },
   { name: 'Contact', href: '/contact' },
   { name: 'Privacy', href: '/privacy' },
   { name: 'Terms', href: '/terms' },
