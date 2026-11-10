@@ -38,6 +38,7 @@
 - [Calculators](https://wiresizes.com/calculators): List of the calculators.
 - [Guides](https://wiresizes.com/guides): List of the guides.
 - [About](https://wiresizes.com/about): Who writes wiresizes.com, which sources its numbers come from, how pages are checked, and the dated list of corrections.
+- [Methodology](https://wiresizes.com/methodology): The sources behind the calculators, with the edition of each, the formulas used, their limits, and the topics not covered yet.
 - [Contact](https://wiresizes.com/contact): Email address for corrections, questions about a page and privacy requests.
 - [Privacy notice](https://wiresizes.com/privacy): What wiresizes.com collects, which services process it, the legal basis, and how to use your data protection rights.
 - [Terms of use](https://wiresizes.com/terms): Who operates wiresizes.com, what its tables and calculators are for, and what they don't cover.

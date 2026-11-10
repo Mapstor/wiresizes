@@ -7,7 +7,7 @@ import { formatDate } from '@/lib/page-dates';
 
 // Copy from research/trust-pages-copy.md (/about), rendered verbatim. WSZ-004a: the rel="me" LinkedIn line, and the
 // Corrections list from src/data/corrections.json (one dated line per error readers could see on the live site, dated
-// the day its fix went live).
+// the day its fix went live). WSZ-004b: the sentence linking /methodology under "Where the numbers come from".
 const TITLE = 'About wiresizes.com';
 const DESCRIPTION =
   'Who writes wiresizes.com, which sources its numbers come from, how pages are checked, and the dated list of corrections.';
@@ -65,6 +65,13 @@ export default function AboutPage() {
           <li>NIST Special Publication 811 for unit conversion factors.</li>
           <li>{"Manufacturers' installation instructions, for pages about specific equipment."}</li>
         </ul>
+        <p>
+          The{' '}
+          <Link href="/methodology" className="text-blue-600 hover:underline">
+            methodology page
+          </Link>{' '}
+          gives the edition of each source, the formulas the calculators use and their limits.
+        </p>
 
         <h2 className="text-2xl font-semibold text-gray-900 pt-4">How pages are made</h2>
         <p>

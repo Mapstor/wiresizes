@@ -47,7 +47,7 @@ for (const [t, name] of Object.entries(TRACKS)) {
   const p = total ? complete / total : 0;
   overall += w[t] * p; wsum += w[t];
   doneUnits += (w[t] * done.length) / Math.max(1, total);
-  todoUnits += (w[t] * todo.length) / Math.max(1, total);
+  todoUnits += (w[t] * todo) / Math.max(1, total);
   let line = `${name.padEnd(9)} ${String(Math.round(p * 100)).padStart(3)}% ${bar(p)}  ${done.length} done · ${clean} clean · ${todo} todo · avg badness found ${avg(bad)}`;
   if (t === 'S') {
     const u = rows.filter((r) => r.S === 'todo' && r.uncited_auto !== '').map((r) => Number(r.uncited_auto)).filter(Number.isFinite);

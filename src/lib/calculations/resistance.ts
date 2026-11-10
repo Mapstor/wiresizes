@@ -12,7 +12,7 @@ export const DOMAINS = ['conductor-resistance-20c'];
 export const COPPER_ALPHA = AWG_CONSTANTS.copper_alpha_per_C_20C;
 export const ALUMINUM_ALPHA = AWG_CONSTANTS.aluminum_ECH19_alpha_per_C_20C;
 // the awg.json resistances, resistivities and α are for 20 °C
-const REFERENCE_TEMP_C = 20;
+export const REFERENCE_TEMP_C = 20;
 
 export type ResistanceMode = 'resistance' | 'distance' | 'power';
 export type CircuitType = 'dc' | 'single' | 'three';

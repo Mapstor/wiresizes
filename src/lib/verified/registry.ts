@@ -9,6 +9,8 @@ import { parseCsv } from './csv.mjs';
 export interface Attribution {
   /** The registry's attribution string, rendered as is. */
   text: string;
+  /** The registry's publisher column, rendered as is (/methodology). */
+  publisher: string;
   url: string;
   /** YYYY-MM-DD */
   verified_date: string;
@@ -45,5 +47,5 @@ export function attribution(domain: string): Attribution {
   if (!row.attribution || !row.url || !/^\d{4}-\d{2}-\d{2}$/.test(row.verified_date)) {
     throw new Error(`data-sources.csv: domain "${domain}" needs an attribution, a url and a verified_date`);
   }
-  return { text: row.attribution, url: row.url, verified_date: row.verified_date, status: row.status };
+  return { text: row.attribution, publisher: row.publisher, url: row.url, verified_date: row.verified_date, status: row.status };
 }
