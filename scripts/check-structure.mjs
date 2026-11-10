@@ -7,8 +7,8 @@ import { readFileSync, existsSync } from 'node:fs';
 import { inflateSync } from 'node:zlib';
 import { join, relative, sep } from 'node:path';
 import {
-  repoRoot, appOutDir, rel, htmlPages, withdrawnRoutes, configRedirects, tokenizeHtml, isJsonLd, visibleText,
-  jsonLdStrings, walkFiles, SITE_ORIGIN,
+  repoRoot, appOutDir, routeCacheDir, rel, htmlPages, prerendered, bodyFile, withdrawnRoutes, configRedirects,
+  tokenizeHtml, isJsonLd, visibleText, jsonLdStrings, walkFiles, SITE_ORIGIN,
 } from './lib/build-output.mjs';
 
 const NEW_REDIRECTS = [
@@ -63,8 +63,8 @@ const withdrawn = withdrawnRoutes();
 const withdrawnSet = new Set(withdrawn);
 const redirects = configRedirects();
 const redirectMatchers = redirects.map((r) => ({ ...r, re: sourceMatcher(r.source) }));
-const sitemapFile = join(appOutDir, 'sitemap.xml.body');
-const sitemap = existsSync(sitemapFile) ? readFileSync(sitemapFile, 'utf8') : '';
+const sitemapFile = bodyFile('/sitemap.xml');
+const sitemap = sitemapFile ? readFileSync(sitemapFile, 'utf8') : '';
 const sitemapLocs = [...sitemap.matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/g)].map((m) => m[1]);
 const sitemapPaths = new Set(sitemapLocs.map((loc) => normalizePath(loc)));
 const pageByRoute = new Map(pages.map((p) => [p.route, p]));
@@ -73,7 +73,7 @@ const livePages = pages.filter((p) => !withdrawnSet.has(p.route));
 // 1. Withdrawn routes: noindex, follow and not in the sitemap
 {
   const failures = [];
-  if (!sitemap) failures.push(`no sitemap at ${rel(sitemapFile)}`);
+  if (!sitemap) failures.push(sitemapFile ? `empty sitemap at ${rel(sitemapFile)}` : 'no prerendered /sitemap.xml (sitemap.xml.body)');
   for (const route of withdrawn) {
     const page = pageByRoute.get(route);
     if (!page) {
@@ -342,9 +342,7 @@ function mainLinks(page) {
   const failures = [];
   let links = 0;
   const targets = new Set(pages.map((p) => p.route).filter((r) => r !== NOT_FOUND_ROUTE && r !== '/_global-error'));
-  for (const f of walkFiles(appOutDir, (x) => x.endsWith('.body'))) {
-    targets.add('/' + relative(appOutDir, f).split(sep).join('/').replace(/\.body$/, ''));
-  }
+  for (const body of prerendered('.body')) targets.add(body.route);
   for (const f of walkFiles(join(appOutDir, 'api'), (x) => x.endsWith('/route.js') || x.endsWith('\\route.js'))) {
     targets.add('/' + relative(appOutDir, f).split(sep).join('/').replace(/\/route\.js$/, ''));
   }
@@ -829,12 +827,12 @@ const usDate = (iso) => `${MONTHS[Number(iso.slice(5, 7)) - 1]} ${Number(iso.sli
     return sizes;
   };
   const icoSource = join(repoRoot, 'src', 'app', 'favicon.ico');
-  const icoBuilt = join(appOutDir, 'favicon.ico.body');
+  const icoBuilt = bodyFile('/favicon.ico');
   try {
     const source = readFileSync(icoSource);
     const sizes = icoSizes(source);
     if (sizes.join(',') !== '16,32,48') failures.push(`${rel(icoSource)}: images ${sizes.join(', ')} px, expected 16, 32, 48`);
-    if (!existsSync(icoBuilt) || !readFileSync(icoBuilt).equals(source)) failures.push(`${rel(icoBuilt)} is not ${rel(icoSource)}`);
+    if (!icoBuilt || !readFileSync(icoBuilt).equals(source)) failures.push(`the prerendered /favicon.ico is not ${rel(icoSource)}`);
   } catch (err) {
     failures.push(`${rel(icoSource)}: ${err.message}`);
   }
@@ -849,5 +847,6 @@ const usDate = (iso) => `${MONTHS[Number(iso.slice(5, 7)) - 1]} ${Number(iso.sli
 }
 
 const failed = results.filter((r) => r.failures.length > 0).length;
-console.log(`\ncheck-structure: ${results.length - failed}/${results.length} checks pass (${pages.length} prerendered pages under ${rel(appOutDir)})`);
+const pagesDir = pages[0].file.startsWith(routeCacheDir) ? routeCacheDir : appOutDir;
+console.log(`\ncheck-structure: ${results.length - failed}/${results.length} checks pass (${pages.length} prerendered pages under ${rel(pagesDir)})`);
 process.exit(failed ? 1 : 0);

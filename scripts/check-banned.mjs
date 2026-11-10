@@ -3,7 +3,8 @@
 // digit may appear in what the site publishes. Run after `rm -rf .next && npm run build`. Exits 1 on any hit.
 //
 // Inputs:
-//   1. Every prerendered HTML file in .next/server/app: visible text (a space at every tag boundary, whitespace
+//   1. Every prerendered HTML file (.next/server/app, or .next/server/route-cache in an adapter build such as
+//      Vercel's; scripts/lib/build-output.mjs): visible text (a space at every tag boundary, whitespace
 //      collapsed), every attribute value, and the string values of JSON-LD blocks. Other <script> bodies (the RSC
 //      payload holds $-prefixed tokens) and <style> bodies are skipped.
 //   2. sitemap.xml (build output), public/robots.txt, public/llms.txt, public/manifest.json and the source text
@@ -24,7 +25,7 @@ import { readFileSync, existsSync, statSync } from 'node:fs';
 import { join, dirname, basename, extname } from 'node:path';
 import ts from 'typescript';
 import {
-  repoRoot, appOutDir, rel, walkFiles, htmlPages, withdrawnRoutes, tokenizeHtml, isJsonLd, visibleText, jsonLdStrings,
+  repoRoot, rel, walkFiles, htmlPages, bodyFile, withdrawnRoutes, tokenizeHtml, isJsonLd, visibleText, jsonLdStrings,
 } from './lib/build-output.mjs';
 
 const WITHDRAWN_COMPONENTS = new Set([
@@ -95,8 +96,10 @@ for (const { file } of pages) {
 }
 
 // 2. Text files
+const sitemapBody = bodyFile('/sitemap.xml');
+if (!sitemapBody) throw new Error('missing input: the prerendered /sitemap.xml (sitemap.xml.body)');
 const textFiles = [
-  join(appOutDir, 'sitemap.xml.body'),
+  sitemapBody,
   join(repoRoot, 'public', 'robots.txt'),
   join(repoRoot, 'public', 'llms.txt'),
   join(repoRoot, 'public', 'manifest.json'),
