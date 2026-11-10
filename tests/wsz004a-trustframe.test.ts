@@ -48,7 +48,7 @@ describe('page dates', () => {
 
   it('pageDates and articleDates read the file, and an unknown route throws', () => {
     assert.deepEqual(pageDates('/guides/nec-table-310-16'), DATES['/guides/nec-table-310-16']);
-    assert.deepEqual(articleDates('/guides/awg-wire-size-chart'), { datePublished: '2026-02-22', dateModified: '2026-11-03' });
+    assert.deepEqual(articleDates('/guides/awg-wire-size-chart'), { datePublished: '2026-02-22', dateModified: DATES['/guides/awg-wire-size-chart'].modified });
     assert.throws(() => pageDates('/calculators/welder-calculator'), /no entry/);
   });
 

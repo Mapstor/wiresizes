@@ -8,7 +8,7 @@ import { inflateSync } from 'node:zlib';
 import { join, relative, sep } from 'node:path';
 import {
   repoRoot, appOutDir, routeCacheDir, rel, htmlPages, prerendered, bodyFile, withdrawnRoutes, configRedirects,
-  tokenizeHtml, isJsonLd, visibleText, jsonLdStrings, walkFiles, SITE_ORIGIN,
+  tokenizeHtml, isJsonLd, visibleText, jsonLdStrings, walkFiles, SITE_ORIGIN, registryRows,
 } from './lib/build-output.mjs';
 
 const NEW_REDIRECTS = [
@@ -129,10 +129,12 @@ const livePages = pages.filter((p) => !withdrawnSet.has(p.route));
   check('next.config.ts holds the six new redirects, one hop each', failures, `${redirects.length} redirects`);
 }
 
-// 4. Canonicals, sitemap and JSON-LD URLs on https://wiresizes.com
+// 4. Canonicals, sitemap and JSON-LD URLs on https://wiresizes.com. WSZ-005a: a Dataset's isBasedOn names its primary
+//    sources, whose url must be the URL of a verified domain in research/data-sources.csv.
 {
   const failures = [];
   let urls = 0;
+  const sourceUrls = new Set([...registryRows()].filter(([, row]) => row.status === 'verified').map(([, row]) => row.url));
   for (const loc of sitemapLocs) {
     urls++;
     if (!isSiteUrl(loc)) failures.push(`sitemap.xml <loc> ${loc}`);
@@ -159,13 +161,23 @@ const livePages = pages.filter((p) => !withdrawnSet.has(p.route));
           }
         } else if (Array.isArray(node)) node.forEach((v) => walk(v, key));
         else if (node && typeof node === 'object') {
-          for (const [k, v] of Object.entries(node)) if (k !== '@context' && k !== '@type') walk(v, k);
+          for (const [k, v] of Object.entries(node)) {
+            if (k === '@context' || k === '@type') continue;
+            if (k === 'isBasedOn') {
+              for (const source of [].concat(v)) {
+                urls++;
+                if (!sourceUrls.has(source?.url)) failures.push(`${page.route}: JSON-LD isBasedOn url ${source?.url} is no verified registry URL`);
+              }
+              continue;
+            }
+            walk(v, k);
+          }
         }
       };
       walk(data, null);
     }
   }
-  check('canonicals, sitemap <loc> and JSON-LD url/@id/item/logo/image values are on https://wiresizes.com', failures, `${urls} URLs`);
+  check('canonicals, sitemap <loc> and JSON-LD url/@id/item/logo/image values are on https://wiresizes.com; isBasedOn URLs are verified registry URLs', failures, `${urls} URLs`);
 }
 
 // 5. JSON-LD types and keys

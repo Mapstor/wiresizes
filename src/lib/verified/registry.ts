@@ -49,3 +49,9 @@ export function attribution(domain: string): Attribution {
   }
   return { text: row.attribution, publisher: row.publisher, url: row.url, verified_date: row.verified_date, status: row.status };
 }
+
+/** A verified domain's coverage column as the registry holds it (WSZ-005a: the 2026 edition facts are read from it). */
+export function coverage(domain: string): string {
+  attribution(domain);
+  return registryRows().get(domain)?.coverage ?? '';
+}

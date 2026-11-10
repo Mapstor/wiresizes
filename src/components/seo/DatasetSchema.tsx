@@ -43,6 +43,8 @@ interface DatasetSchemaProps {
   dateModified: string;
   /** Coverage area (e.g., "United States"). */
   spatialCoverage?: string;
+  /** The primary sources the values come from (WSZ-005a): name and registry URL each. No license is claimed. */
+  isBasedOn?: { name: string; url: string }[];
 }
 
 const ORIGIN = 'https://wiresizes.com';
@@ -58,6 +60,7 @@ export function DatasetSchema({
   datePublished,
   dateModified,
   spatialCoverage,
+  isBasedOn,
 }: DatasetSchemaProps) {
   const url = `${ORIGIN}${path}`;
   const dataset: Record<string, unknown> = {
@@ -82,6 +85,7 @@ export function DatasetSchema({
   }
   if (keywords) dataset.keywords = keywords;
   if (citation) dataset.citation = citation;
+  if (isBasedOn) dataset.isBasedOn = isBasedOn.map(({ name, url }) => ({ '@type': 'CreativeWork', name, url }));
   if (spatialCoverage) {
     dataset.spatialCoverage = { '@type': 'Place', name: spatialCoverage };
   }

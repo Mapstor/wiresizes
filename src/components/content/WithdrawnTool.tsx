@@ -10,8 +10,8 @@ const WITHDRAWN_DESCRIPTION = 'This calculator is offline while it is rebuilt fr
 
 // Anchor text for "Related pages" links: each target page's H1.
 const PAGE_H1: Record<string, string> = {
-  '/guides/nec-table-310-16': 'NEC Table 310.16',
-  '/guides/awg-wire-size-chart': 'AWG Wire Size Chart & Reference Guide',
+  '/guides/nec-table-310-16': 'NEC Table 310.16 Ampacity Chart (2023 NEC)',
+  '/guides/awg-wire-size-chart': 'AWG Wire Size Chart: Diameter, Area, Resistance and Ampacity',
   '/calculators/voltage-drop-calculator': 'Voltage Drop Calculator',
   '/calculators/kilowatts-to-amps-calculator': 'Kilowatts to Amps Calculator',
   '/guides/wire-size-for-100-amp': '100 Amp Wire Size Guide',
