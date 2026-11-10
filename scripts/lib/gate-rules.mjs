@@ -205,13 +205,14 @@ export function unitNumbers(text) {
  * The unit-bearing numbers of a page's visible <body> text, each with the data-src of its nearest ancestor that has
  * one: [{ match, src, traced }]. `events` are tokenizeHtml events; as in visibleText, a tag reads as a space and
  * whitespace runs collapse, so "20<!-- --> A" and "<strong>20</strong> A" both read "20 A". Numbers inside [data-size]
- * (size names) are skipped. `isValid(src)` says whether a data-src value traces.
+ * (size names) and [data-name] (page names in navigation and related links, D-20) are skipped. `isValid(src)` says
+ * whether a data-src value traces.
  */
 export function traceNumbers(events, isValid) {
   let text = '';
-  // per character of `text`: the nearest data-src and whether a [data-size] encloses it
+  // per character of `text`: the nearest data-src and whether a [data-size] or [data-name] encloses it
   const where = [];
-  const NONE = { src: null, size: false };
+  const NONE = { src: null, exempt: false };
   const push = (c, info) => {
     text += c;
     where.push(info);
@@ -223,13 +224,13 @@ export function traceNumbers(events, isValid) {
     }
     if (!e.stack.includes('body')) continue;
     let src = null;
-    let size = false;
+    let exempt = false;
     for (let k = e.ancestors.length - 1; k >= 0; k--) {
       const attrs = e.ancestors[k].attrs;
-      if (attrs['data-size'] !== undefined) size = true;
+      if (attrs['data-size'] !== undefined || attrs['data-name'] !== undefined) exempt = true;
       if (src === null && attrs['data-src'] !== undefined) src = attrs['data-src'];
     }
-    const info = { src, size };
+    const info = { src, exempt };
     for (const c of e.value) {
       if (/[ \t\n\r\f]/u.test(c)) {
         if (text && !text.endsWith(' ')) push(' ', info);
@@ -237,7 +238,7 @@ export function traceNumbers(events, isValid) {
     }
   }
   return unitNumbers(text)
-    .filter((n) => !where[n.index].size)
+    .filter((n) => !where[n.index].exempt)
     .map((n) => {
       const src = where[n.index].src;
       return { match: n.match, src, traced: src !== null && isValid(src) };

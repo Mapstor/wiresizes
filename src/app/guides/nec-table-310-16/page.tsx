@@ -3,7 +3,8 @@ import { FileText, Calculator, AlertTriangle, CheckCircle, Thermometer, BookOpen
 import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { DatasetSchema } from '@/components/seo/DatasetSchema';
-import { getArticleDates } from '@/lib/article-dates';
+import { articleDates } from '@/lib/page-dates';
+import { Byline } from '@/components/content/Byline';
 import table31016 from '../../../../data/verified/nec-310-16.json';
 import corrections from '../../../../data/verified/nec-310-15-B-1-1.json';
 import ratings from '../../../../data/verified/nec-240-6-a.json';
@@ -67,7 +68,7 @@ const articleData = {
   headline: "NEC Table 310.16",
   description: "Complete NEC Table 310.16 reference with copper and aluminum conductor ampacities at 60 °C, 75 °C, and 90 °C. Derating factors and correction calculations.",
   url: "https://wiresizes.com/guides/nec-table-310-16",
-  ...getArticleDates('src/app/guides/nec-table-310-16/page.tsx'),
+  ...articleDates('/guides/nec-table-310-16'),
 };
 
 export default function NECTable310_16Page() {
@@ -80,6 +81,7 @@ export default function NECTable310_16Page() {
             <FileText className="w-8 h-8" />
             <h1 className="text-4xl font-bold">NEC Table 310.16</h1>
           </div>
+          <Byline route="/guides/nec-table-310-16" className="mb-4 text-sm text-blue-100" linkClassName="text-white underline" />
           <p className="text-xl text-blue-100">
             Complete Conductor Ampacities Reference (2023 Edition)
           </p>
@@ -304,7 +306,7 @@ export default function NECTable310_16Page() {
               <Link href="/calculators/wire-size-calculator" 
                 className="bg-white rounded-lg p-6 shadow-md hover:shadow-xl transition-shadow border-2 border-transparent hover:border-blue-500">
                 <Calculator className="w-8 h-8 text-blue-600 mb-3" />
-                <h3 className="font-semibold text-lg mb-2">Wire Size Calculator</h3>
+                <h3 data-name="" className="font-semibold text-lg mb-2">Wire Size Calculator</h3>
                 <p className="text-sm text-gray-600 mb-4">Calculate proper wire size for any circuit</p>
                 <span className="text-blue-600 font-semibold flex items-center gap-1">
                   Try Calculator <ArrowRight className="w-4 h-4" />
@@ -313,7 +315,7 @@ export default function NECTable310_16Page() {
               <Link href="/calculators/voltage-drop-calculator" 
                 className="bg-white rounded-lg p-6 shadow-md hover:shadow-xl transition-shadow border-2 border-transparent hover:border-green-500">
                 <Zap className="w-8 h-8 text-green-600 mb-3" />
-                <h3 className="font-semibold text-lg mb-2">Voltage Drop Calculator</h3>
+                <h3 data-name="" className="font-semibold text-lg mb-2">Voltage Drop Calculator</h3>
                 <p className="text-sm text-gray-600 mb-4">Check voltage drop for long runs</p>
                 <span className="text-green-600 font-semibold flex items-center gap-1">
                   Calculate Drop <ArrowRight className="w-4 h-4" />
@@ -322,7 +324,7 @@ export default function NECTable310_16Page() {
               <Link href="/calculators/ampacity-calculator" 
                 className="bg-white rounded-lg p-6 shadow-md hover:shadow-xl transition-shadow border-2 border-transparent hover:border-purple-500">
                 <FileText className="w-8 h-8 text-purple-600 mb-3" />
-                <h3 className="font-semibold text-lg mb-2">Ampacity Lookup</h3>
+                <h3 data-name="" className="font-semibold text-lg mb-2">Ampacity Lookup</h3>
                 <p className="text-sm text-gray-600 mb-4">Quick ampacity reference tool</p>
                 <span className="text-purple-600 font-semibold flex items-center gap-1">
                   Look Up <ArrowRight className="w-4 h-4" />

@@ -3,6 +3,11 @@ import { OhmsLawCalculator } from '@/components/calculators/OhmsLawCalculator';
 import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import { Byline } from '@/components/content/Byline';
+import { Sources } from '@/components/content/Sources';
+import { DOMAINS as OHMS_LAW_DOMAINS } from '@/lib/calculations/ohms-law';
+
+const SOURCE_DOMAINS = OHMS_LAW_DOMAINS;
 
 export const metadata: Metadata = {
   title: "Ohm's Law Calculator — V, I, R, P",
@@ -98,6 +103,7 @@ export default function OhmsLawCalculatorPage() {
       {/* Calculator Component */}
       <section className="mb-16">
         <OhmsLawCalculator />
+        <Byline route="/calculators/ohms-law-calculator" sources className="mt-4 px-6 text-sm text-gray-600 dark:text-gray-400" linkClassName="text-blue-600 hover:underline dark:text-blue-300" />
       </section>
 
       {/* Understanding Ohm's Law */}
@@ -664,6 +670,19 @@ export default function OhmsLawCalculatorPage() {
         </div>
       </section>
 
+      {/* Sources */}
+      <section className="mb-16">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+          <Sources
+            domains={SOURCE_DOMAINS}
+            headingClassName="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center"
+            listClassName="space-y-2 text-gray-700 dark:text-gray-300"
+            linkClassName="text-blue-600 hover:underline dark:text-blue-300"
+            noteClassName="mt-4 text-sm text-gray-600 dark:text-gray-400"
+          />
+        </div>
+      </section>
+
       {/* Related Calculators */}
       <section className="mb-16">
         <div className="bg-gradient-to-br from-yellow-50 to-orange-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-8">
@@ -677,7 +696,7 @@ export default function OhmsLawCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <Calculator className="h-6 w-6 text-blue-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Watts to Amps</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Watts to Amps</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Convert power to current using Ohm&apos;s law relationships
@@ -690,7 +709,7 @@ export default function OhmsLawCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <Zap className="h-6 w-6 text-green-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Voltage Drop Calculator</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Voltage Drop Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Apply Ohm&apos;s law to calculate voltage drop in conductors
@@ -703,7 +722,7 @@ export default function OhmsLawCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <Settings className="h-6 w-6 text-purple-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Wire Resistance</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Wire Resistance</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Calculate conductor resistance for Ohm&apos;s law applications
@@ -716,7 +735,7 @@ export default function OhmsLawCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <TrendingUp className="h-6 w-6 text-orange-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">kW to Amps</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">kW to Amps</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Convert kilowatts to amperage using power formulas
@@ -729,7 +748,7 @@ export default function OhmsLawCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <AlertCircle className="h-6 w-6 text-red-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Three Phase Calculator</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Three Phase Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Apply Ohm&apos;s law to three-phase power systems

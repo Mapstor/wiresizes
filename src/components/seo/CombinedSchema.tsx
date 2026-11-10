@@ -1,4 +1,5 @@
 import { generateBreadcrumbSchema } from '@/utils/breadcrumbs';
+import { ORGANIZATION, ORGANIZATION_REF, PERSON, PERSON_REF } from '@/lib/identity';
 
 interface WebApplicationData {
   name: string;
@@ -23,14 +24,16 @@ export function CombinedSchema({ webApp }: CombinedSchemaProps) {
       price: '0',
       priceCurrency: 'USD'
     },
-    description: webApp.description
+    description: webApp.description,
+    author: PERSON_REF,
+    publisher: ORGANIZATION_REF
   };
 
   const breadcrumbSchema = generateBreadcrumbSchema(webApp.url);
 
   const combinedSchema = {
     '@context': 'https://schema.org',
-    '@graph': [webApplicationSchema, breadcrumbSchema]
+    '@graph': [webApplicationSchema, breadcrumbSchema, PERSON, ORGANIZATION]
   };
 
   return (

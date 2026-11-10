@@ -3,6 +3,7 @@ import { LowVoltageCalculator } from '@/components/calculators/LowVoltageCalcula
 import { Battery, Calculator, TrendingUp, AlertCircle, BookOpen, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import { Byline } from '@/components/content/Byline';
 import { Sources } from '@/components/content/Sources';
 import { DOMAINS as DC_SIZING_DOMAINS } from '@/lib/calculations/dc-sizing';
 import { DOMAINS as VOLTAGE_DROP_DOMAINS } from '@/lib/calculations/voltage-drop';
@@ -71,6 +72,7 @@ export default function LowVoltageCalculatorPage() {
       {/* Calculator Component */}
       <section className="mb-16">
         <LowVoltageCalculator />
+        <Byline route="/calculators/low-voltage-calculator" sources className="mt-4 px-6 text-sm text-gray-600 dark:text-gray-400" linkClassName="text-blue-600 hover:underline dark:text-blue-300" />
       </section>
 
       {/* Understanding Low Voltage Systems */}
@@ -275,7 +277,7 @@ export default function LowVoltageCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <TrendingUp className="h-6 w-6 text-blue-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Voltage Drop Calculator</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Voltage Drop Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Calculate voltage drop for AC and DC circuits
@@ -288,7 +290,7 @@ export default function LowVoltageCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <Calculator className="h-6 w-6 text-green-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Wire Size Calculator</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Wire Size Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Determine proper wire size for electrical circuits
@@ -301,7 +303,7 @@ export default function LowVoltageCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <Zap className="h-6 w-6 text-purple-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Ohm&apos;s Law Calculator</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Ohm&apos;s Law Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Calculate voltage, current, resistance, and power
@@ -314,7 +316,7 @@ export default function LowVoltageCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <Battery className="h-6 w-6 text-orange-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Watts to Amps</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Watts to Amps</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Convert watts to amperage for power calculations
@@ -327,7 +329,7 @@ export default function LowVoltageCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <AlertCircle className="h-6 w-6 text-red-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Ampacity Calculator</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Ampacity Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Determine wire current carrying capacity

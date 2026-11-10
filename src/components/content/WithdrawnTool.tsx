@@ -61,7 +61,7 @@ export function WithdrawnTool({ heading, whatWasWrong, links }: WithdrawnToolPro
             if (!label) throw new Error(`WithdrawnTool: no H1 recorded for ${href}`);
             return (
               <li key={href}>
-                <Link href={href} className="text-blue-600 hover:underline">
+                <Link data-name="" href={href} className="text-blue-600 hover:underline">
                   {label}
                 </Link>
               </li>

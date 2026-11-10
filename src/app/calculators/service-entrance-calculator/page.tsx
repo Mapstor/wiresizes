@@ -3,6 +3,7 @@ import ServiceEntranceCalculator from '@/components/calculators/ServiceEntranceC
 import { Building, Shield, Zap, Calculator, Users } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import { Byline } from '@/components/content/Byline';
 import { Sources } from '@/components/content/Sources';
 import { DOMAINS as SERVICE_LOOKUP_DOMAINS } from '@/lib/calculations/service-lookup';
 
@@ -64,7 +65,10 @@ export default function ServiceEntranceCalculatorPage() {
           </div>
 
           {/* Main Calculator */}
-          <ServiceEntranceCalculator />
+          <div>
+            <ServiceEntranceCalculator />
+            <Byline route="/calculators/service-entrance-calculator" sources className="mt-4 text-sm text-gray-600" />
+          </div>
 
           {/* FAQs */}
           <div className="bg-white rounded-xl shadow-lg p-8">
@@ -109,19 +113,19 @@ export default function ServiceEntranceCalculatorPage() {
               
               <Link href="/calculators/wire-size-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
                 <Calculator className="w-8 h-8 text-blue-600 mb-2" />
-                <h3 className="font-semibold text-gray-900">Wire Size</h3>
+                <h3 data-name="" className="font-semibold text-gray-900">Wire Size</h3>
                 <p className="text-sm text-gray-600">General wire sizing</p>
               </Link>
               
               <Link href="/calculators/voltage-drop-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
                 <Zap className="w-8 h-8 text-yellow-600 mb-2" />
-                <h3 className="font-semibold text-gray-900">Voltage Drop</h3>
+                <h3 data-name="" className="font-semibold text-gray-900">Voltage Drop</h3>
                 <p className="text-sm text-gray-600">Check voltage loss</p>
               </Link>
               
               <Link href="/calculators/ground-wire-calculator" className="bg-white rounded-lg p-4 border hover:shadow-lg transition-shadow">
                 <Shield className="w-8 h-8 text-green-600 mb-2" />
-                <h3 className="font-semibold text-gray-900">Grounding</h3>
+                <h3 data-name="" className="font-semibold text-gray-900">Grounding</h3>
                 <p className="text-sm text-gray-600">Ground wire sizing</p>
               </Link>
             </div>

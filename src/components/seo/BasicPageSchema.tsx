@@ -1,6 +1,8 @@
 // Minimal schema for static pages (privacy, terms, disclaimer, etc.).
 // Emits WebPage + BreadcrumbList in a single @graph so search engines can
-// connect the page to the site's Organization/WebSite identity.
+// connect the page to the site's Organization/WebSite identity. The
+// publisher, Organization (src/lib/identity.ts), is printed in the same graph.
+import { ORGANIZATION, ORGANIZATION_REF } from '@/lib/identity';
 
 interface BasicPageSchemaProps {
   /** Path beginning with `/`, e.g. `/privacy`. */
@@ -26,7 +28,7 @@ export function BasicPageSchema({ path, name, description }: BasicPageSchemaProp
         description,
         isPartOf: { '@id': `${ORIGIN}/#website` },
         inLanguage: 'en-US',
-        publisher: { '@id': `${ORIGIN}/#organization` },
+        publisher: ORGANIZATION_REF,
       },
       {
         '@type': 'BreadcrumbList',
@@ -36,6 +38,7 @@ export function BasicPageSchema({ path, name, description }: BasicPageSchemaProp
           { '@type': 'ListItem', position: 2, name, item: url },
         ],
       },
+      ORGANIZATION,
     ],
   };
 

@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { Calculator, Zap, BarChart3, Target, TrendingUp, CheckCircle, ArrowRight, ExternalLink } from 'lucide-react';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
-import { getArticleDates } from '@/lib/article-dates';
+import { articleDates } from '@/lib/page-dates';
+import { Byline } from '@/components/content/Byline';
 
 export const metadata = {
   title: 'Electrical Power Calculations — W, A, V, PF',
@@ -50,7 +51,7 @@ const articleData = {
   headline: "Electrical Power Calculations Guide",
   description: "Master electrical power calculations with this guide covering watts, amps, volts, power factor, single-phase and three-phase systems with interactive examples.",
   url: "https://wiresizes.com/guides/electrical-power-calculations",
-  ...getArticleDates('src/app/guides/electrical-power-calculations/page.tsx'),
+  ...articleDates('/guides/electrical-power-calculations'),
 };
 
 export default function ElectricalPowerCalculationsGuide() {
@@ -62,6 +63,7 @@ export default function ElectricalPowerCalculationsGuide() {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Electrical Power Calculations Guide
           </h1>
+          <Byline route="/guides/electrical-power-calculations" className="mb-4 text-sm text-gray-600" />
           <p className="text-xl text-gray-600 mb-6">
             Master the fundamental relationships between watts, amps, volts, and power factor.
           </p>
@@ -351,7 +353,7 @@ export default function ElectricalPowerCalculationsGuide() {
                 <div className={`w-12 h-12 bg-${calc.color}-100 rounded-lg flex items-center justify-center mb-4`}>
                   <IconComponent className={`w-6 h-6 text-${calc.color}-600`} />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">{calc.name}</h3>
+                <h3 data-name="" className="font-semibold text-gray-900 mb-2">{calc.name}</h3>
                 <div className={`text-${calc.color}-600 text-sm flex items-center gap-1`}>
                   Try Calculator <ArrowRight className="w-4 h-4" />
                 </div>
@@ -368,20 +370,23 @@ export default function ElectricalPowerCalculationsGuide() {
           Now that you understand power calculations, explore these related topics to build your electrical engineering expertise.
         </p>
         <div className="flex flex-wrap gap-4">
-          <Link 
+          <Link
+            data-name=""
             href="/guides/single-vs-three-phase"
             className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center gap-2"
           >
             <ArrowRight className="w-5 h-5" />
             Single vs Three Phase Systems
           </Link>
-          <Link 
+          <Link
+            data-name=""
             href="/guides/power-factor-explained"
             className="border border-green-600 text-green-700 px-6 py-3 rounded-lg font-medium hover:bg-green-50 transition-colors"
           >
             Power Factor Deep Dive
           </Link>
-          <Link 
+          <Link
+            data-name=""
             href="/calculators/wire-size-calculator"
             className="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors"
           >

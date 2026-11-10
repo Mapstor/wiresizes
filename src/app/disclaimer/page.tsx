@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
 
 // Copy from research/trust-pages-copy.md (/disclaimer), rendered verbatim.
 const TITLE = 'Disclaimer';
@@ -60,6 +61,7 @@ export default function DisclaimerPage() {
           If you find an error, email contact@wiresizes.com. Corrections are listed with dates on the About page.
         </p>
       </div>
+      <BasicPageSchema path="/disclaimer" name={TITLE} description={DESCRIPTION} />
     </div>
   );
 }

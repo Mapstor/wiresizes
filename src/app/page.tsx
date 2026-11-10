@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
+import { ORGANIZATION, ORGANIZATION_REF } from '@/lib/identity';
 import {
   Calculator,
   Zap,
@@ -70,34 +71,21 @@ const GROUNDING_CONDUCTORS = [
   { service: '200 A', copper: '4 AWG', aluminum: '2 AWG' },
 ];
 
-// Organization and WebSite schema
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://wiresizes.com/#organization",
-  "name": "WireSizes.com",
-  "url": "https://wiresizes.com",
-  "logo": {
-    "@type": "ImageObject",
-    "url": "https://wiresizes.com/icon.svg",
-    "width": "512",
-    "height": "512"
-  },
-  "description": "Wire gauge charts, NEC table values and calculators for sizing conductors.",
-  "sameAs": []
-};
-
+// WebSite schema, with its publisher, the Organization (src/lib/identity.ts), in the same graph
 const websiteSchema = {
   "@context": "https://schema.org",
-  "@type": "WebSite",
-  "@id": "https://wiresizes.com/#website",
-  "url": "https://wiresizes.com",
-  "name": "WireSizes.com",
-  "description": "Wire gauge charts, NEC table values and calculators for sizing conductors.",
-  "publisher": {
-    "@id": "https://wiresizes.com/#organization"
-  },
-  "inLanguage": "en-US"
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://wiresizes.com/#website",
+      "url": "https://wiresizes.com",
+      "name": "WireSizes.com",
+      "description": "Wire gauge charts, NEC table values and calculators for sizing conductors.",
+      "publisher": ORGANIZATION_REF,
+      "inLanguage": "en-US"
+    },
+    ORGANIZATION
+  ]
 };
 
 const webPageSchema = {
@@ -129,10 +117,6 @@ const webPageSchema = {
 export default function HomePage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}

@@ -1,9 +1,13 @@
 import type { Metadata } from 'next';
+import { formatDate, pageDates } from '@/lib/page-dates';
+import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
 
 // Copy from research/trust-pages-copy.md (/terms), rendered verbatim.
 const TITLE = 'Terms of use';
 const DESCRIPTION =
   "Who operates wiresizes.com, what its tables and calculators are for, and what they don't cover.";
+// "Last updated": the route's modified date in src/data/page-dates.json (D-17).
+const UPDATED = pageDates('/terms').modified;
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -30,7 +34,9 @@ export default function TermsPage() {
     <div className="container py-12">
       <div className="max-w-3xl space-y-6 text-lg text-gray-700 leading-relaxed">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Terms of use</h1>
-        <p>Last updated: October 25, 2026</p>
+        <p>
+          Last updated: <time dateTime={UPDATED}>{formatDate(UPDATED)}</time>
+        </p>
 
         <h2 className="text-2xl font-semibold text-gray-900 pt-4">Operator</h2>
         <p>
@@ -68,6 +74,7 @@ export default function TermsPage() {
         <h2 className="text-2xl font-semibold text-gray-900 pt-4">Governing law</h2>
         <p>These terms are governed by the law of the Republic of Slovenia.</p>
       </div>
+      <BasicPageSchema path="/terms" name={TITLE} description={DESCRIPTION} />
     </div>
   );
 }

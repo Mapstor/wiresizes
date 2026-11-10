@@ -4,6 +4,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Consent } from '@/components/analytics/Consent';
+import { AUTHOR_NAME, AUTHOR_URL, PUBLISHER_NAME } from '@/lib/identity';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
@@ -32,9 +33,9 @@ export const metadata: Metadata = {
     'NEC wire size',
     'ampacity calculator',
   ],
-  authors: [{ name: 'WireSizes.com' }],
-  creator: 'WireSizes.com',
-  publisher: 'WireSizes.com',
+  authors: [{ name: AUTHOR_NAME, url: AUTHOR_URL }],
+  creator: AUTHOR_NAME,
+  publisher: PUBLISHER_NAME,
   robots: {
     index: true,
     follow: true,
@@ -69,15 +70,15 @@ export const metadata: Metadata = {
   other: {
     'x-build': BUILD,
   },
+  // Each icon link once (D-19): /favicon.ico comes from src/app/favicon.ico, which Next.js links itself; /icon.svg is
+  // public/icon.svg, the site icon.
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/icon.svg', type: 'image/svg+xml' },
       { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon.ico', sizes: 'any' },
     ],
-    shortcut: '/favicon.svg',
     apple: '/apple-touch-icon.png',
   },
 };
@@ -90,13 +91,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Explicit Favicon Links for Better Compatibility */}
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
-        <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        
         {/* Manifest */}
         <link rel="manifest" href="/manifest.json" />
       </head>

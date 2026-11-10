@@ -28,7 +28,7 @@ export function Header() {
               </div>
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
             </div>
-            <span className="leading-tight">WireSizes</span>
+            <span className="leading-tight" data-name="">WireSizes</span>
           </Link>
 
           {/* Desktop navigation */}
@@ -37,6 +37,7 @@ export function Header() {
               <Link
                 key={item.name}
                 href={item.href}
+                data-name=""
                 className="flex items-center gap-2 px-4 py-2.5 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all font-medium border border-transparent hover:border-primary-100"
               >
                 {item.icon && <item.icon className="w-4 h-4" />}
@@ -77,6 +78,7 @@ export function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
+                  data-name=""
                   className="flex items-center gap-3 px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-white rounded-lg transition-colors font-medium border border-transparent hover:border-primary-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >

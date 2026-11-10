@@ -3,6 +3,7 @@ import { GroundWireCalculator } from '@/components/calculators/GroundWireCalcula
 import { Shield, Calculator, TrendingUp, AlertCircle, BookOpen, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import { Byline } from '@/components/content/Byline';
 import { Sources } from '@/components/content/Sources';
 import { DOMAINS as GROUNDING_DOMAINS, TABLE_250_122_ROWS } from '@/lib/calculations/grounding';
 import { DOMAINS as SERVICE_LOOKUP_DOMAINS, SCOPE_LINES } from '@/lib/calculations/service-lookup';
@@ -92,6 +93,7 @@ export default function GroundWireCalculatorPage() {
       {/* Calculator Component */}
       <section className="mb-16">
         <GroundWireCalculator />
+        <Byline route="/calculators/ground-wire-calculator" sources className="mt-4 px-6 text-sm text-gray-600 dark:text-gray-400" linkClassName="text-blue-600 hover:underline dark:text-blue-300" />
       </section>
 
       {/* Understanding Grounding Systems */}
@@ -566,7 +568,7 @@ export default function GroundWireCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <Calculator className="h-6 w-6 text-blue-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Wire Size Calculator</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Wire Size Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Size circuit conductors that work with grounding systems
@@ -580,7 +582,7 @@ export default function GroundWireCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <Zap className="h-6 w-6 text-purple-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Ampacity Calculator</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Ampacity Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Determine current capacity of grounding conductors
@@ -594,7 +596,7 @@ export default function GroundWireCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <AlertCircle className="h-6 w-6 text-red-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Voltage Drop Calculator</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Voltage Drop Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Ensure proper grounding conductor performance
@@ -607,7 +609,7 @@ export default function GroundWireCalculatorPage() {
             >
               <div className="flex items-center gap-3 mb-3">
                 <BookOpen className="h-6 w-6 text-yellow-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Service Entrance Calculator</h3>
+                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Service Entrance Calculator</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Design complete service grounding systems

@@ -1,9 +1,13 @@
 import type { Metadata } from 'next';
+import { formatDate, pageDates } from '@/lib/page-dates';
+import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
 
 // Copy from research/trust-pages-copy.md (/privacy), rendered verbatim.
 const TITLE = 'Privacy notice';
 const DESCRIPTION =
   'What wiresizes.com collects, which services process it, the legal basis, and how to use your data protection rights.';
+// "Last updated": the route's modified date in src/data/page-dates.json (D-17).
+const UPDATED = pageDates('/privacy').modified;
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -30,7 +34,9 @@ export default function PrivacyPage() {
     <div className="container py-12">
       <div className="max-w-3xl space-y-6 text-lg text-gray-700 leading-relaxed">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Privacy notice</h1>
-        <p>Last updated: October 25, 2026</p>
+        <p>
+          Last updated: <time dateTime={UPDATED}>{formatDate(UPDATED)}</time>
+        </p>
 
         <h2 className="text-2xl font-semibold text-gray-900 pt-4">Who is responsible</h2>
         <p>
@@ -91,6 +97,7 @@ export default function PrivacyPage() {
           protection authority where you live.
         </p>
       </div>
+      <BasicPageSchema path="/privacy" name={TITLE} description={DESCRIPTION} />
     </div>
   );
 }

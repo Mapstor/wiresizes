@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { Target, AlertTriangle, CheckCircle, Calculator, Zap, ArrowRight, Shield, Activity, Eye, TrendingUp, BarChart3 } from 'lucide-react';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
-import { getArticleDates } from '@/lib/article-dates';
+import { articleDates } from '@/lib/page-dates';
+import { Byline } from '@/components/content/Byline';
 
 export const metadata = {
   title: 'NEC Code Compliance — 2023 Branch Circuits',
@@ -25,7 +26,7 @@ const articleData = {
   headline: "NEC Code Compliance Guide",
   description: "Comprehensive NEC code compliance guide covering circuit protection, grounding, and safety requirements.",
   url: "https://wiresizes.com/guides/nec-code-compliance",
-  ...getArticleDates('src/app/guides/nec-code-compliance/page.tsx'),
+  ...articleDates('/guides/nec-code-compliance'),
 };
 
 export default function NECCodeComplianceGuide() {
@@ -38,6 +39,7 @@ export default function NECCodeComplianceGuide() {
             <Target className="w-10 h-10 text-amber-600" />
             <h1 className="text-4xl font-bold text-gray-900">NEC Code Compliance Guide</h1>
           </div>
+          <Byline route="/guides/nec-code-compliance" className="mb-4 text-sm text-gray-600" />
           <p className="text-xl text-gray-600 mb-6">
             Master the National Electrical Code (NEC 2023) requirements for safe electrical installations.
           </p>
@@ -368,7 +370,7 @@ export default function NECCodeComplianceGuide() {
                 <div className={`w-12 h-12 bg-${calc.color}-100 rounded-lg flex items-center justify-center mb-4`}>
                   <IconComponent className={`w-6 h-6 text-${calc.color}-600`} />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">{calc.name}</h3>
+                <h3 data-name="" className="font-semibold text-gray-900 mb-2">{calc.name}</h3>
                 {calc.description && <p className="text-sm text-gray-600 mb-3">{calc.description}</p>}
                 <div className={`text-${calc.color}-600 text-sm flex items-center gap-1`}>
                   Try Calculator <ArrowRight className="w-4 h-4" />
@@ -383,20 +385,23 @@ export default function NECCodeComplianceGuide() {
       <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border p-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Continue Your NEC Education</h2>
         <div className="flex flex-wrap gap-4">
-          <Link 
+          <Link
+            data-name=""
             href="/calculators/wire-size-calculator"
             className="bg-amber-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-amber-700 transition-colors flex items-center gap-2"
           >
             <ArrowRight className="w-5 h-5" />
             Wire Size Calculator
           </Link>
-          <Link 
+          <Link
+            data-name=""
             href="/guides"
             className="border border-amber-600 text-amber-700 px-6 py-3 rounded-lg font-medium hover:bg-amber-50 transition-colors"
           >
             Electrical Guides
           </Link>
-          <Link 
+          <Link
+            data-name=""
             href="/guides/electrical-power-calculations"
             className="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors"
           >

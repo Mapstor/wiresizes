@@ -3,6 +3,11 @@ import { BTUToWattsCalculator } from '@/components/calculators/BTUToWattsCalcula
 import { Flame, Calculator, TrendingUp, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
+import { Byline } from '@/components/content/Byline';
+import { Sources } from '@/components/content/Sources';
+import { DOMAINS as CONVERSIONS_DOMAINS } from '@/lib/calculations/conversions';
+
+const SOURCE_DOMAINS = CONVERSIONS_DOMAINS;
 
 export const metadata: Metadata = {
   title: 'BTU to Watts Calculator',
@@ -65,6 +70,7 @@ export default function BTUToWattsCalculatorPage() {
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
           <BTUToWattsCalculator />
         </div>
+        <Byline route="/calculators/btu-to-watts-calculator" sources className="mt-4 px-8 text-sm text-gray-600 dark:text-gray-400" linkClassName="text-blue-600 hover:underline dark:text-blue-300" />
       </section>
 
       {/* Quick Reference Tables */}
@@ -185,6 +191,19 @@ export default function BTUToWattsCalculatorPage() {
         </div>
       </section>
 
+      {/* Sources */}
+      <section className="mb-12">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+          <Sources
+            domains={SOURCE_DOMAINS}
+            headingClassName="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
+            listClassName="space-y-2 text-gray-700 dark:text-gray-300"
+            linkClassName="text-blue-600 hover:underline dark:text-blue-300"
+            noteClassName="mt-4 text-sm text-gray-600 dark:text-gray-400"
+          />
+        </div>
+      </section>
+
       {/* Related Calculators */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
@@ -194,13 +213,13 @@ export default function BTUToWattsCalculatorPage() {
         <div className="grid md:grid-cols-2 gap-4">
           <Link href="/calculators/watts-to-amps-calculator" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
             <Calculator className="h-8 w-8 text-blue-600 mb-2" />
-            <h3 className="font-semibold mb-1">Watts to Amps</h3>
+            <h3 data-name="" className="font-semibold mb-1">Watts to Amps</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Convert power to current</p>
           </Link>
           
           <Link href="/calculators/wire-size-calculator" className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
             <TrendingUp className="h-8 w-8 text-green-600 mb-2" />
-            <h3 className="font-semibold mb-1">Wire Size</h3>
+            <h3 data-name="" className="font-semibold mb-1">Wire Size</h3>
           </Link>
           
           

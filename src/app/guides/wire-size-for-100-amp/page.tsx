@@ -2,7 +2,8 @@ import { Metadata } from 'next';
 import { Zap, Calculator, AlertTriangle, CheckCircle, TrendingUp, Home, Wrench, Thermometer, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
-import { getArticleDates } from '@/lib/article-dates';
+import { articleDates } from '@/lib/page-dates';
+import { Byline } from '@/components/content/Byline';
 import { formatSize } from '@/lib/calculations/sizes';
 import { gecForServiceConductor, serviceConductors } from '@/lib/calculations/service-lookup';
 import { egcForOcpd } from '@/lib/calculations/grounding';
@@ -34,7 +35,7 @@ const articleData = {
   headline: '100 Amp Wire Size Guide',
   description: 'Complete guide for 100 amp wire sizing. Learn correct wire sizes for 100 A service entrance, copper vs aluminum, and NEC code requirements.',
   url: 'https://wiresizes.com/guides/wire-size-for-100-amp',
-  ...getArticleDates('src/app/guides/wire-size-for-100-amp/page.tsx'),
+  ...articleDates('/guides/wire-size-for-100-amp'),
 };
 
 // Common 100A applications
@@ -67,6 +68,7 @@ export default function WireSizeFor100AmpPage() {
             <Zap className="w-10 h-10 text-yellow-400" />
             <h1 className="text-4xl font-bold">100 Amp Wire Size Guide</h1>
           </div>
+          <Byline route="/guides/wire-size-for-100-amp" className="mb-4 text-sm text-blue-100" linkClassName="text-white underline" />
           <p className="text-xl text-blue-100">
             Complete specifications for 100 A service entrance
           </p>
@@ -286,7 +288,7 @@ export default function WireSizeFor100AmpPage() {
               <Link href="/calculators/wire-size-calculator" 
                 className="bg-white rounded-lg p-6 shadow-md hover:shadow-xl transition-shadow border-2 border-transparent hover:border-blue-500">
                 <Calculator className="w-8 h-8 text-blue-600 mb-3" />
-                <h3 className="font-semibold text-lg mb-2">Wire Size Calculator</h3>
+                <h3 data-name="" className="font-semibold text-lg mb-2">Wire Size Calculator</h3>
                 <p className="text-sm text-gray-600 mb-4">Calculate the wire size for any amperage</p>
                 <span className="text-blue-600 font-semibold flex items-center gap-1">
                   Calculate Now <ArrowRight className="w-4 h-4" />
@@ -295,7 +297,7 @@ export default function WireSizeFor100AmpPage() {
               <Link href="/calculators/voltage-drop-calculator" 
                 className="bg-white rounded-lg p-6 shadow-md hover:shadow-xl transition-shadow border-2 border-transparent hover:border-green-500">
                 <TrendingUp className="w-8 h-8 text-green-600 mb-3" />
-                <h3 className="font-semibold text-lg mb-2">Voltage Drop Calculator</h3>
+                <h3 data-name="" className="font-semibold text-lg mb-2">Voltage Drop Calculator</h3>
                 <p className="text-sm text-gray-600 mb-4">Check voltage drop for your installation</p>
                 <span className="text-green-600 font-semibold flex items-center gap-1">
                   Check Drop <ArrowRight className="w-4 h-4" />
@@ -304,7 +306,7 @@ export default function WireSizeFor100AmpPage() {
               <Link href="/calculators/service-entrance-calculator" 
                 className="bg-white rounded-lg p-6 shadow-md hover:shadow-xl transition-shadow border-2 border-transparent hover:border-purple-500">
                 <Home className="w-8 h-8 text-purple-600 mb-3" />
-                <h3 className="font-semibold text-lg mb-2">Service Calculator</h3>
+                <h3 data-name="" className="font-semibold text-lg mb-2">Service Calculator</h3>
                 <span className="text-purple-600 font-semibold flex items-center gap-1">
                   Size Service <ArrowRight className="w-4 h-4" />
                 </span>

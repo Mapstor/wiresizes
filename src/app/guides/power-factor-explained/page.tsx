@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import GuideClient from './GuideClient';
-import { getArticleDates } from '@/lib/article-dates';
+import { articleDates } from '@/lib/page-dates';
+import { Byline } from '@/components/content/Byline';
 
 export const metadata: Metadata = {
   title: 'Power Factor Explained — kVA, kW, PF',
@@ -10,5 +11,10 @@ export const metadata: Metadata = {
 };
 
 export default function PowerFactorExplainedPage() {
-  return <GuideClient {...getArticleDates('src/app/guides/power-factor-explained/GuideClient.tsx')} />;
+  return (
+    <GuideClient
+      {...articleDates('/guides/power-factor-explained')}
+      byline={<Byline route="/guides/power-factor-explained" className="mb-4 text-sm text-gray-600" />}
+    />
+  );
 }

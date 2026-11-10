@@ -1,20 +1,19 @@
 import { generateBreadcrumbSchema } from '@/utils/breadcrumbs';
+import { ORGANIZATION, ORGANIZATION_REF, PERSON, PERSON_REF } from '@/lib/identity';
 
 interface ArticleData {
   headline: string;
   description: string;
   url: string;
-  /** ISO date (YYYY-MM-DD). Use getArticleDates() for git-derived values. */
-  datePublished?: string;
-  /** ISO date (YYYY-MM-DD). Use getArticleDates() for git-derived values. */
-  dateModified?: string;
+  /** YYYY-MM-DD, from src/data/page-dates.json (articleDates() in src/lib/page-dates.ts). */
+  datePublished: string;
+  /** YYYY-MM-DD, from src/data/page-dates.json (articleDates() in src/lib/page-dates.ts). */
+  dateModified: string;
 }
 
 interface ArticleSchemaProps {
   article: ArticleData;
 }
-
-const FALLBACK_DATE = '2026-01-01';
 
 export function ArticleSchema({ article }: ArticleSchemaProps) {
   const articleSchema = {
@@ -28,26 +27,10 @@ export function ArticleSchema({ article }: ArticleSchemaProps) {
       width: 1200,
       height: 630
     },
-    author: {
-      '@type': 'Organization',
-      '@id': 'https://wiresizes.com/#organization',
-      name: 'WireSizes.com',
-      url: 'https://wiresizes.com'
-    },
-    publisher: {
-      '@type': 'Organization',
-      '@id': 'https://wiresizes.com/#organization',
-      name: 'WireSizes.com',
-      url: 'https://wiresizes.com',
-      logo: {
-        '@type': 'ImageObject',
-        url: 'https://wiresizes.com/icon.svg',
-        width: 512,
-        height: 512
-      }
-    },
-    datePublished: article.datePublished ?? FALLBACK_DATE,
-    dateModified: article.dateModified ?? article.datePublished ?? FALLBACK_DATE,
+    author: PERSON_REF,
+    publisher: ORGANIZATION_REF,
+    datePublished: article.datePublished,
+    dateModified: article.dateModified,
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': article.url
@@ -58,7 +41,7 @@ export function ArticleSchema({ article }: ArticleSchemaProps) {
 
   const combinedSchema = {
     '@context': 'https://schema.org',
-    '@graph': [articleSchema, breadcrumbSchema]
+    '@graph': [articleSchema, breadcrumbSchema, PERSON, ORGANIZATION]
   };
 
   return (
