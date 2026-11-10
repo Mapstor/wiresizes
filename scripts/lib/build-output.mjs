@@ -1,6 +1,7 @@
 // Shared helpers for the build gates (scripts/check-banned.mjs, scripts/check-structure.mjs, and since WSZ-003b
 // check-rendered-text.mjs, check-number-trace.mjs and check-nec-refs.mjs). Node built-ins only. Reads the Next.js build
-// output in .next/server/app after `npm run build`.
+// output after `npm run build`: the prerendered pages and route bodies in .next/server/app, or in .next/server/route-cache
+// when the build ran with an adapter (WSZ-021, see prerendered()).
 
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join, relative, dirname, sep } from 'node:path';
@@ -12,6 +13,11 @@ export { parseCsv };
 
 export const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 export const appOutDir = join(repoRoot, '.next', 'server', 'app');
+// Since Next.js 16.4, a build that runs with an adapter writes prerendered output to
+// .next/server/route-cache/<KIND>/<SHA-256 of the source route>/$<route>.html (.body for route handlers) instead of
+// .next/server/app/<route>.html; compiled route code stays in .next/server/app. Vercel's builder always sets an
+// adapter (NEXT_ADAPTER_PATH), a local `next build` doesn't.
+export const routeCacheDir = join(repoRoot, '.next', 'server', 'route-cache');
 export const SITE_ORIGIN = 'https://wiresizes.com';
 
 export function rel(file) {
@@ -29,15 +35,42 @@ export function walkFiles(dir, predicate) {
   return out.sort();
 }
 
-// Prerendered HTML pages: [{ file, route }]. index.html → "/", about.html → "/about".
-export function htmlPages() {
-  if (!existsSync(appOutDir)) {
-    throw new Error(`No build output at ${rel(appOutDir)}. Run \`rm -rf .next && npm run build\` first.`);
-  }
-  return walkFiles(appOutDir, (f) => f.endsWith('.html')).map((file) => {
-    const r = relative(appOutDir, file).split(sep).join('/').replace(/\.html$/, '');
-    return { file, route: r === 'index' ? '/' : '/' + r };
+// Prerendered files ending in ext ('.html' or '.body') from whichever layout the build wrote: [{ file, route }],
+// ordered by route path. index.html → "/", about.html → "/about", sitemap.xml.body → "/sitemap.xml".
+export function prerendered(ext) {
+  const plain = walkFiles(appOutDir, (f) => f.endsWith(ext)).map((file) => ({
+    file,
+    path: '/' + relative(appOutDir, file).split(sep).join('/'),
+  }));
+  const scoped = walkFiles(routeCacheDir, (f) => f.endsWith(ext)).map((file) => {
+    const p = relative(routeCacheDir, file).split(sep).join('/');
+    const at = p.indexOf('/$/');
+    if (at < 0) throw new Error(`Unexpected file in ${rel(routeCacheDir)}: ${rel(file)}`);
+    return { file, path: p.slice(at + 2) };
   });
+  if (plain.length > 0 && scoped.length > 0) {
+    throw new Error(`Prerendered ${ext} files in both ${rel(appOutDir)} and ${rel(routeCacheDir)}. Run \`rm -rf .next && npm run build\`.`);
+  }
+  return (scoped.length > 0 ? scoped : plain)
+    .sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0))
+    .map(({ file, path }) => {
+      const r = path.slice(0, -ext.length);
+      return { file, route: r === '/index' ? '/' : r };
+    });
+}
+
+// Prerendered HTML pages: [{ file, route }]. Throws when the build wrote none, so no gate passes on an empty list.
+export function htmlPages() {
+  const pages = prerendered('.html');
+  if (pages.length === 0) {
+    throw new Error(`No prerendered pages in ${rel(appOutDir)} or ${rel(routeCacheDir)}. Run \`rm -rf .next && npm run build\` first.`);
+  }
+  return pages;
+}
+
+// The prerendered body file of a route handler such as /sitemap.xml or /favicon.ico, or null.
+export function bodyFile(route) {
+  return prerendered('.body').find((b) => b.route === route)?.file ?? null;
 }
 
 export function withdrawnRoutes() {

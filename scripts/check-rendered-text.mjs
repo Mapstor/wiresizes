@@ -4,7 +4,8 @@
 // allowlist doesn't cover.
 //
 // Inputs:
-//   1. Every prerendered live page in .next/server/app (the withdrawn routes skipped): <title>, the meta description,
+//   1. Every prerendered live page (the withdrawn routes skipped; .next/server/app, or .next/server/route-cache in an
+//      adapter build such as Vercel's): <title>, the meta description,
 //      og:* and twitter:* meta tags, alt, title and aria-label attributes, visible text (SVG <text> included; a space
 //      at every tag boundary) and the string values of JSON-LD blocks. Other scripts, <style> and <noscript> are
 //      skipped (scripts/lib/build-output.mjs).
