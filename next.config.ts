@@ -3,6 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: 'standalone',
+  // Since Next.js 16.3, `next dev` writes a managed block into AGENTS.md at the
+  // repo root when it detects an AI agent. CLAUDE.md and DEVLOG.md are this repo's
+  // agent instructions; version-matched docs stay in node_modules/next/dist/docs/.
+  agentRules: false,
   // Tree-shake icon imports — without this, lucide-react ships every icon
   // even though we only use ~80 distinct ones.
   experimental: {
