@@ -1,0 +1,16 @@
+{
+  "site": "wiresizes.com",
+  "weights": { "S": 50, "P": 10, "D": 15, "F": 25 },
+  "cleanAtOrBelow": 2,
+  "outOfScope": ["legal"],
+  "allowWords": [],
+  "templates": [
+    ["^/$", "home"],
+    ["^/(calculators|guides)$", "hub"],
+    ["^/calculators/", "calculator"],
+    ["^/guides/(awg-wire-size-chart|nec-table-310-16|nec-code-compliance)$", "reference"],
+    ["^/guides/", "guide"],
+    ["^/(about|contact|methodology)$", "about"],
+    ["^/(privacy|terms|disclaimer)$", "legal"]
+  ]
+}
