@@ -2,15 +2,12 @@
 > Handoff file. Read §0–§5 and the last 10 entries of §6 before any work. Rules: devlog skill (.claude/skills/devlog/SKILL.md).
 
 ## §0 Resume here
-_last update: 2026-11-09 · WSZ-019_
-- Phase: live; production serves af00b7c = origin/main (Vercel's latest production deployment, 2026-11-03). Waiting for the owner's merge: WSZ-018 SETUP (claude/WSZ-018-setup, PR open) and WSZ-019 CHECK004A (claude/WSZ-019-check-004a, PR open), which carries WSZ-004a TRUSTFRAME (mac/main, b9b4795), WSZ-018 and WSZ-019's fixes. Work runs in Claude cloud sessions (D-21).
-- Last confirmed: WSZ-019 CHECK004A — WSZ-004a and WSZ-018 merged, the WSZ-004a build checked in Claude in Chrome, four defects fixed and checked again on preview/WSZ-019-check-004a — done (d1842cc, eb110e4, 928a479 and the DEVLOG commit; PR open). WSZ-018 SETUP — done (PR open). WSZ-004a TRUSTFRAME — done; its browser check ran in WSZ-019. Live on af00b7c (the owner's push of 2026-11-03; the portfolio-qa sweep of production on 2026-11-05: 0 P0, 0 P1, 11 P2, no overflow at 390 or 320 px on the 32 pages): WSZ-017 DRAFTCHECK, WSZ-003c FIXES, WSZ-003b GATES, WSZ-003a DATALAYER, and before them WSZ-016, WSZ-015, WSZ-014, WSZ-002, WSZ-013, WSZ-001. WSZ-003c's own check at 320 and 390 px ran on WSZ-019's preview, which carries the same calculator code: no overflow on wire size, voltage drop or any other page.
+_last update: 2026-11-10 · WSZ-020_
+- Phase: live; production serves baaaec4 = origin/main. The owner merged WSZ-018's PR and WSZ-019's on 2026-11-10 (8e019b1, baaaec4). Claude in Chrome on https://wiresizes.com the same day: x-build baaaec4; no horizontal overflow at 320 or 390 px on the 32 sitemap pages; byline links underlined on all 24. Work runs in Claude cloud sessions (D-21).
+- Last confirmed: WSZ-020 CLOSEOUT — the go-live day for the nine routes WSZ-004a changed, and this §0 — done (PR open). Live on baaaec4: WSZ-019 CHECK004A, WSZ-018 SETUP, WSZ-004a TRUSTFRAME, and before them WSZ-017, WSZ-003c, WSZ-003b, WSZ-003a, WSZ-016, WSZ-015, WSZ-014, WSZ-002, WSZ-013, WSZ-001.
 - In flight (handed, NOT confirmed): none
-- Next action: the owner merges WSZ-018's PR, then WSZ-019's. If WSZ-019's merge lands after 2026-11-09, the next wave sets modified of /about and the eight converters to the merge day (D-17). Then WSZ-004b METHODOLOGY (WSZ-017 handoff §7, answers 1, 10–12; WSZ-004a CHAT 1, 3 and 5 still open).
-- Waiting on owner: the two merges ("Create a merge commit"); the wiresizes.com row in portfolio-qa PROGRESS.md (runbook step 11, not in this repo; row text in WSZ-018's PR body). Still listed from before, not checked since (?):
-  · create the contact@wiresizes.com forwarding alias;
-  · add the GSC Domain property and check Manual actions;
-  · add the apex site in Bing Webmaster Tools.
+- Next action: WSZ-021 NEXTSEC — Next.js 16.1.4 to the latest 16.4.x patch before any other work (portfolio rule, portfolio-qa PROGRESS.md, 2026-11-09). 16.1.4 sits inside the range of the 2026-10-14 security release (16.0.0 to 16.4.0, fixed in 16.4.1) and misses the July to September 2026 security releases. Upgrade next and eslint-config-next together (both 16.1.4 now; react and react-dom 19.2.3), read the 16.2, 16.3 and 16.4 upgrade notes, then a clean build with the gates, tests and tracker, a preview/ branch and a Claude in Chrome check of every template at 320, 390 and 1280 px. Then WSZ-004b METHODOLOGY (WSZ-017 handoff §7, answers 1, 10–12; WSZ-004a CHAT 1, 3 and 5 still open).
+- Waiting on owner: merge WSZ-020's PR; the contact@wiresizes.com forwarding alias (owner: "ok", 2026-11-10). Done by the owner (his word, 2026-11-10): the GSC Domain property and the site in Bing Webmaster Tools; he resubmits the sitemap there once the page-by-page rebuild is finished. The wiresizes.com row in portfolio-qa PROGRESS.md goes through that repo's QA-003 PR.
 - Open questions:
   - Raptive: applied, and what status? No ad script is in the code.
   - The repo's .claude/skills copies (WSZ-001) duplicate the account skills that cloud sessions load; all match except devlog, whose copy still says "never push" (§4). Keep them, refresh devlog, or delete the copies?
@@ -109,6 +106,7 @@ _last update: 2026-11-09 · WSZ-019_
 
 ## §5 Backlog (priority order)
 Waves from research/AUDIT-2026-10.md §7; drafts in research/prompts/ (ALL-WSZ-002-011.txt).
+- [P1] (WSZ-020) WSZ-021 NEXTSEC: Next.js 16.1.4 to the latest 16.4.x before other work (§0).
 - [P2] The seven calculators' quick-reference blocks and FAQs hold hand-typed numbers (gate b counts them); their rebuild waves render them from src/lib/verified.
 - [P2] (WSZ-018) Gate b reads only unit-bearing numbers: 1,629 of the baseline's 2,887 uncited numbers in `<main>` carry no unit (sizes in plain text, table cells, factors) and pass it. Decide whether gate b or the rebuild waves cover them before a route joins numberTrace.enforce; qa/pages.csv uncited_auto counts both kinds.
 - [P2] (WSZ-003b answer 7) Each calculator's rebuild wave wires its option labels (data-src or data-size on the `<option>`) and the fixed result-panel text (basis lines, "60 °C ampacity", "about 64 %", RESISTANCE_NOTES, the wire resistance temperature hint); gate b counts them until then.
@@ -241,6 +239,13 @@ Waves from research/AUDIT-2026-10.md §7; drafts in research/prompts/ (ALL-WSZ-0
 - Unverified: real narrow viewports (the owner's Chrome stayed at 1280 px; 320 and 390 ran in iframes without scripts, so the menu, the consent banner and calculator behaviour at those widths were not exercised); the favicon in a real tab (files compared side by side); eslint not run.
 - Commit: d1842cc (merge), eb110e4, 928a479 and this commit (pushed: claude/WSZ-019-check-004a with its PR; preview/WSZ-019-check-004a at 928a479)
 - Notes: a background review of the WSZ-004a diff also found isPartOf pointing at an unprinted WebSite node, check 23 passing with no icons, and the power-definitions Sources item that names three documents but links one (§5). Pre-existing, not fixed: flush-left H2s on volts, kVA and BTU and the nested cards at 320 px (§5). This session's `next start` on ports 3100 and 3101 was left running.
+
+### 2026-11-10 · WSZ-020 CLOSEOUT · CC · done
+- What: close-out after the owner merged WSZ-018's PR and WSZ-019's on 2026-11-10. page-dates.json: /about and the eight converters to modified 2026-11-10, the day their WSZ-004a body text went live (D-17; WSZ-019 had set 2026-11-09). §0: production check recorded; next action WSZ-021 NEXTSEC (Next.js 16.1.4 to the latest 16.4.x) before WSZ-004b, per the portfolio rule; the owner's word on GSC, Bing and the contact alias. §5: the P1 line.
+- Files: src/data/page-dates.json, DEVLOG.md
+- Verified: `rm -rf .next && npm run build` → pass (53/53 static pages), postbuild: check-banned 0 hits; check-structure 23/23; check-rendered-text 0 hits; check-number-trace 0 on enforced routes; check-nec-refs 0 on enforced routes. `npm test` → 345 pass, 0 fail, 0 skipped (golden 214 of 214); `npx tsc --noEmit` → 0 errors. `next start -p 3104` → `npm run qa:tracker -- http://127.0.0.1:3104` → qa/pages.csv byte-identical; `npm run progress` → Overall 18 %; /calculators/ohms-law-calculator serves "Updated November 10, 2026". Claude in Chrome on https://wiresizes.com before this commit (scripts stripped, srcdoc frames, §4): x-build baaaec4; 32 sitemap pages, no horizontal overflow at 320 or 390 px; 24 bylines with underlined links; the eight converters read "Updated November 9, 2026".
+- Commit: this commit (pushed: claude/WSZ-020-closeout with its PR)
+- Notes: the next/og ImageResponse advisory of 2026-09-22 covers 16.2.0 to 16.3.5, not 16.1.4; the 2026-10-14 release does cover it. The site imports no next/image; next.config allows remote images from wiresizes.com only. This session's `next start` on port 3104 was left running.
 
 ## §7 History & archive
 - 2026-01 · 1 commit · 67f98af Create Next App scaffold (2026-01-21)
