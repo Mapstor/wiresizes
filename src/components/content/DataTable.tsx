@@ -1,6 +1,6 @@
 // A reference table in a horizontal scroller (WSZ-005a): the table never widens the page at 320 px, the first column
-// stays in view while the rest scrolls, and the region is focusable and named by the caption so keyboard users can
-// scroll it. src is the table's default citation (data-src on <table>, D-15): cells that come from another source carry
+// stays in view while the rest scrolls, and the region is focusable and named by the caption above it, so keyboard
+// users can scroll it. src is the table's default citation (data-src on <table>, D-15): cells that come from another source carry
 // their own data-src, which the gates read first. Server component, no client JS.
 import type { ReactNode } from 'react';
 import { clsx } from 'clsx';
@@ -14,19 +14,22 @@ interface DataTableProps {
 }
 
 export function DataTable({ id, caption, src, children, className }: DataTableProps) {
+  // The caption sits above the scroller, so it wraps to the screen instead of scrolling (and clipping) with a wide table
   return (
-    <div
-      role="region"
-      aria-labelledby={`${id}-caption`}
-      tabIndex={0}
-      className={clsx('max-w-full overflow-x-auto rounded-md border border-gray-300 bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600', className)}
-    >
-      <table id={id} data-src={src} className="w-full border-collapse text-left text-sm tabular-nums">
-        <caption id={`${id}-caption`} className="px-3 pt-3 pb-2 text-left text-sm font-semibold text-gray-900">
-          {caption}
-        </caption>
-        {children}
-      </table>
+    <div data-src={src} className={clsx('space-y-2', className)}>
+      <p id={`${id}-caption`} className="text-sm font-semibold text-gray-900">
+        {caption}
+      </p>
+      <div
+        role="region"
+        aria-labelledby={`${id}-caption`}
+        tabIndex={0}
+        className="max-w-full overflow-x-auto rounded-md border border-gray-300 bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+      >
+        <table id={id} data-src={src} aria-labelledby={`${id}-caption`} className="w-full border-collapse text-left text-sm tabular-nums">
+          {children}
+        </table>
+      </div>
     </div>
   );
 }

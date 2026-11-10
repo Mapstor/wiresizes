@@ -170,16 +170,16 @@ function ThreeSteps() {
       </text>
       <circle cx={s1} cy={cy} r={r} fill="#f59e0b40" stroke="#92400e" strokeWidth={1.5} />
       <circle cx={s2} cy={cy} r={r} fill="#f59e0b40" stroke="#92400e" strokeWidth={1.5} />
-      <text x={leftX} y={150} textAnchor="middle" fontSize={13} fontWeight={600} fill="#111827">
+      <text x={leftX} y={150} textAnchor="middle" fontSize={15} fontWeight={600} fill="#111827">
         <Size s="10" svg />
       </text>
-      <text x={leftX} y={167} textAnchor="middle" fontSize={11} fill="#374151">
+      <text x={leftX} y={167} textAnchor="middle" fontSize={13} fill="#374151">
         <Val v={big.area_cmil} unit="cmil" src={GEO} svg />
       </text>
-      <text x={(s1 + s2) / 2} y={150} textAnchor="middle" fontSize={13} fontWeight={600} fill="#111827">
+      <text x={(s1 + s2) / 2} y={150} textAnchor="middle" fontSize={15} fontWeight={600} fill="#111827">
         2 × <Size s="13" svg />
       </text>
-      <text x={(s1 + s2) / 2} y={167} textAnchor="middle" fontSize={11} fill="#374151">
+      <text x={(s1 + s2) / 2} y={167} textAnchor="middle" fontSize={13} fill="#374151">
         2 × <Val v={small.area_cmil} unit="cmil" src={GEO} svg />
       </text>
     </svg>

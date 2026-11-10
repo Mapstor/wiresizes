@@ -17,18 +17,18 @@ path,template,words,uncited_auto,prose_auto,func_auto,sweep,S,S_bad,P,P_bad,D,D_
 /calculators/watts-to-amps-calculator,calculator,509,65,0,0,,todo,,clean,,todo,,todo,,2026-11-09,"WSZ-019 S: the Sources item names EIA, DOE and NIST but links only the EIA glossary"
 /calculators/wire-resistance-calculator,calculator,1393,220,0,0,,todo,,clean,,todo,,todo,,2026-11-09,
 /calculators/wire-size-calculator,calculator,1434,319,0,1,P2 meta-description-long,todo,,clean,,todo,,todo,,2026-11-09,WSZ-019 D: at 320 px the result steps wrap in a column of about 100 px (nested cards)
-/guides/awg-wire-size-chart,reference,631,229,0,0,,todo,,clean,,todo,,todo,,2026-11-09,
+/guides/awg-wire-size-chart,reference,1953,2,0,0,,done,7,done,1,todo,,todo,,2026-11-10,"WSZ-005a: rebuilt from awg.json, IEC 60228 sizes, Table 310.16 and 240.4(D); gates b and c enforced; the 2 uncited are the guides sidebar's ""200 Amp""/""100 Amp"" page names (WSZ-005b). D and F wait on Claude in Chrome (preview/WSZ-005a-tables)"
 /guides/nec-code-compliance,reference,445,27,0,0,,todo,,clean,,todo,,todo,,2026-11-09,
-/guides/nec-table-310-16,reference,337,391,0,1,P2 meta-description-long,todo,,clean,,todo,,todo,,2026-11-09,
+/guides/nec-table-310-16,reference,1129,2,0,1,P2 meta-description-long,done,8,done,1,todo,,todo,,2026-11-10,"WSZ-005a: rebuilt from the verified 310.16, 310.15, 240.4(D), 310.12 and 2026-edition data; gates b and c enforced; old wrong section numbers gone; the 2 uncited are the sidebar page names (WSZ-005b). D and F wait on Claude in Chrome; edition panel goes to WSZ-005c"
 /guides/electrical-power-calculations,guide,513,76,0,0,,todo,,clean,,todo,,todo,,2026-11-09,
 /guides/power-factor-explained,guide,438,14,2.3,0,,todo,,todo,,todo,,todo,,2026-11-09,
 /guides/single-vs-three-phase,guide,669,46,6,0,,todo,,todo,,todo,,todo,,2026-11-09,
 /guides/wire-size-for-100-amp,guide,442,53,0,0,,todo,,clean,,todo,,todo,,2026-11-09,
 /guides/wire-size-for-200-amp,guide,931,88,0,0,,todo,,clean,,todo,,todo,,2026-11-09,
 /guides/wire-size-for-ev-charger,guide,419,42,0,0,,todo,,clean,,todo,,todo,,2026-11-09,
-/about,about,302,8,0,1,P2 schema-missing,todo,,clean,,todo,,todo,,2026-11-10,WSZ-004b: sentence linking /methodology
+/about,about,360,8,0,1,P2 schema-missing,todo,,clean,,todo,,todo,,2026-11-10,WSZ-004b: sentence linking /methodology
 /contact,about,61,4,0,2,P2 schema-missing; P2 thin-page,todo,,clean,,todo,,todo,,2026-11-09,
-/methodology,about,3002,0,0,,,done,0,clean,,todo,,todo,,2026-11-10,"WSZ-004b: new page; every number traced (gates b and c enforced, uncited 0); D and F wait on the Claude in Chrome check at 390 and 1280 px"
+/methodology,about,3348,0,0,,,done,0,clean,,todo,,todo,,2026-11-10,"WSZ-004b: new page; every number traced (gates b and c enforced, uncited 0); D and F wait on the Claude in Chrome check at 390 and 1280 px; WSZ-005a: IEC 60228 and 2026 NEC sections, cites the two table guides"
 /disclaimer,legal,135,0,0,2,P2 schema-missing; P2 thin-page,n/a,,n/a,,n/a,,n/a,,2026-11-09,
 /privacy,legal,470,15,0,1,P2 schema-missing,n/a,,n/a,,n/a,,n/a,,2026-11-09,
 /terms,legal,183,3,0,1,P2 schema-missing,n/a,,n/a,,n/a,,n/a,,2026-11-09,
