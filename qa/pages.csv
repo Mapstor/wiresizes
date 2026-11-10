@@ -26,8 +26,9 @@ path,template,words,uncited_auto,prose_auto,func_auto,sweep,S,S_bad,P,P_bad,D,D_
 /guides/wire-size-for-100-amp,guide,442,53,0,0,,todo,,clean,,todo,,todo,,2026-11-09,
 /guides/wire-size-for-200-amp,guide,931,88,0,0,,todo,,clean,,todo,,todo,,2026-11-09,
 /guides/wire-size-for-ev-charger,guide,419,42,0,0,,todo,,clean,,todo,,todo,,2026-11-09,
-/about,about,285,8,0,1,P2 schema-missing,todo,,clean,,todo,,todo,,2026-11-09,
+/about,about,302,8,0,1,P2 schema-missing,todo,,clean,,todo,,todo,,2026-11-10,WSZ-004b: sentence linking /methodology
 /contact,about,61,4,0,2,P2 schema-missing; P2 thin-page,todo,,clean,,todo,,todo,,2026-11-09,
+/methodology,about,3002,0,0,,,done,0,clean,,todo,,todo,,2026-11-10,"WSZ-004b: new page; every number traced (gates b and c enforced, uncited 0); D and F wait on the Claude in Chrome check at 390 and 1280 px"
 /disclaimer,legal,135,0,0,2,P2 schema-missing; P2 thin-page,n/a,,n/a,,n/a,,n/a,,2026-11-09,
 /privacy,legal,470,15,0,1,P2 schema-missing,n/a,,n/a,,n/a,,n/a,,2026-11-09,
 /terms,legal,183,3,0,1,P2 schema-missing,n/a,,n/a,,n/a,,n/a,,2026-11-09,
