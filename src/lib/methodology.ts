@@ -1,32 +1,13 @@
 // /methodology (WSZ-004b): one section per verified source domain that a live page's <Sources> lists, in reading
-// order, each with the live calculators whose Sources list it ("Cited on"). nec-110-14c stays off until WSZ-009 adds
+// order, each with the live pages whose Sources list it ("Cited on"), named as the route list names them
+// (src/lib/routes.ts, D-26). nec-110-14c stays off until WSZ-009 adds
 // it to the wire size calculator's Sources (D-06); domains that no live page cites (nec-continuous-load,
 // doe-efficiency-standards and the rest) stay off too (WSZ-017 answers 10 and 12). check-structure 24 compares these
 // lists with the built pages, so a domain added to or dropped from a page's Sources fails the build until this file
 // follows. Pure data, no JSX: the tests import it.
+import { pageName } from './routes';
 
 export const METHODOLOGY_ROUTE = '/methodology';
-
-/** Link text for the live pages that list a source under Sources (the calculators and, since WSZ-005a, the two table guides), by route. */
-export const CALCULATOR_NAMES: Record<string, string> = {
-  '/calculators/wire-size-calculator': 'Wire Size Calculator',
-  '/calculators/voltage-drop-calculator': 'Voltage Drop Calculator',
-  '/calculators/ampacity-calculator': 'Ampacity Calculator',
-  '/calculators/ground-wire-calculator': 'Ground Wire Calculator',
-  '/calculators/wire-resistance-calculator': 'Wire Resistance Calculator',
-  '/calculators/low-voltage-calculator': 'Low Voltage Calculator',
-  '/calculators/service-entrance-calculator': 'Service Entrance Calculator',
-  '/calculators/watts-to-amps-calculator': 'Watts to Amps Calculator',
-  '/calculators/amps-to-watts-calculator': 'Amps to Watts Calculator',
-  '/calculators/volts-to-amps-calculator': 'Volts to Amps Calculator',
-  '/calculators/kilowatts-to-amps-calculator': 'Kilowatts to Amps Calculator',
-  '/calculators/kva-to-amps-calculator': 'kVA to Amps Calculator',
-  '/calculators/three-phase-calculator': 'Three Phase Calculator',
-  '/calculators/ohms-law-calculator': "Ohm's Law Calculator",
-  '/calculators/btu-to-watts-calculator': 'BTU to Watts Calculator',
-  '/guides/awg-wire-size-chart': 'AWG Wire Size Chart',
-  '/guides/nec-table-310-16': 'NEC Table 310.16',
-};
 
 export interface MethodologySection {
   /** The section's id, its #fragment. */
@@ -48,13 +29,17 @@ const LOW_VOLTAGE = '/calculators/low-voltage-calculator';
 const SERVICE_ENTRANCE = '/calculators/service-entrance-calculator';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
+// The homepage lists four sources under its wire size table; the hubs list the 2026 edition behind their edition line (WSZ-005b)
+const HOME = '/';
+const CALCULATORS_HUB = '/calculators';
+const GUIDES_HUB = '/guides';
 
 export const METHODOLOGY_SECTIONS: MethodologySection[] = [
   {
     id: 'wire-gauge',
     domain: 'awg-geometry',
     title: 'Wire gauge sizes and areas',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, GROUND_WIRE, LOW_VOLTAGE, SERVICE_ENTRANCE, AWG_CHART],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, GROUND_WIRE, LOW_VOLTAGE, SERVICE_ENTRANCE, AWG_CHART, HOME],
   },
   {
     id: 'resistance',
@@ -66,7 +51,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'ampacity',
     domain: 'nec-310-16',
     title: 'Ampacity',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, LOW_VOLTAGE, AWG_CHART, TABLE_310_16],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, HOME],
   },
   {
     id: 'corrections',
@@ -78,7 +63,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'small-conductors',
     domain: 'nec-240-4-d',
     title: 'Small-conductor limits',
-    citedOn: [WIRE_SIZE, AMPACITY, AWG_CHART, TABLE_310_16],
+    citedOn: [WIRE_SIZE, AMPACITY, AWG_CHART, TABLE_310_16, HOME],
   },
   {
     id: 'breaker-ratings',
@@ -128,9 +113,14 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'nec-2026',
     domain: 'nec-2026-edition',
     title: 'The 2026 NEC edition',
-    citedOn: [TABLE_310_16],
+    citedOn: [TABLE_310_16, HOME, CALCULATORS_HUB, GUIDES_HUB],
   },
 ];
+
+/** Link text of the pages a section cites, by route: each page's name in the route list (src/lib/routes.ts). */
+export const CITED_PAGE_NAMES: Record<string, string> = Object.fromEntries(
+  [...new Set(METHODOLOGY_SECTIONS.flatMap((s) => s.citedOn))].map((route) => [route, pageName(route)]),
+);
 
 /** The sections in a page's reading order that are not one source: the method overview and the closing notes. */
 export const METHODOLOGY_EXTRA_SECTIONS = {

@@ -10,7 +10,8 @@
 //   that left the sitemap.
 // - uncited_auto = numbers in the <main> text that no citation covers: not inside an element whose data-src
 //   traces (a verified domain of research/data-sources.csv, calc:<ENGINE_ID> of an engine whose DOMAINS are all
-//   verified, or input; gate b's rule in scripts/lib/gate-rules.mjs) and not a size name inside [data-size].
+//   verified, or input; gate b's rule in scripts/lib/gate-rules.mjs), not a size name inside [data-size] and not a page
+//   name inside [data-name] (navigation and related links, D-20; gate b skips both, WSZ-005b).
 //   Unlike gate b it also counts numbers without a unit: sizes in plain text, table cells, factors. Not counted:
 //   years 1900–2099 without a unit, NEC references as gate c reads them, standard designations (NFPA 70, UL 1561,
 //   NEMA 14-50), dates inside <time> (the byline's "Updated" date, WSZ-019). A value taken from data/verified but rendered without data-src counts until its wave wires it,
@@ -99,21 +100,22 @@ const NUMBER_RE = /(?<![\p{L}\p{N}.,/])[-−]?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+
 const STANDARD_RE = /\b(?:NFPA|UL|IEEE|IEC|ANSI|ASTM|CSA|NEMA|ISO|NIST(?:\s+SP)?)\s?\d[\d.-]*/gu;
 const uncited = (html) => {
   // the <main> text as gate b reads <body>: a tag is a space and whitespace runs collapse; per character, the
-  // nearest data-src and whether a [data-size] encloses it
+  // nearest data-src and whether a [data-size] or [data-name] encloses it
   let text = '';
   const where = [];
-  const NONE = { src: null, size: false, time: false };
+  const NONE = { src: null, size: false, name: false, time: false };
   const push = (c, info) => { text += c; where.push(info); };
   for (const e of tokenizeHtml(html)) {
     if (e.type !== 'text') { if (text && !text.endsWith(' ')) push(' ', NONE); continue; }
     if (!e.stack.includes('main')) continue;
-    let src = null, size = false;
+    let src = null, size = false, name = false;
     for (let k = e.ancestors.length - 1; k >= 0; k--) {
       const attrs = e.ancestors[k].attrs;
       if (attrs['data-size'] !== undefined) size = true;
+      if (attrs['data-name'] !== undefined) name = true;
       if (src === null && attrs['data-src'] !== undefined) src = attrs['data-src'];
     }
-    const info = { src, size, time: e.stack.includes('time') };
+    const info = { src, size, name, time: e.stack.includes('time') };
     for (const c of e.value) {
       if (/[ \t\n\r\f]/u.test(c)) { if (text && !text.endsWith(' ')) push(' ', info); } else push(c, info);
     }
@@ -123,7 +125,7 @@ const uncited = (html) => {
     ...[...text.matchAll(STANDARD_RE)].map((m) => [m.index, m.index + m[0].length]),
   ];
   const inside = (spans, at) => spans.some(([s, e]) => at >= s && at < e);
-  const counts = (at) => !where[at].size && !where[at].time && !cites(where[at].src);
+  const counts = (at) => !where[at].size && !where[at].name && !where[at].time && !cites(where[at].src);
   // unit-bearing numbers and $ amounts exactly as gate b finds them, then every other number
   const units = unitNumbers(text);
   const unit = units.filter((n) => counts(n.index)).length;

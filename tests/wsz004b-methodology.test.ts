@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { parseCsv } from '../src/lib/verified/csv.mjs';
 import { attribution } from '../src/lib/verified/registry';
-import { CALCULATOR_NAMES, METHODOLOGY_EXTRA_SECTIONS, METHODOLOGY_ROUTE, METHODOLOGY_SECTIONS } from '../src/lib/methodology';
+import { CITED_PAGE_NAMES, METHODOLOGY_EXTRA_SECTIONS, METHODOLOGY_ROUTE, METHODOLOGY_SECTIONS } from '../src/lib/methodology';
 import { SERVICE_AMPACITY_PERCENT } from '../src/lib/verified/nec-310-12';
 import { ROWS_240_4_D, max240_4D } from '../src/lib/verified/nec-240-4-d';
 import { TABLE_AMBIENT } from '../src/lib/verified/nec-310-16';
@@ -29,15 +29,15 @@ describe('METHODOLOGY_SECTIONS', () => {
     for (const off of ['nec-110-14c', 'nec-continuous-load', 'doe-efficiency-standards']) assert.ok(!domains.has(off), off);
   });
 
-  it('cites only named live calculators, each section at least one', () => {
+  it('cites only named live pages, each section at least one', () => {
     for (const s of METHODOLOGY_SECTIONS) {
       assert.ok(s.citedOn.length > 0, s.domain);
       assert.equal(new Set(s.citedOn).size, s.citedOn.length, s.domain);
-      for (const route of s.citedOn) assert.ok(CALCULATOR_NAMES[route], `${s.domain}: ${route} has no name`);
+      for (const route of s.citedOn) assert.ok(CITED_PAGE_NAMES[route], `${s.domain}: ${route} has no name`);
     }
-    // every named calculator is cited somewhere, so no name is left over
+    // every named page is cited somewhere, so no name is left over
     const cited = new Set(METHODOLOGY_SECTIONS.flatMap((s) => s.citedOn));
-    assert.deepEqual([...cited].sort(), Object.keys(CALCULATOR_NAMES).sort());
+    assert.deepEqual([...cited].sort(), Object.keys(CITED_PAGE_NAMES).sort());
   });
 
   it('has page dates for its route', () => {

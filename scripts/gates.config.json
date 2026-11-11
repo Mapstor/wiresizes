@@ -1,11 +1,14 @@
 {
   "numberTrace": {
     "enforce": [
+      "/",
       "/_global-error",
       "/_not-found",
       "/about",
+      "/calculators",
       "/contact",
       "/disclaimer",
+      "/guides",
       "/guides/awg-wire-size-chart",
       "/guides/nec-table-310-16",
       "/methodology",

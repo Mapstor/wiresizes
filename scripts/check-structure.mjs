@@ -329,7 +329,8 @@ function mainLinks(page) {
   check('each live calculator page has an <input> or <select> inside <main> in its prerendered HTML', failures, `${LIVE_CALCULATORS.length} pages`);
 }
 
-// 12. Hubs link to every live page of their kind inside <main> (header and footer links don't count)
+// 12. Hubs link to every live page of their kind inside <main> (header and footer links don't count); since WSZ-005b the
+//     homepage links every live guide too (all three read src/lib/routes.ts, D-26)
 {
   const failures = [];
   if (LIVE_GUIDES.length !== 9) failures.push(`${LIVE_GUIDES.length} live guides, expected 9`);
@@ -342,11 +343,11 @@ function mainLinks(page) {
     const links = mainLinks(page);
     for (const target of targets) if (target !== route && !links.has(target)) failures.push(`${route}: no link to ${target} inside <main>`);
   };
-  expectLinks('/', LIVE_CALCULATORS);
+  expectLinks('/', [...LIVE_CALCULATORS, ...LIVE_GUIDES]);
   expectLinks('/calculators', LIVE_CALCULATORS);
   expectLinks('/guides', LIVE_GUIDES);
   for (const route of LIVE_GUIDES) expectLinks(route, LIVE_GUIDES);
-  check('inside <main>, / and /calculators link to all 15 live calculators, /guides to all 9 live guides, and each guide to every other guide', failures, `${2 + 1 + LIVE_GUIDES.length} pages`);
+  check('inside <main>, / links to all 15 live calculators and all 9 live guides, /calculators to the calculators, /guides to the guides, and each guide to every other guide', failures, `${2 + 1 + LIVE_GUIDES.length} pages`);
 }
 
 // 13. Internal links on live pages and the 404 page reach a built page or route, and their #fragments exist
