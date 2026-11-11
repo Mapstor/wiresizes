@@ -24,7 +24,9 @@ import { TABLE_250_122_ROWS } from '@/lib/verified/nec-250-122';
 import { ADJUSTMENT_ROWS } from '@/lib/verified/nec-310-15-C-1';
 import { SERVICE_AMPACITY_PERCENT, TABLE_310_12_ROWS } from '@/lib/verified/nec-310-12';
 import { AMPACITY_COLUMNS, TABLE_310_16_ROWS, TABLE_310_16_SIZES, TABLE_AMBIENT } from '@/lib/verified/nec-310-16';
-import { attribution, attributionParts } from '@/lib/verified/registry';
+import { attribution, attributionParts, coverage } from '@/lib/verified/registry';
+import { NEC_2026_EFFECTIVE, NEC_2026_ISSUED, NEC_2026_MIN_SIZES } from '@/lib/verified/nec-2026-edition';
+import { formatDate } from '@/lib/page-dates';
 
 // /methodology (WSZ-004b): one section per verified source the live calculators cite (src/lib/methodology.ts lists
 // them and the pages that cite each; check-structure 24 holds that list to the built pages), the wire size method,
@@ -89,6 +91,11 @@ const EGC_LAST = TABLE_250_122_ROWS[TABLE_250_122_ROWS.length - 1];
 const SERVICE_FIRST = TABLE_310_12_ROWS[0];
 const SERVICE_LAST = TABLE_310_12_ROWS[TABLE_310_12_ROWS.length - 1];
 const DC_TEMPS = DC_TEMPERATURE_OPTIONS.map((option) => option.value);
+// The IEC 60228 sizes the registry row covers, from its coverage text ("0.5–1600 mm² Class 1 series")
+const IEC_RANGE = /([\d.]+)–([\d.]+) mm²/.exec(coverage('iec-60228-metric-sizes'));
+if (!IEC_RANGE) throw new Error('data-sources.csv iec-60228-metric-sizes coverage: no "N–N mm²" range');
+const IEC_SMALLEST = <Val v={Number(IEC_RANGE[1])} unit="mm²" src="iec-60228-metric-sizes" />;
+const IEC_LARGEST = <Val v={Number(IEC_RANGE[2])} unit="mm²" src="iec-60228-metric-sizes" />;
 
 const materialLabel = (material: string) => (material === 'Cu' ? 'copper' : 'aluminum or copper-clad aluminum');
 
@@ -219,7 +226,8 @@ export default function MethodologyPage() {
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
           has a section below: what it is and which edition was used, where it was read, how the calculators use it,
           and where that use stops. The first section shows how the wire size calculator puts several of them
-          together. Every calculator page also lists its sources under Sources, near the bottom of the page.
+          together. Every calculator page, the AWG wire size chart and the NEC Table 310.16 page also list their sources
+          under Sources, near the bottom of the page.
         </p>
         <p>
           Code values are from NFPA 70, the National Electrical Code (NEC), 2023 edition, unless a section says
@@ -711,6 +719,54 @@ export default function MethodologyPage() {
               Horsepower is electric horsepower. Mechanical horsepower,{' '}
               <Val v={W_PER_MECHANICAL_HP} unit="W" src="nist-sp811-conversions" />, is not used.
             </li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="iec-60228-metric-sizes">
+          <p>
+            IEC 60228 is the international standard for the nominal cross-sections of cable conductors, in square
+            millimeters. The site uses only its list of nominal sizes, to show beside each AWG size the metric size
+            nearest to it and the next one up.
+          </p>
+          <SourceFacts s={section('iec-60228-metric-sizes')} />
+          <p>
+            The nearest size compares the AWG area in mm² from NIST&apos;s table with the IEC series; the{' '}
+            <Link href="/guides/awg-wire-size-chart#metric" className={LINK}>
+              AWG wire size chart
+            </Link>{' '}
+            lists both for each size.
+          </p>
+          <Limits>
+            <li>
+              Only the sizes from {IEC_SMALLEST} to {IEC_LARGEST} were read, so AWG sizes with less area than {IEC_SMALLEST} get
+              no IEC size.
+            </li>
+            <li>The comparison is by area alone; nothing else in the standard is used.</li>
+            <li>Whether a metric cable may replace an AWG one is a question for the local code, not this list.</li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="nec-2026-edition">
+          <p>
+            NFPA issued the 2026 edition of the NEC on{' '}
+            <time dateTime={NEC_2026_ISSUED}>{formatDate(NEC_2026_ISSUED)}</time>, effective{' '}
+            <time dateTime={NEC_2026_EFFECTIVE}>{formatDate(NEC_2026_EFFECTIVE)}</time>. The site&apos;s calculators and tables
+            stay on the 2023 edition; the 2026 facts it states come from NFPA&apos;s issue record and from state reviews of the
+            final edition.
+          </p>
+          <SourceFacts s={section('nec-2026-edition')} />
+          <p>
+            The{' '}
+            <Link href="/guides/nec-table-310-16#nec-2026" className={LINK}>
+              NEC Table 310.16 page
+            </Link>{' '}
+            uses it for the edition&apos;s dates and the new minimum sizes: <Size s={NEC_2026_MIN_SIZES.Cu} /> copper,{' '}
+            <Size s={NEC_2026_MIN_SIZES.CCA} /> copper-clad aluminum and <Size s={NEC_2026_MIN_SIZES.Al} /> aluminum, in a
+            section renumbered to 310.5.
+          </p>
+          <Limits>
+            <li>Changes seen only in NFPA&apos;s revision drafts are labeled as drafts and never shown as final.</li>
+            <li>The final 2026 Table 310.16 has not been seen, so no 2026 ampacity is shown.</li>
           </Limits>
         </SourceSection>
 

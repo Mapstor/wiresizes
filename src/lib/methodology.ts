@@ -7,7 +7,7 @@
 
 export const METHODOLOGY_ROUTE = '/methodology';
 
-/** Link text for the live calculators, by route. */
+/** Link text for the live pages that list a source under Sources (the calculators and, since WSZ-005a, the two table guides), by route. */
 export const CALCULATOR_NAMES: Record<string, string> = {
   '/calculators/wire-size-calculator': 'Wire Size Calculator',
   '/calculators/voltage-drop-calculator': 'Voltage Drop Calculator',
@@ -24,6 +24,8 @@ export const CALCULATOR_NAMES: Record<string, string> = {
   '/calculators/three-phase-calculator': 'Three Phase Calculator',
   '/calculators/ohms-law-calculator': "Ohm's Law Calculator",
   '/calculators/btu-to-watts-calculator': 'BTU to Watts Calculator',
+  '/guides/awg-wire-size-chart': 'AWG Wire Size Chart',
+  '/guides/nec-table-310-16': 'NEC Table 310.16',
 };
 
 export interface MethodologySection {
@@ -33,7 +35,7 @@ export interface MethodologySection {
   domain: string;
   /** Its h2. */
   title: string;
-  /** Routes of the live calculators whose <Sources> list the domain. */
+  /** Routes of the live pages whose <Sources> list the domain. */
   citedOn: string[];
 }
 
@@ -44,37 +46,39 @@ const GROUND_WIRE = '/calculators/ground-wire-calculator';
 const WIRE_RESISTANCE = '/calculators/wire-resistance-calculator';
 const LOW_VOLTAGE = '/calculators/low-voltage-calculator';
 const SERVICE_ENTRANCE = '/calculators/service-entrance-calculator';
+const AWG_CHART = '/guides/awg-wire-size-chart';
+const TABLE_310_16 = '/guides/nec-table-310-16';
 
 export const METHODOLOGY_SECTIONS: MethodologySection[] = [
   {
     id: 'wire-gauge',
     domain: 'awg-geometry',
     title: 'Wire gauge sizes and areas',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, GROUND_WIRE, LOW_VOLTAGE, SERVICE_ENTRANCE],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, GROUND_WIRE, LOW_VOLTAGE, SERVICE_ENTRANCE, AWG_CHART],
   },
   {
     id: 'resistance',
     domain: 'conductor-resistance-20c',
     title: 'Conductor resistance and voltage drop',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, WIRE_RESISTANCE, LOW_VOLTAGE],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART],
   },
   {
     id: 'ampacity',
     domain: 'nec-310-16',
     title: 'Ampacity',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, LOW_VOLTAGE],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, LOW_VOLTAGE, AWG_CHART, TABLE_310_16],
   },
   {
     id: 'corrections',
     domain: 'nec-310-15-corrections',
     title: 'Ambient temperature and bundling',
-    citedOn: [WIRE_SIZE, AMPACITY],
+    citedOn: [WIRE_SIZE, AMPACITY, TABLE_310_16],
   },
   {
     id: 'small-conductors',
     domain: 'nec-240-4-d',
     title: 'Small-conductor limits',
-    citedOn: [WIRE_SIZE, AMPACITY],
+    citedOn: [WIRE_SIZE, AMPACITY, AWG_CHART, TABLE_310_16],
   },
   {
     id: 'breaker-ratings',
@@ -92,7 +96,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'service-conductors',
     domain: 'nec-310-12',
     title: 'Dwelling services and main feeders',
-    citedOn: [SERVICE_ENTRANCE, GROUND_WIRE],
+    citedOn: [SERVICE_ENTRANCE, GROUND_WIRE, TABLE_310_16],
   },
   {
     id: 'power',
@@ -113,6 +117,18 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     domain: 'nist-sp811-conversions',
     title: 'Unit conversions',
     citedOn: ['/calculators/btu-to-watts-calculator', '/calculators/amps-to-watts-calculator'],
+  },
+  {
+    id: 'metric-sizes',
+    domain: 'iec-60228-metric-sizes',
+    title: 'Metric conductor sizes',
+    citedOn: [AWG_CHART],
+  },
+  {
+    id: 'nec-2026',
+    domain: 'nec-2026-edition',
+    title: 'The 2026 NEC edition',
+    citedOn: [TABLE_310_16],
   },
 ];
 

@@ -1,446 +1,835 @@
-import { Metadata } from 'next';
-import { Table, Gauge, Calculator, Info, TrendingUp } from 'lucide-react';
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 import Link from 'next/link';
+import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { DatasetSchema } from '@/components/seo/DatasetSchema';
-import { articleDates } from '@/lib/page-dates';
 import { Byline } from '@/components/content/Byline';
-import awgData from '../../../../data/verified/awg.json';
-import { diameterMm, sizeKeyFromAwgName, tableAmpacity } from '@/lib/calculations/sizes';
-import { maxOcpd240_4D } from '@/lib/calculations/ampacity';
-import table31016 from '../../../../data/verified/nec-310-16.json';
+import { Figure } from '@/components/content/Figure';
+import { DataTable, STICKY_TD, STICKY_TH, TD, TH } from '@/components/content/DataTable';
+import { Num } from '@/components/content/Num';
+import { Size } from '@/components/content/Size';
+import { Sources } from '@/components/content/Sources';
+import { Val } from '@/components/content/Val';
+import { areaRatio, diameterRatio } from '@/lib/calculations/awg-geometry';
+import { articleDates } from '@/lib/page-dates';
+import { AWG_CONSTANTS, AWG_DEFINITION, AWG_TABLE, KCMIL_TABLE, awgRow, sizeKeyFromAwgName } from '@/lib/verified/awg';
+import type { AwgRow, SizeKey } from '@/lib/verified/awg';
+import { max240_4D } from '@/lib/verified/nec-240-4-d';
+import { TABLE_310_16_ROWS, TABLE_310_16_SIZES, table31016 } from '@/lib/verified/nec-310-16';
+import { attribution } from '@/lib/verified/registry';
 
-// 18 AWG to 4/0 AWG: diameters, areas and 20 °C resistance from data/verified/awg.json (NIST Handbook 100,
-// Table 5, solid annealed copper); ampacities from the 75 °C columns of data/verified/nec-310-16.json.
-const CHART_AWG_NAMES = ['18', '16', '14', '12', '10', '8', '6', '4', '3', '2', '1', '0', '00', '000', '0000'];
-const AWG_CHART_ROWS = CHART_AWG_NAMES.map((name) => {
-  const row = awgData.awg.find((r) => r.awg === name);
-  if (!row) throw new Error(`awg.json has no ${name} AWG row`);
-  const size = sizeKeyFromAwgName(name);
-  const copperLimit = maxOcpd240_4D(size, 'Cu');
-  const aluminumLimit = maxOcpd240_4D(size, 'Al');
-  return {
-    awg: size,
-    diameter_mm: row.diameter_mm,
-    diameter_in: row.diameter_in,
-    area_mm2: row.area_mm2,
-    resistance_20c: row.r20_cu_ohm_per_1000ft,
-    copper_75c: tableAmpacity(size, 'Cu', 75),
-    aluminum_75c: tableAmpacity(size, 'Al', 75),
-    // NEC 240.4(D) rows without conditions: 14, 12 and 10 AWG copper, 12 and 10 AWG aluminum
-    copperLimited: copperLimit !== null && copperLimit.conditions === null,
-    aluminumLimited: aluminumLimit !== null && aluminumLimit.conditions === null,
-  };
-});
-
-const OCPD_LIMIT_NOTE = `Limited by NEC 240.4(D) small conductor rule. Copper: ${['14', '12', '10']
-  .map((size) => `${size} AWG max ${maxOcpd240_4D(size, 'Cu')?.max_ocpd_a} A`)
-  .join(', ')} protection. Aluminum: ${['12', '10']
-  .map((size) => `${size} AWG max ${maxOcpd240_4D(size, 'Al')?.max_ocpd_a} A`)
-  .join(', ')} protection.`;
-
-// AWG to mm² with the nearest IEC 60228 size, from data/verified/awg.json
-const METRIC_ROWS = ['14', '12', '10', '8', '6', '4', '2', '0'].map((name) => {
-  const row = awgData.awg.find((r) => r.awg === name);
-  if (!row) throw new Error(`awg.json has no ${name} AWG row`);
-  return { awg: `${sizeKeyFromAwgName(name)} AWG`, area_mm2: row.area_mm2, nearest_mm2: row.iec60228_nearest_mm2 };
-});
-
-const INSULATION_TYPES = table31016.columns_types;
-
-const TITLE = 'AWG Wire Size Chart — Diameter & Ampacity';
-const DESCRIPTION = 'AWG chart from 18 AWG to 4/0: diameter in mm and inches, area in mm², copper resistance at 20 °C and NEC Table 310.16 ampacity at 75 °C.';
+// /guides/awg-wire-size-chart (WSZ-005a): the full AWG 0000–40 and 250–2000 kcmil chart from data/verified/awg.json
+// (NBS Handbook 100 Table 5; calculated resistances labeled as such), the 2023 Table 310.16 excerpt and the 240.4(D)
+// limits, and the AWG scaling rules from the awg-geometry engine. Spec: research/page-specs.md "WSZ-005". Every number
+// renders inside an element whose data-src names its source; the tables carry their default source on <table>.
+const ROUTE = '/guides/awg-wire-size-chart';
+const URL = `https://wiresizes.com${ROUTE}`;
+const H1 = 'AWG Wire Size Chart: Diameter, Area, Resistance and Ampacity';
+const TITLE = 'AWG Wire Size Chart: Diameter, Area and Ampacity';
+const DESCRIPTION =
+  'AWG chart for every gauge from 4/0 to 40 AWG plus 250–2000 kcmil: diameter in inches and mm, area in mm², copper resistance and 2023 NEC ampacity.';
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  keywords: 'AWG chart, wire size chart, American wire gauge, wire diameter table, AWG to mm conversion, wire resistance table, copper wire sizes, aluminum wire sizes, electrical wire chart',
-  alternates: { canonical: '/guides/awg-wire-size-chart' },
+  alternates: { canonical: ROUTE },
   openGraph: {
-    type: 'website',
+    type: 'article',
     locale: 'en_US',
     siteName: 'WireSizes.com',
     title: TITLE,
     description: DESCRIPTION,
-    url: 'https://wiresizes.com/guides/awg-wire-size-chart',
+    url: URL,
     images: ['/opengraph-image'],
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: TITLE,
-    description: DESCRIPTION,
-    images: ['/twitter-image'],
-  },
+  twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION, images: ['/twitter-image'] },
 };
 
-// Article data for schema
-const articleData = {
-  headline: "AWG Wire Size Chart & Reference Guide",
-  description: DESCRIPTION,
-  url: "https://wiresizes.com/guides/awg-wire-size-chart",
-  ...articleDates('/guides/awg-wire-size-chart'),
-};
+const GEO = 'awg-geometry';
+const RES = 'conductor-resistance-20c';
+const IEC = 'iec-60228-metric-sizes';
+const AMP = 'nec-310-16';
+const OCPD = 'nec-240-4-d';
+const CALC = 'calc:awg-geometry';
+const SOURCE_DOMAINS = [GEO, RES, IEC, AMP, OCPD];
 
-export default function AWGWireSizeChartPage() {
+const LINK = 'text-blue-700 underline underline-offset-2 hover:text-blue-900';
+const H2 = 'scroll-mt-20 text-2xl font-semibold text-gray-900';
+const H3 = 'text-lg font-semibold text-gray-900';
+const P = 'leading-relaxed text-gray-800';
+
+function row(key: SizeKey): AwgRow {
+  const found = awgRow(key);
+  if (!found) throw new Error(`awg.json has no ${key} AWG row`);
+  return found;
+}
+
+// Values the copy states, read from the data modules and the awg-geometry engine (none typed here)
+const SIZE_0000 = row('4/0');
+const SIZE_36 = row('36');
+const SIX_STEPS = diameterRatio(6);
+const THREE_STEPS_AREA = areaRatio(3);
+const TEN_STEPS_RESISTANCE = areaRatio(10);
+const STEP_RATIO = AWG_DEFINITION.ratio;
+const SPAN = AWG_DEFINITION.d_0000_in / AWG_DEFINITION.d_36_in;
+const AMPACITY_SIZES = TABLE_310_16_SIZES.slice(TABLE_310_16_SIZES.indexOf('14'), TABLE_310_16_SIZES.indexOf('4/0') + 1);
+const INCH = { fixed: 4 } as const;
+const MM = { fixed: 3 } as const;
+
+const amp = (key: SizeKey, column: Parameters<typeof table31016>[1]) => table31016(key, column);
+/** The 240.4(D) limit of a size without conditions (14, 12 and 10 AWG copper; 12 and 10 AWG aluminum), else null. */
+function ocpdLimit(key: SizeKey, material: 'Cu' | 'Al'): number | null {
+  const limit = max240_4D(key, material);
+  return limit && limit.conditions === null ? limit.max_ocpd_a : null;
+}
+
+const CARD_SIZES: SizeKey[] = ['4/0', '1/0', '2', '4', '6', '8', '10', '12', '14', '16', '18', '20', '22', '24'];
+const anchor = (key: SizeKey) => `awg-${key.replace('/', '-')}`;
+
+function Dash() {
+  return <span aria-label="no value">–</span>;
+}
+
+/** A cell value, or a dash where the source has none. */
+function Cell({ v, src, format }: { v: number | null | undefined; src: string; format?: Parameters<typeof Num>[0]['format'] }) {
+  if (v === null || v === undefined) return <Dash />;
+  return <Num v={v} src={src} format={format} />;
+}
+
+// ── SVGs ──────────────────────────────────────────────────────────────────────────────────────────────────────────
+// Tokens: copper #b45309 fill at 25 % with a #92400e stroke, text #111827 at 13 and 11 px, background white.
+const HERO_SIZES: SizeKey[] = ['4/0', '1/0', '4', '10', '14', '24'];
+
+/** To-scale cross sections of six gauges (solid conductors, diameters from awg.json): one row from sm up, two rows of
+ *  three below it, so the labels stay legible at 320 px. */
+function GaugeCircles({ narrow = false }: { narrow?: boolean }) {
+  const pxPerIn = narrow ? 230 : 300;
+  const rows = narrow ? [HERO_SIZES.slice(0, 3), HERO_SIZES.slice(3)] : [HERO_SIZES];
+  const font = narrow ? { name: 15, value: 13 } : { name: 13, value: 11 };
+  const minStep = narrow ? 92 : 84;
+  const rowHeight = narrow ? 175 : 200;
+  const laid = rows.map((sizes) => {
+    const radii = sizes.map((key) => (row(key).diameter_in * pxPerIn) / 2);
+    const centers: number[] = [];
+    radii.forEach((r, i) => centers.push(i === 0 ? Math.max(12 + r, 40) : centers[i - 1] + Math.max(radii[i - 1] + r + 16, minStep)));
+    return { sizes, radii, centers };
+  });
+  const width = Math.ceil(Math.max(...laid.map((l) => l.centers[l.centers.length - 1] + Math.max(l.radii[l.radii.length - 1], 36) + 12)));
+  const id = narrow ? 'gauge-circles-narrow-title' : 'gauge-circles-title';
   return (
-    <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl">
-            <h1 className="text-4xl font-bold mb-4">
-              AWG Wire Size Chart & Reference Guide
-            </h1>
-            <Byline route="/guides/awg-wire-size-chart" className="mb-4 text-sm text-blue-100" linkClassName="text-white underline" />
-            <p className="text-xl text-blue-100 mb-6">
-              American Wire Gauge (AWG) reference table with diameters, resistance, ampacity and the nearest metric sizes, 18 AWG to 4/0.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link 
-                href="/calculators/wire-size-calculator" 
-                className="bg-white text-blue-900 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors inline-flex items-center gap-2"
-              >
-                <Calculator className="w-5 h-5" />
-                Wire Size Calculator
-              </Link>
-              <Link 
-                href="/guides/nec-table-310-16" 
-                className="bg-blue-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors inline-flex items-center gap-2"
-              >
-                <Table className="w-5 h-5" />
-                NEC Table 310.16
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+    <svg
+      viewBox={`0 0 ${width} ${rowHeight * rows.length}`}
+      width="100%"
+      role="img"
+      aria-labelledby={id}
+      className={clsx('h-auto', narrow ? 'max-w-[360px] sm:hidden' : 'hidden max-w-[640px] sm:block')}
+      data-src={GEO}
+    >
+      <title id={id}>{`Cross sections of ${HERO_SIZES.slice(0, -1).join(', ')} and ${HERO_SIZES[HERO_SIZES.length - 1]} AWG solid wire drawn to the same scale`}</title>
+      {laid.map(({ sizes, radii, centers }, r) =>
+        sizes.map((key, i) => {
+          const top = r * rowHeight;
+          const cy = top + (narrow ? 62 : 84);
+          return (
+            <g key={key}>
+              <circle cx={centers[i]} cy={cy} r={radii[i]} fill="#f59e0b40" stroke="#92400e" strokeWidth={1.5} />
+              <text x={centers[i]} y={top + rowHeight - 34} textAnchor="middle" fontSize={font.name} fontWeight={600} fill="#111827">
+                <Size s={key} svg />
+              </text>
+              <text x={centers[i]} y={top + rowHeight - 16} textAnchor="middle" fontSize={font.value} fill="#374151">
+                <Val v={row(key).diameter_mm} unit="mm" src={GEO} format={{ fixed: 2 }} svg />
+              </text>
+            </g>
+          );
+        }),
+      )}
+    </svg>
+  );
+}
 
-      {/* Quick Reference Card */}
-      <section className="py-8 -mt-8">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="bg-white rounded-xl shadow-xl p-6 border-2 border-blue-200">
-              <h2 className="text-2xl font-bold text-neutral-900 mb-4 flex items-center gap-2">
-                <Gauge className="w-6 h-6 text-blue-600" />
-                Quick AWG Reference - Most Common Sizes
-              </h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <h3 className="font-semibold text-blue-900 mb-2">14 AWG</h3>
-                  <ul className="text-sm space-y-1 text-blue-700">
-                    <li>• Diameter: {diameterMm('14')?.toFixed(3)} mm</li>
-                    <li>• 15 A circuits</li>
-                  </ul>
-                </div>
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <h3 className="font-semibold text-green-900 mb-2">12 AWG</h3>
-                  <ul className="text-sm space-y-1 text-green-700">
-                    <li>• Diameter: {diameterMm('12')?.toFixed(3)} mm</li>
-                    <li>• 20 A circuits</li>
-                  </ul>
-                </div>
-                <div className="bg-amber-50 p-4 rounded-lg">
-                  <h3 className="font-semibold text-amber-900 mb-2">10 AWG</h3>
-                  <ul className="text-sm space-y-1 text-amber-700">
-                    <li>• Diameter: {diameterMm('10')?.toFixed(3)} mm</li>
-                    <li>• 30 A circuits</li>
-                  </ul>
-                </div>
-                <div className="bg-purple-50 p-4 rounded-lg">
-                  <h3 className="font-semibold text-purple-900 mb-2">6 AWG</h3>
-                  <ul className="text-sm space-y-1 text-purple-700">
-                    <li>• Diameter: {diameterMm('6')?.toFixed(3)} mm</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+/** One 10 AWG cross section beside two 13 AWG ones: three gauge steps halve the area. */
+function ThreeSteps() {
+  const pxPerIn = 900;
+  const big = row('10');
+  const small = row('13');
+  const R = (big.diameter_in * pxPerIn) / 2;
+  const r = (small.diameter_in * pxPerIn) / 2;
+  const cy = 70;
+  const leftX = 16 + R;
+  const eqX = leftX + R + 34;
+  const s1 = eqX + 34 + r;
+  const s2 = s1 + 2 * r + 10;
+  const width = Math.ceil(s2 + r + 16);
+  return (
+    <svg viewBox={`0 0 ${width} 180`} width="100%" role="img" aria-labelledby="three-steps-title" className="h-auto max-w-[460px]" data-src={GEO}>
+      <title id="three-steps-title">One 10 AWG wire has about the same cross-section area as two 13 AWG wires</title>
+      <circle cx={leftX} cy={cy} r={R} fill="#f59e0b40" stroke="#92400e" strokeWidth={1.5} />
+      <text x={eqX} y={cy + 6} textAnchor="middle" fontSize={20} fill="#111827" aria-hidden="true">
+        ≈
+      </text>
+      <circle cx={s1} cy={cy} r={r} fill="#f59e0b40" stroke="#92400e" strokeWidth={1.5} />
+      <circle cx={s2} cy={cy} r={r} fill="#f59e0b40" stroke="#92400e" strokeWidth={1.5} />
+      <text x={leftX} y={150} textAnchor="middle" fontSize={15} fontWeight={600} fill="#111827">
+        <Size s="10" svg />
+      </text>
+      <text x={leftX} y={167} textAnchor="middle" fontSize={13} fill="#374151">
+        <Val v={big.area_cmil} unit="cmil" src={GEO} svg />
+      </text>
+      <text x={(s1 + s2) / 2} y={150} textAnchor="middle" fontSize={15} fontWeight={600} fill="#111827">
+        2 × <Size s="13" svg />
+      </text>
+      <text x={(s1 + s2) / 2} y={167} textAnchor="middle" fontSize={13} fill="#374151">
+        2 × <Val v={small.area_cmil} unit="cmil" src={GEO} svg />
+      </text>
+    </svg>
+  );
+}
 
-      {/* Complete AWG Table */}
-      <section className="py-8">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <Table className="w-6 h-6 text-blue-600" />
-              AWG Wire Size Table
-            </h2>
-            
-            <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden shadow-lg">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-                      <th className="px-4 py-3 text-left">AWG</th>
-                      <th className="px-4 py-3 text-center">Diameter (mm)</th>
-                      <th className="px-4 py-3 text-center">Diameter (inch)</th>
-                      <th className="px-4 py-3 text-center">Area (mm²)</th>
-                      <th className="px-4 py-3 text-center">Ω/1000 ft, solid annealed copper, 20 °C (NIST Handbook 100)</th>
-                      <th className="px-4 py-3 text-center">Cu Ampacity 75 °C</th>
-                      <th className="px-4 py-3 text-center">Al Ampacity 75 °C</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100">
-                    {AWG_CHART_ROWS.map((row) => {
-                      const cuLabel = row.copper_75c !== null ? `${row.copper_75c}${row.copperLimited ? '*' : ''}` : '—';
-                      const alLabel = row.aluminum_75c !== null ? `${row.aluminum_75c}${row.aluminumLimited ? '*' : ''}` : '—';
-                      const rowClass = row.copperLimited || row.aluminumLimited ? 'hover:bg-blue-50 bg-yellow-50' : 'hover:bg-blue-50';
-                      return (
-                        <tr key={row.awg} className={rowClass}>
-                          <td className="px-4 py-3 font-mono font-bold">{row.awg}</td>
-                          <td className="px-4 py-3 text-center">{row.diameter_mm.toFixed(3)}</td>
-                          <td className="px-4 py-3 text-center">{row.diameter_in.toFixed(4)}</td>
-                          <td className="px-4 py-3 text-center">{row.area_mm2}</td>
-                          <td className="px-4 py-3 text-center">{row.resistance_20c}</td>
-                          <td className="px-4 py-3 text-center font-semibold">{cuLabel}</td>
-                          <td className="px-4 py-3 text-center">{alLabel}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-              <div className="px-4 py-3 bg-amber-50 border-t border-amber-200">
-                <p className="text-xs text-amber-800">
-                  <strong>*</strong> {OCPD_LIMIT_NOTE}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Metric Conversion Section */}
-      <section className="py-8 bg-neutral-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <TrendingUp className="w-6 h-6 text-green-600" />
-              AWG to Metric Wire Size Conversion
-            </h2>
-            
-            <div className="grid lg:grid-cols-2 gap-6">
-              <div className="bg-white rounded-lg p-6 border border-neutral-200">
-                <h3 className="font-semibold text-neutral-900 mb-4">Common AWG to mm² Conversions</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left py-2">AWG</th>
-                        <th className="text-center py-2">mm²</th>
-                        <th className="text-center py-2">Nearest Metric</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y">
-                      {METRIC_ROWS.map((row) => (
-                        <tr key={row.awg}>
-                          <td className="py-2 font-mono">{row.awg}</td>
-                          <td className="py-2 text-center">{row.area_mm2}</td>
-                          <td className="py-2 text-center">{row.nearest_mm2} mm²</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              
-              <div className="bg-white rounded-lg p-6 border border-neutral-200">
-                <h3 className="font-semibold text-neutral-900 mb-4">AWG System Explained</h3>
-                <div className="space-y-3 text-sm text-neutral-700">
-                  <div className="flex items-start gap-2">
-                    <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                    <p>
-                      The AWG system is logarithmic - each 3-gauge decrease doubles the cross-sectional area.
-                    </p>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                    <p>
-                      Smaller AWG numbers = larger wire diameters. AWG 0000 (4/0) is the largest standard size.
-                    </p>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                    <p>
-                      For sizes larger than 4/0, kcmil (MCM) is used, representing thousands of circular mils.
-                    </p>
-                  </div>
-                  
-                  <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <p className="text-sm text-blue-900">
-                      <strong>Formula:</strong> Diameter(n) = 0.005 × 92^((36-n)/39) inches
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+// ── Sections ──────────────────────────────────────────────────────────────────────────────────────────────────────
+function GaugeCard({ k }: { k: SizeKey }) {
+  const r = row(k);
+  const listed = TABLE_310_16_ROWS.find((x) => x.size === k);
+  const limit = ocpdLimit(k, 'Cu');
+  let note: ReactNode;
+  if (!listed) note = <>Table 310.16 does not list this size.</>;
+  else if (listed.cu_60 === null)
+    note = <>Table 310.16 lists it only in the 90 °C column, and NEC 240.4(D) adds conditions before it may be used.</>;
+  else if (limit !== null)
+    note = (
+      <>
+        NEC 240.4(D) limits copper of this size to <Val v={limit} unit="A" src={OCPD} /> overcurrent protection.
+      </>
+    );
+  else note = <>Ampacities from the 2023 NEC Table 310.16 copper columns.</>;
+  return (
+    <section id={anchor(k)} data-src={GEO} aria-labelledby={`${anchor(k)}-title`} className="scroll-mt-20 rounded-md border border-gray-200 bg-white p-4">
+      <h3 id={`${anchor(k)}-title`} className="text-base font-semibold text-gray-900">
+        <Size s={k} />
+      </h3>
+      <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
+        <dt className="text-gray-600">Diameter</dt>
+        <dd>
+          <Val v={r.diameter_in} unit="in" src={GEO} format={INCH} /> (<Val v={r.diameter_mm} unit="mm" src={GEO} format={MM} />)
+        </dd>
+        <dt className="text-gray-600">Area</dt>
+        <dd>
+          <Val v={r.area_cmil} unit="cmil" src={GEO} /> (<Val v={r.area_mm2} unit="mm²" src={GEO} />)
+        </dd>
+        <dt className="text-gray-600">Copper, 20 °C</dt>
+        <dd>
+          <Val v={r.r20_cu_ohm_per_1000ft} unit="Ω" src={GEO} /> per thousand feet
+        </dd>
+        {listed && (
+          <>
+            <dt className="text-gray-600">Ampacity, Cu</dt>
+            <dd data-src={AMP}>
+              {[listed.cu_60, listed.cu_75, listed.cu_90].map((v, i) => (
+                <span key={i}>
+                  {i > 0 && ' / '}
+                  {v === null ? <Dash /> : <Val v={v} unit="A" src={AMP} />}
+                </span>
+              ))}{' '}
+              <span className="text-gray-600">(60 / 75 / 90 °C)</span>
+            </dd>
+          </>
+        )}
+      </dl>
+      <p data-src={AMP} className="mt-2 text-sm text-gray-700">
+        {note}
+      </p>
+    </section>
+  );
+}
 
-      {/* Related Tools */}
-      <section className="py-12 bg-gradient-to-r from-blue-900 to-blue-700 text-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <Calculator className="w-6 h-6" />
-              Related Calculators & Guides
-            </h2>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Link 
-                href="/calculators/wire-size-calculator"
-                className="bg-white/10 backdrop-blur rounded-lg p-4 hover:bg-white/20 transition-colors"
-              >
-                <h3 data-name="" className="font-semibold mb-2">Wire Size Calculator</h3>
-                <p className="text-sm text-blue-100">Calculate the wire size for your load</p>
-              </Link>
-              
-              <Link 
-                href="/calculators/voltage-drop-calculator"
-                className="bg-white/10 backdrop-blur rounded-lg p-4 hover:bg-white/20 transition-colors"
-              >
-                <h3 data-name="" className="font-semibold mb-2">Voltage Drop Calculator</h3>
-                <p className="text-sm text-blue-100">Check voltage loss over distance</p>
-              </Link>
-              
-              <Link 
-                href="/calculators/ampacity-calculator"
-                className="bg-white/10 backdrop-blur rounded-lg p-4 hover:bg-white/20 transition-colors"
-              >
-                <h3 data-name="" className="font-semibold mb-2">Ampacity Calculator</h3>
-                <p className="text-sm text-blue-100">Derate wire for temperature & fill</p>
-              </Link>
-              
-              <Link 
-                href="/guides/nec-table-310-16"
-                className="bg-white/10 backdrop-blur rounded-lg p-4 hover:bg-white/20 transition-colors"
-              >
-                <h3 data-name="" className="font-semibold mb-2">NEC Table 310.16</h3>
-                <p className="text-sm text-blue-100">Complete ampacity reference table</p>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+const TOC: [string, string][] = [
+  ['chart', 'AWG wire size chart'],
+  ['gauges', 'Gauge by gauge'],
+  ['meaning', 'What the gauge numbers mean'],
+  ['scaling', 'How diameter, area and resistance scale'],
+  ['metric', 'AWG to mm²'],
+  ['ampacity', 'Ampacity is set by the code'],
+  ['resistance', 'Resistance and weight'],
+  ['faq', 'Questions'],
+  ['sources', 'Sources'],
+];
 
-      {/* Standards basis + math behind AWG */}
-      <section className="py-12 bg-gradient-to-br from-slate-50 to-blue-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">The Math Behind AWG — ASTM B258 and the Geometric Progression</h2>
-            <p className="text-gray-600 mb-8">
-              AWG is not arbitrary. The numbers in the table above derive
-              from a specific geometric progression defined by ASTM B258
-              (the Standard Specification for Standard Nominal Diameters
-              and Cross-Sectional Areas of AWG Sizes of Solid Round Wires
-              Used as Electrical Conductors). Understanding the math lets
-              you derive any AWG specification from first principles.
-            </p>
+const articleData = { headline: H1, description: DESCRIPTION, url: URL, ...articleDates(ROUTE) };
 
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-200">
-                <h3 className="text-lg font-bold text-blue-900 mb-3">The geometric definition</h3>
-                <p className="text-sm text-slate-700 mb-3">
-                  AWG is anchored at two endpoints: 0000 (4/0) AWG = 0.4600&Prime;
-                  diameter, and 36 AWG = 0.0050&Prime; diameter. The 38 sizes
-                  between 4/0 and 36 are spaced in a geometric progression.
-                </p>
-                <div className="bg-blue-50 rounded p-3 font-mono text-xs space-y-1">
-                  <div>Common ratio: r = (0.4600 / 0.0050)<sup>1/39</sup> = 92<sup>1/39</sup> &asymp; 1.1229</div>
-                  <div>Diameter formula: d_n = 0.0050 &times; 92<sup>(36-n)/39</sup> inches</div>
-                  <div>Each 6-step jump multiplies diameter by ~2 (a useful approximation)</div>
-                  <div>Each 3-step jump multiplies area by ~2</div>
-                  <div>Each 10-step jump multiplies resistance by ~10</div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-200">
-                <h3 className="text-lg font-bold text-blue-900 mb-3">Above 4/0 — kcmil takes over</h3>
-                <p className="text-sm text-slate-700 mb-3">
-                  AWG runs out at 4/0 (0.4600&Prime;). Larger conductors are
-                  specified by cross-sectional area in kcmil (thousands of
-                  circular mils). 1 circular mil = the area of a circle
-                  with diameter 0.001 inch (1 mil).
-                </p>
-                <div className="bg-blue-50 rounded p-3 font-mono text-xs space-y-1">
-                  <div>Area in cmil = (diameter in mils)&sup2;</div>
-                  <div>1 kcmil = 1,000 cmil = 0.5067 mm&sup2;</div>
-                  <div>Examples:</div>
-                  <div>  4/0 AWG &asymp; 211.6 kcmil (107 mm&sup2;)</div>
-                  <div>  250 kcmil = 250,000 cmil (127 mm&sup2;)</div>
-                  <div>  500 kcmil = 500,000 cmil (253 mm&sup2;)</div>
-                  <div>  Older spec uses MCM (Roman M = 1,000); MCM = kcmil</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Stranded vs Solid */}
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-200">
-                <h3 className="text-lg font-bold text-blue-900 mb-3">Stranded vs solid</h3>
-                <p className="text-sm text-slate-700 mb-3">
-                  All AWG diameters in the table above are for SOLID
-                  conductor.
-                </p>
-                <ul className="text-sm space-y-2 text-slate-700">
-                  <li><strong>Stranded:</strong> in raceways, 8 AWG and larger shall be stranded unless permitted or required elsewhere to be solid (2023 NEC 310.3(C)).</li>
-                </ul>
-              </div>
-
-              <div className="bg-white rounded-lg p-6 shadow-sm border border-blue-200">
-                <h3 className="text-lg font-bold text-blue-900 mb-3">Insulation type</h3>
-                <p className="text-sm text-slate-700 mb-3">
-                  Two conductors of identical AWG can have very different
-                  ampacities depending on insulation rating. NEC 310.16
-                  organizes by insulation temperature class:
-                </p>
-                <ul className="text-sm space-y-1 text-slate-700">
-                  <li><strong>60 &deg;C:</strong> {INSULATION_TYPES.cu_60}</li>
-                  <li><strong>75 &deg;C:</strong> {INSULATION_TYPES.cu_75}</li>
-                  <li><strong>90 &deg;C:</strong> {INSULATION_TYPES.cu_90}</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Wire ampacity vs OCPD distinction */}
-            <div className="bg-amber-50 rounded-lg p-6 border border-amber-200">
-              <h3 className="text-lg font-bold text-amber-900 mb-3">Why 12 AWG ampacity is 25 A (75 &deg;C column) but the breaker can&rsquo;t exceed 20 A</h3>
-              <p className="text-sm text-slate-700 mb-2">
-                NEC 240.4(D) is the &ldquo;small-conductor rule&rdquo;: regardless of higher 310.16 ampacity, the OCPD on 14, 12, 10 AWG copper is capped:
-              </p>
-              <ul className="text-sm space-y-1 text-slate-700">
-                <li><strong>14 AWG:</strong> ampacity 20 A (75 &deg;C), OCPD max <strong>15 A</strong></li>
-                <li><strong>12 AWG:</strong> ampacity 25 A (75 &deg;C), OCPD max <strong>20 A</strong></li>
-                <li><strong>10 AWG:</strong> ampacity 35 A (75 &deg;C), OCPD max <strong>30 A</strong></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
+export default function AwgWireSizeChartPage() {
+  const dates = articleDates(ROUTE);
+  const r14 = row('14');
+  const r12 = row('12');
+  const r10 = row('10');
+  const r6 = row('6');
+  const r24 = row('24');
+  const r20 = row('20');
+  const limit12 = ocpdLimit('12', 'Cu');
+  const limit10 = ocpdLimit('10', 'Cu');
+  const limit14 = ocpdLimit('14', 'Cu');
+  return (
+    <article className="space-y-10 pb-12 text-base">
       <ArticleSchema article={articleData} />
       <DatasetSchema
-        path="/guides/awg-wire-size-chart"
-        name="AWG Wire Size Chart — Diameter, Cross-Section, Resistance, Ampacity"
-        alternateName={['American Wire Gauge Reference', 'AWG to mm² Conversion Chart']}
-        description="AWG (American Wire Gauge) reference table from 18 AWG through 4/0 AWG. Per-row data: conductor diameter (mm, inch), cross-sectional area (mm²), DC resistance per 1000 ft at 20 °C, and NEC 310.16 ampacity at 75 °C for both copper and aluminum."
+        path={ROUTE}
+        name="AWG wire sizes: diameter, area, resistance and weight"
+        alternateName="AWG wire size chart"
+        description="Diameter, cross-section area, 20 °C resistance and weight of solid annealed copper for AWG 0000 to 40 (NBS Handbook 100, Table 5), with calculated 75 °C and aluminum resistances, kcmil sizes 250 to 2000 and nearest IEC 60228 sizes."
         variableMeasured={[
-          { name: 'AWG size', description: 'American Wire Gauge designation per ASTM B258' },
-          { name: 'Conductor diameter (metric)', description: 'Bare conductor outside diameter', unitText: 'millimeter', unitCode: 'MMT' },
-          { name: 'Conductor diameter (imperial)', description: 'Bare conductor outside diameter', unitText: 'inch', unitCode: 'INH' },
-          { name: 'Cross-sectional area', description: 'Conductor cross-sectional area', unitText: 'square millimeter', unitCode: 'MMK' },
-          { name: 'DC resistance at 20 °C', description: 'Direct-current resistance of uncoated copper conductor', unitText: 'ohm per 1000 foot' },
-          { name: 'Copper ampacity at 75 °C', description: 'Allowable ampacity per NEC 310.16, copper conductor, 75 °C insulation rating', unitText: 'ampere', unitCode: 'AMP' },
-          { name: 'Aluminum ampacity at 75 °C', description: 'Allowable ampacity per NEC 310.16, aluminum conductor, 75 °C insulation rating', unitText: 'ampere', unitCode: 'AMP' },
+          { name: 'Diameter', unitText: 'inch', unitCode: 'INH' },
+          { name: 'Diameter', unitText: 'millimeter', unitCode: 'MMT' },
+          { name: 'Cross-section area', unitText: 'circular mil' },
+          { name: 'Cross-section area', unitText: 'square millimeter', unitCode: 'MMK' },
+          { name: 'Resistance per 1000 ft at 20 °C', unitText: 'ohm', unitCode: 'OHM' },
+          { name: 'Weight per 1000 ft', unitText: 'pound', unitCode: 'LBR' },
         ]}
-        keywords={['AWG chart', 'American Wire Gauge', 'wire size chart', 'AWG to mm2', 'wire diameter', 'wire resistance', 'wire ampacity', 'NEC 310.16']}
-        citation="NFPA 70 (NEC) 2023 Article 310 Table 310.16; ASTM B258 — Standard Specification for Standard Nominal Diameters and Cross-Sectional Areas of AWG Sizes; NIST (NBS) Handbook 100, Copper Wire Tables, Table 5"
-        spatialCoverage="United States"
-        datePublished={articleData.datePublished}
-        dateModified={articleData.dateModified}
+        keywords={['AWG', 'American Wire Gauge', 'wire gauge chart', 'wire diameter', 'circular mil']}
+        isBasedOn={[GEO, RES, IEC].map((d) => ({ name: attribution(d).publisher, url: attribution(d).url }))}
+        datePublished={dates.datePublished}
+        dateModified={dates.dateModified}
       />
-    </div>
+
+      <header className="space-y-3">
+        <h1 className="text-3xl font-bold leading-tight text-gray-900 sm:text-4xl">{H1}</h1>
+        <Byline route={ROUTE} sources className="text-sm text-gray-600" linkClassName="text-blue-700" />
+      </header>
+
+      <div className="rounded-md border border-blue-200 bg-blue-50 px-5 py-4" data-src={GEO}>
+        <p className={P}>
+          <strong>American Wire Gauge (AWG) numbers wire on a fixed geometric scale, and a smaller number is a thicker wire.</strong>{' '}
+          Every six gauge steps the diameter about halves (<Num v={SIX_STEPS} src={CALC} format={{ fixed: 3 }} prefix="×" />), and every three
+          steps the cross-section area about halves. <Size s="14" /> is <Val v={r14.diameter_in} unit="in" src={GEO} format={INCH} /> (
+          <Val v={r14.diameter_mm} unit="mm" src={GEO} format={MM} />) across; <Size s="12" /> is{' '}
+          <Val v={r12.diameter_in} unit="in" src={GEO} format={INCH} /> (<Val v={r12.diameter_mm} unit="mm" src={GEO} format={MM} />).
+        </p>
+      </div>
+
+      <Figure
+        caption={
+          <>
+            Drawn to one scale from the chart&apos;s diameters. <Size s="4" /> to <Size s="10" /> is six gauge steps, and its diameter falls
+            from <Val v={row('4').diameter_mm} unit="mm" src={GEO} format={{ fixed: 2 }} /> to{' '}
+            <Val v={r10.diameter_mm} unit="mm" src={GEO} format={{ fixed: 2 }} />.
+          </>
+        }
+      >
+        <GaugeCircles />
+        <GaugeCircles narrow />
+      </Figure>
+
+      <nav aria-label="On this page" className="rounded-md border border-gray-200 bg-white p-4">
+        <p className="mb-2 text-sm font-semibold text-gray-900">On this page</p>
+        <ol className="grid gap-1 text-sm sm:grid-cols-2">
+          {TOC.map(([id, label]) => (
+            <li key={id}>
+              <a href={`#${id}`} className={LINK}>
+                {label}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      <section aria-labelledby="chart" className="space-y-4">
+        <h2 id="chart" className={H2}>
+          AWG wire size chart
+        </h2>
+        <p className={P}>
+          Diameters and areas are for a solid round conductor, from the National Bureau of Standards copper wire tables (now NIST). A stranded
+          conductor of the same gauge has the same copper area but a larger overall diameter, and insulation adds more; neither is in this
+          data.
+        </p>
+        <DataTable id="awg-table" src={GEO} caption="AWG sizes 4/0 (0000) to 40: diameter and cross-section area, solid conductor">
+          <thead>
+            <tr>
+              <th scope="col" className={clsx(TH, STICKY_TH)}>
+                AWG
+              </th>
+              <th scope="col" className={TH}>
+                Diameter, in
+              </th>
+              <th scope="col" className={TH}>
+                Diameter, mm
+              </th>
+              <th scope="col" className={TH}>
+                Area, cmil
+              </th>
+              <th scope="col" className={TH}>
+                Area, mm²
+              </th>
+              <th scope="col" className={TH}>
+                Nearest IEC 60228 size, mm²
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {AWG_TABLE.map((r) => {
+              const key = sizeKeyFromAwgName(r.awg);
+              return (
+                <tr key={r.awg}>
+                  <th scope="row" className={clsx(TD, STICKY_TD)}>
+                    <span data-size={key}>{key === r.awg ? key : `${key} (${r.awg})`}</span>
+                  </th>
+                  <td className={TD}>
+                    <Cell v={r.diameter_in} src={GEO} format={INCH} />
+                  </td>
+                  <td className={TD}>
+                    <Cell v={r.diameter_mm} src={GEO} format={MM} />
+                  </td>
+                  <td className={TD}>
+                    <Cell v={r.area_cmil} src={GEO} />
+                  </td>
+                  <td className={TD}>
+                    <Cell v={r.area_mm2} src={GEO} />
+                  </td>
+                  <td className={TD}>
+                    <Cell v={r.iec60228_nearest_mm2} src={IEC} />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </DataTable>
+        <p className={P}>
+          Above <Size s="4/0" />, sizes are named by area in thousands of circular mils (kcmil). Copper resistances in this table are calculated
+          from the NIST copper and aluminum constants for a solid conductor of the same area.
+        </p>
+        <DataTable id="kcmil-table" src={GEO} caption="kcmil sizes 250 to 2000: area and calculated resistance at 20 °C">
+          <thead>
+            <tr>
+              <th scope="col" className={clsx(TH, STICKY_TH)}>
+                Size
+              </th>
+              <th scope="col" className={TH}>
+                Area, cmil
+              </th>
+              <th scope="col" className={TH}>
+                Area, mm²
+              </th>
+              <th scope="col" className={TH}>
+                Copper, Ω per 1,000 ft (calculated)
+              </th>
+              <th scope="col" className={TH}>
+                Aluminum, Ω per 1,000 ft (calculated)
+              </th>
+              <th scope="col" className={TH}>
+                Nearest IEC 60228 size, mm²
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {KCMIL_TABLE.map((r) => (
+              <tr key={r.kcmil}>
+                <th scope="row" className={clsx(TD, STICKY_TD)}>
+                  <Size s={String(r.kcmil)} />
+                </th>
+                <td className={TD}>
+                  <Cell v={r.area_cmil} src={GEO} />
+                </td>
+                <td className={TD}>
+                  <Cell v={r.area_mm2} src={GEO} />
+                </td>
+                <td className={TD}>
+                  <Cell v={r.r20_cu_ohm_per_1000ft_derived} src={RES} />
+                </td>
+                <td className={TD}>
+                  <Cell v={r.r20_al_ech19_ohm_per_1000ft_derived} src={RES} />
+                </td>
+                <td className={TD}>
+                  <Cell v={r.iec60228_nearest_mm2} src={IEC} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </DataTable>
+      </section>
+
+      <section aria-labelledby="gauges" className="space-y-4">
+        <h2 id="gauges" className={H2}>
+          Gauge by gauge
+        </h2>
+        <p className={P}>
+          The same values for fourteen sizes, each with its own link. Ampacities are the copper columns of the 2023 NEC Table 310.16.
+        </p>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {CARD_SIZES.map((k) => (
+            <GaugeCard key={k} k={k} />
+          ))}
+        </div>
+      </section>
+
+      <section aria-labelledby="meaning" className="space-y-4">
+        <h2 id="meaning" className={H2}>
+          What the gauge numbers mean
+        </h2>
+        <p className={P} data-src={GEO}>
+          AWG is fixed by two diameters: <Size s="4/0" /> (written 0000) is <Val v={SIZE_0000.diameter_in} unit="in" src={GEO} format={INCH} />{' '}
+          and <Size s="36" /> is <Val v={SIZE_36.diameter_in} unit="in" src={GEO} format={INCH} />, with{' '}
+          <Num v={AWG_DEFINITION.steps} src={GEO} /> equal steps between them. Each step multiplies the diameter by the same ratio, so the
+          sizes form a geometric series.
+        </p>
+        <p className={P} data-src={GEO}>
+          The numbers count down as wires get thicker. Past <Size s="1" /> the scale continues with 0, 00, 000 and 0000, said &quot;one
+          aught&quot; to &quot;four aught&quot; and written <Size s="1/0" /> to <Size s="4/0" />. 4/0 means four zeros, not a fraction. Larger
+          conductors are named by area in kcmil, starting at <Size s="250" />.
+        </p>
+        <p className={P}>
+          A circular mil is the area of a circle one mil (one thousandth of an inch) across. A round conductor&apos;s area in circular mils
+          is its diameter in mils squared, so <Size s="4/0" /> at <Num v={SIZE_0000.diameter_mils} src={GEO} /> mils across has an area
+          of <Val v={SIZE_0000.area_cmil} unit="cmil" src={GEO} />.
+        </p>
+      </section>
+
+      <section aria-labelledby="scaling" className="space-y-4">
+        <h2 id="scaling" className={H2}>
+          How diameter, area and resistance scale
+        </h2>
+        <p className={P}>
+          One gauge step changes the diameter by a factor of <Num v={STEP_RATIO} src={GEO} format={{ fixed: 4 }} />. Three rules follow, each
+          worked out from the AWG definition:
+        </p>
+        <ul className="list-disc space-y-2 pl-6 text-gray-800">
+          <li>
+            <strong>Six steps:</strong> the diameter changes by <Num v={SIX_STEPS} src={CALC} format={{ fixed: 3 }} prefix="×" />, about double
+            or half.
+          </li>
+          <li>
+            <strong>Three steps:</strong> the area changes by <Num v={THREE_STEPS_AREA} src={CALC} format={{ fixed: 3 }} prefix="×" />, so the
+            resistance per foot about doubles or halves.
+          </li>
+          <li>
+            <strong>Ten steps:</strong> the area, and with it the resistance, changes by{' '}
+            <Num v={TEN_STEPS_RESISTANCE} src={CALC} format={{ fixed: 2 }} prefix="×" />, close to a factor of ten.
+          </li>
+        </ul>
+        <Figure
+          caption={
+            <>
+              <Size s="10" /> is three gauge steps above <Size s="13" />, so it carries about as much copper as two of them and has about
+              half their resistance per foot.
+            </>
+          }
+        >
+          <ThreeSteps />
+        </Figure>
+        <p className={P} data-src={GEO}>
+          The general formula is d = <Val v={AWG_DEFINITION.d_36_in} unit="in" src={GEO} format={INCH} /> × <Num v={SPAN} src={GEO} />
+          <sup>(36 − n) / {AWG_DEFINITION.steps}</sup>, where n is the gauge number and 1/0 to 4/0 count as 0, −1, −2 and −3.
+        </p>
+      </section>
+
+      <section aria-labelledby="metric" className="space-y-4">
+        <h2 id="metric" className={H2}>
+          AWG to mm²
+        </h2>
+        <p className={P}>
+          Metric cable is sold in the IEC 60228 series of nominal areas, and those sizes do not line up with AWG. <Size s="14" /> has{' '}
+          <Val v={r14.area_mm2} unit="mm²" src={GEO} />, and the next IEC size up is{' '}
+          <Val v={r14.iec60228_next_larger_mm2 as number} unit="mm²" src={IEC} />. When you replace one with the other, compare areas and
+          check what the local code requires; the closest size can be the smaller one.
+        </p>
+        <DataTable id="metric-table" src={GEO} caption="AWG area in mm² beside the IEC 60228 sizes">
+          <thead>
+            <tr>
+              <th scope="col" className={clsx(TH, STICKY_TH)}>
+                AWG
+              </th>
+              <th scope="col" className={TH}>
+                Area, mm²
+              </th>
+              <th scope="col" className={TH}>
+                Nearest IEC size, mm²
+              </th>
+              <th scope="col" className={TH}>
+                Next IEC size up, mm²
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {AWG_TABLE.filter((r) => r.iec60228_nearest_mm2 !== null && r.iec60228_nearest_mm2 !== undefined).map((r) => {
+              const key = sizeKeyFromAwgName(r.awg);
+              return (
+                <tr key={r.awg}>
+                  <th scope="row" className={clsx(TD, STICKY_TD)}>
+                    <Size s={key} />
+                  </th>
+                  <td className={TD}>
+                    <Cell v={r.area_mm2} src={GEO} />
+                  </td>
+                  <td className={TD}>
+                    <Cell v={r.iec60228_nearest_mm2} src={IEC} />
+                  </td>
+                  <td className={TD}>
+                    <Cell v={r.iec60228_next_larger_mm2} src={IEC} />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </DataTable>
+        <p className="text-sm text-gray-700">
+          Rows stop at <Size s="21" /> because smaller gauges fall below the smallest IEC 60228 size in this data.
+        </p>
+      </section>
+
+      <section aria-labelledby="ampacity" className="space-y-4">
+        <h2 id="ampacity" className={H2}>
+          Ampacity is set by the code
+        </h2>
+        <p className={P}>
+          A gauge fixes the copper&apos;s size. How much current the wire may carry is set by the electrical code, and it depends on the
+          insulation&apos;s temperature rating, the surrounding temperature and how many current-carrying conductors run together. The table
+          below is an excerpt of the 2023 NEC Table 310.16 at its base conditions; the{' '}
+          <Link href="/guides/nec-table-310-16" className={LINK}>
+            full Table 310.16 page
+          </Link>{' '}
+          has every size and the corrections.
+        </p>
+        <DataTable id="ampacity-table" src={AMP} caption="2023 NEC Table 310.16 excerpt, amperes, with the 240.4(D) protection limit for copper">
+          <thead>
+            <tr>
+              <th scope="col" className={clsx(TH, STICKY_TH)}>
+                AWG
+              </th>
+              <th scope="col" className={TH}>
+                Cu 60 °C
+              </th>
+              <th scope="col" className={TH}>
+                Cu 75 °C
+              </th>
+              <th scope="col" className={TH}>
+                Cu 90 °C
+              </th>
+              <th scope="col" className={TH}>
+                Al 60 °C
+              </th>
+              <th scope="col" className={TH}>
+                Al 75 °C
+              </th>
+              <th scope="col" className={TH}>
+                Al 90 °C
+              </th>
+              <th scope="col" className={TH}>
+                Cu protection limit, 240.4(D)
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {AMPACITY_SIZES.map((k) => (
+              <tr key={k}>
+                <th scope="row" className={clsx(TD, STICKY_TD)}>
+                  <Size s={k} />
+                </th>
+                {(['cu_60', 'cu_75', 'cu_90', 'al_60', 'al_75', 'al_90'] as const).map((c) => (
+                  <td key={c} className={TD}>
+                    <Cell v={amp(k, c)} src={AMP} />
+                  </td>
+                ))}
+                <td className={TD}>
+                  <Cell v={ocpdLimit(k, 'Cu')} src={OCPD} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </DataTable>
+        <p className={P}>
+          Under 2023 NEC 240.4(D), the overcurrent protection for <Size s="14" />, <Size s="12" /> and <Size s="10" /> copper may not exceed{' '}
+          <Val v={limit14 as number} unit="A" src={OCPD} />, <Val v={limit12 as number} unit="A" src={OCPD} /> and{' '}
+          <Val v={limit10 as number} unit="A" src={OCPD} />, even where a temperature column lists more. This limit applies to the breaker or
+          fuse, not to the wire&apos;s ampacity.
+        </p>
+        <p className={P} data-src={AMP}>
+          Gauge also decides whether solid wire is allowed: under 2023 NEC 310.3(C), conductors <Size s="8" /> and larger installed in a
+          raceway must be stranded unless the Code permits or requires otherwise elsewhere.
+        </p>
+      </section>
+
+      <section aria-labelledby="resistance" className="space-y-4">
+        <h2 id="resistance" className={H2}>
+          Resistance and weight
+        </h2>
+        <p className={P} data-src={RES}>
+          The 20 °C copper resistance and the weight come from the NIST copper wire tables for solid annealed copper. The 75 °C column and the
+          aluminum column are calculated by this site from NIST&apos;s constants and are marked as such; a stranded conductor measures slightly
+          higher than these solid values.
+        </p>
+        <p className={P} data-src={RES}>
+          The 75 °C values use R<sub>75</sub> = R<sub>20</sub> × (1 + <Num v={AWG_CONSTANTS.copper_alpha_per_C_20C} src={RES} /> × 55), the
+          copper temperature coefficient from NIST. Aluminum is EC-H19 at <Val v={AWG_CONSTANTS.aluminum_ECH19_pct_IACS} unit="%" src={RES} />{' '}
+          IACS, given from <Size s="12" /> up. For another temperature or a run length, use the{' '}
+          <Link href="/calculators/wire-resistance-calculator" className={LINK}>
+            wire resistance calculator
+          </Link>
+          ; for the drop on a circuit, the{' '}
+          <Link href="/calculators/voltage-drop-calculator" className={LINK}>
+            voltage drop calculator
+          </Link>{' '}
+          or, for low-voltage DC runs, the{' '}
+          <Link href="/calculators/low-voltage-calculator" className={LINK}>
+            low voltage calculator
+          </Link>
+          .
+        </p>
+        <DataTable id="resistance-table" src={GEO} caption="Resistance and weight per AWG size, solid conductor">
+          <thead>
+            <tr>
+              <th scope="col" className={clsx(TH, STICKY_TH)}>
+                AWG
+              </th>
+              <th scope="col" className={TH}>
+                Copper 20 °C, Ω per 1,000 ft
+              </th>
+              <th scope="col" className={TH}>
+                Copper 20 °C, Ω per km
+              </th>
+              <th scope="col" className={TH}>
+                Copper 75 °C, Ω per 1,000 ft (calculated)
+              </th>
+              <th scope="col" className={TH}>
+                Aluminum 20 °C, Ω per 1,000 ft (calculated)
+              </th>
+              <th scope="col" className={TH}>
+                Copper, lb per 1,000 ft
+              </th>
+              <th scope="col" className={TH}>
+                Copper, kg per km
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {AWG_TABLE.map((r) => {
+              const key = sizeKeyFromAwgName(r.awg);
+              const al = 'r20_al_ech19_ohm_per_1000ft_derived' in r ? r.r20_al_ech19_ohm_per_1000ft_derived : null;
+              return (
+                <tr key={r.awg}>
+                  <th scope="row" className={clsx(TD, STICKY_TD)}>
+                    <Size s={key} />
+                  </th>
+                  <td className={TD}>
+                    <Cell v={r.r20_cu_ohm_per_1000ft} src={GEO} />
+                  </td>
+                  <td className={TD}>
+                    <Cell v={r.r20_cu_ohm_per_km} src={GEO} />
+                  </td>
+                  <td className={TD}>
+                    <Cell v={r.r75_cu_solid_ohm_per_1000ft_derived} src={RES} />
+                  </td>
+                  <td className={TD}>
+                    <Cell v={al} src={RES} />
+                  </td>
+                  <td className={TD}>
+                    <Cell v={r.weight_cu_lb_per_1000ft} src={GEO} />
+                  </td>
+                  <td className={TD}>
+                    <Cell v={r.weight_cu_kg_per_km} src={GEO} />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </DataTable>
+      </section>
+
+      <section aria-labelledby="faq" className="space-y-5">
+        <h2 id="faq" className={H2}>
+          Questions
+        </h2>
+        <div className="space-y-1">
+          <h3 className={H3}>What does AWG mean?</h3>
+          <p className={P} data-src={GEO}>
+            American Wire Gauge, the standard series of wire sizes used in the United States. Its numbers run from 0000 (<Size s="4/0" />) for
+            the thickest wire to <Size s="40" /> and beyond for the thinnest.
+          </p>
+        </div>
+        <div className="space-y-1">
+          <h3 className={H3}>
+            Is <Size s="6" /> bigger than <Size s="24" />?
+          </h3>
+          <p className={P}>
+            Yes. A smaller gauge number is a thicker wire. <Size s="6" /> is <Val v={r6.diameter_mm} unit="mm" src={GEO} format={MM} />{' '}
+            across and <Size s="24" /> is <Val v={r24.diameter_mm} unit="mm" src={GEO} format={MM} />, about{' '}
+            <Num v={diameterRatio(18)} src={CALC} format={{ fixed: 1 }} /> times the diameter.
+          </p>
+        </div>
+        <div className="space-y-1">
+          <h3 className={H3}>How are AWG sizes calculated?</h3>
+          <p className={P}>
+            From two fixed diameters, <Size s="4/0" /> and <Size s="36" />, with <Num v={AWG_DEFINITION.steps} src={GEO} /> equal ratio
+            steps between them. Each step changes the diameter by <Num v={STEP_RATIO} src={GEO} format={{ fixed: 4 }} />; the formula is under{' '}
+            <a href="#scaling" className={LINK}>
+              how diameter, area and resistance scale
+            </a>
+            .
+          </p>
+        </div>
+        <div className="space-y-1">
+          <h3 className={H3}>
+            What is <Size s="14" /> in mm²?
+          </h3>
+          <p className={P}>
+            <Val v={r14.area_mm2} unit="mm²" src={GEO} />. The nearest IEC 60228 size is{' '}
+            <Val v={r14.iec60228_nearest_mm2 as number} unit="mm²" src={IEC} />, and the next one up is{' '}
+            <Val v={r14.iec60228_next_larger_mm2 as number} unit="mm²" src={IEC} />.
+          </p>
+        </div>
+        <div className="space-y-1">
+          <h3 className={H3}>
+            What is the diameter of <Size s="20" /> wire in mm?
+          </h3>
+          <p className={P}>
+            <Val v={r20.diameter_mm} unit="mm" src={GEO} format={MM} /> (<Val v={r20.diameter_in} unit="in" src={GEO} format={INCH} />) for a
+            solid conductor. Stranded and insulated wire is larger overall.
+          </p>
+        </div>
+        <div className="space-y-1">
+          <h3 className={H3}>
+            What do <span data-size="1/0">1/0</span> and <span data-size="4/0">4/0</span> mean?
+          </h3>
+          <p className={P} data-src={GEO}>
+            They are the gauges written 0 and 0000, one size and four sizes thicker than <Size s="1" />. <Size s="4/0" /> is the largest AWG
+            size, at <Val v={SIZE_0000.area_cmil} unit="cmil" src={GEO} />; the next common size is <Size s="250" />.
+          </p>
+        </div>
+        <div className="space-y-1">
+          <h3 className={H3}>
+            What is the difference between <Size s="10" /> and <Size s="12" />?
+          </h3>
+          <p className={P}>
+            <Size s="10" /> is two gauge steps thicker: <Val v={r10.diameter_mm} unit="mm" src={GEO} format={MM} /> against{' '}
+            <Val v={r12.diameter_mm} unit="mm" src={GEO} format={MM} />, with <Num v={areaRatio(2)} src={CALC} format={{ fixed: 2 }} /> times
+            the area and correspondingly lower resistance. Under 2023 NEC 240.4(D), <Size s="10" /> copper may be protected at up to{' '}
+            <Val v={limit10 as number} unit="A" src={OCPD} /> and <Size s="12" /> copper at up to <Val v={limit12 as number} unit="A" src={OCPD} />.
+          </p>
+        </div>
+        <div className="space-y-1">
+          <h3 className={H3}>
+            How much current can <Size s="12" /> copper carry?
+          </h3>
+          <p className={P} data-src={AMP}>
+            Table 310.16 (2023 NEC) lists <Val v={amp('12', 'cu_60') as number} unit="A" src={AMP} />,{' '}
+            <Val v={amp('12', 'cu_75') as number} unit="A" src={AMP} /> and <Val v={amp('12', 'cu_90') as number} unit="A" src={AMP} /> in its
+            60, 75 and 90 °C columns, for up to three current-carrying conductors at 30 °C. NEC 240.4(D) limits the breaker or fuse to{' '}
+            <Val v={limit12 as number} unit="A" src={OCPD} />. Higher ambient temperatures and more conductors lower the ampacity; the{' '}
+            <Link href="/calculators/ampacity-calculator" className={LINK}>
+              ampacity calculator
+            </Link>{' '}
+            applies both corrections.
+          </p>
+        </div>
+      </section>
+
+      <section aria-label="Sources and method" className="space-y-3 border-t border-gray-200 pt-6 text-sm text-gray-700">
+        <Sources domains={SOURCE_DOMAINS} headingClassName={H2} listClassName="list-disc space-y-1 pl-6" linkClassName={LINK} />
+        <p data-src={AMP}>
+          Values marked calculated are worked out by this site from NIST&apos;s constants; the{' '}
+          <Link href="/methodology" className={LINK}>
+            methodology page
+          </Link>{' '}
+          gives each formula. ASTM B258 defines the AWG diameters; its text is not reproduced here. NFPA 70®, National Electrical Code® and
+          NEC® are registered trademarks of the National Fire Protection Association; NEC values are shown as data with attribution.
+        </p>
+      </section>
+    </article>
   );
 }

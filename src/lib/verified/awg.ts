@@ -31,6 +31,11 @@ export function sizeKeyFromAwgName(name: string): SizeKey {
   return AWG_NAME_TO_OUGHT[name] ?? name;
 }
 
+/** All awg.json AWG rows in table order, 0000 to 40. */
+export const AWG_TABLE: AwgRow[] = awgData.awg;
+/** All awg.json kcmil rows in table order, 250 to 2000 kcmil. */
+export const KCMIL_TABLE: KcmilRow[] = awgData.kcmil;
+
 const AWG_ROWS = new Map<SizeKey, AwgRow>(awgData.awg.map((row) => [sizeKeyFromAwgName(row.awg), row]));
 const KCMIL_ROWS = new Map<SizeKey, KcmilRow>(awgData.kcmil.map((row) => [String(row.kcmil), row]));
 

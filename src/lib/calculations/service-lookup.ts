@@ -1,7 +1,7 @@
 // 120/240 V single-phase dwelling service or main power feeder: conductor sizes from NEC Table 310.12, then the
 // grounding electrode conductor from Table 250.66 for each of those conductors (src/lib/verified/nec-250-66.ts turns
 // each Table 250.66 cell into an area range).
-import { table31012, TABLE_310_12_ROWS } from '../verified/nec-310-12';
+import { SERVICE_AMPACITY_PERCENT, table31012, TABLE_310_12_ROWS } from '../verified/nec-310-12';
 import { gec } from '../verified/nec-250-66';
 import type { GecSizes } from '../verified/nec-250-66';
 import type { SizeKey } from '../verified/awg';
@@ -15,6 +15,11 @@ export type { GecSizes } from '../verified/nec-250-66';
 // The names before WSZ-003a, for the guides
 export { table31012 as serviceConductors } from '../verified/nec-310-12';
 export { gec as gecForServiceConductor } from '../verified/nec-250-66';
+
+/** 310.12(A): the least ampacity a dwelling service conductor needs for a service rating, in amperes (83 % of it). */
+export function minimumServiceAmpacity(ratingA: number): number {
+  return (ratingA * SERVICE_AMPACITY_PERCENT) / 100;
+}
 
 export const NO_ROW_MESSAGE = 'Table 310.12 has no row for this rating.';
 export const SCOPE_LINES = [

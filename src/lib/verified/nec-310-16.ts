@@ -36,6 +36,11 @@ if (!AMBIENT) throw new Error('nec-310-16.json: the title no longer names the am
 /** The ambient temperature the table's values assume, read from the file's title: 30 °C (86 °F). */
 export const TABLE_AMBIENT = { c: Number(AMBIENT[1]), f: Number(AMBIENT[2]) };
 
+/** Insulation types per temperature column as the file lists them (keyed by 60, 75, 90; written for copper). */
+export const COLUMN_TYPES: Record<AmpacityColumn, string> = Object.fromEntries(
+  Object.entries(table.columns_types).map(([key, types]) => [Number(key.split('_')[1]), types]),
+) as Record<AmpacityColumn, string>;
+
 /** The temperature columns of the table (columns_types: cu_60, cu_75, cu_90), coolest first. */
 export const AMPACITY_COLUMNS = Object.keys(table.columns_types).map((key) => Number(key.split('_')[1]) as AmpacityColumn);
 
