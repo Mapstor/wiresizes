@@ -29,6 +29,6 @@ path,template,words,uncited_auto,prose_auto,func_auto,sweep,S,S_bad,P,P_bad,D,D_
 /about,about,360,8,0,1,P2 schema-missing,todo,,clean,,todo,,todo,,2026-11-10,WSZ-004b: sentence linking /methodology
 /contact,about,61,4,0,2,P2 schema-missing; P2 thin-page,todo,,clean,,todo,,todo,,2026-11-09,
 /methodology,about,3356,0,0,,,done,0,clean,,todo,,todo,,2026-11-11,"WSZ-004b: new page; every number traced (gates b and c enforced, uncited 0); D and F wait on the Claude in Chrome check at 390 and 1280 px; WSZ-005a: IEC 60228 and 2026 NEC sections, cites the two table guides; WSZ-005b: cites the homepage under the sources it lists (check 24). S: the nec-2026-edition source link (Minnesota DLI PDF) returns 404 since at least 2026-11-11"
-/disclaimer,legal,135,0,0,2,P2 schema-missing; P2 thin-page,n/a,,n/a,,n/a,,n/a,,2026-11-09,
-/privacy,legal,470,15,0,1,P2 schema-missing,n/a,,n/a,,n/a,,n/a,,2026-11-09,
-/terms,legal,183,3,0,1,P2 schema-missing,n/a,,n/a,,n/a,,n/a,,2026-11-09,
+/disclaimer,legal,135,0,0,2,P2 schema-missing; P2 thin-page,n/a,,n/a,,todo,,todo,,2026-11-11,D and F in scope from 2026-11-11 (owner; D-24); S and P stay n/a
+/privacy,legal,470,15,0,1,P2 schema-missing,n/a,,n/a,,todo,,todo,,2026-11-11,D and F in scope from 2026-11-11 (owner; D-24); S and P stay n/a
+/terms,legal,183,3,0,1,P2 schema-missing,n/a,,n/a,,todo,,todo,,2026-11-11,D and F in scope from 2026-11-11 (owner; D-24); S and P stay n/a
