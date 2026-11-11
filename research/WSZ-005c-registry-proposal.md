@@ -61,7 +61,7 @@ Keep one row, point its url at the DLI minutes and leave NFPA's dates in it. Tha
 
 - [DLI minutes, Sept. 25, 2025](https://www.dli.mn.gov/sites/default/files/pdf/NEC-2026-adoption-review-092525-minutes.pdf): 23 pages; Attachment A from p. 9.
 - [DLI minutes, Oct. 28, 2025](https://www.dli.mn.gov/sites/default/files/pdf/NEC-2026-adoption-review-102825-minutes.pdf): the same Attachment A and the 230.85 note.
-- [Minnesota Board of Electricity minutes, Jan. 15, 2026](https://www.dli.mn.gov/sites/default/files/pdf/boe-minutes011526.pdf): Minnesota's 2026 NEC effective date, July 1, 2026, or five business days after the notice of adoption, whichever is later. This belongs to WSZ-005c's adoption rows, not this row.
+- [Minnesota Board of Electricity minutes, Jan. 15, 2026](https://www.dli.mn.gov/sites/default/files/pdf/boe-minutes011526.pdf): Minnesota's 2026 NEC effective date, July 1, 2026, or five business days after the notice of adoption, whichever is later. This belongs to the adoption data, not this row. data/verified/nec-adoption.json already has the resulting date, Aug. 17, 2026, from DLI's codes page.
 - [DLI 2026 NEC FAQ](https://www.dli.mn.gov/sites/default/files/pdf/NECFAQ26.pdf), revised Oct. 5, 2026.
 - [NFPA Standards Council Final Minutes, Aug. 18–20, 2025](https://content.nfpa.org/-/media/Project/Storefront/Catalog/Files/Codes-and-standards/standards-council/August-2025/SC_Final_Minutes_08_2025.pdf): 22 pages.
 - [NFPA Standards Council Final Minutes, Aug. 18–20, 2026](https://content.nfpa.org/-/media/Project/Storefront/Catalog/Files/Codes-and-standards/standards-council/August-2026/SC_Final_Minutes_08_2026.pdf).
