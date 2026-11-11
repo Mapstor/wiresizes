@@ -15,7 +15,7 @@ import { formatValue } from '@/lib/calculations/format';
 import { GROUND_WIRE_RATINGS } from '@/lib/calculations/grounding';
 import { ALUMINUM_ALPHA, COPPER_ALPHA, REFERENCE_TEMP_C } from '@/lib/calculations/resistance';
 import { RESISTANCE_TEMP_C } from '@/lib/calculations/voltage-drop';
-import { CALCULATOR_NAMES, METHODOLOGY_EXTRA_SECTIONS, METHODOLOGY_ROUTE, METHODOLOGY_SECTIONS } from '@/lib/methodology';
+import { CITED_PAGE_NAMES, METHODOLOGY_EXTRA_SECTIONS, METHODOLOGY_ROUTE, METHODOLOGY_SECTIONS } from '@/lib/methodology';
 import type { MethodologySection } from '@/lib/methodology';
 import { AWG_CONSTANTS, AWG_DEFINITION, awgRow, kcmilRow } from '@/lib/verified/awg';
 import { ROWS_240_4_D } from '@/lib/verified/nec-240-4-d';
@@ -143,7 +143,7 @@ function Formulas({ src, rows }: { src: string; rows: [string, ReactNode][] }) {
   );
 }
 
-/** The source's link, publisher, retrieval month and the calculators that list it under Sources. */
+/** The source's link, publisher, retrieval month and the pages that list it under Sources. */
 function SourceFacts({ s }: { s: MethodologySection }) {
   const { text, publisher, url, verified_date } = attribution(s.domain);
   const { short } = attributionParts(text);
@@ -167,7 +167,7 @@ function SourceFacts({ s }: { s: MethodologySection }) {
           <span key={route}>
             {i > 0 && ', '}
             <Link href={route} data-name="" className={LINK}>
-              {CALCULATOR_NAMES[route]}
+              {CITED_PAGE_NAMES[route]}
             </Link>
           </span>
         ))}
@@ -226,8 +226,8 @@ export default function MethodologyPage() {
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
           has a section below: what it is and which edition was used, where it was read, how the calculators use it,
           and where that use stops. The first section shows how the wire size calculator puts several of them
-          together. Every calculator page, the AWG wire size chart and the NEC Table 310.16 page also list their sources
-          under Sources, near the bottom of the page.
+          together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page and the homepage also list
+          their sources under Sources, near the bottom of the page.
         </p>
         <p>
           Code values are from NFPA 70, the National Electrical Code (NEC), 2023 edition, unless a section says

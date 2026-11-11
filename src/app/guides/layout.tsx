@@ -1,161 +1,26 @@
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { BookOpen, Calculator, Zap, Target, BarChart3, Table, FileText, Home, Car } from 'lucide-react';
+import type { Metadata } from 'next';
+import { GuidesFrame } from '@/components/layout/GuidesFrame';
+import type { NavGroup, NavLink } from '@/components/layout/GuidesFrame';
+import { ROUTES, sectionGroups } from '@/lib/routes';
 
-export const metadata: Metadata = {
-  title: 'Electrical Guides',
-  description: 'Comprehensive electrical engineering guides covering wire sizing, power calculations and NEC codes.',
-};
+// The guides' frame (WSZ-005b): the guide navigation from the route list (src/lib/routes.ts, D-26), placed by
+// GuidesFrame after each guide's content. Only names and paths reach the client frame.
+const GUIDES: NavGroup[] = sectionGroups('guides').map(({ group, routes }) => ({
+  id: group.id,
+  title: group.title,
+  links: routes.map(({ path, name }) => ({ path, name })),
+}));
 
-const GUIDES = [
-  {
-    slug: 'awg-wire-size-chart',
-    title: 'AWG Wire Size Chart & Reference Guide',
-    icon: Table,
-    color: 'blue',
-  },
-  {
-    slug: 'nec-table-310-16',
-    title: 'NEC Table 310.16',
-    icon: FileText,
-    color: 'green',
-  },
-  {
-    slug: 'wire-size-for-200-amp',
-    title: 'Wire Size for 200 Amp Service',
-    icon: Home,
-    color: 'amber',
-  },
-  {
-    slug: 'wire-size-for-100-amp',
-    title: '100 Amp Wire Size Guide',
-    icon: Home,
-    color: 'amber',
-  },
-  {
-    slug: 'wire-size-for-ev-charger',
-    title: 'EV Charger Wire Size Guide',
-    icon: Car,
-    color: 'purple',
-  },
-  {
-    slug: 'electrical-power-calculations',
-    title: 'Electrical Power Calculations',
-    description: 'Master the fundamentals of electrical power, current, voltage, and energy calculations',
-    icon: Calculator,
-    color: 'blue',
-    topics: ['Watts, Amps, Volts', 'Power Factor', 'Single & Three Phase', "Ohm's Law"]
-  },
-  {
-    slug: 'nec-code-compliance',
-    title: 'NEC Code Compliance Guide',
-    description: 'Navigate the National Electrical Code requirements for safe electrical installations',
-    icon: Target,
-    color: 'amber',
-    topics: ['Wire Sizing Rules', 'Circuit Protection', 'Grounding', 'Load Calculations']
-  },
-  {
-    slug: 'power-factor-explained',
-    title: 'Power Factor Explained',
-    description: 'Understanding reactive power, apparent power, and power factor correction',
-    icon: BarChart3,
-    color: 'green',
-    topics: ['Real vs Apparent Power', 'Inductive Loads', 'Capacitive Correction', 'Efficiency']
-  },
-  {
-    slug: 'single-vs-three-phase',
-    title: 'Single vs Three Phase Systems',
-    description: 'Compare electrical distribution systems and their applications',
-    icon: Zap,
-    color: 'purple',
-    topics: ['Voltage Systems', 'Load Distribution', 'Motor Applications', 'Power Transmission']
-  },
-];
+const CALCULATORS: NavLink[] = ROUTES.filter((r) => r.guidesNav).map(({ path, name }) => ({ path, name }));
 
-export default function GuidesLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+// A title without a template: the guide pages below keep their titles as written, without the root layout's
+// " | WireSizes.com" (the /guides hub, in this segment, still gets it). Every guide sets its own title and description.
+export const metadata: Metadata = { title: 'Electrical Guides' };
+
+export default function GuidesLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center gap-3">
-            <BookOpen className="w-8 h-8 text-primary-600" />
-            <span className="text-3xl font-bold text-gray-900">Electrical Guides</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 py-8">
-        {/* min-w-0 on grid children prevents max-content sizing from wide
-            tables in {children} bleeding into the sidebar column on mobile. */}
-        <div className="grid lg:grid-cols-4 gap-8">
-          {/* Sidebar Navigation */}
-          <div className="lg:col-span-1 min-w-0">
-            <div className="bg-white rounded-lg shadow-sm border p-6 sticky top-8">
-              <h2 className="font-semibold text-gray-900 mb-4">Guide Topics</h2>
-              <nav className="space-y-2">
-                {GUIDES.map((guide) => {
-                  const IconComponent = guide.icon;
-                  return (
-                    <Link
-                      key={guide.slug}
-                      href={`/guides/${guide.slug}`}
-                      className={`flex items-center gap-3 p-3 rounded-lg transition-colors hover:bg-${guide.color}-50 hover:text-${guide.color}-700`}
-                    >
-                      <IconComponent className={`w-5 h-5 text-${guide.color}-600`} />
-                      <span className="text-sm font-medium" data-name="">{guide.title}</span>
-                    </Link>
-                  );
-                })}
-              </nav>
-
-              {/* Quick Calculator Links */}
-              <div className="mt-8 pt-6 border-t">
-                <h3 className="font-semibold text-gray-900 mb-4">Quick Calculators</h3>
-                <div className="space-y-2">
-                  <Link
-                    data-name=""
-                    href="/calculators/wire-size-calculator"
-                    className="block text-sm text-primary-600 hover:text-primary-700 p-2 rounded hover:bg-primary-50"
-                  >
-                    Wire Size Calculator
-                  </Link>
-                  <Link
-                    data-name=""
-                    href="/calculators/voltage-drop-calculator"
-                    className="block text-sm text-primary-600 hover:text-primary-700 p-2 rounded hover:bg-primary-50"
-                  >
-                    Voltage Drop Calculator
-                  </Link>
-                  <Link
-                    data-name=""
-                    href="/calculators/amps-to-watts-calculator"
-                    className="block text-sm text-primary-600 hover:text-primary-700 p-2 rounded hover:bg-primary-50"
-                  >
-                    Amps to Watts Calculator
-                  </Link>
-                  <Link
-                    data-name=""
-                    href="/calculators"
-                    className="block text-sm font-medium text-gray-700 hover:text-primary-700 p-2 rounded hover:bg-gray-50"
-                  >
-                    View All Calculators →
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Main Content */}
-          <div className="lg:col-span-3 min-w-0">
-            {children}
-          </div>
-        </div>
-      </div>
-    </div>
+    <GuidesFrame guides={GUIDES} calculators={CALCULATORS}>
+      {children}
+    </GuidesFrame>
   );
 }

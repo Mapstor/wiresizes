@@ -1,363 +1,284 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
+import { clsx } from 'clsx';
+import { DataTable, STICKY_TD, STICKY_TH, TD, TH } from '@/components/content/DataTable';
+import { EditionNote } from '@/components/content/EditionNote';
+import { Num } from '@/components/content/Num';
+import { INDEX_LINK, RouteLinks } from '@/components/content/RouteIndex';
+import { Size } from '@/components/content/Size';
+import { Sources } from '@/components/content/Sources';
+import { Val } from '@/components/content/Val';
 import { ORGANIZATION, ORGANIZATION_REF } from '@/lib/identity';
-import {
-  Calculator,
-  Zap,
-  ArrowRight,
-  AlertTriangle,
-  Cpu,
-  Power,
-} from 'lucide-react';
+import { awgRow } from '@/lib/verified/awg';
+import type { AwgRow, SizeKey } from '@/lib/verified/awg';
+import { ROWS_240_4_D } from '@/lib/verified/nec-240-4-d';
+import { AMPACITY_COLUMNS, TABLE_310_16_SIZES, TABLE_AMBIENT, columnKey, table31016 } from '@/lib/verified/nec-310-16';
+import type { AmpacityColumn } from '@/lib/verified/nec-310-16';
+
+// The homepage (WSZ-005b): what the site covers and who keeps it, every live calculator and guide from the route list
+// (src/lib/routes.ts, D-26), and a short wire size table, 14 AWG to 4/0, read from awg.json, Table 310.16 and 240.4(D).
+// Spec: research/page-specs.md "WSZ-005", homepage. Every number renders inside an element whose data-src names its
+// source.
+const H1 = 'Wire Size Charts and Electrical Calculators';
+const TITLE = `${H1} | WireSizes.com`;
+const DESCRIPTION =
+  'AWG wire size chart, NEC Table 310.16 ampacity and calculators for wire size, voltage drop and amps to watts, from the 2023 NEC and NIST wire tables.';
 
 export const metadata: Metadata = {
-  title: 'Wire Size Calculator — NEC 310.16',
-  description: 'Wire size, ampacity and voltage drop calculators with AWG and NEC reference tables.',
-  keywords: 'electrical calculator, wire size calculator, voltage drop, ampacity, NEC table 310.16',
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   alternates: { canonical: '/' },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    siteName: 'WireSizes.com',
+    title: H1,
+    description: DESCRIPTION,
+    url: 'https://wiresizes.com',
+    images: ['/opengraph-image'],
+  },
+  twitter: { card: 'summary_large_image', title: H1, description: DESCRIPTION, images: ['/twitter-image'] },
 };
 
-// Featured calculators organized by category
-const CALCULATOR_CATEGORIES = [
-  {
-    title: 'Wire & Cable',
-    icon: Zap,
-    calculators: [
-      { name: 'Wire Size Calculator', slug: 'wire-size-calculator', desc: 'Calculate AWG wire size for any circuit' },
-      { name: 'Voltage Drop Calculator', slug: 'voltage-drop-calculator', desc: 'Calculate voltage drop over distance' },
-      { name: 'Ampacity Calculator', slug: 'ampacity-calculator', desc: 'Find wire current carrying capacity' },
-      { name: 'Ground Wire Calculator', slug: 'ground-wire-calculator', desc: 'Equipment grounding conductor size' },
-      { name: 'Wire Resistance Calculator', slug: 'wire-resistance-calculator', desc: 'Calculate conductor resistance' },
-    ]
-  },
-  {
-    title: 'Load & Power',
-    icon: Power,
-    calculators: [
-      { name: 'Watts to Amps Calculator', slug: 'watts-to-amps-calculator', desc: 'Convert watts to amperage' },
-      { name: 'Amps to Watts Calculator', slug: 'amps-to-watts-calculator', desc: 'Convert amperage to watts' },
-      { name: 'Volts to Amps Calculator', slug: 'volts-to-amps-calculator', desc: 'Current from power and voltage' },
-      { name: 'kVA to Amps Calculator', slug: 'kva-to-amps-calculator', desc: 'Convert kilovolt-amperes to amps' },
-      { name: 'Kilowatts to Amps Calculator', slug: 'kilowatts-to-amps-calculator', desc: 'Convert kilowatts to amperage' },
-      { name: 'BTU to Watts Calculator', slug: 'btu-to-watts-calculator', desc: 'Convert Btu/h, watts and tons' },
-      { name: "Ohm's Law Calculator", slug: 'ohms-law-calculator', desc: 'Solve for volts, amps, ohms or watts' },
-    ]
-  },
-  {
-    title: 'Specialized',
-    icon: Cpu,
-    calculators: [
-      { name: 'Three Phase Calculator', slug: 'three-phase-calculator', desc: '3-phase power calculations' },
-      { name: 'Service Entrance Calculator', slug: 'service-entrance-calculator', desc: 'Dwelling service conductors from Table 310.12' },
-      { name: 'Low Voltage Calculator', slug: 'low-voltage-calculator', desc: '12 V/24 V DC applications' },
-    ]
-  }
-];
+const GEO = 'awg-geometry';
+const AMP = 'nec-310-16';
+const OCPD = 'nec-240-4-d';
+const SOURCE_DOMAINS = [GEO, AMP, OCPD];
 
-// NEC Table 310.12 (2023), 120/240 V single-phase dwelling services (data/verified/nec-310-12.json)
-const SERVICE_SIZES = [
-  { service: '100 A', copper: '4 AWG', aluminum: '2 AWG' },
-  { service: '125 A', copper: '2 AWG', aluminum: '1/0 AWG' },
-  { service: '150 A', copper: '1 AWG', aluminum: '2/0 AWG' },
-  { service: '200 A', copper: '2/0 AWG', aluminum: '4/0 AWG' },
-];
+const LINK = 'text-blue-700 underline underline-offset-2 hover:text-blue-900';
+const H2 = 'text-2xl font-semibold text-gray-900';
+const P = 'max-w-prose leading-relaxed text-gray-700';
+// The table's cells with less side padding, so its four columns fit a 360 px phone without scrolling
+const CTH = TH.replace('px-3', 'px-2');
+const CTD = TD.replace('px-3', 'px-2');
 
-// NEC Table 250.66 for the Table 310.12 conductors above (data/verified/nec-250-66.json)
-const GROUNDING_CONDUCTORS = [
-  { service: '100 A', copper: '8 AWG', aluminum: '6 AWG' },
-  { service: '125 A', copper: '8 AWG', aluminum: '6 AWG' },
-  { service: '150 A', copper: '6 AWG', aluminum: '4 AWG' },
-  { service: '200 A', copper: '4 AWG', aluminum: '2 AWG' },
-];
+// The table shows one ampacity column of Table 310.16; a column the data lacks fails the build
+function dataColumn(column: AmpacityColumn): AmpacityColumn {
+  if (!AMPACITY_COLUMNS.includes(column)) throw new Error(`nec-310-16.json has no ${column} °C column`);
+  return column;
+}
+const COLUMN = dataColumn(75);
+const FIRST = TABLE_310_16_SIZES.indexOf('14');
+const LAST = TABLE_310_16_SIZES.indexOf('4/0');
+if (FIRST === -1 || LAST < FIRST) throw new Error('nec-310-16.json lacks the 14 AWG or the 4/0 AWG row');
+const SIZES: SizeKey[] = TABLE_310_16_SIZES.slice(FIRST, LAST + 1);
 
-// WebSite schema, with its publisher, the Organization (src/lib/identity.ts), in the same graph
+function row(key: SizeKey): AwgRow {
+  const found = awgRow(key);
+  if (!found) throw new Error(`awg.json has no ${key} AWG row`);
+  return found;
+}
+
+// 240.4(D) limits without conditions on the table's sizes, copper first: the breaker or fuse may not exceed them
+const LIMITS = (['Cu', 'Al'] as const).flatMap((material) =>
+  ROWS_240_4_D.filter((r) => r.material === material && r.conditions === null && SIZES.includes(r.size)).map((r) => ({
+    size: r.size,
+    material,
+    maxA: r.max_ocpd_a,
+  })),
+);
+const LIMITED = new Set(LIMITS.map((l) => l.size));
+
 const websiteSchema = {
-  "@context": "https://schema.org",
-  "@graph": [
+  '@context': 'https://schema.org',
+  '@graph': [
     {
-      "@type": "WebSite",
-      "@id": "https://wiresizes.com/#website",
-      "url": "https://wiresizes.com",
-      "name": "WireSizes.com",
-      "description": "Wire gauge charts, NEC table values and calculators for sizing conductors.",
-      "publisher": ORGANIZATION_REF,
-      "inLanguage": "en-US"
+      '@type': 'WebSite',
+      '@id': 'https://wiresizes.com/#website',
+      url: 'https://wiresizes.com',
+      name: 'WireSizes.com',
+      description: 'Wire gauge charts, NEC table values and calculators for sizing conductors.',
+      publisher: ORGANIZATION_REF,
+      inLanguage: 'en-US',
     },
-    ORGANIZATION
-  ]
+    ORGANIZATION,
+  ],
 };
 
 const webPageSchema = {
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  "url": "https://wiresizes.com",
-  "name": "Electrical Calculators & Wire Sizing Tools",
-  "description": "Wire size, ampacity and voltage drop calculators with AWG and NEC reference tables.",
-  "isPartOf": {
-    "@id": "https://wiresizes.com/#website"
-  },
-  "about": {
-    "@type": "Thing",
-    "name": "Electrical Engineering Calculators"
-  },
-  "breadcrumb": {
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://wiresizes.com"
-      }
-    ]
-  }
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  url: 'https://wiresizes.com',
+  name: H1,
+  description: DESCRIPTION,
+  isPartOf: { '@id': 'https://wiresizes.com/#website' },
+  inLanguage: 'en-US',
 };
+
+function Dash() {
+  return (
+    <>
+      <span aria-hidden="true">–</span>
+      <span className="sr-only">no value</span>
+    </>
+  );
+}
+
+function Cell({ v, src }: { v: number | null; src: string }) {
+  return v === null ? <Dash /> : <Num v={v} src={src} />;
+}
+
+const materialWord = (m: 'Cu' | 'Al') => (m === 'Cu' ? 'copper' : 'aluminum');
 
 export default function HomePage() {
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
-      />
-      {/* Compact Header */}
-      <section className="bg-neutral-900 text-white py-4">
-        <div className="container">
-          <h1 className="text-xl sm:text-2xl font-bold">Electrical Calculators & Wire Sizing Tools</h1>
+    <div className="container py-10 lg:py-14">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
+
+      <header className="max-w-3xl space-y-4">
+        <h1 className="text-3xl font-bold leading-tight text-gray-900 sm:text-4xl">{H1}</h1>
+        <p className="max-w-prose text-lg leading-relaxed text-gray-700">
+          Wire gauge charts, NEC ampacity tables and calculators for wire size and power, with code values from the 2023 NEC and wire data
+          from the NIST copper wire tables.
+        </p>
+        <p className={P}>
+          Written and maintained by{' '}
+          <Link href="/about" className={LINK}>
+            Marko Visic, BSc Physics
+          </Link>
+          . The{' '}
+          <Link href="/methodology" className={LINK}>
+            methodology
+          </Link>{' '}
+          page lists the sources and formulas behind the calculators.
+        </p>
+      </header>
+
+      <section aria-labelledby="calculators" className="mt-12 max-w-4xl">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-gray-300 pb-2">
+          <h2 id="calculators" className={H2}>
+            Calculators
+          </h2>
+          <Link href="/calculators" className={INDEX_LINK}>
+            What each calculator does
+          </Link>
         </div>
+        <RouteLinks section="calculators" columnsClassName="mt-5 grid gap-x-12 gap-y-6 sm:grid-cols-2" />
       </section>
 
-      {/* Featured Calculators Grid */}
-      <section className="py-6 bg-neutral-50">
-        <div className="container">
-          <div className="text-center mb-6">
-            <h2 className="text-lg sm:text-xl font-bold text-neutral-900">Calculators</h2>
-          </div>
-          <div className="grid gap-6">
-            {CALCULATOR_CATEGORIES.map((category) => {
-              const IconComponent = category.icon;
-              const categoryColors: Record<string, { bg: string; border: string; accent: string }> = {
-                'Wire & Cable': { bg: 'bg-blue-500', border: 'border-blue-200', accent: 'bg-blue-50' },
-                'Load & Power': { bg: 'bg-green-500', border: 'border-green-200', accent: 'bg-green-50' },
-                'Specialized': { bg: 'bg-orange-500', border: 'border-orange-200', accent: 'bg-orange-50' },
-              };
-              const colors = categoryColors[category.title] || { bg: 'bg-gray-500', border: 'border-gray-200', accent: 'bg-gray-50' };
-              
-              return (
-                <div key={category.title} className={`bg-white border ${colors.border} rounded-lg shadow-sm overflow-hidden`}>
-                  <div className={`flex items-center gap-3 px-4 py-3 ${colors.accent} border-b ${colors.border}`}>
-                    <div className={`w-10 h-10 ${colors.bg} rounded-lg flex items-center justify-center`}>
-                      <IconComponent className="w-5 h-5 text-white" />
-                    </div>
-                    <h3 className="font-bold text-neutral-900">{category.title}</h3>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-1 p-3">
-                    {category.calculators.map((calc) => (
-                      <Link
-                        key={calc.slug}
-                        href={`/calculators/${calc.slug}`}
-                        className="group block p-3 rounded-lg hover:bg-neutral-50 border border-transparent hover:border-neutral-200 transition-all duration-200"
-                      >
-                        <div className="flex items-start gap-2 mb-2">
-                          <div className={`w-6 h-6 ${colors.bg} rounded flex items-center justify-center flex-shrink-0 mt-0.5 opacity-80 group-hover:opacity-100 transition-opacity`}>
-                            <Calculator className="w-3 h-3 text-white" />
-                          </div>
-                          <div className="font-medium text-xs text-neutral-900 leading-tight group-hover:text-neutral-800">
-                            {calc.name}
-                          </div>
-                        </div>
-                        <div className="text-xs text-neutral-500 leading-relaxed group-hover:text-neutral-600">
-                          {calc.desc}
-                        </div>
-                        <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <ArrowRight className="w-3 h-3 text-neutral-400" />
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+      <section aria-labelledby="wire-sizes" className="mt-14 space-y-4">
+        <h2 id="wire-sizes" className={clsx(H2, 'border-b border-gray-300 pb-2')}>
+          Wire diameter and ampacity, <Size s="14" /> to <Size s="4/0" />
+        </h2>
+        <p className={P} data-src={AMP}>
+          Each row gives a size&apos;s diameter as solid wire and its allowable ampacity in the{' '}
+          <Val v={COLUMN} unit="°C" src={AMP} /> column of 2023 NEC Table 310.16, for not more than three current-carrying conductors
+          at <Val v={TABLE_AMBIENT.c} unit="°C" src={AMP} /> (<Val v={TABLE_AMBIENT.f} unit="°F" src={AMP} />). For a given breaker or
+          fuse rating, the{' '}
+          <Link href="/calculators/wire-size-calculator" className={LINK}>
+            wire size calculator
+          </Link>{' '}
+          picks the size.
+        </p>
+        <DataTable
+          id="wire-sizes-table"
+          src={AMP}
+          className="max-w-2xl"
+          caption={
+            <>
+              Solid-wire diameter, and allowable ampacity in amperes at <Val v={COLUMN} unit="°C" src={AMP} />
+            </>
+          }
+        >
+          <thead>
+            <tr>
+              <th scope="col" rowSpan={2} className={clsx(CTH, STICKY_TH)}>
+                Size
+              </th>
+              <th scope="col" rowSpan={2} className={CTH}>
+                Diameter
+              </th>
+              <th scope="colgroup" colSpan={2} className={clsx(CTH, 'text-center')}>
+                Ampacity (A) at <Val v={COLUMN} unit="°C" src={AMP} />
+              </th>
+            </tr>
+            <tr>
+              <th scope="col" className={CTH}>
+                Copper
+              </th>
+              <th scope="col" className={CTH}>
+                Aluminum
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {SIZES.map((k) => (
+              <tr key={k}>
+                <th scope="row" className={clsx(CTD, STICKY_TD, 'whitespace-nowrap')}>
+                  <Size s={k} />
+                  {LIMITED.has(k) && (
+                    <>
+                      <span aria-hidden="true" className="ml-1 text-gray-900">
+                        †
+                      </span>
+                      <span className="sr-only"> (breaker limit in the note below the table)</span>
+                    </>
+                  )}
+                </th>
+                <td className={CTD}>
+                  <Val v={row(k).diameter_in} unit="in" src={GEO} format={{ fixed: 4 }} />
+                  <span className="block text-xs text-gray-600">
+                    <Val v={row(k).diameter_mm} unit="mm" src={GEO} format={{ fixed: 3 }} />
+                  </span>
+                </td>
+                <td className={CTD}>
+                  <Cell v={table31016(k, columnKey('Cu', COLUMN))} src={AMP} />
+                </td>
+                <td className={CTD}>
+                  <Cell v={table31016(k, columnKey('Al', COLUMN))} src={AMP} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </DataTable>
+        <p className={P} data-src={OCPD}>
+          † Under 2023 NEC 240.4(D), the breaker or fuse may not exceed{' '}
+          {LIMITS.map((l, i) => (
+            <span key={`${l.size}-${l.material}`}>
+              {i > 0 && (i === LIMITS.length - 1 ? ' and ' : ', ')}
+              <Val v={l.maxA} unit="A" src={OCPD} /> on <Size s={l.size} /> {materialWord(l.material)}
+            </span>
+          ))}
+          , even where the table lists more.
+        </p>
+        <p className={P} data-src={GEO}>
+          A stranded conductor of the same size has the same metal area and a larger overall diameter. The{' '}
+          <Link href="/guides/awg-wire-size-chart" className={LINK}>
+            AWG wire size chart
+          </Link>{' '}
+          adds the smaller gauges and the kcmil sizes with their area and resistance, and the{' '}
+          <Link href="/guides/nec-table-310-16" className={LINK}>
+            NEC Table 310.16 page
+          </Link>{' '}
+          has every ampacity column with the corrections for heat and bundling.
+        </p>
       </section>
 
-      {/* Quick Wire Size Lookup */}
-      <section className="py-6 bg-blue-50 border-y border-blue-100">
-        <div className="container">
-          <div className="bg-white p-4 rounded-lg border border-blue-200">
-            <h2 className="font-semibold text-neutral-900 mb-3">Quick Wire Size Lookup</h2>
-            <div className="grid grid-cols-2 gap-2 sm:gap-3 text-xs">
-              <div className="p-2 bg-neutral-50 rounded">
-                <div className="font-mono font-bold">15 A Circuit</div>
-                <div className="text-neutral-600">14 AWG</div>
-              </div>
-              <div className="p-2 bg-neutral-50 rounded">
-                <div className="font-mono font-bold">20 A Circuit</div>
-                <div className="text-neutral-600">12 AWG</div>
-              </div>
-              <div className="p-2 bg-neutral-50 rounded">
-                <div className="font-mono font-bold">30 A Circuit</div>
-                <div className="text-neutral-600">10 AWG</div>
-              </div>
-              <div className="p-2 bg-neutral-50 rounded">
-                <div className="font-mono font-bold">40 A Circuit</div>
-                <div className="text-neutral-600">8 AWG</div>
-              </div>
-            </div>
-            <p className="mt-3 text-xs text-neutral-600">
-              Copper, 60 °C column of NEC Table 310.16 (2023), 30 °C ambient, up to three current-carrying conductors.
-            </p>
-          </div>
+      <section aria-labelledby="guides" className="mt-14 max-w-4xl">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-gray-300 pb-2">
+          <h2 id="guides" className={H2}>
+            Charts and guides
+          </h2>
+          <Link href="/guides" className={INDEX_LINK}>
+            What each guide covers
+          </Link>
         </div>
+        <RouteLinks section="guides" columnsClassName="mt-5 grid gap-x-12 gap-y-6 sm:grid-cols-2 lg:grid-cols-3" />
       </section>
 
-      {/* Service Entrance and Grounding Electrode Conductors */}
-      <section className="py-4 bg-neutral-50">
-        <div className="container">
-          <div className="grid sm:grid-cols-2 gap-3 lg:gap-4">
-            {/* Service Entrance */}
-            <div className="bg-white border border-neutral-200 rounded">
-              <div className="px-3 py-2 bg-neutral-50 border-b border-neutral-200">
-                <h3 className="font-semibold text-neutral-900 text-sm">Service Entrance</h3>
-              </div>
-              <div className="p-2">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs">
-                    <thead>
-                      <tr className="text-neutral-500">
-                        <th className="text-left font-medium">Service</th>
-                        <th className="text-left font-medium">Copper</th>
-                        <th className="text-left font-medium">Aluminum</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-neutral-100">
-                      {SERVICE_SIZES.map((service) => (
-                        <tr key={service.service}>
-                          <td className="py-1 font-mono">{service.service}</td>
-                          <td className="py-1 font-mono text-xs">{service.copper}</td>
-                          <td className="py-1 font-mono text-xs">{service.aluminum}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                <p className="mt-2 text-xs text-neutral-600">
-                  120/240 V single-phase dwelling service or main power feeder, NEC Table 310.12 (2023).
-                </p>
-              </div>
-            </div>
-
-            {/* Grounding Electrode Conductors */}
-            <div className="bg-white border border-neutral-200 rounded">
-              <div className="px-3 py-2 bg-neutral-50 border-b border-neutral-200">
-                <h3 className="font-semibold text-neutral-900 text-sm">Grounding Electrode Conductors</h3>
-              </div>
-              <div className="p-2">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs">
-                    <thead>
-                      <tr className="text-neutral-500">
-                        <th className="text-left font-medium">Service</th>
-                        <th className="text-left font-medium">Copper GEC</th>
-                        <th className="text-left font-medium">Aluminum GEC</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-neutral-100">
-                      {GROUNDING_CONDUCTORS.map((item) => (
-                        <tr key={item.service}>
-                          <td className="py-1 font-mono">{item.service}</td>
-                          <td className="py-1 font-mono">{item.copper}</td>
-                          <td className="py-1 font-mono">{item.aluminum}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                <p className="mt-2 text-xs text-neutral-600">
-                  NEC Table 250.66, for the Table 310.12 conductors (values from NFPA&apos;s 2020 grounding fact sheet).
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Guides */}
-      <section className="py-4 bg-neutral-50">
-        <div className="container">
-          <div className="bg-white border border-neutral-200 rounded">
-            <div className="px-3 py-2 bg-neutral-50 border-b border-neutral-200">
-              <h2 className="font-semibold text-neutral-900 text-sm">Guides</h2>
-            </div>
-            <div className="p-3">
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                <Link href="/guides/wire-size-for-100-amp" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">100 Amp Wire Size</div>
-                </Link>
-                <Link href="/guides/wire-size-for-200-amp" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">200 Amp Wire Size</div>
-                </Link>
-                <Link href="/guides/wire-size-for-ev-charger" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">EV Charging Circuits</div>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Tools & Resources */}
-      <section className="py-4">
-        <div className="container">
-          <div className="bg-white border border-neutral-200 rounded">
-            <div className="px-3 py-2 bg-neutral-50 border-b border-neutral-200">
-              <h2 className="font-semibold text-neutral-900 text-sm">Charts and references</h2>
-            </div>
-            <div className="p-3">
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                <Link href="/guides/awg-wire-size-chart" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">AWG Wire Chart</div>
-                </Link>
-                <Link href="/guides/nec-table-310-16" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">NEC Table 310.16</div>
-                </Link>
-                <Link href="/guides/nec-code-compliance" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">NEC Code Compliance</div>
-                </Link>
-                <Link href="/guides/electrical-power-calculations" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">Power Calculations</div>
-                </Link>
-                <Link href="/guides/power-factor-explained" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">Power Factor</div>
-                </Link>
-                <Link href="/guides/single-vs-three-phase" className="block p-2 rounded hover:bg-neutral-50 transition-colors">
-                  <div className="font-medium text-xs text-neutral-900">Single vs Three Phase</div>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Compact Disclaimer */}
-      <section className="py-3 bg-amber-50 border-t border-amber-200">
-        <div className="container">
-          <div className="flex items-center gap-2 text-xs">
-            <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
-            <div className="text-amber-800">
-              <strong>Disclaimer:</strong> Reference values for planning. Check them against the NEC edition your jurisdiction enforces and the equipment&apos;s instructions. The author is a physicist, not a licensed electrician or engineer.
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      <BreadcrumbSchema url="https://wiresizes.com" />
-    </>
+      <div className="mt-14 space-y-8 border-t border-gray-300 pt-8">
+        <EditionNote className={P} />
+        <section aria-labelledby="sources" className="max-w-prose space-y-3">
+          <Sources
+            domains={SOURCE_DOMAINS}
+            headingClassName="text-xl font-semibold text-gray-900"
+            listClassName="list-disc space-y-1 pl-6 text-sm text-gray-700"
+            linkClassName={LINK}
+            noteClassName="text-sm text-gray-600"
+          />
+        </section>
+      </div>
+    </div>
   );
 }
