@@ -226,8 +226,8 @@ export default function MethodologyPage() {
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
           has a section below: what it is and which edition was used, where it was read, how the calculators use it,
           and where that use stops. The first section shows how the wire size calculator puts several of them
-          together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, the homepage and the
-          calculator and guide index pages also list their sources under Sources, near the bottom of the page.
+          together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page and the homepage also list
+          their sources under Sources, near the bottom of the page.
         </p>
         <p>
           Code values are from NFPA 70, the National Electrical Code (NEC), 2023 edition, unless a section says

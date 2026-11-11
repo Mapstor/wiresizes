@@ -99,11 +99,15 @@ describe('readers of the route list', () => {
     );
   });
 
-  it('/methodology names the pages it cites as the route list does, the homepage and hubs included', () => {
+  it('/methodology names the pages it cites as the route list does, the homepage included', () => {
     for (const [route, name] of Object.entries(CITED_PAGE_NAMES)) assert.equal(name, pageName(route), route);
     const byDomain = Object.fromEntries(METHODOLOGY_SECTIONS.map((s) => [s.domain, s.citedOn]));
-    for (const domain of ['awg-geometry', 'nec-310-16', 'nec-240-4-d', 'nec-2026-edition']) assert.ok(byDomain[domain].includes('/'), domain);
-    for (const hub of ['/calculators', '/guides']) assert.ok(byDomain['nec-2026-edition'].includes(hub), hub);
+    for (const domain of ['awg-geometry', 'nec-310-16', 'nec-240-4-d']) assert.ok(byDomain[domain].includes('/'), domain);
+    // the hubs cite nothing: their only sourced line, the 2026 edition's dates, waits for a working source link (DEVLOG §5)
+    for (const [domain, routes] of Object.entries(byDomain)) {
+      for (const hub of ['/calculators', '/guides']) assert.ok(!routes.includes(hub), `${domain}: ${hub}`);
+    }
+    assert.ok(!byDomain['nec-2026-edition'].includes('/'));
   });
 });
 

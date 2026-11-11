@@ -12,7 +12,6 @@ import { ORGANIZATION, ORGANIZATION_REF } from '@/lib/identity';
 import { awgRow } from '@/lib/verified/awg';
 import type { AwgRow, SizeKey } from '@/lib/verified/awg';
 import { ROWS_240_4_D } from '@/lib/verified/nec-240-4-d';
-import { NEC_2026_DOMAIN } from '@/lib/verified/nec-2026-edition';
 import { AMPACITY_COLUMNS, TABLE_310_16_SIZES, TABLE_AMBIENT, columnKey, table31016 } from '@/lib/verified/nec-310-16';
 import type { AmpacityColumn } from '@/lib/verified/nec-310-16';
 
@@ -44,7 +43,7 @@ export const metadata: Metadata = {
 const GEO = 'awg-geometry';
 const AMP = 'nec-310-16';
 const OCPD = 'nec-240-4-d';
-const SOURCE_DOMAINS = [GEO, AMP, OCPD, NEC_2026_DOMAIN];
+const SOURCE_DOMAINS = [GEO, AMP, OCPD];
 
 const LINK = 'text-blue-700 underline underline-offset-2 hover:text-blue-900';
 const H2 = 'text-2xl font-semibold text-gray-900';

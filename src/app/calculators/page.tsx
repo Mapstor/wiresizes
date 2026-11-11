@@ -2,13 +2,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { EditionNote } from '@/components/content/EditionNote';
 import { RouteList } from '@/components/content/RouteIndex';
-import { Sources } from '@/components/content/Sources';
 import { ORGANIZATION, ORGANIZATION_REF } from '@/lib/identity';
 import { sectionRoutes } from '@/lib/routes';
-import { NEC_2026_DOMAIN } from '@/lib/verified/nec-2026-edition';
 
 // /calculators (WSZ-005b): every live calculator from the route list (src/lib/routes.ts, D-26), grouped, each with one
-// factual line; the NEC edition line from the registry. Spec: research/page-specs.md "WSZ-005", hubs.
+// factual line; the NEC edition line. Spec: research/page-specs.md "WSZ-005", hubs.
 const ROUTE = '/calculators';
 const URL = `https://wiresizes.com${ROUTE}`;
 const H1 = 'Electrical Calculators';
@@ -101,17 +99,8 @@ export default function CalculatorsPage() {
         <RouteList section="calculators" />
       </div>
 
-      <div className="mt-14 space-y-8 border-t border-gray-300 pt-8">
+      <div className="mt-14 border-t border-gray-300 pt-8">
         <EditionNote className={P} />
-        <section aria-labelledby="sources" className="max-w-prose space-y-3">
-          <Sources
-            domains={[NEC_2026_DOMAIN]}
-            headingClassName="text-xl font-semibold text-gray-900"
-            listClassName="list-disc space-y-1 pl-6 text-sm text-gray-700"
-            linkClassName={LINK}
-            noteClassName="text-sm text-gray-600"
-          />
-        </section>
       </div>
     </div>
   );

@@ -29,10 +29,8 @@ const LOW_VOLTAGE = '/calculators/low-voltage-calculator';
 const SERVICE_ENTRANCE = '/calculators/service-entrance-calculator';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
-// The homepage lists four sources under its wire size table; the hubs list the 2026 edition behind their edition line (WSZ-005b)
+// The homepage lists the three sources of its wire size table under Sources (WSZ-005b)
 const HOME = '/';
-const CALCULATORS_HUB = '/calculators';
-const GUIDES_HUB = '/guides';
 
 export const METHODOLOGY_SECTIONS: MethodologySection[] = [
   {
@@ -113,7 +111,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'nec-2026',
     domain: 'nec-2026-edition',
     title: 'The 2026 NEC edition',
-    citedOn: [TABLE_310_16, HOME, CALCULATORS_HUB, GUIDES_HUB],
+    citedOn: [TABLE_310_16],
   },
 ];
 
