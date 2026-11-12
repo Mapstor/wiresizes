@@ -243,16 +243,16 @@
    "state": "LA",
    "edition": "2020",
    "status": "verified",
-   "effective": null,
+   "effective": "2023-01-01",
    "scope": "statewide (Louisiana State Uniform Construction Code, LAC 17:I.115); the 2021 IRC is adopted without Part VIII-Electrical, so the NEC also governs dwellings",
    "next_change": {
     "edition": "2023",
     "effective": null
    },
-   "source_publisher": "Louisiana Dept. of Public Safety and Corrections, Office of State Fire Marshal, Uniform Construction Code Council (Emergency Rule, Louisiana Register December 2023)",
-   "source_url": "https://doa.louisiana.gov/media/1kbejceb/2312emr003.pdf",
-   "quote": "A. National Electric Code (NEC), 2020 Edition, and the standards referenced in that code for regulation | of construction in this state.",
-   "note": "Effective date conflicting: the emergency rule says the rules 'first adopted and published in the October 20, 2022 edition of the Louisiana Register' and 'The rule became effective on July 1, 2023.'; ICC-NTA (non-primary) says January 1, 2023. Pending: LSUCCC agenda of July 7, 2026 'Adoption of the 2023 NEC and 2024 I-Codes as the Uniform Construction Code (LAC 17:I. Chapter 1)'; the proposed text (Baton Rouge copy, updated 07/07/2026) reads 'effective January 1, 2027'; the Louisiana Register citation in that copy was blank ('LR 52:'). R5-1 (2026-10-24): the Notice of Intent was published in the Louisiana Register, Vol. 52, No. 8, August 20, 2026, pages 1403-1432 (LUCCC page, release date June 22, 2026; issue PDF on luccc.louisiana.gov). Two pulls of the Notice: it proposes 'the 2023 edition of the National Electrical Code (NEC)' 'with an effective date of January 1,' 2027, under 'Uniform Construction Code Commission' (Office of the Governor). It is a proposal: no final rule was seen, so next_change.effective stays null. The 2020-NEC start date is still unresolved: Act 635 of 2022 sets 'shall become effective July 1, 2023.' only for the codes in R.S. 40:1730.28.5(A) (IECC; IRC Part IV Energy Efficiency), not for the NEC."
+   "source_publisher": "Louisiana Uniform Construction Code Commission (LUCCC), Office of the Governor: Louisiana Construction Codes information sheet, revised 08/06/2026",
+   "source_url": "https://luccc.louisiana.gov/wp-content/uploads/2025/11/LSUCCC_Louisiana-Construction-Code-Information.pdf",
+   "quote": "National Electrical Code (NEC) 2020 | 2020 NEC January 1, 2023 | Next Code Review Cycle (ICC code editions will become effective January 1, 2027.) A. 2023 edition of NEC",
+   "note": "WSZ-024 (2026-11-12, research/sources/round6/WSZ-024-adoption.md): the commission's code history gives the 2020 NEC 'January 1, 2023' and the IECC 07/01/2023, which settles the start date (the December 2023 emergency rule's 'The rule became effective on July 1, 2023.' is the IECC's). 2023 NEC still proposed: Notice of Intent, Louisiana Register Aug. 20, 2026 (LR 52:1403-32), proposed effective January 1, 2027; substantive changes to §115 (NEC) published in the October 20, 2026 Register (p. 1900, 2610#053), public hearing November 24, 2026; no final rule seen, so next_change.effective stays null. The emergency rule's old address (doa.louisiana.gov/media/1kbejceb/2312emr003.pdf) answers 404 since at least 2026-11-11."
   },
   {
    "state": "MA",
@@ -381,13 +381,13 @@
    "state": "NH",
    "edition": "2023",
    "status": "verified",
-   "effective": null,
+   "effective": "2025-07-01",
    "scope": "statewide (state building code)",
    "next_change": null,
    "source_publisher": "New Hampshire General Court, RSA 155-A:1, IV",
    "source_url": "https://gc.nh.gov/rsa/html/XII/155-A/155-A-1.htm",
-   "quote": "and the National Electrical Code 2023, as published by the National Fire Protection Association, Inc.,",
-   "note": "Source line: '2025, 135:1, eff. July 1, 2025; 276:2, eff. July 1, 2026.' '2026, 49:1, eff. July 1, 2026; 318:3, 63, eff. July 1, 2026 at 12:01 a.m.' NH Fire Marshal list revised 2024-08-08 still showed the 2020 NEC (eff. August 13, 2024). Switch date between 2024-08-13 and 2026-07-01, not pinned."
+   "quote": "and the National Electrical Code 2023, as published by the National Fire Protection Association, Inc., | 2025 Laws ch. 135 (HB 134): '135:1 Definition of State Building Code. Amend RSA 155-A:1, IV' ... 'the National Electrical Code [2020] 2023' | '135:2 Effective Date. This act shall take effect July 1, 2025.'",
+   "note": "WSZ-024 (2026-11-12): 2025 Laws chapter 135 (HB 134, approved June 24, 2025) changed the NEC in RSA 155-A:1, IV from 2020 to 2023, effective July 1, 2025 (gc.nh.gov bill status lsr=235 sy=2025 and chaptered text billText.aspx?id=242&sy=2025). The later laws in the RSA's source line (2025, 276:2; 2026, 49:1 and 318:3) keep the 2023 NEC. gc.nh.gov refuses some automated clients; it loads in a browser."
   },
   {
    "state": "NJ",
@@ -630,10 +630,10 @@
    "effective": "2026-09-01",
    "scope": "replaces the 2017 NEC with state amendments",
    "next_change": null,
-   "source_publisher": "Wisconsin Department of Safety and Professional Services",
-   "source_url": "https://dsps.wi.gov/Documents/NewsMedia/20260901NewElectricalCodeNewsRelease.pdf",
-   "quote": "the 2023 National Electric Code",
-   "note": null
+   "source_publisher": "Wisconsin Department of Safety and Professional Services (news release, September 1, 2026)",
+   "source_url": "https://dsps.wi.gov/MediaFileLocation/qv4nl4uf/dsps-celebrates-latest-code-update.pdf",
+   "quote": "Wisconsin is adopting the 2023 National Electric Code, moving away from using the 2017 edition with amendments. | The new electrical code updates take effect September 1",
+   "note": "WSZ-024 (2026-11-12): DSPS moved its website on 2026-09-28, so the release's old address (dsps.wi.gov/Documents/NewsMedia/20260901NewElectricalCodeNewsRelease.pdf) answers 404; the same release is now under /MediaFileLocation/. DSPS's June 2026 release: 'The electrical code update adopts 2023 National Electrical Code (NEC) standards'."
   },
   {
    "state": "WV",
@@ -673,6 +673,7 @@
   "Round 4b (R4-6b, 2026-10-24) added AZ, IL, KS and MO as local-adoption rows from state government pages, set AK effective 2022-04-16 and UT effective 2025-07-01, and found no new HI council adoption through December 2025 (round 5 then moved HI to not verified: HRS 107-24(c) default adoption); evidence research/sources/round4/R4-6b-adoption.md. Scoped evidence only (not rendered): the NV State Public Works Board adopted the 2023 NEC as minimum standards for the design of state buildings (NAC 341.045(d), LCB File R072-24); Mississippi's modular-home rule ME-2007-3 (revised July 1, 2026) prints 'NFPA 70, 2024 edition', which is not an NFPA 70 edition.",
   "Round 5 (R5-1, 2026-10-24): AR effective 2026-09-03 from the official Code of Arkansas Rules (17 CAR § 210-601, Ark. R. 2026-108); NV added as local adoption (NRS 244.3675(2) and 268.413(2) as printed in A.B. 97 of 2023; the State Fire Marshal's NAC 477.281 lists no NFPA 70; state buildings 2023 NEC); HI moved to not verified (HRS 107-24(c) default rule covers the NEC, the council adopted nothing in 2023-2025, and no state document states the NEC edition now in the state code); LA 2023 NEC is still a proposal (Notice of Intent, Louisiana Register Vol. 52 No. 8, August 20, 2026, pp. 1403-1432, proposed effective January 1, 2027); TN chapter 0780-02-01 has an unread July 2025 revision; WY start date and MS still open. Evidence: research/sources/round4/R5-1-adoption.md.",
   "Round 4 (2026-10-24) also merged A7's verified OH commercial row (OAC 4101:1-35-01, rule version effective 2025-10-15), fixed the NY-NYC scope text, and added the NC 2023-code pointer from R4-8.",
-  "Rows were retrieved between 2026-10-19 and 2026-10-24; each row's evidence file is named in the notes above."
+  "Rows were retrieved between 2026-10-19 and 2026-10-24; each row's evidence file is named in the notes above.",
+  "Round 6 (WSZ-024, 2026-11-12) re-read LA, WI and NH on state government pages; evidence research/sources/round6/WSZ-024-adoption.md. LA: 2020 NEC effective 2023-01-01 (LUCCC sheet revised 08/06/2026); the 2023 NEC is still a proposal (substantive changes published October 20, 2026; hearing November 24, 2026). WI: same facts, the source moved to DSPS's new website. NH: 2023 NEC effective 2025-07-01 (2025 Laws ch. 135). as_of stays 2026-10-24 for the other rows."
  ]
 }
