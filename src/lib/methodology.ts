@@ -108,9 +108,15 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     citedOn: [AWG_CHART],
   },
   {
+    id: 'nec-2026-issuance',
+    domain: 'nec-2026-issuance',
+    title: 'The 2026 NEC: issue and effective dates',
+    citedOn: [TABLE_310_16],
+  },
+  {
     id: 'nec-2026',
     domain: 'nec-2026-edition',
-    title: 'The 2026 NEC edition',
+    title: 'Changes in the 2026 NEC',
     citedOn: [TABLE_310_16],
   },
 ];

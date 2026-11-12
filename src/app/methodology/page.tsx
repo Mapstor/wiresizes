@@ -25,7 +25,7 @@ import { ADJUSTMENT_ROWS } from '@/lib/verified/nec-310-15-C-1';
 import { SERVICE_AMPACITY_PERCENT, TABLE_310_12_ROWS } from '@/lib/verified/nec-310-12';
 import { AMPACITY_COLUMNS, TABLE_310_16_ROWS, TABLE_310_16_SIZES, TABLE_AMBIENT } from '@/lib/verified/nec-310-16';
 import { attribution, attributionParts, coverage } from '@/lib/verified/registry';
-import { NEC_2026_EFFECTIVE, NEC_2026_ISSUED, NEC_2026_MIN_SIZES } from '@/lib/verified/nec-2026-edition';
+import { NEC_2026_DOMAIN, NEC_2026_EFFECTIVE, NEC_2026_ISSUANCE_DOMAIN, NEC_2026_ISSUED, NEC_2026_MIN_SIZES } from '@/lib/verified/nec-2026-edition';
 import { formatDate } from '@/lib/page-dates';
 
 // /methodology (WSZ-004b): one section per verified source the live calculators cite (src/lib/methodology.ts lists
@@ -746,27 +746,53 @@ export default function MethodologyPage() {
           </Limits>
         </SourceSection>
 
-        <SourceSection domain="nec-2026-edition">
+        <SourceSection domain={NEC_2026_ISSUANCE_DOMAIN}>
           <p>
-            NFPA issued the 2026 edition of the NEC on{' '}
-            <time dateTime={NEC_2026_ISSUED}>{formatDate(NEC_2026_ISSUED)}</time>, effective{' '}
-            <time dateTime={NEC_2026_EFFECTIVE}>{formatDate(NEC_2026_EFFECTIVE)}</time>. The site&apos;s calculators and tables
-            stay on the 2023 edition; the 2026 facts it states come from NFPA&apos;s issue record and from state reviews of the
-            final edition.
+            NFPA&apos;s Standards Council issues each edition of the NEC. The final minutes of the meeting that issued the
+            2026 edition give its issue date,{' '}
+            <time dateTime={NEC_2026_ISSUED}>{formatDate(NEC_2026_ISSUED)}</time>, and its effective date,{' '}
+            <time dateTime={NEC_2026_EFFECTIVE}>{formatDate(NEC_2026_EFFECTIVE)}</time>. They also record the council&apos;s
+            decisions on appeals against parts of the final text, one of which kept the 310.5 rule that allows{' '}
+            <Size s={NEC_2026_MIN_SIZES.Cu} /> copper and <Size s={NEC_2026_MIN_SIZES.CCA} /> copper-clad aluminum
+            branch-circuit conductors.
           </p>
-          <SourceFacts s={section('nec-2026-edition')} />
+          <SourceFacts s={section(NEC_2026_ISSUANCE_DOMAIN)} />
           <p>
             The{' '}
             <Link href="/guides/nec-table-310-16#nec-2026" className={LINK}>
               NEC Table 310.16 page
             </Link>{' '}
-            uses it for the edition&apos;s dates and the new minimum sizes: <Size s={NEC_2026_MIN_SIZES.Cu} /> copper,{' '}
+            takes the two dates from these minutes.
+          </p>
+          <Limits>
+            <li>The minutes give dates and decisions, not the code text, so the changes themselves come from the state review in the next section.</li>
+            <li>
+              NFPA can amend an issued edition with Tentative Interim Amendments. None issued for the 2026 edition by{' '}
+              {monthOf(attribution(NEC_2026_ISSUANCE_DOMAIN).verified_date)} changes a section this site states.
+            </li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain={NEC_2026_DOMAIN}>
+          <p>
+            Minnesota&apos;s Department of Labor and Industry reviewed the issued 2026 edition before the state adopted it.
+            The minutes of its review committee include a table of the significant changes, section by section, and the
+            site states only changes that table describes. The site&apos;s calculators and tables stay on the 2023 edition.
+          </p>
+          <SourceFacts s={section(NEC_2026_DOMAIN)} />
+          <p>
+            The{' '}
+            <Link href="/guides/nec-table-310-16#nec-2026" className={LINK}>
+              NEC Table 310.16 page
+            </Link>{' '}
+            uses it for the new minimum sizes, <Size s={NEC_2026_MIN_SIZES.Cu} /> copper,{' '}
             <Size s={NEC_2026_MIN_SIZES.CCA} /> copper-clad aluminum and <Size s={NEC_2026_MIN_SIZES.Al} /> aluminum, in a
-            section renumbered to 310.5.
+            section renumbered to 310.5, and for the load-calculation article, renumbered from 220 to 120.
           </p>
           <Limits>
             <li>Changes seen only in NFPA&apos;s revision drafts are labeled as drafts and never shown as final.</li>
             <li>The final 2026 Table 310.16 has not been seen, so no 2026 ampacity is shown.</li>
+            <li>One line of the summary, on electric vehicle charging, describes draft text that the issued edition left out; the site does not use it.</li>
           </Limits>
         </SourceSection>
 

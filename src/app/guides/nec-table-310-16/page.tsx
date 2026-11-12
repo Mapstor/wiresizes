@@ -15,7 +15,7 @@ import { minimumServiceAmpacity } from '@/lib/calculations/service-lookup';
 import { articleDates, formatDate } from '@/lib/page-dates';
 import { conditions240_4D, max240_4D, ROWS_240_4_D } from '@/lib/verified/nec-240-4-d';
 import type { Row240_4D } from '@/lib/verified/nec-240-4-d';
-import { NEC_2026_DOMAIN, NEC_2026_EFFECTIVE, NEC_2026_ISSUED, NEC_2026_MIN_SIZES } from '@/lib/verified/nec-2026-edition';
+import { NEC_2026_DOMAIN, NEC_2026_EFFECTIVE, NEC_2026_ISSUANCE_DOMAIN, NEC_2026_ISSUED, NEC_2026_MIN_SIZES } from '@/lib/verified/nec-2026-edition';
 import { SERVICE_AMPACITY_PERCENT, TABLE_310_12_ROWS, table31012 } from '@/lib/verified/nec-310-12';
 import { AMBIENT_ROWS } from '@/lib/verified/nec-310-15-B-1-1';
 import { ADJUSTMENT_ROWS } from '@/lib/verified/nec-310-15-C-1';
@@ -55,9 +55,10 @@ const COR = 'nec-310-15-corrections';
 const OCPD = 'nec-240-4-d';
 const SVC = 'nec-310-12';
 const ED = NEC_2026_DOMAIN;
+const ISSUE = NEC_2026_ISSUANCE_DOMAIN;
 const CALC_AMP = 'calc:ampacity';
 const CALC_SVC = 'calc:service-lookup';
-const SOURCE_DOMAINS = [AMP, COR, OCPD, SVC, ED];
+const SOURCE_DOMAINS = [AMP, COR, OCPD, SVC, ISSUE, ED];
 
 const LINK = 'text-blue-700 underline underline-offset-2 hover:text-blue-900';
 const H2 = 'scroll-mt-20 text-2xl font-semibold text-gray-900';
@@ -599,8 +600,15 @@ export default function NecTable31016Page() {
           What the 2026 NEC changed
         </h2>
         <p className={P} data-src={ED}>
-          NFPA issued the 2026 edition on <time dateTime={NEC_2026_ISSUED}>{formatDate(NEC_2026_ISSUED)}</time>, effective{' '}
-          <time dateTime={NEC_2026_EFFECTIVE}>{formatDate(NEC_2026_EFFECTIVE)}</time>. It moves the minimum-size rule from 310.3(A) to 310.5, with
+          NFPA issued the 2026 edition on{' '}
+          <time dateTime={NEC_2026_ISSUED} data-src={ISSUE}>
+            {formatDate(NEC_2026_ISSUED)}
+          </time>
+          , effective{' '}
+          <time dateTime={NEC_2026_EFFECTIVE} data-src={ISSUE}>
+            {formatDate(NEC_2026_EFFECTIVE)}
+          </time>
+          . It moves the minimum-size rule from 310.3(A) to 310.5, with
           minimum sizes of <Size s={NEC_2026_MIN_SIZES.Cu} /> copper, <Size s={NEC_2026_MIN_SIZES.CCA} /> copper-clad aluminum and{' '}
           <Size s={NEC_2026_MIN_SIZES.Al} /> aluminum, and it renumbers the load-calculation article from 220 to 120.
         </p>
