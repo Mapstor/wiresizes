@@ -26,12 +26,14 @@ const MIXED_CASE: Record<string, string> = {
 // the canonical display name (e.g. dotted NEC table numbers).
 const SLUG_OVERRIDES: Record<string, string> = {
   'nec-table-310-16': 'NEC Table 310.16',
+  // repurposed in WSZ-005c; the slug keeps its old name
+  'nec-code-compliance': 'NEC Edition by State',
 };
 
 /**
  * Converts a slug string to a human-friendly title.
  * Example: "wire-size-for-200-amp" → "Wire Size for 200 Amp"
- *          "nec-code-compliance"   → "NEC Code Compliance"
+ *          "single-vs-three-phase" → "Single vs Three Phase"
  *          "kva-to-amps-calculator" → "kVA to Amps Calculator"
  */
 function slugToTitle(slug: string): string {

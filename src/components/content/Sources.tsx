@@ -4,7 +4,9 @@
 // segment and one line "Retrieved {Mon YYYY}." follows the list; otherwise each item keeps its own segment. Each item
 // carries data-src={domain}, so the numbers in its text trace to it. Server only (registry.ts). The page wraps it in
 // its own secondary-section markup and passes that section's classes. The heading is #sources, the target of the
-// byline's "Sources below" (WSZ-004a); scroll-mt-20 keeps it clear of the sticky header.
+// byline's "Sources below" (WSZ-004a); scroll-mt-20 keeps it clear of the sticky header. `hrefs` replaces the registry
+// URL of a domain whose records are linked one per row elsewhere (WSZ-005c: nec-adoption links the editions page's state
+// table, where each state's record is linked).
 import { clsx } from 'clsx';
 import { attribution, attributionParts } from '@/lib/verified/registry';
 import { monthOf } from './AsOf';
@@ -17,12 +19,14 @@ interface SourcesProps {
   linkClassName?: string;
   /** The "Retrieved" line. */
   noteClassName?: string;
+  /** Link targets that replace a domain's registry URL. */
+  hrefs?: Readonly<Record<string, string>>;
 }
 
-export function Sources({ domains, headingClassName, listClassName, linkClassName, noteClassName }: SourcesProps) {
+export function Sources({ domains, headingClassName, listClassName, linkClassName, noteClassName, hrefs = {} }: SourcesProps) {
   const items = [...new Set(domains)].map((domain) => {
     const { text, url, verified_date } = attribution(domain);
-    return { domain, url, verified_date, ...attributionParts(text) };
+    return { domain, url: hrefs[domain] ?? url, verified_date, ...attributionParts(text) };
   });
   if (items.length === 0) throw new Error('<Sources> needs at least one domain');
   const retrieved = items[0].retrieved;

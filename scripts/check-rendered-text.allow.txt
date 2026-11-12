@@ -10,3 +10,9 @@
 /calculators/watts-to-amps-calculator | 3Φ | phase-count notation: 3Φ is three-phase, a symbol name, not a number and a unit
 /guides/wire-size-for-ev-charger | §30C | section 30C of the Internal Revenue Code (the IRS credit's name)
 /privacy | _ga_T871GVJZE2 | the name of Google Analytics' session cookie, which the privacy notice must name exactly
+
+# state code citations as the states print them (nec-adoption.json, the editions page's table, WSZ-005c)
+/guides/nec-code-compliance | 15A-2-103(1)(g | Utah Code section 15A-2-103(1)(g), cited in Utah's scope text; a statute number, not a number and a unit
+/guides/nec-code-compliance | 15A-2-103(1)(b | Utah Code section 15A-2-103(1)(b), cited in Utah's scope text; a statute number, not a number and a unit
+/guides/nec-code-compliance | 15A-2-103 | Utah Code section 15A-2-103, named in Utah's source line; a statute number, not a number and a unit
+/guides/nec-code-compliance | 87CSR4 | West Virginia's rule citation 87CSR4 (Code of State Rules, Title 87, Series 4) in its scope text and source line, as the state writes it

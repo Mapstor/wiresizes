@@ -24,9 +24,10 @@ import { TABLE_250_122_ROWS } from '@/lib/verified/nec-250-122';
 import { ADJUSTMENT_ROWS } from '@/lib/verified/nec-310-15-C-1';
 import { SERVICE_AMPACITY_PERCENT, TABLE_310_12_ROWS } from '@/lib/verified/nec-310-12';
 import { AMPACITY_COLUMNS, TABLE_310_16_ROWS, TABLE_310_16_SIZES, TABLE_AMBIENT } from '@/lib/verified/nec-310-16';
-import { attribution, attributionParts, coverage } from '@/lib/verified/registry';
-import { NEC_2026_EFFECTIVE, NEC_2026_ISSUED, NEC_2026_MIN_SIZES } from '@/lib/verified/nec-2026-edition';
+import { attribution, attributionParts, coverage, nextCheck } from '@/lib/verified/registry';
+import { NEC_2026_DOMAIN, NEC_2026_EFFECTIVE, NEC_2026_ISSUANCE_DOMAIN, NEC_2026_ISSUED, NEC_2026_MIN_SIZES } from '@/lib/verified/nec-2026-edition';
 import { formatDate } from '@/lib/page-dates';
+import { ADOPTION_AS_OF, ADOPTION_TABLE_HREF, joinNames, NEC_ADOPTION_DOMAIN, NOT_VERIFIED, stateName } from '@/lib/verified/nec-adoption';
 
 // /methodology (WSZ-004b): one section per verified source the live calculators cite (src/lib/methodology.ts lists
 // them and the pages that cite each; check-structure 24 holds that list to the built pages), the wire size method,
@@ -143,15 +144,16 @@ function Formulas({ src, rows }: { src: string; rows: [string, ReactNode][] }) {
   );
 }
 
-/** The source's link, publisher, retrieval month and the pages that list it under Sources. */
-function SourceFacts({ s }: { s: MethodologySection }) {
+/** The source's link, publisher, retrieval month and the pages that list it under Sources. `href` replaces the link of a
+ *  source whose records are linked one per row on a page (nec-adoption: the editions page's state table). */
+function SourceFacts({ s, href }: { s: MethodologySection; href?: string }) {
   const { text, publisher, url, verified_date } = attribution(s.domain);
   const { short } = attributionParts(text);
   return (
     <dl className="grid gap-x-4 gap-y-1 text-base sm:grid-cols-[7rem_1fr]">
       <dt className="font-semibold text-gray-900">Source</dt>
       <dd>
-        <a href={url} className={LINK}>
+        <a href={href ?? url} className={LINK}>
           {short}
         </a>
       </dd>
@@ -226,8 +228,9 @@ export default function MethodologyPage() {
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
           has a section below: what it is and which edition was used, where it was read, how the calculators use it,
           and where that use stops. The first section shows how the wire size calculator puts several of them
-          together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page and the homepage also list
-          their sources under Sources, near the bottom of the page.
+          together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
+          homepage and the calculators and guides pages also list their sources under Sources, near the bottom of the
+          page.
         </p>
         <p>
           Code values are from NFPA 70, the National Electrical Code (NEC), 2023 edition, unless a section says
@@ -746,27 +749,87 @@ export default function MethodologyPage() {
           </Limits>
         </SourceSection>
 
-        <SourceSection domain="nec-2026-edition">
+        <SourceSection domain={NEC_ADOPTION_DOMAIN}>
           <p>
-            NFPA issued the 2026 edition of the NEC on{' '}
-            <time dateTime={NEC_2026_ISSUED}>{formatDate(NEC_2026_ISSUED)}</time>, effective{' '}
-            <time dateTime={NEC_2026_EFFECTIVE}>{formatDate(NEC_2026_EFFECTIVE)}</time>. The site&apos;s calculators and tables
-            stay on the 2023 edition; the 2026 facts it states come from NFPA&apos;s issue record and from state reviews of the
-            final edition.
+            Which NEC edition applies depends on what each state has adopted, or, where a state has no single statewide
+            electrical code, what its cities and counties have adopted. The{' '}
+            <Link href={ADOPTION_TABLE_HREF} className={LINK}>
+              NEC edition by state
+            </Link>{' '}
+            table has one row per state code, each read from a state or District of Columbia government record: a statute, an
+            administrative rule or a page of the agency that enforces the code. Each row links its record.
           </p>
-          <SourceFacts s={section('nec-2026-edition')} />
+          <SourceFacts s={section(NEC_ADOPTION_DOMAIN)} href={ADOPTION_TABLE_HREF} />
+          <p>
+            The pages under Cited on give, from these rows, the states on the newest edition and the number of states on
+            each edition, counting each state and the District of Columbia once.
+          </p>
+          <Limits>
+            <li>
+              {joinNames(NOT_VERIFIED.map((n) => stateName(n.state)))} {NOT_VERIFIED.length === 1 ? 'has' : 'have'} no
+              verified edition, and none is guessed.
+            </li>
+            <li>City and county codes and their amendments are not listed; the local inspection office says which apply.</li>
+            <li>
+              The rows were verified as of{' '}
+              <time dateTime={ADOPTION_AS_OF} data-src={NEC_ADOPTION_DOMAIN}>
+                {formatDate(ADOPTION_AS_OF)}
+              </time>{' '}
+              and are checked again by{' '}
+              <time dateTime={nextCheck(NEC_ADOPTION_DOMAIN).slice(0, 7)} data-src={NEC_ADOPTION_DOMAIN}>
+                {monthOf(nextCheck(NEC_ADOPTION_DOMAIN))}
+              </time>
+              .
+            </li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain={NEC_2026_ISSUANCE_DOMAIN}>
+          <p>
+            NFPA&apos;s Standards Council issues each edition of the NEC. The final minutes of the meeting that issued the
+            2026 edition give its issue date,{' '}
+            <time dateTime={NEC_2026_ISSUED}>{formatDate(NEC_2026_ISSUED)}</time>, and its effective date,{' '}
+            <time dateTime={NEC_2026_EFFECTIVE}>{formatDate(NEC_2026_EFFECTIVE)}</time>. They also record the council&apos;s
+            decisions on appeals against parts of the final text, one of which kept the 310.5 rule that allows{' '}
+            <Size s={NEC_2026_MIN_SIZES.Cu} /> copper and <Size s={NEC_2026_MIN_SIZES.CCA} /> copper-clad aluminum
+            branch-circuit conductors.
+          </p>
+          <SourceFacts s={section(NEC_2026_ISSUANCE_DOMAIN)} />
+          <p>The pages under Cited on take the two dates from these minutes.</p>
+          <Limits>
+            <li>The minutes give dates and decisions, not the code text, so the changes themselves come from the state review in the next section.</li>
+            <li>
+              NFPA can amend an issued edition with Tentative Interim Amendments. None issued for the 2026 edition by{' '}
+              {monthOf(attribution(NEC_2026_ISSUANCE_DOMAIN).verified_date)} changes a section this site states.
+            </li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain={NEC_2026_DOMAIN}>
+          <p>
+            Minnesota&apos;s Department of Labor and Industry reviewed the issued 2026 edition before the state adopted it.
+            The minutes of its review committee include a table of the significant changes, section by section, and the
+            site states only changes that table describes. The site&apos;s calculators and tables stay on the 2023 edition.
+          </p>
+          <SourceFacts s={section(NEC_2026_DOMAIN)} />
           <p>
             The{' '}
             <Link href="/guides/nec-table-310-16#nec-2026" className={LINK}>
               NEC Table 310.16 page
             </Link>{' '}
-            uses it for the edition&apos;s dates and the new minimum sizes: <Size s={NEC_2026_MIN_SIZES.Cu} /> copper,{' '}
+            uses it for the new minimum sizes, <Size s={NEC_2026_MIN_SIZES.Cu} /> copper,{' '}
             <Size s={NEC_2026_MIN_SIZES.CCA} /> copper-clad aluminum and <Size s={NEC_2026_MIN_SIZES.Al} /> aluminum, in a
-            section renumbered to 310.5.
+            section renumbered to 310.5, and for the load-calculation article, renumbered from 220 to 120.{' '}
+            <Link href="/guides/nec-code-compliance#changes" className={LINK}>
+              NEC edition by state
+            </Link>{' '}
+            lists those changes and others from the summary, among them the threshold of outdoor GFCI protection at
+            dwellings and the outdoor service disconnect of one- and two-family dwellings.
           </p>
           <Limits>
             <li>Changes seen only in NFPA&apos;s revision drafts are labeled as drafts and never shown as final.</li>
             <li>The final 2026 Table 310.16 has not been seen, so no 2026 ampacity is shown.</li>
+            <li>One line of the summary, on electric vehicle charging, describes draft text that the issued edition left out; the site does not use it.</li>
           </Limits>
         </SourceSection>
 

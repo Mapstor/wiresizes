@@ -29,8 +29,12 @@ const LOW_VOLTAGE = '/calculators/low-voltage-calculator';
 const SERVICE_ENTRANCE = '/calculators/service-entrance-calculator';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
-// The homepage lists the three sources of its wire size table under Sources (WSZ-005b)
+const EDITIONS = '/guides/nec-code-compliance';
+// The homepage lists the three sources of its wire size table under Sources (WSZ-005b); it and the two hubs also list
+// the two sources of the NEC edition line (WSZ-005c)
 const HOME = '/';
+const CALCULATORS_HUB = '/calculators';
+const GUIDES_HUB = '/guides';
 
 export const METHODOLOGY_SECTIONS: MethodologySection[] = [
   {
@@ -108,10 +112,22 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     citedOn: [AWG_CHART],
   },
   {
+    id: 'nec-adoption',
+    domain: 'nec-adoption',
+    title: 'NEC editions adopted by the states',
+    citedOn: [EDITIONS, TABLE_310_16, HOME, CALCULATORS_HUB, GUIDES_HUB],
+  },
+  {
+    id: 'nec-2026-issuance',
+    domain: 'nec-2026-issuance',
+    title: 'The 2026 NEC: issue and effective dates',
+    citedOn: [EDITIONS, TABLE_310_16, HOME, CALCULATORS_HUB, GUIDES_HUB],
+  },
+  {
     id: 'nec-2026',
     domain: 'nec-2026-edition',
-    title: 'The 2026 NEC edition',
-    citedOn: [TABLE_310_16],
+    title: 'Changes in the 2026 NEC',
+    citedOn: [EDITIONS, TABLE_310_16],
   },
 ];
 
