@@ -166,14 +166,12 @@ export function startDateRange(edition: string): { first: AdoptionRow; last: Ado
 }
 
 /**
- * Source links that answered 404 when WSZ-005c checked every row's link (2026-11-12): those rows show their publisher
- * without a link until the state's record is read again and the data file regenerated (DEVLOG §5). A URL here that the
- * data file no longer holds fails tests/wsz005c-editions.test.ts, so the list empties itself with the next data file.
+ * Source links of verified rows found answering 404 (D-31): those rows show their publisher without a link until the
+ * state's record is read again and the data file regenerated. Empty since WSZ-024 (2026-11-12), which replaced
+ * Louisiana's and Wisconsin's dead links. A URL here that the data file no longer holds fails
+ * tests/wsz005c-editions.test.ts.
  */
-export const OFFLINE_SOURCE_URLS: ReadonlySet<string> = new Set([
-  'https://doa.louisiana.gov/media/1kbejceb/2312emr003.pdf',
-  'https://dsps.wi.gov/Documents/NewsMedia/20260901NewElectricalCodeNewsRelease.pdf',
-]);
+export const OFFLINE_SOURCE_URLS: ReadonlySet<string> = new Set<string>([]);
 
 /** "a, b and c" (the site's lists take no serial comma). */
 export function joinNames(names: string[]): string {

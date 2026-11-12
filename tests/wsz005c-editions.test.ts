@@ -128,6 +128,15 @@ describe('nec-adoption.json, rendered per its rules', () => {
     for (const url of OFFLINE_SOURCE_URLS) assert.ok(urls.has(url), url);
   });
 
+  it('holds the rows re-read in WSZ-024: Louisiana and New Hampshire dated, Wisconsin on its new address, no dead link left', () => {
+    const by = (state: string) => adoption().find((r) => r.state === state);
+    assert.equal(by('LA')?.effective, '2023-01-01');
+    assert.deepEqual(by('LA')?.next_change, { edition: '2023', effective: null });
+    assert.equal(by('NH')?.effective, '2025-07-01');
+    assert.match(by('WI')?.source_url ?? '', /^https:\/\/dsps\.wi\.gov\/MediaFileLocation\//);
+    assert.equal(OFFLINE_SOURCE_URLS.size, 0);
+  });
+
   it('joins names without a serial comma', () => {
     assert.equal(joinNames(['A']), 'A');
     assert.equal(joinNames(['A', 'B']), 'A and B');
