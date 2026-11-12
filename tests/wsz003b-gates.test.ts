@@ -207,6 +207,13 @@ describe('gate c: NEC references', () => {
     assert.deepEqual(refs('§ 230.70'), ['230.70']);
   });
 
+  it('skips the sections of state statutes and rules (WSZ-005c)', () => {
+    assert.deepEqual(refs('Counties (NRS 244.3675(2)) and cities (NRS 268.413(2)) may adopt any code'), []);
+    assert.deepEqual(refs('State buildings: 2023 NEC as minimum design standards (NAC 341.045(d)).'), []);
+    assert.deepEqual(refs('NRS 268.413(2), and 240.4(D) limits the breaker'), ['240.4(D)']);
+    assert.deepEqual(refs('2017 NEC applies to 210.8(A), 230.67(A)'), ['210.8(A)', '230.67(A)']);
+  });
+
   it('skips measurements, constants, prices and the code name', () => {
     for (const text of ['120.5 V', '17.002 Ω·cmil/ft', '10.371 Ω·cmil/ft', 'NFPA 70 (NEC) 2023', '$110.02', 'a factor of 1.25', 'I = 831.36 A', 'times 831.36', 'NEC 2023']) {
       assert.deepEqual(refs(text), [], text);

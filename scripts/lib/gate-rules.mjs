@@ -267,6 +267,9 @@ const KEYWORD_RE = new RegExp(`(?:\\bTables?|\\bNEC|\\bSections?|§)\\s*(${SECTI
 const ARTICLE_RE = /\bArticles?\s+(\d{2,3}(?:\s*(?:,|and|or|&)\s*\d{2,3})*)\b/gu;
 // a bare section number: "240.4(D)" (with a subdivision) or "310.12"
 const BARE_RE = new RegExp(`(?<![\\p{L}\\p{N}.,$/])(${SECTION})(?![\\p{N}])`, 'gu');
+// a state statute or rule abbreviation right before a number makes it that state's section, not the NEC's (WSZ-005c:
+// Nevada's "NRS 268.413(2)" and "NAC 341.045(d)" in the editions page's scope text)
+const STATUTE_BEFORE = /(?:\b(?:NRS|NAC|HRS|RSA|RSMo|ILCS)|A\.R\.S\.|K\.S\.A\.|K\.A\.R\.)\s*$/u;
 
 function articleOf(ref) {
   return Number(ref.split('.')[0]);
@@ -276,7 +279,8 @@ function articleOf(ref) {
  * NEC references in a text: [{ ref, index }]. A keyword ("Table", "NEC", "Section", "§", "Article") makes a
  * reference of the section numbers it leads; a bare number counts when it has a subdivision ("240.4(D)") or its
  * article is one the allowlist uses (`articles`). Articles below 90 do not exist, so "17.002" is a constant; a number
- * followed by a unit is a measurement ("120.5 V", "17.002 Ω·cmil/ft").
+ * followed by a unit is a measurement ("120.5 V", "17.002 Ω·cmil/ft"); a number after a state statute or rule
+ * abbreviation is the state's section ("NRS 268.413(2)").
  */
 export function necRefs(text, articles) {
   const refs = [];
@@ -302,6 +306,7 @@ export function necRefs(text, articles) {
     if (taken.some(([s, e]) => at >= s && at < e)) continue;
     const article = articleOf(m[1]);
     if (article < 90 || isMeasurement(end)) continue;
+    if (STATUTE_BEFORE.test(text.slice(Math.max(0, at - 12), at))) continue;
     if (!m[1].includes('(') && !articles.has(article)) continue;
     refs.push({ ref: m[1], index: at });
   }

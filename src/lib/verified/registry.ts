@@ -55,3 +55,11 @@ export function coverage(domain: string): string {
   attribution(domain);
   return registryRows().get(domain)?.coverage ?? '';
 }
+
+/** A verified domain's next_check date, YYYY-MM-DD (WSZ-005c: the editions page shows when its data is checked next). */
+export function nextCheck(domain: string): string {
+  attribution(domain);
+  const date = registryRows().get(domain)?.next_check ?? '';
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error(`data-sources.csv: domain "${domain}" has no next_check date`);
+  return date;
+}

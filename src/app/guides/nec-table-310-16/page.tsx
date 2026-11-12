@@ -4,6 +4,7 @@ import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { DatasetSchema } from '@/components/seo/DatasetSchema';
 import { Byline } from '@/components/content/Byline';
+import { EditionSummary } from '@/components/content/EditionSummary';
 import { DataTable, STICKY_TD, STICKY_TH, TD, TH } from '@/components/content/DataTable';
 import { Figure } from '@/components/content/Figure';
 import { Num } from '@/components/content/Num';
@@ -16,6 +17,7 @@ import { articleDates, formatDate } from '@/lib/page-dates';
 import { conditions240_4D, max240_4D, ROWS_240_4_D } from '@/lib/verified/nec-240-4-d';
 import type { Row240_4D } from '@/lib/verified/nec-240-4-d';
 import { NEC_2026_DOMAIN, NEC_2026_EFFECTIVE, NEC_2026_ISSUANCE_DOMAIN, NEC_2026_ISSUED, NEC_2026_MIN_SIZES } from '@/lib/verified/nec-2026-edition';
+import { ADOPTION_AS_OF, ADOPTION_TABLE_HREF, NEC_ADOPTION_DOMAIN } from '@/lib/verified/nec-adoption';
 import { SERVICE_AMPACITY_PERCENT, TABLE_310_12_ROWS, table31012 } from '@/lib/verified/nec-310-12';
 import { AMBIENT_ROWS } from '@/lib/verified/nec-310-15-B-1-1';
 import { ADJUSTMENT_ROWS } from '@/lib/verified/nec-310-15-C-1';
@@ -56,9 +58,10 @@ const OCPD = 'nec-240-4-d';
 const SVC = 'nec-310-12';
 const ED = NEC_2026_DOMAIN;
 const ISSUE = NEC_2026_ISSUANCE_DOMAIN;
+const ADOPT = NEC_ADOPTION_DOMAIN;
 const CALC_AMP = 'calc:ampacity';
 const CALC_SVC = 'calc:service-lookup';
-const SOURCE_DOMAINS = [AMP, COR, OCPD, SVC, ISSUE, ED];
+const SOURCE_DOMAINS = [AMP, COR, OCPD, SVC, ISSUE, ED, ADOPT];
 
 const LINK = 'text-blue-700 underline underline-offset-2 hover:text-blue-900';
 const H2 = 'scroll-mt-20 text-2xl font-semibold text-gray-900';
@@ -95,6 +98,8 @@ const MIN_200 = minimumServiceAmpacity(SERVICE_200.ratingA);
 function Dash({ label = 'no value' }: { label?: string }) {
   return <span aria-label={label}>–</span>;
 }
+
+const monthYear = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
 
 const materialName = (m: string) => (m === 'Cu' ? 'copper' : m === 'Al' ? 'aluminum' : 'copper-clad aluminum');
 
@@ -616,6 +621,22 @@ export default function NecTable31016Page() {
           NFPA&apos;s 2026 revision drafts show the Table 310.16 rows from <Size s="12" /> to <Size s="2000" /> unchanged. This site has not seen
           the final 2026 table, so this page shows the 2023 values. Which edition applies depends on what your state or city has adopted.
         </p>
+        <aside aria-labelledby="edition-panel" className="space-y-3 rounded-md border border-blue-200 bg-blue-50 px-5 py-4" data-src={ADOPT}>
+          <h3 id="edition-panel" className={H3}>
+            The edition each state has adopted, as of{' '}
+            <time dateTime={ADOPTION_AS_OF} data-src={ADOPT}>
+              {monthYear(ADOPTION_AS_OF)}
+            </time>
+          </h3>
+          <EditionSummary />
+          <p className={P}>
+            Scope and start dates differ from state to state, and cities and counties can amend the state code.{' '}
+            <Link href="/guides/nec-code-compliance" className={LINK}>
+              NEC edition by state
+            </Link>{' '}
+            gives each state&apos;s code, start date and scope, with a link to the state&apos;s record.
+          </p>
+        </aside>
       </section>
 
       <section aria-labelledby="faq" className="space-y-5">
@@ -681,7 +702,13 @@ export default function NecTable31016Page() {
       </section>
 
       <section aria-label="Sources and notices" className="space-y-3 border-t border-gray-200 pt-6 text-sm text-gray-700">
-        <Sources domains={SOURCE_DOMAINS} headingClassName={H2} listClassName="list-disc space-y-1 pl-6" linkClassName={LINK} />
+        <Sources
+          domains={SOURCE_DOMAINS}
+          hrefs={{ [ADOPT]: ADOPTION_TABLE_HREF }}
+          headingClassName={H2}
+          listClassName="list-disc space-y-1 pl-6"
+          linkClassName={LINK}
+        />
         <p data-src={AMP}>
           Values are shown as data with attribution; NFPA&apos;s table notes are not reproduced. The{' '}
           <Link href="/methodology" className={LINK}>

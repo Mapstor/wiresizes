@@ -290,8 +290,8 @@ export default function WireSizeForEVChargerPage() {
                   <p className="text-sm text-gray-600">Upgrading to 200 A service for EV charging and modern homes.</p>
                 </Link>
                 <Link href="/guides/nec-code-compliance" className="bg-white rounded-lg p-4 hover:shadow-lg transition-shadow">
-                  <h3 data-name="" className="font-semibold text-blue-600 mb-2">NEC Code Compliance</h3>
-                  <p className="text-sm text-gray-600">Understanding electrical code requirements for safe installations.</p>
+                  <h3 data-name="" className="font-semibold text-blue-600 mb-2">NEC Edition by State</h3>
+                  <p className="text-sm text-gray-600">Which edition of the electrical code each state has adopted, and since when.</p>
                 </Link>
                 <Link href="/calculators/voltage-drop-calculator" className="bg-white rounded-lg p-4 hover:shadow-lg transition-shadow">
                   <h3 data-name="" className="font-semibold text-blue-600 mb-2">Voltage Drop Calculator</h3>

@@ -30,7 +30,7 @@
 - [Electrical Power Calculations](https://wiresizes.com/guides/electrical-power-calculations): Formulas for power, current, voltage and resistance in DC, single-phase and three-phase circuits.
 - [Single vs Three Phase](https://wiresizes.com/guides/single-vs-three-phase): Single-phase and three-phase voltage systems and the power formulas for each.
 - [Power Factor Explained](https://wiresizes.com/guides/power-factor-explained): Real, reactive and apparent power and power factor, PF = P ÷ S.
-- [NEC Code Compliance](https://wiresizes.com/guides/nec-code-compliance): NEC overcurrent protection (standard ratings from Table 240.6(A) and the 240.4(D) small-conductor limits), grounding and bonding, the voltage drop formula and GFCI locations.
+- [NEC Edition by State](https://wiresizes.com/guides/nec-code-compliance): the National Electrical Code edition each state and DC has adopted, with its start date, scope and any scheduled change, each row linked to the state's record; the 2026 edition's dates and the changes Minnesota's review of it lists.
 
 ## Site
 

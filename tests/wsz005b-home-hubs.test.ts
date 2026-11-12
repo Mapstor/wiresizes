@@ -103,9 +103,13 @@ describe('readers of the route list', () => {
     for (const [route, name] of Object.entries(CITED_PAGE_NAMES)) assert.equal(name, pageName(route), route);
     const byDomain = Object.fromEntries(METHODOLOGY_SECTIONS.map((s) => [s.domain, s.citedOn]));
     for (const domain of ['awg-geometry', 'nec-310-16', 'nec-240-4-d']) assert.ok(byDomain[domain].includes('/'), domain);
-    // the hubs cite nothing: their only sourced line, the 2026 edition's dates, waits for a working source link (DEVLOG §5)
+    // the hubs cite only the two sources of the edition line, which the homepage also cites (WSZ-005c)
     for (const [domain, routes] of Object.entries(byDomain)) {
-      for (const hub of ['/calculators', '/guides']) assert.ok(!routes.includes(hub), `${domain}: ${hub}`);
+      const editionLine = domain === 'nec-2026-issuance' || domain === 'nec-adoption';
+      for (const hub of ['/calculators', '/guides', '/']) {
+        if (editionLine) assert.ok(routes.includes(hub), `${domain}: ${hub}`);
+        else if (hub !== '/') assert.ok(!routes.includes(hub), `${domain}: ${hub}`);
+      }
     }
     assert.ok(!byDomain['nec-2026-edition'].includes('/'));
   });

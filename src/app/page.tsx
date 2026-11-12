@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { clsx } from 'clsx';
 import { DataTable, STICKY_TD, STICKY_TH, TD, TH } from '@/components/content/DataTable';
-import { EditionNote } from '@/components/content/EditionNote';
+import { EDITION_NOTE_DOMAINS, EditionNote } from '@/components/content/EditionNote';
 import { Num } from '@/components/content/Num';
 import { INDEX_LINK, RouteLinks } from '@/components/content/RouteIndex';
 import { Size } from '@/components/content/Size';
@@ -12,13 +12,14 @@ import { ORGANIZATION, ORGANIZATION_REF } from '@/lib/identity';
 import { awgRow } from '@/lib/verified/awg';
 import type { AwgRow, SizeKey } from '@/lib/verified/awg';
 import { ROWS_240_4_D } from '@/lib/verified/nec-240-4-d';
+import { ADOPTION_TABLE_HREF, NEC_ADOPTION_DOMAIN } from '@/lib/verified/nec-adoption';
 import { AMPACITY_COLUMNS, TABLE_310_16_SIZES, TABLE_AMBIENT, columnKey, table31016 } from '@/lib/verified/nec-310-16';
 import type { AmpacityColumn } from '@/lib/verified/nec-310-16';
 
 // The homepage (WSZ-005b): what the site covers and who keeps it, every live calculator and guide from the route list
 // (src/lib/routes.ts, D-26), and a short wire size table, 14 AWG to 4/0, read from awg.json, Table 310.16 and 240.4(D).
 // Spec: research/page-specs.md "WSZ-005", homepage. Every number renders inside an element whose data-src names its
-// source.
+// source; the edition line's dates and states (WSZ-005c) add nec-2026-issuance and nec-adoption to Sources.
 const H1 = 'Wire Size Charts and Electrical Calculators';
 const TITLE = `${H1} | WireSizes.com`;
 const DESCRIPTION =
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
 const GEO = 'awg-geometry';
 const AMP = 'nec-310-16';
 const OCPD = 'nec-240-4-d';
-const SOURCE_DOMAINS = [GEO, AMP, OCPD];
+const SOURCE_DOMAINS = [GEO, AMP, OCPD, ...EDITION_NOTE_DOMAINS];
 
 const LINK = 'text-blue-700 underline underline-offset-2 hover:text-blue-900';
 const H2 = 'text-2xl font-semibold text-gray-900';
@@ -268,10 +269,11 @@ export default function HomePage() {
       </section>
 
       <div className="mt-14 space-y-8 border-t border-gray-300 pt-8">
-        <EditionNote className={P} />
+        <EditionNote className={P} linkClassName={LINK} />
         <section aria-labelledby="sources" className="max-w-prose space-y-3">
           <Sources
             domains={SOURCE_DOMAINS}
+            hrefs={{ [NEC_ADOPTION_DOMAIN]: ADOPTION_TABLE_HREF }}
             headingClassName="text-xl font-semibold text-gray-900"
             listClassName="list-disc space-y-1 pl-6 text-sm text-gray-700"
             linkClassName={LINK}

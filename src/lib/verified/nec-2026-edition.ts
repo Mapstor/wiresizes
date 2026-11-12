@@ -43,3 +43,17 @@ if (upheld[1] !== NEC_2026_MIN_SIZES.Cu || upheld[2] !== NEC_2026_MIN_SIZES.CCA)
 }
 
 match(changes, NEC_2026_DOMAIN, /Article 220 → Article 120/, 'Article 220 → Article 120');
+
+const gfci = match(
+  changes,
+  NEC_2026_DOMAIN,
+  /210\.8\(F\) outdoor-outlet GFCI threshold (\d+) A → (\d+) A for single-phase branch circuits rated (\d+) V or less to ground/,
+  'the 210.8(F) threshold',
+);
+/** 210.8(F), outdoor outlets at dwellings: the branch-circuit rating GFCI protection reaches, 2023 and 2026, and the
+ *  voltage to ground it applies at or below. */
+export const NEC_2026_OUTDOOR_GFCI = { fromA: Number(gfci[1]), toA: Number(gfci[2]), maxVoltsToGround: Number(gfci[3]) };
+
+// Stated in words only on the pages; the patterns hold the wording the copy relies on
+match(changes, NEC_2026_DOMAIN, /120\.7 Power Control System \(energy management systems renamed power control systems\)/, '120.7 power control systems');
+match(changes, NEC_2026_DOMAIN, /230\.70\(A\)\(1\) one- and two-family dwelling service disconnect in a readily accessible outdoor location/, '230.70 outdoor disconnect');

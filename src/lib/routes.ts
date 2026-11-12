@@ -146,8 +146,8 @@ export const ROUTES: readonly SiteRoute[] = [
   {
     path: '/guides/nec-code-compliance',
     group: 'tables',
-    name: 'NEC Code Compliance Guide',
-    line: 'Overcurrent protection and grounding rules of the 2023 NEC for branch circuits.',
+    name: 'NEC Edition by State',
+    line: 'The National Electrical Code edition each state has adopted, with its start date, who it covers and any scheduled change, from state records.',
   },
   {
     path: '/guides/wire-size-for-100-amp',

@@ -6,5 +6,9 @@
   {
     "date": "2026-11-11",
     "text": "Rebuilt the AWG wire size chart and the NEC Table 310.16 page from NIST, IEC and NFPA sources. The chart now covers every AWG gauge in NIST's copper wire tables and the kcmil sizes Table 310.16 lists, each value with its source, and statements on both pages that no cited source supports were removed."
+  },
+  {
+    "date": "2026-11-12",
+    "text": "Replaced the NEC code compliance guide, whose summaries of overcurrent protection and grounding cited code sections this site had not checked against a source, with NEC edition by state: the edition each state has adopted, read from state government records."
   }
 ]

@@ -36,7 +36,7 @@ const footerLinks = {
     { name: 'View All Guides', href: '/guides', isViewAll: true },
   ],
   resources: [
-    { name: 'NEC Code Compliance', href: '/guides/nec-code-compliance' },
+    { name: 'NEC Edition by State', href: '/guides/nec-code-compliance' },
     { name: 'Power Calculations', href: '/guides/electrical-power-calculations' },
     { name: 'Single vs Three Phase', href: '/guides/single-vs-three-phase' },
     { name: 'Power Factor Explained', href: '/guides/power-factor-explained' },
