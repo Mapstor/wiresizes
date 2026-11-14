@@ -232,7 +232,7 @@ export default function KvaToAmpsPage() {
                     </th>
                     {TABLE_COLS.map((c) => (
                       <td key={c.key} className={RTD}>
-                        <Num v={ampsOf(s, c.volts, c.phases)} src={CALC} format={SIG} />
+                        <Val v={ampsOf(s, c.volts, c.phases)} unit="A" src={CALC} format={SIG} />
                       </td>
                     ))}
                   </tr>
