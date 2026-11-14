@@ -20,6 +20,8 @@ import { TABLE_310_16_ROWS, TABLE_310_16_SIZES, table31016 } from '@/lib/verifie
 import { attribution } from '@/lib/verified/registry';
 import { LookGuideBody } from '@/components/layout/LookGuideBody';
 import { CopperSpiral } from '@/components/look/CopperSpiral';
+import { ResistanceChart } from '@/components/look/Charts';
+import { Figure } from '@/components/content/Figure';
 import { PageTitle } from '@/components/look/PageTitle';
 import { SourceLine } from '@/components/content/SourceLine';
 import {
@@ -710,6 +712,20 @@ export default function AwgWireSizeChartPage() {
                 </Link>
                 .
               </p>
+              <Figure
+                caption={
+                  <>
+                    <span data-src={RES}>
+                      Copper from the NIST tables and aluminum calculated by this site, every gauge on one logarithmic scale. The line is straight
+                      because each gauge step multiplies the resistance by the same factor, about ten times every ten gauges. Point at a gauge to
+                      read its copper value.
+                    </span>
+                    <SourceLine domains={[GEO, RES]} />
+                  </>
+                }
+              >
+                <ResistanceChart />
+              </Figure>
               <DataTable id="resistance-table" variant="ruled" src={GEO} caption="Resistance and weight per AWG size, solid conductor">
                 <thead>
                   <tr>

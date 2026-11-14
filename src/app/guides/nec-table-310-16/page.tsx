@@ -8,6 +8,8 @@ import { EditionSummary } from '@/components/content/EditionSummary';
 import { DataTable, RSTICKY_TD, RSTICKY_TH, RTD, RTH } from '@/components/content/DataTable';
 import { LookGuideBody } from '@/components/layout/LookGuideBody';
 import { OnThisPage } from '@/components/look/OnThisPage';
+import { AmbientChart, AmpacityDumbbell, BundlingBars } from '@/components/look/Charts';
+import { SourceLine } from '@/components/content/SourceLine';
 import { PageTitle } from '@/components/look/PageTitle';
 import {
   LOOK_BYLINE,
@@ -353,6 +355,19 @@ export default function NecTable31016Page() {
             ))}
           </tbody>
         </DataTable>
+        <Figure
+          caption={
+            <>
+              <span data-src={AMP}>
+                Copper beside aluminum or copper-clad aluminum in the <Val v={75} unit="°C" src={AMP} /> column, every size that both list.
+                Aluminum carries less current than copper of the same size. Point at a size to read both values.
+              </span>
+              <SourceLine domains={[AMP]} />
+            </>
+          }
+        >
+          <AmpacityDumbbell />
+        </Figure>
       </section>
 
       <section aria-labelledby="columns" className="space-y-4">
@@ -390,6 +405,19 @@ export default function NecTable31016Page() {
           by the factor for the ambient temperature, taken from the same temperature column. Factors above 1 apply in cooler surroundings. A
           dash means conductors of that rating may not be used at that temperature.
         </p>
+        <Figure
+          caption={
+            <>
+              <span data-src={COR}>
+                Each step is one band of the table. Every column&apos;s factor is 1.00 at 26 to 30 °C, and a column&apos;s line ends where
+                conductors of that rating may not be used. Point at a band to read its three factors.
+              </span>
+              <SourceLine domains={[COR]} />
+            </>
+          }
+        >
+          <AmbientChart />
+        </Figure>
         <DataTable variant="ruled" id="ambient-table" src={COR} caption="2023 NEC Table 310.15(B)(1)(1), correction factors based on 30 °C (86 °F)">
           <thead>
             <tr>
@@ -437,6 +465,16 @@ export default function NecTable31016Page() {
           after any ambient correction. This site has not yet verified the rules for which conductors count as current-carrying, such as
           neutrals and equipment grounding conductors, so check them in the Code.
         </p>
+        <Figure
+          caption={
+            <>
+              <span data-src={COR}>The percent of the Table 310.16 value for each count of current-carrying conductors.</span>
+              <SourceLine domains={[COR]} />
+            </>
+          }
+        >
+          <BundlingBars />
+        </Figure>
         <DataTable variant="ruled" id="adjustment-table" src={COR} caption="2023 NEC Table 310.15(C)(1), percent of the Table 310.16 value">
           <thead>
             <tr>

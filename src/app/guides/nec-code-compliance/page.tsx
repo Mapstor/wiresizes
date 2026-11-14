@@ -6,6 +6,7 @@ import { monthOf } from '@/components/content/AsOf';
 import { Byline } from '@/components/content/Byline';
 import { LookGuideBody } from '@/components/layout/LookGuideBody';
 import { OnThisPage } from '@/components/look/OnThisPage';
+import { barPath, EditionTileMap, editionStyle } from '@/components/look/Charts';
 import {
   LOOK_BYLINE,
   LOOK_BYLINE_LINK,
@@ -188,14 +189,14 @@ function AdoptionTimeline({ narrow = false }: { narrow?: boolean }) {
       width="100%"
       role="img"
       aria-labelledby={id}
-      className={clsx('h-auto font-display', narrow ? 'max-w-[300px] sm:hidden' : 'hidden max-w-[560px] sm:block')}
+      className={clsx('h-auto font-display', narrow ? 'swap-sm-narrow max-w-[300px]' : 'swap-sm-wide max-w-[560px]')}
       data-src={ADOPT}
     >
       <title id={id}>{`How the ${NEWEST.edition} NEC reached the states: NFPA's issue and effective dates, then the date each state's adoption took effect${UNDATED.length ? `; ${joinNames(UNDATED.map((r) => cap(prose(r.state))))} adopted it with no start date found` : ''}`}</title>
-      <line x1={lineX} x2={lineX} y1={y(0)} y2={y(events.length - 1)} stroke="#8f877f" strokeWidth={2} aria-hidden="true" />
+      <line x1={lineX} x2={lineX} y1={y(0)} y2={y(events.length - 1)} stroke="#8f877f" strokeWidth={2} pathLength={1} className="viz-draw" aria-hidden="true" />
       {events.map((e, i) => (
         <g key={e.key} data-src={e.src}>
-          <circle cx={lineX} cy={y(i)} r={6} fill={e.nfpa ? '#111111' : '#ffffff'} stroke="#111111" strokeWidth={2} aria-hidden="true" />
+          <circle cx={lineX} cy={y(i)} r={6} fill={e.nfpa ? '#111111' : '#ffffff'} stroke="#111111" strokeWidth={2} className="viz-pop" aria-hidden="true" />
           {narrow ? (
             <>
               <text x={lineX + 18} y={y(i) - 4} fontSize={14} fontWeight={600} fill="#555555">
@@ -239,7 +240,14 @@ function AdoptionTimeline({ narrow = false }: { narrow?: boolean }) {
 /** How many jurisdictions are on each edition, with local adoption and the states not verified. */
 function EditionBars({ narrow = false }: { narrow?: boolean }) {
   const bars = [
-    ...EDITIONS.map((g) => ({ key: g.edition, label: editionLabel(g.edition), n: g.states.length, fill: g === NEWEST ? '#111111' : '#8f877f', dash: false })),
+    // the same colors as the tile map, so an edition has one color on the whole page
+    ...EDITIONS.map((g) => ({
+      key: g.edition,
+      label: editionLabel(g.edition),
+      n: g.states.length,
+      fill: editionStyle(g.edition, EDITIONS.map((e) => e.edition)).fill,
+      dash: false,
+    })),
     ...(LOCAL ? [{ key: 'local', label: LOCAL_LABEL, n: LOCAL.states.length, fill: '#ffffff', dash: false }] : []),
     { key: 'not-verified', label: 'Not verified', n: NOT_VERIFIED.length, fill: '#ffffff', dash: true },
   ];
@@ -258,7 +266,7 @@ function EditionBars({ narrow = false }: { narrow?: boolean }) {
       width="100%"
       role="img"
       aria-labelledby={id}
-      className={clsx('h-auto font-display', narrow ? 'max-w-[300px] sm:hidden' : 'hidden max-w-[560px] sm:block')}
+      className={clsx('h-auto font-display', narrow ? 'swap-sm-narrow max-w-[300px]' : 'swap-sm-wide max-w-[560px]')}
       data-src={ADOPT}
     >
       <title id={id}>{`Jurisdictions on each NEC edition, ${AS_OF}, each state and the District of Columbia counted once`}</title>
@@ -278,15 +286,13 @@ function EditionBars({ narrow = false }: { narrow?: boolean }) {
             >
               {b.label}
             </text>
-            <rect
-              x={barX}
-              y={barY}
-              width={bw}
-              height={barH}
+            <path
+              d={b.fill === '#ffffff' ? barPath(barX + 0.75, barY + 0.75, bw - 1.5, barH - 1.5) : barPath(barX, barY, bw, barH)}
               fill={b.fill}
-              stroke={b.fill === '#ffffff' ? '#111111' : b.fill}
+              stroke={b.fill === '#ffffff' ? '#111111' : 'none'}
               strokeWidth={1.5}
               strokeDasharray={b.dash ? '4 3' : undefined}
+              className="viz-grow"
               aria-hidden="true"
             />
             <text x={barX + bw + 8} y={barY + barH - 4} fontSize={14} fontWeight={600} fill="#111111">
@@ -506,6 +512,16 @@ export default function NecEditionByStatePage() {
           Find your state in the first column. The edition is the one the state has adopted, the scope says which buildings or work it covers,
           and the last column links the record the row was read from. Where no start date was found in the state&apos;s records, none is given.
         </p>
+        <Figure
+          caption={
+            <span data-src={ADOPT}>
+              One square per state: the newest edition in copper, older editions in grays, darker for newer. The table below gives each
+              state&apos;s record and start date. Point at a square for the state&apos;s name and edition.
+            </span>
+          }
+        >
+          <EditionTileMap />
+        </Figure>
         <div data-src={ADOPT} className="space-y-2">
           <p id="state-table-caption" className="font-display text-base font-semibold text-ink">
             NEC edition adopted in each state and the District of Columbia, as of{' '}

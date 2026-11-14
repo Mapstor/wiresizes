@@ -4,6 +4,7 @@ import { clsx } from 'clsx';
 import { DataTable, RSTICKY_TD, RSTICKY_TH, RTD, RTH } from '@/components/content/DataTable';
 import { SourceLine } from '@/components/content/SourceLine';
 import { CopperSpiral } from '@/components/look/CopperSpiral';
+import { ALUMINUM, COPPER } from '@/components/look/Charts';
 import { PageTitle } from '@/components/look/PageTitle';
 import {
   LOOK_CAPTION,
@@ -136,6 +137,25 @@ function Cell({ v, src }: { v: number | null; src: string }) {
 
 const materialWord = (m: 'Cu' | 'Al') => (m === 'Cu' ? 'copper' : 'aluminum');
 
+// The largest ampacity in the table, so the copper and aluminum bars share one scale
+const MAX_AMP = Math.max(...SIZES.flatMap((k) => [table31016(k, columnKey('Cu', COLUMN)) ?? 0, table31016(k, columnKey('Al', COLUMN)) ?? 0]));
+
+/**
+ * A thin bar under an ampacity, its length to scale with the table's largest value (WSZ-028, DESIGN.md "Charts").
+ * The track has one fixed width in both columns, so copper and aluminum bars share one scale; it ends under the figure.
+ */
+function AmpBar({ v, color }: { v: number | null; color: string }) {
+  if (v === null) return null;
+  return (
+    <span aria-hidden="true" className="ml-auto mt-1 block w-[2.75rem] sm:w-[5.5rem]">
+      <span
+        className="viz-grow block h-[5px] rounded-r-[3px]"
+        style={{ width: `${((v / MAX_AMP) * 100).toFixed(1)}%`, background: color }}
+      />
+    </span>
+  );
+}
+
 export default function HomePage() {
   return (
     <div className={LOOK_PAGE}>
@@ -259,9 +279,11 @@ export default function HomePage() {
                     </td>
                     <td className={CTD}>
                       <Cell v={table31016(k, columnKey('Cu', COLUMN))} src={AMP} />
+                      <AmpBar v={table31016(k, columnKey('Cu', COLUMN))} color={COPPER} />
                     </td>
                     <td className={CTD}>
                       <Cell v={table31016(k, columnKey('Al', COLUMN))} src={AMP} />
+                      <AmpBar v={table31016(k, columnKey('Al', COLUMN))} color={ALUMINUM} />
                     </td>
                   </tr>
                 ))}

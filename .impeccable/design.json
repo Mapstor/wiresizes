@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-14T13:35:32+00:00",
+  "generatedAt": "2026-11-14T14:58:19+00:00",
   "title": "Design System: WireSizes",
   "extensions": {
     "colorMeta": {
@@ -228,6 +228,96 @@
           "#ccc8c4",
           "#f1eeea"
         ]
+      },
+      "aluminum-blue": {
+        "role": "secondary",
+        "displayName": "Aluminum Blue",
+        "canonical": "#2f6aa3",
+        "tonalRamp": [
+          "#000c1c",
+          "#002647",
+          "#084475",
+          "#29649d",
+          "#4f86be",
+          "#7ca9d8",
+          "#afcdec",
+          "#e6f0fa"
+        ]
+      },
+      "chart-copper-light": {
+        "role": "primary",
+        "displayName": "Chart Copper Light",
+        "canonical": "#c8803f",
+        "tonalRamp": [
+          "#150700",
+          "#3a1c00",
+          "#623504",
+          "#8d500c",
+          "#b66f2c",
+          "#d6955e",
+          "#ebbf9d",
+          "#faece0"
+        ]
+      },
+      "edition-dark": {
+        "role": "neutral",
+        "displayName": "Edition Dark",
+        "canonical": "#2b2826",
+        "tonalRamp": [
+          "#0c0b0a",
+          "#272422",
+          "#44413f",
+          "#64605e",
+          "#85817f",
+          "#a8a4a2",
+          "#cbc8c7",
+          "#efeeee"
+        ]
+      },
+      "edition-mid": {
+        "role": "neutral",
+        "displayName": "Edition Mid",
+        "canonical": "#57514c",
+        "tonalRamp": [
+          "#0d0b09",
+          "#282421",
+          "#46413c",
+          "#66605b",
+          "#87817c",
+          "#a9a49f",
+          "#ccc8c5",
+          "#efeeed"
+        ]
+      },
+      "edition-light": {
+        "role": "neutral",
+        "displayName": "Edition Light",
+        "canonical": "#a39b93",
+        "tonalRamp": [
+          "#0e0b08",
+          "#2a241e",
+          "#47413a",
+          "#676058",
+          "#898179",
+          "#aba49c",
+          "#cdc8c3",
+          "#f0eeec"
+        ]
+      },
+      "connector-gray": {
+        "role": "neutral",
+        "displayName": "Connector Gray",
+        "canonical": "#c4bdb5",
+        "tonalRamp": [
+          "#0e0a07",
+          "#29241e",
+          "#47413a",
+          "#666059",
+          "#88817a",
+          "#aba49c",
+          "#cec8c1",
+          "#f0eeec"
+        ]
       }
     },
     "typographyMeta": {
@@ -279,6 +369,11 @@
         "name": "shine",
         "value": "ease-in-out 6s infinite",
         "purpose": "A soft highlight passing across the conductors from 3.4 s; off under reduced motion."
+      },
+      {
+        "name": "scroll-reveal",
+        "value": "linear, animation-timeline: view()",
+        "purpose": "Chart lines draw, bars grow from the baseline and tiles appear as the chart scrolls into view; finished without scroll timelines or under reduced motion."
       }
     ],
     "breakpoints": [
@@ -358,6 +453,14 @@
       "css": ".ds-spiral { position: relative; width: 260px; height: 170px; font-family: Archivo, Arial, sans-serif; } .ds-c { position: absolute; left: var(--x); top: var(--y); width: var(--d); height: var(--d); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; color: #2a1205; background: radial-gradient(circle at 30% 25%, #f3c193, #d6904f 55%, #a95a26); border: 1px solid #6b3112; border-radius: 50%; animation: ds-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1) var(--t) both; } @keyframes ds-grow { from { transform: scale(0); opacity: 0; } 40% { opacity: 1; } to { transform: scale(1); opacity: 1; } } @media (prefers-reduced-motion: reduce) { .ds-c { animation: none; } }"
     },
     {
+      "name": "Chart",
+      "kind": "custom",
+      "refersTo": "aluminum-blue",
+      "description": "Copper beside aluminum: 10 px dots with a white ring, a gray connector, hairline grid, a legend; the bars grow in as the chart scrolls into view.",
+      "html": "<figure class=\"ds-chart\"><svg viewBox=\"0 0 320 120\" width=\"320\" height=\"120\" role=\"img\" aria-label=\"Ampacity at 75 °C, copper and aluminum\"><g font-family=\"Archivo, Arial, sans-serif\" font-size=\"13\"><circle cx=\"8\" cy=\"10\" r=\"5\" fill=\"#a95a26\"/><text x=\"19\" y=\"14\" fill=\"#111111\">Copper</text><circle cx=\"92\" cy=\"10\" r=\"5\" fill=\"#2f6aa3\"/><text x=\"103\" y=\"14\" fill=\"#111111\">Aluminum</text><line x1=\"96\" x2=\"96\" y1=\"28\" y2=\"96\" stroke=\"#ebe7e2\"/><line x1=\"296\" x2=\"296\" y1=\"28\" y2=\"96\" stroke=\"#ebe7e2\"/><text x=\"10\" y=\"48\" fill=\"#111111\">4/0 AWG</text><line class=\"ds-grow\" x1=\"198\" x2=\"226\" y1=\"44\" y2=\"44\" stroke=\"#c4bdb5\" stroke-width=\"2\"/><circle cx=\"198\" cy=\"44\" r=\"5\" fill=\"#2f6aa3\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"226\" cy=\"44\" r=\"5\" fill=\"#a95a26\" stroke=\"#fff\" stroke-width=\"2\"/><text x=\"10\" y=\"80\" fill=\"#111111\">500 kcmil</text><line class=\"ds-grow\" x1=\"244\" x2=\"282\" y1=\"76\" y2=\"76\" stroke=\"#c4bdb5\" stroke-width=\"2\"/><circle cx=\"244\" cy=\"76\" r=\"5\" fill=\"#2f6aa3\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"282\" cy=\"76\" r=\"5\" fill=\"#a95a26\" stroke=\"#fff\" stroke-width=\"2\"/><text x=\"96\" y=\"114\" text-anchor=\"middle\" fill=\"#555555\">0</text><text x=\"296\" y=\"114\" text-anchor=\"middle\" fill=\"#555555\">400 A</text></g></svg><figcaption class=\"ds-fc\">Copper beside aluminum in the 75 °C column.</figcaption></figure>",
+      "css": ".ds-chart { margin: 0; font-family: Archivo, Arial, sans-serif; } .ds-fc { margin-top: 8px; padding-top: 8px; border-top: 2px solid #111111; font-size: 15px; line-height: 1.55; color: #3d3d3d; } .ds-grow { transform-box: fill-box; transform-origin: 0 50%; animation: ds-gx 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; } @keyframes ds-gx { from { transform: scaleX(0); } to { transform: scaleX(1); } } @media (prefers-reduced-motion: reduce) { .ds-grow { animation: none; } }"
+    },
+    {
       "name": "On this page",
       "kind": "nav",
       "refersTo": "link",
@@ -370,22 +473,27 @@
     "northStar": "The Cut Conductor",
     "overview": "The look is a reference sheet you could hold up to a spool of wire. Every drawing is the wire itself: the cut end of a solid copper conductor, drawn at its true size from the site's diameter data, so the picture proves the number next to it. The AWG chart opens with all 44 gauges as cut copper ends wound into a spiral, each one gauge step smaller than the last.\n\nThe feel is exact, plain and warm. Exact, because every figure sits in a ruled table with its source line under it and every drawing is to scale. Plain, because nothing is decorative: no cards, no shadows, no icons, no tinted panels, just ink type on white separated by ruled lines of different weights. Warm, because the one color is the copper of the conductors themselves, and it shows up only where copper belongs: the drawn wire, the underline of a link, the text selection.\n\nType does the hierarchy. A very large, tightly set Archivo H1 runs across the top of the page; headings are heavy and short; prose sits at a reading measure; figures in tables are set in Azeret Mono so columns line up digit for digit.",
     "keyCharacteristics": [
-      "Ink on white with cut copper as the only color.",
+      "Ink on white with cut copper as the only color; in charts, Aluminum Blue marks aluminum and nothing else.",
       "Drawings built from real data at true scale, never illustrations.",
       "Ruled tables: a double rule on top, a stronger line every five rows, a heavy closing rule.",
       "A source line under every table and drawing.",
       "Flat surfaces; depth comes from the weight of a rule, never from a shadow.",
-      "One clear moment of motion per drawing, off under reduced motion."
+      "One clear moment of motion per drawing, off under reduced motion; a chart's marks grow in as it scrolls into view."
     ],
     "rules": [
       {
         "name": "The One Metal Rule",
-        "body": "Copper is the only color on the page. It appears as drawn conductors, link underlines and the text selection (Cut Copper at 30 %), never as a background behind prose or controls, and no second accent joins it.",
+        "body": "Copper is the only accent color in a page's text, links and drawings. It appears as drawn conductors, link underlines and the text selection (Cut Copper at 30 %), never as a background behind prose or controls, and no second accent joins it outside charts.",
+        "section": "colors"
+      },
+      {
+        "name": "The Material Color Rule",
+        "body": "In a chart, a series that stands for a metal wears that metal's color: copper for copper, Aluminum Blue for aluminum or copper-clad aluminum. Aluminum Blue appears nowhere else on the site; every other chart color is copper or a gray from the ramps above, and text in a chart stays ink or Muted Gray.",
         "section": "colors"
       },
       {
         "name": "The Measured Copper Rule",
-        "body": "A copper disc always stands for a real conductor at a stated scale (diameter in inches from the data times a fixed pixels-per-inch). Copper circles are never ornament.",
+        "body": "Outside charts, a copper disc always stands for a real conductor at a stated scale (diameter in inches from the data times a fixed pixels-per-inch). Copper circles are never ornament; in a chart a 10 px copper dot marks one copper value on an axis.",
         "section": "colors"
       },
       {
@@ -410,11 +518,13 @@
       "Do put a source line under every table and every drawing.",
       "Do keep text in drawings at 13 px or more on screen at every width; give a wide drawing a narrow version below 640 px rather than shrinking it.",
       "Do set figures in ruled tables in Azeret Mono and prose in Archivo at a 35rem measure.",
-      "Do show drawings finished, without motion, when the reader asks for reduced motion."
+      "Do show drawings finished, without motion, when the reader asks for reduced motion.",
+      "Do give every chart a source line, a legend when it has two or more series, and a table of its numbers on the same page."
     ],
     "donts": [
       "Don't add shadows, rounded cards, tinted panels or gradients behind text (The Flat Sheet Rule).",
-      "Don't add a second accent color; the blue of the older pages goes as they move to this look (The One Metal Rule).",
+      "Don't add a second accent color outside charts; the blue of the older pages goes as they move to this look (The One Metal Rule).",
+      "Don't use Aluminum Blue for anything but aluminum in a chart (The Material Color Rule).",
       "Don't draw copper circles that are not conductors at a stated scale (The Measured Copper Rule).",
       "Don't put small capital-letter labels above headings, number the sections, or put icons beside links.",
       "Don't hide an animated drawing with display: none, even inside a media query that does not match: Chrome stops painting it while its animation runs."
