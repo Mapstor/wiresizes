@@ -7,7 +7,8 @@ export const LOOK_PAGE = 'look bg-white font-display text-ink';
 
 /** H1: the main line at the display size, an optional second line at display-sub (components/look/PageTitle). */
 export const LOOK_H1 = 'font-display font-extrabold tracking-[-0.04em] text-ink';
-export const LOOK_H1_MAIN = 'block text-balance text-[54px] leading-[0.92] sm:text-[76px] lg:text-[96px]';
+// 12.5 % of the screen width below 432 px, so a long word ("wiresizes.com", "Methodology") fits a 320 px screen
+export const LOOK_H1_MAIN = 'block text-balance text-[clamp(40px,12.5vw,54px)] leading-[0.92] sm:text-[76px] lg:text-[96px]';
 export const LOOK_H1_SUB = 'mt-4 block text-[23px] font-medium leading-[1.15] tracking-[-0.015em] text-cut-graphite sm:text-[31px]';
 
 export const LOOK_H2 =

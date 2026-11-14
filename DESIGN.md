@@ -167,7 +167,7 @@ One metal on paper: ink for words and rules, white for the ground, and a cut-cop
 **Character:** Archivo is a grotesque with real weight at 800 and clear, upright figures; it carries headlines and prose alike. Azeret Mono is a monospace with plain zeros, used only for figures in tables, where columns must line up.
 
 ### Hierarchy
-- **Display** (800, 96 px on desktop, 76 px from 640 px, 54 px on phones; line height 0.92; tracking −0.04em): the H1's main line only, across the full width of the page.
+- **Display** (800, 96 px on desktop, 76 px from 640 px, 54 px on phones and down to 40 px on a 320 px screen, so a long word fits; line height 0.92; tracking −0.04em): the H1's main line only, across the full width of the page.
 - **Display sub** (500, 31 px, 23 px on phones; line height 1.15): the second line of the H1, after a colon kept for screen readers.
 - **Headline** (800, 46 px, 34 px on phones; line height 1.04; tracking −0.035em): section headings (H2).
 - **Title** (800, 22 px; line height 1.25; tracking −0.02em): H3s: a gauge's name, a question, a rule's heading word.
