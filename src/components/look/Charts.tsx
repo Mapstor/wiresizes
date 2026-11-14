@@ -1299,7 +1299,8 @@ const PHASE_GRAY = '#a39b93';
 function PhasePowerPlot({ narrow }: { narrow: boolean }) {
   const W = narrow ? 288 : 560;
   const left = narrow ? 34 : 44;
-  const right = narrow ? 8 : 16;
+  // room for half of the "360°" label, centred on the plot's right end
+  const right = narrow ? 18 : 16;
   const top = narrow ? 62 : 48;
   const ph = narrow ? 130 : 170;
   const H = top + ph + 46;
