@@ -75,13 +75,13 @@ export const ROUTES: readonly SiteRoute[] = [
     path: '/calculators/wire-resistance-calculator',
     group: 'wire-sizing',
     name: 'Wire Resistance Calculator',
-    line: 'Resistance and power loss of a copper or aluminum run at the temperature you choose, or the length that reaches a given resistance.',
+    line: 'Resistance in ohms of a copper or aluminum run, one conductor and a two-wire circuit, at the temperature you choose.',
   },
   {
     path: '/calculators/low-voltage-calculator',
     group: 'wire-sizing',
     name: 'Low Voltage Calculator',
-    line: 'Copper wire size for a low-voltage DC circuit from the load, the one-way distance and the voltage-drop limit you set.',
+    line: 'Copper wire size for a low-voltage DC circuit from the load, the one-way length and your voltage-drop target, checked against the current.',
   },
   {
     path: '/calculators/watts-to-amps-calculator',

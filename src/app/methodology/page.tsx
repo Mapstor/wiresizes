@@ -424,8 +424,8 @@ export default function MethodologyPage() {
             </Link>{' '}
             lets you choose <Val v={DC_TEMPS[0]} unit="°C" src="calc:dc-sizing" /> or{' '}
             <Val v={DC_TEMPS[DC_TEMPS.length - 1]} unit="°C" src="calc:dc-sizing" /> and finds the copper area a DC
-            circuit needs for your voltage-drop target, with the current I = watts ÷ volts and the allowed drop VD in
-            volts:
+            circuit needs for your voltage-drop target, with the current I you enter (or watts ÷ volts) and the allowed
+            drop VD in volts:
           </p>
           <Formulas
             src="calc:dc-sizing"
@@ -619,7 +619,11 @@ export default function MethodologyPage() {
               voltage drop calculator
             </Link>{' '}
             quotes the note as advice and starts its search for the smallest size at the note&apos;s{' '}
-            <Val v={VOLTAGE_DROP_NOTE.feederPct} unit="%" src="nec-continuous-load" />, a target you can change. No calculator
+            <Val v={VOLTAGE_DROP_NOTE.feederPct} unit="%" src="nec-continuous-load" />, a target you can change; the{' '}
+            <Link href="/calculators/low-voltage-calculator" className={LINK}>
+              low voltage calculator
+            </Link>{' '}
+            starts at the same figure. No calculator
             applies the continuous-load rules yet: the wire size calculator starts from the breaker or fuse rating you enter.
           </p>
           <Limits>

@@ -57,7 +57,12 @@ export function resistivityK(tempC: number): number {
 export function dcSizing(input: DcSizingInput): DcSizingResult | { error: 'input-invalid' } {
   const { volts, watts, lengthFt, dropPct, tempC } = input;
   if (!(volts > 0 && watts > 0 && lengthFt > 0 && dropPct > 0)) return { error: 'input-invalid' };
-  const amps = watts / volts;
+  return dcSizingFromAmps({ volts, amps: watts / volts, lengthFt, dropPct, tempC });
+}
+
+/** The same sizing from the current in amperes (the low voltage calculator takes amps or watts). */
+export function dcSizingFromAmps(input: Omit<DcSizingInput, 'watts'> & { amps: number }): DcSizingResult {
+  const { volts, amps, lengthFt, dropPct, tempC } = input;
   const k = resistivityK(tempC);
   const vdVolts = (volts * dropPct) / 100;
   const requiredCmil = (2 * k * amps * lengthFt) / vdVolts;
@@ -86,3 +91,76 @@ export const DC_SIZING_DEFAULTS = {
   dropPct: 3,
   tempC: 75,
 };
+
+// ── WSZ-006c: the low voltage calculator's calculation path ─────────────────────────────────────────────────────────
+// The calculator takes amps or watts, any DC voltage (12, 24 and 48 V one click away), the reader's drop target and 20
+// or 75 °C. Around dcSizingFromAmps it adds the area in mm², the drop of the result size and of its neighbours by the same
+// formula (VD = 2 × K × I × L ÷ CM, so a size that meets the target by area meets it by drop), and the 60 °C ampacity
+// the current check used.
+
+export const LV_TOOL_QUICK_VOLTS = [12, 24, 48];
+export const LV_TOOL_TEMPS = DC_TEMPERATURE_OPTIONS.map((o) => o.value);
+export const LV_TOOL_VOLTS_MAX = 600;
+export const LV_TOOL_AMPS_MAX = 5000;
+export const LV_TOOL_LENGTH_MIN_FT = 1;
+export const LV_TOOL_LENGTH_MAX_FT = 5000;
+export const LV_TOOL_DROP_MIN_PCT = 0.1;
+export const LV_TOOL_DROP_MAX_PCT = 20;
+/** The significant figures the low voltage calculator shows for areas, drops and lengths it works out. */
+export const LV_SIG = 3;
+
+export interface LvInput {
+  volts: number;
+  amps: number;
+  lengthFt: number;
+  dropPct: number;
+  tempC: number;
+}
+
+export interface LvSizeDrop {
+  size: SizeKey;
+  areaCmil: number;
+  vdVolts: number;
+  vdPct: number;
+}
+
+export interface LvResult extends DcSizingResult {
+  input: LvInput;
+  requiredMm2: number;
+  /** The 60 °C copper ampacity of the current size (the value the current check met). */
+  currentAmpacity: number | null;
+  /** The drop of the result size, null when there is none. */
+  result: LvSizeDrop | null;
+  /** Up to two smaller and two larger Table 310.16 sizes around the result (or the largest size when none meets it). */
+  neighbours: LvSizeDrop[];
+}
+
+/** The drop of a size by the sizing formula: VD = 2 × K × I × L ÷ area. */
+export function lvDrop(size: SizeKey, input: LvInput): LvSizeDrop {
+  const area = areaCmil(size);
+  const vdVolts = (2 * resistivityK(input.tempC) * input.amps * input.lengthFt) / area;
+  return { size, areaCmil: area, vdVolts, vdPct: (vdVolts / input.volts) * 100 };
+}
+
+/** The low voltage calculator's result, or null for an input out of range. */
+export function lowVoltageSize(input: LvInput): LvResult | null {
+  const { volts, amps, lengthFt, dropPct, tempC } = input;
+  if (!(volts > 0 && amps > 0 && lengthFt > 0 && dropPct > 0) || !LV_TOOL_TEMPS.includes(tempC)) return null;
+  const base = dcSizingFromAmps(input);
+  const around = base.resultSize ?? TABLE_310_16_SIZES[TABLE_310_16_SIZES.length - 1];
+  const i = TABLE_310_16_SIZES.indexOf(around);
+  const neighbours = TABLE_310_16_SIZES.slice(Math.max(0, i - 2), i + 3).map((size) => lvDrop(size, input));
+  return {
+    ...base,
+    input,
+    requiredMm2: base.requiredCmil * AWG_CONSTANTS.mm2_per_cmil,
+    currentAmpacity: base.currentSize ? table31016(base.currentSize, columnKey('Cu', 60)) : null,
+    result: base.resultSize ? lvDrop(base.resultSize, input) : null,
+    neighbours,
+  };
+}
+
+/** The one-way length, ft, at which `size` carrying `amps` at `volts` reaches `dropPct`: L = VD × area ÷ (2 × K × I). */
+export function lvLengthForDrop(size: SizeKey, volts: number, amps: number, dropPct: number, tempC: number): number {
+  return (((volts * dropPct) / 100) * areaCmil(size)) / (2 * resistivityK(tempC) * amps);
+}
