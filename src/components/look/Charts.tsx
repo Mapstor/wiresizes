@@ -1535,7 +1535,7 @@ function VoltsAmpsPlot({ narrow }: { narrow: boolean }) {
   const W = narrow ? 288 : 560;
   const left = narrow ? 40 : 48;
   const right = narrow ? 16 : 24;
-  const top = narrow ? 62 : 44;
+  const top = narrow ? 84 : 66;
   const ph = narrow ? 170 : 210;
   const H = top + ph + 46;
   const pw = W - left - right;
@@ -1572,6 +1572,9 @@ function VoltsAmpsPlot({ narrow }: { narrow: boolean }) {
       <Key x={narrow ? 0 : 230} y={narrow ? 36 : 18} color={MUTED}>
         Fixed resistance, <Val v={VA_CHART_OHMS} unit="Ω" src={TP} svg />
       </Key>
+      <Key x={0} y={narrow ? 56 : 42} color={INK} dot>
+        Both: <Val v={meet} unit="A" src={TP} svg /> at <Val v={volts} unit="V" src={TP} svg />
+      </Key>
       {[0, 10, 20, 30, 40, 50].map((a) => (
         <g key={a}>
           <line x1={left} x2={W - right} y1={y(a)} y2={y(a)} stroke={GRID} strokeWidth={1} />
@@ -1590,12 +1593,7 @@ function VoltsAmpsPlot({ narrow }: { narrow: boolean }) {
       </text>
       <path d={path(atPower)} fill="none" stroke={INK} strokeWidth={3} pathLength={1} className="viz-draw" />
       <path d={path(atOhms)} fill="none" stroke={MUTED} strokeWidth={2} pathLength={1} className="viz-draw" />
-      <g className="viz-pop">
-        <circle cx={x(volts)} cy={y(meet)} r={5} fill={INK} stroke="#fff" strokeWidth={2} />
-        <text x={x(volts) + 10} y={y(meet) - 10} fontSize={13} fill={INK}>
-          <Val v={meet} unit="A" src={TP} svg /> at <Val v={volts} unit="V" src={TP} svg />
-        </text>
-      </g>
+      <circle cx={x(volts)} cy={y(meet)} r={5} fill={INK} stroke="#fff" strokeWidth={2} className="viz-pop" />
     </svg>
   );
 }

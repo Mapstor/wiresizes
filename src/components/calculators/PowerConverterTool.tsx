@@ -466,8 +466,8 @@ function ConvOutcome({
         )}
         {!kwEntered && (
           <p data-src={three ? MIT : EIA}>
-            <strong>The current:</strong> I = S ÷ ({sqrt}V) = <Val v={sShown * 1000} unit="VA" src="input" /> ÷ ({sqrt}
-            {V}) {eq(r.amps, (sShown * 1000) / ((three ? SQRT3 : 1) * r.volts))} {I}.
+            <strong>The current:</strong> I = S ÷ {three ? '(√3 × V)' : 'V'} = <Val v={sShown * 1000} unit="VA" src="input" /> ÷{' '}
+            {three ? <>(√3 × {V})</> : V} {eq(r.amps, (sShown * 1000) / ((three ? SQRT3 : 1) * r.volts))} {I}.
           </p>
         )}
         {kwEntered && PF && P && (
