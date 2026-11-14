@@ -1,88 +1,69 @@
 'use client';
 
+// The site header in the picked look (D-33, WSZ-025): the WireSizes wordmark in Archivo, the three section links
+// underlined in copper, a warm hairline below. Phones get the same links behind a menu button.
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Calculator, BookOpen, Zap } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 const navigation = [
-  { name: 'Calculators', href: '/calculators', icon: Calculator },
-  { name: 'Guides', href: '/guides', icon: BookOpen },
-  { name: 'About', href: '/about', icon: null },
+  { name: 'Calculators', href: '/calculators' },
+  { name: 'Guides', href: '/guides' },
+  { name: 'About', href: '/about' },
 ];
+
+const NAV_LINK =
+  'font-display font-medium text-ink underline decoration-cut-line decoration-2 underline-offset-[6px] transition-colors hover:text-cut-deep hover:decoration-cut-deep';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white border-b border-neutral-200 sticky top-0 z-50 shadow-sm">
+    <header className="sticky top-0 z-50 border-b border-cut-rule bg-white">
       <nav className="container" aria-label="Main navigation">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link 
-            href="/" 
-            className="flex items-center gap-3 font-bold text-xl text-primary-600 hover:text-primary-700 transition-colors group"
-          >
-            <div className="relative">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center group-hover:from-primary-600 group-hover:to-primary-800 transition-all">
-                <Zap className="w-5 h-5 text-white" />
-              </div>
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-            </div>
-            <span className="leading-tight" data-name="">WireSizes</span>
+        <div className="flex h-16 items-center justify-between">
+          <Link href="/" className="font-display text-2xl font-extrabold tracking-tight text-ink transition-colors hover:text-cut-deep">
+            <span className="leading-tight" data-name="">
+              WireSizes
+            </span>
           </Link>
 
           {/* Desktop navigation */}
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden items-center gap-8 md:flex">
             {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                data-name=""
-                className="flex items-center gap-2 px-4 py-2.5 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all font-medium border border-transparent hover:border-primary-100"
-              >
-                {item.icon && <item.icon className="w-4 h-4" />}
+              <Link key={item.name} href={item.href} data-name="" className={`py-2 text-base ${NAV_LINK}`}>
                 {item.name}
               </Link>
             ))}
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center gap-3">
+          <div className="flex items-center md:hidden">
             <button
               type="button"
-              className="p-2 text-neutral-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors border border-neutral-200"
+              className="rounded-md border border-cut-rule p-2 text-ink transition-colors hover:border-ink"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-menu"
             >
-              <span className="sr-only">
-                {mobileMenuOpen ? 'Close menu' : 'Open menu'}
-              </span>
-              {mobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
+              <span className="sr-only">{mobileMenuOpen ? 'Close menu' : 'Open menu'}</span>
+              {mobileMenuOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
             </button>
           </div>
         </div>
 
         {/* Mobile navigation */}
         {mobileMenuOpen && (
-          <div 
-            id="mobile-menu" 
-            className="md:hidden py-4 border-t border-neutral-100 animate-fade-in bg-neutral-50"
-          >
-            <div className="flex flex-col gap-1">
+          <div id="mobile-menu" className="border-t border-cut-rule py-3 md:hidden">
+            <div className="flex flex-col">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
                   data-name=""
-                  className="flex items-center gap-3 px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-white rounded-lg transition-colors font-medium border border-transparent hover:border-primary-100"
+                  className={`px-1 py-3 text-lg ${NAV_LINK}`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  {item.icon && <item.icon className="w-5 h-5" />}
                   {item.name}
                 </Link>
               ))}

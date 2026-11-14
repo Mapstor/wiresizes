@@ -36,6 +36,18 @@ const config: Config = {
           800: '#78350f',
           900: '#451a03',
         },
+        // The picked look (D-33): ink text and rules, cut-copper accent (links 5.4:1 on white), warm hairlines
+        ink: '#111111',
+        cut: {
+          light: '#f3c193',
+          mid: '#d6904f',
+          dark: '#a95a26',
+          line: '#b0571f',
+          deep: '#8a3d10',
+          rule: '#ebe7e2',
+          'rule-dark': '#8f877f',
+          muted: '#555555',
+        },
         // Aluminum - For aluminum wire elements
         aluminum: {
           50: '#f8fafc',
@@ -50,9 +62,13 @@ const config: Config = {
           900: '#0f172a',
         },
       },
+      // The look the owner picked on 2026-11-13 (DEVLOG D-33): white ground, ink, cut copper; Archivo for text and
+      // headings, Azeret Mono for table numbers. Pages move to it in three steps (page-looks skill).
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        display: ['Archivo', 'Arial', 'sans-serif'],
+        figures: ['"Azeret Mono"', 'ui-monospace', 'monospace'],
       },
       fontSize: {
         'display': ['3rem', { lineHeight: '1.1', fontWeight: '700' }],

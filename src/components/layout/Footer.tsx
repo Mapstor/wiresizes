@@ -1,5 +1,6 @@
+// The site footer in the picked look (D-33, WSZ-025): white with ink type and copper-underlined links, the same
+// groups, site pages, trademark notice and disclaimer as before.
 import Link from 'next/link';
-import { Zap, Calculator, Home, Cpu, ArrowRight } from 'lucide-react';
 import { CookieSettingsButton } from '@/components/analytics/Consent';
 
 const footerLinks = {
@@ -54,185 +55,72 @@ const sitePages = [
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const groups = [
+    { id: 'core', title: 'Core Tools', links: footerLinks.coreCalculators },
+    { id: 'conversions', title: 'Conversions', links: footerLinks.conversionCalculators },
+    { id: 'advanced', title: 'Advanced', links: footerLinks.advancedCalculators },
+    { id: 'guides', title: 'Wire Guides', links: footerLinks.guides },
+    { id: 'education', title: 'Education', links: footerLinks.resources },
+  ];
+  const link =
+    'text-ink underline decoration-cut-line decoration-1 underline-offset-[3px] transition-colors hover:text-cut-deep hover:decoration-2';
 
   return (
-    <footer className="bg-gradient-to-br from-neutral-900 via-neutral-800 to-blue-900 text-white">
-      {/* Main Footer Content */}
-      <div className="container py-16">
-        {/* Brand and Description */}
-        <div className="mb-12">
-          <Link 
-            href="/" 
-            className="flex items-center gap-3 font-bold text-2xl text-yellow-400 mb-4"
-          >
-            <div className="p-2 bg-yellow-400/20 rounded-lg">
-              <Zap className="w-8 h-8" />
-            </div>
+    <footer className="border-t-2 border-ink bg-white font-display text-ink">
+      <div className="container py-14">
+        <div className="mb-10">
+          <Link href="/" className="text-2xl font-extrabold tracking-tight text-ink hover:text-cut-deep">
             <span data-name="">WireSizes.com</span>
           </Link>
-          <p className="text-neutral-300 text-lg max-w-2xl leading-relaxed">
+          <p className="mt-2 max-w-2xl text-lg leading-relaxed text-cut-muted">
             Wire gauge charts, NEC table values and calculators for sizing conductors.
           </p>
         </div>
 
-        {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-          
-          {/* Core Calculators */}
-          <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <Calculator className="w-5 h-5 text-blue-400" />
-              <h3 className="font-semibold text-white">Core Tools</h3>
+        <div className="grid grid-cols-1 gap-8 border-t border-cut-rule pt-8 md:grid-cols-2 lg:grid-cols-5">
+          {groups.map((group) => (
+            <div key={group.id}>
+              <h3 className="mb-3 text-base font-bold text-ink">{group.title}</h3>
+              <ul className="space-y-2 text-[0.9375rem]">
+                {group.links.map((item) => (
+                  <li key={item.href + item.name}>
+                    <Link href={item.href} data-name="" className={`${link} ${'isViewAll' in item && item.isViewAll ? 'font-semibold' : ''}`}>
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <ul className="space-y-2">
-              {footerLinks.coreCalculators.map((link) => (
-                <li key={link.href}>
-                  <Link 
-                    href={link.href}
-                    data-name=""
-                    className={`text-neutral-300 hover:text-blue-400 text-sm transition-colors flex items-center gap-1 ${
-                      link.isViewAll ? 'font-semibold mt-3 text-blue-300' : ''
-                    }`}
-                  >
-                    {link.isViewAll && <ArrowRight className="w-3 h-3" />}
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Power Conversions */}
-          <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <Zap className="w-5 h-5 text-yellow-400" />
-              <h3 className="font-semibold text-white">Conversions</h3>
-            </div>
-            <ul className="space-y-2">
-              {footerLinks.conversionCalculators.map((link) => (
-                <li key={link.href}>
-                  <Link 
-                    href={link.href}
-                    data-name=""
-                    className={`text-neutral-300 hover:text-yellow-400 text-sm transition-colors flex items-center gap-1 ${
-                      link.isViewAll ? 'font-semibold mt-3 text-yellow-300' : ''
-                    }`}
-                  >
-                    {link.isViewAll && <ArrowRight className="w-3 h-3" />}
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Advanced Calculators */}
-          <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <Cpu className="w-5 h-5 text-purple-400" />
-              <h3 className="font-semibold text-white">Advanced</h3>
-            </div>
-            <ul className="space-y-2">
-              {footerLinks.advancedCalculators.map((link) => (
-                <li key={link.href}>
-                  <Link 
-                    href={link.href}
-                    data-name=""
-                    className={`text-neutral-300 hover:text-purple-400 text-sm transition-colors flex items-center gap-1 ${
-                      link.isViewAll ? 'font-semibold mt-3 text-purple-300' : ''
-                    }`}
-                  >
-                    {link.isViewAll && <ArrowRight className="w-3 h-3" />}
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Guides */}
-          <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <Home className="w-5 h-5 text-orange-400" />
-              <h3 className="font-semibold text-white">Wire Guides</h3>
-            </div>
-            <ul className="space-y-2">
-              {footerLinks.guides.map((link) => (
-                <li key={link.href}>
-                  <Link 
-                    href={link.href}
-                    data-name=""
-                    className={`text-neutral-300 hover:text-orange-400 text-sm transition-colors flex items-center gap-1 ${
-                      link.isViewAll ? 'font-semibold mt-3 text-orange-300' : ''
-                    }`}
-                  >
-                    {link.isViewAll && <ArrowRight className="w-3 h-3" />}
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Resources & Education */}
-          <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <Home className="w-5 h-5 text-red-400" />
-              <h3 className="font-semibold text-white">Education</h3>
-            </div>
-            <ul className="space-y-2">
-              {footerLinks.resources.map((link) => (
-                <li key={link.href}>
-                  <Link 
-                    href={link.href}
-                    data-name=""
-                    className="text-neutral-300 hover:text-red-400 text-sm transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
+          ))}
         </div>
 
-        {/* Site pages and trademark notice */}
-        <div className="mt-12 pt-8 border-t border-neutral-700">
-          <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+        <div className="mt-12 border-t border-cut-rule pt-8">
+          <ul className="flex flex-wrap gap-x-6 gap-y-2 text-[0.9375rem]">
             {sitePages.map((page) => (
               <li key={page.href}>
-                <Link href={page.href} data-name="" className="text-neutral-300 hover:text-blue-400 transition-colors">
+                <Link href={page.href} data-name="" className={link}>
                   {page.name}
                 </Link>
               </li>
             ))}
             <li>
-              <CookieSettingsButton className="text-neutral-300 hover:text-blue-400 transition-colors" />
+              <CookieSettingsButton className={link} />
             </li>
           </ul>
-          <p className="mt-4 text-neutral-400 text-xs leading-relaxed max-w-3xl">
+          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-cut-muted">
             NFPA 70®, National Electrical Code® and NEC® are registered trademarks of the National Fire Protection
             Association. wiresizes.com is not affiliated with or endorsed by NFPA.
           </p>
-        </div>
-
-        {/* Disclaimer */}
-        <div className="mt-8 pt-6 border-t border-neutral-700">
-          <div className="bg-amber-600/20 border border-amber-500/30 rounded-lg p-4">
-            <p className="text-amber-200 text-sm font-semibold mb-1">Disclaimer</p>
-            <p className="text-amber-100 text-sm leading-relaxed">
-              Reference values for planning. Check them against the NEC edition your jurisdiction enforces and the
-              equipment&apos;s instructions. The author is a physicist, not a licensed electrician or engineer.
-            </p>
-          </div>
+          <p className="mt-6 max-w-3xl text-sm leading-relaxed text-ink">
+            <strong className="font-bold">Disclaimer.</strong> Reference values for planning. Check them against the NEC edition your
+            jurisdiction enforces and the equipment&apos;s instructions. The author is a physicist, not a licensed electrician or engineer.
+          </p>
         </div>
       </div>
 
-      {/* Bottom Footer */}
-      <div className="bg-neutral-900 border-t border-neutral-700">
+      <div className="border-t border-cut-rule">
         <div className="container py-6">
-          <p className="text-neutral-400 text-sm">© {currentYear} Moving Data Systems d.o.o.</p>
+          <p className="text-sm text-cut-muted">© {currentYear} Moving Data Systems d.o.o.</p>
         </div>
       </div>
     </footer>
