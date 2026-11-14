@@ -247,7 +247,9 @@ export default function KilowattsToAmpsPage() {
               Questions
             </h2>
             <div className="space-y-1.5">
-              <h3 className={H3}>How many amps is 1 kW?</h3>
+              <h3 className={H3}>
+                How many amps is <Val v={1} unit="kW" src={CALC} />?
+              </h3>
               <p className={P} data-src={CALC}>
                 At power factor <Num v={1} src={CALC} />, single-phase: <Val v={ONE_KW_120.amps} unit="A" src={CALC} format={SIG} /> at{' '}
                 <Val v={ONE_KW_120.volts} unit="V" src={VOLTS} /> and <Val v={ONE_KW_240.amps} unit="A" src={CALC} format={SIG} /> at{' '}
