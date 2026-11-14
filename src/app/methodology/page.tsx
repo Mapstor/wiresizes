@@ -9,7 +9,7 @@ import { Size } from '@/components/content/Size';
 import { Val } from '@/components/content/Val';
 import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
 import { RATING_MAX_A, RATING_MIN_A, terminationColumn } from '@/lib/calculations/conductor-sizing';
-import { BTU_PER_H_PER_TON, W_PER_BTU_PER_H, W_PER_ELECTRICAL_HP, W_PER_MECHANICAL_HP } from '@/lib/calculations/conversions';
+import { BTU_PER_H_PER_TON, W_PER_BTU_PER_H } from '@/lib/calculations/conversions';
 import { DC_TEMPERATURE_OPTIONS } from '@/lib/calculations/dc-sizing';
 import { formatValue } from '@/lib/calculations/format';
 import { GROUND_WIRE_RATINGS } from '@/lib/calculations/grounding';
@@ -831,6 +831,15 @@ export default function MethodologyPage() {
           <Formulas src="calc:power" rows={[['Current, DC', 'I = P ÷ V']]} />
         </SourceSection>
 
+        <SourceSection domain="mfr-water-heaters">
+          <p data-src="mfr-water-heaters">
+            Rheem&apos;s and A.O. Smith&apos;s documents for their <Val v={240} unit="V" src="mfr-water-heaters" /> electric water heaters with
+            two <Val v={4500} unit="W" src="mfr-water-heaters" /> elements wire the elements so only one heats at a time. The watts to amps
+            calculator uses this to show why such a heater draws the current of one element; the current itself is calculated.
+          </p>
+          <SourceFacts s={section('mfr-water-heaters')} />
+        </SourceSection>
+
         <SourceSection domain="power-definitions">
           <p>
             The unit converters and the Ohm&apos;s law calculator cite three U.S. government documents as one source:
@@ -915,7 +924,6 @@ export default function MethodologyPage() {
             rows={[
               ['Btu per hour', <>1 Btu/h = <Val v={W_PER_BTU_PER_H} unit="W" src="nist-sp811-conversions" /></>],
               ['Ton of refrigeration', <>1 ton = <Val v={BTU_PER_H_PER_TON} unit="Btu/h" src="nist-sp811-conversions" /></>],
-              ['Electric horsepower', <>1 hp = <Val v={W_PER_ELECTRICAL_HP} unit="W" src="nist-sp811-conversions" /></>],
             ]}
           />
           <p>
@@ -923,19 +931,11 @@ export default function MethodologyPage() {
             <Link href="/calculators/btu-to-watts-calculator" className={LINK}>
               BTU to watts calculator
             </Link>{' '}
-            converts both ways and gives the load in tons, and the{' '}
-            <Link href="/calculators/amps-to-watts-calculator" className={LINK}>
-              amps to watts calculator
-            </Link>{' '}
-            gives its result in horsepower too.
+            converts both ways and gives the load in tons.
           </p>
           <Limits>
             <li>The Btu is the International Table Btu, the one SP 811 lists for Btu per hour.</li>
             <li>A ton is a ton of refrigeration, a rate of heat removal, not a weight.</li>
-            <li>
-              Horsepower is electric horsepower. Mechanical horsepower,{' '}
-              <Val v={W_PER_MECHANICAL_HP} unit="W" src="nist-sp811-conversions" />, is not used.
-            </li>
           </Limits>
         </SourceSection>
 

@@ -46,5 +46,13 @@
   {
     "date": "2026-11-15",
     "text": "Rebuilt the volts to amps calculator to match its description: it now works out the current from the power or from the resistance. Removed the section on how voltage changes current and the examples by type of equipment, such as solar strings and EV charging, which cited no source."
+  },
+  {
+    "date": "2026-11-15",
+    "text": "Rebuilt the watts to amps calculator. It now takes DC, single-phase and three-phase loads at any voltage, with a worked water heater example from the makers' documents and a table of amps by watts. Removed lists of common applications and notes that cited no source."
+  },
+  {
+    "date": "2026-11-15",
+    "text": "Rebuilt the amps to watts calculator. It now gives the apparent power and the same load's current at other voltages, with the three-phase example worked out and a table of watts by amps. Removed equipment examples (a range, an EV charger, LED lighting) whose power factors and uses cited no source, and the horsepower figure in the result."
   }
 ]
