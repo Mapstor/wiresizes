@@ -27,8 +27,8 @@ slug,archetype,disposition,redirect_to,primary_query,data_source,data_sources_al
 /calculators/horsepower-to-amps-calculator,tool,rebuild,,hp to amps,nec-430-motors,nec-430-motors;nist-sp811-conversions,WSZ-011,withdraw,314,6,0,"NEC tables, not formula"
 /calculators/ground-wire-calculator,tool,rebuild,,ground wire size calculator,nec-250-grounding,nec-250-grounding;nec-misc-installation,WSZ-008,fix,299,2,0,
 /guides/nec-code-compliance,reference,repurpose,,which nec edition does my state use,nec-adoption,nec-adoption;nec-2026-edition;nec-2023-rule-excerpts;nec-2026-issuance,WSZ-005,fix,176,1,0,NEC editions by state + what changed
-/calculators/three-phase-calculator,tool,rebuild,,three phase calculator,power-definitions,power-definitions;us-nominal-voltages,WSZ-006,fix,161,7,0,P0 motor table fix in W1
-/calculators/voltage-drop-calculator,tool,rebuild,,voltage drop calculator,conductor-resistance-20c,conductor-resistance-20c;awg-geometry;nec-continuous-load;eia-electricity-price,WSZ-006,fix,9,1,0,T8 DC / T9 AC effective Z
+/calculators/three-phase-calculator,tool,rebuild,,three phase calculator,doe-motor-load-efficiency,doe-motor-load-efficiency;eia-power-glossary;doe-power-factor-cost;mit-polyphase-networks;us-nominal-voltages,WSZ-006,fix,161,7,0,P0 motor table fix in W1
+/calculators/voltage-drop-calculator,tool,rebuild,,voltage drop calculator,conductor-resistance-20c,conductor-resistance-20c;awg-geometry;nec-310-16;nec-continuous-load;us-nominal-voltages;eia-power-glossary;doe-motor-load-efficiency;nist-sp330-si-units,WSZ-006,fix,9,1,0,T8 DC / T9 AC effective Z
 /calculators/wire-size-calculator,tool,rebuild-absorb,,wire size calculator,nec-310-16,nec-310-16;nec-310-15-corrections;nec-240-4-d;nec-240-ocpd;nec-250-grounding;nec-continuous-load;nec-misc-installation,WSZ-009,fix,49,1,0,absorbs wire-sizing-guide
 /calculators/conduit-fill-calculator,tool,rebuild,,conduit fill calculator,nec-ch9-fill,nec-ch9-fill,WSZ-009,withdraw,35,0,178,
 /calculators/circuit-breaker-calculator,tool,rebuild,,circuit breaker size calculator,nec-240-ocpd,nec-240-ocpd;nec-240-4-d;nec-310-16,WSZ-009,withdraw,35,0,0,
@@ -39,7 +39,7 @@ slug,archetype,disposition,redirect_to,primary_query,data_source,data_sources_al
 /calculators/garage-subpanel-calculator,tool,rebuild,,garage subpanel wire size,nec-310-16,nec-310-16;nec-250-grounding;conductor-resistance-20c;nec-misc-installation,WSZ-008,withdraw,22,1,0,"225/250.32; withdrawn in WSZ-002 (code audit 2026-10-20: invented load calc, panel smaller than computed load, Cu EGC on Al card)"
 /calculators/watts-to-amps-calculator,tool,rebuild,,watts to amps,power-definitions,power-definitions;mfr-water-heaters,WSZ-007,fix,11,0,0,
 /calculators/ohms-law-calculator,tool,rebuild,,ohms law calculator,power-definitions,power-definitions,WSZ-007,fix,10,0,0,mostly correct already
-/calculators/low-voltage-calculator,tool,rebuild,,12v wire size calculator,conductor-resistance-20c,conductor-resistance-20c;awg-geometry,WSZ-006,fix,2,0,0,P0 formula fix in W1
+/calculators/low-voltage-calculator,tool,rebuild,,12v wire size calculator,conductor-resistance-20c,conductor-resistance-20c;awg-geometry;nec-310-16;nec-continuous-load;nist-sp330-si-units,WSZ-006,fix,2,0,0,P0 formula fix in W1
 /guides,hub,rebuild,,electrical guides,nec-310-16,nec-310-16;nec-2026-edition;nec-2026-issuance;nec-adoption,WSZ-005,fix,9,0,0,
 /about,structural,rebuild,,,,,WSZ-004,strip-fabrications,0,0,0,"Marko Visic, BSc Physics; Moving Data Systems d.o.o."
 /contact,structural,rebuild,,,,,WSZ-004,strip-fabrications,0,0,0,one working address

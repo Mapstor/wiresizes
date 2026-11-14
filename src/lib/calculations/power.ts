@@ -206,27 +206,182 @@ export const VOLTS_TO_AMPS_COMPARISON_VOLTS = [120, 240, 480];
 
 export const AMPS_TO_WATTS_DEFAULTS = { amps: 20, volts: 120, circuit: 'single' as Circuit, pf: 0.9 };
 
+// ── The three-phase calculator (WSZ-006d; spec: research/page-specs.md "WSZ-006"): the line-to-line voltage plus any
+// two of real power, apparent power, line current and power factor; the rest follows from S = √3 × V × I (MIT 6.061
+// polyphase notes, eq. 56; DOE/GO-10097-517 Equation 1 with PF), P = S × PF (EIA Glossary) and Q = √(S² − P²) (reactive
+// power at 90° to real power, DOE/GO-10096-286). Any voltage the reader measures or names is allowed; the nominal ones
+// are buttons. A target power factor adds the capacitor that reaches it at the same real power.
+
+/** √3, the ratio of line-to-line to line-to-neutral voltage in a balanced three-phase set. */
+export const SQRT3 = Math.sqrt(3);
+
+/** The pairs of known values the calculator accepts (with the voltage). kVA and amps together fix each other at a voltage. */
+export const TP_KNOWN = ['kw-pf', 'kva-pf', 'amps-pf', 'kw-kva', 'kw-amps'] as const;
+export type TpKnown = (typeof TP_KNOWN)[number];
+
+/** Significant figures of the calculator's results: the spec's golden values carry four (66.82 A, 42.13 kVAR, 15.79 %). */
+export const TP_SIG = 4;
+export const TP_VOLTS_MIN = 1;
+export const TP_VOLTS_MAX = 100000;
+
 /**
- * Three-phase systems by name (the form value and the URL parameter), with the label the page shows and the
- * line-to-line voltage the converter uses.
+ * The nominal wye systems among the three-phase voltages (us-nominal-voltages: 208Y/120 and 480Y/277), as line-to-line
+ * and line-to-neutral volts; the page checks this list against the registry when it builds.
  */
-export const THREE_PHASE_SYSTEMS: { system: string; label: string; lineVolts: number }[] = [
-  { system: '208Y/120V', label: '208Y/120 V', lineVolts: 208 },
-  { system: '240Δ/120V', label: '240Δ/120 V', lineVolts: 240 },
-  { system: '480Y/277V', label: '480Y/277 V', lineVolts: 480 },
-  { system: '480Δ', label: '480Δ', lineVolts: 480 },
-  { system: '600Y/347V', label: '600Y/347 V', lineVolts: 600 },
+export const TP_WYE_SYSTEMS: { lineVolts: number; neutralVolts: number }[] = [
+  { lineVolts: 208, neutralVolts: 120 },
+  { lineVolts: 480, neutralVolts: 277 },
 ];
 
-export type ThreePhaseMode = 'power' | 'current';
-export const THREE_PHASE_MODE_OPTIONS: { value: ThreePhaseMode; label: string }[] = [
-  { value: 'power', label: 'Known Power (kW)' },
-  { value: 'current', label: 'Known Current' },
-];
-export const THREE_PHASE_DEFAULTS = {
-  system: '208Y/120V',
-  mode: 'power' as ThreePhaseMode,
-  kilowatts: 50,
-  amps: 100,
-  pf: 0.85,
-};
+export interface TpInput {
+  /** Line-to-line voltage, V. */
+  volts: number;
+  known: TpKnown;
+  /** Real power, kW. */
+  kw?: number;
+  /** Apparent power, kVA. */
+  kva?: number;
+  /** Line current, A. */
+  amps?: number;
+  /** Power factor, 0 to 1. */
+  pf?: number;
+  /** The power factor to correct to, or null for none. */
+  targetPf?: number | null;
+}
+
+export interface TpCorrection {
+  targetPf: number;
+  /** The capacitor bank's reactive power, kVAR: Q before − Q after at the same real power. */
+  capKvar: number;
+  kvarAfter: number;
+  kvaAfter: number;
+  ampsAfter: number;
+  /** (1 − PF ÷ target) × 100. */
+  currentDownPct: number;
+}
+
+export interface TpResult {
+  input: TpInput;
+  volts: number;
+  amps: number;
+  kw: number;
+  kva: number;
+  kvar: number;
+  pf: number;
+  /** V ÷ √3: the line-to-neutral voltage a wye system at this line-to-line voltage has. */
+  lineToNeutral: number;
+  /** The nominal wye system the voltage names, if it names one. */
+  wye: { lineVolts: number; neutralVolts: number } | null;
+  /** 'none': no target; 'at-or-above': the power factor already meets the target; 'applied': see correction. */
+  correctionState: 'none' | 'at-or-above' | 'applied';
+  correction: TpCorrection | null;
+}
+
+/** 'input-invalid': a value the pair needs is missing or out of range; 'kw-above-kva': real power above apparent power. */
+export type TpError = 'input-invalid' | 'kw-above-kva';
+
+const positive = (v: number | undefined): v is number => typeof v === 'number' && Number.isFinite(v) && v > 0;
+
+/** Reactive power of P at a power factor: P × √(1 ÷ PF² − 1), which is √(S² − P²) with S = P ÷ PF. */
+export function kvarAt(kw: number, pf: number): number {
+  return kw * Math.sqrt(Math.max(0, 1 / (pf * pf) - 1));
+}
+
+/** Line current of an apparent power at a line-to-line voltage: I = S ÷ (√3 × V), with S in kVA. */
+export function ampsFromKva(kva: number, volts: number): number {
+  return (kva * 1000) / (SQRT3 * volts);
+}
+
+/** Apparent power of a line current at a line-to-line voltage: S = √3 × V × I ÷ 1000, in kVA. */
+export function kvaFromAmps(amps: number, volts: number): number {
+  return (SQRT3 * volts * amps) / 1000;
+}
+
+/** Everything about a balanced three-phase load from its line-to-line voltage and two known values. */
+export function threePhase(input: TpInput): TpResult | { error: TpError } {
+  const { volts, known } = input;
+  if (!(Number.isFinite(volts) && volts >= TP_VOLTS_MIN && volts <= TP_VOLTS_MAX)) return { error: 'input-invalid' };
+  if (!TP_KNOWN.includes(known)) return { error: 'input-invalid' };
+  const needsPf = known === 'kw-pf' || known === 'kva-pf' || known === 'amps-pf';
+  if (needsPf && !(positive(input.pf) && powerFactorValid(input.pf))) return { error: 'input-invalid' };
+  let kw: number;
+  let kva: number;
+  let pf: number;
+  switch (known) {
+    case 'kw-pf':
+      if (!positive(input.kw)) return { error: 'input-invalid' };
+      pf = input.pf as number;
+      kw = input.kw;
+      kva = kw / pf;
+      break;
+    case 'kva-pf':
+      if (!positive(input.kva)) return { error: 'input-invalid' };
+      pf = input.pf as number;
+      kva = input.kva;
+      kw = kva * pf;
+      break;
+    case 'amps-pf':
+      if (!positive(input.amps)) return { error: 'input-invalid' };
+      pf = input.pf as number;
+      kva = kvaFromAmps(input.amps, volts);
+      kw = kva * pf;
+      break;
+    case 'kw-kva':
+      if (!positive(input.kw) || !positive(input.kva)) return { error: 'input-invalid' };
+      kw = input.kw;
+      kva = input.kva;
+      if (kw > kva * (1 + 1e-9)) return { error: 'kw-above-kva' };
+      pf = Math.min(1, kw / kva);
+      break;
+    case 'kw-amps':
+      if (!positive(input.kw) || !positive(input.amps)) return { error: 'input-invalid' };
+      kw = input.kw;
+      kva = kvaFromAmps(input.amps, volts);
+      if (kw > kva * (1 + 1e-9)) return { error: 'kw-above-kva' };
+      pf = Math.min(1, kw / kva);
+      break;
+  }
+  const amps = known === 'amps-pf' || known === 'kw-amps' ? (input.amps as number) : ampsFromKva(kva, volts);
+  // a difference below rounding noise is no reactive power (PF 1)
+  const diff = kva * kva - kw * kw;
+  const kvar = diff <= kva * kva * 1e-12 ? 0 : Math.sqrt(diff);
+  const target = input.targetPf ?? null;
+  if (target !== null && !(positive(target) && powerFactorValid(target))) return { error: 'input-invalid' };
+  let correctionState: TpResult['correctionState'] = 'none';
+  let correction: TpCorrection | null = null;
+  if (target !== null) {
+    if (pf >= target) {
+      correctionState = 'at-or-above';
+    } else {
+      const c = pfCorrection({ kw, pfFrom: pf, pfTo: target });
+      if (!c) return { error: 'input-invalid' };
+      const kvaAfter = kw / target;
+      correctionState = 'applied';
+      correction = {
+        targetPf: target,
+        capKvar: c.kvar,
+        kvarAfter: kvarAt(kw, target),
+        kvaAfter,
+        ampsAfter: ampsFromKva(kvaAfter, volts),
+        currentDownPct: c.currentReductionPct,
+      };
+    }
+  }
+  return {
+    input,
+    volts,
+    amps,
+    kw,
+    kva,
+    kvar,
+    pf,
+    lineToNeutral: volts / SQRT3,
+    wye: TP_WYE_SYSTEMS.find((w) => w.lineVolts === volts) ?? null,
+    correctionState,
+    correction,
+  };
+}
+
+export function isTpError(r: TpResult | { error: TpError }): r is { error: TpError } {
+  return 'error' in r;
+}

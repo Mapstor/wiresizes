@@ -26,6 +26,7 @@ const AMPACITY = '/calculators/ampacity-calculator';
 const GROUND_WIRE = '/calculators/ground-wire-calculator';
 const WIRE_RESISTANCE = '/calculators/wire-resistance-calculator';
 const LOW_VOLTAGE = '/calculators/low-voltage-calculator';
+const THREE_PHASE = '/calculators/three-phase-calculator';
 const SERVICE_ENTRANCE = '/calculators/service-entrance-calculator';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
@@ -92,6 +93,37 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     citedOn: [SERVICE_ENTRANCE, GROUND_WIRE, TABLE_310_16],
   },
   {
+    id: 'power-terms',
+    domain: 'eia-power-glossary',
+    title: 'Real, reactive and apparent power',
+    citedOn: [VOLTAGE_DROP, THREE_PHASE],
+  },
+  {
+    id: 'three-phase-power',
+    domain: 'doe-motor-load-efficiency',
+    title: 'Three-phase power',
+    citedOn: [VOLTAGE_DROP, THREE_PHASE],
+  },
+  {
+    id: 'line-voltages',
+    domain: 'mit-polyphase-networks',
+    title: 'Line-to-line and line-to-neutral voltage',
+    citedOn: [THREE_PHASE],
+  },
+  {
+    id: 'power-factor-correction',
+    domain: 'doe-power-factor-cost',
+    title: 'Power factor correction',
+    citedOn: [THREE_PHASE],
+  },
+  {
+    id: 'si-units',
+    domain: 'nist-sp330-si-units',
+    title: 'Watts, volts and ohms',
+    citedOn: [VOLTAGE_DROP, LOW_VOLTAGE],
+  },
+  {
+    // the converters and Ohm's law until WSZ-007 moves them to the rows above (one per document, WSZ-006d)
     id: 'power',
     domain: 'power-definitions',
     title: 'Power, current and power factor',
@@ -101,17 +133,14 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
       '/calculators/volts-to-amps-calculator',
       '/calculators/kilowatts-to-amps-calculator',
       '/calculators/kva-to-amps-calculator',
-      '/calculators/three-phase-calculator',
       '/calculators/ohms-law-calculator',
-      VOLTAGE_DROP,
-      LOW_VOLTAGE,
     ],
   },
   {
     id: 'nominal-voltages',
     domain: 'us-nominal-voltages',
     title: 'Nominal system voltages',
-    citedOn: [VOLTAGE_DROP],
+    citedOn: [VOLTAGE_DROP, THREE_PHASE],
   },
   {
     id: 'conversions',

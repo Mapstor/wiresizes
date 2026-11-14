@@ -16,6 +16,8 @@ import { GROUND_WIRE_RATINGS } from '@/lib/calculations/grounding';
 import { ALUMINUM_ALPHA, COPPER_ALPHA, REFERENCE_TEMP_C } from '@/lib/calculations/resistance';
 import { RESISTANCE_TEMP_C, VD_TOOL_DEFAULT_TEMP_C, VD_TOOL_SINGLE_QUICK_VOLTS } from '@/lib/calculations/voltage-drop';
 import { THREE_PHASE_VOLTS } from '@/lib/calculations/inputs';
+import { TP_WYE_SYSTEMS, isTpError, threePhase } from '@/lib/calculations/power';
+import { DOE_MOTOR, DOE_PF } from '@/lib/verified/power-examples';
 import { CONTINUOUS_LOAD_PERCENT, VOLTAGE_DROP_NOTE } from '@/lib/verified/nec-continuous-load-2023';
 import { NOMINAL_SINGLE_PHASE, NOMINAL_THREE_PHASE, assertNominal } from '@/lib/verified/us-nominal-voltages';
 import { CITED_PAGE_NAMES, METHODOLOGY_EXTRA_SECTIONS, METHODOLOGY_ROUTE, METHODOLOGY_SECTIONS } from '@/lib/methodology';
@@ -102,6 +104,11 @@ const IEC_RANGE = /([\d.]+)–([\d.]+) mm²/.exec(coverage('iec-60228-metric-siz
 if (!IEC_RANGE) throw new Error('data-sources.csv iec-60228-metric-sizes coverage: no "N–N mm²" range');
 const IEC_SMALLEST = <Val v={Number(IEC_RANGE[1])} unit="mm²" src="iec-60228-metric-sizes" />;
 const IEC_LARGEST = <Val v={Number(IEC_RANGE[2])} unit="mm²" src="iec-60228-metric-sizes" />;
+
+// The DOE fact sheets' examples (their registry rows' coverage), the correction worked by the engine
+const DOE_PF_RUN = threePhase({ volts: 480, known: 'kw-kva', kw: DOE_PF.kw, kva: DOE_PF.kva, targetPf: DOE_PF.to });
+if (isTpError(DOE_PF_RUN) || !DOE_PF_RUN.correction) throw new Error('methodology: the DOE power factor example has no result');
+const DOE_PF_KVAR = DOE_PF_RUN.correction.capKvar;
 
 const materialLabel = (material: string) => (material === 'Cu' ? 'copper' : 'aluminum or copper-clad aluminum');
 
@@ -403,7 +410,9 @@ export default function MethodologyPage() {
           <p>
             Asked for the smallest size, the voltage drop calculator tries each Table 310.16 size from the smallest it
             offers until the drop is at most your target. A load entered in watts becomes a current through the formulas
-            in <SectionLink domain="power-definitions">Power, current and power factor</SectionLink>.
+            in <SectionLink domain="eia-power-glossary">Real, reactive and apparent power</SectionLink>,{' '}
+            <SectionLink domain="doe-motor-load-efficiency">Three-phase power</SectionLink> and{' '}
+            <SectionLink domain="nist-sp330-si-units">Watts, volts and ohms</SectionLink>.
           </p>
           <p>The power lost in the conductors, in watts:</p>
           <Formulas
@@ -424,8 +433,8 @@ export default function MethodologyPage() {
             </Link>{' '}
             lets you choose <Val v={DC_TEMPS[0]} unit="°C" src="calc:dc-sizing" /> or{' '}
             <Val v={DC_TEMPS[DC_TEMPS.length - 1]} unit="°C" src="calc:dc-sizing" /> and finds the copper area a DC
-            circuit needs for your voltage-drop target, with the current I you enter (or watts ÷ volts) and the allowed
-            drop VD in volts:
+            circuit needs for your voltage-drop target, with the current I you enter (or watts ÷ volts, see{' '}
+            <SectionLink domain="nist-sp330-si-units">Watts, volts and ohms</SectionLink>) and the allowed drop VD in volts:
           </p>
           <Formulas
             src="calc:dc-sizing"
@@ -697,12 +706,138 @@ export default function MethodologyPage() {
           </Limits>
         </SourceSection>
 
+        <SourceSection domain="eia-power-glossary">
+          <p>
+            The U.S. Energy Information Administration&apos;s glossary defines the powers the calculators work with.
+            Apparent power is volts times amperes, in volt-amperes. It splits into real power, the part that does work,
+            in watts, and reactive power, which does none and which motors and other magnetic equipment need, in vars.
+            Power factor is real power divided by apparent power, so it is at most 1.
+          </p>
+          <SourceFacts s={section('eia-power-glossary')} />
+          <p>With P the real power, S the apparent power, V the voltage and PF the power factor:</p>
+          <Formulas
+            src="calc:power"
+            rows={[
+              ['Power factor', 'PF = P ÷ S'],
+              ['Apparent power', 'S = P ÷ PF'],
+              ['Current, single-phase AC', 'I = P ÷ (V × PF)'],
+            ]}
+          />
+          <Limits>
+            <li>The calculators use the power factor you enter; none measures or estimates it.</li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="doe-motor-load-efficiency">
+          <p data-src="doe-motor-load-efficiency">
+            The U.S. Department of Energy&apos;s Motor Challenge fact sheet on motor load and efficiency gives the power of
+            a three-phase load as V × I × PF × √3 ÷ 1000 kilowatts, V being the voltage between two lines and I the
+            current in one line, and works it on a measured motor: <Val v={DOE_MOTOR.volts} unit="V" src="doe-motor-load-efficiency" />,{' '}
+            <Val v={DOE_MOTOR.amps} unit="A" src="doe-motor-load-efficiency" /> and a power factor of {DOE_MOTOR.pf} give{' '}
+            <Val v={DOE_MOTOR.printedKw} unit="kW" src="doe-motor-load-efficiency" />.
+          </p>
+          <SourceFacts s={section('doe-motor-load-efficiency')} />
+          <Formulas
+            src="calc:power"
+            rows={[
+              ['Three-phase real power', 'P = √3 × V × I × PF'],
+              ['Current, three-phase AC', 'I = P ÷ (√3 × V × PF)'],
+            ]}
+          />
+          <p>
+            The{' '}
+            <Link href="/calculators/three-phase-calculator" className={LINK}>
+              three-phase calculator
+            </Link>{' '}
+            solves it for whichever value you leave out, and the{' '}
+            <Link href="/calculators/voltage-drop-calculator" className={LINK}>
+              voltage drop calculator
+            </Link>{' '}
+            uses it to turn a three-phase load in watts into a current.
+          </p>
+          <Limits>
+            <li>A balanced load: the same current in all three lines, with sinusoidal voltage and current.</li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="mit-polyphase-networks">
+          <p data-src="mit-polyphase-networks">
+            MIT&apos;s course notes on polyphase networks (6.061, J. L. Kirtley Jr.) show that in a balanced three-phase
+            system the voltage between two lines is √3 times the voltage from a line to neutral, and that three-phase
+            power, 3 × V(line to neutral) × I, is the same as √3 × V(line to line) × I. The nominal wye systems bear it
+            out:{' '}
+            {TP_WYE_SYSTEMS.map((w, k) => (
+              <span key={w.lineVolts} data-src="us-nominal-voltages">
+                {k > 0 && ' and '}
+                {w.lineVolts}Y/{w.neutralVolts} V
+              </span>
+            ))}
+            .
+          </p>
+          <SourceFacts s={section('mit-polyphase-networks')} />
+          <Formulas
+            src="calc:power"
+            rows={[
+              ['Apparent power, three-phase', 'S = √3 × V × I'],
+              ['Line to neutral, wye', 'V(line to neutral) = V(line to line) ÷ √3'],
+            ]}
+          />
+          <Limits>
+            <li>
+              The three-phase calculator names a line-to-neutral voltage only at{' '}
+              {TP_WYE_SYSTEMS.map((w, k) => (
+                <span key={w.lineVolts}>
+                  {k > 0 && ' and '}
+                  <Val v={w.lineVolts} unit="V" src="us-nominal-voltages" />
+                </span>
+              ))}
+              , the wye systems among the nominal voltages.
+            </li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="doe-power-factor-cost">
+          <p data-src="doe-power-factor-cost">
+            The U.S. Department of Energy&apos;s Motor Challenge fact sheet on power factor cost draws real, reactive and
+            apparent power as a right triangle, reactive power at 90° to real power, and shows a capacitor bank taking over
+            reactive power so the apparent power and the current fall: <Val v={DOE_PF.kw} unit="kW" src="doe-power-factor-cost" /> at{' '}
+            <Val v={DOE_PF.kva} unit="kVA" src="doe-power-factor-cost" />, raised to a power factor of {DOE_PF.to}.
+          </p>
+          <SourceFacts s={section('doe-power-factor-cost')} />
+          <Formulas
+            src="calc:power"
+            rows={[
+              ['Reactive power', 'Q = √(S² − P²)'],
+              ['Capacitor bank', 'Qc = Q before − Q after, at the same P'],
+              ['Current after', 'I′ = I × PF ÷ PF′'],
+            ]}
+          />
+          <Limits>
+            <li>
+              The sheet gives its capacitor in kW; capacitors are rated in kVAR, and the sheet&apos;s own figures give{' '}
+              <Val v={DOE_PF_KVAR} unit="kVAR" src="calc:power" format={{ sig: 4 }} />.
+            </li>
+            <li>The capacitor bank&apos;s own protection and switching are outside the calculator.</li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="nist-sp330-si-units">
+          <p>
+            NIST Special Publication 330, the U.S. edition of the International System of Units, defines the volt as a watt
+            per ampere and the ohm as a volt per ampere (Table 4). A watt is therefore a volt times an ampere, and on DC
+            the current is the power divided by the voltage.
+          </p>
+          <SourceFacts s={section('nist-sp330-si-units')} />
+          <Formulas src="calc:power" rows={[['Current, DC', 'I = P ÷ V']]} />
+        </SourceSection>
+
         <SourceSection domain="power-definitions">
           <p>
-            The power formulas follow U.S. government definitions: real, reactive and apparent power and power factor
-            from the U.S. Energy Information Administration&apos;s glossary, the balanced three-phase power formula
-            from U.S. Department of Energy Motor Challenge fact sheets, and the watt and the ohm from NIST Special
-            Publication 330, The International System of Units.
+            The unit converters and the Ohm&apos;s law calculator cite three U.S. government documents as one source:
+            the U.S. Energy Information Administration&apos;s glossary for real, reactive and apparent power and power
+            factor, a U.S. Department of Energy Motor Challenge fact sheet for the balanced three-phase power formula,
+            and NIST Special Publication 330 for the watt and the ohm. The sections above describe and link each of them;
+            these pages move to them as they are rebuilt.
           </p>
           <SourceFacts s={section('power-definitions')} />
           <p>
@@ -756,6 +891,11 @@ export default function MethodologyPage() {
             </Link>{' '}
             offers {THREE_PHASE_VOLTS.join(', ')} V line to line on three-phase, and {VD_TOOL_SINGLE_QUICK_VOLTS.join(', ')} V as
             quick choices on single-phase: each is a voltage one of these systems names, line to line or line to neutral.
+            The{' '}
+            <Link href="/calculators/three-phase-calculator" className={LINK}>
+              three-phase calculator
+            </Link>{' '}
+            offers the same three-phase voltages as buttons and takes any other you type.
           </p>
           <Limits>
             <li>A nominal voltage names the system; the voltage actually delivered varies within the limits the standard sets.</li>

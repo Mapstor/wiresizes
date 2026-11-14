@@ -117,7 +117,7 @@ export const ROUTES: readonly SiteRoute[] = [
     path: '/calculators/three-phase-calculator',
     group: 'conversions',
     name: 'Three Phase Calculator',
-    line: 'Three-phase power and current for delta and wye systems, with the power factor.',
+    line: 'Three-phase amps, kW, kVA, kVAR and power factor from the line-to-line voltage and any two known values, with the capacitor bank for a target power factor.',
   },
   {
     path: '/calculators/ohms-law-calculator',
