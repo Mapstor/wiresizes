@@ -385,3 +385,108 @@ export function threePhase(input: TpInput): TpResult | { error: TpError } {
 export function isTpError(r: TpResult | { error: TpError }): r is { error: TpError } {
   return 'error' in r;
 }
+
+// ── The converters (WSZ-007b; spec: research/page-specs.md "WSZ-007"): kilowatts or kVA to amps on a single-phase or a
+// balanced three-phase circuit, and volts to amps from power or from resistance. Three-phase runs through threePhase(), so
+// the converters and the three-phase calculator give the same numbers; single-phase uses S = V × I (EIA Glossary: apparent
+// power is volts times amperes) and P = S × PF. From resistance it is Ohm's law, I = V ÷ R (NIST SP 330: the ohm is a volt
+// per ampere), with P = V × I (the watt is a volt-ampere).
+
+export type ConvPhases = 1 | 3;
+export const CONV_PHASES = [1, 3] as const;
+/** Largest power, apparent power or resistance a converter takes. */
+export const CONV_VALUE_MAX = 1000000;
+
+export interface ConvInput {
+  phases: ConvPhases;
+  /** Line-to-line voltage on three-phase, V. */
+  volts: number;
+  /** Real power in kW with its power factor, or apparent power in kVA (the power factor optional). */
+  known: 'kw-pf' | 'kva';
+  kw?: number;
+  kva?: number;
+  pf?: number | null;
+}
+
+export interface ConvResult {
+  input: ConvInput;
+  phases: ConvPhases;
+  volts: number;
+  /** Current in each line, A. */
+  amps: number;
+  kva: number;
+  /** Real and reactive power and power factor; null when apparent power came without a power factor. */
+  kw: number | null;
+  kvar: number | null;
+  pf: number | null;
+  /** Three-phase only: V ÷ √3 and the nominal wye system the voltage names, if any. */
+  lineToNeutral: number | null;
+  wye: { lineVolts: number; neutralVolts: number } | null;
+}
+
+/** Current of an apparent power in kVA: S ÷ V single-phase, S ÷ (√3 × V) three-phase. */
+export function ampsOf(kva: number, volts: number, phases: ConvPhases): number {
+  return phases === 3 ? ampsFromKva(kva, volts) : (kva * 1000) / volts;
+}
+
+/** Amps, kVA and, with a power factor, kW and kVAR of a load on a single-phase or balanced three-phase circuit. */
+export function convertToAmps(input: ConvInput): ConvResult | { error: 'input-invalid' } {
+  const { phases, volts, known } = input;
+  if (!CONV_PHASES.includes(phases)) return { error: 'input-invalid' };
+  if (!(Number.isFinite(volts) && volts >= TP_VOLTS_MIN && volts <= TP_VOLTS_MAX)) return { error: 'input-invalid' };
+  const pf = input.pf ?? null;
+  if (pf !== null && !(positive(pf) && powerFactorValid(pf))) return { error: 'input-invalid' };
+  const value = known === 'kw-pf' ? input.kw : input.kva;
+  if (!positive(value) || value > CONV_VALUE_MAX) return { error: 'input-invalid' };
+  if (known === 'kw-pf' && pf === null) return { error: 'input-invalid' };
+  if (known !== 'kw-pf' && known !== 'kva') return { error: 'input-invalid' };
+  if (phases === 3 && pf !== null) {
+    const r = threePhase(known === 'kw-pf' ? { volts, known: 'kw-pf', kw: value, pf } : { volts, known: 'kva-pf', kva: value, pf });
+    if (isTpError(r)) return { error: 'input-invalid' };
+    return { input, phases, volts, amps: r.amps, kva: r.kva, kw: r.kw, kvar: r.kvar, pf: r.pf, lineToNeutral: r.lineToNeutral, wye: r.wye };
+  }
+  const kva = known === 'kw-pf' ? value / (pf as number) : value;
+  const kw = pf === null ? null : known === 'kw-pf' ? value : value * pf;
+  return {
+    input,
+    phases,
+    volts,
+    amps: ampsOf(kva, volts, phases),
+    kva,
+    kw,
+    kvar: kw === null || pf === null ? null : kvarAt(kw, pf),
+    pf,
+    lineToNeutral: phases === 3 ? volts / SQRT3 : null,
+    wye: phases === 3 ? (TP_WYE_SYSTEMS.find((w) => w.lineVolts === volts) ?? null) : null,
+  };
+}
+
+export function isConvError(r: ConvResult | { error: 'input-invalid' }): r is { error: 'input-invalid' } {
+  return 'error' in r;
+}
+
+/** The same load's current at other voltages of its circuit: the apparent power held, I = S ÷ V or S ÷ (√3 × V). */
+export function ampsAtVolts(r: ConvResult, voltages: readonly number[]): { volts: number; amps: number }[] {
+  return voltages.map((volts) => ({ volts, amps: ampsOf(r.kva, volts, r.phases) }));
+}
+
+export interface OhmResult {
+  volts: number;
+  ohms: number;
+  /** I = V ÷ R, A. */
+  amps: number;
+  /** P = V × I, W. */
+  watts: number;
+}
+
+/** Ohm's law: the current through a resistance R at a voltage V, and the power it takes. */
+export function ampsFromResistance(volts: number, ohms: number): OhmResult | { error: 'input-invalid' } {
+  if (!(Number.isFinite(volts) && volts >= TP_VOLTS_MIN && volts <= TP_VOLTS_MAX)) return { error: 'input-invalid' };
+  if (!positive(ohms) || ohms > CONV_VALUE_MAX) return { error: 'input-invalid' };
+  const amps = volts / ohms;
+  return { volts, ohms, amps, watts: volts * amps };
+}
+
+export function isOhmError(r: OhmResult | { error: 'input-invalid' }): r is { error: 'input-invalid' } {
+  return 'error' in r;
+}
