@@ -180,8 +180,11 @@ describe('WSZ-006d power sources: one registry row per document', () => {
     }
     assert.ok(cited('doe-motor-load-efficiency').includes('/calculators/three-phase-calculator'));
     assert.ok(cited('eia-power-glossary').includes('/calculators/three-phase-calculator'));
-    assert.deepEqual(cited('doe-power-factor-cost'), ['/calculators/three-phase-calculator']);
-    assert.deepEqual(cited('mit-polyphase-networks'), ['/calculators/three-phase-calculator']);
-    assert.deepEqual(cited('nist-sp330-si-units'), ['/calculators/voltage-drop-calculator', '/calculators/low-voltage-calculator']);
+    // later waves add their pages to these lists (WSZ-007a: the two power guides, tests/wsz007a-power-guides.test.ts)
+    assert.ok(cited('doe-power-factor-cost').includes('/calculators/three-phase-calculator'));
+    assert.ok(cited('mit-polyphase-networks').includes('/calculators/three-phase-calculator'));
+    for (const route of ['/calculators/voltage-drop-calculator', '/calculators/low-voltage-calculator']) {
+      assert.ok(cited('nist-sp330-si-units').includes(route), route);
+    }
   });
 });

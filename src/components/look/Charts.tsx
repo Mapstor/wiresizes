@@ -21,7 +21,9 @@ import { TABLE_310_16_ROWS, table31016 } from '@/lib/verified/nec-310-16';
 import { decimalsAtSig } from '@/lib/calculations/format';
 import { dropRun, lengthForDrop } from '@/lib/calculations/voltage-drop';
 import { lowVoltageSize, lvLengthForDrop } from '@/lib/calculations/dc-sizing';
-import { SQRT3, TP_WYE_SYSTEMS, isTpError, threePhase } from '@/lib/calculations/power';
+import { SQRT3, TP_WYE_SYSTEMS } from '@/lib/calculations/power';
+import type { TpResult } from '@/lib/calculations/power';
+import { COMPARE_KW, COMPARE_ROWS, PF_BARS, PF_BAR_ROWS, PF_EXAMPLE } from '@/lib/power-guides';
 import { conductor } from '@/lib/verified/awg';
 import { editionGroups, editionLabel, NEC_ADOPTION_DOMAIN, NOT_VERIFIED, stateName } from '@/lib/verified/nec-adoption';
 
@@ -1192,19 +1194,14 @@ export function WyePhasors() {
 
 // ── Three-phase: the power triangle before and after a capacitor bank (the golden case, 100 kW from PF 0.80 to 0.95) ─
 
-/** Golden case "100 kW from PF 0.80 to 0.95" (research/golden-cases.json, pf-correction), at 480 V for its currents. */
-export const PF_EXAMPLE = (() => {
-  const r = threePhase({ volts: 480, known: 'kw-pf', kw: 100, pf: 0.8, targetPf: 0.95 });
-  if (isTpError(r) || !r.correction) throw new Error('PF_EXAMPLE: the golden correction has no result');
-  return r;
-})();
 
-function TrianglePlot({ narrow }: { narrow: boolean }) {
-  const r = PF_EXAMPLE;
+function TrianglePlot({ narrow, example, idPrefix }: { narrow: boolean; example: TpResult; idPrefix: string }) {
+  const r = example;
   const c = r.correction;
   if (!c) throw new Error('TrianglePlot: no correction');
   const W = narrow ? 288 : 560;
-  const k = narrow ? 1.5 : 3.1; // px per kW and per kVAR: one scale for both sides
+  // px per kW and per kVAR, one scale for both sides, so the longer side fits 150 px (phones) or 310 px
+  const k = Math.min(narrow ? 1.5 : 3.1, (narrow ? 150 : 310) / Math.max(r.kw, r.kvar));
   const x0 = narrow ? 14 : 30;
   const top = narrow ? 24 : 26;
   const base = top + r.kvar * k;
@@ -1213,14 +1210,13 @@ function TrianglePlot({ narrow }: { narrow: boolean }) {
   const yQ1 = base - r.kvar * k;
   const yQ2 = base - c.kvarAfter * k;
   const sig = { sig: 4 };
-  const whole = { upTo: 2 };
   const pf2 = { fixed: 2 };
   const fs = narrow ? 13 : 14;
-  const id = narrow ? 'tp-triangle-narrow' : 'tp-triangle-wide';
+  const id = `${idPrefix}-${narrow ? 'narrow' : 'wide'}`;
   const lx = xP + 10;
   const before = (
     <>
-      <Val v={r.kva} unit="kVA" src={TP} format={whole} svg /> at PF <Num v={r.pf} src={TP} format={pf2} svg />
+      <Val v={Number(r.kva.toPrecision(4))} unit="kVA" src={TP} svg /> at PF <Num v={r.pf} src={TP} format={pf2} svg />
     </>
   );
   const after = (
@@ -1239,7 +1235,7 @@ function TrianglePlot({ narrow }: { narrow: boolean }) {
       data-src={TP}
     >
       <title id={`${id}-title`}>
-        {`Power triangle of a ${r.kw} kW load, drawn to scale: at power factor 0.80 it draws ${r.kvar} kVAR and ${r.kva} kVA; a ${c.capKvar.toPrecision(4)} kVAR capacitor bank brings it to power factor 0.95, ${c.kvarAfter.toPrecision(4)} kVAR and ${c.kvaAfter.toPrecision(4)} kVA`}
+        {`Power triangle of a ${r.kw} kW load, drawn to scale: at power factor ${r.pf.toFixed(2)} it draws ${Number(r.kvar.toPrecision(4))} kVAR and ${Number(r.kva.toPrecision(4))} kVA; a ${c.capKvar.toPrecision(4)} kVAR capacitor bank brings it to power factor ${c.targetPf.toFixed(2)}, ${c.kvarAfter.toPrecision(4)} kVAR and ${c.kvaAfter.toPrecision(4)} kVA`}
       </title>
       {/* real power along the bottom, reactive power up the right side, apparent power as the long sides */}
       <line x1={x0} y1={base} x2={xP} y2={base} stroke={INK} strokeWidth={3} pathLength={1} className="viz-draw" />
@@ -1251,7 +1247,7 @@ function TrianglePlot({ narrow }: { narrow: boolean }) {
         <Val v={r.kw} unit="kW" src={TP} svg /> real power
       </text>
       <text x={lx} y={yQ1 + 4} fontSize={13} fill={MUTED}>
-        <Val v={r.kvar} unit="kVAR" src={TP} format={whole} svg /> before
+        <Val v={Number(r.kvar.toPrecision(4))} unit="kVAR" src={TP} svg /> before
       </text>
       {/* the capacitor's share of the side: from the corrected reactive power up to the original */}
       <text x={lx} y={(yQ1 + yQ2) / 2 + 2} fontSize={fs} fontWeight={700} fill={INK} className="viz-pop" data-src={PFC}>
@@ -1287,11 +1283,221 @@ function TrianglePlot({ narrow }: { narrow: boolean }) {
 }
 
 /** The power triangle before and after power factor correction, to one scale (DOE/GO-10096-286's triangle). */
-export function PowerTriangle() {
+export function PowerTriangle({ example = PF_EXAMPLE, idPrefix = 'tp-triangle' }: { example?: TpResult; idPrefix?: string }) {
   return (
     <div>
-      <TrianglePlot narrow={false} />
-      <TrianglePlot narrow />
+      <TrianglePlot narrow={false} example={example} idPrefix={idPrefix} />
+      <TrianglePlot narrow example={example} idPrefix={idPrefix} />
+    </div>
+  );
+}
+
+// ── Single phase vs three phase: power over one cycle (MIT 6.061 polyphase notes) ──────────────────────────────────
+
+const PHASE_GRAY = '#a39b93';
+
+function PhasePowerPlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 34 : 44;
+  const right = narrow ? 8 : 16;
+  const top = narrow ? 62 : 48;
+  const ph = narrow ? 130 : 170;
+  const H = top + ph + 46;
+  const pw = W - left - right;
+  const x = (deg: number) => left + (deg / 360) * pw;
+  const y = (v: number) => top + ph - (v / 2) * ph;
+  const steps = 72;
+  const path = (f: (deg: number) => number) =>
+    Array.from({ length: steps + 1 }, (_, i) => {
+      const deg = (360 * i) / steps;
+      return `${i === 0 ? 'M' : 'L'}${x(deg).toFixed(1)},${y(f(deg)).toFixed(1)}`;
+    }).join('');
+  const rad = (deg: number) => (deg * Math.PI) / 180;
+  // at power factor 1: one phase delivers P(1 − cos 2θ); three phases 120° apart each a third of it, summing to P
+  const single = (deg: number) => 1 - Math.cos(2 * rad(deg));
+  const phase = (k: number) => (deg: number) => (1 - Math.cos(2 * rad(deg - 120 * k))) / 3;
+  const total = (deg: number) => phase(0)(deg) + phase(1)(deg) + phase(2)(deg);
+  const id = narrow ? 'phase-power-narrow' : 'phase-power-wide';
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={POLY}
+    >
+      <title id={`${id}-title`}>
+        Power delivered over one cycle at the same average power: single-phase rises and falls between zero and twice the average; the
+        three phases of a balanced three-phase load add up to a constant
+      </title>
+      <Key x={0} y={narrow ? 16 : 18} color={INK}>
+        Three-phase, the sum
+      </Key>
+      <Key x={narrow ? 0 : 200} y={narrow ? 36 : 18} color={MUTED}>
+        Single-phase
+      </Key>
+      {!narrow && (
+        <Key x={340} y={18} color={PHASE_GRAY}>
+          Each phase
+        </Key>
+      )}
+      {[0, 1, 2].map((v) => (
+        <g key={v}>
+          <line x1={left} x2={W - right} y1={y(v)} y2={y(v)} stroke={GRID} strokeWidth={1} />
+          <text x={left - 8} y={y(v) + 4.5} textAnchor="end" fontSize={13} fill={MUTED}>
+            <Num v={v} src={POLY} svg />×
+          </text>
+        </g>
+      ))}
+      {[0, 90, 180, 270, 360].map((d) => (
+        <text key={d} x={x(d)} y={top + ph + 20} textAnchor="middle" fontSize={13} fill={MUTED}>
+          <Num v={d} src={POLY} svg />°
+        </text>
+      ))}
+      <text x={left + pw / 2} y={H - 6} textAnchor="middle" fontSize={13} fill={MUTED}>
+        One cycle of the voltage
+      </text>
+      {!narrow &&
+        [0, 1, 2].map((k) => (
+          <path key={k} d={path(phase(k))} fill="none" stroke={PHASE_GRAY} strokeWidth={1.5} pathLength={1} className="viz-draw" />
+        ))}
+      <path d={path(single)} fill="none" stroke={MUTED} strokeWidth={2} pathLength={1} className="viz-draw" />
+      <path d={path(total)} fill="none" stroke={INK} strokeWidth={3} pathLength={1} className="viz-draw" />
+    </svg>
+  );
+}
+
+/** Instantaneous power over one cycle, single-phase against the three phases' sum, at the same average power. */
+export function PhasePowerChart() {
+  return (
+    <div>
+      <PhasePowerPlot narrow={false} />
+      <PhasePowerPlot narrow />
+    </div>
+  );
+}
+
+// ── Single phase vs three phase: the same 10 kW at three voltages (golden cases, power group) ─────────────────────
+
+const POWER_ENGINE = 'calc:power';
+
+const BAR_GRAY = '#57514c';
+
+function CompareBarsPlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 104 : 150;
+  const right = narrow ? 62 : 80;
+  const top = 8;
+  const rowH = narrow ? 34 : 36;
+  const barH = narrow ? 16 : 18;
+  const H = top + COMPARE_ROWS.length * rowH + 30;
+  const pw = W - left - right;
+  const max = Math.max(...COMPARE_ROWS.map((r) => r.amps));
+  const id = narrow ? 'compare-bars-narrow' : 'compare-bars-wide';
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={POWER_ENGINE}
+    >
+      <title id={`${id}-title`}>
+        {`Current of a ${COMPARE_KW} kW load at power factor 1: ` +
+          COMPARE_ROWS.map((r) => `${r.amps.toPrecision(4)} A at ${r.volts} V ${r.phases === 1 ? 'single-phase' : 'three-phase'}`).join(', ')}
+      </title>
+      {COMPARE_ROWS.map((r, k) => {
+        const yb = top + k * rowH + (rowH - barH) / 2;
+        const w = (r.amps / max) * pw;
+        return (
+          <g key={r.key}>
+            <text x={left - 10} y={yb + barH / 2 + 4.5} textAnchor="end" fontSize={13} fill={INK} data-src={NOMINAL}>
+              <Val v={r.volts} unit="V" src={NOMINAL} svg /> {r.phases === 1 ? 'single' : 'three'}
+            </text>
+            <path d={barPath(left, yb, Math.max(2, w), barH)} fill={BAR_GRAY} className="viz-grow" />
+            <text x={left + w + 8} y={yb + barH / 2 + 4.5} fontSize={13} fontWeight={700} fill={INK} className="viz-pop">
+              <Val v={r.amps} unit="A" src={POWER_ENGINE} format={{ sig: 4 }} svg />
+            </text>
+          </g>
+        );
+      })}
+      <text x={left} y={H - 8} fontSize={13} fill={MUTED}>
+        Current per line, <Val v={COMPARE_KW} unit="kW" src={POWER_ENGINE} svg /> at power factor <Num v={1} src={POWER_ENGINE} svg />
+      </text>
+    </svg>
+  );
+}
+
+/** One 10 kW load at 240 V single-phase, 208 V three-phase and 480 V three-phase. */
+export function CompareCurrentBars() {
+  return (
+    <div>
+      <CompareBarsPlot narrow={false} />
+      <CompareBarsPlot narrow />
+    </div>
+  );
+}
+
+// ── Power factor: current for 100 kW at 480 V as the power factor falls (power factor guide) ──────────────────────
+
+
+function PfBarsPlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 70 : 92;
+  const right = narrow ? 58 : 72;
+  const top = 8;
+  const rowH = narrow ? 26 : 28;
+  const barH = narrow ? 14 : 16;
+  const H = top + PF_BAR_ROWS.length * rowH + 30;
+  const pw = W - left - right;
+  const max = Math.max(...PF_BAR_ROWS.map((r) => r.amps));
+  const id = narrow ? 'pf-bars-narrow' : 'pf-bars-wide';
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={TP}
+    >
+      <title id={`${id}-title`}>
+        {`Current in each line of a ${PF_BARS.kw} kW three-phase load at ${PF_BARS.volts} V as the power factor falls: ` +
+          PF_BAR_ROWS.map((r) => `${r.amps.toPrecision(4)} A at ${r.pf}`).join(', ')}
+      </title>
+      {PF_BAR_ROWS.map((r, k) => {
+        const yb = top + k * rowH + (rowH - barH) / 2;
+        const w = (r.amps / max) * pw;
+        return (
+          <g key={r.pf} className="viz-mark">
+            <text x={left - 10} y={yb + barH / 2 + 4.5} textAnchor="end" fontSize={13} fill={INK}>
+              PF <Num v={r.pf} src={TP} format={{ fixed: 2 }} svg />
+            </text>
+            <path d={barPath(left, yb, Math.max(2, w), barH)} fill={BAR_GRAY} className="viz-grow" />
+            <text x={left + w + 8} y={yb + barH / 2 + 4.5} fontSize={13} fill={INK} className="viz-pop">
+              <Val v={r.amps} unit="A" src={TP} format={{ sig: 4 }} svg />
+            </text>
+          </g>
+        );
+      })}
+      <text x={left} y={H - 8} fontSize={13} fill={MUTED}>
+        Amperes per line, <Val v={PF_BARS.kw} unit="kW" src={TP} svg /> at <Val v={PF_BARS.volts} unit="V" src={NOMINAL} svg /> three-phase
+      </text>
+    </svg>
+  );
+}
+
+/** The current of one load as its power factor falls. */
+export function PfCurrentBars() {
+  return (
+    <div>
+      <PfBarsPlot narrow={false} />
+      <PfBarsPlot narrow />
     </div>
   );
 }
