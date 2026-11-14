@@ -20,13 +20,13 @@ export function EditionSummary({ className }: { className?: string }) {
     { key: 'not-verified', term: 'Not verified', states: NOT_VERIFIED.map((n) => n.state) },
   ];
   return (
-    <dl data-src={ADOPT} className={clsx('divide-y divide-gray-200 text-base', className)}>
+    <dl data-src={ADOPT} className={clsx('divide-y divide-cut-rule border-y border-ink text-base', className)}>
       {rows.map((r) => (
         <div key={r.key} className="grid gap-x-4 py-2 sm:grid-cols-[11rem_1fr]">
-          <dt className="font-semibold text-gray-900">
-            {r.term} <span className="font-normal text-gray-600">(<Num v={r.states.length} src={ADOPT} />)</span>
+          <dt className="font-semibold text-ink">
+            {r.term} <span className="font-normal text-cut-muted">(<Num v={r.states.length} src={ADOPT} />)</span>
           </dt>
-          <dd className="leading-relaxed text-gray-800">{joinNames(r.states.map(stateName))}</dd>
+          <dd className="leading-relaxed text-ink">{joinNames(r.states.map(stateName))}</dd>
         </div>
       ))}
     </dl>

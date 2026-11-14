@@ -5,7 +5,23 @@ import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { DatasetSchema } from '@/components/seo/DatasetSchema';
 import { Byline } from '@/components/content/Byline';
 import { EditionSummary } from '@/components/content/EditionSummary';
-import { DataTable, STICKY_TD, STICKY_TH, TD, TH } from '@/components/content/DataTable';
+import { DataTable, RSTICKY_TD, RSTICKY_TH, RTD, RTH } from '@/components/content/DataTable';
+import { LookGuideBody } from '@/components/layout/LookGuideBody';
+import { OnThisPage } from '@/components/look/OnThisPage';
+import { PageTitle } from '@/components/look/PageTitle';
+import {
+  LOOK_BYLINE,
+  LOOK_BYLINE_LINK,
+  LOOK_H2 as H2,
+  LOOK_H3 as H3,
+  LOOK_LEAD,
+  LOOK_LINK as LINK,
+  LOOK_P as P,
+  LOOK_PAGE,
+  LOOK_SOURCES_HEADING,
+  LOOK_SOURCES_LIST,
+  LOOK_SOURCES_SECTION,
+} from '@/components/look/styles';
 import { Figure } from '@/components/content/Figure';
 import { Num } from '@/components/content/Num';
 import { Size } from '@/components/content/Size';
@@ -63,10 +79,6 @@ const CALC_AMP = 'calc:ampacity';
 const CALC_SVC = 'calc:service-lookup';
 const SOURCE_DOMAINS = [AMP, COR, OCPD, SVC, ISSUE, ED, ADOPT];
 
-const LINK = 'text-blue-700 underline underline-offset-2 hover:text-blue-900';
-const H2 = 'scroll-mt-20 text-2xl font-semibold text-gray-900';
-const H3 = 'text-lg font-semibold text-gray-900';
-const P = 'leading-relaxed text-gray-800';
 
 const COLUMNS: Table31016Column[] = ['cu_60', 'cu_75', 'cu_90', 'al_60', 'al_75', 'al_90'];
 const amp = (size: string, column: Table31016Column) => table31016(size, column) as number;
@@ -96,7 +108,12 @@ const SERVICE_200 = required(table31012(200), 'Table 310.12 row for 200 A');
 const MIN_200 = minimumServiceAmpacity(SERVICE_200.ratingA);
 
 function Dash({ label = 'no value' }: { label?: string }) {
-  return <span aria-label={label}>–</span>;
+  return (
+    <>
+      <span aria-hidden="true">–</span>
+      <span className="sr-only">{label}</span>
+    </>
+  );
 }
 
 const monthYear = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
@@ -106,7 +123,7 @@ const materialName = (m: string) => (m === 'Cu' ? 'copper' : m === 'Al' ? 'alumi
 /** A 240.4(D) row's conditions in plain words; numbers from the data text (conditions240_4D). */
 function ConditionWords({ row }: { row: Row240_4D }) {
   const c = conditions240_4D(row);
-  if (!c) return <span className="text-gray-600">None</span>;
+  if (!c) return <span className="text-cut-muted">None</span>;
   return (
     <>
       Continuous load no more than <Val v={c.continuousMaxA} unit="A" src={OCPD} />, and a breaker or fuse listed and marked for{' '}
@@ -117,8 +134,8 @@ function ConditionWords({ row }: { row: Row240_4D }) {
 }
 
 // ── SVGs ──────────────────────────────────────────────────────────────────────────────────────────────────────────
-// Tokens as on the AWG chart: copper #f59e0b at 25 % with a #92400e stroke, text #111827 at 13 and 11 px, rules
-// #9ca3af, accent #1d4ed8.
+// In the look (D-33, DESIGN.md): ink on white, square corners, labels in Archivo at 13 px or more on screen. The three
+// conductors are schematic, not to scale, so they are drawn in ink, not copper (The Measured Copper Rule).
 
 /** What the table assumes: up to three current-carrying conductors together, in 30 °C (86 °F) surroundings. Labels
  *  beside the raceway from sm up, below it on narrow screens. */
@@ -128,11 +145,11 @@ function BaseConditions({ narrow = false }: { narrow?: boolean }) {
   const [cx, cy] = narrow ? [150, 100] : [130, 105];
   const labelX = narrow ? 24 : 230;
   const labelY = narrow ? 210 : 70;
-  const font = narrow ? 16 : 13;
+  const font = narrow ? 16 : 14;
   const conductor = (dx: number, dy: number, n: number) => (
     <g key={n}>
-      <circle cx={cx + dx} cy={cy + dy} r={22} fill="#f59e0b40" stroke="#92400e" strokeWidth={1.5} />
-      <text x={cx + dx} y={cy + dy + 5} textAnchor="middle" fontSize={14} fontWeight={600} fill="#111827" aria-hidden="true">
+      <circle cx={cx + dx} cy={cy + dy} r={22} fill="#ffffff" stroke="#111111" strokeWidth={1.5} />
+      <text x={cx + dx} y={cy + dy + 5} textAnchor="middle" fontSize={15} fontWeight={700} fill="#111111" aria-hidden="true">
         {n}
       </text>
     </g>
@@ -143,25 +160,24 @@ function BaseConditions({ narrow = false }: { narrow?: boolean }) {
       width="100%"
       role="img"
       aria-labelledby={id}
-      className={clsx('h-auto', narrow ? 'max-w-[360px] sm:hidden' : 'hidden max-w-[560px] sm:block')}
+      className={clsx('h-auto font-display', narrow ? 'max-w-[360px] sm:hidden' : 'hidden max-w-[560px] sm:block')}
       data-src={AMP}
     >
       <title id={id}>{`Table 310.16 conditions: not more than three current-carrying conductors, in ${TABLE_AMBIENT.c} °C (${TABLE_AMBIENT.f} °F) surroundings`}</title>
-      <rect x={1} y={1} width={w - 2} height={h - 2} rx={8} fill="#eff6ff" stroke="#bfdbfe" />
-      <circle cx={cx} cy={cy} r={70} fill="#ffffff" stroke="#6b7280" strokeWidth={3} />
+      <circle cx={cx} cy={cy} r={70} fill="#ffffff" stroke="#111111" strokeWidth={3} />
       {conductor(-26, -17, 1)}
       {conductor(26, -17, 2)}
       {conductor(0, 27, 3)}
-      <text x={labelX} y={labelY} fontSize={font} fontWeight={600} fill="#111827">
+      <text x={labelX} y={labelY} fontSize={font} fontWeight={700} fill="#111111">
         Not more than three
       </text>
-      <text x={labelX} y={labelY + font + 5} fontSize={font} fill="#111827">
+      <text x={labelX} y={labelY + font + 5} fontSize={font} fill="#2b2b2b">
         current-carrying conductors
       </text>
-      <text x={labelX} y={labelY + 3 * font + 8} fontSize={font} fontWeight={600} fill="#111827">
+      <text x={labelX} y={labelY + 3 * font + 8} fontSize={font} fontWeight={700} fill="#111111">
         Ambient temperature
       </text>
-      <text x={labelX} y={labelY + 4 * font + 13} fontSize={font} fill="#111827">
+      <text x={labelX} y={labelY + 4 * font + 13} fontSize={font} fill="#2b2b2b">
         <Val v={TABLE_AMBIENT.c} unit="°C" src={AMP} svg /> (<Val v={TABLE_AMBIENT.f} unit="°F" src={AMP} svg />)
       </text>
     </svg>
@@ -188,7 +204,7 @@ function CorrectionChain({ narrow = false }: { narrow?: boolean }) {
       width="100%"
       role="img"
       aria-labelledby={id}
-      className={clsx('h-auto', narrow ? 'max-w-[300px] sm:hidden' : 'hidden max-w-[560px] sm:block')}
+      className={clsx('h-auto font-display', narrow ? 'max-w-[300px] sm:hidden' : 'hidden max-w-[560px] sm:block')}
       data-src={COR}
     >
       <title id={id}>{`Worked example: ${EXAMPLE.size} AWG copper, ${EXAMPLE.column} °C column, ${EXAMPLE.ambientRow} °C ambient, ${EXAMPLE.band} current-carrying conductors`}</title>
@@ -198,14 +214,14 @@ function CorrectionChain({ narrow = false }: { narrow?: boolean }) {
         const last = i === steps.length - 1;
         return (
           <g key={s.label} data-src={i === 0 ? AMP : i === 3 ? CALC_AMP : COR}>
-            <rect x={x + 1} y={y + 1} width={w - 2} height={118} rx={8} fill={last ? '#1d4ed8' : '#ffffff'} stroke={last ? '#1d4ed8' : '#9ca3af'} />
-            <text x={x + w / 2} y={y + 30} textAnchor="middle" fontSize={13} fontWeight={600} fill={last ? '#ffffff' : '#374151'}>
+            <rect x={x + 1} y={y + 1} width={w - 2} height={118} fill={last ? '#111111' : '#ffffff'} stroke="#111111" strokeWidth={1.5} />
+            <text x={x + w / 2} y={y + 30} textAnchor="middle" fontSize={14} fontWeight={600} fill={last ? '#ffffff' : '#2b2b2b'}>
               {s.label}
             </text>
-            <text x={x + w / 2} y={y + 68} textAnchor="middle" fontSize={22} fontWeight={700} fill={last ? '#ffffff' : '#111827'}>
+            <text x={x + w / 2} y={y + 68} textAnchor="middle" fontSize={23} fontWeight={800} fill={last ? '#ffffff' : '#111111'}>
               {s.value}
             </text>
-            <text x={x + w / 2} y={y + 98} textAnchor="middle" fontSize={12} fill={last ? '#dbeafe' : '#4b5563'}>
+            <text x={x + w / 2} y={y + 98} textAnchor="middle" fontSize={13.5} fill={last ? '#e8e8e8' : '#555555'}>
               {s.sub}
             </text>
           </g>
@@ -233,7 +249,8 @@ const articleData = { headline: H1, description: DESCRIPTION, url: URL, ...artic
 export default function NecTable31016Page() {
   const dates = articleDates(ROUTE);
   return (
-    <article className="space-y-10 pb-12 text-base">
+    <div className={LOOK_PAGE}>
+    <article className="container pb-16">
       <ArticleSchema article={articleData} />
       <DatasetSchema
         path={ROUTE}
@@ -251,13 +268,14 @@ export default function NecTable31016Page() {
         dateModified={dates.dateModified}
       />
 
-      <header className="space-y-3">
-        <h1 className="text-3xl font-bold leading-tight text-gray-900 sm:text-4xl">{H1}</h1>
-        <Byline route={ROUTE} sources className="text-sm text-gray-600" linkClassName="text-blue-700" />
+      {/* The look (D-33): the H1 across the top, then the answer beside the drawing of the table's two conditions */}
+      <header className="pt-10 sm:pt-12">
+        <PageTitle main="NEC Table 310.16 Ampacity Chart" sub="(2023 NEC)" />
+        <Byline route={ROUTE} sources className={LOOK_BYLINE} linkClassName={LOOK_BYLINE_LINK} />
       </header>
 
-      <div className="rounded-md border border-blue-200 bg-blue-50 px-5 py-4" data-src={AMP}>
-        <p className={P}>
+      <div className="mt-6 grid items-center gap-8 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-10">
+        <p className={LOOK_LEAD} data-src={AMP}>
           <strong>NEC Table 310.16 gives the allowable ampacity of insulated copper and aluminum conductors</strong> for not more than three
           current-carrying conductors in raceway, cable or earth at an ambient temperature of <Val v={TABLE_AMBIENT.c} unit="°C" src={AMP} /> (
           <Val v={TABLE_AMBIENT.f} unit="°F" src={AMP} />). For example, <Size s="12" /> copper is rated{' '}
@@ -265,7 +283,6 @@ export default function NecTable31016Page() {
           <Val v={amp('12', 'cu_90')} unit="A" src={AMP} /> in the 60, 75 and 90 °C columns, and 2023 NEC 240.4(D) limits its breaker or fuse
           to <Val v={unconditional('12', 'Cu') as number} unit="A" src={OCPD} />.
         </p>
-      </div>
 
       <Figure
         caption={
@@ -278,19 +295,10 @@ export default function NecTable31016Page() {
         <BaseConditions />
         <BaseConditions narrow />
       </Figure>
+      </div>
 
-      <nav aria-label="On this page" className="rounded-md border border-gray-200 bg-white p-4">
-        <p className="mb-2 text-sm font-semibold text-gray-900">On this page</p>
-        <ol className="grid gap-1 text-sm sm:grid-cols-2">
-          {TOC.map(([id, label]) => (
-            <li key={id}>
-              <a href={`#${id}`} className={LINK}>
-                {label}
-              </a>
-            </li>
-          ))}
-        </ol>
-      </nav>
+      <LookGuideBody className="mt-12 border-t border-cut-rule pt-10">
+      <OnThisPage items={TOC} />
 
       <section aria-labelledby="table" className="space-y-4">
         <h2 id="table" className={H2}>
@@ -304,22 +312,22 @@ export default function NecTable31016Page() {
           </a>
           .
         </p>
-        <DataTable id="ampacity-table" src={AMP} caption="2023 NEC Table 310.16, allowable ampacities in amperes">
+        <DataTable variant="ruled" id="ampacity-table" src={AMP} caption="2023 NEC Table 310.16, allowable ampacities in amperes">
           <thead>
             <tr>
-              <th scope="col" rowSpan={2} className={clsx(TH, STICKY_TH)}>
+              <th scope="col" rowSpan={2} className={clsx(RTH, RSTICKY_TH)}>
                 Size
               </th>
-              <th scope="colgroup" colSpan={3} className={clsx(TH, 'text-center')}>
+              <th scope="colgroup" colSpan={3} className={clsx(RTH, 'text-center')}>
                 Copper
               </th>
-              <th scope="colgroup" colSpan={3} className={clsx(TH, 'text-center')}>
+              <th scope="colgroup" colSpan={3} className={clsx(RTH, 'text-center')}>
                 Aluminum or copper-clad aluminum
               </th>
             </tr>
             <tr>
               {COLUMNS.map((c) => (
-                <th key={c} scope="col" className={TH}>
+                <th key={c} scope="col" className={RTH}>
                   {c.split('_')[1]} °C
                 </th>
               ))}
@@ -328,16 +336,16 @@ export default function NecTable31016Page() {
           <tbody>
             {TABLE_310_16_ROWS.map((r) => (
               <tr key={r.size}>
-                <th scope="row" className={clsx(TD, STICKY_TD, 'whitespace-nowrap')}>
+                <th scope="row" className={RSTICKY_TD}>
                   <Size s={r.size} />
                   {LIMITED.has(r.size) && (
-                    <a href="#small-conductors" className="ml-1 text-blue-700 no-underline" aria-label="240.4(D) limit applies">
+                    <a href="#small-conductors" className="ml-1 text-cut-line no-underline" aria-label="240.4(D) limit applies">
                       †
                     </a>
                   )}
                 </th>
                 {COLUMNS.map((c) => (
-                  <td key={c} className={TD}>
+                  <td key={c} className={RTD}>
                     {r[c] === null ? <Dash /> : <Num v={r[c] as number} src={AMP} />}
                   </td>
                 ))}
@@ -355,13 +363,13 @@ export default function NecTable31016Page() {
           The three temperatures are insulation ratings: the highest temperature the conductor&apos;s insulation is rated to run at. A hotter
           rating allows more current through the same metal. The table groups insulation types under each column:
         </p>
-        <dl className="grid gap-x-4 gap-y-2 rounded-md border border-gray-200 bg-white p-4 text-sm sm:grid-cols-[6rem_1fr]" data-src={AMP}>
+        <dl className="grid max-w-[44rem] gap-x-4 gap-y-2 border-y border-ink py-3 text-[15px] sm:grid-cols-[6rem_1fr]" data-src={AMP}>
           {AMPACITY_COLUMNS.map((c) => (
             <div key={c} className="contents">
-              <dt className="font-semibold text-gray-900">
+              <dt className="font-semibold text-ink">
                 <Val v={c} unit="°C" src={AMP} />
               </dt>
-              <dd className="text-gray-800">{COLUMN_TYPES[c]}</dd>
+              <dd className="text-ink">{COLUMN_TYPES[c]}</dd>
             </div>
           ))}
         </dl>
@@ -382,22 +390,22 @@ export default function NecTable31016Page() {
           by the factor for the ambient temperature, taken from the same temperature column. Factors above 1 apply in cooler surroundings. A
           dash means conductors of that rating may not be used at that temperature.
         </p>
-        <DataTable id="ambient-table" src={COR} caption="2023 NEC Table 310.15(B)(1)(1), correction factors based on 30 °C (86 °F)">
+        <DataTable variant="ruled" id="ambient-table" src={COR} caption="2023 NEC Table 310.15(B)(1)(1), correction factors based on 30 °C (86 °F)">
           <thead>
             <tr>
-              <th scope="col" className={clsx(TH, STICKY_TH)}>
+              <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
                 Ambient, °C
               </th>
-              <th scope="col" className={TH}>
+              <th scope="col" className={RTH}>
                 Ambient, °F
               </th>
-              <th scope="col" className={TH}>
+              <th scope="col" className={RTH}>
                 60 °C column
               </th>
-              <th scope="col" className={TH}>
+              <th scope="col" className={RTH}>
                 75 °C column
               </th>
-              <th scope="col" className={TH}>
+              <th scope="col" className={RTH}>
                 90 °C column
               </th>
             </tr>
@@ -405,12 +413,12 @@ export default function NecTable31016Page() {
           <tbody>
             {AMBIENT_ROWS.map((r) => (
               <tr key={r.key}>
-                <th scope="row" className={clsx(TD, STICKY_TD, 'whitespace-nowrap')}>
+                <th scope="row" className={RSTICKY_TD}>
                   {r.key}
                 </th>
-                <td className={clsx(TD, 'whitespace-nowrap')}>{r.ambientF}</td>
+                <td className={RTD}>{r.ambientF}</td>
                 {[r.f_60, r.f_75, r.f_90].map((f, i) => (
-                  <td key={i} className={TD}>
+                  <td key={i} className={RTD}>
                     {f === null ? <Dash label="not permitted" /> : <Num v={f} src={COR} format={{ fixed: 2 }} />}
                   </td>
                 ))}
@@ -429,13 +437,13 @@ export default function NecTable31016Page() {
           after any ambient correction. This site has not yet verified the rules for which conductors count as current-carrying, such as
           neutrals and equipment grounding conductors, so check them in the Code.
         </p>
-        <DataTable id="adjustment-table" src={COR} caption="2023 NEC Table 310.15(C)(1), percent of the Table 310.16 value">
+        <DataTable variant="ruled" id="adjustment-table" src={COR} caption="2023 NEC Table 310.15(C)(1), percent of the Table 310.16 value">
           <thead>
             <tr>
-              <th scope="col" className={clsx(TH, STICKY_TH)}>
+              <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
                 Current-carrying conductors
               </th>
-              <th scope="col" className={TH}>
+              <th scope="col" className={RTH}>
                 Percent of table value
               </th>
             </tr>
@@ -443,10 +451,10 @@ export default function NecTable31016Page() {
           <tbody>
             {ADJUSTMENT_ROWS.map((r) => (
               <tr key={r.key}>
-                <th scope="row" className={clsx(TD, STICKY_TD)}>
+                <th scope="row" className={RSTICKY_TD}>
                   {r.key}
                 </th>
-                <td className={TD}>
+                <td className={RTD}>
                   <Val v={r.percent} unit="%" src={COR} />
                 </td>
               </tr>
@@ -484,7 +492,7 @@ export default function NecTable31016Page() {
           <CorrectionChain />
           <CorrectionChain narrow />
         </Figure>
-        <ol className="list-decimal space-y-2 pl-6 text-gray-800" data-src={AMP}>
+        <ol className="max-w-[35rem] list-decimal space-y-2 pl-6 text-[17px] leading-[1.65] text-ink marker:font-bold marker:text-cut-line" data-src={AMP}>
           <li>
             Table 310.16 gives <Val v={EXAMPLE_RESULT.tableAmpacity} unit="A" src={AMP} /> for <Size s={EXAMPLE.size} /> copper in
             the <Val v={EXAMPLE.column} unit="°C" src={AMP} /> column.
@@ -511,22 +519,22 @@ export default function NecTable31016Page() {
           <Val v={unconditional('14', 'Cu') as number} unit="A" src={OCPD} />. Three of the sizes come with conditions, shown in plain words
           below.
         </p>
-        <DataTable id="limits-table" src={OCPD} caption="2023 NEC 240.4(D), maximum overcurrent protection">
+        <DataTable variant="ruled" id="limits-table" src={OCPD} caption="2023 NEC 240.4(D), maximum overcurrent protection">
           <thead>
             <tr>
-              <th scope="col" className={clsx(TH, STICKY_TH)}>
+              <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
                 Size
               </th>
-              <th scope="col" className={TH}>
+              <th scope="col" className={RTH}>
                 Material
               </th>
-              <th scope="col" className={TH}>
+              <th scope="col" className={RTH}>
                 Maximum protection
               </th>
-              <th scope="col" className={TH}>
+              <th scope="col" className={RTH}>
                 Conditions
               </th>
-              <th scope="col" className={TH}>
+              <th scope="col" className={RTH}>
                 Item
               </th>
             </tr>
@@ -534,17 +542,17 @@ export default function NecTable31016Page() {
           <tbody>
             {ROWS_240_4_D.map((r) => (
               <tr key={`${r.item}-${r.material}`}>
-                <th scope="row" className={clsx(TD, STICKY_TD, 'whitespace-nowrap')}>
+                <th scope="row" className={RSTICKY_TD}>
                   <Size s={r.size} />
                 </th>
-                <td className={TD}>{materialName(r.material)}</td>
-                <td className={TD}>
+                <td className={RTD}>{materialName(r.material)}</td>
+                <td className={RTD}>
                   <Val v={r.max_ocpd_a} unit="A" src={OCPD} />
                 </td>
-                <td className={clsx(TD, 'min-w-[16rem]')}>
+                <td className={clsx(RTD, 'min-w-[16rem] whitespace-normal text-left font-display text-[15px]')}>
                   <ConditionWords row={r} />
                 </td>
-                <td className={clsx(TD, 'whitespace-nowrap')}>{r.item}</td>
+                <td className={RTD}>{r.item}</td>
               </tr>
             ))}
           </tbody>
@@ -568,16 +576,16 @@ export default function NecTable31016Page() {
           </Link>{' '}
           use this table.
         </p>
-        <DataTable id="service-table" src={SVC} caption="2023 NEC Table 310.12, dwelling services and main power feeders">
+        <DataTable variant="ruled" id="service-table" src={SVC} caption="2023 NEC Table 310.12, dwelling services and main power feeders">
           <thead>
             <tr>
-              <th scope="col" className={clsx(TH, STICKY_TH)}>
+              <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
                 Service rating, A
               </th>
-              <th scope="col" className={TH}>
+              <th scope="col" className={RTH}>
                 Copper
               </th>
-              <th scope="col" className={TH}>
+              <th scope="col" className={RTH}>
                 Aluminum or copper-clad aluminum
               </th>
             </tr>
@@ -585,13 +593,13 @@ export default function NecTable31016Page() {
           <tbody>
             {TABLE_310_12_ROWS.map((r) => (
               <tr key={r.ratingA}>
-                <th scope="row" className={clsx(TD, STICKY_TD)}>
+                <th scope="row" className={RSTICKY_TD}>
                   <Num v={r.ratingA} src={SVC} />
                 </th>
-                <td className={TD}>
+                <td className={RTD}>
                   <Size s={r.cu} />
                 </td>
-                <td className={TD}>
+                <td className={RTD}>
                   <Size s={r.alCca} />
                 </td>
               </tr>
@@ -621,7 +629,7 @@ export default function NecTable31016Page() {
           NFPA&apos;s 2026 revision drafts show the Table 310.16 rows from <Size s="12" /> to <Size s="2000" /> unchanged. This site has not seen
           the final 2026 table, so this page shows the 2023 values. Which edition applies depends on what your state or city has adopted.
         </p>
-        <aside aria-labelledby="edition-panel" className="space-y-3 rounded-md border border-blue-200 bg-blue-50 px-5 py-4" data-src={ADOPT}>
+        <aside aria-labelledby="edition-panel" className="max-w-[44rem] space-y-3 border-t-2 border-ink pt-4" data-src={ADOPT}>
           <h3 id="edition-panel" className={H3}>
             The edition each state has adopted, as of{' '}
             <time dateTime={ADOPTION_AS_OF} data-src={ADOPT}>
@@ -701,12 +709,12 @@ export default function NecTable31016Page() {
         </div>
       </section>
 
-      <section aria-label="Sources and notices" className="space-y-3 border-t border-gray-200 pt-6 text-sm text-gray-700">
+      <section aria-label="Sources and notices" className={LOOK_SOURCES_SECTION}>
         <Sources
           domains={SOURCE_DOMAINS}
           hrefs={{ [ADOPT]: ADOPTION_TABLE_HREF }}
-          headingClassName={H2}
-          listClassName="list-disc space-y-1 pl-6"
+          headingClassName={LOOK_SOURCES_HEADING}
+          listClassName={LOOK_SOURCES_LIST}
           linkClassName={LINK}
         />
         <p data-src={AMP}>
@@ -725,6 +733,8 @@ export default function NecTable31016Page() {
           .
         </p>
       </section>
+      </LookGuideBody>
     </article>
+    </div>
   );
 }

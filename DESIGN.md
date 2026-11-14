@@ -90,6 +90,14 @@ components:
     textColor: "{colors.ink}"
     rounded: "{rounded.control}"
     padding: "8px"
+  consent-button:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.control}"
+    padding: "8px 16px"
+  consent-button-hover:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
   table-header-cell:
     textColor: "{colors.graphite}"
     typography: "{typography.label}"
@@ -159,7 +167,7 @@ One metal on paper: ink for words and rules, white for the ground, and a cut-cop
 **Character:** Archivo is a grotesque with real weight at 800 and clear, upright figures; it carries headlines and prose alike. Azeret Mono is a monospace with plain zeros, used only for figures in tables, where columns must line up.
 
 ### Hierarchy
-- **Display** (800, 96 px on desktop, 76 px from 640 px, 54 px on phones; line height 0.92; tracking −0.04em): the H1's main line only, across the full width of the page.
+- **Display** (800, 96 px on desktop, 76 px from 640 px, 54 px on phones and down to 40 px on a 320 px screen, so a long word fits; line height 0.92; tracking −0.04em): the H1's main line only, across the full width of the page.
 - **Display sub** (500, 31 px, 23 px on phones; line height 1.15): the second line of the H1, after a colon kept for screen readers.
 - **Headline** (800, 46 px, 34 px on phones; line height 1.04; tracking −0.035em): section headings (H2).
 - **Title** (800, 22 px; line height 1.25; tracking −0.02em): H3s: a gauge's name, a question, a rule's heading word.
@@ -180,7 +188,7 @@ A centered container with 16 px gutters on phones, 24 px from 640 px and 32 px f
 
 On the AWG chart the H1 runs across the top. Below it, from 1024 px, the answer sits in a 330 px column beside the drawing; from 1280 px the drawing's caption takes its own 230 px column at the right, and below 1280 px it drops under the drawing. Under the hero a hairline opens the body: the content column beside a 17rem guides column from 1024 px, 48 px apart; on phones the guides column follows the content.
 
-Sections are 56 px apart. Tables keep the full content width and scroll sideways inside their own frame on small screens, the first column staying in place. Gauge entries sit in two columns from 768 px, each a 96 px drawing column beside the values. Breakpoints: 640, 768, 1024 and 1280 px.
+Pages without a drawing of their own (the hubs, About, Contact, the legal pages, Methodology) keep the H1 across the top and set their text in one 35rem column under it; on the homepage the copper spiral takes the place of the AWG chart's. Sections are 56 px apart. Tables keep the full content width and scroll sideways inside their own frame on small screens, the first column staying in place. Gauge entries sit in two columns from 768 px, each a 96 px drawing column beside the values. Breakpoints: 640, 768, 1024 and 1280 px.
 
 ## Elevation & Depth
 
@@ -199,6 +207,7 @@ Square corners everywhere: tables, sections, the footer. Circles appear only as 
 Plain and quiet; the site's buttons are controls, not calls to action.
 - **Shape:** gently rounded (6 px), hairline border.
 - **Menu button:** white with an ink icon, 8 px padding; its border turns ink on hover. Its label reads "Open menu" or "Close menu" for screen readers.
+- **Consent buttons:** white with a 1 px ink border, 8 by 16 px padding, Archivo 600 at 15 px; on hover they fill with ink and the text turns white. The banner itself is white over a 2 px ink rule at the bottom of the screen.
 - **Focus:** a 2 px ink outline, 3 px from the element, on every focusable element in the body of a page in the look (the header and footer still show the browser's own focus ring).
 
 ### Navigation
@@ -211,6 +220,9 @@ Every link is underlined: ink text, a Copper Line underline 2 px thick and 3 px 
 
 ### Ruled Table (signature)
 The reference table. A caption in Archivo 600 at 16 px above it. A 3 px double ink rule on top; column headers in the label style, right-aligned, over a 1 px ink rule; rows with hairlines, every fifth row with the strong rule; figures right-aligned in Azeret Mono with 14 px by 6 px cell padding; the first column (the size) left-aligned, semibold and fixed while the rest scrolls; a 2 px ink rule closes it. A missing value is a dash hidden from screen readers plus the words "no value" for them. Under the table, a source line.
+
+### Figure
+A drawing with its caption: no frame or panel; the caption sits under the drawing after a 2 px ink rule, in the caption style, at most 40rem wide. Schematic drawings (conductors in a raceway, a chain of correction factors, charts of counts, timelines) are drawn in ink and grays with square corners; copper is kept for conductors drawn to scale.
 
 ### Source Line
 "Source:" and each source's short name from the registry, in 14 px Muted Gray, directly under a table or inside a figure caption. Every table and every drawing carries one.

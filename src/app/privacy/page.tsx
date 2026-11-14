@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { formatDate, pageDates } from '@/lib/page-dates';
 import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
+import { PageTitle } from '@/components/look/PageTitle';
+import { LOOK_H2, LOOK_PAGE } from '@/components/look/styles';
 
 // Copy from research/trust-pages-copy.md (/privacy), rendered verbatim.
 const TITLE = 'Privacy notice';
@@ -31,22 +33,25 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="container py-12">
-      <div className="max-w-3xl space-y-6 text-lg text-gray-700 leading-relaxed">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Privacy notice</h1>
-        <p>
+    <div className={LOOK_PAGE}>
+    <div className="container pb-16">
+      <header className="pt-10 sm:pt-12">
+        <PageTitle main="Privacy notice" />
+      </header>
+      <div className="mt-10 max-w-[35rem] space-y-6 text-[17px] leading-[1.65] text-ink">
+        <p className="text-[15px] text-cut-muted">
           Last updated: <time dateTime={UPDATED}>{formatDate(UPDATED)}</time>
         </p>
 
-        <h2 className="text-2xl font-semibold text-gray-900 pt-4">Who is responsible</h2>
+        <h2 className={`${LOOK_H2} pt-6`}>Who is responsible</h2>
         <p>
           Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia (company registration number 9041273000, VAT
           ID SI94001154), publishes wiresizes.com and is the controller of the personal data described here.
           Contact: contact@wiresizes.com.
         </p>
 
-        <h2 className="text-2xl font-semibold text-gray-900 pt-4">What runs on this site</h2>
-        <ul className="list-disc pl-6 space-y-3">
+        <h2 className={`${LOOK_H2} pt-6`}>What runs on this site</h2>
+        <ul className="list-disc space-y-3 pl-6 marker:text-cut-line">
           <li>
             <strong>Hosting (Vercel).</strong> Vercel Inc. hosts the site. To deliver pages and protect the service,
             {" Vercel's"} servers receive your IP address and the details your browser sends with each request.
@@ -78,7 +83,7 @@ export default function PrivacyPage() {
           and address only to reply.
         </p>
 
-        <h2 className="text-2xl font-semibold text-gray-900 pt-4">Legal basis</h2>
+        <h2 className={`${LOOK_H2} pt-6`}>Legal basis</h2>
         <p>
           Hosting, Vercel Web Analytics and Speed Insights: our legitimate interest in running a working website and
           knowing which pages are read and how fast they load (Article 6(1)(f) GDPR). Google Analytics: your consent
@@ -87,7 +92,7 @@ export default function PrivacyPage() {
           read (Article 6(1)(f) GDPR). Email: replying to you (Article 6(1)(f) GDPR).
         </p>
 
-        <h2 className="text-2xl font-semibold text-gray-900 pt-4">Your rights</h2>
+        <h2 className={`${LOOK_H2} pt-6`}>Your rights</h2>
         <p>
           You can ask for access to your data, correction, erasure, restriction of processing and a copy in a
           portable format, and you can object to processing based on legitimate interest. You can withdraw your
@@ -98,6 +103,7 @@ export default function PrivacyPage() {
         </p>
       </div>
       <BasicPageSchema path="/privacy" name={TITLE} description={DESCRIPTION} />
+    </div>
     </div>
   );
 }

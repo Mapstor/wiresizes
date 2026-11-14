@@ -17,9 +17,23 @@ import { AWG_CONSTANTS, AWG_DEFINITION, AWG_TABLE, KCMIL_TABLE, awgRow, sizeKeyF
 import type { AwgRow, SizeKey } from '@/lib/verified/awg';
 import { max240_4D } from '@/lib/verified/nec-240-4-d';
 import { TABLE_310_16_ROWS, TABLE_310_16_SIZES, table31016 } from '@/lib/verified/nec-310-16';
-import { attribution, attributionParts } from '@/lib/verified/registry';
-import { GuidesNav } from '@/components/layout/GuidesFrame';
-import { GUIDE_CALCULATORS, GUIDE_GROUPS } from '@/lib/guides-nav';
+import { attribution } from '@/lib/verified/registry';
+import { LookGuideBody } from '@/components/layout/LookGuideBody';
+import { CopperSpiral } from '@/components/look/CopperSpiral';
+import { PageTitle } from '@/components/look/PageTitle';
+import { SourceLine } from '@/components/content/SourceLine';
+import {
+  LOOK_BYLINE,
+  LOOK_BYLINE_LINK,
+  LOOK_H2 as H2,
+  LOOK_H3 as H3,
+  LOOK_LINK as LINK,
+  LOOK_P as P,
+  LOOK_PAGE,
+  LOOK_SOURCES_HEADING,
+  LOOK_SOURCES_LIST,
+  LOOK_SOURCES_SECTION,
+} from '@/components/look/styles';
 
 // /guides/awg-wire-size-chart (WSZ-005a): the full AWG 0000–40 and 250–2000 kcmil chart from data/verified/awg.json
 // (NBS Handbook 100 Table 5; calculated resistances labeled as such), the 2023 Table 310.16 excerpt and the 240.4(D)
@@ -58,11 +72,6 @@ const OCPD = 'nec-240-4-d';
 const CALC = 'calc:awg-geometry';
 const SOURCE_DOMAINS = [GEO, RES, IEC, AMP, OCPD];
 
-const LINK = 'text-ink underline decoration-cut-line decoration-2 underline-offset-[3px] hover:text-cut-deep';
-const H2 = 'scroll-mt-24 text-balance font-display text-[34px] font-extrabold leading-[1.04] tracking-[-0.035em] text-ink sm:text-[46px]';
-const H3 = 'text-balance font-display text-[22px] font-extrabold leading-tight tracking-[-0.02em] text-ink';
-const P = 'max-w-[35rem] text-[17px] leading-[1.65] text-ink';
-const SRC = 'mt-2 text-sm text-cut-muted';
 
 function row(key: SizeKey): AwgRow {
   const found = awgRow(key);
@@ -101,22 +110,6 @@ function Dash() {
   );
 }
 
-/** "Source: …" under a table or drawing: each domain's short attribution from the registry, inside its own data-src. */
-function SourceLine({ domains, className = SRC }: { domains: string[]; className?: string }) {
-  return (
-    <p className={className}>
-      Source:{' '}
-      {domains.map((d, i) => (
-        <span key={d} data-src={d}>
-          {i > 0 && '; '}
-          {attributionParts(attribution(d).text).short}
-        </span>
-      ))}
-      .
-    </p>
-  );
-}
-
 /** A cell value, or a dash where the source has none. */
 function Cell({ v, src, format }: { v: number | null | undefined; src: string; format?: Parameters<typeof Num>[0]['format'] }) {
   if (v === null || v === undefined) return <Dash />;
@@ -126,86 +119,6 @@ function Cell({ v, src, format }: { v: number | null | undefined; src: string; f
 // ── SVGs ──────────────────────────────────────────────────────────────────────────────────────────────────────────
 // The picked look (D-33): cut copper, a flat face lit from the top left (#f3c193 → #d6904f → #a95a26) with a #6b3112
 // rim; labels in Archivo, #2a1205 on the copper (7:1 at the face's middle tone) and ink on white.
-
-const STEP_ANGLE = Math.PI / 4; // one gauge per 45°: eight discs a turn, so the turns of the spiral do not touch
-
-/** Every gauge from 4/0 to 40 as a cut solid conductor at one scale (diameters from awg.json), each disc placed one
- *  gauge step further along a logarithmic spiral. Discs touch their neighbors because each is the last one's diameter
- *  divided by the AWG step ratio, the same ratio the spiral shrinks by. */
-function spiralLayout(pxPerIn: number) {
-  const q = 1 / STEP_RATIO;
-  const reach = (1 + q) / Math.sqrt(1 + q * q - 2 * q * Math.cos(STEP_ANGLE));
-  const start = (150 * Math.PI) / 180;
-  const raw = AWG_TABLE.map((r, i) => {
-    const radius = (r.diameter_in * pxPerIn) / 2;
-    const angle = start + i * STEP_ANGLE;
-    return { key: sizeKeyFromAwgName(r.awg), x: reach * radius * Math.cos(angle), y: reach * radius * Math.sin(angle), radius };
-  });
-  const pad = 8;
-  const minX = Math.min(...raw.map((d) => d.x - d.radius)) - pad;
-  const minY = Math.min(...raw.map((d) => d.y - d.radius)) - pad;
-  const width = Math.ceil(Math.max(...raw.map((d) => d.x + d.radius)) - minX + pad);
-  const height = Math.ceil(Math.max(...raw.map((d) => d.y + d.radius)) - minY + pad);
-  return { discs: raw.map((d) => ({ ...d, x: d.x - minX, y: d.y - minY })), width, height };
-}
-
-function Spiral({ narrow = false }: { narrow?: boolean }) {
-  // Labels stay at 13 px or more on screen (§5: SVG labels below 13 px). The wide drawing (569 px) keeps its size; the
-  // narrow one (342 px) shrinks only on screens under 342 px, to 94 % at 320 px, so its labels start at 14 px.
-  const { discs, width, height } = spiralLayout(narrow ? 268 : 455);
-  const fontMin = narrow ? 14 : 13;
-  const fontMax = narrow ? 26 : 34;
-  const id = narrow ? 'spiral-narrow' : 'spiral-wide';
-  return (
-    <svg
-      width={width}
-      height={height}
-      viewBox={`0 0 ${width} ${height}`}
-      role="img"
-      aria-labelledby={`${id}-title`}
-      className={clsx('mx-auto block overflow-visible font-display', narrow ? 'spiral-narrow' : 'spiral-wide')}
-      data-src={GEO}
-    >
-      <title id={`${id}-title`}>
-        Cross sections of solid copper wire from 4/0 to 40 AWG drawn to one scale, each one gauge step smaller than the last, laid in a spiral
-      </title>
-      <defs>
-        <linearGradient id={`${id}-cu`} x1="0.1" y1="0" x2="0.9" y2="1">
-          <stop offset="0" stopColor="#f3c193" />
-          <stop offset="0.45" stopColor="#d6904f" />
-          <stop offset="1" stopColor="#a95a26" />
-        </linearGradient>
-      </defs>
-      {discs.map((d, i) => {
-        const diameter = 2 * d.radius;
-        const font = Math.max(fontMin, Math.min(fontMax, 0.36 * diameter));
-        return (
-          <g key={d.key} className="spiral-disc" style={{ animationDelay: `${(0.25 + i * 0.055).toFixed(3)}s` }}>
-            <circle cx={d.x} cy={d.y} r={d.radius} fill={`url(#${id}-cu)`} stroke={diameter > 6 ? '#6b3112' : 'none'} strokeWidth={0.8} />
-            {diameter > 14 && <circle cx={d.x} cy={d.y} r={d.radius - 2.2} fill="none" stroke="#ffe2c4" strokeOpacity={0.55} strokeWidth={1} />}
-            {diameter > 10 && (
-              <ellipse
-                className="spiral-shine"
-                style={{ animationDelay: `${(3.4 + i * 0.07).toFixed(2)}s` }}
-                cx={d.x - d.radius * 0.28}
-                cy={d.y - d.radius * 0.32}
-                rx={d.radius * 0.5}
-                ry={d.radius * 0.26}
-                transform={`rotate(-32 ${d.x - d.radius * 0.28} ${d.y - d.radius * 0.32})`}
-                fill="#fff6ec"
-              />
-            )}
-            {diameter >= 21 && (
-              <text x={d.x} y={d.y + font * 0.36} textAnchor="middle" fontSize={font} fontWeight={700} fill="#2a1205">
-                <tspan data-size={d.key}>{d.key}</tspan>
-              </text>
-            )}
-          </g>
-        );
-      })}
-    </svg>
-  );
-}
 
 /** One 10 AWG cross section beside two 13 AWG ones: three gauge steps halve the area. Drawn 271 px wide, so it fits
  *  the 288 px column at 320 px without shrinking its 14 px labels, and scaled up to 420 px where there is room. */
@@ -386,7 +299,7 @@ export default function AwgWireSizeChartPage() {
   const limit14 = ocpdLimit('14', 'Cu');
   const sameIec = r14.iec60228_nearest_mm2 === r14.iec60228_next_larger_mm2;
   return (
-    <div className="look bg-white font-display text-ink">
+    <div className={LOOK_PAGE}>
       <article className="container pb-16">
         <ArticleSchema article={articleData} />
         <DatasetSchema
@@ -410,20 +323,8 @@ export default function AwgWireSizeChartPage() {
 
         {/* The hero: the H1 across the top, then the answer, the spiral of every gauge and its caption */}
         <header className="pt-10 sm:pt-12">
-          <h1 className="font-display font-extrabold tracking-[-0.04em] text-ink">
-            <span className="block text-balance text-[54px] leading-[0.92] sm:text-[76px] lg:text-[96px]">
-              AWG Wire Size Chart<span className="sr-only">:</span>
-            </span>{' '}
-            <span className="mt-4 block text-[23px] font-medium leading-[1.15] tracking-[-0.015em] text-[#2a2a2a] sm:text-[31px]">
-              Diameter, Area, Resistance and Ampacity
-            </span>
-          </h1>
-          <Byline
-            route={ROUTE}
-            sources
-            className="mt-5 text-[15px] text-cut-muted"
-            linkClassName="text-ink decoration-cut-line decoration-2 hover:text-cut-deep"
-          />
+          <PageTitle main="AWG Wire Size Chart" sub="Diameter, Area, Resistance and Ampacity" joiner=": " />
+          <Byline route={ROUTE} sources className={LOOK_BYLINE} linkClassName={LOOK_BYLINE_LINK} />
         </header>
 
         <div className="mt-6 grid items-center gap-6 lg:grid-cols-[330px_minmax(0,1fr)] lg:gap-9">
@@ -437,10 +338,7 @@ export default function AwgWireSizeChartPage() {
             <Val v={r12.diameter_in} unit="in" src={GEO} format={INCH} /> (<Val v={r12.diameter_mm} unit="mm" src={GEO} format={MM} />).
           </p>
           <figure className="grid items-center gap-5 xl:grid-cols-[minmax(0,1fr)_230px] xl:gap-9">
-            <div className="relative -mx-4 overflow-hidden sm:mx-0 sm:overflow-visible">
-              <Spiral />
-              <Spiral narrow />
-            </div>
+            <CopperSpiral />
             <figcaption className="border-t-2 border-ink pt-3 text-[15px] leading-[1.55] text-[#3d3d3d]" data-src={GEO}>
               Every disc is a cut solid copper conductor drawn to one scale from the chart&apos;s diameters, each one gauge step (
               <Num v={STEP_RATIO} src={GEO} format={{ fixed: 4 }} prefix="×" /> in diameter) smaller than the one before it: <Size s="4/0" /> on
@@ -450,8 +348,7 @@ export default function AwgWireSizeChartPage() {
           </figure>
         </div>
 
-        <div className="mt-12 grid gap-12 border-t border-cut-rule pt-10 lg:grid-cols-[minmax(0,1fr)_17rem]">
-          <div className="min-w-0 space-y-14">
+        <LookGuideBody className="mt-12 border-t border-cut-rule pt-10">
             <nav aria-label="On this page" className="grid gap-3 border-t-2 border-ink pt-3 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-4">
               <p className="text-[15px] font-bold">On this page</p>
               <ol className="gap-x-8 text-[16.5px] sm:columns-2">
@@ -972,13 +869,8 @@ export default function AwgWireSizeChartPage() {
               </div>
             </section>
 
-            <section aria-label="Sources and method" className="space-y-3 border-t-2 border-ink pt-4 text-[15.5px] text-[#333333]">
-              <Sources
-                domains={SOURCE_DOMAINS}
-                headingClassName="font-display text-[32px] font-extrabold tracking-[-0.035em] text-ink"
-                listClassName="list-disc space-y-1 pl-6"
-                linkClassName={LINK}
-              />
+            <section aria-label="Sources and method" className={LOOK_SOURCES_SECTION}>
+              <Sources domains={SOURCE_DOMAINS} headingClassName={LOOK_SOURCES_HEADING} listClassName={LOOK_SOURCES_LIST} linkClassName={LINK} />
               <p data-src={AMP} className="max-w-[34rem]">
                 Values marked calculated are worked out by this site from NIST&apos;s constants; the{' '}
                 <Link href="/methodology" className={LINK}>
@@ -988,10 +880,7 @@ export default function AwgWireSizeChartPage() {
                 NEC® are registered trademarks of the National Fire Protection Association; NEC values are shown as data with attribution.
               </p>
             </section>
-          </div>
-
-          <GuidesNav guides={GUIDE_GROUPS} calculators={GUIDE_CALCULATORS} look="look" />
-        </div>
+        </LookGuideBody>
       </article>
     </div>
   );

@@ -47,6 +47,8 @@ const config: Config = {
           rule: '#ebe7e2',
           'rule-dark': '#8f877f',
           muted: '#555555',
+          graphite: '#2b2b2b',
+          caption: '#3d3d3d',
         },
         // Aluminum - For aluminum wire elements
         aluminum: {

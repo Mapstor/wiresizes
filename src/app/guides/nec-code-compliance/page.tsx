@@ -4,7 +4,24 @@ import Link from 'next/link';
 import { clsx } from 'clsx';
 import { monthOf } from '@/components/content/AsOf';
 import { Byline } from '@/components/content/Byline';
-import { STICKY_TD, STICKY_TH, TD, TH } from '@/components/content/DataTable';
+import { LookGuideBody } from '@/components/layout/LookGuideBody';
+import { OnThisPage } from '@/components/look/OnThisPage';
+import {
+  LOOK_BYLINE,
+  LOOK_BYLINE_LINK,
+  LOOK_H1,
+  LOOK_H1_MAIN,
+  LOOK_H1_SUB,
+  LOOK_H2 as H2,
+  LOOK_H3 as H3,
+  LOOK_LEAD,
+  LOOK_LINK as LINK,
+  LOOK_P as P,
+  LOOK_PAGE,
+  LOOK_SOURCES_HEADING,
+  LOOK_SOURCES_LIST,
+  LOOK_SOURCES_SECTION,
+} from '@/components/look/styles';
 import { EditionSummary } from '@/components/content/EditionSummary';
 import { Figure } from '@/components/content/Figure';
 import { Num } from '@/components/content/Num';
@@ -82,10 +99,6 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION, images: ['/twitter-image'] },
 };
 
-const LINK = 'text-blue-700 underline underline-offset-2 hover:text-blue-900';
-const H2 = 'scroll-mt-20 text-2xl font-semibold text-gray-900';
-const H3 = 'text-lg font-semibold text-gray-900';
-const P = 'leading-relaxed text-gray-800';
 
 function required<T>(value: T | null | undefined, what: string): T {
   if (value === null || value === undefined) throw new Error(`nec-code-compliance page: no ${what}`);
@@ -175,29 +188,29 @@ function AdoptionTimeline({ narrow = false }: { narrow?: boolean }) {
       width="100%"
       role="img"
       aria-labelledby={id}
-      className={clsx('h-auto', narrow ? 'max-w-[300px] sm:hidden' : 'hidden max-w-[560px] sm:block')}
+      className={clsx('h-auto font-display', narrow ? 'max-w-[300px] sm:hidden' : 'hidden max-w-[560px] sm:block')}
       data-src={ADOPT}
     >
       <title id={id}>{`How the ${NEWEST.edition} NEC reached the states: NFPA's issue and effective dates, then the date each state's adoption took effect${UNDATED.length ? `; ${joinNames(UNDATED.map((r) => cap(prose(r.state))))} adopted it with no start date found` : ''}`}</title>
-      <line x1={lineX} x2={lineX} y1={y(0)} y2={y(events.length - 1)} stroke="#9ca3af" strokeWidth={2} aria-hidden="true" />
+      <line x1={lineX} x2={lineX} y1={y(0)} y2={y(events.length - 1)} stroke="#8f877f" strokeWidth={2} aria-hidden="true" />
       {events.map((e, i) => (
         <g key={e.key} data-src={e.src}>
-          <circle cx={lineX} cy={y(i)} r={6} fill={e.nfpa ? '#1d4ed8' : '#ffffff'} stroke="#1d4ed8" strokeWidth={2} aria-hidden="true" />
+          <circle cx={lineX} cy={y(i)} r={6} fill={e.nfpa ? '#111111' : '#ffffff'} stroke="#111111" strokeWidth={2} aria-hidden="true" />
           {narrow ? (
             <>
-              <text x={lineX + 18} y={y(i) - 4} fontSize={14} fontWeight={600} fill="#374151">
+              <text x={lineX + 18} y={y(i) - 4} fontSize={14} fontWeight={600} fill="#555555">
                 <tspan data-src={e.src}>{shortDate(e.date)}</tspan>
               </text>
-              <text x={lineX + 18} y={y(i) + 15} fontSize={15} fontWeight={e.nfpa ? 700 : 400} fill="#111827">
+              <text x={lineX + 18} y={y(i) + 15} fontSize={15} fontWeight={e.nfpa ? 700 : 400} fill="#111111">
                 {e.label}
               </text>
             </>
           ) : (
             <>
-              <text x={lineX - 16} y={y(i) + 5} textAnchor="end" fontSize={14} fill="#374151">
+              <text x={lineX - 16} y={y(i) + 5} textAnchor="end" fontSize={14} fill="#555555">
                 <tspan data-src={e.src}>{shortDate(e.date)}</tspan>
               </text>
-              <text x={lineX + 18} y={y(i) + 5} fontSize={15} fontWeight={e.nfpa ? 700 : 400} fill="#111827">
+              <text x={lineX + 18} y={y(i) + 5} fontSize={15} fontWeight={e.nfpa ? 700 : 400} fill="#111111">
                 {e.label}
               </text>
             </>
@@ -207,15 +220,15 @@ function AdoptionTimeline({ narrow = false }: { narrow?: boolean }) {
       {UNDATED.length > 0 &&
         (narrow ? (
           <>
-            <text x={0} y={h - 32} fontSize={14} fill="#374151">
+            <text x={0} y={h - 32} fontSize={14} fill="#555555">
               Also adopted, no start date found:
             </text>
-            <text x={0} y={h - 12} fontSize={15} fill="#111827">
+            <text x={0} y={h - 12} fontSize={15} fill="#111111">
               {joinNames(UNDATED.map((r) => cap(prose(r.state))))}
             </text>
           </>
         ) : (
-          <text x={lineX + 18} y={h - 12} fontSize={14} fill="#374151">
+          <text x={lineX + 18} y={h - 12} fontSize={14} fill="#555555">
             Also adopted, no start date found: {joinNames(UNDATED.map((r) => cap(prose(r.state))))}
           </text>
         ))}
@@ -226,7 +239,7 @@ function AdoptionTimeline({ narrow = false }: { narrow?: boolean }) {
 /** How many jurisdictions are on each edition, with local adoption and the states not verified. */
 function EditionBars({ narrow = false }: { narrow?: boolean }) {
   const bars = [
-    ...EDITIONS.map((g) => ({ key: g.edition, label: editionLabel(g.edition), n: g.states.length, fill: g === NEWEST ? '#1d4ed8' : '#9ca3af', dash: false })),
+    ...EDITIONS.map((g) => ({ key: g.edition, label: editionLabel(g.edition), n: g.states.length, fill: g === NEWEST ? '#111111' : '#8f877f', dash: false })),
     ...(LOCAL ? [{ key: 'local', label: LOCAL_LABEL, n: LOCAL.states.length, fill: '#ffffff', dash: false }] : []),
     { key: 'not-verified', label: 'Not verified', n: NOT_VERIFIED.length, fill: '#ffffff', dash: true },
   ];
@@ -245,7 +258,7 @@ function EditionBars({ narrow = false }: { narrow?: boolean }) {
       width="100%"
       role="img"
       aria-labelledby={id}
-      className={clsx('h-auto', narrow ? 'max-w-[300px] sm:hidden' : 'hidden max-w-[560px] sm:block')}
+      className={clsx('h-auto font-display', narrow ? 'max-w-[300px] sm:hidden' : 'hidden max-w-[560px] sm:block')}
       data-src={ADOPT}
     >
       <title id={id}>{`Jurisdictions on each NEC edition, ${AS_OF}, each state and the District of Columbia counted once`}</title>
@@ -261,7 +274,7 @@ function EditionBars({ narrow = false }: { narrow?: boolean }) {
               textAnchor={narrow ? 'start' : 'end'}
               fontSize={narrow ? 15 : 14}
               fontWeight={b.key === NEWEST.edition ? 700 : 400}
-              fill="#111827"
+              fill="#111111"
             >
               {b.label}
             </text>
@@ -270,14 +283,13 @@ function EditionBars({ narrow = false }: { narrow?: boolean }) {
               y={barY}
               width={bw}
               height={barH}
-              rx={3}
               fill={b.fill}
-              stroke={b.fill === '#ffffff' ? '#6b7280' : b.fill}
+              stroke={b.fill === '#ffffff' ? '#111111' : b.fill}
               strokeWidth={1.5}
               strokeDasharray={b.dash ? '4 3' : undefined}
               aria-hidden="true"
             />
-            <text x={barX + bw + 8} y={barY + barH - 4} fontSize={14} fontWeight={600} fill="#111827">
+            <text x={barX + bw + 8} y={barY + barH - 4} fontSize={14} fontWeight={600} fill="#111111">
               <Num v={b.n} src={ADOPT} svg />
             </text>
           </g>
@@ -338,7 +350,7 @@ const articleData = { headline: H1, description: DESCRIPTION, url: URL, ...artic
 const sourceHref = (url: string) => url.replace(/\$/g, '%24');
 
 function SourceCell({ row }: { row: AdoptionRow }) {
-  if (OFFLINE_SOURCE_URLS.has(row.source_url)) return <span className="text-gray-700">{row.source_publisher}</span>;
+  if (OFFLINE_SOURCE_URLS.has(row.source_url)) return <span className="text-ink">{row.source_publisher}</span>;
   return (
     <a href={sourceHref(row.source_url)} className={LINK}>
       {row.source_publisher}
@@ -350,8 +362,11 @@ function SourceCell({ row }: { row: AdoptionRow }) {
 // roles keep the header cells for assistive technology), so a phone shows the edition, date, scope and source of a state
 // together instead of a 950 px table scrolled sideways. From sm up it is the usual scrolled table with a sticky first
 // column. Explicit roles keep the table semantics when display changes.
-const CELL = clsx(TD, 'align-top max-sm:block max-sm:border-0 max-sm:px-0 max-sm:py-0.5');
-const LABEL = 'font-semibold text-gray-700 sm:hidden';
+// In the look (D-33): ruled rows, text cells in Archivo, left-aligned; on phones each state is a block between hairlines.
+const TCELL = 'border-b border-cut-rule px-3.5 py-2 text-left align-top font-display text-[15px] leading-snug text-ink';
+const THL = 'border-b border-ink bg-white px-3.5 py-2.5 text-left align-bottom font-display text-[13.5px] font-semibold leading-tight text-cut-graphite';
+const CELL = clsx(TCELL, 'max-sm:block max-sm:border-0 max-sm:px-0 max-sm:py-0.5');
+const LABEL = 'font-semibold text-cut-muted sm:hidden';
 
 function Label({ children }: { children: ReactNode }) {
   return (
@@ -365,18 +380,18 @@ function StateRow({ row }: { row: AdoptionRow }) {
   const qualifier = editionQualifier(row);
   const next = nextChangeParts(row);
   return (
-    <tr role="row" className="max-sm:block max-sm:rounded-md max-sm:border max-sm:border-gray-300 max-sm:bg-white max-sm:px-4 max-sm:py-3">
+    <tr role="row" className="max-sm:block max-sm:border-b max-sm:border-cut-rule max-sm:py-3">
       <th
         role="rowheader"
         scope="row"
-        className={clsx(TD, STICKY_TD, 'align-top max-sm:static max-sm:block max-sm:border-0 max-sm:bg-transparent max-sm:px-0 max-sm:pb-1 max-sm:pt-0 max-sm:text-base')}
+        className={clsx(TCELL, 'sticky left-0 z-10 bg-white font-semibold max-sm:static max-sm:block max-sm:border-0 max-sm:bg-transparent max-sm:px-0 max-sm:pb-1 max-sm:pt-0 max-sm:text-[17px]')}
       >
         {stateName(row.state)}
       </th>
       <td role="cell" className={CELL}>
         <Label>Edition</Label>
-        <span className="whitespace-nowrap font-semibold text-gray-900">{editionLabel(row.edition)}</span>
-        {qualifier && <span className="mt-0.5 block text-gray-600 max-sm:inline">{` ${qualifier}`}</span>}
+        <span className="whitespace-nowrap font-semibold text-ink">{editionLabel(row.edition)}</span>
+        {qualifier && <span className="mt-0.5 block text-cut-muted max-sm:inline">{` ${qualifier}`}</span>}
       </td>
       {/* relative: the sr-only text of an empty cell stays inside the cell, so it cannot widen the page */}
       <td role="cell" className={clsx(CELL, 'relative')}>
@@ -388,14 +403,14 @@ function StateRow({ row }: { row: AdoptionRow }) {
         ) : row.edition === 'local' ? (
           <NoValue label="not applicable" />
         ) : (
-          <span className="whitespace-nowrap text-gray-600">No date found</span>
+          <span className="whitespace-nowrap text-cut-muted">No date found</span>
         )}
       </td>
       <td role="cell" className={CELL}>
         <Label>Scope</Label>
         {row.scope}
         {next && (
-          <span className="mt-1 block font-medium text-gray-900">
+          <span className="mt-1 block font-medium text-ink">
             {cap(next.before)}
             {next.date && (
               <time dateTime={next.date} className="whitespace-nowrap">
@@ -428,30 +443,28 @@ function Faq({ q, children, src }: { q: ReactNode; children: ReactNode; src: str
 export default function NecEditionByStatePage() {
   const adoptionSource = attributionParts(attribution(ADOPT).text).short;
   return (
-    <article className="space-y-10 pb-12 text-base">
+    <div className={LOOK_PAGE}>
+    <article className="container pb-16">
       <ArticleSchema article={articleData} />
 
-      <header className="space-y-3">
-        <h1 className="text-3xl font-bold leading-tight text-gray-900 sm:text-4xl">
-          NEC Edition by State (Verified{' '}
-          <time dateTime={ADOPTION_AS_OF} data-src={ADOPT}>
-            {AS_OF}
-          </time>
-          )
+      {/* The look (D-33): the H1 across the top, then the answer beside the timeline of the newest edition */}
+      <header className="pt-10 sm:pt-12">
+        <h1 className={LOOK_H1}>
+          <span className={LOOK_H1_MAIN}>NEC Edition by State</span>{' '}
+          <span className={LOOK_H1_SUB}>
+            (Verified{' '}
+            <time dateTime={ADOPTION_AS_OF} data-src={ADOPT}>
+              {AS_OF}
+            </time>
+            )
+          </span>
         </h1>
-        <Byline route={ROUTE} sources className="text-sm text-gray-600" linkClassName="text-blue-700" />
+        <Byline route={ROUTE} sources className={LOOK_BYLINE} linkClassName={LOOK_BYLINE_LINK} />
       </header>
 
-      <p className={P}>
-        An inspector checks electrical work against the edition of the National Electrical Code (NEC) adopted where the work is done, and that is
-        often not the newest one. NFPA issued the {NEWEST.edition} edition on <When iso={NEC_2026_ISSUED} src={ISSUE} />, effective{' '}
-        <When iso={NEC_2026_EFFECTIVE} src={ISSUE} />, but each state decides when to adopt it, and {ON_EARLIER > VERIFIED / 2 ? 'most' : 'many'} are
-        still on an earlier edition. The table below gives each state&apos;s adopted edition, the date it took effect, who it covers and any change
-        already scheduled, from the state&apos;s own records.
-      </p>
-
-      <div className="rounded-md border border-blue-200 bg-blue-50 px-5 py-4" data-src={ADOPT}>
-        <p className={P}>
+      <div className="mt-6 grid items-start gap-8 xl:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] xl:gap-10">
+        <div className="space-y-4">
+          <p className={LOOK_LEAD} data-src={ADOPT}>
           <strong>
             As of{' '}
             <time dateTime={ADOPTION_AS_OF} data-src={ADOPT}>
@@ -461,9 +474,15 @@ export default function NecEditionByStatePage() {
           </strong>{' '}
           {names(NEWEST.states)}. The {editionLabel(SECOND.edition)} is adopted in <Count g={SECOND} /> and the {editionLabel(THIRD.edition)} in{' '}
           <Num v={THIRD.states.length} src={ADOPT} />. <AnswerTail />
+          </p>
+            <p className={P}>
+          An inspector checks electrical work against the edition of the National Electrical Code (NEC) adopted where the work is done, and that is
+          often not the newest one. NFPA issued the {NEWEST.edition} edition on <When iso={NEC_2026_ISSUED} src={ISSUE} />, effective{' '}
+          <When iso={NEC_2026_EFFECTIVE} src={ISSUE} />, but each state decides when to adopt it, and {ON_EARLIER > VERIFIED / 2 ? 'most' : 'many'} are
+          still on an earlier edition. The table below gives each state&apos;s adopted edition, the date it took effect, who it covers and any change
+          already scheduled, from the state&apos;s own records.
         </p>
-      </div>
-
+        </div>
       <Figure
         caption={
           <span data-src={ADOPT}>
@@ -474,19 +493,10 @@ export default function NecEditionByStatePage() {
         <AdoptionTimeline />
         <AdoptionTimeline narrow />
       </Figure>
+      </div>
 
-      <nav aria-label="On this page" className="rounded-md border border-gray-200 bg-white p-4">
-        <p className="mb-2 text-sm font-semibold text-gray-900">On this page</p>
-        <ol className="grid gap-1 text-sm sm:grid-cols-2">
-          {TOC.map(([id, label]) => (
-            <li key={id}>
-              <a href={`#${id}`} className={LINK}>
-                {label}
-              </a>
-            </li>
-          ))}
-        </ol>
-      </nav>
+      <LookGuideBody className="mt-12 border-t border-cut-rule pt-10">
+      <OnThisPage items={TOC} />
 
       <section aria-labelledby="states" className="space-y-4">
         <h2 id="states" className={H2}>
@@ -497,7 +507,7 @@ export default function NecEditionByStatePage() {
           and the last column links the record the row was read from. Where no start date was found in the state&apos;s records, none is given.
         </p>
         <div data-src={ADOPT} className="space-y-2">
-          <p id="state-table-caption" className="text-sm font-semibold text-gray-900">
+          <p id="state-table-caption" className="font-display text-base font-semibold text-ink">
             NEC edition adopted in each state and the District of Columbia, as of{' '}
             <time dateTime={ADOPTION_AS_OF} data-src={ADOPT}>
               {AS_OF}
@@ -507,35 +517,35 @@ export default function NecEditionByStatePage() {
             role="region"
             aria-labelledby="state-table-caption"
             tabIndex={0}
-            className="max-w-full overflow-x-auto rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 sm:border sm:border-gray-300 sm:bg-white"
+            className="relative max-w-full overflow-x-auto focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink"
           >
             <table
               id="state-table"
               role="table"
               data-src={ADOPT}
               aria-labelledby="state-table-caption"
-              className="w-full border-collapse text-left text-sm max-sm:block"
+              className="w-full border-collapse text-left text-[15px] [border-bottom:2px_solid_#111111] [border-top:3px_double_#111111] max-sm:block"
             >
               <thead role="rowgroup" className="max-sm:sr-only">
                 <tr role="row">
-                  <th role="columnheader" scope="col" className={clsx(TH, STICKY_TH)}>
+                  <th role="columnheader" scope="col" className={clsx(THL, 'sticky left-0 z-20')}>
                     State
                   </th>
-                  <th role="columnheader" scope="col" className={TH}>
+                  <th role="columnheader" scope="col" className={THL}>
                     Edition
                   </th>
-                  <th role="columnheader" scope="col" className={TH}>
+                  <th role="columnheader" scope="col" className={THL}>
                     In force since
                   </th>
-                  <th role="columnheader" scope="col" className={clsx(TH, 'min-w-[16rem]')}>
+                  <th role="columnheader" scope="col" className={clsx(THL, 'min-w-[15rem]')}>
                     Scope and scheduled change
                   </th>
-                  <th role="columnheader" scope="col" className={clsx(TH, 'min-w-[13rem]')}>
+                  <th role="columnheader" scope="col" className={clsx(THL, 'min-w-[15rem]')}>
                     Source
                   </th>
                 </tr>
               </thead>
-              <tbody role="rowgroup" className="max-sm:block max-sm:space-y-3">
+              <tbody role="rowgroup" className="max-sm:block">
                 {adoptionByName().map((row) => (
                   <StateRow key={`${row.state} ${row.scope}`} row={row} />
                 ))}
@@ -547,7 +557,7 @@ export default function NecEditionByStatePage() {
         <h3 id="not-verified" className={H3}>
           Not verified
         </h3>
-        <ul className="list-disc space-y-1 pl-6 leading-relaxed text-gray-800" data-src={ADOPT}>
+        <ul className="max-w-[35rem] list-disc space-y-1 pl-6 text-[17px] leading-[1.65] text-ink marker:text-cut-line" data-src={ADOPT}>
           {NOT_VERIFIED.map((n) => (
             <li key={n.state}>
               <strong>{stateName(n.state)}:</strong> {cap(n.reason)}
@@ -580,11 +590,11 @@ export default function NecEditionByStatePage() {
           <EditionBars />
           <EditionBars narrow />
         </Figure>
-        <div className="rounded-md border border-gray-200 bg-white px-5 py-4" data-src={ADOPT}>
-          <p className="text-lg font-semibold text-gray-900">
+        <div className="max-w-[44rem] border-t-2 border-ink pt-3" data-src={ADOPT}>
+          <p className="font-display text-[19px] font-bold text-ink">
             The {editionLabel(COMMON.edition)} is the most common edition: <Count g={COMMON} /> had adopted it by {AS_OF}.
           </p>
-          <p className="mt-1 text-sm text-gray-600">Source: {adoptionSource}.</p>
+          <p className="mt-1 text-sm text-cut-muted">Source: {adoptionSource}.</p>
         </div>
         <EditionSummary />
         <p className={P}>
@@ -601,7 +611,7 @@ export default function NecEditionByStatePage() {
           The edition that applies is the one adopted where the work is done, and each state sets how its projects change over to a new
           edition. Examples from the table:
         </p>
-        <ul className="list-disc space-y-1 pl-6 leading-relaxed text-gray-800" data-src={ADOPT}>
+        <ul className="max-w-[35rem] list-disc space-y-1 pl-6 text-[17px] leading-[1.65] text-ink marker:text-cut-line" data-src={ADOPT}>
           {PERMIT_ROWS.map((r) => (
             <li key={r.state}>
               <strong>{stateName(r.state)} ({editionLabel(r.edition)}):</strong> {r.scope}
@@ -646,7 +656,7 @@ export default function NecEditionByStatePage() {
           Minnesota&apos;s Department of Labor and Industry reviewed the issued 2026 edition before the state adopted it. These changes from its
           summary affect wire sizes, dwelling circuits and services:
         </p>
-        <ul className="list-disc space-y-3 pl-6 leading-relaxed text-gray-800">
+        <ul className="max-w-[35rem] list-disc space-y-3 pl-6 text-[17px] leading-[1.65] text-ink marker:text-cut-line">
           <li>
             <span data-src={ED}>
               <strong>Minimum conductor sizes</strong> move from 310.3(A) to 310.5, with minimum sizes of <Size s={NEC_2026_MIN_SIZES.Cu} /> copper,{' '}
@@ -748,12 +758,12 @@ export default function NecEditionByStatePage() {
         </Faq>
       </section>
 
-      <section aria-label="Sources and notices" className="space-y-3 border-t border-gray-200 pt-6 text-sm text-gray-700">
+      <section aria-label="Sources and notices" className={LOOK_SOURCES_SECTION}>
         <Sources
           domains={SOURCE_DOMAINS}
           hrefs={{ [ADOPT]: '#states' }}
-          headingClassName={H2}
-          listClassName="list-disc space-y-1 pl-6"
+          headingClassName={LOOK_SOURCES_HEADING}
+          listClassName={LOOK_SOURCES_LIST}
           linkClassName={LINK}
         />
         <p>
@@ -765,6 +775,8 @@ export default function NecEditionByStatePage() {
           Association; wiresizes.com is not affiliated with or endorsed by NFPA.
         </p>
       </section>
+      </LookGuideBody>
     </article>
+    </div>
   );
 }
