@@ -38,6 +38,7 @@ import {
   nearestSizeForMm2,
   resistanceAt,
   resistanceRun,
+  resistanceSig,
   toolSizes,
 } from '@/lib/calculations/resistance';
 import type { RunResult } from '@/lib/calculations/resistance';
@@ -569,7 +570,7 @@ function Result({
         {otherRun !== null ? (
           <p>
             <strong>{inputs.material === 'Cu' ? 'In aluminum' : 'In copper'}</strong>, the same size over the same length reads{' '}
-            <Val v={otherRun} unit="Ω" src={CALC} format={{ sig: 4 }} /> at this temperature
+            <Val v={otherRun} unit="Ω" src={CALC} format={{ sig: resistanceSig(run.size, other) }} /> at this temperature
             {inputs.material === 'Cu' ? ': aluminum EC-H19 conducts less well than copper of the same area.' : '.'}
           </p>
         ) : (
