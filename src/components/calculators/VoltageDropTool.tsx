@@ -47,6 +47,7 @@ import {
   sizeForTarget,
   voltageDropSizes,
   AMPACITY_NOTE_COLUMN,
+  DROP_EXCEEDS_SUPPLY_MESSAGE,
   WIRE_SIZE_CALCULATOR_LINK,
 } from '@/lib/calculations/voltage-drop';
 import type { DropRun, TargetSearch, VdCircuit } from '@/lib/calculations/voltage-drop';
@@ -876,9 +877,7 @@ function CheckResult({
         <CircuitText inputs={inputs} />, at <TempText inputs={inputs} />
       </h2>
       {exceeds ? (
-        <p className="mt-3 max-w-[38rem] text-[17px] leading-[1.6] text-ink">
-          The calculated drop is larger than the supply voltage. Choose a larger size, a shorter run or a lower current.
-        </p>
+        <p className="mt-3 max-w-[38rem] text-[17px] leading-[1.6] text-ink">{DROP_EXCEEDS_SUPPLY_MESSAGE}</p>
       ) : (
         <>
           <p className={BIG}>

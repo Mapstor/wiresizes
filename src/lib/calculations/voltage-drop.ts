@@ -35,7 +35,6 @@ export const WIRE_SIZE_CALCULATOR_LINK = { href: '/calculators/wire-size-calcula
 export const RESISTANCE_BASIS_LABEL =
   'DC resistance of solid conductors at 75 °C, calculated from NIST Handbook 100 and 109 constants. Stranded conductors measure slightly higher, and AC reactance is not included.';
 export const ALUMINUM_RESISTANCE_NOTE = 'about 64 % higher resistance than copper';
-export const VD_INPUT_INVALID_MESSAGE = 'Enter a current of 0 A or more and a one-way length from 0 ft to 2000 ft.';
 /** Labels of the copper and aluminum lines under the voltage drop inputs. */
 export const VD_HEADLINE_LABELS = { Cu: 'Copper:', Al: 'Aluminum:' };
 
@@ -139,11 +138,6 @@ export function sizeForDrop(input: VoltageDropInput, targetPct: number): SizeFor
     if (!result) throw new Error(`No resistance for ${size} ${input.material}`);
   }
   return { size, result };
-}
-
-/** The smallest size the voltage drop calculator offers whose drop is at most `targetPct` (or 2000 kcmil). */
-export function smallestSizeForDrop(input: Omit<VoltageDropInput, 'size'>, targetPct: number): SizeForDrop {
-  return sizeForDrop({ ...input, size: voltageDropSizes(input.material)[0] }, targetPct);
 }
 
 export interface ParallelEquivalent {
