@@ -383,29 +383,33 @@
   }
 }
 
+/* Each motion starts as the mark comes in at the bottom of the screen and is finished in the bottom fifth to third of
+   it, so a chart at rest shows its true values: a bar's length is its value, so bars finish first (an exponential
+   ease-out puts most of the growth in the first part of the range); lines draw at an even pace and are complete by
+   the time a chart of about 380 px is fully on screen (WSZ-028, checked in Chrome at 801 px of window height). */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .viz-grow {
       transform-box: fill-box;
       transform-origin: 0 50%;
-      animation: viz-grow-x linear both;
+      animation: viz-grow-x cubic-bezier(0.16, 1, 0.3, 1) both;
       animation-timeline: view();
-      animation-range: entry 5% cover 40%;
+      animation-range: entry 0% cover 20%;
     }
 
     .viz-draw {
       stroke-dasharray: 1;
       animation: viz-draw linear both;
       animation-timeline: view();
-      animation-range: entry 10% cover 55%;
+      animation-range: entry 0% cover 35%;
     }
 
     .viz-pop {
       transform-box: fill-box;
       transform-origin: 50% 50%;
-      animation: viz-pop linear both;
+      animation: viz-pop cubic-bezier(0.16, 1, 0.3, 1) both;
       animation-timeline: view();
-      animation-range: entry 5% cover 30%;
+      animation-range: entry 0% cover 25%;
     }
   }
 }

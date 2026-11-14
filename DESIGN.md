@@ -250,7 +250,7 @@ A chart sits in a Figure (caption, 2 px ink rule, source line) next to the ruled
 - **Marks:** 2 px lines; 10 px dots with a 2 px white ring so neighbors stay apart; bars up to 24 px thick; tiles with a 2 px white gap (1 px on phones) and their state code in Archivo 700, white on dark tiles and ink on light ones.
 - **Text:** at least 13 px on screen at every width; a chart wider than a phone gets its own narrow drawing (288 px) below 768 px (640 px for the tile map and the counts), swapped by visibility and size, never by display.
 - **Hover:** pointing at a mark shows its values in a white box with a 1 px ink outline and no shadow.
-- **Motion:** tied to the scroll. As a chart comes into view, its lines draw from the first point, bars grow from the baseline and dots and tiles appear, through CSS scroll-driven animation with no script. Browsers without scroll timelines, and readers who ask for reduced motion, see the finished chart.
+- **Motion:** tied to the scroll. As a chart comes into view, its lines draw from the first point, bars grow from the baseline and dots and tiles appear, through CSS scroll-driven animation with no script. Every motion starts as its mark enters at the bottom of the screen and is finished within the bottom fifth to third of it (bars first, on an exponential ease-out, since a bar's length is its value), so a chart at rest shows true values. Browsers without scroll timelines, and readers who ask for reduced motion, see the finished chart.
 - **Table bars:** under each figure in an ampere column, a 5 px bar on a fixed track (44 px on phones, 88 px from 640 px) that ends under the figure, so every column in the table shares one scale.
 
 ### Gauge Entry
