@@ -17,6 +17,12 @@ colors:
   muted-gray: "#555555"
   rule-strong: "#8f877f"
   hairline: "#ebe7e2"
+  aluminum-blue: "#2f6aa3"
+  chart-copper-light: "#c8803f"
+  edition-dark: "#2b2826"
+  edition-mid: "#57514c"
+  edition-light: "#a39b93"
+  connector-gray: "#c4bdb5"
 typography:
   display:
     fontFamily: "Archivo, Arial, sans-serif"
@@ -124,12 +130,12 @@ The feel is exact, plain and warm. Exact, because every figure sits in a ruled t
 Type does the hierarchy. A very large, tightly set Archivo H1 runs across the top of the page; headings are heavy and short; prose sits at a reading measure; figures in tables are set in Azeret Mono so columns line up digit for digit.
 
 **Key Characteristics:**
-- Ink on white with cut copper as the only color.
+- Ink on white with cut copper as the only color; in charts, Aluminum Blue marks aluminum and nothing else.
 - Drawings built from real data at true scale, never illustrations.
 - Ruled tables: a double rule on top, a stronger line every five rows, a heavy closing rule.
 - A source line under every table and drawing.
 - Flat surfaces; depth comes from the weight of a rule, never from a shadow.
-- One clear moment of motion per drawing, off under reduced motion.
+- One clear moment of motion per drawing, off under reduced motion; a chart's marks grow in as it scrolls into view.
 
 ## Colors
 
@@ -151,12 +157,22 @@ One metal on paper: ink for words and rules, white for the ground, and a cut-cop
 - **Caption Gray** (caption-gray): figure captions and the text under drawings.
 - **Muted Gray** (muted-gray): bylines, source lines, labels in definition lists; 7.5:1 on white.
 - **Strong Rule** (rule-strong): the line under every fifth table row.
-- **Hairline** (hairline): row lines, section dividers, the header's bottom line.
+- **Hairline** (hairline): row lines, section dividers, the header's bottom line, chart gridlines and the 100 % track behind a percent bar.
+
+### Chart colors
+Charts take their colors by the job the color does, and every set was checked with the dataviz palette validator against white.
+- **Copper and Aluminum Blue** (copper-dark, aluminum-blue): the two metals, wherever a chart compares them (the resistance line, the copper-beside-aluminum chart, the bars in the homepage table). The pair passes the colorblind and normal-vision checks.
+- **Temperature ramp** (chart-copper-light, copper-dark, copper-rim): the 60, 75 and 90 °C columns, light to dark in one copper family, because the columns are ordered.
+- **Edition ramp** (copper-dark, edition-dark, edition-mid, edition-light): the newest NEC edition in copper, older editions in grays, darker for newer; all pairs at least 15.8 apart for normal vision and 10.3 for colorblind readers. The lightest gray is 2.7:1 on white, so every tile names its state and a table on the same page lists each one.
+- **Connector Gray** (connector-gray): the line joining a pair of dots.
+- **Neutral bars**: a single series of bars (the adjustment percents) in Edition Mid, so copper keeps its meaning.
 
 ### Named Rules
-**The One Metal Rule.** Copper is the only color on the page. It appears as drawn conductors, link underlines and the text selection (Cut Copper at 30 %), never as a background behind prose or controls, and no second accent joins it.
+**The One Metal Rule.** Copper is the only accent color in a page's text, links and drawings. It appears as drawn conductors, link underlines and the text selection (Cut Copper at 30 %), never as a background behind prose or controls, and no second accent joins it outside charts.
 
-**The Measured Copper Rule.** A copper disc always stands for a real conductor at a stated scale (diameter in inches from the data times a fixed pixels-per-inch). Copper circles are never ornament.
+**The Material Color Rule.** In a chart, a series that stands for a metal wears that metal's color: copper for copper, Aluminum Blue for aluminum or copper-clad aluminum. Aluminum Blue appears nowhere else on the site; every other chart color is copper or a gray from the ramps above, and text in a chart stays ink or Muted Gray.
+
+**The Measured Copper Rule.** Outside charts, a copper disc always stands for a real conductor at a stated scale (diameter in inches from the data times a fixed pixels-per-inch). Copper circles are never ornament; in a chart a 10 px copper dot marks one copper value on an axis.
 
 ## Typography
 
@@ -199,7 +215,7 @@ The system is flat. There are no shadows at all. Depth and grouping come from th
 
 ## Shapes
 
-Square corners everywhere: tables, sections, the footer. Circles appear only as conductors. The phone menu button is the single rounded control (6 px corners, hairline border).
+Square corners everywhere: tables, sections, the footer, chart tiles. Circles appear as conductors and, in charts, as 10 px data dots. The phone menu button is the single rounded control (6 px corners, hairline border). A chart bar has one rounded end: the value end, at a 4 px radius; its baseline end stays square.
 
 ## Components
 
@@ -227,6 +243,16 @@ A drawing with its caption: no frame or panel; the caption sits under the drawin
 ### Source Line
 "Source:" and each source's short name from the registry, in 14 px Muted Gray, directly under a table or inside a figure caption. Every table and every drawing carries one.
 
+### Charts
+A chart sits in a Figure (caption, 2 px ink rule, source line) next to the ruled table that holds its numbers, so nothing depends on reading the picture.
+- **Form follows the data's job:** a line on a logarithmic scale for resistance across all gauges; dots joined by a line for copper beside aluminum at each size; step lines for correction factors by temperature band; bars on a light 100 % track for adjustment percents; a tile map, one square per state, for editions; bars for counts; thin bars inside a ruled table for a column of amperes. Never a pie, a dual axis or a gradient fill.
+- **Anatomy:** no frame or panel. Gridlines in Hairline, tick labels and axis titles in Archivo 13 px Muted Gray. Two or more series get a legend at the top left (10 px dots or 18 px line keys, Archivo 14 px ink); a few direct labels carry the story (the last value, a bracket over a ratio), never a number on every point.
+- **Marks:** 2 px lines; 10 px dots with a 2 px white ring so neighbors stay apart; bars up to 24 px thick; tiles with a 2 px white gap (1 px on phones) and their state code in Archivo 700, white on dark tiles and ink on light ones.
+- **Text:** at least 13 px on screen at every width; a chart wider than a phone gets its own narrow drawing (288 px) below 768 px (640 px for the tile map and the counts), swapped by visibility and size, never by display.
+- **Hover:** pointing at a mark shows its values in a white box with a 1 px ink outline and no shadow.
+- **Motion:** tied to the scroll. As a chart comes into view, its lines draw from the first point, bars grow from the baseline and dots and tiles appear, through CSS scroll-driven animation with no script. Browsers without scroll timelines, and readers who ask for reduced motion, see the finished chart.
+- **Table bars:** under each figure in an ampere column, a 5 px bar on a fixed track (44 px on phones, 88 px from 640 px) that ends under the figure, so every column in the table shares one scale.
+
 ### Gauge Entry
 One gauge per entry: a 96 px square column holding its conductor drawn at 200 px per inch, the gauge as a title, then a definition list (diameter, area, resistance, one row per ampacity column) in 15 px with tabular figures and Muted Gray terms, and a note when the code limits the size. A hairline above each entry.
 
@@ -242,10 +268,12 @@ All 44 AWG sizes from 4/0 to 40 as cut conductors at one scale (455 px per inch 
 - **Do** keep text in drawings at 13 px or more on screen at every width; give a wide drawing a narrow version below 640 px rather than shrinking it.
 - **Do** set figures in ruled tables in Azeret Mono and prose in Archivo at a 35rem measure.
 - **Do** show drawings finished, without motion, when the reader asks for reduced motion.
+- **Do** give every chart a source line, a legend when it has two or more series, and a table of its numbers on the same page.
 
 ### Don't:
 - **Don't** add shadows, rounded cards, tinted panels or gradients behind text (The Flat Sheet Rule).
-- **Don't** add a second accent color; the blue of the older pages goes as they move to this look (The One Metal Rule).
+- **Don't** add a second accent color outside charts; the blue of the older pages goes as they move to this look (The One Metal Rule).
+- **Don't** use Aluminum Blue for anything but aluminum in a chart (The Material Color Rule).
 - **Don't** draw copper circles that are not conductors at a stated scale (The Measured Copper Rule).
 - **Don't** put small capital-letter labels above headings, number the sections, or put icons beside links.
 - **Don't** hide an animated drawing with display: none, even inside a media query that does not match: Chrome stops painting it while its animation runs.

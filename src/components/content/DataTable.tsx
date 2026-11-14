@@ -60,9 +60,13 @@ export const STICKY = 'sticky left-0 z-10 border-r border-gray-200';
 export const STICKY_TH = clsx(STICKY, 'bg-gray-100');
 export const STICKY_TD = clsx(STICKY, 'bg-white font-semibold text-gray-900');
 
-/** The ruled variant's cells (D-33): headers in Archivo, figures right-aligned in Azeret Mono, the row label sticky. */
+/**
+ * The ruled variant's cells (D-33): headers in Archivo, figures right-aligned in Azeret Mono, the row label sticky.
+ * Only the first cell of the first header row (the row-label column) is left-aligned: in a two-row header the second
+ * row holds figure columns only (WSZ-028 fix: "Copper" and "60 °C" had been left-aligned).
+ */
 export const RTH =
-  'min-w-[7.5em] border-b border-ink bg-white px-3.5 py-2.5 text-right align-bottom font-display text-[13.5px] font-semibold leading-tight text-[#2b2b2b] first:min-w-0 first:text-left';
+  'min-w-[7.5em] border-b border-ink bg-white px-3.5 py-2.5 text-right align-bottom font-display text-[13.5px] font-semibold leading-tight text-[#2b2b2b] [tr:first-child>&:first-child]:min-w-0 [tr:first-child>&:first-child]:text-left';
 export const RTD = 'whitespace-nowrap border-b border-cut-rule px-3.5 py-1.5 text-right font-figures text-sm text-ink';
 export const RSTICKY_TH = 'sticky left-0 z-20';
 export const RSTICKY_TD =
