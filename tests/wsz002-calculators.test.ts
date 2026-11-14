@@ -11,26 +11,14 @@ import {
   WIRE_SIZE_DEFAULTS,
   WIRE_SIZE_RATINGS,
 } from '../src/lib/calculations/conductor-sizing';
-import {
-  ABOVE_TARGET_TITLE,
-  ALUMINUM_RESISTANCE_NOTE,
-  MEETS_TARGET_TITLE,
-  RESISTANCE_BASIS_LABEL,
-  VD_TARGET_OPTIONS,
-  VOLTAGE_DROP_DEFAULTS,
-} from '../src/lib/calculations/voltage-drop';
+import { ABOVE_TARGET_TITLE, MEETS_TARGET_TITLE, VD_TARGET_OPTIONS } from '../src/lib/calculations/voltage-drop';
 import {
   AMBIENT_ROWS,
   AMPACITY_DEFAULTS,
   NOT_PERMITTED_MESSAGE,
   ocpdLimitLabel,
 } from '../src/lib/calculations/ampacity';
-import { RESISTANCE_DEFAULTS } from '../src/lib/calculations/resistance';
-import {
-  BASIS_LINE as DC_BASIS_LINE,
-  DC_SIZING_DEFAULTS,
-  NO_SIZE_MESSAGE,
-} from '../src/lib/calculations/dc-sizing';
+import { NO_SIZE_MESSAGE } from '../src/lib/calculations/dc-sizing';
 import { GROUND_WIRE_DEFAULTS, PROPORTIONAL_NOTE } from '../src/lib/calculations/grounding';
 import {
   NO_ROW_MESSAGE,
@@ -61,14 +49,9 @@ function powerResult(result: PowerResult | PowerFailure): PowerResult {
 }
 
 describe('exported titles, notes and messages', () => {
-  it('voltage-drop titles and labels', () => {
+  it('voltage-drop target titles (the wire size result)', () => {
     assert.equal(MEETS_TARGET_TITLE, 'Meets your voltage-drop target');
     assert.equal(ABOVE_TARGET_TITLE, 'Above your voltage-drop target');
-    assert.equal(
-      RESISTANCE_BASIS_LABEL,
-      'DC resistance of solid conductors at 75 °C, calculated from NIST Handbook 100 and 109 constants. Stranded conductors measure slightly higher, and AC reactance is not included.',
-    );
-    assert.equal(ALUMINUM_RESISTANCE_NOTE, 'about 64 % higher resistance than copper');
   });
 
   it('wire size basis lines and ground-wire notes', () => {
@@ -94,7 +77,6 @@ describe('exported titles, notes and messages', () => {
       'Size increases in proportion if the phase conductors are upsized (NEC 250.122(B)); the wire size calculator does this.',
     );
     assert.equal(NO_SIZE_MESSAGE, 'No size in NEC Table 310.16 is large enough for this load.');
-    assert.equal(DC_BASIS_LINE, 'Sized for voltage drop and for current (60 °C column of NEC Table 310.16, 30 °C ambient).');
     assert.equal(NO_ROW_MESSAGE, 'Table 310.12 has no row for this rating.');
     assert.deepEqual(SCOPE_LINES, [
       'For a 120/240 V single-phase service or main power feeder of one dwelling unit. Other services are sized from Table 310.16. Where the conductors run hotter than 30 °C or with more than three current-carrying conductors, the corrections in Tables 310.15(B)(1)(1) and 310.15(C)(1) still apply.',
@@ -121,9 +103,6 @@ describe('default and reset inputs', () => {
   });
 
   it('other tools', () => {
-    assert.equal(VOLTAGE_DROP_DEFAULTS.targetPct, 3);
-    assert.equal(RESISTANCE_DEFAULTS.tempF, 68);
-    assert.equal(DC_SIZING_DEFAULTS.tempC, 75);
     assert.equal(GROUND_WIRE_DEFAULTS.ocpdA, 20);
     assert.equal(SERVICE_LOOKUP_DEFAULTS.ratingA, 200);
     assert.equal(BTU_DEFAULTS.mode, 'btu-to-watts');

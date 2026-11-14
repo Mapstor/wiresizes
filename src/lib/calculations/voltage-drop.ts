@@ -2,7 +2,7 @@
 // VD = k × I × R × L / 1000 (k = 2 single-phase, √3 three-phase; R in Ω per 1000 ft; L one way in ft),
 // % = VD ÷ volts × 100. Parallel sets: the areas add, so R divides by the number of sets. Power lost in the
 // conductors: resistance.ts. Size search: from a size up through Table 310.16 until the drop meets the target.
-import { materialName, partsText, withUnit } from './format';
+import { partsText } from './format';
 import type { TextPart, ValueFormat } from './format';
 import { areaCmil, conductor, formatSize } from '../verified/awg';
 import type { Material, SizeKey } from '../verified/awg';
@@ -13,7 +13,6 @@ import type { Phase } from './inputs';
 import { powerLossWatts, resistanceAt, resistanceSig } from './resistance';
 
 export const ENGINE_ID = 'voltage-drop';
-const CALC = `calc:${ENGINE_ID}`;
 export const DOMAINS = ['conductor-resistance-20c', 'nec-310-16', 'awg-geometry'];
 
 /** Shown in place of the aluminum result when 14 AWG is selected (also on the ampacity calculator), in parts. */
@@ -32,11 +31,6 @@ export const DROP_EXCEEDS_SUPPLY_MESSAGE =
   'The calculated drop is larger than the supply voltage. Choose a larger size, a shorter run or a lower current.';
 /** The link in the ampacity note. */
 export const WIRE_SIZE_CALCULATOR_LINK = { href: '/calculators/wire-size-calculator', text: 'wire size calculator' };
-export const RESISTANCE_BASIS_LABEL =
-  'DC resistance of solid conductors at 75 °C, calculated from NIST Handbook 100 and 109 constants. Stranded conductors measure slightly higher, and AC reactance is not included.';
-export const ALUMINUM_RESISTANCE_NOTE = 'about 64 % higher resistance than copper';
-/** Labels of the copper and aluminum lines under the voltage drop inputs. */
-export const VD_HEADLINE_LABELS = { Cu: 'Copper:', Al: 'Aluminum:' };
 
 /** The conductor temperature of the resistances voltageDrop uses: awg.json's 75 °C values (r75_*). */
 export const RESISTANCE_TEMP_C = 75;
@@ -52,16 +46,6 @@ export function targetTitle(meetsTarget: boolean): string {
 
 /** Voltage drop in volts and percent as the result panels show it: two decimals. */
 export const VD_FORMAT: ValueFormat = { fixed: 2 };
-
-/** Voltage drop percent as the result panel shows it: "2.02 %". */
-export function formatVdPct(pct: number): string {
-  return withUnit(pct, '%', VD_FORMAT);
-}
-
-/** Voltage drop in volts as the result panel shows it: "4.86 V". */
-export function formatVdVolts(volts: number): string {
-  return withUnit(volts, 'V', VD_FORMAT);
-}
 
 /** Ω per 1000 ft at 75 °C: copper AWG and kcmil, or aluminum EC-H19 (12 AWG and larger); null otherwise. */
 export function resistance75(key: SizeKey, material: Material): number | null {
@@ -153,11 +137,6 @@ export function parallelEquivalent(size: SizeKey, sets: number): ParallelEquival
   return { totalCmil, smallestSingleSize: smallestSizeWithArea(totalCmil) };
 }
 
-/** A drop of 100 % or more of the supply voltage: DROP_EXCEEDS_SUPPLY_MESSAGE replaces its figures. */
-export function dropExceedsSupply(result: VoltageDropResult): boolean {
-  return result.vdPct >= 100;
-}
-
 /** The Table 310.16 column the ampacity note compares the current with. */
 export const AMPACITY_NOTE_COLUMN: AmpacityColumn = 60;
 
@@ -169,41 +148,6 @@ export function ampacityExceeded(size: SizeKey, material: Material, amps: number
   const ampacity = table31016(size, columnKey(material, AMPACITY_NOTE_COLUMN));
   return ampacity !== null && amps > ampacity ? ampacity : null;
 }
-
-/**
- * The note under a material's result when the current is above its 60 °C ampacity: before + link + after.
- * beforeParts is `before` in parts (before = partsText(beforeParts, formatSize)).
- */
-export function ampacityNote(
-  size: SizeKey,
-  material: Material,
-  ampacity: number,
-): { before: string; beforeParts: TextPart[]; link: string; after: string } {
-  const beforeParts: TextPart[] = [
-    'This current is more than the ',
-    { v: AMPACITY_NOTE_COLUMN, unit: '°C', src: CALC },
-    ' ampacity of ',
-    { size },
-    ` ${materialName(material)} (`,
-    { v: ampacity, unit: 'A', src: CALC },
-    ', NEC Table 310.16). Choose the size with the ',
-  ];
-  return {
-    before: partsText(beforeParts, formatSize),
-    beforeParts,
-    link: WIRE_SIZE_CALCULATOR_LINK.text,
-    after: ' first.',
-  };
-}
-
-export const VOLTAGE_DROP_DEFAULTS = {
-  size: '10' as SizeKey,
-  amps: 20,
-  lengthFt: 100,
-  volts: 240,
-  phase: 'single' as Phase,
-  targetPct: DEFAULT_VD_TARGET_PCT,
-};
 
 // ── WSZ-006b: the voltage drop calculator's calculation path ─────────────────────────────────────────────────────────
 // The calculator takes the conductor temperature (R(T) from resistance.ts; 75 °C unless the reader changes it), DC as
