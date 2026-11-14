@@ -1,0 +1,423 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-14T12:40:08+00:00",
+  "title": "Design System: WireSizes",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#111111",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "copper-light": {
+        "role": "primary",
+        "displayName": "Copper Light",
+        "canonical": "#f3c193",
+        "tonalRamp": [
+          "#140800",
+          "#391e00",
+          "#603704",
+          "#82562a",
+          "#a5774b",
+          "#ca9a6d",
+          "#f0be90",
+          "#fcebdc"
+        ]
+      },
+      "copper": {
+        "role": "primary",
+        "displayName": "Cut Copper",
+        "canonical": "#d6904f",
+        "tonalRamp": [
+          "#150801",
+          "#381e03",
+          "#613604",
+          "#8c510d",
+          "#b4702d",
+          "#d89455",
+          "#edbf98",
+          "#fbebdf"
+        ]
+      },
+      "copper-dark": {
+        "role": "primary",
+        "displayName": "Copper Dark",
+        "canonical": "#a95a26",
+        "tonalRamp": [
+          "#170600",
+          "#3d1a02",
+          "#692f03",
+          "#96490f",
+          "#b96c3c",
+          "#d5946e",
+          "#ebbfa6",
+          "#faebe3"
+        ]
+      },
+      "copper-rim": {
+        "role": "primary",
+        "displayName": "Oxide Rim",
+        "canonical": "#6b3112",
+        "tonalRamp": [
+          "#190500",
+          "#401601",
+          "#682f10",
+          "#8c4f31",
+          "#b07052",
+          "#ce967d",
+          "#e5c0af",
+          "#f8ece6"
+        ]
+      },
+      "copper-glint": {
+        "role": "primary",
+        "displayName": "Glint",
+        "canonical": "#ffe2c4",
+        "tonalRamp": [
+          "#140800",
+          "#352005",
+          "#543d23",
+          "#755c42",
+          "#977d62",
+          "#bba083",
+          "#e0c4a6",
+          "#feebd7"
+        ]
+      },
+      "copper-label": {
+        "role": "primary",
+        "displayName": "Copper Shadow Ink",
+        "canonical": "#2a1205",
+        "tonalRamp": [
+          "#160701",
+          "#371e10",
+          "#563b2c",
+          "#775a4a",
+          "#9a7b6a",
+          "#be9d8c",
+          "#dec3b5",
+          "#f5ece8"
+        ]
+      },
+      "copper-line": {
+        "role": "primary",
+        "displayName": "Copper Line",
+        "canonical": "#b0571f",
+        "tonalRamp": [
+          "#170601",
+          "#3e1903",
+          "#6a2e05",
+          "#974713",
+          "#bf6836",
+          "#da916a",
+          "#eebda3",
+          "#fbebe2"
+        ]
+      },
+      "copper-deep": {
+        "role": "primary",
+        "displayName": "Deep Copper",
+        "canonical": "#8a3d10",
+        "tonalRamp": [
+          "#190500",
+          "#3f1803",
+          "#6c2c05",
+          "#96481e",
+          "#b96b45",
+          "#d59374",
+          "#ebbea9",
+          "#faebe4"
+        ]
+      },
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "canonical": "#2b2b2b",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "caption-gray": {
+        "role": "neutral",
+        "displayName": "Caption Gray",
+        "canonical": "#3d3d3d",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "muted-gray": {
+        "role": "neutral",
+        "displayName": "Muted Gray",
+        "canonical": "#555555",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Strong Rule",
+        "canonical": "#8f877f",
+        "tonalRamp": [
+          "#0d0b08",
+          "#29241f",
+          "#48413a",
+          "#676058",
+          "#898179",
+          "#aba49d",
+          "#cdc8c4",
+          "#f0eeed"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#ebe7e2",
+        "tonalRamp": [
+          "#0d0b08",
+          "#272521",
+          "#45413d",
+          "#64615c",
+          "#85827d",
+          "#a8a4a0",
+          "#ccc8c4",
+          "#f1eeea"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The H1's main line only, across the full page width (96 px desktop, 76 px from 640 px, 54 px phones)."
+      },
+      "display-sub": {
+        "displayName": "Display sub",
+        "purpose": "Second line of the H1."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings (H2); 34 px on phones."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "H3s: a gauge's name, a question, a rule's heading word."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "The answer at the top of the page; first sentence bold; 18 px on phones."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose at most 35rem wide (about 70 characters a line)."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Figure captions, definition lists, notes; source lines at 14 px."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Table column headers, right-aligned."
+      },
+      "figures": {
+        "displayName": "Figures",
+        "purpose": "Every number inside a ruled table; the row label 600 at 14.5 px."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Conductors growing in (0.5 s each, 55 ms apart, from the largest)."
+      },
+      {
+        "name": "shine",
+        "value": "ease-in-out 6s infinite",
+        "purpose": "A soft highlight passing across the conductors from 3.4 s; off under reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Link",
+      "kind": "custom",
+      "refersTo": "link",
+      "description": "Every link: ink text with a 2 px Copper Line underline; Deep Copper on hover.",
+      "html": "<p class=\"ds-p\">Use the <a class=\"ds-link\" href=\"#\">wire resistance calculator</a> for another temperature.</p>",
+      "css": ".ds-p { font-family: Archivo, Arial, sans-serif; font-size: 17px; line-height: 1.65; color: #111111; } .ds-link { color: #111111; text-decoration: underline; text-decoration-color: #b0571f; text-decoration-thickness: 2px; text-underline-offset: 3px; } .ds-link:hover { color: #8a3d10; } .ds-link:focus-visible { outline: 2px solid #111111; outline-offset: 3px; }"
+    },
+    {
+      "name": "Header navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Wordmark and the three section links, on white with a hairline below.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-wordmark\" href=\"#\">WireSizes</a><span class=\"ds-navlinks\"><a href=\"#\">Calculators</a><a href=\"#\">Guides</a><a href=\"#\">About</a></span></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 32px; background: #ffffff; border-bottom: 1px solid #ebe7e2; font-family: Archivo, Arial, sans-serif; } .ds-wordmark { font-size: 24px; font-weight: 800; letter-spacing: -0.025em; color: #111111; text-decoration: none; } .ds-wordmark:hover { color: #8a3d10; } .ds-navlinks { display: flex; gap: 32px; } .ds-navlinks a { padding: 8px 0; font-size: 16px; font-weight: 500; color: #111111; text-decoration: underline; text-decoration-color: #b0571f; text-decoration-thickness: 2px; text-underline-offset: 6px; } .ds-navlinks a:hover { color: #8a3d10; text-decoration-color: #8a3d10; }"
+    },
+    {
+      "name": "Menu button",
+      "kind": "button",
+      "refersTo": "menu-button",
+      "description": "The one rounded control: opens the phone menu.",
+      "html": "<button class=\"ds-menu\" type=\"button\" aria-label=\"Open menu\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#111111\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M4 6h16M4 12h16M4 18h16\"/></svg></button>",
+      "css": ".ds-menu { display: inline-flex; padding: 8px; background: #ffffff; border: 1px solid #ebe7e2; border-radius: 6px; cursor: pointer; transition: border-color 0.15s; } .ds-menu:hover { border-color: #111111; } .ds-menu:focus-visible { outline: 2px solid #111111; outline-offset: 3px; }"
+    },
+    {
+      "name": "Ruled table",
+      "kind": "custom",
+      "refersTo": "table-cell",
+      "description": "The reference table: double rule on top, hairline rows, a strong rule every fifth row, Azeret Mono figures, a heavy close and a source line.",
+      "html": "<div class=\"ds-tw\"><p class=\"ds-cap\">AWG sizes: diameter and area, solid conductor</p><table class=\"ds-table\"><thead><tr><th>AWG</th><th>Diameter, in</th><th>Area, cmil</th></tr></thead><tbody><tr><th>10</th><td>0.1019</td><td>10,380</td></tr><tr><th>12</th><td>0.0808</td><td>6,530</td></tr><tr class=\"ds-fifth\"><th>14</th><td>0.0641</td><td>4,110</td></tr></tbody></table><p class=\"ds-src\">Source: NIST (NBS) Handbook 100, Copper Wire Tables, Table 5.</p></div>",
+      "css": ".ds-tw { font-family: Archivo, Arial, sans-serif; color: #111111; } .ds-cap { margin: 0 0 8px; font-size: 16px; font-weight: 600; } .ds-table { width: 100%; border-collapse: collapse; border-top: 3px double #111111; border-bottom: 2px solid #111111; font-size: 15px; line-height: 1.375; } .ds-table thead th { padding: 10px 14px; border-bottom: 1px solid #111111; font-size: 13.5px; font-weight: 600; color: #2b2b2b; text-align: right; vertical-align: bottom; } .ds-table thead th:first-child { text-align: left; } .ds-table td { padding: 6px 14px; border-bottom: 1px solid #ebe7e2; font-family: 'Azeret Mono', ui-monospace, monospace; font-size: 14px; text-align: right; white-space: nowrap; } .ds-table tbody th { padding: 6px 14px; border-bottom: 1px solid #ebe7e2; font-family: 'Azeret Mono', ui-monospace, monospace; font-size: 14.5px; font-weight: 600; text-align: left; } .ds-table tr.ds-fifth > * { border-bottom-color: #8f877f; } .ds-src { margin: 8px 0 0; font-size: 14px; color: #555555; }"
+    },
+    {
+      "name": "Source line",
+      "kind": "custom",
+      "refersTo": "source-line",
+      "description": "Under every table and drawing: the short names of its sources.",
+      "html": "<p class=\"ds-source\">Source: NFPA 70 (NEC) 2023, Table 310.16; NFPA 70 (NEC), 240.4(D).</p>",
+      "css": ".ds-source { margin: 0; font-family: Archivo, Arial, sans-serif; font-size: 14px; line-height: 1.5; color: #555555; }"
+    },
+    {
+      "name": "Gauge entry",
+      "kind": "card",
+      "refersTo": "table-cell",
+      "description": "One gauge: its conductor at 200 px per inch beside its values, a hairline above.",
+      "html": "<section class=\"ds-gauge\"><div class=\"ds-disc-box\"><span class=\"ds-disc\" style=\"width:20.4px;height:20.4px\"></span></div><div><h3 class=\"ds-gauge-h\">10 AWG</h3><dl class=\"ds-dl\"><dt>Diameter</dt><dd>0.1019 in (2.588 mm)</dd><dt>Area</dt><dd>10,380 cmil (5.26 mm²)</dd><dt>Ampacity, 75 °C</dt><dd>35 A</dd></dl></div></section>",
+      "css": ".ds-gauge { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px 16px; padding: 20px 0; border-top: 1px solid #ebe7e2; font-family: Archivo, Arial, sans-serif; color: #111111; } .ds-disc-box { width: 96px; height: 96px; display: flex; align-items: center; justify-content: center; } .ds-disc { display: block; background: radial-gradient(circle at 30% 25%, #f3c193, #d6904f 55%, #a95a26); border: 1px solid #6b3112; border-radius: 50%; } .ds-gauge-h { margin: 0 0 8px; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; } .ds-dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 16px; margin: 0; font-size: 15px; font-variant-numeric: tabular-nums; } .ds-dl dt { color: #555555; } .ds-dl dd { margin: 0; }"
+    },
+    {
+      "name": "Copper spiral",
+      "kind": "custom",
+      "refersTo": "copper",
+      "description": "Signature drawing: cut conductors at one scale along a spiral, growing in from the largest; reduced motion shows them finished.",
+      "html": "<div class=\"ds-spiral\"><span class=\"ds-c\" style=\"--d:92px;--x:0px;--y:20px;--t:0s\">4/0</span><span class=\"ds-c\" style=\"--d:82px;--x:96px;--y:0px;--t:.055s\">3/0</span><span class=\"ds-c\" style=\"--d:73px;--x:180px;--y:30px;--t:.11s\">2/0</span><span class=\"ds-c\" style=\"--d:65px;--x:120px;--y:90px;--t:.165s\">1/0</span></div>",
+      "css": ".ds-spiral { position: relative; width: 260px; height: 170px; font-family: Archivo, Arial, sans-serif; } .ds-c { position: absolute; left: var(--x); top: var(--y); width: var(--d); height: var(--d); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; color: #2a1205; background: radial-gradient(circle at 30% 25%, #f3c193, #d6904f 55%, #a95a26); border: 1px solid #6b3112; border-radius: 50%; animation: ds-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1) var(--t) both; } @keyframes ds-grow { from { transform: scale(0); opacity: 0; } 40% { opacity: 1; } to { transform: scale(1); opacity: 1; } } @media (prefers-reduced-motion: reduce) { .ds-c { animation: none; } }"
+    },
+    {
+      "name": "On this page",
+      "kind": "nav",
+      "refersTo": "link",
+      "description": "Table of contents under a 2 px ink rule: a label column and the section links in two columns.",
+      "html": "<nav class=\"ds-toc\"><p class=\"ds-toc-l\">On this page</p><ol><li><a href=\"#\">AWG wire size chart</a></li><li><a href=\"#\">Gauge by gauge</a></li><li><a href=\"#\">AWG to mm²</a></li><li><a href=\"#\">Questions</a></li></ol></nav>",
+      "css": ".ds-toc { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; padding-top: 12px; border-top: 2px solid #111111; font-family: Archivo, Arial, sans-serif; } .ds-toc-l { margin: 0; font-size: 15px; font-weight: 700; color: #111111; } .ds-toc ol { margin: 0; padding: 0; list-style: none; columns: 2; column-gap: 32px; font-size: 16.5px; } .ds-toc li { margin-bottom: 6px; break-inside: avoid; } .ds-toc a { color: #111111; text-decoration: underline; text-decoration-color: #b0571f; text-decoration-thickness: 2px; text-underline-offset: 3px; } .ds-toc a:hover { color: #8a3d10; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Cut Conductor",
+    "overview": "The look is a reference sheet you could hold up to a spool of wire. Every drawing is the wire itself: the cut end of a solid copper conductor, drawn at its true size from the site's diameter data, so the picture proves the number next to it. The AWG chart opens with all 44 gauges as cut copper ends wound into a spiral, each one gauge step smaller than the last.\n\nThe feel is exact, plain and warm. Exact, because every figure sits in a ruled table with its source line under it and every drawing is to scale. Plain, because nothing is decorative: no cards, no shadows, no icons, no tinted panels, just ink type on white separated by ruled lines of different weights. Warm, because the one color is the copper of the conductors themselves, and it shows up only where copper belongs: the drawn wire, the underline of a link, the text selection.\n\nType does the hierarchy. A very large, tightly set Archivo H1 runs across the top of the page; headings are heavy and short; prose sits at a reading measure; figures in tables are set in Azeret Mono so columns line up digit for digit.",
+    "keyCharacteristics": [
+      "Ink on white with cut copper as the only color.",
+      "Drawings built from real data at true scale, never illustrations.",
+      "Ruled tables: a double rule on top, a stronger line every five rows, a heavy closing rule.",
+      "A source line under every table and drawing.",
+      "Flat surfaces; depth comes from the weight of a rule, never from a shadow.",
+      "One clear moment of motion per drawing, off under reduced motion."
+    ],
+    "rules": [
+      {
+        "name": "The One Metal Rule",
+        "body": "Copper is the only color on the page. It appears as drawn conductors, link underlines and the text selection (Cut Copper at 30 %), never as a background behind prose or controls, and no second accent joins it.",
+        "section": "colors"
+      },
+      {
+        "name": "The Measured Copper Rule",
+        "body": "A copper disc always stands for a real conductor at a stated scale (diameter in inches from the data times a fixed pixels-per-inch). Copper circles are never ornament.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "Archivo speaks and Azeret Mono counts: inside ruled tables every figure is Azeret Mono; everywhere else, numbers included, the text is Archivo.",
+        "section": "typography"
+      },
+      {
+        "name": "The Measure Rule",
+        "body": "Prose stops at 35rem; tables, drawings and the H1 use the full width.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Sheet Rule",
+        "body": "Nothing floats. If two things need separating, a rule separates them; if a thing needs emphasis, its rule gets heavier.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do underline every link in Copper Line (2 px, 3 px offset) over ink text.",
+      "Do draw conductors from the data at a stated pixels-per-inch, so the drawing proves the number.",
+      "Do put a source line under every table and every drawing.",
+      "Do keep text in drawings at 13 px or more on screen at every width; give a wide drawing a narrow version below 640 px rather than shrinking it.",
+      "Do set figures in ruled tables in Azeret Mono and prose in Archivo at a 35rem measure.",
+      "Do show drawings finished, without motion, when the reader asks for reduced motion."
+    ],
+    "donts": [
+      "Don't add shadows, rounded cards, tinted panels or gradients behind text (The Flat Sheet Rule).",
+      "Don't add a second accent color; the blue of the older pages goes as they move to this look (The One Metal Rule).",
+      "Don't draw copper circles that are not conductors at a stated scale (The Measured Copper Rule).",
+      "Don't put small capital-letter labels above headings, number the sections, or put icons beside links.",
+      "Don't hide an animated drawing with display: none, even inside a media query that does not match: Chrome stops painting it while its animation runs."
+    ]
+  }
+}
