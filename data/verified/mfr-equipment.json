@@ -412,6 +412,35 @@
  "ranges": [
   {
    "brand": "Whirlpool",
+   "doc": "W11640146A",
+   "title": "Freestanding Electric Range Owner's Manual (installation instructions included)",
+   "table": [
+    {
+     "kw_120_240": "8.8 – 16.5",
+     "kw_120_208": "7.8 – 12.5",
+     "amps": "40 or 50"
+    },
+    {
+     "kw_120_240": "16.6 – 22.5",
+     "kw_120_208": "12.6 – 18.5",
+     "amps": "50"
+    }
+   ],
+   "cord_3wire": "3-wire, UL listed, 40 or 50 A power supply cord (pigtail); NEMA 10-50R receptacle",
+   "cord_4wire": "UL listed, 4-wire, 250 V, 40 or 50 A cord with a NEMA 14-50R receptacle (4-wire recommended; 3-wire only where local codes permit)",
+   "direct_wire": "8 gauge copper or 6 gauge aluminum",
+   "min_copper_4wire_40a_circuit": {
+    "hot": "2 No. 8",
+    "neutral": "1 No. 10 white",
+    "ground": "1 No. 8 green"
+   },
+   "url": "https://www.whirlpool.com/content/dam/global/documents/202305/owners-manual-w11640146-revA.pdf",
+   "host": "official",
+   "retrieved": "2026-11-14",
+   "status": "VERIFIED (mfr); same kW table as W10403811C and W10575959A"
+  },
+  {
+   "brand": "Whirlpool",
    "doc": "Ref. W10403811C",
    "date": "04/17/2017",
    "type": "30in freestanding electric range dimension/installation guide",
@@ -432,7 +461,8 @@
    "nema": null,
    "url": "https://pdf.lowes.com/productdocuments/bec1ae1e-5c73-4878-bf30-b1d7e6dacd5c/61917695.pdf",
    "host": "retailer copy of manufacturer document",
-   "status": "VERIFIED (mfr doc; retailer-hosted)"
+   "status": "VERIFIED (mfr doc; retailer-hosted)",
+   "superseded_for_citation_by": "W11640146A (whirlpool.com, same kW table)"
   },
   {
    "brand": "Whirlpool",
@@ -447,7 +477,8 @@
    "table": "same as W10403811C",
    "url": "https://images.thdstatic.com/catalog/pdfImages/83/83e89524-eaeb-47f6-bae5-48567e2a7801.pdf",
    "host": "retailer copy of manufacturer document",
-   "status": "VERIFIED (mfr doc; retailer-hosted); matches W10403811C"
+   "status": "VERIFIED (mfr doc; retailer-hosted); matches W10403811C",
+   "superseded_for_citation_by": "W11640146A (whirlpool.com, same kW table)"
   },
   {
    "brand": "Frigidaire (host frigidaire.bynder.com; brand not printed in extracted text)",
@@ -478,7 +509,8 @@
  },
  "notes": [
   "Cite each value to its model, document number and revision. Never generalize one brand's value to a rule.",
-  "Carrier 26SCA5 3.5 and 4 ton MOCP differ between 26SCA5-02PD (35/40 A) and coastal 26SCA5C-01PD (40/50 A): CONFLICTING for those two rows; minimum circuit amps match."
+  "Carrier 26SCA5 3.5 and 4 ton MOCP differ between 26SCA5-02PD (35/40 A) and coastal 26SCA5C-01PD (40/50 A): CONFLICTING for those two rows; minimum circuit amps match.",
+  "2026-11-14 (WSZ-006b source check): Whirlpool's own copy of a range manual with the kW table (W11640146A, whirlpool.com) replaces the retailer-hosted W10403811C and W10575959A as the document a page links; their values are unchanged."
  ],
  "pool_pumps": {
   "status": "VERIFIED (mfr): two pulls agree on the six 1-2 HP rows below",
