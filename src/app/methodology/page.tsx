@@ -28,6 +28,8 @@ import { attribution, attributionParts, coverage, nextCheck } from '@/lib/verifi
 import { NEC_2026_DOMAIN, NEC_2026_EFFECTIVE, NEC_2026_ISSUANCE_DOMAIN, NEC_2026_ISSUED, NEC_2026_MIN_SIZES } from '@/lib/verified/nec-2026-edition';
 import { formatDate } from '@/lib/page-dates';
 import { ADOPTION_AS_OF, ADOPTION_TABLE_HREF, joinNames, NEC_ADOPTION_DOMAIN, NOT_VERIFIED, stateName } from '@/lib/verified/nec-adoption';
+import { PageTitle } from '@/components/look/PageTitle';
+import { LOOK_BYLINE, LOOK_BYLINE_LINK, LOOK_H2, LOOK_H3, LOOK_LINK, LOOK_PAGE } from '@/components/look/styles';
 
 // /methodology (WSZ-004b): one section per verified source the live calculators cite (src/lib/methodology.ts lists
 // them and the pages that cite each; check-structure 24 holds that list to the built pages), the wire size method,
@@ -56,10 +58,10 @@ export const metadata: Metadata = {
   },
 };
 
-const LINK = 'text-blue-600 underline underline-offset-2 hover:text-blue-800';
-const H2 = 'text-2xl font-semibold text-gray-900 pt-4';
-const H3 = 'text-lg font-semibold text-gray-900';
-const LIST = 'list-disc pl-6 space-y-2';
+const LINK = LOOK_LINK;
+const H2 = `${LOOK_H2} pt-6`;
+const H3 = LOOK_H3;
+const LIST = 'list-disc space-y-2 pl-6 marker:text-cut-line';
 
 const SECTION = new Map(METHODOLOGY_SECTIONS.map((s) => [s.domain, s]));
 function section(domain: string): MethodologySection {
@@ -117,9 +119,10 @@ function gauges(rows: { size: string }[]): string {
   return keys.length === 1 ? `${keys[0]} AWG` : `${keys.slice(0, -1).join(', ')} or ${keys[keys.length - 1]} AWG`;
 }
 
-const FORMULA_BOX = 'rounded-md border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900';
-// Symbols in the site's formula face (mono, as the guides set formulas); a formula written in words stays in the text face
-const MONO = 'font-mono text-sm sm:text-base';
+// In the look (D-33): a formula sits between two ink rules, flat, with no box
+const FORMULA_BOX = 'border-y border-ink py-3 text-ink';
+// Symbols in the site's figure face (Azeret Mono, as the tables set figures); a formula written in words stays in the text face
+const MONO = 'font-figures text-[14px] sm:text-[15px]';
 
 /** One formula. */
 function Formula({ src, words = false, children }: { src: string; words?: boolean; children: ReactNode }) {
@@ -136,7 +139,7 @@ function Formulas({ src, rows }: { src: string; rows: [string, ReactNode][] }) {
     <dl data-src={src} className={clsx(FORMULA_BOX, 'grid gap-x-6 gap-y-1 text-base sm:grid-cols-[auto_1fr]')}>
       {rows.map(([label, formula]) => (
         <Fragment key={label}>
-          <dt className="text-gray-700">{label}</dt>
+          <dt className="text-cut-muted">{label}</dt>
           <dd className={clsx(MONO, 'mb-2 last:mb-0 sm:mb-0')}>{formula}</dd>
         </Fragment>
       ))}
@@ -150,20 +153,20 @@ function SourceFacts({ s, href }: { s: MethodologySection; href?: string }) {
   const { text, publisher, url, verified_date } = attribution(s.domain);
   const { short } = attributionParts(text);
   return (
-    <dl className="grid gap-x-4 gap-y-1 text-base sm:grid-cols-[7rem_1fr]">
-      <dt className="font-semibold text-gray-900">Source</dt>
+    <dl className="grid gap-x-4 gap-y-1 text-[15px] sm:grid-cols-[7rem_1fr]">
+      <dt className="font-semibold text-ink">Source</dt>
       <dd>
         <a href={href ?? url} className={LINK}>
           {short}
         </a>
       </dd>
-      <dt className="font-semibold text-gray-900">Publisher</dt>
+      <dt className="font-semibold text-ink">Publisher</dt>
       <dd>{publisher}</dd>
-      <dt className="font-semibold text-gray-900">Retrieved</dt>
+      <dt className="font-semibold text-ink">Retrieved</dt>
       <dd>
         <time dateTime={verified_date}>{monthOf(verified_date)}</time>
       </dd>
-      <dt className="font-semibold text-gray-900">Cited on</dt>
+      <dt className="font-semibold text-ink">Cited on</dt>
       <dd data-cited-on="">
         {s.citedOn.map((route, i) => (
           <span key={route}>
@@ -181,7 +184,7 @@ function SourceFacts({ s, href }: { s: MethodologySection; href?: string }) {
 function SourceSection({ domain, children }: { domain: string; children: ReactNode }) {
   const s = section(domain);
   return (
-    <section id={s.id} data-src={s.domain} aria-labelledby={`${s.id}-title`} className="scroll-mt-20 space-y-4">
+    <section id={s.id} data-src={s.domain} aria-labelledby={`${s.id}-title`} className="scroll-mt-24 space-y-4">
       <h2 id={`${s.id}-title`} className={H2}>
         {s.title}
       </h2>
@@ -217,12 +220,13 @@ const TOC = [
 export default function MethodologyPage() {
   const { method, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
   return (
-    <div className="container py-12">
-      <article className="max-w-3xl space-y-6 text-lg text-gray-700 leading-relaxed">
-        <header className="space-y-2">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Methodology: sources and formulas</h1>
-          <Byline route={METHODOLOGY_ROUTE} />
-        </header>
+    <div className={LOOK_PAGE}>
+    <div className="container pb-16">
+      <header className="pt-10 sm:pt-12">
+        <PageTitle main="Methodology" sub="sources and formulas" joiner=": " />
+        <Byline route={METHODOLOGY_ROUTE} className={LOOK_BYLINE} linkClassName={LOOK_BYLINE_LINK} />
+      </header>
+      <article className="mt-10 max-w-[35rem] space-y-6 text-[17px] leading-[1.65] text-ink">
 
         <p>
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
@@ -240,9 +244,9 @@ export default function MethodologyPage() {
           work is done.
         </p>
 
-        <nav aria-label="On this page" className="text-base">
-          <p className="font-semibold text-gray-900">On this page</p>
-          <ul className="mt-2 grid gap-x-8 gap-y-1 sm:grid-cols-2">
+        <nav aria-label="On this page" className="border-t-2 border-ink pt-3 text-[16.5px]">
+          <p className="text-[15px] font-bold">On this page</p>
+          <ul className="mt-2 grid gap-x-8 gap-y-1.5 sm:grid-cols-2">
             {TOC.map((item) => (
               <li key={item.id}>
                 <a href={`#${item.id}`} className={LINK}>
@@ -253,7 +257,7 @@ export default function MethodologyPage() {
           </ul>
         </nav>
 
-        <section id={method.id} data-src="calc:conductor-sizing" aria-labelledby={`${method.id}-title`} className="scroll-mt-20 space-y-4">
+        <section id={method.id} data-src="calc:conductor-sizing" aria-labelledby={`${method.id}-title`} className="scroll-mt-24 space-y-4">
           <h2 id={`${method.id}-title`} className={H2}>
             {method.title}
           </h2>
@@ -265,7 +269,7 @@ export default function MethodologyPage() {
             starts from the breaker or fuse rating, the circuit and the length you enter, and works in six steps, once
             for copper and once for aluminum:
           </p>
-          <ol className="list-decimal pl-6 space-y-2">
+          <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-cut-line">
             <li>
               Take the smallest size whose ampacity in the <Val v={SIZING_COLUMN_C} unit="°C" src="nec-310-16" /> column
               of NEC Table 310.16 is at least the rating (see <SectionLink domain="nec-310-16">Ampacity</SectionLink>).
@@ -833,7 +837,7 @@ export default function MethodologyPage() {
           </Limits>
         </SourceSection>
 
-        <section id={notCovered.id} aria-labelledby={`${notCovered.id}-title`} className="scroll-mt-20 space-y-4">
+        <section id={notCovered.id} aria-labelledby={`${notCovered.id}-title`} className="scroll-mt-24 space-y-4">
           <h2 id={`${notCovered.id}-title`} className={H2}>
             {notCovered.title}
           </h2>
@@ -866,7 +870,7 @@ export default function MethodologyPage() {
           </ul>
         </section>
 
-        <section id={errors.id} aria-labelledby={`${errors.id}-title`} className="scroll-mt-20 space-y-4">
+        <section id={errors.id} aria-labelledby={`${errors.id}-title`} className="scroll-mt-24 space-y-4">
           <h2 id={`${errors.id}-title`} className={H2}>
             {errors.title}
           </h2>
@@ -885,6 +889,7 @@ export default function MethodologyPage() {
         </section>
       </article>
       <BasicPageSchema path={METHODOLOGY_ROUTE} name={TITLE} description={DESCRIPTION} authored />
+    </div>
     </div>
   );
 }

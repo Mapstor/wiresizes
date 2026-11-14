@@ -1,5 +1,17 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { clsx } from 'clsx';
+import { PageTitle } from '@/components/look/PageTitle';
+import {
+  LOOK_LEAD,
+  LOOK_LINK as LINK,
+  LOOK_P as P,
+  LOOK_PAGE,
+  LOOK_SOURCES_HEADING,
+  LOOK_SOURCES_LIST,
+  LOOK_SOURCES_NOTE,
+  LOOK_SOURCES_SECTION,
+} from '@/components/look/styles';
 import { EDITION_NOTE_DOMAINS, EditionNote } from '@/components/content/EditionNote';
 import { RouteList } from '@/components/content/RouteIndex';
 import { Sources } from '@/components/content/Sources';
@@ -32,8 +44,6 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION, images: ['/twitter-image'] },
 };
 
-const LINK = 'text-blue-700 underline underline-offset-2 hover:text-blue-900';
-const P = 'max-w-prose leading-relaxed text-gray-700';
 const CALCULATORS = sectionRoutes('calculators');
 
 const calculatorsCollectionSchema = {
@@ -78,12 +88,13 @@ const calculatorsCollectionSchema = {
 
 export default function CalculatorsPage() {
   return (
-    <div className="container py-10 lg:py-14">
+    <div className={LOOK_PAGE}>
+      <div className="container pb-16">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorsCollectionSchema) }} />
 
-      <header className="max-w-3xl space-y-4">
-        <h1 className="text-3xl font-bold leading-tight text-gray-900 sm:text-4xl">{H1}</h1>
-        <p className="max-w-prose text-lg leading-relaxed text-gray-700">
+      <header className="pt-10 sm:pt-12">
+        <PageTitle main={H1} />
+        <p className={clsx(LOOK_LEAD, 'mt-6')}>
           Size copper and aluminum wire from the NEC tables, or convert between watts, amps, volts, kilowatts, kVA and Btu per hour. Each
           calculator lists its sources below the tool, and the{' '}
           <Link href="/methodology" className={LINK}>
@@ -97,22 +108,23 @@ export default function CalculatorsPage() {
         </p>
       </header>
 
-      <div className="mt-12 max-w-4xl space-y-12">
+      <div className="mt-12 max-w-5xl space-y-14">
         <RouteList section="calculators" />
       </div>
 
-      <div className="mt-14 space-y-8 border-t border-gray-300 pt-8">
+      <div className="mt-14 space-y-8 border-t border-cut-rule pt-10">
         <EditionNote className={P} linkClassName={LINK} />
-        <section aria-labelledby="sources" className="max-w-prose space-y-3">
+        <section aria-labelledby="sources" className={clsx(LOOK_SOURCES_SECTION, 'max-w-[44rem]')}>
           <Sources
             domains={EDITION_NOTE_DOMAINS}
             hrefs={{ [NEC_ADOPTION_DOMAIN]: ADOPTION_TABLE_HREF }}
-            headingClassName="text-xl font-semibold text-gray-900"
-            listClassName="list-disc space-y-1 pl-6 text-sm text-gray-700"
+            headingClassName={LOOK_SOURCES_HEADING}
+            listClassName={LOOK_SOURCES_LIST}
             linkClassName={LINK}
-            noteClassName="text-sm text-gray-600"
+            noteClassName={LOOK_SOURCES_NOTE}
           />
         </section>
+      </div>
       </div>
     </div>
   );

@@ -162,12 +162,12 @@ export function Consent() {
       ref={bannerRef}
       role="region"
       aria-label="Cookie choice"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-neutral-300 bg-white shadow-lg"
+      className="fixed inset-x-0 bottom-0 z-50 border-t-2 border-ink bg-white font-display"
     >
       <div className="container flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-neutral-800">
+        <p className="text-[15px] leading-snug text-ink">
           {"We'd like to use Google Analytics cookies to see which pages people read."}{' '}
-          <Link href="/privacy" className="text-blue-700 underline">
+          <Link href="/privacy" className="text-ink underline decoration-cut-line decoration-2 underline-offset-[3px] hover:text-cut-deep">
             Privacy notice
           </Link>
         </p>
@@ -175,14 +175,14 @@ export function Consent() {
           <button
             type="button"
             onClick={() => choose('granted')}
-            className="w-full rounded-lg border border-neutral-400 bg-white px-4 py-2 text-sm font-semibold text-neutral-900 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="w-full rounded-md border border-ink bg-white px-4 py-2 text-[15px] font-semibold text-ink transition-colors hover:bg-ink hover:text-white focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
             Accept analytics
           </button>
           <button
             type="button"
             onClick={() => choose('denied')}
-            className="w-full rounded-lg border border-neutral-400 bg-white px-4 py-2 text-sm font-semibold text-neutral-900 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="w-full rounded-md border border-ink bg-white px-4 py-2 text-[15px] font-semibold text-ink transition-colors hover:bg-ink hover:text-white focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
             Reject
           </button>

@@ -10,6 +10,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { clsx } from 'clsx';
+import { LOOK_PAGE } from '@/components/look/styles';
 import type { NavGroup, NavLink } from '@/lib/guides-nav';
 
 interface GuidesFrameProps {
@@ -20,7 +21,7 @@ interface GuidesFrameProps {
 
 const HUB = '/guides';
 /** Guides that draw their own frame in the picked look (D-33). */
-const LOOK_GUIDES = new Set(['/guides/awg-wire-size-chart']);
+const LOOK_GUIDES = new Set(['/guides/awg-wire-size-chart', '/guides/nec-table-310-16', '/guides/nec-code-compliance']);
 
 const STYLES = {
   classic: {
@@ -39,7 +40,12 @@ const STYLES = {
 
 export function GuidesFrame({ guides, calculators, children }: GuidesFrameProps) {
   const pathname = usePathname();
-  if (pathname === HUB) return <div className="container py-10 lg:py-14">{children}</div>;
+  if (pathname === HUB)
+    return (
+      <div className={LOOK_PAGE}>
+        <div className="container pb-16">{children}</div>
+      </div>
+    );
   if (LOOK_GUIDES.has(pathname)) return <>{children}</>;
   return (
     <div className="bg-gray-50">
