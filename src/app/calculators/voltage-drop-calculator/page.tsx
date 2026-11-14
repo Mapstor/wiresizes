@@ -74,7 +74,9 @@ const GEO = 'awg-geometry';
 const AMP = 'nec-310-16';
 const NOTE = 'nec-continuous-load';
 const VOLTS = 'us-nominal-voltages';
-const POWER = 'power-definitions';
+const EIA = 'eia-power-glossary';
+const DOE = 'doe-motor-load-efficiency';
+const SI = 'nist-sp330-si-units';
 const CALC = `calc:${ENGINE_ID}`;
 const RCALC = `calc:${RES_ENGINE}`;
 /** 2023 NEC 215.2(A), Informational Note No. 2, read from nec-continuous-load-2023.json. */
@@ -391,10 +393,11 @@ export default function VoltageDropCalculatorPage() {
               </Link>{' '}
               shows R for any size and temperature.
             </p>
-            <p className={P} data-src={POWER}>
-              A load given in watts becomes a current through I = P ÷ (V × PF) on a single-phase circuit, P ÷ (√3 × V × PF) on three-phase
-              and P ÷ V on DC, PF being the power factor. The heat in the conductors is <Num v={2} src={CALC} /> × I² × R × L ÷ 1,000 watts
-              on a two-wire circuit and <Num v={3} src={CALC} /> × I² × R × L ÷ 1,000 on three-phase.
+            <p className={P} data-src={EIA}>
+              A load given in watts becomes a current through I = P ÷ (V × PF) on a single-phase circuit,{' '}
+              <span data-src={DOE}>P ÷ (√3 × V × PF) on three-phase</span> and <span data-src={SI}>P ÷ V on DC</span>, PF being the power
+              factor. <span data-src={CALC}>The heat in the conductors is <Num v={2} src={CALC} /> × I² × R × L ÷ 1,000 watts
+              on a two-wire circuit and <Num v={3} src={CALC} /> × I² × R × L ÷ 1,000 on three-phase.</span>
             </p>
           </section>
 
@@ -530,7 +533,7 @@ export default function VoltageDropCalculatorPage() {
 
           <section aria-label="Sources and notices" className={LOOK_SOURCES_SECTION}>
             <Sources
-              domains={[RES, GEO, AMP, NOTE, VOLTS, POWER]}
+              domains={[RES, GEO, AMP, NOTE, VOLTS, EIA, DOE, SI]}
               headingClassName={LOOK_SOURCES_HEADING}
               listClassName={LOOK_SOURCES_LIST}
               linkClassName={LINK}

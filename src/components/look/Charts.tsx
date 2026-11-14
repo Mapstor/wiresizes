@@ -21,6 +21,7 @@ import { TABLE_310_16_ROWS, table31016 } from '@/lib/verified/nec-310-16';
 import { decimalsAtSig } from '@/lib/calculations/format';
 import { dropRun, lengthForDrop } from '@/lib/calculations/voltage-drop';
 import { lowVoltageSize, lvLengthForDrop } from '@/lib/calculations/dc-sizing';
+import { SQRT3, TP_WYE_SYSTEMS, isTpError, threePhase } from '@/lib/calculations/power';
 import { conductor } from '@/lib/verified/awg';
 import { editionGroups, editionLabel, NEC_ADOPTION_DOMAIN, NOT_VERIFIED, stateName } from '@/lib/verified/nec-adoption';
 
@@ -1089,6 +1090,208 @@ export function LowVoltageBars() {
     <div>
       <LvBarPlot narrow={false} />
       <LvBarPlot narrow />
+    </div>
+  );
+}
+
+// ── Three-phase: line to line and line to neutral on a wye system (three-phase calculator, WSZ-006d) ───────────────
+
+const TP = 'calc:power';
+const NOMINAL = 'us-nominal-voltages';
+const POLY = 'mit-polyphase-networks';
+const PFC = 'doe-power-factor-cost';
+/** The system the phasor drawing shows: the larger nominal wye system (480Y/277 V). */
+export const WYE_DRAWN = TP_WYE_SYSTEMS[TP_WYE_SYSTEMS.length - 1];
+const PHASOR = '#57514c';
+
+function PhasorPlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const R = narrow ? 96 : 140;
+  const cx = W / 2;
+  const cy = narrow ? 124 : 176;
+  const H = cy + R / 2 + (narrow ? 52 : 58);
+  const tip = (deg: number) => ({ x: cx + R * Math.cos((deg * Math.PI) / 180), y: cy - R * Math.sin((deg * Math.PI) / 180) });
+  // A up, B lower right, C lower left: 120° apart
+  const A = tip(90);
+  const B = tip(-30);
+  const C = tip(210);
+  const head = (to: { x: number; y: number }) => {
+    const dx = to.x - cx;
+    const dy = to.y - cy;
+    const len = Math.hypot(dx, dy);
+    const ux = dx / len;
+    const uy = dy / len;
+    const bx = to.x - ux * 11;
+    const by = to.y - uy * 11;
+    return `M${to.x},${to.y}L${bx - uy * 5},${by + ux * 5}L${bx + uy * 5},${by - ux * 5}Z`;
+  };
+  const arcR = narrow ? 24 : 30;
+  const arc = `M${cx},${cy - arcR}A${arcR},${arcR} 0 0 1 ${cx + arcR * Math.cos(Math.PI / 6)},${cy + arcR * Math.sin(Math.PI / 6)}`;
+  const fs = narrow ? 13 : 14;
+  const id = narrow ? 'tp-phasors-narrow' : 'tp-phasors-wide';
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={NOMINAL}
+    >
+      <title id={`${id}-title`}>
+        {`The three line-to-neutral voltages of a ${WYE_DRAWN.lineVolts}Y/${WYE_DRAWN.neutralVolts} V system, ${WYE_DRAWN.neutralVolts} V each and 120° apart, and the ${WYE_DRAWN.lineVolts} V between two lines, √3 times longer`}
+      </title>
+      {[A, B, C].map((t, k) => (
+        <g key={k}>
+          <line x1={cx} y1={cy} x2={t.x} y2={t.y} stroke={PHASOR} strokeWidth={2.5} pathLength={1} className="viz-draw" />
+          <path d={head(t)} fill={PHASOR} className="viz-pop" />
+        </g>
+      ))}
+      {/* the line-to-line voltage between B and C */}
+      <line x1={C.x} y1={C.y} x2={B.x} y2={B.y} stroke={INK} strokeWidth={3.5} pathLength={1} className="viz-draw" />
+      <path d={arc} fill="none" stroke={MUTED} strokeWidth={1.5} />
+      <circle cx={cx} cy={cy} r={4} fill={INK} />
+      <text x={cx - 10} y={cy + 5} textAnchor="end" fontSize={fs} fontWeight={700} fill={INK}>
+        N
+      </text>
+      <text x={A.x} y={A.y - 8} textAnchor="middle" fontSize={fs} fontWeight={700} fill={INK}>
+        A
+      </text>
+      <text x={B.x + 8} y={B.y + 5} fontSize={fs} fontWeight={700} fill={INK}>
+        B
+      </text>
+      <text x={C.x - 8} y={C.y + 5} textAnchor="end" fontSize={fs} fontWeight={700} fill={INK}>
+        C
+      </text>
+      <text x={cx + 10} y={cy - R * (narrow ? 0.62 : 0.58)} fontSize={fs} fill={INK} className="viz-pop">
+        <Val v={WYE_DRAWN.neutralVolts} unit="V" src={NOMINAL} svg /> to neutral
+      </text>
+      <text x={cx + arcR + 6} y={cy + 4} fontSize={13} fill={MUTED} data-src={POLY}>
+        <Num v={120} src={POLY} svg />°
+      </text>
+      <text x={cx} y={B.y + (narrow ? 26 : 30)} textAnchor="middle" fontSize={fs} fontWeight={700} fill={INK} className="viz-pop">
+        <Val v={WYE_DRAWN.lineVolts} unit="V" src={NOMINAL} svg /> line to line
+      </text>
+      <text x={cx} y={B.y + (narrow ? 44 : 50)} textAnchor="middle" fontSize={13} fill={MUTED} data-src={TP}>
+        = √3 × <Val v={WYE_DRAWN.lineVolts / SQRT3} unit="V" src={TP} format={{ sig: 4 }} svg />
+      </text>
+    </svg>
+  );
+}
+
+/** A wye system's three voltages to neutral and the voltage between two lines (MIT 6.061 polyphase notes). */
+export function WyePhasors() {
+  return (
+    <div>
+      <PhasorPlot narrow={false} />
+      <PhasorPlot narrow />
+    </div>
+  );
+}
+
+// ── Three-phase: the power triangle before and after a capacitor bank (the golden case, 100 kW from PF 0.80 to 0.95) ─
+
+/** Golden case "100 kW from PF 0.80 to 0.95" (research/golden-cases.json, pf-correction), at 480 V for its currents. */
+export const PF_EXAMPLE = (() => {
+  const r = threePhase({ volts: 480, known: 'kw-pf', kw: 100, pf: 0.8, targetPf: 0.95 });
+  if (isTpError(r) || !r.correction) throw new Error('PF_EXAMPLE: the golden correction has no result');
+  return r;
+})();
+
+function TrianglePlot({ narrow }: { narrow: boolean }) {
+  const r = PF_EXAMPLE;
+  const c = r.correction;
+  if (!c) throw new Error('TrianglePlot: no correction');
+  const W = narrow ? 288 : 560;
+  const k = narrow ? 1.5 : 3.1; // px per kW and per kVAR: one scale for both sides
+  const x0 = narrow ? 14 : 30;
+  const top = narrow ? 24 : 26;
+  const base = top + r.kvar * k;
+  const H = base + (narrow ? 78 : 44);
+  const xP = x0 + r.kw * k;
+  const yQ1 = base - r.kvar * k;
+  const yQ2 = base - c.kvarAfter * k;
+  const sig = { sig: 4 };
+  const whole = { upTo: 2 };
+  const pf2 = { fixed: 2 };
+  const fs = narrow ? 13 : 14;
+  const id = narrow ? 'tp-triangle-narrow' : 'tp-triangle-wide';
+  const lx = xP + 10;
+  const before = (
+    <>
+      <Val v={r.kva} unit="kVA" src={TP} format={whole} svg /> at PF <Num v={r.pf} src={TP} format={pf2} svg />
+    </>
+  );
+  const after = (
+    <>
+      <Val v={c.kvaAfter} unit="kVA" src={TP} format={sig} svg /> at PF <Num v={c.targetPf} src={TP} format={pf2} svg />
+    </>
+  );
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={TP}
+    >
+      <title id={`${id}-title`}>
+        {`Power triangle of a ${r.kw} kW load, drawn to scale: at power factor 0.80 it draws ${r.kvar} kVAR and ${r.kva} kVA; a ${c.capKvar.toPrecision(4)} kVAR capacitor bank brings it to power factor 0.95, ${c.kvarAfter.toPrecision(4)} kVAR and ${c.kvaAfter.toPrecision(4)} kVA`}
+      </title>
+      {/* real power along the bottom, reactive power up the right side, apparent power as the long sides */}
+      <line x1={x0} y1={base} x2={xP} y2={base} stroke={INK} strokeWidth={3} pathLength={1} className="viz-draw" />
+      <line x1={xP} y1={base} x2={xP} y2={yQ2} stroke={PHASOR} strokeWidth={3} pathLength={1} className="viz-draw" />
+      <line x1={xP} y1={yQ2} x2={xP} y2={yQ1} stroke={PHASOR} strokeWidth={3} strokeDasharray="5 4" />
+      <line x1={x0} y1={base} x2={xP} y2={yQ1} stroke={MUTED} strokeWidth={2} pathLength={1} className="viz-draw" />
+      <line x1={x0} y1={base} x2={xP} y2={yQ2} stroke={INK} strokeWidth={2.5} pathLength={1} className="viz-draw" />
+      <text x={(x0 + xP) / 2} y={base + 24} textAnchor="middle" fontSize={fs} fontWeight={700} fill={INK}>
+        <Val v={r.kw} unit="kW" src={TP} svg /> real power
+      </text>
+      <text x={lx} y={yQ1 + 4} fontSize={13} fill={MUTED}>
+        <Val v={r.kvar} unit="kVAR" src={TP} format={whole} svg /> before
+      </text>
+      {/* the capacitor's share of the side: from the corrected reactive power up to the original */}
+      <text x={lx} y={(yQ1 + yQ2) / 2 + 2} fontSize={fs} fontWeight={700} fill={INK} className="viz-pop" data-src={PFC}>
+        <Val v={c.capKvar} unit="kVAR" src={TP} format={sig} svg />
+      </text>
+      <text x={lx} y={(yQ1 + yQ2) / 2 + (narrow ? 18 : 20)} fontSize={13} fill={MUTED} className="viz-pop">
+        capacitor
+      </text>
+      <text x={lx} y={(yQ2 + base) / 2 + 4} fontSize={fs} fill={INK} className="viz-pop">
+        <Val v={c.kvarAfter} unit="kVAR" src={TP} format={sig} svg /> after
+      </text>
+      {narrow ? (
+        <>
+          <Key x={x0} y={base + 50} color={MUTED}>
+            {before}
+          </Key>
+          <Key x={x0} y={base + 70} color={INK}>
+            {after}
+          </Key>
+        </>
+      ) : (
+        <>
+          <text x={x0 + (xP - x0) * 0.42 - 8} y={base - r.kvar * k * 0.42 - 12} textAnchor="end" fontSize={14} fill={MUTED}>
+            {before}
+          </text>
+          <text x={xP - 12} y={base - 14} textAnchor="end" fontSize={14} fontWeight={700} fill={INK}>
+            {after}
+          </text>
+        </>
+      )}
+    </svg>
+  );
+}
+
+/** The power triangle before and after power factor correction, to one scale (DOE/GO-10096-286's triangle). */
+export function PowerTriangle() {
+  return (
+    <div>
+      <TrianglePlot narrow={false} />
+      <TrianglePlot narrow />
     </div>
   );
 }

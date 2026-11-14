@@ -22,5 +22,9 @@
   {
     "date": "2026-11-14",
     "text": "Rebuilt the low voltage calculator. It now takes the load in amps or watts and any DC voltage, gives the copper area in circular mils and mm², and shows the drop of the chosen size and the sizes around it. Removed safety and installation advice that cited no source."
+  },
+  {
+    "date": "2026-11-15",
+    "text": "Rebuilt the three-phase calculator. It now takes any line-to-line voltage and any two of kW, kVA, amps and power factor, gives the reactive power and the line-to-neutral voltage of 208Y/120 V and 480Y/277 V systems, and sizes the capacitor bank for a target power factor. Removed the 600Y/347 V system, which is not among the U.S. nominal voltages the site cites, and sections on safety, load balancing, troubleshooting and international practice that cited no source."
   }
 ]

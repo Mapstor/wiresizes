@@ -72,7 +72,7 @@ const RES = 'conductor-resistance-20c';
 const GEO = 'awg-geometry';
 const AMP = 'nec-310-16';
 const NOTE = 'nec-continuous-load';
-const POWER = 'power-definitions';
+const SI = 'nist-sp330-si-units';
 const CALC = `calc:${ENGINE_ID}`;
 const SIG = { sig: LV_SIG };
 
@@ -323,7 +323,7 @@ export default function LowVoltageCalculatorPage() {
             <h2 id="voltage" className={H2}>
               Why a higher voltage needs less copper
             </h2>
-            <p className={P} data-src={POWER}>
+            <p className={P} data-src={SI}>
               For the same power, twice the voltage draws half the current (I = P ÷ V). The drop allowed doubles too, since it is a share of a
               voltage twice as high. The copper area needed is in proportion to the current and in inverse proportion to the allowed drop, so it
               falls to a quarter.
@@ -437,7 +437,7 @@ export default function LowVoltageCalculatorPage() {
 
           <section aria-label="Sources and notices" className={LOOK_SOURCES_SECTION}>
             <Sources
-              domains={[RES, GEO, AMP, NOTE, POWER]}
+              domains={[RES, GEO, AMP, NOTE, SI]}
               headingClassName={LOOK_SOURCES_HEADING}
               listClassName={LOOK_SOURCES_LIST}
               linkClassName={LINK}
