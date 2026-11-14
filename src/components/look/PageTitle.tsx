@@ -3,10 +3,11 @@
 // with a colon, " " otherwise), and only its non-space part is hidden from view.
 import { LOOK_H1, LOOK_H1_MAIN, LOOK_H1_SUB } from '@/components/look/styles';
 
-export function PageTitle({ main, sub, joiner = ' ' }: { main: string; sub?: string; joiner?: string }) {
+export function PageTitle({ main, sub, joiner = ' ', src }: { main: string; sub?: string; joiner?: string; src?: string }) {
   const mark = joiner.trim();
   return (
-    <h1 className={LOOK_H1}>
+    // src: the source of any number in the title (data-src, gate b)
+    <h1 className={LOOK_H1} data-src={src}>
       <span className={LOOK_H1_MAIN}>
         {main}
         {sub && mark && <span className="sr-only">{mark}</span>}

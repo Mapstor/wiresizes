@@ -107,10 +107,10 @@ const GOV_CURRENT = lv12(5, 5);
 const GOV_DROP = lv12(20, 20);
 if (GOV_CURRENT.governs !== 'current' || GOV_DROP.governs !== 'voltage drop') throw new Error('low voltage page: the governs examples changed');
 
-const TOC: [string, string][] = [
+const TOC: ([string, string] | [string, string, string])[] = [
   ['read', 'Reading the result'],
   ['examples', 'Worked examples'],
-  ['chart', '12 V wire size chart'],
+  ['chart', '12 V wire size chart', `calc:${ENGINE_ID}`],
   ['governs', 'Drop or current: which sets the size'],
   ['voltage', 'Why a higher voltage needs less copper'],
   ['formula', 'The formula'],
@@ -145,7 +145,7 @@ export default function LowVoltageCalculatorPage() {
         <CombinedSchema webApp={webAppData} />
 
         <header className="pt-10 sm:pt-12">
-          <PageTitle main="Low Voltage Calculator" sub="Wire Size for 12 V, 24 V and 48 V DC" joiner=": " />
+          <PageTitle main="Low Voltage Calculator" sub="Wire Size for 12 V, 24 V and 48 V DC" joiner=": " src={CALC} />
           <p className={clsx(LOOK_LEAD, 'mt-5')}>
             Enter the DC voltage, the load and the one-way length to get the copper size that keeps the voltage drop within your target and
             carries the current.
@@ -234,7 +234,7 @@ export default function LowVoltageCalculatorPage() {
           </section>
 
           <section aria-labelledby="chart" className="space-y-5">
-            <h2 id="chart" className={H2}>
+            <h2 id="chart" className={H2} data-src={CALC}>
               12 V wire size chart
             </h2>
             <p className={P} data-src={CALC}>
@@ -400,14 +400,18 @@ export default function LowVoltageCalculatorPage() {
               </p>
             </div>
             <div className="space-y-1.5">
-              <h3 className={H3}>Why does a 12 V system need such thick wire?</h3>
+              <h3 className={H3}>
+                Why does a <Val v={12} unit="V" src={CALC} /> system need such thick wire?
+              </h3>
               <p className={P}>
                 The same power at <Val v={12} unit="V" src={CALC} /> draws ten times the current it would at <Val v={120} unit="V" src={CALC} />, and a
                 given percent of <Val v={12} unit="V" src={CALC} /> is a tenth of the volts. Both push the copper area up.
               </p>
             </div>
             <div className="space-y-1.5">
-              <h3 className={H3}>Does 24 V need smaller wire than 12 V?</h3>
+              <h3 className={H3}>
+                Does <Val v={24} unit="V" src={CALC} /> need smaller wire than <Val v={12} unit="V" src={CALC} />?
+              </h3>
               <p className={P}>
                 Yes: for the same power and the same percent drop, a quarter of the copper area, which is about six gauge steps smaller.
               </p>
@@ -421,7 +425,9 @@ export default function LowVoltageCalculatorPage() {
               </p>
             </div>
             <div className="space-y-1.5">
-              <h3 className={H3}>Should the run be sized at 20 °C or 75 °C?</h3>
+              <h3 className={H3}>
+                Should the run be sized at <Val v={20} unit="°C" src={RES} /> or <Val v={75} unit="°C" src={AMP} />?
+              </h3>
               <p className={P}>
                 <Val v={75} unit="°C" src={AMP} /> is the safer choice and the calculator&apos;s start: copper&apos;s resistance there is higher, so the
                 size covers a warm conductor. <Val v={20} unit="°C" src={RES} /> suits a lightly loaded run at room temperature.
