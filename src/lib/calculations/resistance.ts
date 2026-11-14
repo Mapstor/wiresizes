@@ -2,7 +2,7 @@
 // copper R20 from HB100 (kcmil sizes calculated), α 0.00393; aluminum EC-H19 R20 calculated from HB109
 // constants, α 0.00403, 12 AWG and larger. Power loss: 2·I²·R·L/1000 for DC or single-phase,
 // 3·I²·R·L/1000 for three-phase (R in Ω per 1000 ft, L one way in ft), in watts.
-import { AWG_CONSTANTS, awgRow, conductor } from '../verified/awg';
+import { AWG_CONSTANTS, AWG_TABLE, KCMIL_TABLE, areaCmil, awgRow, conductor, sizeKeyFromAwgName } from '../verified/awg';
 import type { Material, SizeKey } from '../verified/awg';
 import { TABLE_310_16_SIZES } from '../verified/nec-310-16';
 
@@ -150,3 +150,141 @@ export const RESISTANCE_DEFAULTS = {
   circuit: 'single' as CircuitType,
   maxLoopOhms: 0.5,
 };
+
+// ── WSZ-006: the wire resistance calculator's calculation path ──────────────────────────────────────────────────────
+
+/** Feet in a kilometre, by the definition of the foot (0.3048 m). */
+export const FT_PER_KM = 1000 / 0.3048;
+
+/** The calculator's temperature range and its quick choices, °C: 20 °C is the tables' temperature, 75 °C the NEC column's. */
+export const TOOL_TEMP_MIN_C = -40;
+export const TOOL_TEMP_MAX_C = 90;
+export const TOOL_TEMP_QUICK_C = [20, 75] as const;
+/** The calculator's length range, ft (1 to 5,000 ft; 0.3 to 1,524 m). */
+export const TOOL_LENGTH_MIN_FT = 1;
+export const TOOL_LENGTH_MAX_FT = 5000;
+
+/** Every size with a resistance for the material, thin to thick: 40 AWG to 4/0, then 250 to 2000 kcmil (aluminum EC-H19 from 12 AWG). */
+export function toolSizes(material: Material): SizeKey[] {
+  const awg = [...AWG_TABLE].reverse().map((row) => sizeKeyFromAwgName(row.awg));
+  const kcmil = KCMIL_TABLE.map((row) => String(row.kcmil));
+  return [...awg, ...kcmil].filter((key) => r20(key, material) !== null);
+}
+
+/**
+ * The significant figures a size's resistance carries, at any temperature and length. NIST Handbook 100 prints copper
+ * Ω per 1000 ft to four figures below 1 Ω and to three from 1 Ω up (awg.json: 0.9988, then 1.26, 1.59, 2.0 for 2.00),
+ * so 12 AWG's 1.59 never shows as "1.590". kcmil and aluminum values are calculated from five-figure constants: 4.
+ */
+export function resistanceSig(key: SizeKey, material: Material): number {
+  const row = material === 'Cu' ? awgRow(key) : null;
+  if (!row) return 4;
+  return row.r20_cu_ohm_per_1000ft < 1 ? 4 : 3;
+}
+
+/** The same for Ω per km: HB100's metric column has four figures throughout, and calculated values get 4. */
+export const PER_KM_SIG = 4;
+
+/** The sizes people buy, thin to thick: every gauge thinner than 18 AWG, then Table 310.16's sizes from 18 AWG up. */
+export function commonSizes(material: Material): SizeKey[] {
+  return toolSizes(material).filter((k) => TABLE_310_16_SIZES.includes(k) || (awgRow(k)?.n ?? -99) > 18);
+}
+
+/** Ω per km at `tempC`: copper AWG sizes from HB100's metric column, other sizes from Ω per 1000 ft. */
+export function ohmsPerKm(key: SizeKey, material: Material, tempC: number): number | null {
+  const metric = resistancePerKmAt(key, material, tempC);
+  if (metric !== null) return metric;
+  const perKft = resistanceAt(key, material, tempC);
+  return perKft === null ? null : (perKft * FT_PER_KM) / 1000;
+}
+
+/** A size's area in mm², from its area in circular mils. */
+export function areaMm2(key: SizeKey): number {
+  return areaCmil(key) * AWG_CONSTANTS.mm2_per_cmil;
+}
+
+/** The size of the material nearest an area in mm², nearest on a log scale as gauge steps run; null for a non-positive area. */
+export function nearestSizeForMm2(mm2: number, material: Material): SizeKey | null {
+  if (!(mm2 > 0)) return null;
+  let best: SizeKey | null = null;
+  let bestGap = Infinity;
+  for (const key of toolSizes(material)) {
+    const gap = Math.abs(Math.log(areaMm2(key) / mm2));
+    if (gap < bestGap) {
+      best = key;
+      bestGap = gap;
+    }
+  }
+  return best;
+}
+
+export interface RunValues {
+  /** Ω per 1000 ft */
+  perKft: number;
+  /** Ω per km */
+  perKm: number;
+  /** One conductor over the length, Ω */
+  conductor: number;
+  /** Out and back in a two-wire circuit of the length (twice the wire), Ω */
+  loop: number;
+}
+
+export interface RunResult extends RunValues {
+  size: SizeKey;
+  material: Material;
+  lengthFt: number;
+  tempC: number;
+  /** Significant figures of the per-1000-ft, conductor and loop values (resistanceSig) and of per km (perKmSig). */
+  sig: number;
+  kmSig: number;
+  at20: RunValues;
+  at75: RunValues;
+  /** Up to two thinner and two thicker sizes of the material, thin to thick, the chosen size among them, at `tempC`: Table 310.16's
+   *  sizes from 18 AWG up and every gauge thinner, so 14 AWG sits between 18, 16, 12 and 10 AWG. */
+  neighbours: { size: SizeKey; conductor: number; sig: number }[];
+}
+
+function runValues(size: SizeKey, material: Material, lengthFt: number, tempC: number): RunValues | null {
+  const perKft = resistanceAt(size, material, tempC);
+  const perKm = ohmsPerKm(size, material, tempC);
+  if (perKft === null || perKm === null || !(lengthFt >= 0)) return null;
+  const conductorOhms = (perKft * lengthFt) / 1000;
+  return { perKft, perKm, conductor: conductorOhms, loop: 2 * conductorOhms };
+}
+
+/** Resistance of a run: one conductor and a two-wire circuit, per 1000 ft and per km, at `tempC`, 20 °C and 75 °C. */
+export function resistanceRun(size: SizeKey, material: Material, lengthFt: number, tempC: number): RunResult | null {
+  const at = runValues(size, material, lengthFt, tempC);
+  const at20 = runValues(size, material, lengthFt, 20);
+  const at75 = runValues(size, material, lengthFt, 75);
+  if (!at || !at20 || !at75) return null;
+  const sizes = commonSizes(material).includes(size) ? commonSizes(material) : toolSizes(material).filter((k) => k === size || commonSizes(material).includes(k));
+  const i = sizes.indexOf(size);
+  const neighbours = sizes
+    .slice(Math.max(0, i - 2), i + 3)
+    .map((key) => ({
+      size: key,
+      conductor: ((resistanceAt(key, material, tempC) as number) * lengthFt) / 1000,
+      sig: resistanceSig(key, material),
+    }));
+  return {
+    size,
+    material,
+    lengthFt,
+    tempC,
+    sig: resistanceSig(size, material),
+    kmSig: PER_KM_SIG,
+    ...at,
+    at20,
+    at75,
+    neighbours,
+  };
+}
+
+/** The thinnest common size of `to` whose resistance per length is at most that of `size` in `from`, at 20 °C (both materials scale alike with temperature within 0.5 %). */
+export function equivalentSize(size: SizeKey, from: Material, to: Material): SizeKey | null {
+  const target = r20(size, from);
+  if (target === null) return null;
+  return commonSizes(to).find((key) => (r20(key, to) as number) <= target) ?? null;
+}
+

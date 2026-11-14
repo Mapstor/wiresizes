@@ -10,5 +10,9 @@
   {
     "date": "2026-11-12",
     "text": "Replaced the NEC code compliance guide, whose summaries of overcurrent protection and grounding cited code sections this site had not checked against a source, with NEC edition by state: the edition each state has adopted, read from state government records."
+  },
+  {
+    "date": "2026-11-14",
+    "text": "Rebuilt the wire resistance calculator from NIST's copper wire tables. It now covers every AWG gauge and the kcmil sizes, and prints each resistance to the figures NIST publishes, where it had added a digit. Removed sections on skin effect, testing and safety factors that cited no source."
   }
 ]

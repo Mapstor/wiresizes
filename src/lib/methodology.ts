@@ -41,7 +41,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'wire-gauge',
     domain: 'awg-geometry',
     title: 'Wire gauge sizes and areas',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, GROUND_WIRE, LOW_VOLTAGE, SERVICE_ENTRANCE, AWG_CHART, HOME],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, GROUND_WIRE, WIRE_RESISTANCE, LOW_VOLTAGE, SERVICE_ENTRANCE, AWG_CHART, HOME],
   },
   {
     id: 'resistance',
@@ -53,7 +53,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'ampacity',
     domain: 'nec-310-16',
     title: 'Ampacity',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, HOME],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, HOME],
   },
   {
     id: 'corrections',

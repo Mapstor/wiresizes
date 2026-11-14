@@ -73,6 +73,11 @@ typography:
     fontSize: "14px"
     fontWeight: 400
     lineHeight: 1.375
+  control:
+    fontFamily: "Azeret Mono, ui-monospace, monospace"
+    fontSize: "16px"
+    fontWeight: 400
+    lineHeight: 1.25
 rounded:
   none: "0px"
   control: "6px"
@@ -252,6 +257,14 @@ A chart sits in a Figure (caption, 2 px ink rule, source line) next to the ruled
 - **Hover:** pointing at a mark shows its values in a white box with a 1 px ink outline and no shadow.
 - **Motion:** tied to the scroll. As a chart comes into view, its lines draw from the first point, bars grow from the baseline and dots and tiles appear, through CSS scroll-driven animation with no script. Every motion starts as its mark enters at the bottom of the screen and is finished within the bottom fifth to third of it (bars first, on an exponential ease-out, since a bar's length is its value), so a chart at rest shows true values. Browsers without scroll timelines, and readers who ask for reduced motion, see the finished chart.
 - **Table bars:** under each figure in an ampere column, a 5 px bar on a fixed track (44 px on phones, 88 px from 640 px) that ends under the figure, so every column in the table shares one scale.
+
+### Calculator
+A calculator is a form on the page, not a card: a 2 px ink rule above it, no frame, no fill.
+- **Fields:** the label in Archivo 600 at 15 px above the control; a hint in Muted Gray at 14 px below it. Inputs and selects are 44 px tall, white, with a 1 px Strong Rule border and 6 px corners; their text is Azeret Mono at 16 px (Control), the size below which phones zoom into a field. An invalid field takes a 2 px ink border, and its message replaces the hint in ink at 14 px, semibold.
+- **Choices:** a short set of options (copper or aluminum, ft or m, °C or °F) is a row of segments inside one 1 px ink border; the chosen segment is filled with ink and its text turns white.
+- **Buttons:** Calculate is the one filled control on the page: ink, white text, 44 px tall, 6 px corners, Archivo 600. Reset, the quick values (20 °C, 75 °C), Copy link and Print are white with a 1 px ink border and fill with ink on hover.
+- **Result:** appears only after Calculate, under its own 2 px ink rule. A 15 px label says what was calculated; the main value follows in Azeret Mono at 34 px (46 px from 640 px); then one ruled table of the values side by side, short paragraphs that explain each number, the result chart, the assumptions with a link to the methodology, and the next pages. Calculated values keep the significant figures of their source.
+- **Result chart:** one bar per nearby size on a shared scale, each value in its own right-aligned column; the chosen size in its metal's color (The Material Color Rule), the others in Strong Rule. The bars grow once, in 0.7 s, when the result appears (none under reduced motion).
 
 ### Gauge Entry
 One gauge per entry: a 96 px square column holding its conductor drawn at 200 px per inch, the gauge as a title, then a definition list (diameter, area, resistance, one row per ampacity column) in 15 px with tabular figures and Muted Gray terms, and a note when the code limits the size. A hairline above each entry.

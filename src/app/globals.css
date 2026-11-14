@@ -392,6 +392,15 @@
   }
 }
 
+/* A result drawn after Calculate (the wire resistance calculator's bars): the bars grow once, on a timer, since the
+   result appears where the reader is already looking (WSZ-006). */
+@media (prefers-reduced-motion: no-preference) {
+  .viz-grow-once {
+    transform-origin: 0 50%;
+    animation: viz-grow-x 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
 /* Each motion starts as the mark comes in at the bottom of the screen and is finished in the bottom fifth to third of
    it, so a chart at rest shows its true values: a bar's length is its value, so bars finish first (an exponential
    ease-out puts most of the growth in the first part of the range); lines draw at an even pace and are complete by
