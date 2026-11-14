@@ -1524,3 +1524,88 @@ export function PfCurrentBars() {
     </div>
   );
 }
+
+// ── Volts to amps: the current of one 4,500 W load against voltage, as a fixed power and as a fixed resistance ───────
+
+/** Golden case "4500 W at 240 V" (power) and the 12.8 Ω the same element has at 240 V (R = V² ÷ P). */
+export const VA_CHART = { watts: 4500, volts: 240, voltsFrom: 100, voltsTo: 300 };
+export const VA_CHART_OHMS = (VA_CHART.volts * VA_CHART.volts) / VA_CHART.watts;
+
+function VoltsAmpsPlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 40 : 48;
+  const right = narrow ? 16 : 24;
+  const top = narrow ? 62 : 44;
+  const ph = narrow ? 170 : 210;
+  const H = top + ph + 46;
+  const pw = W - left - right;
+  const { watts, volts, voltsFrom, voltsTo } = VA_CHART;
+  const ampsMax = 50;
+  const x = (v: number) => left + ((v - voltsFrom) / (voltsTo - voltsFrom)) * pw;
+  const y = (a: number) => top + ph - (Math.min(a, ampsMax) / ampsMax) * ph;
+  const steps = 80;
+  const path = (f: (v: number) => number) =>
+    Array.from({ length: steps + 1 }, (_, i) => {
+      const v = voltsFrom + ((voltsTo - voltsFrom) * i) / steps;
+      return `${i === 0 ? 'M' : 'L'}${x(v).toFixed(1)},${y(f(v)).toFixed(1)}`;
+    }).join('');
+  const atPower = (v: number) => watts / v;
+  const atOhms = (v: number) => v / VA_CHART_OHMS;
+  const meet = atPower(volts);
+  const id = narrow ? 'volts-amps-narrow' : 'volts-amps-wide';
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={TP}
+    >
+      <title id={`${id}-title`}>
+        {`Current against voltage for a ${watts} W load: held at ${watts} W the current falls as the voltage rises; as a fixed ${VA_CHART_OHMS} Ω resistance it rises with the voltage. Both give ${meet} A at ${volts} V.`}
+      </title>
+      <Key x={0} y={narrow ? 16 : 18} color={INK}>
+        Fixed power, <Val v={watts} unit="W" src={TP} svg />
+      </Key>
+      <Key x={narrow ? 0 : 230} y={narrow ? 36 : 18} color={MUTED}>
+        Fixed resistance, <Val v={VA_CHART_OHMS} unit="Ω" src={TP} svg />
+      </Key>
+      {[0, 10, 20, 30, 40, 50].map((a) => (
+        <g key={a}>
+          <line x1={left} x2={W - right} y1={y(a)} y2={y(a)} stroke={GRID} strokeWidth={1} />
+          <text x={left - 8} y={y(a) + 4.5} textAnchor="end" fontSize={13} fill={MUTED}>
+            <Num v={a} src={TP} svg />
+          </text>
+        </g>
+      ))}
+      {[100, 150, 200, 250, 300].map((v) => (
+        <text key={v} x={x(v)} y={top + ph + 20} textAnchor="middle" fontSize={13} fill={MUTED}>
+          <Num v={v} src={TP} svg />
+        </text>
+      ))}
+      <text x={left + pw / 2} y={H - 6} textAnchor="middle" fontSize={13} fill={MUTED}>
+        Volts (amps on the left)
+      </text>
+      <path d={path(atPower)} fill="none" stroke={INK} strokeWidth={3} pathLength={1} className="viz-draw" />
+      <path d={path(atOhms)} fill="none" stroke={MUTED} strokeWidth={2} pathLength={1} className="viz-draw" />
+      <g className="viz-pop">
+        <circle cx={x(volts)} cy={y(meet)} r={5} fill={INK} stroke="#fff" strokeWidth={2} />
+        <text x={x(volts) + 10} y={y(meet) - 10} fontSize={13} fill={INK}>
+          <Val v={meet} unit="A" src={TP} svg /> at <Val v={volts} unit="V" src={TP} svg />
+        </text>
+      </g>
+    </svg>
+  );
+}
+
+/** The current of one load against voltage: held at a fixed power, and as a fixed resistance. */
+export function VoltsAmpsChart() {
+  return (
+    <div>
+      <VoltsAmpsPlot narrow={false} />
+      <VoltsAmpsPlot narrow />
+    </div>
+  );
+}

@@ -141,3 +141,39 @@ describe('WSZ-007b converters: refusals', () => {
     assert.ok(isOhmError(ampsFromResistance(240, Number.NaN)));
   });
 });
+
+describe('WSZ-007b converters: sources and the old components', () => {
+  const CITED: Record<string, string[]> = {
+    '/calculators/kilowatts-to-amps-calculator': ['eia-power-glossary', 'doe-motor-load-efficiency', 'mit-polyphase-networks', 'doe-power-factor-cost', 'us-nominal-voltages'],
+    '/calculators/kva-to-amps-calculator': ['eia-power-glossary', 'mit-polyphase-networks', 'doe-power-factor-cost', 'us-nominal-voltages'],
+    '/calculators/volts-to-amps-calculator': ['nist-sp330-si-units', 'eia-power-glossary', 'doe-motor-load-efficiency', 'mit-polyphase-networks', 'us-nominal-voltages'],
+  };
+  it('/methodology, the registry and the page map list each page under exactly the sources it cites', async () => {
+    const { METHODOLOGY_SECTIONS } = await import('../src/lib/methodology');
+    const { parseCsv } = await import('../src/lib/verified/csv.mjs');
+    const { readFileSync } = await import('node:fs');
+    const registry = parseCsv(readFileSync(new URL('../research/data-sources.csv', import.meta.url), 'utf8'));
+    const pageMap = parseCsv(readFileSync(new URL('../research/page-map.csv', import.meta.url), 'utf8'));
+    for (const [route, domains] of Object.entries(CITED)) {
+      const listed = METHODOLOGY_SECTIONS.filter((s) => s.citedOn.includes(route)).map((s) => s.domain);
+      assert.deepEqual([...listed].sort(), [...domains].sort(), route);
+      for (const d of domains) {
+        const row = registry.find((r: Record<string, string>) => r.domain === d);
+        assert.ok(row && row.status === 'verified' && row.pages_served.split(';').includes(route), `${d} → ${route}`);
+      }
+      const old = registry.find((r: Record<string, string>) => r.domain === 'power-definitions');
+      assert.ok(old && !old.pages_served.split(';').includes(route), `power-definitions still serves ${route}`);
+      const mapRow = pageMap.find((r: Record<string, string>) => Object.values(r).includes(route));
+      assert.ok(mapRow, route);
+      assert.deepEqual(mapRow.data_sources_all.split(';').sort(), [...domains].sort(), route);
+      const page = readFileSync(new URL(`../src/app${route}/page.tsx`, import.meta.url), 'utf8');
+      assert.ok(page.includes('<PowerConverterTool mode='), route);
+    }
+  });
+  it('the three old calculator components are gone', async () => {
+    const { existsSync } = await import('node:fs');
+    for (const f of ['KilowattsToAmpsCalculator', 'kVAToAmpsCalculator', 'VoltsToAmpsCalculator']) {
+      assert.equal(existsSync(new URL(`../src/components/calculators/${f}.tsx`, import.meta.url)), false, f);
+    }
+  });
+});

@@ -28,6 +28,9 @@ const WIRE_RESISTANCE = '/calculators/wire-resistance-calculator';
 const LOW_VOLTAGE = '/calculators/low-voltage-calculator';
 const THREE_PHASE = '/calculators/three-phase-calculator';
 const SINGLE_VS_THREE = '/guides/single-vs-three-phase';
+const KW_TO_AMPS = '/calculators/kilowatts-to-amps-calculator';
+const KVA_TO_AMPS = '/calculators/kva-to-amps-calculator';
+const VOLTS_TO_AMPS = '/calculators/volts-to-amps-calculator';
 const POWER_FACTOR = '/guides/power-factor-explained';
 const SERVICE_ENTRANCE = '/calculators/service-entrance-calculator';
 const AWG_CHART = '/guides/awg-wire-size-chart';
@@ -98,31 +101,31 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'power-terms',
     domain: 'eia-power-glossary',
     title: 'Real, reactive and apparent power',
-    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR],
+    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS],
   },
   {
     id: 'three-phase-power',
     domain: 'doe-motor-load-efficiency',
     title: 'Three-phase power',
-    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR],
+    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, VOLTS_TO_AMPS],
   },
   {
     id: 'line-voltages',
     domain: 'mit-polyphase-networks',
     title: 'Line-to-line and line-to-neutral voltage',
-    citedOn: [THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR],
+    citedOn: [THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS],
   },
   {
     id: 'power-factor-correction',
     domain: 'doe-power-factor-cost',
     title: 'Power factor correction',
-    citedOn: [THREE_PHASE, POWER_FACTOR],
+    citedOn: [THREE_PHASE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS],
   },
   {
     id: 'si-units',
     domain: 'nist-sp330-si-units',
     title: 'Watts, volts and ohms',
-    citedOn: [VOLTAGE_DROP, LOW_VOLTAGE],
+    citedOn: [VOLTAGE_DROP, LOW_VOLTAGE, VOLTS_TO_AMPS],
   },
   {
     // the converters and Ohm's law until WSZ-007 moves them to the rows above (one per document, WSZ-006d)
@@ -132,9 +135,6 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     citedOn: [
       '/calculators/watts-to-amps-calculator',
       '/calculators/amps-to-watts-calculator',
-      '/calculators/volts-to-amps-calculator',
-      '/calculators/kilowatts-to-amps-calculator',
-      '/calculators/kva-to-amps-calculator',
       '/calculators/ohms-law-calculator',
     ],
   },
@@ -142,7 +142,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'nominal-voltages',
     domain: 'us-nominal-voltages',
     title: 'Nominal system voltages',
-    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR],
+    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS],
   },
   {
     id: 'conversions',
