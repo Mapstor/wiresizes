@@ -342,7 +342,9 @@ export function threePhase(input: TpInput): TpResult | { error: TpError } {
       break;
   }
   const amps = known === 'amps-pf' || known === 'kw-amps' ? (input.amps as number) : ampsFromKva(kva, volts);
-  const kvar = Math.sqrt(Math.max(0, kva * kva - kw * kw));
+  // a difference below rounding noise is no reactive power (PF 1)
+  const diff = kva * kva - kw * kw;
+  const kvar = diff <= kva * kva * 1e-12 ? 0 : Math.sqrt(diff);
   const target = input.targetPf ?? null;
   if (target !== null && !(positive(target) && powerFactorValid(target))) return { error: 'input-invalid' };
   let correctionState: TpResult['correctionState'] = 'none';

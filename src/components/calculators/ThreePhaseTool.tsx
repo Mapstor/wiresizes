@@ -26,8 +26,9 @@ const DOE = 'doe-motor-load-efficiency';
 const PFC = 'doe-power-factor-cost';
 const MIT = 'mit-polyphase-networks';
 const LINK = 'text-ink underline decoration-cut-line decoration-2 underline-offset-[3px]';
-const SIG = { sig: TP_SIG };
 const VALUE_MAX = 1000000;
+/** A calculated value as shown: TP_SIG significant figures, without trailing zeros (75 kW, not 75.00 kW). */
+const r4 = (v: number) => Number(v.toPrecision(TP_SIG));
 
 const KNOWN_LABELS: Record<TpKnown, string> = {
   'kw-pf': 'kW and power factor',
@@ -317,7 +318,6 @@ export function ThreePhaseTool() {
 function sameShown(exact: number, fromShown: number): boolean {
   return Number(exact.toPrecision(TP_SIG)) === Number(fromShown.toPrecision(TP_SIG));
 }
-const shownOf = (v: number) => Number(v.toPrecision(TP_SIG));
 
 function Result({
   result,
@@ -348,7 +348,7 @@ function Result({
           ) : (
             <>
               At {vShown}, <Val v={fieldNumber(inputs.amps)} unit="A" src="input" /> in each line is{' '}
-              <Val v={result.kva} unit="kVA" src={CALC} format={SIG} /> of apparent power, less than the <Val v={kw} unit="kW" src="input" />{' '}
+              <Val v={r4(result.kva)} unit="kVA" src={CALC} /> of apparent power, less than the <Val v={kw} unit="kW" src="input" />{' '}
               entered.
             </>
           )}{' '}
@@ -363,20 +363,22 @@ function Result({
   const known = r.input.known;
   const entered = (f: ValueField) => FIELDS_OF[known].includes(f);
   const src = (f: ValueField) => (entered(f) ? 'input' : CALC);
-  const fmt = (f: ValueField) => (entered(f) ? undefined : SIG);
-  const I = <Val v={r.amps} unit="A" src={src('amps')} format={fmt('amps')} />;
-  const P = <Val v={r.kw} unit="kW" src={src('kw')} format={fmt('kw')} />;
-  const S = <Val v={r.kva} unit="kVA" src={src('kva')} format={fmt('kva')} />;
-  const Q = <Val v={r.kvar} unit="kVAR" src={CALC} format={SIG} />;
-  const PF = entered('pf') ? <Num v={r.pf} src="input" /> : <Num v={r.pf} src={CALC} format={SIG} />;
+  const value = (f: ValueField) => {
+    const v = f === 'kw' ? r.kw : f === 'kva' ? r.kva : f === 'amps' ? r.amps : r.pf;
+    return entered(f) ? v : r4(v);
+  };
+  const I = <Val v={value('amps')} unit="A" src={src('amps')} />;
+  const P = <Val v={value('kw')} unit="kW" src={src('kw')} />;
+  const S = <Val v={value('kva')} unit="kVA" src={src('kva')} />;
+  const Q = <Val v={r4(r.kvar)} unit="kVAR" src={CALC} />;
+  const PF = <Num v={value('pf')} src={src('pf')} />;
   const headline: 'amps' | 'kw' | 'pf' = !entered('amps') ? 'amps' : !entered('kw') ? 'kw' : 'pf';
 
   // shown values the worked sums start from: entered values as entered, calculated ones at TP_SIG figures
-  const sv = (f: ValueField) => (entered(f) ? fieldNumber(inputs[f]) : shownOf(f === 'kw' ? r.kw : f === 'kva' ? r.kva : f === 'amps' ? r.amps : r.pf));
-  const sKw = sv('kw');
-  const sKva = sv('kva');
-  const sAmps = sv('amps');
-  const sPf = sv('pf');
+  const sKw = value('kw');
+  const sKva = value('kva');
+  const sAmps = value('amps');
+  const sPf = value('pf');
   const eq = (exact: number, fromShown: number) => (sameShown(exact, fromShown) ? '=' : '≈');
 
   const rows: { key: string; label: React.ReactNode; value: React.ReactNode }[] = [
@@ -394,20 +396,20 @@ function Result({
                 Line to neutral, {r.wye.lineVolts}Y/{r.wye.neutralVolts} V system
               </span>
             ),
-            value: <Val v={r.lineToNeutral} unit="V" src={CALC} format={SIG} />,
+            value: <Val v={r4(r.lineToNeutral)} unit="V" src={CALC} />,
           },
         ]
       : []),
   ];
 
   const bars: ValueBarRow[] = [
-    { key: 'p', label: 'Real power', value: r.kw, unit: 'kW', src: src('kw'), format: fmt('kw'), strong: headline === 'kw' },
-    { key: 'q', label: 'Reactive power', value: r.kvar, unit: 'kVAR', src: CALC, format: SIG },
-    { key: 's', label: 'Apparent power', value: r.kva, unit: 'kVA', src: src('kva'), format: fmt('kva') },
+    { key: 'p', label: 'Real power', value: value('kw'), unit: 'kW', src: src('kw'), strong: headline === 'kw' },
+    { key: 'q', label: 'Reactive power', value: r4(r.kvar), unit: 'kVAR', src: CALC },
+    { key: 's', label: 'Apparent power', value: value('kva'), unit: 'kVA', src: src('kva') },
     ...(r.correction
       ? [
-          { key: 'qa', label: 'Reactive, after', value: r.correction.kvarAfter, unit: 'kVAR' as const, src: CALC, format: SIG },
-          { key: 'sa', label: 'Apparent, after', value: r.correction.kvaAfter, unit: 'kVA' as const, src: CALC, format: SIG },
+          { key: 'qa', label: 'Reactive, after', value: r4(r.correction.kvarAfter), unit: 'kVAR' as const, src: CALC },
+          { key: 'sa', label: 'Apparent, after', value: r4(r.correction.kvaAfter), unit: 'kVA' as const, src: CALC },
         ]
       : []),
   ];
@@ -515,16 +517,16 @@ function Result({
           </p>
         )}
         <p data-src={PFC}>
-          <strong>The reactive power:</strong> Q = √(S² − P²) = √({S}² − {P}²) {eq(r.kvar, Math.sqrt(Math.max(0, sKva * sKva - sKw * sKw)))} {Q}. It
+          <strong>The reactive power:</strong> Q = √(S² − P²) = √(({S})² − ({P})²) {eq(r.kvar, Math.sqrt(Math.max(0, sKva * sKva - sKw * sKw)))} {Q}. It
           acts at a right angle to the real power, so the three powers form a right triangle with S as its long side.
         </p>
         <p data-src={MIT}>
-          √3, about <Num v={SQRT3} src={CALC} format={SIG} />, is the ratio of the line-to-line to the line-to-neutral voltage.
+          √3, about <Num v={r4(SQRT3)} src={CALC} />, is the ratio of the line-to-line to the line-to-neutral voltage.
           {r.wye && (
             <>
               {' '}
               On this <span data-src={VOLTS}>{r.wye.lineVolts}Y/{r.wye.neutralVolts} V</span> system, each line is{' '}
-              <Val v={r.lineToNeutral} unit="V" src={CALC} format={SIG} /> from the neutral, the{' '}
+              <Val v={r4(r.lineToNeutral)} unit="V" src={CALC} /> from the neutral, the{' '}
               <Val v={r.wye.neutralVolts} unit="V" src={VOLTS} /> of its name.
             </>
           )}
@@ -542,15 +544,15 @@ function Result({
           <p>
             <strong>
               To raise the power factor to <Num v={r.correction.targetPf} src="input" />: a capacitor bank of{' '}
-              <Val v={r.correction.capKvar} unit="kVAR" src={CALC} format={SIG} />.
+              <Val v={r4(r.correction.capKvar)} unit="kVAR" src={CALC} />.
             </strong>{' '}
-            At the same {P}, the apparent power falls to <Val v={r.correction.kvaAfter} unit="kVA" src={CALC} format={SIG} /> and the current
-            in each line to <Val v={r.correction.ampsAfter} unit="A" src={CALC} format={SIG} />,{' '}
-            <Val v={r.correction.currentDownPct} unit="%" src={CALC} format={SIG} /> less.
+            At the same {P}, the apparent power falls to <Val v={r4(r.correction.kvaAfter)} unit="kVA" src={CALC} /> and the current in
+            each line to <Val v={r4(r.correction.ampsAfter)} unit="A" src={CALC} />,{' '}
+            <Val v={r4(r.correction.currentDownPct)} unit="%" src={CALC} /> less.
           </p>
           <p>
             The capacitor supplies the reactive power the load stops drawing from the source: {Q} before,{' '}
-            <Val v={r.correction.kvarAfter} unit="kVAR" src={CALC} format={SIG} /> after (S = P ÷ PF and Q = √(S² − P²) at the new power
+            <Val v={r4(r.correction.kvarAfter)} unit="kVAR" src={CALC} /> after (S = P ÷ PF and Q = √(S² − P²) at the new power
             factor). The current is multiplied by PF ÷ PF′ = {PF} ÷ <Num v={r.correction.targetPf} src="input" />.
           </p>
         </div>
