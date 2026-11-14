@@ -96,7 +96,7 @@ function ResistancePlot({ narrow }: { narrow: boolean }) {
       height={H}
       role="img"
       aria-labelledby={`${id}-title`}
-      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[720px]')}
+      className={clsx('viz-scope h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[720px]')}
       data-src={GEO}
     >
       <title id={`${id}-title`}>
@@ -133,36 +133,38 @@ function ResistancePlot({ narrow }: { narrow: boolean }) {
       <text x={left + pw / 2} y={H - 8} textAnchor="middle" fontSize={13} fill={MUTED}>
         AWG, thick to thin
       </text>
-      {/* ten gauge steps: ×10.16 */}
-      <g aria-hidden="true">
-        <line x1={x(p10.i)} x2={x(p20.i)} y1={y(p10.cu)} y2={y(p10.cu)} stroke={INK} strokeWidth={1} />
-        <line x1={x(p20.i)} x2={x(p20.i)} y1={y(p10.cu)} y2={y(p20.cu)} stroke={INK} strokeWidth={1} />
+      {/* ten gauge steps: ×10.16; it appears with the end values, once the lines are drawn */}
+      <g className="viz-end-fade">
+        <g aria-hidden="true">
+          <line x1={x(p10.i)} x2={x(p20.i)} y1={y(p10.cu)} y2={y(p10.cu)} stroke={INK} strokeWidth={1} />
+          <line x1={x(p20.i)} x2={x(p20.i)} y1={y(p10.cu)} y2={y(p20.cu)} stroke={INK} strokeWidth={1} />
+        </g>
+        <text x={x(p20.i) + 6} y={(y(p10.cu) + y(p20.cu)) / 2 + 4} fontSize={13} fontWeight={700} fill={INK}>
+          <Num v={areaRatio(10)} src={CALC} format={{ fixed: 2 }} prefix="×" svg />
+        </text>
+        <text
+          x={narrow ? x(p10.i) + 4 : (x(p10.i) + x(p20.i)) / 2}
+          y={y(p10.cu) + 17}
+          textAnchor={narrow ? 'start' : 'middle'}
+          fontSize={13}
+          fill={MUTED}
+        >
+          ten gauges
+        </text>
       </g>
-      <text x={x(p20.i) + 6} y={(y(p10.cu) + y(p20.cu)) / 2 + 4} fontSize={13} fontWeight={700} fill={INK}>
-        <Num v={areaRatio(10)} src={CALC} format={{ fixed: 2 }} prefix="×" svg />
-      </text>
-      <text
-        x={narrow ? x(p10.i) + 4 : (x(p10.i) + x(p20.i)) / 2}
-        y={y(p10.cu) + 17}
-        textAnchor={narrow ? 'start' : 'middle'}
-        fontSize={13}
-        fill={MUTED}
-      >
-        ten gauges
-      </text>
       <path d={line(alPts)} pathLength={1} fill="none" stroke={ALUMINUM} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" className="viz-draw" />
       <path d={line(cuPts)} pathLength={1} fill="none" stroke={COPPER} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" className="viz-draw" />
-      <circle cx={x(lastCu.i)} cy={y(lastCu.cu)} r={4.5} fill={COPPER} stroke="#ffffff" strokeWidth={2} className="viz-pop" />
-      <circle cx={x(lastAl.i)} cy={y(lastAl.v)} r={4.5} fill={ALUMINUM} stroke="#ffffff" strokeWidth={2} className="viz-pop" />
+      <circle cx={x(lastCu.i)} cy={y(lastCu.cu)} r={4.5} fill={COPPER} stroke="#ffffff" strokeWidth={2} className="viz-end" />
+      <circle cx={x(lastAl.i)} cy={y(lastAl.v)} r={4.5} fill={ALUMINUM} stroke="#ffffff" strokeWidth={2} className="viz-end" />
       {!narrow && (
-        <>
+        <g className="viz-end-fade">
           <text x={x(lastCu.i) + 10} y={y(lastCu.cu) + 4.5} fontSize={13} fill={INK}>
             <tspan data-size="40">40 AWG</tspan>
           </text>
           <text x={x(lastCu.i) + 10} y={y(lastCu.cu) + 21} fontSize={13} fill={MUTED} data-src={GEO}>
             <Val v={lastCu.cu} unit="Ω" src={GEO} svg />
           </text>
-        </>
+        </g>
       )}
       {/* the value of each gauge while the pointer is on it */}
       {RES_ROWS.map((r) => {
@@ -277,7 +279,7 @@ function DumbbellPlot({ narrow }: { narrow: boolean }) {
         );
       })}
       {!narrow && (
-        <text x={x(last.cu_75) + 10} y={yRow(DUMBBELL_ROWS.length - 1) + 4.5} fontSize={13} fill={INK}>
+        <text x={x(last.cu_75) + 10} y={yRow(DUMBBELL_ROWS.length - 1) + 4.5} fontSize={13} fill={INK} className="viz-pop">
           <Val v={last.cu_75} unit="A" src={AMP} svg />
         </text>
       )}
@@ -338,7 +340,7 @@ function AmbientPlot({ narrow }: { narrow: boolean }) {
       height={H}
       role="img"
       aria-labelledby={`${id}-title`}
-      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[720px]')}
+      className={clsx('viz-scope h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[720px]')}
       data-src={COR}
     >
       <title id={`${id}-title`}>
@@ -371,9 +373,9 @@ function AmbientPlot({ narrow }: { narrow: boolean }) {
         return (
           <g key={c.key}>
             <path d={d} pathLength={1} fill="none" stroke={TEMP_RAMP[c.key]} strokeWidth={2.5} strokeLinejoin="round" className="viz-draw" />
-            {end && <circle cx={end.x} cy={end.y} r={4.5} fill={TEMP_RAMP[c.key]} stroke="#ffffff" strokeWidth={2} className="viz-pop" />}
+            {end && <circle cx={end.x} cy={end.y} r={4.5} fill={TEMP_RAMP[c.key]} stroke="#ffffff" strokeWidth={2} className="viz-end" />}
             {end && !narrow && (
-              <text x={end.x} y={end.y + 22} textAnchor="middle" fontSize={13} fill={INK}>
+              <text x={end.x} y={end.y + 22} textAnchor="middle" fontSize={13} fill={INK} className="viz-end-fade">
                 <Val v={Number(c.label)} unit="°C" src={AMP} svg />
               </text>
             )}

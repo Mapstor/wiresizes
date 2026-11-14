@@ -383,6 +383,15 @@
   }
 }
 
+@keyframes viz-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Each motion starts as the mark comes in at the bottom of the screen and is finished in the bottom fifth to third of
    it, so a chart at rest shows its true values: a bar's length is its value, so bars finish first (an exponential
    ease-out puts most of the growth in the first part of the range); lines draw at an even pace and are complete by
@@ -410,6 +419,31 @@
       animation: viz-pop cubic-bezier(0.16, 1, 0.3, 1) both;
       animation-timeline: view();
       animation-range: entry 0% cover 25%;
+    }
+
+    /* A line chart's <svg> names one timeline for all its marks: the lines draw over the chart's own range, and the
+       end dots, end labels and notes on the lines (.viz-end, .viz-end-fade) appear as the lines finish. Each chart's
+       marks find the nearest <svg> with the name, so charts on one page don't share it. */
+    .viz-scope {
+      view-timeline-name: --viz-chart;
+    }
+
+    .viz-scope .viz-draw {
+      animation-timeline: --viz-chart;
+    }
+
+    .viz-end {
+      transform-box: fill-box;
+      transform-origin: 50% 50%;
+      animation: viz-pop cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-timeline: --viz-chart;
+      animation-range: cover 32% cover 40%;
+    }
+
+    .viz-end-fade {
+      animation: viz-fade linear both;
+      animation-timeline: --viz-chart;
+      animation-range: cover 32% cover 40%;
     }
   }
 }
