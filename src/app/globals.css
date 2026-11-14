@@ -218,6 +218,93 @@
   }
 }
 
+/* The picked look (DEVLOG D-33), on pages wrapped in .look: copper selection and focus ring, warm table numerals. */
+.look ::selection {
+  background-color: rgb(214 144 79 / 0.3);
+}
+
+.look *:focus-visible {
+  outline: 2px solid #111111;
+  outline-offset: 3px;
+}
+
+/* The AWG spiral (/guides/awg-wire-size-chart): the discs grow in from 4/0 inward, then light passes across them.
+   The two drawings swap by visibility, not display: a display:none rule on an animated drawing's wrapper, even in a
+   media query that does not match, stopped Chrome painting the discs while they animated (WSZ-025). */
+@keyframes spiral-grow {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes spiral-shine {
+  0% {
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.38;
+  }
+  22% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.spiral-disc {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: spiral-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.spiral-shine {
+  opacity: 0;
+  animation: spiral-shine 6s ease-in-out infinite both;
+}
+
+.spiral-narrow {
+  visibility: hidden;
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 639px) {
+  .spiral-wide {
+    visibility: hidden;
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .spiral-narrow {
+    visibility: visible;
+    position: static;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spiral-disc,
+  .spiral-shine {
+    animation: none;
+  }
+}
+
 /* Print styles */
 @media print {
   .no-print {

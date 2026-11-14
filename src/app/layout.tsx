@@ -11,6 +11,14 @@ import '@fontsource/inter/600.css';
 import '@fontsource/inter/700.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/500.css';
+// The picked look (D-33): Archivo for text and headings, Azeret Mono for table numbers
+import '@fontsource/archivo/400.css';
+import '@fontsource/archivo/500.css';
+import '@fontsource/archivo/600.css';
+import '@fontsource/archivo/700.css';
+import '@fontsource/archivo/800.css';
+import '@fontsource/azeret-mono/400.css';
+import '@fontsource/azeret-mono/600.css';
 import './globals.css';
 
 // The commit a build came from (first 7 characters of Vercel's VERCEL_GIT_COMMIT_SHA), or "local": chat fetches a
