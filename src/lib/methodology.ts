@@ -77,7 +77,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'continuous-loads',
     domain: 'nec-continuous-load',
     title: 'Continuous loads and the voltage-drop note',
-    citedOn: [VOLTAGE_DROP],
+    citedOn: [VOLTAGE_DROP, LOW_VOLTAGE],
   },
   {
     id: 'grounding',
@@ -104,6 +104,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
       '/calculators/three-phase-calculator',
       '/calculators/ohms-law-calculator',
       VOLTAGE_DROP,
+      LOW_VOLTAGE,
     ],
   },
   {

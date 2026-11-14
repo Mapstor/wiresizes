@@ -18,5 +18,9 @@
   {
     "date": "2026-11-14",
     "text": "Rebuilt the voltage drop calculator on NIST's wire tables. It now takes the conductor temperature, DC circuits, a load in watts and up to four sets in parallel, can find the smallest size for a target, and quotes the NEC's informational note on voltage drop as advice. Removed sections on troubleshooting, installation practice and the effects of voltage drop that cited no source."
+  },
+  {
+    "date": "2026-11-14",
+    "text": "Rebuilt the low voltage calculator. It now takes the load in amps or watts and any DC voltage, gives the copper area in circular mils and mm², and shows the drop of the chosen size and the sizes around it. Removed safety and installation advice that cited no source."
   }
 ]

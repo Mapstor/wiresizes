@@ -20,6 +20,8 @@ import { VOLTAGE_DROP_NOTE } from '@/lib/verified/nec-continuous-load-2023';
 import { TABLE_310_16_ROWS, table31016 } from '@/lib/verified/nec-310-16';
 import { decimalsAtSig } from '@/lib/calculations/format';
 import { dropRun, lengthForDrop } from '@/lib/calculations/voltage-drop';
+import { lowVoltageSize, lvLengthForDrop } from '@/lib/calculations/dc-sizing';
+import { conductor } from '@/lib/verified/awg';
 import { editionGroups, editionLabel, NEC_ADOPTION_DOMAIN, NOT_VERIFIED, stateName } from '@/lib/verified/nec-adoption';
 
 export const COPPER = '#a95a26';
@@ -921,6 +923,172 @@ export function DropSplitDiagram() {
     <div>
       <SplitPlot narrow={false} />
       <SplitPlot narrow />
+    </div>
+  );
+}
+
+// ── Low voltage: the same load at 12, 24 and 48 V, drawn to one scale (low voltage calculator, WSZ-006c) ───────────
+
+const DC = 'calc:dc-sizing';
+/** The scenario of the drawing: golden case "12 V, 400 W, 40 ft one way, 2% drop, copper at 75 °C", at three voltages. */
+export const DISC_SCENARIO = { watts: 400, lengthFt: 40, dropPct: 2, tempC: 75, volts: [12, 24, 48] };
+
+export const DISC_ROWS = DISC_SCENARIO.volts.map((volts) => {
+  const r = lowVoltageSize({ volts, amps: DISC_SCENARIO.watts / volts, lengthFt: DISC_SCENARIO.lengthFt, dropPct: DISC_SCENARIO.dropPct, tempC: DISC_SCENARIO.tempC });
+  if (!r?.resultSize) throw new Error(`DISC_ROWS: no size at ${volts} V`);
+  const diameterIn = (conductor(r.resultSize)?.diameterMm ?? 0) / 25.4;
+  return { volts, amps: r.amps, cmil: r.requiredCmil, size: r.resultSize, diameterIn };
+});
+
+function DiscPlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const pxPerIn = narrow ? 150 : 280;
+  const maxR = (Math.max(...DISC_ROWS.map((d) => d.diameterIn)) * pxPerIn) / 2;
+  const top = 30;
+  const cy = top + maxR + 6;
+  const H = cy + maxR + (narrow ? 50 : 54);
+  const id = narrow ? 'lv-discs-narrow' : 'lv-discs-wide';
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={DC}
+    >
+      <title id={`${id}-title`}>
+        {`Cross sections drawn to one scale of the copper a ${DISC_SCENARIO.watts} W load ${DISC_SCENARIO.lengthFt} ft away needs for a ${DISC_SCENARIO.dropPct} % drop: ` +
+          DISC_ROWS.map((d) => `${d.size} AWG at ${d.volts} V`).join(', ')}
+      </title>
+      <defs>
+        <linearGradient id={`${id}-cu`} x1="0.1" y1="0" x2="0.9" y2="1">
+          <stop offset="0" stopColor="#f3c193" />
+          <stop offset="0.45" stopColor="#d6904f" />
+          <stop offset="1" stopColor="#a95a26" />
+        </linearGradient>
+      </defs>
+      {DISC_ROWS.map((d, k) => {
+        const cx = (W / 6) * (2 * k + 1);
+        const r = (d.diameterIn * pxPerIn) / 2;
+        return (
+          <g key={d.volts}>
+            <text x={cx} y={18} textAnchor="middle" fontSize={narrow ? 14 : 16} fontWeight={800} fill={INK}>
+              <Val v={d.volts} unit="V" src={DC} svg />
+            </text>
+            <g className="viz-pop">
+              <circle cx={cx} cy={cy} r={r} fill={`url(#${id}-cu)`} stroke="#6b3112" strokeWidth={0.8} />
+              {2 * r > 14 && <circle cx={cx} cy={cy} r={r - 2.2} fill="none" stroke="#ffe2c4" strokeOpacity={0.55} strokeWidth={1} />}
+            </g>
+            <text x={cx} y={cy + maxR + 24} textAnchor="middle" fontSize={narrow ? 13 : 14} fontWeight={700} fill={INK}>
+              <Size s={d.size} svg />
+            </text>
+            <text x={cx} y={cy + maxR + (narrow ? 42 : 44)} textAnchor="middle" fontSize={13} fill={MUTED}>
+              <Val v={d.amps} unit="A" src={DC} format={{ sig: 3 }} svg />
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/** The copper the same load needs at 12, 24 and 48 V, as cut conductors at one scale (The Measured Copper Rule). */
+export function LowVoltageDiscs() {
+  return (
+    <div>
+      <DiscPlot narrow={false} />
+      <DiscPlot narrow />
+    </div>
+  );
+}
+
+/** The bar chart's scenario: 10 A at 12 V, a 3 % drop (the informational note's figure), copper at 75 °C. */
+export const LV_BAR_SCENARIO = { amps: 10, volts: 12, dropPct: VOLTAGE_DROP_NOTE.feederPct, tempC: 75 };
+const LV_BAR_SIZES = ['14', '12', '10', '8', '6', '4', '2', '1/0'];
+const LV_BAR_ROWS = LV_BAR_SIZES.map((size) => ({
+  size,
+  ft: lvLengthForDrop(size, LV_BAR_SCENARIO.volts, LV_BAR_SCENARIO.amps, LV_BAR_SCENARIO.dropPct, LV_BAR_SCENARIO.tempC),
+}));
+
+function LvBarPlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 62 : 74;
+  const right = narrow ? 20 : 64;
+  const top = 8;
+  const rowH = narrow ? 26 : 28;
+  const barH = narrow ? 14 : 16;
+  const bottom = 42;
+  const H = top + LV_BAR_ROWS.length * rowH + bottom;
+  const pw = W - left - right;
+  const max = 160;
+  const x = (v: number) => left + (v / max) * pw;
+  const ticks = narrow ? [0, 50, 100, 150] : [0, 20, 40, 60, 80, 100, 120, 140, 160];
+  const id = narrow ? 'lv-bars-narrow' : 'lv-bars-wide';
+  const first = LV_BAR_ROWS[0];
+  const last = LV_BAR_ROWS[LV_BAR_ROWS.length - 1];
+  const sig = { sig: 3 };
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={DC}
+    >
+      <title id={`${id}-title`}>
+        {`One-way length at which ${LV_BAR_SCENARIO.amps} A at ${LV_BAR_SCENARIO.volts} V DC reaches a ${LV_BAR_SCENARIO.dropPct} % drop, copper at ${LV_BAR_SCENARIO.tempC} °C, for each size from 14 AWG to 1/0`}
+      </title>
+      {ticks.map((t) => (
+        <g key={t}>
+          <line x1={x(t)} x2={x(t)} y1={top - 4} y2={H - bottom + 4} stroke={GRID} strokeWidth={1} />
+          <text x={x(t)} y={H - bottom + 20} textAnchor="middle" fontSize={13} fill={MUTED}>
+            <Num v={t} src={DC} svg />
+          </text>
+        </g>
+      ))}
+      <text x={left + pw / 2} y={H - 4} textAnchor="middle" fontSize={13} fill={MUTED}>
+        Feet, one way
+      </text>
+      {LV_BAR_ROWS.map((r, k) => {
+        const y = top + k * rowH + (rowH - barH) / 2;
+        const cy = y + barH / 2;
+        const tipW = narrow ? 120 : 130;
+        const tipX = Math.min(x(r.ft) + 8, W - tipW - 1);
+        return (
+          <g key={r.size} className="viz-mark">
+            <rect x={0} y={top + k * rowH} width={W} height={rowH} fill="transparent" />
+            <text x={left - 10} y={cy + 4.5} textAnchor="end" fontSize={13} fill={INK}>
+              <Size s={r.size} svg />
+            </text>
+            <path d={barPath(left, y, Math.max(2, x(r.ft) - left), barH)} fill={COPPER} className="viz-grow" />
+            {(r === first || r === last) && (
+              <text x={x(r.ft) + 6} y={cy + 4.5} fontSize={13} fontWeight={700} fill={INK} className="viz-pop">
+                <Val v={r.ft} unit="ft" src={DC} format={sig} svg />
+              </text>
+            )}
+            <g className="viz-tip" aria-hidden="true">
+              <rect x={tipX} y={cy - 11} width={tipW} height={22} fill="#ffffff" stroke={INK} strokeWidth={1} />
+              <text x={tipX + 6} y={cy + 4.5} fontSize={13} fill={INK}>
+                <Val v={r.ft} unit="ft" src={DC} format={sig} svg />
+              </text>
+            </g>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/** How far each copper size carries 10 A at 12 V before a 3 % drop. */
+export function LowVoltageBars() {
+  return (
+    <div>
+      <LvBarPlot narrow={false} />
+      <LvBarPlot narrow />
     </div>
   );
 }

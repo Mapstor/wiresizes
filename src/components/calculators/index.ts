@@ -15,4 +15,3 @@ export { GroundWireCalculator } from './GroundWireCalculator';
 export { AmpacityCalculator } from './AmpacityCalculator';
 export { default as PoolPumpCalculator } from './PoolPumpCalculator';
 export { ThreePhaseCalculator } from './ThreePhaseCalculator';
-export { LowVoltageCalculator } from './LowVoltageCalculator';
