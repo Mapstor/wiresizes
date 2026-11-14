@@ -339,8 +339,8 @@ export function VoltageDropTool() {
           legend="Calculate"
           value={inputs.mode}
           options={[
-            { value: 'check', label: 'Drop for a wire size' },
-            { value: 'find', label: 'Wire size for a target' },
+            { value: 'check', label: 'Drop for a size' },
+            { value: 'find', label: 'Size for a target' },
           ]}
           onChange={(mode) => update({ mode })}
         />
@@ -646,6 +646,11 @@ export function VoltageDropTool() {
         </div>
       </form>
 
+      {result && JSON.stringify(result.inputs) !== JSON.stringify(inputs) && (
+        <p role="status" className="mt-6 text-[15px] font-semibold text-ink">
+          The inputs have changed since this result. Press Calculate to update it.
+        </p>
+      )}
       {result?.mode === 'check' && <CheckResult result={result} headingRef={headingRef} shareUrl={shareUrl} />}
       {result?.mode === 'find' && <FindResult result={result} headingRef={headingRef} shareUrl={shareUrl} />}
     </div>
@@ -725,7 +730,7 @@ function ValuesTable({ run, inputs }: { run: DropRun; inputs: Inputs }) {
   ];
   return (
     <div className="mt-6 overflow-x-auto">
-      <table className="w-full min-w-[20rem] max-w-[38rem] border-collapse text-[15px]" data-src={CALC}>
+      <table className="w-full max-w-[38rem] border-collapse text-[15px]" data-src={CALC}>
         <caption className="sr-only">The run&apos;s values</caption>
         <tbody>
           {rows.map((r) => (
@@ -746,6 +751,12 @@ function ValuesTable({ run, inputs }: { run: DropRun; inputs: Inputs }) {
 function HowWorkedOut({ run, inputs }: { run: DropRun; inputs: Inputs }) {
   const { sig } = figures(run);
   const k = circuitFactor(run.circuit);
+  // the factors as shown; when their product rounds to a different figure, the sentence says ≈ rather than =
+  const shownI = inputs.loadUnit === 'W' ? Number(run.amps.toPrecision(3)) : run.amps;
+  const shownR = Number(run.phaseKft.toPrecision(run.sig));
+  const shownL = Number(run.lengthFt.toFixed(1));
+  const product = (k * shownI * shownR * shownL) / 1000;
+  const exact = Number(product.toPrecision(run.sig)) === Number(run.vdVolts.toPrecision(run.sig));
   return (
     <p>
       <strong>How it is worked out:</strong>{' '}
@@ -758,8 +769,9 @@ function HowWorkedOut({ run, inputs }: { run: DropRun; inputs: Inputs }) {
           <Num v={k} src={CALC} /> × <AmpsText inputs={inputs} amps={run.amps} />
         </>
       )}{' '}
-      × <Val v={run.phaseKft} unit="Ω" src={CALC} format={sig} /> per 1,000 ft × <Val v={run.lengthFt} unit="ft" src={CALC} format={{ upTo: 1 }} /> ÷ 1,000 ={' '}
-      <Val v={run.vdVolts} unit="V" src={CALC} format={sig} />.{' '}
+      × <Val v={run.phaseKft} unit="Ω" src={CALC} format={sig} /> per 1,000 ft × <Val v={run.lengthFt} unit="ft" src={CALC} format={{ upTo: 1 }} /> ÷ 1,000{' '}
+      {exact ? '=' : '≈'} <Val v={run.vdVolts} unit="V" src={CALC} format={sig} />
+      {exact ? '' : ' (the factors are rounded here; the result is not)'}.{' '}
       {run.circuit === 'three'
         ? 'On a balanced three-phase circuit the drop between two lines is √3 times the drop along one conductor.'
         : 'The current runs out on one conductor and back on the other, so both lengths count.'}
@@ -970,9 +982,18 @@ function FindResult({
       ) : (
         <div className={PROSE}>
           <p>
-            <strong>No size up to 2000 kcmil keeps the drop within your target.</strong> <span data-size={largest.size}>{formatSize(largest.size)}</span>{' '}
-            drops <Val v={largest.vdPct} unit="%" src={CALC} format={figures(largest).sig} />. Run conductors in parallel, shorten the run or
-            use a higher voltage.
+            <strong>No size up to 2000 kcmil keeps the drop within your target.</strong>{' '}
+            {largest.vdPct >= 100 ? (
+              <>
+                Even <span data-size={largest.size}>{formatSize(largest.size)}</span> would drop more than the supply voltage.
+              </>
+            ) : (
+              <>
+                <span data-size={largest.size}>{formatSize(largest.size)}</span> drops{' '}
+                <Val v={largest.vdPct} unit="%" src={CALC} format={figures(largest).sig} />.
+              </>
+            )}{' '}
+            Run conductors in parallel, shorten the run or use a higher voltage.
           </p>
           <p>The largest sizes; the line marks your target:</p>
         </div>

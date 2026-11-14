@@ -34,7 +34,7 @@ import {
 } from '@/components/look/styles';
 import { decimalsAtSig } from '@/lib/calculations/format';
 import { COPPER_ALPHA, ENGINE_ID as RES_ENGINE, atTemperature, equivalentSize } from '@/lib/calculations/resistance';
-import { ENGINE_ID, dropRun, parallelEquivalent } from '@/lib/calculations/voltage-drop';
+import { ENGINE_ID, circuitFactor, dropRun, parallelEquivalent } from '@/lib/calculations/voltage-drop';
 import type { DropInput, DropRun } from '@/lib/calculations/voltage-drop';
 import { articleDates } from '@/lib/page-dates';
 import { AWG_CONSTANTS, areaCmil } from '@/lib/verified/awg';
@@ -141,10 +141,13 @@ function Stat({ figure, text, domains }: { figure: ReactNode; text: ReactNode; d
 /** One worked example's arithmetic in a sentence: k × I × R × L ÷ 1,000 = VD, the percent and the load voltage. */
 function Arithmetic({ r }: { r: DropRun }) {
   const sig = { sig: r.sig };
+  // = only when the factors as shown give the result as shown
+  const shown = (circuitFactor(r.circuit) * r.amps * Number(r.perKft.toPrecision(r.sig)) * r.lengthFt) / 1000;
+  const exact = Number(shown.toPrecision(r.sig)) === Number(r.vdVolts.toPrecision(r.sig));
   return (
     <>
       {r.circuit === 'three' ? '√3' : <Num v={2} src={CALC} />} × <Val v={r.amps} unit="A" src={CALC} /> ×{' '}
-      <Val v={r.perKft} unit="Ω" src={CALC} format={sig} /> × <Val v={r.lengthFt} unit="ft" src={CALC} /> ÷ 1,000 ={' '}
+      <Val v={r.perKft} unit="Ω" src={CALC} format={sig} /> × <Val v={r.lengthFt} unit="ft" src={CALC} /> ÷ 1,000 {exact ? '=' : '≈'}{' '}
       <strong>
         <Val v={r.vdVolts} unit="V" src={CALC} format={sig} />
       </strong>
@@ -197,7 +200,7 @@ export default function VoltageDropCalculatorPage() {
                   Table 310.16, conductor at <Val v={DROP_CHART.tempC} unit="°C" src={AMP} />. On <Val v={240} unit="V" src={VOLTS} /> each
                   distance doubles. Point at a bar to read it.
                 </span>
-                <SourceLine domains={[RES, AMP, NOTE]} />
+                <SourceLine domains={[RES, AMP]} />
               </>
             }
           >
@@ -323,7 +326,7 @@ export default function VoltageDropCalculatorPage() {
                 ))}
               </tbody>
             </DataTable>
-            <SourceLine domains={[RES, AMP, NOTE, VOLTS]} />
+            <SourceLine domains={[RES, AMP, VOLTS]} />
             <p className={P} data-src={CALC}>
               The length is in proportion to the target and the voltage and in inverse proportion to the current: half the current goes twice
               as far, and a <Val v={NOTE_TOTAL_PCT} unit="%" src={NOTE} /> target goes <Num v={NOTE_TOTAL_PCT / NOTE_FEEDER_PCT} src={CALC} format={{ fixed: 2 }} />{' '}

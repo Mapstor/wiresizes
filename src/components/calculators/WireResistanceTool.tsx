@@ -424,6 +424,11 @@ export function WireResistanceTool() {
         </div>
       </form>
 
+      {result && JSON.stringify(result.inputs) !== JSON.stringify(inputs) && (
+        <p role="status" className="mt-6 text-[15px] font-semibold text-ink">
+          The inputs have changed since this result. Press Calculate to update it.
+        </p>
+      )}
       {result && <Result result={result} headingRef={headingRef} shareUrl={shareUrl} />}
     </div>
   );
