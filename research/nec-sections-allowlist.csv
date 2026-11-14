@@ -73,3 +73,8 @@ Article 310,article,2023,Conductors for General Wiring,nec-310-16,verified,"Loca
 210.8(A)(5),section,2017,Nebraska applies the 2017 NEC text of this section (state amendment to its 2023 adoption),nec-adoption,verified,Only inside Nebraska's scope text from nec-adoption.json (WSZ-005c)
 230.67(A),section,2017,Nebraska applies the 2017 NEC text of this section (state amendment to its 2023 adoption),nec-adoption,verified,Only inside Nebraska's scope text from nec-adoption.json (WSZ-005c)
 110.24,section,2017,Tennessee makes available fault current marking optional (state exception to its 2017 adoption),nec-adoption,verified,Only inside Tennessee's scope text from nec-adoption.json (WSZ-005c)
+210.19(A),section,2023,Branch-circuit conductors: ampacity at least the noncontinuous load plus 125 % of the continuous load,nec-continuous-load,verified,Excerpts only (items (1) and (2) not seen whole); its voltage-drop note is unverified
+210.20(A),section,2023,Branch-circuit overcurrent device: noncontinuous load plus 125 % of the continuous load,nec-continuous-load,verified,Main rule only; the exception is draft text
+215.2(A),section,2023,"Feeder conductor ampacity; Informational Note No. 2: 3 % voltage drop at the farthest outlet, 5 % on feeder and branch circuit together, for reasonable efficiency",nec-continuous-load,verified,The note is advice about efficiency: never call it a limit or a requirement
+215.3,section,2023,Feeder overcurrent device: noncontinuous load plus 125 % of the continuous load,nec-continuous-load,verified,
+230.42(A),section,2023,Service-entrance conductors: ampacity at least the noncontinuous load plus 125 % of the continuous load,nec-continuous-load,verified,(A)(2) unverified; Exception No. 2 conflicting

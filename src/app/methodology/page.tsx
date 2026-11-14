@@ -14,7 +14,10 @@ import { DC_TEMPERATURE_OPTIONS } from '@/lib/calculations/dc-sizing';
 import { formatValue } from '@/lib/calculations/format';
 import { GROUND_WIRE_RATINGS } from '@/lib/calculations/grounding';
 import { ALUMINUM_ALPHA, COPPER_ALPHA, REFERENCE_TEMP_C } from '@/lib/calculations/resistance';
-import { RESISTANCE_TEMP_C } from '@/lib/calculations/voltage-drop';
+import { RESISTANCE_TEMP_C, VD_TOOL_DEFAULT_TEMP_C, VD_TOOL_SINGLE_QUICK_VOLTS } from '@/lib/calculations/voltage-drop';
+import { THREE_PHASE_VOLTS } from '@/lib/calculations/inputs';
+import { CONTINUOUS_LOAD_PERCENT, VOLTAGE_DROP_NOTE } from '@/lib/verified/nec-continuous-load-2023';
+import { NOMINAL_SINGLE_PHASE, NOMINAL_THREE_PHASE, assertNominal } from '@/lib/verified/us-nominal-voltages';
 import { CITED_PAGE_NAMES, METHODOLOGY_EXTRA_SECTIONS, METHODOLOGY_ROUTE, METHODOLOGY_SECTIONS } from '@/lib/methodology';
 import type { MethodologySection } from '@/lib/methodology';
 import { AWG_CONSTANTS, AWG_DEFINITION, awgRow, kcmilRow } from '@/lib/verified/awg';
@@ -210,6 +213,9 @@ function SectionLink({ domain, children }: { domain: string; children: ReactNode
   );
 }
 
+assertNominal(THREE_PHASE_VOLTS, 'three-phase voltages (inputs.ts)');
+assertNominal(VD_TOOL_SINGLE_QUICK_VOLTS, 'voltage drop calculator quick voltages');
+
 const TOC = [
   METHODOLOGY_EXTRA_SECTIONS.method,
   ...METHODOLOGY_SECTIONS.map(({ id, title }) => ({ id, title })),
@@ -380,18 +386,25 @@ export default function MethodologyPage() {
             <Link href="/calculators/voltage-drop-calculator" className={LINK}>
               voltage drop calculator
             </Link>{' '}
-            and the voltage-drop step of the wire size calculator use resistance at{' '}
-            <Val v={RESISTANCE_TEMP_C} unit="°C" src="calc:voltage-drop" />. With I the current, R the resistance per
-            1000 ft, L the one-way length in feet, V the supply voltage, and k = 2 on a single-phase circuit or √3 on a
+            uses the conductor temperature you enter, starting at{' '}
+            <Val v={VD_TOOL_DEFAULT_TEMP_C} unit="°C" src="calc:voltage-drop" />; the voltage-drop step of the wire size
+            calculator uses <Val v={RESISTANCE_TEMP_C} unit="°C" src="calc:voltage-drop" />. With I the current, R the
+            resistance per 1000 ft of one conductor, n the number of conductors in parallel, L the one-way length in feet,
+            V the supply voltage (line to line on three-phase), and k = 2 on a DC or single-phase circuit or √3 on a
             three-phase circuit:
           </p>
           <Formulas
             src="calc:voltage-drop"
             rows={[
-              ['Voltage drop', 'VD = k × I × R × L ÷ 1000'],
+              ['Voltage drop', 'VD = k × I × (R ÷ n) × L ÷ 1000'],
               ['Percent drop', '100 × VD ÷ V'],
             ]}
           />
+          <p>
+            Asked for the smallest size, the voltage drop calculator tries each Table 310.16 size from the smallest it
+            offers until the drop is at most your target. A load entered in watts becomes a current through the formulas
+            in <SectionLink domain="power-definitions">Power, current and power factor</SectionLink>.
+          </p>
           <p>The power lost in the conductors, in watts:</p>
           <Formulas
             src="calc:resistance"
@@ -584,6 +597,37 @@ export default function MethodologyPage() {
           </Limits>
         </SourceSection>
 
+        <SourceSection domain="nec-continuous-load">
+          <p>
+            The 2023 NEC sizes branch circuits (210.19(A) and 210.20(A)), feeders (215.2(A) and 215.3) and service-entrance
+            conductors (230.42(A)) for the noncontinuous load plus{' '}
+            <Val v={CONTINUOUS_LOAD_PERCENT} unit="%" src="nec-continuous-load" /> of the continuous load, the conductors and
+            the breaker or fuse ahead of them alike. 215.2(A) also carries an informational note on voltage drop: feeder
+            conductors sized to keep the drop at the farthest outlet under{' '}
+            <Val v={VOLTAGE_DROP_NOTE.feederPct} unit="%" src="nec-continuous-load" />, with no more than{' '}
+            <Val v={VOLTAGE_DROP_NOTE.totalPct} unit="%" src="nec-continuous-load" /> on feeder and branch circuit together,
+            &ldquo;will provide reasonable efficiency of operation.&rdquo;
+          </p>
+          <SourceFacts s={section('nec-continuous-load')} />
+          <p>
+            NFPA&apos;s public inputs and First Draft for the 2026 edition print these 2023 sections as their base text; the
+            voltage-drop note was read in two public inputs that quote 215.2(A) word for word.
+          </p>
+          <p>
+            The{' '}
+            <Link href="/calculators/voltage-drop-calculator" className={LINK}>
+              voltage drop calculator
+            </Link>{' '}
+            quotes the note as advice and starts its search for the smallest size at the note&apos;s{' '}
+            <Val v={VOLTAGE_DROP_NOTE.feederPct} unit="%" src="nec-continuous-load" />, a target you can change. No calculator
+            applies the continuous-load rules yet: the wire size calculator starts from the breaker or fuse rating you enter.
+          </p>
+          <Limits>
+            <li>The matching note for branch circuits has not been read in a 2023 text, so no page quotes it.</li>
+            <li>The pages give the note&apos;s figures as advice about efficiency, never as limits.</li>
+          </Limits>
+        </SourceSection>
+
         <SourceSection domain="nec-250-grounding">
           <p>
             NFPA&apos;s 2020 grounding fact sheet, Using the Tables in Article 250 of the NEC, prints two tables the
@@ -690,6 +734,28 @@ export default function MethodologyPage() {
           <Limits>
             <li>The three-phase formulas assume a balanced load.</li>
             <li>The calculators use the power factor you enter; DC circuits use 1.</li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="us-nominal-voltages">
+          <p data-src="us-nominal-voltages">
+            North Carolina Utilities Commission Rule R8-17 has utilities use a nominal voltage from ANSI C84.1, the national
+            standard for system voltages, and lists them. At the low voltages buildings use: {NOMINAL_SINGLE_PHASE.join(' and ')}{' '}
+            V single-phase; {NOMINAL_THREE_PHASE.slice(0, -1).join(', ')} and {NOMINAL_THREE_PHASE[NOMINAL_THREE_PHASE.length - 1]} V
+            three-phase. ANSI C84.1 itself is sold, not published openly, so the rule is the public record the calculators cite.
+          </p>
+          <SourceFacts s={section('us-nominal-voltages')} />
+          <p data-src="us-nominal-voltages">
+            The{' '}
+            <Link href="/calculators/voltage-drop-calculator" className={LINK}>
+              voltage drop calculator
+            </Link>{' '}
+            offers {THREE_PHASE_VOLTS.join(', ')} V line to line on three-phase, and {VD_TOOL_SINGLE_QUICK_VOLTS.join(', ')} V as
+            quick choices on single-phase: each is a voltage one of these systems names, line to line or line to neutral.
+          </p>
+          <Limits>
+            <li>A nominal voltage names the system; the voltage actually delivered varies within the limits the standard sets.</li>
+            <li>Other single-phase voltages can be typed in.</li>
           </Limits>
         </SourceSection>
 

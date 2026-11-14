@@ -1,7 +1,6 @@
 export { CalculatorResult } from './CalculatorResult';
 export { CalculatorLayout } from './CalculatorLayout';
 export { WireSizeCalculator } from './WireSizeCalculator';
-export { VoltageDropCalculator } from './VoltageDropCalculator';
 export { WattsToAmpsCalculator } from './WattsToAmpsCalculator';
 export { default as AmpsToWattsCalculator } from './AmpsToWattsCalculator';
 export { VoltsToAmpsCalculator } from './VoltsToAmpsCalculator';
