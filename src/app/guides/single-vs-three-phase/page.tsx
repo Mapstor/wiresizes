@@ -229,9 +229,6 @@ export default function SingleVsThreePhasePage() {
                     System
                   </th>
                   <th scope="col" className={RTH}>
-                    Formula
-                  </th>
-                  <th scope="col" className={RTH}>
                     Current per line
                   </th>
                 </tr>
@@ -242,7 +239,6 @@ export default function SingleVsThreePhasePage() {
                     <th scope="row" className={RSTICKY_TD}>
                       <Val v={r.volts} unit="V" src={VOLTS} /> {r.phases === 1 ? 'single-phase' : 'three-phase'}
                     </th>
-                    <td className={RTD}>{r.phases === 1 ? 'I = P ÷ (V × PF)' : 'I = P ÷ (√3 × V × PF)'}</td>
                     <td className={RTD}>
                       <Amps r={r} />
                     </td>
@@ -252,7 +248,8 @@ export default function SingleVsThreePhasePage() {
             </DataTable>
             <p className={P} data-src={CALC}>
               At <Val v={THREE_480.volts} unit="V" src={VOLTS} /> three-phase the current is less than a third of the{' '}
-              <Val v={SINGLE_240.volts} unit="V" src={VOLTS} /> single-phase figure: twice the voltage, times √3 for the three phases. Less
+              <Val v={SINGLE_240.volts} unit="V" src={VOLTS} /> single-phase figure: twice the voltage, times √3 for the three phases (I = P ÷
+              (V × PF) on single-phase, I = P ÷ (√3 × V × PF) on three-phase). Less
               current lets a smaller conductor carry the load, which the{' '}
               <Link href="/calculators/wire-size-calculator" className={LINK}>
                 wire size calculator
@@ -313,7 +310,7 @@ export default function SingleVsThreePhasePage() {
             </h2>
             <p className={P} data-src={MIT}>
               A three-phase supply also feeds single-phase loads, connected between two lines or from one line to the neutral. On a{' '}
-              <Wye w={WYE_208} /> system that is <Val v={WYE_208.lineVolts} unit="V" src={VOLTS} /> or{' '}
+              <Wye w={WYE_208} /> system, that is <Val v={WYE_208.lineVolts} unit="V" src={VOLTS} /> or{' '}
               <Val v={WYE_208.neutralVolts} unit="V" src={VOLTS} />; on <Wye w={WYE_480} />,{' '}
               <Val v={WYE_480.lineVolts} unit="V" src={VOLTS} /> or <Val v={WYE_480.neutralVolts} unit="V" src={VOLTS} />. Sharing such loads
               evenly among the three phases keeps the load balanced and the neutral current low.

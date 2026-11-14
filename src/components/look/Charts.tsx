@@ -1392,7 +1392,7 @@ function CompareBarsPlot({ narrow }: { narrow: boolean }) {
   const top = 8;
   const rowH = narrow ? 34 : 36;
   const barH = narrow ? 16 : 18;
-  const H = top + COMPARE_ROWS.length * rowH + 30;
+  const H = top + COMPARE_ROWS.length * rowH + (narrow ? 46 : 30);
   const pw = W - left - right;
   const max = Math.max(...COMPARE_ROWS.map((r) => r.amps));
   const id = narrow ? 'compare-bars-narrow' : 'compare-bars-wide';
@@ -1425,9 +1425,20 @@ function CompareBarsPlot({ narrow }: { narrow: boolean }) {
           </g>
         );
       })}
-      <text x={left} y={H - 8} fontSize={13} fill={MUTED}>
-        Current per line, <Val v={COMPARE_KW} unit="kW" src={POWER_ENGINE} svg /> at power factor <Num v={1} src={POWER_ENGINE} svg />
-      </text>
+      {narrow ? (
+        <>
+          <text x={0} y={H - 24} fontSize={13} fill={MUTED}>
+            Current per line,
+          </text>
+          <text x={0} y={H - 8} fontSize={13} fill={MUTED}>
+            <Val v={COMPARE_KW} unit="kW" src={POWER_ENGINE} svg /> at power factor <Num v={1} src={POWER_ENGINE} svg />
+          </text>
+        </>
+      ) : (
+        <text x={left} y={H - 8} fontSize={13} fill={MUTED}>
+          Current per line, <Val v={COMPARE_KW} unit="kW" src={POWER_ENGINE} svg /> at power factor <Num v={1} src={POWER_ENGINE} svg />
+        </text>
+      )}
     </svg>
   );
 }
@@ -1452,7 +1463,7 @@ function PfBarsPlot({ narrow }: { narrow: boolean }) {
   const top = 8;
   const rowH = narrow ? 26 : 28;
   const barH = narrow ? 14 : 16;
-  const H = top + PF_BAR_ROWS.length * rowH + 30;
+  const H = top + PF_BAR_ROWS.length * rowH + (narrow ? 46 : 30);
   const pw = W - left - right;
   const max = Math.max(...PF_BAR_ROWS.map((r) => r.amps));
   const id = narrow ? 'pf-bars-narrow' : 'pf-bars-wide';
@@ -1485,9 +1496,20 @@ function PfBarsPlot({ narrow }: { narrow: boolean }) {
           </g>
         );
       })}
-      <text x={left} y={H - 8} fontSize={13} fill={MUTED}>
-        Amperes per line, <Val v={PF_BARS.kw} unit="kW" src={TP} svg /> at <Val v={PF_BARS.volts} unit="V" src={NOMINAL} svg /> three-phase
-      </text>
+      {narrow ? (
+        <>
+          <text x={0} y={H - 24} fontSize={13} fill={MUTED}>
+            Amperes per line,
+          </text>
+          <text x={0} y={H - 8} fontSize={13} fill={MUTED}>
+            <Val v={PF_BARS.kw} unit="kW" src={TP} svg /> at <Val v={PF_BARS.volts} unit="V" src={NOMINAL} svg /> three-phase
+          </text>
+        </>
+      ) : (
+        <text x={left} y={H - 8} fontSize={13} fill={MUTED}>
+          Amperes per line, <Val v={PF_BARS.kw} unit="kW" src={TP} svg /> at <Val v={PF_BARS.volts} unit="V" src={NOMINAL} svg /> three-phase
+        </text>
+      )}
     </svg>
   );
 }

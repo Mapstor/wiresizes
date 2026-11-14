@@ -69,6 +69,9 @@ const VOLTS = 'us-nominal-voltages';
 const CALC = 'calc:power';
 const SIG = { sig: 4 };
 const PF2 = { fixed: 2 };
+/** The kVAR table's target columns, sized to their figures (the ruled table's 7.5em minimum would make it scroll at 390 px). */
+const KVAR_TH = RTH.replace('min-w-[7.5em]', 'min-w-0');
+if (KVAR_TH === RTH) throw new Error('power factor guide: RTH no longer sets min-w-[7.5em]');
 /** A computed value at 4 significant figures with no trailing zeros ("125", "32.87"). */
 const r4 = (v: number) => Number(v.toPrecision(4));
 
@@ -203,7 +206,7 @@ export default function PowerFactorExplainedPage() {
                 <>
                   <span data-src={CALC}>
                     The current in each line of the same <Val v={PF_BARS.kw} unit="kW" src={CALC} /> three-phase load at{' '}
-                    <Val v={PF_BARS.volts} unit="V" src={VOLTS} />, at power factors from <Num v={1} src={CALC} /> down to{' '}
+                    <Val v={PF_BARS.volts} unit="V" src={VOLTS} />, at power factors from <Num v={1} src={CALC} format={PF2} /> down to{' '}
                     <Num v={LOWEST_PF} src={CALC} format={PF2} />.
                   </span>
                   <SourceLine domains={[DOE, MIT, EIA, VOLTS]} />
@@ -294,7 +297,7 @@ export default function PowerFactorExplainedPage() {
                     Present power factor
                   </th>
                   {KVAR_TABLE.to.map((to) => (
-                    <th key={to} scope="col" className={RTH}>
+                    <th key={to} scope="col" className={KVAR_TH}>
                       To <Num v={to} src={CALC} format={PF2} />
                     </th>
                   ))}
@@ -352,7 +355,7 @@ export default function PowerFactorExplainedPage() {
               <p className={P} data-src={CALC}>
                 For the same real power and voltage, the current is in proportion to <Num v={1} src={CALC} /> ÷ PF. At power factor{' '}
                 <Num v={BAR_08.pf} src={CALC} format={PF2} />, a load draws <Val v={r4((1 / BAR_08.pf - 1) * 100)} unit="%" src={CALC} /> more
-                current than at <Num v={1} src={CALC} />.
+                current than at power factor <Num v={1} src={CALC} />.
               </p>
             </div>
             <div className="space-y-1.5">
