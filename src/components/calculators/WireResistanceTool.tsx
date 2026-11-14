@@ -260,7 +260,10 @@ export function WireResistanceTool() {
                     { value: 'list', label: 'AWG or kcmil' },
                     { value: 'mm2', label: 'mm²' },
                   ]}
-                  onChange={(sizeMode) => update({ sizeMode })}
+                  onChange={(sizeMode) => {
+                    setSizeNote(null);
+                    update({ sizeMode });
+                  }}
                 />
               </div>
               <div className="mt-2">
@@ -293,7 +296,10 @@ export function WireResistanceTool() {
                   <TextInput
                     id="mm2"
                     value={inputs.mm2}
-                    onChange={(mm2) => update({ mm2 })}
+                    onChange={(mm2) => {
+                      setSizeNote(null);
+                      update({ mm2 });
+                    }}
                     onBlur={() => fieldErrors.touch('mm2')}
                     error={shown('mm2')}
                     describedById={describedBy('mm2', shown('mm2'), true)}
