@@ -359,7 +359,7 @@ export default function PowerFactorExplainedPage() {
               <h3 className={H3}>What power factor should a facility aim for?</h3>
               <p className={P} data-src={PFC}>
                 The DOE fact sheet corrects its example to <Num v={DOE_PF.to} src={PFC} format={PF2} /> and says many utilities charge an
-                additional fee below that. The sheet dates from the 1990s, so the utility&apos;s current rate terms are the figure to check.
+                additional fee below that. NREL&apos;s record dates the sheet to 1996, so the utility&apos;s current rate terms are the figure to check.
               </p>
             </div>
             <div className="space-y-1.5">
