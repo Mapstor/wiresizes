@@ -13,6 +13,6 @@
   },
   {
     "date": "2026-11-14",
-    "text": "Rebuilt the wire resistance calculator from NIST's copper wire tables. It now covers every AWG gauge and the kcmil sizes, aluminum from 12 AWG up, and shows each result at room temperature and at the temperature of the NEC's 75-degree column side by side. Removed a wrong aluminum value and a table that listed room-temperature values under a 75-degree heading."
+    "text": "Rebuilt the wire resistance calculator from NIST's copper wire tables. It now covers every AWG gauge and the kcmil sizes, and prints each resistance to the figures NIST publishes, where it had added a digit. Removed sections on skin effect, testing and safety factors that cited no source."
   }
 ]
