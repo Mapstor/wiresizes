@@ -17,16 +17,8 @@ export const DC_TEMPERATURE_OPTIONS = [
   { value: 75, label: '75 °C (167 °F)' },
 ];
 export const NO_SIZE_MESSAGE = 'No size in NEC Table 310.16 is large enough for this load.';
-export const BASIS_LINE = 'Sized for voltage drop and for current (60 °C column of NEC Table 310.16, 30 °C ambient).';
-export const INPUT_INVALID_MESSAGE = 'Enter volts, watts, length and a voltage-drop target greater than 0.';
 
 export type Governs = 'voltage drop' | 'current' | 'both';
-
-export const GOVERNS_LABELS: Record<Governs, string> = {
-  'voltage drop': 'Voltage drop',
-  current: 'Current',
-  both: 'Both (same size)',
-};
 
 export interface DcSizingInput {
   volts: number;
@@ -82,15 +74,6 @@ export function dcSizingFromAmps(input: Omit<DcSizingInput, 'watts'> & { amps: n
   }
   return { amps, k, vdVolts, requiredCmil, vdSize, currentSize, resultSize, governs };
 }
-
-export const DC_SIZING_DEFAULTS = {
-  volts: 12,
-  loads: 8,
-  wattsPerLoad: 3,
-  lengthFt: 100,
-  dropPct: 3,
-  tempC: 75,
-};
 
 // ── WSZ-006c: the low voltage calculator's calculation path ─────────────────────────────────────────────────────────
 // The calculator takes amps or watts, any DC voltage (12, 24 and 48 V one click away), the reader's drop target and 20

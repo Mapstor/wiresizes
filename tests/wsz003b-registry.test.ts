@@ -7,7 +7,7 @@ import { formatValue, partsText, withUnit } from '../src/lib/calculations/format
 import type { TextPart } from '../src/lib/calculations/format';
 import { formatSize } from '../src/lib/verified/awg';
 import { ENGINE_ID, sizeConductor } from '../src/lib/calculations/conductor-sizing';
-import { ampacityNote, NO_14_AWG_ALUMINUM_NOTE, NO_14_AWG_ALUMINUM_NOTE_PARTS } from '../src/lib/calculations/voltage-drop';
+import { NO_14_AWG_ALUMINUM_NOTE, NO_14_AWG_ALUMINUM_NOTE_PARTS } from '../src/lib/calculations/voltage-drop';
 import { ocpdLimitLabel, ocpdLimitParts } from '../src/lib/calculations/ampacity';
 
 describe('attribution()', () => {
@@ -62,9 +62,7 @@ describe('text parts', () => {
     }
   });
 
-  it('the voltage-drop note, the 14 AWG aluminum note and the 240.4(D) label read the same as text', () => {
-    const note = ampacityNote('10', 'Cu', 30);
-    assert.equal(note.before, partsText(note.beforeParts, formatSize));
+  it('the 14 AWG aluminum note and the 240.4(D) label read the same as text', () => {
     assert.equal(NO_14_AWG_ALUMINUM_NOTE, partsText(NO_14_AWG_ALUMINUM_NOTE_PARTS, formatSize));
     assert.equal(ocpdLimitLabel(20), partsText(ocpdLimitParts(20)));
   });

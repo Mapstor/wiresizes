@@ -10,10 +10,8 @@ import {
   hasPowerInputError,
   VOLTS_TO_AMPS_DEFAULTS,
 } from '../src/lib/calculations/power';
-import { formatVdPct, formatVdVolts, NO_14_AWG_ALUMINUM_NOTE, VD_HEADLINE_LABELS, voltageDrop } from '../src/lib/calculations/voltage-drop';
-import { RESISTANCE_INPUT_MESSAGES } from '../src/lib/calculations/resistance';
+import { NO_14_AWG_ALUMINUM_NOTE, voltageDrop } from '../src/lib/calculations/voltage-drop';
 import { calculateAmpacity, formatFactor } from '../src/lib/calculations/ampacity';
-import { DC_SIZING_DEFAULTS } from '../src/lib/calculations/dc-sizing';
 
 describe('number fields', () => {
   it('empty or blank text is NaN, numbers parse', () => {
@@ -63,10 +61,7 @@ describe('power inputs', () => {
 });
 
 describe('WSZ-014 step 3 texts and formats', () => {
-  it('voltage drop headline labels and formats; no 14 AWG aluminum result', () => {
-    assert.deepEqual(VD_HEADLINE_LABELS, { Cu: 'Copper:', Al: 'Aluminum:' });
-    assert.equal(formatVdPct(2.0234), '2.02 %');
-    assert.equal(formatVdVolts(4.8561), '4.86 V');
+  it('no 14 AWG aluminum voltage drop result', () => {
     assert.equal(NO_14_AWG_ALUMINUM_NOTE, 'NEC Table 310.16 lists aluminum from 12 AWG, so there is no 14 AWG aluminum result.');
     assert.equal(voltageDrop({ size: '14', material: 'Al', amps: 10, lengthFt: 50, volts: 120, phase: 'single' }), null);
     assert.notEqual(voltageDrop({ size: '14', material: 'Cu', amps: 10, lengthFt: 50, volts: 120, phase: 'single' }), null);
@@ -79,19 +74,6 @@ describe('WSZ-014 step 3 texts and formats', () => {
     assert.equal(formatFactor(null), '–');
     const al14 = calculateAmpacity({ size: '14', material: 'Al', column: 60, ambientRow: '26–30', band: '1–3' });
     assert.equal(al14.tableAmpacity, null);
-  });
-
-  it('wire resistance: one message per field (WSZ-015 replaced the per-mode messages)', () => {
-    assert.deepEqual(RESISTANCE_INPUT_MESSAGES, {
-      lengthFt: 'Enter a one-way distance from 1 ft to 5000 ft.',
-      tempF: 'Enter a temperature from −40 °F to 200 °F.',
-      amps: 'Enter a current greater than 0 A.',
-      maxLoopOhms: 'Enter a loop resistance greater than 0 Ω.',
-    });
-  });
-
-  it('low voltage: the default target is one of the 1–5 % choices', () => {
-    assert.equal(DC_SIZING_DEFAULTS.dropPct, 3);
   });
 
   it('volts to amps: no load type; the power factor note', () => {
