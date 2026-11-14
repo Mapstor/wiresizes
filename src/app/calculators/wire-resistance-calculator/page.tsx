@@ -234,10 +234,11 @@ export default function WireResistanceCalculatorPage() {
             </p>
             <figure className="max-w-[40rem] space-y-3">
               <RunBars
-                rows={EXAMPLE.neighbours}
+                rows={EXAMPLE.neighbours.map((n) => ({ size: n.size, value: n.conductor, format: { sig: n.sig } }))}
                 chosen="14"
                 material="Cu"
                 src={CALC}
+                unit="Ω"
                 label="One conductor, 100 ft, at 75 °C, in nearby sizes"
               />
               <figcaption className="border-t-2 border-ink pt-3 text-[15px] leading-[1.55] text-cut-caption">

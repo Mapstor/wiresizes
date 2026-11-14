@@ -26,7 +26,12 @@ describe('METHODOLOGY_SECTIONS', () => {
 
   it('leaves out nec-110-14c until WSZ-009 and the verified domains no live page cites', () => {
     const domains = new Set(METHODOLOGY_SECTIONS.map((s) => s.domain));
-    for (const off of ['nec-110-14c', 'nec-continuous-load', 'doe-efficiency-standards']) assert.ok(!domains.has(off), off);
+    for (const off of ['nec-110-14c', 'doe-efficiency-standards']) assert.ok(!domains.has(off), off);
+  });
+
+  it('has nec-continuous-load since the voltage drop calculator quotes its note (WSZ-006b)', () => {
+    const s = METHODOLOGY_SECTIONS.find((x) => x.domain === 'nec-continuous-load');
+    assert.deepEqual(s?.citedOn, ['/calculators/voltage-drop-calculator']);
   });
 
   it('cites only named live pages, each section at least one', () => {

@@ -56,7 +56,7 @@ export const ROUTES: readonly SiteRoute[] = [
     path: '/calculators/voltage-drop-calculator',
     group: 'wire-sizing',
     name: 'Voltage Drop Calculator',
-    line: 'Voltage drop in volts and percent for a single-phase or three-phase run, from the wire size, current, one-way length and voltage.',
+    line: 'Voltage drop in volts and percent for a DC, single-phase or three-phase run, or the smallest wire size that keeps it within your target.',
     guidesNav: true,
   },
   {

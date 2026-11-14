@@ -10,7 +10,7 @@ import { columnKey, nextLargerSize, smallestSizeWithArea, table31016, TABLE_310_
 import type { AmpacityColumn } from '../verified/nec-310-16';
 import { voltsValid } from './inputs';
 import type { Phase } from './inputs';
-import { powerLossWatts } from './resistance';
+import { powerLossWatts, resistanceAt, resistanceSig } from './resistance';
 
 export const ENGINE_ID = 'voltage-drop';
 const CALC = `calc:${ENGINE_ID}`;
@@ -35,7 +35,6 @@ export const WIRE_SIZE_CALCULATOR_LINK = { href: '/calculators/wire-size-calcula
 export const RESISTANCE_BASIS_LABEL =
   'DC resistance of solid conductors at 75 °C, calculated from NIST Handbook 100 and 109 constants. Stranded conductors measure slightly higher, and AC reactance is not included.';
 export const ALUMINUM_RESISTANCE_NOTE = 'about 64 % higher resistance than copper';
-export const VD_INPUT_INVALID_MESSAGE = 'Enter a current of 0 A or more and a one-way length from 0 ft to 2000 ft.';
 /** Labels of the copper and aluminum lines under the voltage drop inputs. */
 export const VD_HEADLINE_LABELS = { Cu: 'Copper:', Al: 'Aluminum:' };
 
@@ -141,11 +140,6 @@ export function sizeForDrop(input: VoltageDropInput, targetPct: number): SizeFor
   return { size, result };
 }
 
-/** The smallest size the voltage drop calculator offers whose drop is at most `targetPct` (or 2000 kcmil). */
-export function smallestSizeForDrop(input: Omit<VoltageDropInput, 'size'>, targetPct: number): SizeForDrop {
-  return sizeForDrop({ ...input, size: voltageDropSizes(input.material)[0] }, targetPct);
-}
-
 export interface ParallelEquivalent {
   /** Total area of the sets, in cmil. */
   totalCmil: number;
@@ -210,3 +204,124 @@ export const VOLTAGE_DROP_DEFAULTS = {
   phase: 'single' as Phase,
   targetPct: DEFAULT_VD_TARGET_PCT,
 };
+
+// ── WSZ-006b: the voltage drop calculator's calculation path ─────────────────────────────────────────────────────────
+// The calculator takes the conductor temperature (R(T) from resistance.ts; 75 °C unless the reader changes it), DC as
+// well as single-phase and three-phase, one to four sets in parallel, and either a size to check or a drop target to
+// meet. A result keeps the significant figures of the resistance it comes from (resistanceSig, D-35): 12 AWG copper's
+// drop to three, 4 AWG's to four. The functions above stay for the wire size calculator and the older tests.
+
+/** DC and single-phase circuits drop on both conductors, out and back; a balanced three-phase circuit by √3. */
+export type VdCircuit = 'single' | 'three' | 'dc';
+
+export const VD_TOOL_DEFAULT_TEMP_C = RESISTANCE_TEMP_C;
+export const VD_TOOL_SETS = [1, 2, 3, 4] as const;
+export const VD_TOOL_LENGTH_MIN_FT = 1;
+export const VD_TOOL_LENGTH_MAX_FT = 5000;
+export const VD_TOOL_VOLTS_MAX = 1000;
+export const VD_TOOL_AMPS_MAX = 10000;
+export const VD_TOOL_TARGET_MIN_PCT = 0.1;
+export const VD_TOOL_TARGET_MAX_PCT = 20;
+/** The single-phase quick picks: nominal system voltages, or the line-to-neutral voltage of one (277 V of 480Y/277 V). */
+export const VD_TOOL_SINGLE_QUICK_VOLTS = [120, 208, 240, 277];
+
+/** k in VD = k × I × R × L ÷ 1000: 2 for DC and single-phase, √3 for three-phase on its line-to-line voltage. */
+export function circuitFactor(circuit: VdCircuit): number {
+  return circuit === 'three' ? Math.sqrt(3) : 2;
+}
+
+export interface DropInput {
+  size: SizeKey;
+  material: Material;
+  /** Current per phase, all sets together, A. */
+  amps: number;
+  /** One way, ft. */
+  lengthFt: number;
+  /** Supply voltage; line to line on three-phase. */
+  volts: number;
+  circuit: VdCircuit;
+  /** Conductor temperature, °C. */
+  tempC: number;
+  /** Conductors in parallel per phase (and in the return on DC and single-phase). */
+  sets: number;
+}
+
+export interface DropRun extends DropInput {
+  /** One conductor, Ω per 1000 ft at tempC. */
+  perKft: number;
+  /** The sets of one phase together: perKft ÷ sets. */
+  phaseKft: number;
+  vdVolts: number;
+  vdPct: number;
+  loadVolts: number;
+  /** Heat in all the conductors, W: 2 × I² × R × L ÷ 1000 (3 × … on three-phase), R = phaseKft. */
+  lossW: number;
+  /** Significant figures of the resistance, and so of the drop and the loss (resistanceSig). */
+  sig: number;
+}
+
+/** The drop of one run, or null for a size the calculator doesn't offer or an input out of range. */
+export function dropRun(input: DropInput): DropRun | null {
+  const { size, material, amps, lengthFt, volts, circuit, tempC, sets } = input;
+  if (!voltageDropSizes(material).includes(size)) return null;
+  const perKft = resistanceAt(size, material, tempC);
+  if (perKft === null || !(perKft > 0)) return null;
+  if (!(volts > 0) || !(amps >= 0) || !(lengthFt >= 0) || !(VD_TOOL_SETS as readonly number[]).includes(sets)) return null;
+  const phaseKft = perKft / sets;
+  const vdVolts = (circuitFactor(circuit) * amps * phaseKft * lengthFt) / 1000;
+  return {
+    ...input,
+    perKft,
+    phaseKft,
+    vdVolts,
+    vdPct: (vdVolts / volts) * 100,
+    loadVolts: volts - vdVolts,
+    lossW: powerLossWatts(amps, phaseKft, lengthFt, circuit),
+    sig: resistanceSig(size, material),
+  };
+}
+
+/** The run in up to two smaller and two larger sizes the calculator offers, smallest first, the given size among them. */
+export function dropNeighbours(input: DropInput): DropRun[] {
+  const sizes = voltageDropSizes(input.material);
+  const i = sizes.indexOf(input.size);
+  if (i === -1) return [];
+  return sizes
+    .slice(Math.max(0, i - 2), i + 3)
+    .map((size) => dropRun({ ...input, size }))
+    .filter((run): run is DropRun => run !== null);
+}
+
+export interface TargetSearch {
+  /** The smallest size whose drop is at most the target, or null when 2000 kcmil is above it too. */
+  found: DropRun | null;
+  /** The next smaller size, above the target (null when the smallest size already meets it). */
+  smaller: DropRun | null;
+}
+
+/** The smallest size the calculator offers whose drop is at most `targetPct` (compared unrounded). */
+export function sizeForTarget(input: Omit<DropInput, 'size'>, targetPct: number): TargetSearch {
+  let smaller: DropRun | null = null;
+  for (const size of voltageDropSizes(input.material)) {
+    const run = dropRun({ ...input, size });
+    if (!run) continue;
+    if (run.vdPct <= targetPct) return { found: run, smaller };
+    smaller = run;
+  }
+  return { found: null, smaller };
+}
+
+/**
+ * The 60 °C ampacity of the size when the current in each conductor (amps ÷ sets) is above it, or null
+ * (ampacityExceeded on the current per conductor).
+ */
+export function ampacityPerConductorExceeded(run: Pick<DropRun, 'size' | 'material' | 'amps' | 'sets'>): number | null {
+  return ampacityExceeded(run.size, run.material, run.amps / run.sets);
+}
+
+/** The one-way length, ft, at which the drop reaches `targetPct` of `volts`; null for a size without a resistance. */
+export function lengthForDrop(input: Omit<DropInput, 'lengthFt'>, targetPct: number): number | null {
+  const perKft = resistanceAt(input.size, input.material, input.tempC);
+  if (perKft === null || !(input.amps > 0) || !(input.volts > 0)) return null;
+  return ((targetPct / 100) * input.volts * 1000) / (circuitFactor(input.circuit) * input.amps * (perKft / input.sets));
+}

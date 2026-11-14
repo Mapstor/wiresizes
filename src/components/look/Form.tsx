@@ -169,7 +169,7 @@ export function Segmented<T extends string>({
             />
             <span
               className={clsx(
-                'flex h-[42px] cursor-pointer select-none items-center px-3.5 font-display text-[15px] font-semibold text-ink',
+                'flex h-[42px] cursor-pointer select-none items-center px-2.5 font-display text-[15px] font-semibold text-ink sm:px-3.5',
                 'peer-checked:bg-ink peer-checked:text-white peer-focus-visible:outline peer-focus-visible:outline-2',
                 'peer-focus-visible:outline-offset-[3px] peer-focus-visible:outline-ink',
                 i === 0 && 'rounded-l-[5px]',

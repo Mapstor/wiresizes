@@ -16,7 +16,10 @@ import { AWG_TABLE, sizeKeyFromAwgName } from '@/lib/verified/awg';
 import { AMBIENT_ROWS } from '@/lib/verified/nec-310-15-B-1-1';
 import type { CorrectionColumn } from '@/lib/verified/nec-310-15-B-1-1';
 import { ADJUSTMENT_ROWS } from '@/lib/verified/nec-310-15-C-1';
-import { TABLE_310_16_ROWS } from '@/lib/verified/nec-310-16';
+import { VOLTAGE_DROP_NOTE } from '@/lib/verified/nec-continuous-load-2023';
+import { TABLE_310_16_ROWS, table31016 } from '@/lib/verified/nec-310-16';
+import { decimalsAtSig } from '@/lib/calculations/format';
+import { dropRun, lengthForDrop } from '@/lib/calculations/voltage-drop';
 import { editionGroups, editionLabel, NEC_ADOPTION_DOMAIN, NOT_VERIFIED, stateName } from '@/lib/verified/nec-adoption';
 
 export const COPPER = '#a95a26';
@@ -739,3 +742,185 @@ export function EditionTileMap() {
   );
 }
 
+
+// ── How far each size runs before a 3 % drop (voltage drop calculator, WSZ-006b) ───────────────────────────────────
+
+const VD = 'calc:voltage-drop';
+/** The scenario of the chart and of the distance table beside it: copper at 75 °C carrying its 60 °C ampacity. */
+export const DROP_CHART = { targetPct: VOLTAGE_DROP_NOTE.feederPct, volts: 120, tempC: 75, column: 'cu_60' as const };
+const DROP_CHART_SIZES = ['14', '12', '10', '8', '6', '4', '3', '2', '1', '1/0', '2/0', '3/0', '4/0'];
+
+/** The one-way length in whole feet, rounded down, at which `size` copper carrying its 60 °C ampacity drops the target. */
+export function dropDistanceFt(size: string, volts: number, circuit: 'single' | 'three'): { amps: number; ft: number } {
+  const amps = table31016(size, DROP_CHART.column) as number;
+  const ft = lengthForDrop({ size, material: 'Cu', amps, volts, circuit, tempC: DROP_CHART.tempC, sets: 1 }, DROP_CHART.targetPct) as number;
+  return { amps, ft: Math.floor(ft) };
+}
+
+const DROP_ROWS = DROP_CHART_SIZES.map((size) => ({ size, ...dropDistanceFt(size, DROP_CHART.volts, 'single') }));
+
+function DropDistancePlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 62 : 74;
+  const right = narrow ? 20 : 56;
+  const top = 8;
+  const rowH = narrow ? 26 : 28;
+  const barH = narrow ? 14 : 16;
+  const bottom = 42;
+  const H = top + DROP_ROWS.length * rowH + bottom;
+  const pw = W - left - right;
+  const max = 175;
+  const x = (v: number) => left + (v / max) * pw;
+  const ticks = narrow ? [0, 50, 100, 150] : [0, 25, 50, 75, 100, 125, 150, 175];
+  const id = narrow ? 'drop-distance-narrow' : 'drop-distance-wide';
+  const first = DROP_ROWS[0];
+  const last = DROP_ROWS[DROP_ROWS.length - 1];
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={VD}
+    >
+      <title id={`${id}-title`}>
+        {`One-way length at which the voltage drop reaches ${DROP_CHART.targetPct} % on a ${DROP_CHART.volts} V single-phase circuit, for copper from 14 AWG to 4/0 carrying its ampacity in the 60 °C column of NEC Table 310.16, conductor at ${DROP_CHART.tempC} °C: from ${first.ft} ft for 14 AWG to ${last.ft} ft for 4/0`}
+      </title>
+      {ticks.map((t) => (
+        <g key={t}>
+          <line x1={x(t)} x2={x(t)} y1={top - 4} y2={H - bottom + 4} stroke={GRID} strokeWidth={1} />
+          <text x={x(t)} y={H - bottom + 20} textAnchor="middle" fontSize={13} fill={MUTED}>
+            <Num v={t} src={VD} svg />
+          </text>
+        </g>
+      ))}
+      <text x={left + pw / 2} y={H - 4} textAnchor="middle" fontSize={13} fill={MUTED}>
+        Feet, one way
+      </text>
+      {DROP_ROWS.map((r, k) => {
+        const y = top + k * rowH + (rowH - barH) / 2;
+        const cy = y + barH / 2;
+        const tipW = narrow ? 168 : 182;
+        const tipX = Math.min(x(r.ft) + 8, W - tipW - 1);
+        return (
+          <g key={r.size} className="viz-mark">
+            <rect x={0} y={top + k * rowH} width={W} height={rowH} fill="transparent" />
+            <text x={left - 10} y={cy + 4.5} textAnchor="end" fontSize={13} fill={INK}>
+              <Size s={r.size} svg />
+            </text>
+            <path d={barPath(left, y, x(r.ft) - left, barH)} fill={COPPER} className="viz-grow" />
+            {(r === first || r === last) && (
+              <text x={x(r.ft) + 6} y={cy + 4.5} fontSize={13} fontWeight={700} fill={INK} className="viz-pop">
+                <Val v={r.ft} unit="ft" src={VD} svg />
+              </text>
+            )}
+            <g className="viz-tip" aria-hidden="true">
+              <rect x={tipX} y={cy - 11} width={tipW} height={22} fill="#ffffff" stroke={INK} strokeWidth={1} />
+              <text x={tipX + 6} y={cy + 4.5} fontSize={13} fill={INK}>
+                <Val v={r.ft} unit="ft" src={VD} svg /> at <Val v={r.amps} unit="A" src={AMP} svg />
+              </text>
+            </g>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/**
+ * How far each copper size can run on a 120 V circuit before the drop reaches 3 %, carrying the current Table 310.16's
+ * 60 °C column allows it, conductor at 75 °C. The page's distance table has the same values and the 240 V and
+ * three-phase columns.
+ */
+export function DropDistanceChart() {
+  return (
+    <div>
+      <DropDistancePlot narrow={false} />
+      <DropDistancePlot narrow />
+    </div>
+  );
+}
+
+// ── Where the drop happens: out and back (voltage drop calculator's worked example) ──────────────────────────────
+
+/** The worked example the diagram draws: golden case "3/0 AWG Cu, 200 A, 100 ft one way, 240 V, single-phase, 75 °C". */
+export const SPLIT_EXAMPLE = dropRun({ size: '3/0', material: 'Cu', amps: 200, lengthFt: 100, volts: 240, circuit: 'single', tempC: 75, sets: 1 });
+
+function SplitPlot({ narrow }: { narrow: boolean }) {
+  const run = SPLIT_EXAMPLE;
+  if (!run) throw new Error('SplitPlot: the worked example has no result');
+  const W = narrow ? 288 : 560;
+  const H = narrow ? 196 : 176;
+  const boxW = narrow ? 66 : 104;
+  const loadW = narrow ? 92 : 116;
+  const boxTop = narrow ? 52 : 44;
+  const boxH = narrow ? 92 : 88;
+  const yOut = boxTop + 22;
+  const yBack = boxTop + boxH - 22;
+  const x1 = boxW;
+  const x2 = W - loadW;
+  const mid = (x1 + x2) / 2;
+  const half = run.vdVolts / 2;
+  const sig = { sig: run.sig };
+  const load = { fixed: decimalsAtSig(run.vdVolts, run.sig) };
+  const id = narrow ? 'drop-split-narrow' : 'drop-split-wide';
+  const arrow = (x: number, y: number, dir: 1 | -1) => `M${x - 6 * dir},${y - 5}L${x},${y}L${x - 6 * dir},${y + 5}`;
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={VD}
+    >
+      <title id={`${id}-title`}>
+        {`A ${run.volts} V supply feeding a load ${run.lengthFt} ft away through two 3/0 AWG copper conductors at ${run.amps} A: each conductor drops half of the total, and the load gets the supply voltage less the total drop`}
+      </title>
+      {/* supply and load: square boxes in ink, the conductors as two ink lines with the current's direction */}
+      <rect x={1} y={boxTop} width={boxW - 2} height={boxH} fill="#ffffff" stroke={INK} strokeWidth={2} />
+      <text x={boxW / 2} y={boxTop + boxH / 2 - 4} textAnchor="middle" fontSize={13} fill={MUTED}>
+        Supply
+      </text>
+      <text x={boxW / 2} y={boxTop + boxH / 2 + 15} textAnchor="middle" fontSize={14} fontWeight={700} fill={INK}>
+        <Val v={run.volts} unit="V" src={VD} svg />
+      </text>
+      <rect x={x2 + 1} y={boxTop} width={loadW - 2} height={boxH} fill="#ffffff" stroke={INK} strokeWidth={2} />
+      <text x={x2 + loadW / 2} y={boxTop + boxH / 2 - 4} textAnchor="middle" fontSize={13} fill={MUTED}>
+        Load
+      </text>
+      <text x={x2 + loadW / 2} y={boxTop + boxH / 2 + 15} textAnchor="middle" fontSize={14} fontWeight={700} fill={INK}>
+        <Val v={run.loadVolts} unit="V" src={VD} format={load} svg />
+      </text>
+      <line x1={x1} x2={x2} y1={yOut} y2={yOut} stroke={INK} strokeWidth={3} pathLength={1} className="viz-draw" />
+      <line x1={x2} x2={x1} y1={yBack} y2={yBack} stroke={INK} strokeWidth={3} pathLength={1} className="viz-draw" />
+      <path d={arrow(mid + 10, yOut, 1)} fill="none" stroke={INK} strokeWidth={2} />
+      <path d={arrow(mid - 10, yBack, -1)} fill="none" stroke={INK} strokeWidth={2} />
+      <text x={mid} y={yOut - 12} textAnchor="middle" fontSize={13} fill={INK} className="viz-pop">
+        Out: drops <Val v={half} unit="V" src={VD} format={sig} svg />
+      </text>
+      <text x={mid} y={yBack + 22} textAnchor="middle" fontSize={13} fill={INK} className="viz-pop">
+        Back: drops <Val v={half} unit="V" src={VD} format={sig} svg />
+      </text>
+      <text x={mid} y={(yOut + yBack) / 2 + 4.5} textAnchor="middle" fontSize={13} fill={MUTED}>
+        <Val v={run.lengthFt} unit="ft" src={VD} svg /> one way
+      </text>
+      <text x={0} y={narrow ? 18 : 18} fontSize={13} fill={INK}>
+        Total drop <Val v={run.vdVolts} unit="V" src={VD} format={sig} svg />, <Val v={run.vdPct} unit="%" src={VD} format={sig} svg />
+      </text>
+    </svg>
+  );
+}
+
+/** The worked example drawn: a supply, two conductors and a load, the drop shared by the two conductors. */
+export function DropSplitDiagram() {
+  return (
+    <div>
+      <SplitPlot narrow={false} />
+      <SplitPlot narrow />
+    </div>
+  );
+}

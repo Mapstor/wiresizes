@@ -8,6 +8,7 @@ import { useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Val } from '@/components/content/Val';
 import { Num } from '@/components/content/Num';
+import { ResultActions } from '@/components/look/ResultActions';
 import { RunBars } from '@/components/look/RunBars';
 import {
   BUTTON_PRIMARY,
@@ -187,11 +188,9 @@ export function WireResistanceTool() {
     setInputs(next);
     setResult(compute(next));
   });
-  const [copied, setCopied] = useState(false);
 
   const update = (patch: Partial<Inputs>) => {
     markChanged();
-    setCopied(false);
     setInputs((prev) => ({ ...prev, ...patch }));
   };
 
@@ -425,17 +424,12 @@ export function WireResistanceTool() {
         </div>
       </form>
 
-      {result && (
-        <Result
-          result={result}
-          headingRef={headingRef}
-          onCopy={async () => {
-            await navigator.clipboard.writeText(shareUrl());
-            setCopied(true);
-          }}
-          copied={copied}
-        />
+      {result && JSON.stringify(result.inputs) !== JSON.stringify(inputs) && (
+        <p role="status" className="mt-6 text-[15px] font-semibold text-ink">
+          The inputs have changed since this result. Press Calculate to update it.
+        </p>
       )}
+      {result && <Result result={result} headingRef={headingRef} shareUrl={shareUrl} />}
     </div>
   );
 }
@@ -443,13 +437,11 @@ export function WireResistanceTool() {
 function Result({
   result,
   headingRef,
-  onCopy,
-  copied,
+  shareUrl,
 }: {
   result: Computed;
   headingRef: React.RefObject<HTMLHeadingElement | null>;
-  onCopy: () => void;
-  copied: boolean;
+  shareUrl: () => string;
 }) {
   const { inputs, run } = result;
   const metal = inputs.material === 'Cu' ? 'copper' : 'aluminum EC-H19';
@@ -591,10 +583,11 @@ function Result({
 
       <div className="mt-4 max-w-[40rem]">
         <RunBars
-          rows={run.neighbours}
+          rows={run.neighbours.map((n) => ({ size: n.size, value: n.conductor, format: { sig: n.sig } }))}
           chosen={run.size}
           material={inputs.material}
           src={CALC}
+          unit="Ω"
           label={`One conductor, ${inputs.length} ${inputs.lengthUnit}, in nearby sizes`}
         />
       </div>
@@ -625,14 +618,7 @@ function Result({
         </p>
       </div>
 
-      <div className="mt-6 flex flex-wrap gap-3 print:hidden">
-        <button type="button" onClick={onCopy} className={BUTTON_SECONDARY}>
-          {copied ? 'Link copied' : 'Copy link to this result'}
-        </button>
-        <button type="button" onClick={() => window.print()} className={BUTTON_SECONDARY}>
-          Print
-        </button>
-      </div>
+      <ResultActions shareUrl={shareUrl} />
     </section>
   );
 }

@@ -1,8 +1,8 @@
 // /methodology (WSZ-004b): one section per verified source domain that a live page's <Sources> lists, in reading
 // order, each with the live pages whose Sources list it ("Cited on"), named as the route list names them
 // (src/lib/routes.ts, D-26). nec-110-14c stays off until WSZ-009 adds
-// it to the wire size calculator's Sources (D-06); domains that no live page cites (nec-continuous-load,
-// doe-efficiency-standards and the rest) stay off too (WSZ-017 answers 10 and 12). check-structure 24 compares these
+// it to the wire size calculator's Sources (D-06); domains that no live page cites (doe-efficiency-standards and the
+// rest) stay off too (WSZ-017 answers 10 and 12). check-structure 24 compares these
 // lists with the built pages, so a domain added to or dropped from a page's Sources fails the build until this file
 // follows. Pure data, no JSX: the tests import it.
 import { pageName } from './routes';
@@ -74,6 +74,12 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     citedOn: [WIRE_SIZE, GROUND_WIRE],
   },
   {
+    id: 'continuous-loads',
+    domain: 'nec-continuous-load',
+    title: 'Continuous loads and the voltage-drop note',
+    citedOn: [VOLTAGE_DROP],
+  },
+  {
     id: 'grounding',
     domain: 'nec-250-grounding',
     title: 'Ground wires and grounding electrode conductors',
@@ -97,7 +103,14 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
       '/calculators/kva-to-amps-calculator',
       '/calculators/three-phase-calculator',
       '/calculators/ohms-law-calculator',
+      VOLTAGE_DROP,
     ],
+  },
+  {
+    id: 'nominal-voltages',
+    domain: 'us-nominal-voltages',
+    title: 'Nominal system voltages',
+    citedOn: [VOLTAGE_DROP],
   },
   {
     id: 'conversions',

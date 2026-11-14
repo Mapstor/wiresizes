@@ -39,6 +39,16 @@ export function formatSignificant(value: number, digits: number): string {
   });
 }
 
+/**
+ * The decimals that `value` shows at `digits` significant figures, at most `max` (3): decimalsAtSig(3.094, 3) → 2,
+ * decimalsAtSig(0.0123, 3) → 3. A sum or difference with that value keeps those decimals (120 V − 3.09 V = 116.91 V).
+ */
+export function decimalsAtSig(value: number, digits: number, max = 3): number {
+  if (!(Math.abs(value) > 0) || !Number.isFinite(value)) return 0;
+  const shown = Number(value.toPrecision(digits));
+  return Math.min(max, Math.max(0, digits - 1 - Math.floor(Math.log10(Math.abs(shown)))));
+}
+
 /** A number as the reader entered it, grouped and unrounded: formatEntered(1500) → "1,500", formatEntered(0.85) → "0.85". */
 export function formatEntered(value: number): string {
   return group(value, 'entered', { maximumFractionDigits: 20 });
