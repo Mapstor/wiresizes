@@ -184,10 +184,13 @@ export function ThreePhaseTool() {
       amps: { label: 'Current in each line, A', hint: 'The current in one of the three line conductors.' },
       pf: {
         label: 'Power factor',
-        hint:
-          inputs.known === 'kva-pf'
-            ? 'From 0 to 1. The current doesn’t depend on it; the real and reactive power do.'
-            : 'From 0 to 1, from the nameplate or a meter. A heater, which draws no reactive power, has 1.',
+        hint: (
+          <span data-src={EIA}>
+            {inputs.known === 'kva-pf'
+              ? 'From 0 to 1. The current doesn’t depend on it; the real and reactive power do.'
+              : 'From 0 to 1, from the nameplate or a meter. A heater, which draws no reactive power, has 1.'}
+          </span>
+        ),
       },
     }[f];
     return (
@@ -271,7 +274,7 @@ export function ThreePhaseTool() {
             <Field
               id="target"
               label="Target power factor (optional)"
-              hint="To size the capacitor bank that raises the power factor to it, 0.95 for example. Leave empty to skip."
+              hint={<span data-src={PFC}>To size the capacitor bank that raises the power factor to it, 0.95 for example. Leave empty to skip.</span>}
               error={shown('target')}
             >
               <TextInput

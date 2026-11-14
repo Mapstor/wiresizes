@@ -119,7 +119,7 @@ const TOC: ([string, string] | [string, string, string])[] = [
   ['read', 'Reading the result'],
   ['examples', 'Worked examples'],
   ['formulas', 'The formulas'],
-  ['root3', 'Why √3: line to line and line to neutral'],
+  ['root3', 'Why √3: line to line and line to neutral', MIT],
   ['power', 'kW, kVA, kVAR and power factor'],
   ['correction', 'Raising the power factor'],
   ['per-kw', 'Current per kW and per kVA'],
@@ -284,7 +284,7 @@ export default function ThreePhaseCalculatorPage() {
           </section>
 
           <section aria-labelledby="root3" className="space-y-4">
-            <h2 id="root3" className={H2}>
+            <h2 id="root3" className={H2} data-src={MIT}>
               Why √3: line to line and line to neutral
             </h2>
             <p className={P} data-src={MIT}>
@@ -540,7 +540,9 @@ export default function ThreePhaseCalculatorPage() {
               </p>
             </div>
             <div className="space-y-1.5">
-              <h3 className={H3}>Why is √3 in three-phase formulas?</h3>
+              <h3 className={H3} data-src={MIT}>
+                Why is √3 in three-phase formulas?
+              </h3>
               <p className={P} data-src={MIT}>
                 The voltage between two lines is √3 times the voltage from a line to neutral. The three phases deliver{' '}
                 <Num v={3} src={MIT} /> × V(line to neutral) × I together, which is √3 × V(line to line) × I.
