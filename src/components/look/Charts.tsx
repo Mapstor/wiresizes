@@ -11,6 +11,7 @@ import { Num } from '@/components/content/Num';
 import { Size } from '@/components/content/Size';
 import { Val } from '@/components/content/Val';
 import { areaRatio } from '@/lib/calculations/awg-geometry';
+import { resistanceAt, resistanceSig } from '@/lib/calculations/resistance';
 import { AWG_TABLE, sizeKeyFromAwgName } from '@/lib/verified/awg';
 import { AMBIENT_ROWS } from '@/lib/verified/nec-310-15-B-1-1';
 import type { CorrectionColumn } from '@/lib/verified/nec-310-15-B-1-1';
@@ -53,6 +54,118 @@ function Key({ x, y, color, children, dot = false }: { x: number; y: number; col
 export function barPath(x: number, y: number, w: number, h: number): string {
   const r = Math.min(4, w / 2, h / 2);
   return `M${x},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h - r}Q${x + w},${y + h} ${x + w - r},${y + h}H${x}Z`;
+}
+
+// ── Resistance against conductor temperature (wire resistance calculator, WSZ-006) ─────────────────────────────
+
+const TEMP_SIZE = '12';
+const TEMP_POINTS = [-40, 90];
+const TEMP_MARKS = [20, 75];
+const RCALC = 'calc:resistance';
+
+function TemperaturePlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 640;
+  const H = narrow ? 300 : 330;
+  const left = narrow ? 44 : 52;
+  const right = narrow ? 14 : 64;
+  const top = narrow ? 70 : 52;
+  const bottom = 52;
+  const pw = W - left - right;
+  const ph = H - top - bottom;
+  const tMin = -40;
+  const tMax = 90;
+  const yMin = 1;
+  const yMax = 3.5;
+  const x = (t: number) => left + ((t - tMin) / (tMax - tMin)) * pw;
+  const y = (v: number) => top + ph - ((v - yMin) / (yMax - yMin)) * ph;
+  const series = (['Cu', 'Al'] as const).map((m) => ({
+    m,
+    color: m === 'Cu' ? COPPER : ALUMINUM,
+    pts: TEMP_POINTS.map((t) => ({ t, v: resistanceAt(TEMP_SIZE, m, t) as number })),
+    marks: TEMP_MARKS.map((t) => ({ t, v: resistanceAt(TEMP_SIZE, m, t) as number })),
+  }));
+  const id = narrow ? 'temp-narrow' : 'temp-wide';
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('viz-scope h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[640px]')}
+      data-src={RCALC}
+    >
+      <title id={`${id}-title`}>
+        Resistance of 12 AWG copper and aluminum EC-H19 per 1,000 ft from −40 °C to 90 °C, calculated from NIST Handbooks 100 and 109
+      </title>
+      <Key x={0} y={18} color={COPPER}>
+        <tspan data-size="12">12 AWG</tspan> copper
+      </Key>
+      <Key x={narrow ? 0 : 150} y={narrow ? 40 : 18} color={ALUMINUM}>
+        <tspan data-size="12">12 AWG</tspan> aluminum EC-H19
+      </Key>
+      <text x={0} y={narrow ? 62 : 40} fontSize={13} fill={MUTED}>
+        Ω per thousand feet
+      </text>
+      {[1, 1.5, 2, 2.5, 3, 3.5].map((v) => (
+        <g key={v}>
+          <line x1={left} x2={left + pw} y1={y(v)} y2={y(v)} stroke={GRID} strokeWidth={1} />
+          <text x={left - 8} y={y(v) + 4.5} textAnchor="end" fontSize={13} fill={MUTED}>
+            <Num v={v} src={RCALC} format={{ fixed: 1 }} svg />
+          </text>
+        </g>
+      ))}
+      {[-40, -20, 0, 20, 40, 60, 75, 90].filter((t) => !narrow || t % 40 === 0 || t === 20 || t === 75).map((t) => (
+        <text key={t} x={x(t)} y={top + ph + 22} textAnchor="middle" fontSize={13} fill={TEMP_MARKS.includes(t) ? INK : MUTED} fontWeight={TEMP_MARKS.includes(t) ? 700 : 400}>
+          <Val v={t} unit="°C" src={RCALC} svg />
+        </text>
+      ))}
+      {TEMP_MARKS.map((t) => (
+        <line key={t} x1={x(t)} x2={x(t)} y1={top} y2={top + ph} stroke={INK} strokeWidth={1} strokeDasharray="3 4" />
+      ))}
+      {series.map((s) => (
+        <g key={s.m}>
+          <path
+            d={`M${x(s.pts[0].t).toFixed(1)},${y(s.pts[0].v).toFixed(1)}L${x(s.pts[1].t).toFixed(1)},${y(s.pts[1].v).toFixed(1)}`}
+            pathLength={1}
+            fill="none"
+            stroke={s.color}
+            strokeWidth={2}
+            strokeLinecap="round"
+            className="viz-draw"
+          />
+          {s.marks.map((p) => (
+            <circle key={p.t} cx={x(p.t)} cy={y(p.v)} r={5} fill={s.color} stroke="#ffffff" strokeWidth={2} className="viz-end" />
+          ))}
+          {/* the lines rise to the right: aluminum's values sit above and left of their dots, copper's below and right */}
+          {!narrow &&
+            s.marks.map((p) => (
+              <text
+                key={p.t}
+                x={x(p.t) + (s.m === 'Cu' ? 10 : -10)}
+                y={y(p.v) + (s.m === 'Cu' ? 19 : -11)}
+                textAnchor={s.m === 'Cu' ? 'start' : 'end'}
+                fontSize={13}
+                fill={INK}
+                className="viz-end-fade"
+              >
+                <Val v={p.v} unit="Ω" src={RCALC} format={{ sig: resistanceSig(TEMP_SIZE, s.m) }} svg />
+              </text>
+            ))}
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+/** 12 AWG copper and aluminum per 1,000 ft across the calculator's temperature range, 20 °C and 75 °C marked. */
+export function TemperatureChart() {
+  return (
+    <div>
+      <TemperaturePlot narrow={false} />
+      <TemperaturePlot narrow />
+    </div>
+  );
 }
 
 // ── Resistance per 1,000 ft, every gauge (AWG chart) ─────────────────────────────────────────────────────────────

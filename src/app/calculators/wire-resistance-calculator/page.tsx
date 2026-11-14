@@ -1,662 +1,574 @@
-import { Metadata } from 'next';
-import { WireResistanceCalculator } from '@/components/calculators/WireResistanceCalculator';
-import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Settings } from 'lucide-react';
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 import Link from 'next/link';
+import { clsx } from 'clsx';
+import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 import { Byline } from '@/components/content/Byline';
-import { conductor, formatSize, TABLE_310_16_SIZES } from '@/lib/calculations/sizes';
-import type { ConductorData } from '@/lib/calculations/sizes';
+import { DataTable, RSTICKY_TD, RSTICKY_TH, RTD, RTH } from '@/components/content/DataTable';
+import { Figure } from '@/components/content/Figure';
+import { Num } from '@/components/content/Num';
+import { Size } from '@/components/content/Size';
+import { SourceLine } from '@/components/content/SourceLine';
 import { Sources } from '@/components/content/Sources';
-import { DOMAINS as RESISTANCE_DOMAINS, RESISTANCE_NOTES } from '@/lib/calculations/resistance';
+import { Val } from '@/components/content/Val';
+import { WireResistanceTool } from '@/components/calculators/WireResistanceTool';
+import { LookGuideBody } from '@/components/layout/LookGuideBody';
+import { ResistanceChart, TemperatureChart } from '@/components/look/Charts';
+import { OnThisPage } from '@/components/look/OnThisPage';
+import { PageTitle } from '@/components/look/PageTitle';
+import { RunBars } from '@/components/look/RunBars';
+import {
+  LOOK_BYLINE,
+  LOOK_BYLINE_LINK,
+  LOOK_FORMULA,
+  LOOK_H2 as H2,
+  LOOK_H3 as H3,
+  LOOK_LEAD,
+  LOOK_LINK as LINK,
+  LOOK_P as P,
+  LOOK_PAGE,
+  LOOK_SOURCES_HEADING,
+  LOOK_SOURCES_LIST,
+  LOOK_SOURCES_NOTE,
+  LOOK_SOURCES_SECTION,
+} from '@/components/look/styles';
+import { areaRatio } from '@/lib/calculations/awg-geometry';
+import {
+  ALUMINUM_ALPHA,
+  COPPER_ALPHA,
+  ENGINE_ID,
+  atTemperature,
+  equivalentSize,
+  ohmsPerKm,
+  resistanceAt,
+  resistanceRun,
+  resistanceSig,
+} from '@/lib/calculations/resistance';
+import { articleDates } from '@/lib/page-dates';
+import { AWG_CONSTANTS, AWG_TABLE, areaCmil, conductor, sizeKeyFromAwgName } from '@/lib/verified/awg';
+import type { SizeKey } from '@/lib/verified/awg';
+import { TABLE_310_16_SIZES } from '@/lib/verified/nec-310-16';
 
-// Sources: the domains of the engines this page uses
-const SOURCE_DOMAINS = RESISTANCE_DOMAINS;
+// /calculators/wire-resistance-calculator (WSZ-006 PHYSICS; spec: research/page-specs.md "WSZ-006"): the calculator in
+// the look (D-33), every number from the resistance engine or awg.json with its source in data-src. Copper R20 from
+// NIST Handbook 100 (kcmil calculated), aluminum EC-H19 from Handbook 109's resistivity, R(T) = R20 × (1 + α(T − 20 °C)).
+// Worked example = golden case "14 AWG copper at 75 °C"; the typical-values tables come from the same engine.
+const ROUTE = '/calculators/wire-resistance-calculator';
+const URL = `https://wiresizes.com${ROUTE}`;
+const TITLE = 'Wire Resistance Calculator: Ohms per 1,000 ft and per km';
+const DESCRIPTION =
+  'Resistance of copper or aluminum wire from 40 AWG to 2000 kcmil for your length and temperature, from NIST’s copper wire tables, with the method shown.';
 
 export const metadata: Metadata = {
-  title: 'Wire Resistance Calculator — Ω / 1000 ft',
-  description: 'DC resistance of copper and aluminum conductors per AWG and length. For voltage-drop calculations.',
-  keywords: 'wire resistance calculator, conductor resistance, ohms per foot, wire impedance, electrical resistance, copper wire resistance, aluminum wire resistance, voltage drop resistance',
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: ROUTE },
   openGraph: {
-    title: 'Wire Resistance Calculator - Conductor Resistance Tool',
-    description: 'Calculate electrical resistance of wire conductors. Copper and aluminum wire resistance calculator.',
     type: 'website',
-    url: 'https://wiresizes.com/calculators/wire-resistance-calculator',
-    images: ['/opengraph-image']
+    locale: 'en_US',
+    siteName: 'WireSizes.com',
+    url: URL,
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ['/opengraph-image'],
   },
-  alternates: { canonical: '/calculators/wire-resistance-calculator' },
+  twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION },
 };
 
+const RES = 'conductor-resistance-20c';
+const GEO = 'awg-geometry';
+const AMP = 'nec-310-16';
+const CALC = `calc:${ENGINE_ID}`;
+const GCALC = 'calc:awg-geometry';
+const SIG4 = { sig: 4 } as const;
 
-// Web application data for schema
-const webAppData = {
-  name: "Wire Resistance Calculator",
-  url: "https://wiresizes.com/calculators/wire-resistance-calculator",
-  description: "Calculate wire resistance and power loss for copper and aluminum conductors."
-};
+const r20 = (key: SizeKey) => (conductor(key) as NonNullable<ReturnType<typeof conductor>>).r20Cu;
+const FACTOR_75_CU = atTemperature(1, 'Cu', 75);
+const FACTOR_75_AL = atTemperature(1, 'Al', 75);
+const AL_TO_CU = AWG_CONSTANTS.aluminum_ECH19_resistivity_ohm_cmil_per_ft_20C / AWG_CONSTANTS.copper_resistivity_ohm_cmil_per_ft_20C;
+const AL_FOR_12 = equivalentSize('12', 'Cu', 'Al') as SizeKey;
+const EXAMPLE = resistanceRun('14', 'Cu', 100, 75) as NonNullable<ReturnType<typeof resistanceRun>>;
+const STEP = areaRatio(1);
+/** °F from °C, for the parenthetical at a temperature's first mention. */
+const cToF = (c: number) => (c * 9) / 5 + 32;
+/** The significant figures of 14 AWG and 12 AWG copper as NIST prints them, for values calculated from them. */
+const EX = { sig: EXAMPLE.sig };
+const SIG12 = { sig: resistanceSig('12', 'Cu') };
 
-// Ω per 1000 ft from data/verified/awg.json, 18 AWG to 500 kcmil
-const RESISTANCE_ROWS: ConductorData[] = TABLE_310_16_SIZES.slice(0, TABLE_310_16_SIZES.indexOf('500') + 1)
-  .map((key) => conductor(key))
-  .filter((row): row is ConductorData => row !== null);
+/** Building wire, 14 AWG to 4/0: Table 310.16's sizes in that range. */
+const BUILDING = TABLE_310_16_SIZES.slice(TABLE_310_16_SIZES.indexOf('14'), TABLE_310_16_SIZES.indexOf('4/0') + 1);
+/** Every gauge thinner than 14 AWG, 16 to 40 AWG, thick to thin. */
+const SMALL = AWG_TABLE.map((row) => sizeKeyFromAwgName(row.awg)).filter((key) => {
+  const n = Number(key);
+  return Number.isFinite(n) && n >= 16;
+});
 
-const wireResistanceFAQs = [
-  {
-    question: "How do I calculate the resistance of a wire?",
-    answer: "Wire resistance is calculated using R = ρL/A, where R is resistance, ρ (rho) is resistivity, L is length, and A is cross-sectional area. For practical calculations, use: R = (Resistance per 1000 feet × Length in feet) ÷ 1000. For example, 12 AWG copper has 1.93 ohms per 1000 feet at 75 °C, so 100 feet = 0.193 ohms."
-  },
-  {
-    question: "What's the difference between resistance and impedance?",
-    answer: "Resistance is the opposition to DC current flow, measured in ohms. Impedance is the total opposition to AC current flow, including both resistance and reactance (inductive and capacitive)."
-  },
-  {
-    question: "How does temperature affect wire resistance?",
-    answer: "Wire resistance increases with temperature for copper and aluminum. The formula is: R₂ = R₁[1 + α(T₂ - T₁)], where α is the temperature coefficient (0.00393/°C for copper, 0.00403/°C for aluminum). For every 1 °C increase, copper resistance increases by about 0.39 %. At 75 °C vs 20 °C, resistance increases by approximately 22 %."
-  },
-  {
-    question: "Why is copper wire resistance lower than aluminum?",
-    answer: "Aluminum EC-H19 has about 64 % higher resistance than copper of the same size: 17.002 against 10.371 Ω·cmil/ft at 20 °C (NIST Handbooks 109 and 100)."
-  },
-  {
-    question: "How do I calculate voltage drop from wire resistance?",
-    answer: "Voltage drop equals current times resistance: VD = I × R. For single-phase: VD = I × R × 2 (accounting for both conductors). For three-phase: VD = I × R × 1.732."
-  }
+const TOC: [string, string][] = [
+  ['read', 'How to read the results'],
+  ['example', 'Worked example'],
+  ['table', 'Resistance by wire size'],
+  ['temperature', 'Temperature'],
+  ['aluminum', 'Copper or aluminum'],
+  ['formula', 'How it is calculated'],
+  ['stranded', 'Solid and stranded wire'],
+  ['uses', 'When you would use it'],
+  ['faq', 'Questions'],
+  ['sources', 'Sources'],
 ];
+
+const articleData = { headline: 'Wire Resistance Calculator', description: DESCRIPTION, url: URL, ...articleDates(ROUTE) };
+const webAppData = { name: 'Wire Resistance Calculator', url: URL, description: DESCRIPTION };
+
+/** A stat callout: one figure in Azeret Mono at the headline size, what it is, and its source, under a 2 px ink rule. */
+function Stat({ figure, text, domains, prefix }: { figure: ReactNode; text: ReactNode; domains: string[]; prefix?: string }) {
+  return (
+    <aside className="max-w-[35rem] border-t-2 border-ink pt-3" aria-label="Key figure">
+      <p className="font-mono text-[34px] font-medium leading-none tracking-[-0.02em] text-ink sm:text-[46px]">
+        {prefix}
+        {figure}
+      </p>
+      <p className="mt-2 text-[15px] leading-[1.55] text-cut-caption">{text}</p>
+      <SourceLine domains={domains} />
+    </aside>
+  );
+}
+
+/** A value or the site's "no value" mark (an aria-hidden dash and screen-reader text). */
+function Cell({ v, src, sig }: { v: number | null; src: string; sig?: number }) {
+  if (v === null) {
+    return (
+      <>
+        <span aria-hidden="true">–</span>
+        <span className="sr-only">no value</span>
+      </>
+    );
+  }
+  // a published value as awg.json writes it; a calculated one at the significant figures of its source
+  return <Num v={v} src={src} format={sig ? { sig } : undefined} />;
+}
 
 export default function WireResistanceCalculatorPage() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <CombinedSchema 
-        webApp={webAppData} 
-      />
-      
-      
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-purple-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900 py-12 rounded-2xl mb-12">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Wire Resistance Calculator
-            </h1>
-            <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-              Calculate electrical resistance of wire conductors.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-              <Zap className="h-12 w-12 text-purple-600 mb-4" />
-              <p className="text-xl font-semibold mb-2">Precise Calculations</p>
-              <p className="text-gray-600 dark:text-gray-400">
-                Resistance of copper and aluminum conductors at the temperature you choose.
-              </p>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-              <Calculator className="h-12 w-12 text-indigo-600 mb-4" />
-              <p className="text-xl font-semibold mb-2">Multiple Parameters</p>
-              <p className="text-gray-600 dark:text-gray-400">
-                Calculate resistance and power loss for any conductor.
-              </p>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-              <Settings className="h-12 w-12 text-blue-600 mb-4" />
-              <p className="text-xl font-semibold mb-2">Engineering Data</p>
-              <p className="text-gray-600 dark:text-gray-400">
-                Access comprehensive resistance tables and technical specifications.
-              </p>
-            </div>
-          </div>
+    <div className={LOOK_PAGE}>
+      <article className="container pb-16">
+        <ArticleSchema article={articleData} />
+        <CombinedSchema webApp={webAppData} />
+
+        <header className="pt-10 sm:pt-12">
+          <PageTitle main="Wire Resistance Calculator" sub="Copper and Aluminum, Any Length" joiner=": " />
+          <p className={clsx(LOOK_LEAD, 'mt-5')}>
+            Choose a wire size, a length and a temperature to get the resistance of the run in ohms, from NIST&apos;s copper wire tables.
+          </p>
+          <Byline route={ROUTE} sources className={LOOK_BYLINE} linkClassName={LOOK_BYLINE_LINK} />
+        </header>
+
+        <section aria-label="Calculator" className="mt-8 border-t-2 border-ink pt-7">
+          <WireResistanceTool />
+        </section>
+
+        <div className="mt-14 grid gap-10 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:gap-12">
+          <p className={LOOK_LEAD} data-src={RES}>
+            <strong>
+              Copper wire at <Val v={20} unit="°C" src={RES} /> (<Val v={cToF(20)} unit="°F" src={CALC} />)
+            </strong>{' '}
+            runs from <Val v={r20('4/0')} unit="Ω" src={GEO} /> per 1,000 ft for <Size s="4/0" /> to{' '}
+            <Val v={r20('40')} unit="Ω" src={GEO} /> for <Size s="40" />. Building wire: <Size s="14" /> is <Val v={r20('14')} unit="Ω" src={GEO} />,{' '}
+            <Size s="12" /> <Val v={r20('12')} unit="Ω" src={GEO} /> and <Size s="10" /> <Val v={r20('10')} unit="Ω" src={GEO} /> per 1,000 ft. At{' '}
+            <Val v={75} unit="°C" src={AMP} /> (<Val v={cToF(75)} unit="°F" src={CALC} />) copper reads{' '}
+            <Val v={(FACTOR_75_CU - 1) * 100} unit="%" src={CALC} format={{ fixed: 1 }} /> higher, and aluminum EC-H19 reads{' '}
+            <Num v={AL_TO_CU} src={CALC} format={{ fixed: 3 }} /> times copper of the same size.
+          </p>
+          <Figure
+            caption={
+              <>
+                Each gauge step multiplies the resistance by the same factor, so on a logarithmic scale every gauge falls on one straight line.
+                Point at a gauge to read its copper value.
+                <SourceLine domains={[GEO, RES]} />
+              </>
+            }
+          >
+            <ResistanceChart />
+          </Figure>
         </div>
-      </section>
 
-      {/* Calculator Component */}
-      <section className="mb-16">
-        <WireResistanceCalculator />
-        <Byline route="/calculators/wire-resistance-calculator" sources className="mt-4 px-6 text-sm text-gray-600 dark:text-gray-400" linkClassName="text-blue-600 hover:underline dark:text-blue-300" />
-      </section>
+        <LookGuideBody className="mt-14 border-t border-cut-rule pt-10">
+          <OnThisPage items={TOC} />
 
-      {/* Understanding Wire Resistance */}
-      <section className="mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <BookOpen className="h-8 w-8 text-blue-600" />
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Understanding Wire Resistance and Impedance
+          <section aria-labelledby="read" className="space-y-4">
+            <h2 id="read" className={H2}>
+              How to read the results
             </h2>
-          </div>
-          
-          <div className="prose prose-lg dark:prose-invert max-w-none">
-            <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-              Wire resistance is the opposition to electrical current flow in conductors, causing voltage 
-              drop and power loss. Understanding resistance characteristics is essential for proper circuit 
-              design, voltage drop calculations, and ensuring efficient power transmission in electrical systems.
+            <p className={P}>
+              <strong>The large number</strong> is the resistance of one conductor over the length you entered, at your temperature. A cable
+              that feeds a load carries the current out on one conductor and back on another, so the result also gives the{' '}
+              <strong>two-wire circuit</strong>: the same run counted twice.
             </p>
-
-            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              Fundamental Principles of Wire Resistance
-            </h3>
-            <p className="text-gray-700 dark:text-gray-300 mb-4">
-              Wire resistance depends on four primary factors governed by the fundamental equation:
+            <p className={P} data-src={RES}>
+              <strong>Per 1,000 ft and per km</strong> are the rates of the size at each temperature; the run is the rate times its length. The
+              table shows them at your temperature, at <Val v={20} unit="°C" src={RES} />, the temperature of NIST&apos;s tables, and at{' '}
+              <Val v={75} unit="°C" src={AMP} />, one of the conductor temperature ratings in NEC Table 310.16.
             </p>
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg mb-6">
-              <h4 className="text-xl font-semibold text-blue-800 dark:text-blue-300 mb-3">Resistance Formula</h4>
-              <div className="text-center">
-                <div className="text-2xl font-mono text-blue-800 dark:text-blue-300 mb-4">
-                  R = ρL/A
-                </div>
-                <div className="grid grid-cols-2 gap-4 text-sm text-blue-700 dark:text-blue-300">
-                  <div>R = Resistance (ohms)</div>
-                  <div>ρ = Resistivity (ohm-meters)</div>
-                  <div>L = Length (meters)</div>
-                  <div>A = Cross-sectional area (square meters)</div>
-                </div>
-              </div>
-            </div>
+            <p className={P}>
+              <strong>The bars</strong> compare your run in the two sizes thinner and the two thicker. A size entered in mm² is matched to the
+              nearest listed size, and the result names it.
+            </p>
+          </section>
 
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg">
-                <h4 className="text-xl font-semibold text-green-800 dark:text-green-300 mb-3">Material Properties</h4>
-                <div className="space-y-3 text-green-700 dark:text-green-300">
-                  <div>
-                    <span className="font-medium">Copper Resistivity:</span> 1.72 × 10⁻⁸ Ω⋅m at 20 °C
-                  </div>
-                  <div>
-                    <span className="font-medium">Temperature Coefficient:</span> Increases with temperature
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-lg">
-                <h4 className="text-xl font-semibold text-orange-800 dark:text-orange-300 mb-3">Geometric Factors</h4>
-                <div className="space-y-3 text-orange-700 dark:text-orange-300">
-                  <div>
-                    <span className="font-medium">Length:</span> Resistance increases proportionally
-                  </div>
-                  <div>
-                    <span className="font-medium">Cross-sectional Area:</span> Resistance decreases proportionally
-                  </div>
-                  <div>
-                    <span className="font-medium">Wire Gauge:</span> Smaller AWG = larger area = lower resistance
-                  </div>
-                  <div>
-                    <span className="font-medium">Stranding:</span> Slight increase due to lay factor
-                  </div>
-                </div>
-              </div>
-            </div>
+          <section aria-labelledby="example" className="space-y-4">
+            <h2 id="example" className={H2}>
+              Worked example: <Val v={100} unit="ft" src={CALC} /> of <Size s="14" /> copper at <Val v={75} unit="°C" src={AMP} />
+            </h2>
+            <p className={P} data-src={CALC}>
+              NIST gives <Size s="14" /> copper <Val v={r20('14')} unit="Ω" src={GEO} /> per 1,000 ft at <Val v={20} unit="°C" src={RES} />.
+              Warmed to <Val v={75} unit="°C" src={AMP} /> it rises by a factor of <Num v={FACTOR_75_CU} src={CALC} format={{ fixed: 5 }} /> to{' '}
+              <Val v={EXAMPLE.perKft} unit="Ω" src={CALC} format={EX} /> per 1,000 ft. One conductor 100 ft long is a tenth of that,{' '}
+              <strong>
+                <Val v={EXAMPLE.conductor} unit="Ω" src={CALC} format={EX} />
+              </strong>
+              , and a two-wire circuit 100 ft long, out and back, is{' '}
+              <strong>
+                <Val v={EXAMPLE.loop} unit="Ω" src={CALC} format={EX} />
+              </strong>
+              . At room temperature the same run would read <Val v={EXAMPLE.at20.conductor} unit="Ω" src={CALC} format={EX} />.
+            </p>
+            <figure className="max-w-[40rem] space-y-3">
+              <RunBars
+                rows={EXAMPLE.neighbours}
+                chosen="14"
+                material="Cu"
+                src={CALC}
+                label="One conductor, 100 ft, at 75 °C, in nearby sizes"
+              />
+              <figcaption className="border-t-2 border-ink pt-3 text-[15px] leading-[1.55] text-cut-caption">
+                The same <Val v={100} unit="ft" src={CALC} /> at <Val v={75} unit="°C" src={AMP} /> in the sizes around <Size s="14" />. Moving up to <Size s="12" /> cuts the
+                resistance by a factor of <Num v={areaRatio(2)} src={GCALC} format={{ fixed: 3 }} />, two gauge steps of{' '}
+                <Num v={STEP} src={GCALC} format={{ fixed: 3 }} />.
+              </figcaption>
+            </figure>
+          </section>
 
-            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              AC vs DC Resistance Characteristics
-            </h3>
-            <div className="grid lg:grid-cols-2 gap-6 mb-8">
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
-                <h4 className="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-3">DC Resistance</h4>
-                <ul className="list-disc pl-4 space-y-2 text-blue-700 dark:text-blue-300 text-sm">
-                  <li>Current distributed evenly across conductor</li>
-                  <li>Only material resistivity affects resistance</li>
-                  <li>Temperature is primary variable factor</li>
-                  <li>Used for low-frequency and DC applications</li>
-                  <li>Base reference for all calculations</li>
-                </ul>
-              </div>
-              
-              <div className="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-lg">
-                <h4 className="text-lg font-semibold text-purple-800 dark:text-purple-300 mb-3">AC Impedance</h4>
-                <ul className="list-disc pl-4 space-y-2 text-purple-700 dark:text-purple-300 text-sm">
-                  <li>Includes resistance plus reactance</li>
-                  <li>Skin effect concentrates current at surface</li>
-                  <li>Proximity effect from nearby conductors</li>
-                  <li>Frequency-dependent characteristics</li>
-                  <li>Important for high-frequency applications</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Detailed Examples Section */}
-      <section className="mb-16">
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Real-World Wire Resistance Calculations
-          </h2>
-          
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Example 5: Temperature Effects */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg lg:col-span-2">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-red-100 dark:bg-red-900/30 p-2 rounded-lg">
-                  <TrendingUp className="h-6 w-6 text-red-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Temperature Effect on Conductor Resistance
-                </h3>
-              </div>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                  <p className="font-medium text-gray-900 dark:text-white mb-2">Analysis:</p>
-                  <p className="text-gray-700 dark:text-gray-300 mb-4">
-                    4/0 AWG copper conductor resistance at various operating temperatures
-                  </p>
-                  <div className="space-y-2">
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Base Resistance (20 °C):</span> 0.0490 Ω/1000 ft
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Temperature Coefficient:</span> 0.00393/°C
-                    </p>
-                    <div className="mt-4">
-                      <h4 className="font-medium text-gray-900 dark:text-white mb-2">Resistance vs Temperature:</h4>
-                      <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
-                        <div className="flex justify-between">
-                          <span>20 °C:</span><span>0.0490 Ω/1000 ft (100 %)</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>60 °C:</span><span>0.0567 Ω/1000 ft (116 %)</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>75 °C:</span><span>0.0596 Ω/1000 ft (122 %)</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>90 °C:</span><span>0.0625 Ω/1000 ft (128 %)</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                    <h4 className="font-medium text-blue-800 dark:text-blue-300 mb-2">Impact on System:</h4>
-                    <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
-                      <li>• Higher operating temperatures increase losses</li>
-                      <li>• Voltage drop increases with temperature</li>
-                      <li>• Critical for hot climates and loaded conductors</li>
-                    </ul>
-                  </div>
-                  <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-                    <h4 className="font-medium text-green-800 dark:text-green-300 mb-2">Design Considerations:</h4>
-                    <ul className="text-sm text-green-700 dark:text-green-300 space-y-1">
-                      <li>• Use conductor temperature ratings for calculations</li>
-                      <li>• Consider ambient temperature and I²R heating</li>
-                      <li>• Size conductors for worst-case conditions</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Resistance Reference Tables */}
-      <section className="mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Wire Resistance Reference Tables
-          </h2>
-          
-          <div className="overflow-x-auto">
-            <table className="w-full border border-gray-300 dark:border-gray-600 rounded-lg">
-              <thead className="bg-gray-50 dark:bg-gray-700">
+          <section aria-labelledby="table" className="space-y-5">
+            <h2 id="table" className={H2} data-src={RES}>
+              Resistance per 1,000 ft by wire size
+            </h2>
+            <p className={P}>
+              Copper at <Val v={20} unit="°C" src={RES} /> is NIST Handbook 100&apos;s; the <Val v={75} unit="°C" src={CALC} /> values and
+              every aluminum value are calculated from NIST&apos;s constants. Aluminum EC-H19 is listed from <Size s="12" /> up.
+            </p>
+            <DataTable id="building-table" variant="ruled" src={RES} caption="Building wire, 14 AWG to 4/0: ohms per 1,000 ft, solid conductor">
+              <thead>
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                    Size
+                  <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
+                    AWG
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                    Copper, 20 °C (NIST Handbook 100; kcmil calculated), Ω/1000 ft
+                  <th scope="col" className={RTH}>
+                    Copper, <Val v={20} unit="°C" src={RES} />
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                    Copper, 75 °C (calculated), Ω/1000 ft
+                  <th scope="col" className={RTH}>
+                    Copper, <Val v={75} unit="°C" src={CALC} />
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                    Aluminum EC-H19, 20 °C (calculated), Ω/1000 ft
+                  <th scope="col" className={RTH}>
+                    Aluminum, <Val v={20} unit="°C" src={RES} />
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                    Aluminum EC-H19, 75 °C (calculated), Ω/1000 ft
+                  <th scope="col" className={RTH}>
+                    Aluminum, <Val v={75} unit="°C" src={CALC} />
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                {RESISTANCE_ROWS.map((row) => (
-                  <tr key={row.key}>
-                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{formatSize(row.key)}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.r20Cu}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.r75Cu}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.r20Al ?? '—'}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.r75Al ?? '—'}</td>
+              <tbody>
+                {BUILDING.map((key) => (
+                  <tr key={key}>
+                    <th scope="row" className={RSTICKY_TD}>
+                      <span data-size={key}>{key}</span>
+                    </th>
+                    <td className={RTD}>
+                      <Cell v={r20(key)} src={GEO} />
+                    </td>
+                    <td className={RTD}>
+                      <Cell v={resistanceAt(key, 'Cu', 75)} src={RES} sig={resistanceSig(key, 'Cu')} />
+                    </td>
+                    <td className={RTD}>
+                      <Cell v={resistanceAt(key, 'Al', 20)} src={RES} sig={4} />
+                    </td>
+                    <td className={RTD}>
+                      <Cell v={resistanceAt(key, 'Al', 75)} src={RES} sig={4} />
+                    </td>
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
-          <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">{RESISTANCE_NOTES[0]}</p>
+            </DataTable>
+            <DataTable id="small-table" variant="ruled" src={GEO} caption="Small gauges, 16 to 40 AWG: copper, ohms per 1,000 ft and per km">
+              <thead>
+                <tr>
+                  <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
+                    AWG
+                  </th>
+                  <th scope="col" className={RTH}>
+                    Per 1,000 ft, <Val v={20} unit="°C" src={RES} />
+                  </th>
+                  <th scope="col" className={RTH}>
+                    Per 1,000 ft, <Val v={75} unit="°C" src={CALC} />
+                  </th>
+                  <th scope="col" className={RTH}>
+                    Per km, <Val v={20} unit="°C" src={RES} />
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {SMALL.map((key) => (
+                  <tr key={key}>
+                    <th scope="row" className={RSTICKY_TD}>
+                      <span data-size={key}>{key}</span>
+                    </th>
+                    <td className={RTD}>
+                      <Cell v={r20(key)} src={GEO} />
+                    </td>
+                    <td className={RTD}>
+                      <Cell v={resistanceAt(key, 'Cu', 75)} src={RES} sig={resistanceSig(key, 'Cu')} />
+                    </td>
+                    <td className={RTD}>
+                      <Cell v={ohmsPerKm(key, 'Cu', 20)} src={GEO} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </DataTable>
+            <SourceLine domains={[GEO, RES]} />
+            <p className={P}>
+              The kcmil sizes, <Size s="250" /> to <Size s="2000" />, are in the calculator and on the{' '}
+              <Link href="/guides/awg-wire-size-chart#kcmil-table" className={LINK}>
+                AWG wire size chart
+              </Link>
+              .
+            </p>
+          </section>
 
-          <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
-            <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-3">
-              Temperature Correction Factors
-            </h3>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="text-base leading-tight font-medium text-blue-800 dark:text-blue-300 mb-2">Copper Temperature Coefficient</h4>
-                <p className="text-sm text-blue-700 dark:text-blue-300 mb-2">
-                  R₂ = R₁ × [1 + 0.00393(T₂ - T₁)]
-                </p>
-                <div className="text-xs text-blue-600 dark:text-blue-400 space-y-1">
-                  <div>• 0 °C: 0.92× resistance at 20 °C</div>
-                  <div>• 20 °C: 1.00× reference temperature</div>
-                  <div>• 75 °C: 1.22× resistance at 20 °C</div>
-                  <div>• 90 °C: 1.28× resistance at 20 °C</div>
-                </div>
-              </div>
-              <div>
-                <h4 className="text-base leading-tight font-medium text-blue-800 dark:text-blue-300 mb-2">Aluminum Temperature Coefficient</h4>
-                <p className="text-sm text-blue-700 dark:text-blue-300 mb-2">
-                  R₂ = R₁ × [1 + 0.00403(T₂ - T₁)]
-                </p>
-                <div className="text-xs text-blue-600 dark:text-blue-400 space-y-1">
-                  <div>• 0 °C: 0.92× resistance at 20 °C</div>
-                  <div>• 20 °C: 1.00× reference temperature</div>
-                  <div>• 75 °C: 1.22× resistance at 20 °C</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Technical Applications */}
-      <section className="mb-16">
-        <div className="bg-gradient-to-br from-purple-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Technical Applications and Considerations
-          </h2>
-          
-          <div className="grid lg:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                  <Zap className="h-6 w-6 text-purple-600" />
-                  Power System Design
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Loss Calculations:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Power loss = I² × R (watts per conductor)</li>
-                      <li>• Critical for high-current, long-distance applications</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Design Considerations:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Use worst-case temperature for resistance calculations</li>
-                      <li>• Consider load growth and future expansion</li>
-                      <li>• Account for parallel conductor skin effect</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                  <Settings className="h-6 w-6 text-indigo-600" />
-                  Measurement and Testing
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Test Methods:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• DC resistance: Wheatstone bridge or digital ohmmeter</li>
-                      <li>• AC impedance: LCR meter at specific frequency</li>
-                      <li>• Four-wire (Kelvin) measurement for accuracy</li>
-                      <li>• Temperature correction for field measurements</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Quality Control:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Verify conductor cross-sectional area</li>
-                      <li>• Check for strand breakage or defects</li>
-                      <li>• Validate resistance within specification limits</li>
-                      <li>• Document test conditions and results</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                  <Calculator className="h-6 w-6 text-blue-600" />
-                  Frequency Effects
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Skin Effect:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Current concentrates at conductor surface at higher frequencies</li>
-                      <li>• Skin depth δ = √(2/(ωμσ))</li>
-                      <li>• Resistance increases with √frequency</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Proximity Effect:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Magnetic field from adjacent conductors</li>
-                      <li>• Increases AC resistance beyond skin effect</li>
-                      <li>• Critical in parallel conductor installations</li>
-                      <li>• Consider conductor spacing and arrangement</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Safety and Standards */}
-      <section className="mb-16">
-        <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <AlertCircle className="h-8 w-8 text-red-600" />
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Standards and Safety Considerations
+          <section aria-labelledby="temperature" className="space-y-4">
+            <h2 id="temperature" className={H2}>
+              How temperature changes resistance
             </h2>
-          </div>
-          
-          <div className="grid lg:grid-cols-2 gap-8">
-            <div className="space-y-6">
+            <p className={P}>
+              A metal conductor resists more as it warms. Over the range this calculator covers, the change is close to a straight line:
+            </p>
+            <p className={LOOK_FORMULA}>
+              R(T) = R<sub>20</sub> × (1 + α × (T − <Val v={20} unit="°C" src={RES} />))
+            </p>
+            <Stat
+              figure={<Val v={(FACTOR_75_CU - 1) * 100} unit="%" src={CALC} format={{ fixed: 1 }} />}
+              text={
+                <>
+                  Copper&apos;s resistance from <Val v={20} unit="°C" src={RES} /> to <Val v={75} unit="°C" src={AMP} />, from NIST&apos;s α of{' '}
+                  <Num v={COPPER_ALPHA} src={RES} />.
+                </>
+              }
+              domains={[RES]}
+              prefix="+"
+            />
+            <p className={P}>
+              α is <Num v={COPPER_ALPHA} src={RES} /> per degree for copper and <Num v={ALUMINUM_ALPHA} src={RES} /> for aluminum EC-H19, so
+              from <Val v={20} unit="°C" src={RES} /> to <Val v={75} unit="°C" src={AMP} /> copper gains{' '}
+              <Val v={(FACTOR_75_CU - 1) * 100} unit="%" src={CALC} format={{ fixed: 1 }} /> and aluminum{' '}
+              <Val v={(FACTOR_75_AL - 1) * 100} unit="%" src={CALC} format={{ fixed: 1 }} />. A wire on a reel at room temperature matches
+              the tables; the same wire carrying its full rated current runs warmer, and its resistance rises with it.
+            </p>
+            <Figure
+              caption={
+                <>
+                  <span data-src={CALC}>
+                    <Size s="12" /> copper and aluminum per 1,000 ft from <Val v={-40} unit="°C" src={CALC} /> to{' '}
+                    <Val v={90} unit="°C" src={CALC} />, the dots at <Val v={20} unit="°C" src={RES} /> and <Val v={75} unit="°C" src={AMP} />.
+                  </span>
+                  <SourceLine domains={[RES]} />
+                </>
+              }
+            >
+              <TemperatureChart />
+            </Figure>
+          </section>
 
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Testing Requirements
-                </h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Acceptance Testing:</span>
-                    <span className="text-gray-800 dark:text-gray-200">Field verification of installed cable</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Maintenance Testing:</span>
-                    <span className="text-gray-800 dark:text-gray-200">Periodic resistance monitoring</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Fault Analysis:</span>
-                    <span className="text-gray-800 dark:text-gray-200">Resistance measurement for diagnosis</span>
-                  </div>
-                </div>
-              </div>
+          <section aria-labelledby="aluminum" className="space-y-4">
+            <h2 id="aluminum" className={H2}>
+              Copper or aluminum
+            </h2>
+            <p className={P}>
+              Aluminum conductor alloy EC-H19 has a resistivity of{' '}
+              <Num v={AWG_CONSTANTS.aluminum_ECH19_resistivity_ohm_cmil_per_ft_20C} src={RES} /> Ω·cmil/ft at{' '}
+              <Val v={20} unit="°C" src={RES} /> against copper&apos;s <Num v={AWG_CONSTANTS.copper_resistivity_ohm_cmil_per_ft_20C} src={RES} />;
+              its conductivity is <Val v={AWG_CONSTANTS.aluminum_ECH19_pct_IACS} unit="%" src={RES} /> of the International Annealed Copper
+              Standard. Of the same size, aluminum reads <Num v={AL_TO_CU} src={CALC} format={{ fixed: 3 }} /> times copper.
+            </p>
+            <Stat
+              figure={<Num v={AL_TO_CU} src={CALC} format={{ fixed: 3 }} prefix="×" />}
+              text={
+                <>
+                  Aluminum EC-H19 against copper of the same size: <Num v={AWG_CONSTANTS.aluminum_ECH19_resistivity_ohm_cmil_per_ft_20C} src={RES} />{' '}
+                  ÷ <Num v={AWG_CONSTANTS.copper_resistivity_ohm_cmil_per_ft_20C} src={RES} />, the two resistivities.
+                </>
+              }
+              domains={[RES]}
+            />
+            <p className={P} data-src={CALC}>
+              To match the resistance of <Size s="12" /> copper, aluminum needs <Size s={AL_FOR_12} />:{' '}
+              <Val v={resistanceAt(AL_FOR_12, 'Al', 20) as number} unit="Ω" src={CALC} format={SIG4} /> per 1,000 ft against copper&apos;s{' '}
+              <Val v={r20('12')} unit="Ω" src={GEO} />. Ampacity is a separate question with its own table: the{' '}
+              <Link href="/guides/nec-table-310-16" className={LINK}>
+                Table 310.16 page
+              </Link>{' '}
+              lists both metals.
+            </p>
+          </section>
+
+          <section aria-labelledby="formula" className="space-y-4">
+            <h2 id="formula" className={H2}>
+              How wire resistance is calculated
+            </h2>
+            <p className={P}>Resistance is the resistivity of the metal times the length, divided by the area:</p>
+            <p className={LOOK_FORMULA}>R = ρ × L ÷ A</p>
+            <p className={P} data-src={CALC}>
+              In the units of US tables, ρ for copper is <Num v={AWG_CONSTANTS.copper_resistivity_ohm_cmil_per_ft_20C} src={RES} /> Ω·cmil/ft at{' '}
+              <Val v={20} unit="°C" src={RES} /> and the area is in circular mils. <Size s="12" /> has an area of{' '}
+              <Val v={areaCmil('12')} unit="cmil" src={GEO} />, so 1,000 ft of it reads{' '}
+              <Num v={AWG_CONSTANTS.copper_resistivity_ohm_cmil_per_ft_20C} src={RES} /> × 1,000 ÷ <Num v={areaCmil('12')} src={GEO} /> ={' '}
+              <Val v={(AWG_CONSTANTS.copper_resistivity_ohm_cmil_per_ft_20C * 1000) / areaCmil('12')} unit="Ω" src={CALC} format={SIG12} />, the
+              figure NIST lists. In metric units ρ is <Num v={AWG_CONSTANTS.copper_resistivity_ohm_mm2_per_m_20C} src={RES} /> Ω·mm²/m.
+            </p>
+          </section>
+
+          <section aria-labelledby="stranded" className="space-y-4">
+            <h2 id="stranded" className={H2}>
+              Solid and stranded wire
+            </h2>
+            <p className={P}>
+              The values here are for a solid conductor. A stranded conductor of the same size has slightly higher resistance: its strands
+              are laid in a spiral, so each is a little longer than the cable. This calculator doesn&apos;t estimate that difference; the
+              conductor&apos;s data sheet gives it.
+            </p>
+          </section>
+
+          <section aria-labelledby="uses" className="space-y-5">
+            <h2 id="uses" className={H2}>
+              When you would use it
+            </h2>
+            <div className="space-y-1.5">
+              <h3 className={H3}>A long low-voltage run</h3>
+              <p className={P}>
+                On a low-voltage DC system, a fraction of an ohm costs a large share of the supply. Find the run&apos;s resistance here, then
+                size the wire in the{' '}
+                <Link href="/calculators/low-voltage-calculator" className={LINK}>
+                  low voltage calculator
+                </Link>
+                .
+              </p>
             </div>
-
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Design Safety Factors
-                </h3>
-                <ul className="space-y-3 text-gray-700 dark:text-gray-300">
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Use conservative temperature assumptions for resistance calculations</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Account for aging effects and corrosion over system life</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Consider connection resistance in addition to conductor resistance</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Verify adequate short-circuit current capability</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Design for thermal cycling and mechanical stress</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-                  Disclaimer
-                </h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  This calculator provides theoretical resistance values. Actual measurements may vary due to 
-                  manufacturing tolerances, temperature, aging, and installation conditions. Always verify 
-                  calculations with actual measurements and consult applicable standards and specifications.
-                </p>
-              </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>Checking a meter reading</h3>
+              <p className={P}>
+                An ohmmeter across both ends of a run reads its resistance. Compare it with this result at the wire&apos;s temperature: a much
+                higher reading points to a poor connection or the wrong size.
+              </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Frequently Asked Questions
-          </h2>
-          <div className="space-y-6">
-            {wireResistanceFAQs.map((faq, index) => (
-              <div key={index} className="border-b border-gray-200 dark:border-gray-700 pb-6">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  {faq.question}
-                </h3>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {faq.answer}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Sources */}
-      <section className="mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <Sources
-            domains={SOURCE_DOMAINS}
-            headingClassName="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center"
-            listClassName="space-y-2 text-gray-700 dark:text-gray-300"
-            linkClassName="text-blue-600 hover:underline dark:text-blue-300"
-            noteClassName="mt-4 text-sm text-gray-600 dark:text-gray-400"
-          />
-        </div>
-      </section>
-
-      {/* Related Calculators */}
-      <section className="mb-16">
-        <div className="bg-gradient-to-br from-purple-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Related Electrical Calculators
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Link 
-              href="/calculators/voltage-drop-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <TrendingUp className="h-6 w-6 text-blue-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Voltage Drop Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Calculate voltage drop using wire resistance values
+            <div className="space-y-1.5">
+              <h3 className={H3}>Thin signal and data wire</h3>
+              <p className={P}>
+                The small-gauge table above runs to <Size s="40" />, so the resistance of sensor, speaker or data wire over a long run is a quick
+                look-up.
               </p>
-            </Link>
-            
-            <Link 
-              href="/calculators/ohms-law-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <Calculator className="h-6 w-6 text-green-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Ohm&apos;s Law Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Apply Ohm&apos;s law with resistance calculations
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>Voltage drop on a branch circuit or feeder</h3>
+              <p className={P}>
+                Resistance times current is the voltage lost in the wire. The{' '}
+                <Link href="/calculators/voltage-drop-calculator" className={LINK}>
+                  voltage drop calculator
+                </Link>{' '}
+                does that step for single-phase and three-phase circuits.
               </p>
-            </Link>
+            </div>
+          </section>
 
-            <Link 
-              href="/calculators/wire-size-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <Zap className="h-6 w-6 text-purple-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Wire Size Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Size conductors based on resistance requirements
+          <section aria-labelledby="faq" className="space-y-6">
+            <h2 id="faq" className={H2}>
+              Questions
+            </h2>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={RES}>
+                What is the resistance of copper wire per 1,000 ft?
+              </h3>
+              <p className={P}>
+                At <Val v={20} unit="°C" src={RES} />: <Size s="14" /> <Val v={r20('14')} unit="Ω" src={GEO} />, <Size s="12" />{' '}
+                <Val v={r20('12')} unit="Ω" src={GEO} />, <Size s="10" /> <Val v={r20('10')} unit="Ω" src={GEO} />, <Size s="8" />{' '}
+                <Val v={r20('8')} unit="Ω" src={GEO} /> and <Size s="6" /> <Val v={r20('6')} unit="Ω" src={GEO} />. The table above lists
+                every size from <Size s="40" /> to <Size s="4/0" />.
               </p>
-            </Link>
-
-            <Link 
-              href="/calculators/ampacity-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <Settings className="h-6 w-6 text-orange-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Ampacity Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Determine current capacity with heating effects
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={CALC}>
+                What is the resistance per 100 ft?
+              </h3>
+              <p className={P} data-src={CALC}>
+                A tenth of the value per 1,000 ft: 100 ft of <Size s="12" /> copper is{' '}
+                <Val v={r20('12') / 10} unit="Ω" src={CALC} format={SIG12} /> at <Val v={20} unit="°C" src={RES} /> and{' '}
+                <Val v={(resistanceAt('12', 'Cu', 75) as number) / 10} unit="Ω" src={CALC} format={SIG12} /> at{' '}
+                <Val v={75} unit="°C" src={AMP} />.
               </p>
-            </Link>
-
-            <Link 
-              href="/calculators/three-phase-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <AlertCircle className="h-6 w-6 text-red-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Three Phase Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Three-phase power and resistance calculations
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>How does temperature change wire resistance?</h3>
+              <p className={P}>
+                It rises by α of the <Val v={20} unit="°C" src={RES} /> value for every degree: <Num v={COPPER_ALPHA} src={RES} /> for copper.
+                At <Val v={75} unit="°C" src={AMP} /> copper reads <Val v={(FACTOR_75_CU - 1) * 100} unit="%" src={CALC} format={{ fixed: 1 }} />{' '}
+                above its table value.
               </p>
-            </Link>
-
-            <Link 
-              href="/calculators/low-voltage-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <BookOpen className="h-6 w-6 text-yellow-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Low Voltage Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                DC resistance calculations for low voltage systems
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>Is aluminum wire more resistive than copper?</h3>
+              <p className={P}>
+                Yes, <Num v={AL_TO_CU} src={CALC} format={{ fixed: 3 }} /> times for EC-H19 of the same size. <Size s={AL_FOR_12} /> aluminum
+                comes closest to the resistance of <Size s="12" /> copper without going over it.
               </p>
-            </Link>
-          </div>
-        </div>
-      </section>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>How is wire resistance calculated?</h3>
+              <p className={P}>
+                R = ρ × L ÷ A, with ρ = <Num v={AWG_CONSTANTS.copper_resistivity_ohm_cmil_per_ft_20C} src={RES} /> Ω·cmil/ft for copper at{' '}
+                <Val v={20} unit="°C" src={RES} />, L in feet and A in circular mils.{' '}
+                <a href="#formula" className={LINK}>
+                  The full method is above
+                </a>
+                .
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>What is the resistance in ohms per meter?</h3>
+              <p className={P}>
+                The value per km divided by 1,000. <Size s="12" /> copper is <Val v={ohmsPerKm('12', 'Cu', 20) as number} unit="Ω" src={GEO} />{' '}
+                per km at <Val v={20} unit="°C" src={RES} />, so{' '}
+                <Val v={(ohmsPerKm('12', 'Cu', 20) as number) / 1000} unit="Ω" src={CALC} format={{ sig: 4 }} /> per meter. The calculator takes
+                lengths in meters too.
+              </p>
+            </div>
+          </section>
 
+          <section aria-label="Sources and notices" className={LOOK_SOURCES_SECTION}>
+            <Sources
+              domains={[RES, GEO, AMP]}
+              headingClassName={LOOK_SOURCES_HEADING}
+              listClassName={LOOK_SOURCES_LIST}
+              linkClassName={LINK}
+              noteClassName={LOOK_SOURCES_NOTE}
+            />
+            <p>
+              The{' '}
+              <Link href="/methodology#resistance" className={LINK}>
+                methodology page
+              </Link>{' '}
+              describes each source and how the calculated values are derived. NFPA 70®, National Electrical Code® and NEC® are registered
+              trademarks of the National Fire Protection Association; wiresizes.com is not affiliated with or endorsed by NFPA.
+            </p>
+          </section>
+        </LookGuideBody>
+      </article>
     </div>
   );
 }

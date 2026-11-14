@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-14T14:58:19+00:00",
+  "generatedAt": "2026-11-14T17:18:49+00:00",
   "title": "Design System: WireSizes",
   "extensions": {
     "colorMeta": {
@@ -356,6 +356,10 @@
       "figures": {
         "displayName": "Figures",
         "purpose": "Every number inside a ruled table; the row label 600 at 14.5 px."
+      },
+      "control": {
+        "displayName": "Control",
+        "purpose": "Text inside calculator inputs and selects: 16 px, the size below which phones zoom into a field."
       }
     },
     "shadows": [],
