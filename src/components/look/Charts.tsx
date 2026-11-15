@@ -2265,6 +2265,15 @@ function AmpacityStepsPlot({ run, id, narrow }: { run: AmpacityRun; id: string; 
       <title id={`${fullId}-title`}>
         {`${formatSize(run.size)} ${run.material === 'Cu' ? 'copper' : 'aluminum'} from the ${run.column} °C column of Table 310.16: ${result.tableAmpacity} A, ${afterAmbient.toFixed(2)} A after the ambient factor ${result.correctionFactor.toFixed(2)}, ${result.ampacity.toFixed(2)} A after ${result.adjustmentPercent} % for bundling; the terminal columns allow ${capLines.map((c) => `${c.tableA} A at ${c.column} °C`).join(' and ')}`}
       </title>
+      {/* the limits first, so the bar labels and their halos sit over the lines */}
+      {capLines.map((c, k) => (
+        <g key={c.column} data-src="nec-110-14c">
+          <line x1={x(c.tableA)} x2={x(c.tableA)} y1={top - 10} y2={top + bars.length * rowH - 12} stroke={INK} strokeWidth={1.5} strokeDasharray={k === 0 ? '5 4' : undefined} />
+          <text x={x(c.tableA)} y={top + bars.length * rowH + (k === 0 ? 6 : 24)} textAnchor="middle" fontSize={13} fill={INK}>
+            <Val v={c.column} unit="°C" src="nec-110-14c" svg /> terminals: <Val v={c.tableA} unit="A" src={AMP} svg />
+          </text>
+        </g>
+      ))}
       {bars.map((b, k) => {
         const y = top + k * rowH;
         return (
@@ -2282,14 +2291,6 @@ function AmpacityStepsPlot({ run, id, narrow }: { run: AmpacityRun; id: string; 
           </g>
         );
       })}
-      {capLines.map((c, k) => (
-        <g key={c.column} data-src="nec-110-14c">
-          <line x1={x(c.tableA)} x2={x(c.tableA)} y1={top - 10} y2={top + bars.length * rowH - 12} stroke={INK} strokeWidth={1.5} strokeDasharray={k === 0 ? '5 4' : undefined} />
-          <text x={x(c.tableA)} y={top + bars.length * rowH + (k === 0 ? 6 : 24)} textAnchor="middle" fontSize={13} fill={INK}>
-            <Val v={c.column} unit="°C" src="nec-110-14c" svg /> terminals: <Val v={c.tableA} unit="A" src={AMP} svg />
-          </text>
-        </g>
-      ))}
     </svg>
   );
 }
