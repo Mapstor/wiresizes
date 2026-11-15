@@ -2285,7 +2285,9 @@ function AmpacityStepsPlot({ run, id, narrow }: { run: AmpacityRun; id: string; 
               {b.sub}
             </text>
             <path d={barPath(left, y, x(b.v) - left, barH)} fill={COPPER} className="viz-grow" />
-            <text x={x(b.v) + 8} y={y + barH / 2 + 4.5} fontSize={13} fill={INK} stroke="#ffffff" strokeWidth={4} paintOrder="stroke">
+            {/* a white plate under the value, so a limit line never runs through it (about 7.5 px a character at 13 px) */}
+            <rect x={x(b.v) + 4} y={y + barH / 2 - 9} width={(String(Number(b.v.toFixed(2))).length + 2) * 7.5 + 6} height={18} fill="#ffffff" />
+            <text x={x(b.v) + 8} y={y + barH / 2 + 4.5} fontSize={13} fill={INK}>
               <Val v={Number(b.v.toFixed(2))} unit="A" src={b.src} svg />
             </text>
           </g>
