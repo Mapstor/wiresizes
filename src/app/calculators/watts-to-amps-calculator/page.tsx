@@ -233,7 +233,12 @@ export default function WattsToAmpsPage() {
                 <span data-src={DOE}>
                   Use the power factor from the nameplate data or a meter; the DOE motor fact sheet lists the full-load power factor among the
                   nameplate values.
-                </span>
+                </span>{' '}
+                For a motor rated in horsepower, the{' '}
+                <Link href="/calculators/horsepower-to-amps-calculator" className={LINK}>
+                  horsepower to amps calculator
+                </Link>{' '}
+                reads its full-load current from the NEC tables.
               </p>
             </div>
             <div className="space-y-1.5">

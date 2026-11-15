@@ -28,6 +28,8 @@ import { GUIDE_200 } from '@/lib/service-guides';
 import { LENGTH_MAX_FT_CHART, LENGTH_TRACKS } from '@/lib/wire-size-page';
 import { MIXED } from '@/lib/breaker-page';
 import { EXAMPLE, EXAMPLE_CONNECTED_A, EXAMPLE_CONNECTED_VA } from '@/lib/residential-load-page';
+import { RATIO_ROWS } from '@/lib/hp-page';
+import { hpText } from '@/lib/calculations/motor-flc';
 import { CONTINUOUS_LOAD_PERCENT } from '@/lib/verified/nec-continuous-load-2023';
 import type { GuideSide } from '@/lib/service-guides';
 import type { AmpacityRun } from '@/lib/calculations/ampacity';
@@ -2639,6 +2641,92 @@ export function LoadMethodsChart() {
     <div>
       <LoadMethodsPlot narrow={false} />
       <LoadMethodsPlot narrow />
+    </div>
+  );
+}
+
+// ── Horsepower to amps (WSZ-011): Table 430.248's current as a multiple of the current of the rated power alone ──────
+
+const HP_FLC = 'nec-430-flc';
+const HP_CALC = 'calc:motor-flc';
+const HP_TICKS = [1, 2, 3, 4];
+
+function HpRatioPlot({ narrow }: { narrow: boolean }) {
+  const rows = RATIO_ROWS;
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 64 : 92;
+  const right = narrow ? 48 : 64;
+  const top = 8;
+  const rowH = narrow ? 26 : 25;
+  const barH = narrow ? 14 : 14;
+  const plotH = rows.length * rowH;
+  const H = top + plotH + (narrow ? 64 : 48);
+  const pw = W - left - right;
+  const max = Math.ceil(Math.max(...rows.map((r) => r.ratio)));
+  const x = (v: number) => left + (v / max) * pw;
+  const id = narrow ? 'hp-ratio-narrow' : 'hp-ratio-wide';
+  const times = (v: number) => formatValue(v, { upTo: 2 });
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={HP_CALC}
+    >
+      <title id={`${id}-title`}>
+        {'Single-phase motors in the 230 V column: the Table 430.248 full-load current as a multiple of the current of the rated power alone ' +
+          '(horsepower × 746 W ÷ 230 V): ' +
+          rows.map((r) => `${hpText(r.hp)} hp ${times(r.ratio)} times (${formatValue(r.flcA)} A against ${times(r.powerAmps)} A)`).join(', ')}
+      </title>
+      {HP_TICKS.filter((t) => t <= max).map((t) => (
+        <g key={t}>
+          <line x1={x(t)} x2={x(t)} y1={top} y2={top + plotH} stroke={t === 1 ? INK : GRID} strokeWidth={1} strokeDasharray={t === 1 ? '4 3' : undefined} />
+          <text x={x(t)} y={top + plotH + 16} textAnchor="middle" fontSize={13} fill={MUTED}>
+            <Num v={t} src={HP_CALC} svg />×
+          </text>
+        </g>
+      ))}
+      {rows.map((r, k) => {
+        const yb = top + k * rowH + (rowH - barH) / 2;
+        return (
+          <g key={r.hp}>
+            <text x={left - 10} y={yb + barH / 2 + 4.5} textAnchor="end" fontSize={13} fill={INK} data-src={HP_FLC}>
+              {hpText(r.hp)} hp
+            </text>
+            <path d={barPath(left, yb, x(r.ratio) - left, barH)} fill={COPPER} className="viz-grow" />
+            <text x={x(r.ratio) + 6} y={yb + barH / 2 + 4.5} fontSize={13} fontWeight={700} fill={INK} className="viz-pop">
+              <Num v={r.ratio} src={HP_CALC} format={{ upTo: 2 }} svg />×
+            </text>
+          </g>
+        );
+      })}
+      {narrow ? (
+        <>
+          <text x={0} y={H - 26} fontSize={13} fill={MUTED}>
+            Table current ÷ current of the
+          </text>
+          <text x={0} y={H - 8} fontSize={13} fill={MUTED}>
+            rated power alone, at <Val v={230} unit="V" src={HP_FLC} svg />
+          </text>
+        </>
+      ) : (
+        <text x={left} y={H - 8} fontSize={13} fill={MUTED}>
+          Table current ÷ current of the rated power alone, at <Val v={230} unit="V" src={HP_FLC} svg />
+        </text>
+      )}
+    </svg>
+  );
+}
+
+/** Single-phase motors at 230 V: Table 430.248's current as a multiple of hp × 746 W ÷ 230 V, for every rating. */
+export function HpRatioBars() {
+  return (
+    <div>
+      <HpRatioPlot narrow={false} />
+      <HpRatioPlot narrow />
     </div>
   );
 }

@@ -24,7 +24,7 @@ slug,archetype,disposition,redirect_to,primary_query,data_source,data_sources_al
 /calculators/kva-to-amps-calculator,tool,rebuild,,kva to amps,eia-power-glossary,eia-power-glossary;mit-polyphase-networks;doe-power-factor-cost;us-nominal-voltages,WSZ-007,fix,355,0,0,drop wire/breaker columns
 /calculators/air-conditioner-calculator,tool,rebuild,,air conditioner wire size calculator,nec-440-hvac,nec-440-hvac;mfr-hvac-specs;nec-310-16;doe-efficiency-standards,WSZ-011,withdraw,348,5,1721,nameplate MCA/MOCP method
 /calculators/btu-to-watts-calculator,tool,rebuild,,btu to watts,nist-sp811-conversions,nist-sp811-conversions,WSZ-007,fix,335,2,0,
-/calculators/horsepower-to-amps-calculator,tool,rebuild,,hp to amps,nec-430-motors,nec-430-motors;nist-sp811-conversions,WSZ-011,withdraw,314,6,0,"NEC tables, not formula"
+/calculators/horsepower-to-amps-calculator,tool,rebuild,,hp to amps,nec-430-flc,nec-430-flc;nec-2023-rule-excerpts;nist-sp811-conversions;doe-motor-load-efficiency;doe-power-factor-cost;eia-power-glossary;us-nominal-voltages,WSZ-011,withdraw,314,6,0,"NEC tables, not formula"
 /calculators/ground-wire-calculator,tool,rebuild,,ground wire size calculator,nec-250-grounding,nec-250-grounding;nec-240-ocpd;nec-310-12;awg-geometry,WSZ-008,fix,299,2,0,
 /guides/nec-code-compliance,reference,repurpose,,which nec edition does my state use,nec-adoption,nec-adoption;nec-2026-edition;nec-2023-rule-excerpts;nec-2026-issuance,WSZ-005,fix,176,1,0,NEC editions by state + what changed
 /calculators/three-phase-calculator,tool,rebuild,,three phase calculator,doe-motor-load-efficiency,doe-motor-load-efficiency;eia-power-glossary;doe-power-factor-cost;mit-polyphase-networks;us-nominal-voltages,WSZ-006,fix,161,7,0,P0 motor table fix in W1

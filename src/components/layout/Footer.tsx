@@ -19,6 +19,7 @@ const footerLinks = {
     { name: 'Volts to Amps', href: '/calculators/volts-to-amps-calculator' },
     { name: 'Kilowatts to Amps', href: '/calculators/kilowatts-to-amps-calculator' },
     { name: 'kVA to Amps', href: '/calculators/kva-to-amps-calculator' },
+    { name: 'Horsepower to Amps', href: '/calculators/horsepower-to-amps-calculator' },
     { name: 'BTU to Watts', href: '/calculators/btu-to-watts-calculator' },
     { name: "Ohm's Law Calculator", href: '/calculators/ohms-law-calculator' },
     { name: 'View All Conversions', href: '/calculators', isViewAll: true },

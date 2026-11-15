@@ -282,7 +282,11 @@ export default function KilowattsToAmpsPage() {
               <h3 className={H3}>What power factor should I enter?</h3>
               <p className={P} data-src={DOE}>
                 The load&apos;s own: a motor&apos;s nameplate data can list its full-load power factor, and a meter can measure it. With{' '}
-                <Num v={1} src={CALC} /> the calculator gives the least current the load could draw.
+                <Num v={1} src={CALC} /> the calculator gives the least current the load could draw. For a motor rated in horsepower, the{' '}
+                <Link href="/calculators/horsepower-to-amps-calculator" className={LINK}>
+                  horsepower to amps calculator
+                </Link>{' '}
+                reads its full-load current from the NEC tables.
               </p>
             </div>
           </section>

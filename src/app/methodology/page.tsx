@@ -9,7 +9,9 @@ import { Size } from '@/components/content/Size';
 import { Val } from '@/components/content/Val';
 import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
 import { RATING_MAX_A, RATING_MIN_A, terminationColumn } from '@/lib/calculations/conductor-sizing';
-import { BTU_PER_H_PER_TON, W_PER_BTU_PER_H } from '@/lib/calculations/conversions';
+import { BTU_PER_H_PER_TON, W_PER_BTU_PER_H, W_PER_ELECTRICAL_HP } from '@/lib/calculations/conversions';
+import { voltageColumns } from '@/lib/calculations/motor-flc';
+import { flcTable } from '@/lib/verified/nec-430-440-2023';
 import { DC_TEMPERATURE_OPTIONS } from '@/lib/calculations/dc-sizing';
 import { formatValue } from '@/lib/calculations/format';
 import { GROUND_WIRE_RATINGS } from '@/lib/calculations/grounding';
@@ -248,13 +250,31 @@ const TOC = [
   METHODOLOGY_EXTRA_SECTIONS.loadMethod,
   METHODOLOGY_EXTRA_SECTIONS.rangeMethod,
   METHODOLOGY_EXTRA_SECTIONS.dryerMethod,
+  METHODOLOGY_EXTRA_SECTIONS.hpMethod,
   ...METHODOLOGY_SECTIONS.map(({ id, title }) => ({ id, title })),
   METHODOLOGY_EXTRA_SECTIONS.notCovered,
   METHODOLOGY_EXTRA_SECTIONS.errors,
 ];
 
+// The horsepower to amps sections: the system voltages the motor tables' notes give each column, and the last Table
+// 430.250 row the Eaton reprint covers
+const HP_THREE_SYSTEMS = (() => {
+  const columns = voltageColumns('3');
+  const ranges = columns
+    .filter((c) => c.min !== c.max)
+    .map((c, k) => `${formatValue(c.min)}–${formatValue(c.max)} V ${k === 0 ? 'takes ' : ''}the ${formatValue(c.volts)} V column`);
+  const own = columns.filter((c) => c.min === c.max).map((c) => `${formatValue(c.volts)} V`);
+  return `${ranges.slice(0, -1).join(', ')} and ${ranges[ranges.length - 1]}; ${own.join(' and ')} have columns of their own`;
+})();
+const HP_EATON_LAST = (() => {
+  const rows = flcTable('430.250').rows;
+  const last = [...rows].reverse().find((r) => r.status === 'verified-2023');
+  if (!last) throw new Error('methodology: no Table 430.250 row matched the Eaton reprint');
+  return last.hp;
+})();
+
 export default function MethodologyPage() {
-  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
+  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
   return (
     <div className={LOOK_PAGE}>
     <div className="container pb-16">
@@ -267,8 +287,8 @@ export default function MethodologyPage() {
         <p>
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
           has a section below: what it is and which edition was used, where it was read, how the calculators use it,
-          and where that use stops. The first five sections show how the wire size, circuit breaker, residential load,
-          range and dryer calculators put several of them together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
+          and where that use stops. The first six sections show how the wire size, circuit breaker, residential load,
+          range, dryer and horsepower to amps calculators put several of them together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
           homepage and the calculators and guides pages also list their sources under Sources, near the bottom of the
           page.
         </p>
@@ -593,6 +613,40 @@ export default function MethodologyPage() {
           <Limits>
             <li>The calculator never picks the circuit rating; the dryer&apos;s instructions give it.</li>
             <li>Dryers on a 3-phase feeder and the 220.61 neutral are not calculated.</li>
+          </Limits>
+        </section>
+
+        <section id={hpMethod.id} data-src="calc:motor-flc" aria-labelledby={`${hpMethod.id}-title`} className="scroll-mt-24 space-y-4">
+          <h2 id={`${hpMethod.id}-title`} className={H2}>
+            {hpMethod.title}
+          </h2>
+          <p>
+            The{' '}
+            <Link href="/calculators/horsepower-to-amps-calculator" className={LINK}>
+              horsepower to amps calculator
+            </Link>{' '}
+            reads one cell of an NEC full-load current table and does no arithmetic on it:
+          </p>
+          <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-cut-line">
+            <li>
+              The table by motor: Table 430.248 for single-phase AC, Table 430.250&apos;s induction motors for three-phase AC, Table 430.247 for DC
+              (see <SectionLink domain="nec-430-flc">Motor full-load currents</SectionLink>).
+            </li>
+            <li>
+              The column by voltage: a single- or three-phase system voltage takes the rated-voltage column the tables&apos; notes give it; a DC
+              motor takes the column of its rated voltage.
+            </li>
+            <li>The cell in the horsepower&apos;s row, or none where the table prints none.</li>
+          </ol>
+          <p>
+            Beside the current it shows the rated power, the horsepower times{' '}
+            <Val v={W_PER_ELECTRICAL_HP} unit="W" src="nist-sp811-conversions" />, and the current that power alone would draw at the
+            column&apos;s voltage at <Val v={100} unit="%" src="calc:motor-flc" /> efficiency and a power factor of 1, divided by √3 more on
+            three-phase. That second current is a comparison, never an answer.
+          </p>
+          <Limits>
+            <li>No conductor, overload or breaker size: Article 430&apos;s rules for them are not verified here yet.</li>
+            <li>Synchronous motors, two-phase motors (Table 430.249) and Table 430.250&apos;s power factor footnote are left out.</li>
           </Limits>
         </section>
 
@@ -1102,11 +1156,30 @@ export default function MethodologyPage() {
             Single sections of the 2023 NEC that the site cites, read from Leviton&apos;s Captain Code 2023 pages, which
             reprint them with NFPA&apos;s permission. The range and dryer calculators cite 210.8(D): GFCI protection for the
             branch circuit or outlet that supplies an electric range, a wall-mounted oven, a counter-mounted cooking unit or
-            a clothes dryer.
+            a clothes dryer. The horsepower to amps calculator cites 430.6(A): the full-load current tables, not the
+            nameplate current, for a motor&apos;s conductor ampacity, switch ratings and short-circuit and ground-fault
+            protection, and the nameplate current for its separate overload protection.
           </p>
           <SourceFacts s={section('nec-2023-rule-excerpts')} />
           <Limits>
             <li>Only the sections that source covers; state adoptions can amend them.</li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="nec-430-flc">
+          <p data-src="nec-430-flc">
+            NEC 2023 Tables 430.247 to 430.250 list a motor&apos;s full-load current by horsepower and rated voltage: DC,
+            single-phase, two-phase and three-phase motors. The values were read from NFPA&apos;s 2023-cycle Second Draft
+            (SR-7559 changed the titles and notes only) and from Eaton&apos;s 2023 reprint, which carries NFPA&apos;s
+            permission; Table 430.250&apos;s rows up to {HP_EATON_LAST} hp match that reprint cell for cell, and every other
+            cell was confirmed twice against the Second Draft. The tables&apos; notes give the columns for system voltages:{' '}
+            {HP_THREE_SYSTEMS}.
+          </p>
+          <SourceFacts s={section('nec-430-flc')} />
+          <Limits>
+            <li>Only the induction motor columns of Table 430.250; the synchronous motor columns are not used.</li>
+            <li>Table 430.250&apos;s footnote for synchronous motors at other power factors is not used.</li>
+            <li>Two-phase motors (Table 430.249) are in the file but not offered: a 120/240 V supply is single-phase.</li>
           </Limits>
         </SourceSection>
 
@@ -1140,6 +1213,14 @@ export default function MethodologyPage() {
             current in one line, and works it on a measured motor: <Val v={DOE_MOTOR.volts} unit="V" src="doe-motor-load-efficiency" />,{' '}
             <Val v={DOE_MOTOR.amps} unit="A" src="doe-motor-load-efficiency" /> and a power factor of {DOE_MOTOR.pf} give{' '}
             <Val v={DOE_MOTOR.printedKw} unit="kW" src="doe-motor-load-efficiency" />.
+          </p>
+          <p data-src="doe-motor-load-efficiency">
+            The{' '}
+            <Link href="/calculators/horsepower-to-amps-calculator" className={LINK}>
+              horsepower to amps calculator
+            </Link>{' '}
+            quotes the sheet on horsepower and efficiency: a motor of a given rated horsepower is expected to deliver that
+            power in mechanical form, and its efficiency is the ratio of its useful power output to its total power input.
           </p>
           <SourceFacts s={section('doe-motor-load-efficiency')} />
           <Formulas
@@ -1305,6 +1386,7 @@ export default function MethodologyPage() {
             rows={[
               ['Btu per hour', <>1 Btu/h = <Val v={W_PER_BTU_PER_H} unit="W" src="nist-sp811-conversions" /></>],
               ['Ton of refrigeration', <>1 ton = <Val v={BTU_PER_H_PER_TON} unit="Btu/h" src="nist-sp811-conversions" /></>],
+              ['Horsepower (electric)', <>1 hp = <Val v={W_PER_ELECTRICAL_HP} unit="W" src="nist-sp811-conversions" /></>],
             ]}
           />
           <p>
@@ -1312,7 +1394,11 @@ export default function MethodologyPage() {
             <Link href="/calculators/btu-to-watts-calculator" className={LINK}>
               BTU to watts calculator
             </Link>{' '}
-            converts both ways and gives the load in tons.
+            converts both ways and gives the load in tons. The{' '}
+            <Link href="/calculators/horsepower-to-amps-calculator" className={LINK}>
+              horsepower to amps calculator
+            </Link>{' '}
+            gives a motor&apos;s rating in watts.
           </p>
           <Limits>
             <li>The Btu is the International Table Btu, the one SP 811 lists for Btu per hour.</li>
