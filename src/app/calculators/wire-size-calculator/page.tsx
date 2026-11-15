@@ -1,592 +1,470 @@
-import { Metadata } from 'next';
-import { WireSizeCalculator } from '@/components/calculators/WireSizeCalculator';
-import { AlertTriangle, Calculator, Zap, BookOpen, Info, CheckCircle, ArrowRight, Gauge, AlertCircle, Shield, Lightbulb, Wrench } from 'lucide-react';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { clsx } from 'clsx';
+import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 import { Byline } from '@/components/content/Byline';
+import { DataTable, RSTICKY_TD, RSTICKY_TH, RTD, RTH } from '@/components/content/DataTable';
+import { Figure } from '@/components/content/Figure';
+import { Size } from '@/components/content/Size';
+import { SourceLine } from '@/components/content/SourceLine';
 import { Sources } from '@/components/content/Sources';
-import { AMBIENT_ROWS, ambientLabel, DOMAINS as AMPACITY_DOMAINS } from '@/lib/calculations/ampacity';
-import { DOMAINS as SIZING_DOMAINS } from '@/lib/calculations/conductor-sizing';
-import { DOMAINS as VOLTAGE_DROP_DOMAINS } from '@/lib/calculations/voltage-drop';
-import { TABLE_310_16_ROWS } from '@/lib/verified/nec-310-16';
+import { Val } from '@/components/content/Val';
+import { WireSizeTool } from '@/components/calculators/WireSizeTool';
+import { LookGuideBody } from '@/components/layout/LookGuideBody';
+import { LengthBandsChart } from '@/components/look/Charts';
+import { OnThisPage } from '@/components/look/OnThisPage';
+import { PageTitle } from '@/components/look/PageTitle';
+import {
+  LOOK_BYLINE,
+  LOOK_BYLINE_LINK,
+  LOOK_H2 as H2,
+  LOOK_H3 as H3,
+  LOOK_LEAD,
+  LOOK_LINK as LINK,
+  LOOK_P as P,
+  LOOK_PAGE,
+  LOOK_SOURCES_HEADING,
+  LOOK_SOURCES_LIST,
+  LOOK_SOURCES_NOTE,
+  LOOK_SOURCES_SECTION,
+} from '@/components/look/styles';
+import { ENGINE_ID } from '@/lib/calculations/conductor-sizing';
+import { RESISTANCE_TEMP_C } from '@/lib/calculations/voltage-drop';
+import { articleDates } from '@/lib/page-dates';
+import {
+  BUNDLED,
+  BUNDLED_8_A,
+  BUNDLED_PLAIN,
+  CONTINUOUS,
+  CONTINUOUS_LOAD_A,
+  CONTINUOUS_NEEDED_A,
+  CONTINUOUS_RATING_A,
+  LENGTH_TRACKS,
+  LONG_RUN,
+  LONG_RUN_AT_12,
+  RATING_ROWS,
+  ratingRow,
+} from '@/lib/wire-size-page';
+import type { RatingRow, SizedAt } from '@/lib/wire-size-page';
+import { TERMINATION_RULES } from '@/lib/verified/nec-110-14c';
+import { CONTINUOUS_LOAD_PERCENT, VOLTAGE_DROP_NOTE } from '@/lib/verified/nec-continuous-load-2023';
+import { max240_4D, NEXT_SIZE_UP_MAX_A } from '@/lib/verified/nec-240-4-d';
+import { adjustment } from '@/lib/verified/nec-310-15-C-1';
+import { AMPACITY_COLUMNS, COLUMN_TYPES, TABLE_AMBIENT, table31016 } from '@/lib/verified/nec-310-16';
+import type { Material, SizeKey } from '@/lib/verified/awg';
 
-// Sources: the domains of the engines this page uses. nec-110-14c (the 110.14(C) termination rules) stays off the
-// page until WSZ-009 adds the termination inputs: its attribution prints "110.14(C)", which check-structure 7 fails.
-const SOURCE_DOMAINS = [...SIZING_DOMAINS, ...VOLTAGE_DROP_DOMAINS, ...AMPACITY_DOMAINS].filter((domain) => domain !== 'nec-110-14c');
+// /calculators/wire-size-calculator (WSZ-009b; spec: research/page-specs-held.md "WSZ-009"; data gate BUILD): the
+// smallest conductor for a breaker or fuse rating in the Table 310.16 column the terminals allow (110.14(C)), corrected
+// for heat and bundling, moved up by 240.4(D), checked against the 125 % continuous-load rule (210.20(A), 210.19(A)) and
+// sized up for voltage drop, with the Table 250.122 ground wire. Every number below comes from the engine through
+// src/lib/wire-size-page.ts or from a verified table. NM and UF cable stay at 60 °C (engine rule nm-cable), as on the
+// ampacity calculator; the cable articles' own rules (registry nec-cable-rules) are not covered.
+const ROUTE = '/calculators/wire-size-calculator';
+const URL = `https://wiresizes.com${ROUTE}`;
+const TITLE = 'Wire Size Calculator: AWG by Breaker Size, NEC Table 310.16';
+const DESCRIPTION =
+  'Copper or aluminum wire size for a 15 to 400 A breaker from NEC Table 310.16, with the terminal temperature, heat, bundling, continuous loads, ground wire and voltage drop.';
 
 export const metadata: Metadata = {
-  title: 'Wire Size Calculator — AWG / NEC 310.16',
-  description: 'Copper and aluminum wire size for a 15–400 A breaker or fuse from the 60 °C column of NEC Table 310.16, limited by 240.4(D), with the ground wire and a voltage-drop check.',
-  keywords: 'wire size calculator, AWG calculator, electrical wire sizing, cable size calculator, conductor sizing, NEC wire size, copper wire calculator, aluminum wire calculator',
-  alternates: { canonical: '/calculators/wire-size-calculator' },
-  openGraph: {
-    title: 'Wire Size Calculator — AWG / NEC 310.16',
-    description: 'Copper and aluminum wire size for a 15–400 A breaker or fuse from the 60 °C column of NEC Table 310.16, limited by 240.4(D), with the ground wire and a voltage-drop check.',
-    url: 'https://wiresizes.com/calculators/wire-size-calculator',
-    siteName: 'WireSizes.com',
-    locale: 'en_US',
-    type: 'website',
-    images: ['/opengraph-image'],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Wire Size Calculator — AWG / NEC 310.16',
-    description: 'Copper and aluminum wire size for a 15–400 A breaker or fuse from the 60 °C column of NEC Table 310.16, limited by 240.4(D), with the ground wire and a voltage-drop check.',
-    images: ['/twitter-image'],
-  },
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: ROUTE },
+  openGraph: { type: 'website', locale: 'en_US', siteName: 'WireSizes.com', url: URL, title: TITLE, description: DESCRIPTION, images: ['/opengraph-image'] },
+  twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION },
 };
 
-// Web application data for schema
-const webAppData = {
-  name: "Wire Size Calculator - AWG Electrical Wire Sizing",
-  url: "https://wiresizes.com/calculators/wire-size-calculator",
-  description: "Calculate the correct AWG wire size for any electrical circuit. Free wire size calculator for copper and aluminum conductors. Includes voltage drop, ampacity, and distance calculations."
-};
+const AMP = 'nec-310-16';
+const COR = 'nec-310-15-corrections';
+const TERM = 'nec-110-14c';
+const CONT = 'nec-continuous-load';
+const SMALL = 'nec-240-4-d';
+const OCPD = 'nec-240-ocpd';
+const EGC = 'nec-250-grounding';
+const RES = 'conductor-resistance-20c';
+const GEO = 'awg-geometry';
+const SVC = 'nec-310-12';
+const VOLTS = 'us-nominal-voltages';
+const CALC = `calc:${ENGINE_ID}`;
+const [, , C90] = AMPACITY_COLUMNS;
+const COLD = TERMINATION_RULES.columnAtOrBelowLimit;
+const WARM = TERMINATION_RULES.columnAboveLimit;
+const METAL: Record<Material, string> = { Cu: 'copper', Al: 'aluminum' };
 
-// Wire ampacity table — NEC Table 310.16 (src/lib/verified/nec-310-16.ts). Limited to
-// 14 AWG through 4/0 since this calculator is for branch / feeder
-// circuits typical in residential and small-commercial work.
-const WIRE_AMPACITY_TABLE = TABLE_310_16_ROWS
-  .filter((row) => /^(14|12|10|8|6|4|3|2|1|[1234]\/0)$/.test(row.size))
-  .map((row) => ({
-    awg: row.size,
-    copper60C: row.cu_60,
-    copper75C: row.cu_75,
-    copper90C: row.cu_90,
-    aluminum60C: row.al_60 ?? '—',
-    aluminum75C: row.al_75 ?? '—',
-    aluminum90C: row.al_90 ?? '—',
-  }));
+// the facts the copy states, checked when the page builds
+const ANSWER_RATINGS = [15, 20, 30, 40, 50];
+const R20 = { Cu: ratingRow('Cu', 20), Al: ratingRow('Al', 20) };
+const R30 = { Cu: ratingRow('Cu', 30), Al: ratingRow('Al', 30) };
+const R40 = { Cu: ratingRow('Cu', 40), Al: ratingRow('Al', 40) };
+const R50 = { Cu: ratingRow('Cu', 50), Al: ratingRow('Al', 50) };
+const R60 = { Cu: ratingRow('Cu', 60), Al: ratingRow('Al', 60) };
+const R100 = { Cu: ratingRow('Cu', 100), Al: ratingRow('Al', 100) };
+const B60 = R60.Cu.below60 as SizedAt;
+const B100 = R100.Cu.below60 as SizedAt;
+function plainLimit(size: SizeKey): number {
+  const row = max240_4D(size, 'Cu');
+  if (!row || row.conditions !== null) throw new Error(`wire size page: no plain 240.4(D) row for ${size} copper`);
+  return row.max_ocpd_a;
+}
+const LIMIT_14 = plainLimit('14');
+const LIMIT_12 = plainLimit(R20.Cu.c60.size);
+const EGC_30_TO_60 = RATING_ROWS.Cu.filter((r) => r.ratingA >= 30 && r.ratingA <= 60);
+const THHN_90 = COLUMN_TYPES[C90].includes('THHN');
+const BUNDLE_PERCENT = adjustment('7–9');
+const [TRACK_20, TRACK_30] = LENGTH_TRACKS;
+if (!B60 || !B100 || R60.Cu.below75 !== null) throw new Error('wire size page: the 240.4(B) examples changed');
+if (R30.Cu.c60.size !== R30.Cu.c75.size || R30.Al.c60.size !== R30.Al.c75.size) throw new Error('wire size page: 30 A differs by column');
+if (R40.Cu.c60.size !== R40.Cu.c75.size) throw new Error('wire size page: 40 A copper differs by column');
+if (new Set(EGC_30_TO_60.map((r) => r.egc)).size !== 1) throw new Error('wire size page: the 30–60 A ground wires differ');
+if (!THHN_90) throw new Error('wire size page: Table 310.16 no longer lists THHN at 90 °C');
+if (LONG_RUN.size === LONG_RUN.minSizeByAmpacity || !LONG_RUN.egcUpsized) throw new Error('wire size page: the long run no longer steps up');
+if (BUNDLED.size === BUNDLED_PLAIN.size || BUNDLED.nextSizeUp !== null) throw new Error('wire size page: the bundling example changed');
+if (TRACK_20.ratingA !== R20.Cu.ratingA || TRACK_30.ratingA !== R30.Cu.ratingA) throw new Error('wire size page: the chart circuits moved');
+if (CONTINUOUS.minSizeByAmpacity !== R30.Cu.c60.size || CONTINUOUS_RATING_A !== R30.Cu.ratingA) throw new Error('wire size page: the continuous example changed');
+if (LIMIT_12 !== R20.Cu.ratingA) throw new Error('wire size page: 12 AWG copper is no longer limited to 20 A');
 
-// Common mistakes in wire sizing
-const COMMON_MISTAKES = [
-  {
-    mistake: "Ignoring voltage drop for long runs",
-    consequence: "Equipment malfunction, dimming lights, motor failure",
-    solution: "Always calculate voltage drop"
-  },
-  {
-    mistake: "Mixing copper and aluminum connections",
-    consequence: "Corrosion, high resistance, connection failure",
-    solution: "Use proper connectors rated for both materials"
-  },
-  {
-    mistake: "Undersizing neutral in multi-wire circuits",
-    consequence: "Neutral overload with non-linear loads",
-    solution: "Size neutral for maximum unbalanced load"
-  },
-  {
-    mistake: "Forgetting derating for bundled conductors",
-    consequence: "Overheating when multiple wires in conduit",
-    solution: "Apply NEC Table 310.15(C)(1) adjustment factors"
-  }
+const TOC: ([string, string] | [string, string, string])[] = [
+  ['by-rating', 'Wire size by breaker rating'],
+  ['distance', 'Wire size by distance'],
+  ['continuous', 'Continuous loads'],
+  ['heat-bundling', 'Heat and bundling'],
+  ['faq', 'Questions'],
+  ['sources', 'Sources'],
 ];
 
-const faqItems = [
-  {
-    question: "What size wire for 20 amp circuit?",
-    answer: "A 20 amp circuit requires 12 AWG copper wire or 10 AWG aluminum wire per NEC Table 310.16."
-  },
-  {
-    question: "How do I calculate wire size for distance?",
-    answer: "For distance calculations: 1) Start with ampacity-based size from NEC 310.16, 2) Calculate voltage drop using VD = (2 × L × I × R) ÷ 1000. Distance often requires larger wire than ampacity alone."
-  },
-  {
-    question: "Can I use aluminum wire instead of copper?",
-    answer: "Yes. Aluminum carries less current than copper of the same size, so it often needs a larger one: for a 30 A breaker, the 60 °C column of NEC Table 310.16 gives 10 AWG copper and 8 AWG aluminum. The calculator shows both."
-  },
-  {
-    question: "How many amps can 12 gauge wire handle?",
-    answer: "12 AWG copper wire is rated for 25 amps at 75 °C per NEC Table 310.16, but must be protected at 20 amps maximum per NEC 240.4(D)."
-  },
-  {
-    question: "What size ground wire do I need?",
-    answer: "Equipment grounding conductor size is based on overcurrent device per NEC Table 250.122: 15 A circuits need 14 AWG, 20 A circuits need 12 AWG, 30-60 A need 10 AWG, 100 A needs 8 AWG, 200 A needs 6 AWG copper ground."
-  },
-  {
-    question: "What wire size for 200 amp service entrance?",
-    answer: "2/0 AWG copper or 4/0 aluminum (dwelling service, Table 310.12). Verify local requirements."
-  },
-  {
-    question: "Can I use 14 gauge wire on a 20 amp circuit?",
-    answer: "No. NEC 240.4(D) limits 14 AWG copper to 15 A overcurrent protection, even though Table 310.16 lists 20 A for it in the 75 °C column."
-  },
-  {
-    question: "What affects wire ampacity ratings?",
-    answer: "Wire ampacity is affected by: conductor material (copper vs aluminum), insulation temperature rating (60/75/90 °C), ambient temperature (derating required above 86 °F), number of conductors in raceway (derating for heat), and installation method."
-  },
-  {
-    question: "What's the difference between stranded and solid wire?",
-    answer: "Stranded wire is more flexible and resistant to fatigue, ideal for vibration or frequent movement. Solid wire is easier to terminate, and preferred for permanent building wiring. Both have identical ampacity ratings."
-  },
-];
+const articleData = { headline: 'Wire Size Calculator', description: DESCRIPTION, url: URL, ...articleDates(ROUTE) };
+const webAppData = { name: 'Wire Size Calculator', url: URL, description: DESCRIPTION };
 
-export default function WireSizeCalculatorPage() {
+/** "12 AWG copper (20 A at 60 °C)": a size the engine found, with its ampacity in a column. */
+function SizeAmps({ s, column, metal }: { s: SizedAt; column: number; metal?: string }) {
   return (
     <>
-      
-      {/* Quick Answer Section */}
-      <section className="bg-blue-50 border-b border-blue-200">
-        <div className="container py-4 sm:py-8">
-          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-            <h1 className="text-3xl font-bold text-neutral-900 mb-3">
-              Wire Size Calculator - AWG Electrical Wire Sizing
-            </h1>
-            <p className="text-lg text-neutral-700 mb-6">
-              Copper and aluminum conductor sizes for a 15–400 A breaker or fuse, from the 60 °C column of NEC
-              Table 310.16, with a voltage-drop check.
+      <Size s={s.size} />
+      {metal ? ` ${metal}` : ''} (<Val v={s.amps} unit="A" src={AMP} /> at <Val v={column} unit="°C" src={AMP} />)
+    </>
+  );
+}
+
+function RatingTable({ material }: { material: Material }) {
+  const rows: RatingRow[] = RATING_ROWS[material];
+  const name = material === 'Cu' ? 'Copper' : 'Aluminum or copper-clad aluminum';
+  return (
+    <DataTable id={`by-rating-${material.toLowerCase()}`} variant="ruled" src={CALC} caption={`${name}: smallest size for each rating`}>
+      <thead>
+        <tr>
+          <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
+            Breaker or fuse
+          </th>
+          <th scope="col" className={clsx(RTH, 'max-sm:!min-w-0 max-sm:!px-2')}>
+            <Val v={COLD} unit="°C" src={TERM} />
+          </th>
+          <th scope="col" className={clsx(RTH, 'max-sm:!min-w-0 max-sm:!px-2')}>
+            <Val v={WARM} unit="°C" src={TERM} />
+          </th>
+          <th scope="col" className={clsx(RTH, 'max-sm:!min-w-0 max-sm:!px-2')}>
+            Ground wire
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr key={r.ratingA}>
+            <th scope="row" className={clsx(RSTICKY_TD, '!font-normal')}>
+              <Val v={r.ratingA} unit="A" src={OCPD} />
+            </th>
+            <td className={clsx(RTD, 'max-sm:!min-w-0 max-sm:!px-2')}>
+              <Size s={r.c60.size} />
+            </td>
+            <td className={clsx(RTD, 'max-sm:!min-w-0 max-sm:!px-2')}>
+              <Size s={r.c75.size} />
+            </td>
+            <td className={clsx(RTD, 'max-sm:!min-w-0 max-sm:!px-2')} data-src={EGC}>
+              <Size s={r.egc} />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </DataTable>
+  );
+}
+
+function sizesIn(material: Material): SizeKey[] {
+  return ANSWER_RATINGS.map((a) => ratingRow(material, a).c60.size);
+}
+
+export default function WireSizeCalculatorPage() {
+  const answer = sizesIn('Cu');
+  return (
+    <div className={LOOK_PAGE}>
+      <article className="container pb-16">
+        <ArticleSchema article={articleData} />
+        <CombinedSchema webApp={webAppData} />
+
+        <header className="pt-10 sm:pt-12">
+          <PageTitle main="Wire Size Calculator" sub="AWG by Breaker Size, NEC Table 310.16" joiner=": " src={AMP} />
+          <p className={clsx(LOOK_LEAD, 'mt-5')}>
+            The smallest copper or aluminum wire for a breaker or fuse, held to the terminals and 240.4(D), then sized up for the voltage drop
+            over the run.
+          </p>
+          <Byline route={ROUTE} sources className={LOOK_BYLINE} linkClassName={LOOK_BYLINE_LINK} />
+        </header>
+
+        <section aria-label="Calculator" className="mt-8 border-t-2 border-ink pt-7">
+          <WireSizeTool />
+        </section>
+
+        <div className="mt-14 max-w-[44rem] space-y-4">
+          <p className={LOOK_LEAD} data-src={CALC}>
+            <strong>
+              In NM cable, a <Val v={ANSWER_RATINGS[0]} unit="A" src={OCPD} /> breaker takes <Size s={answer[0]} /> copper,{' '}
+              <Val v={ANSWER_RATINGS[1]} unit="A" src={OCPD} /> takes <Size s={answer[1]} />, <Val v={ANSWER_RATINGS[2]} unit="A" src={OCPD} /> takes{' '}
+              <Size s={answer[2]} />, <Val v={ANSWER_RATINGS[3]} unit="A" src={OCPD} /> takes <Size s={answer[3]} /> and{' '}
+              <Val v={ANSWER_RATINGS[4]} unit="A" src={OCPD} /> takes <Size s={answer[4]} />, from the <Val v={COLD} unit="°C" src={AMP} /> column of NEC
+              Table 310.16.
+            </strong>{' '}
+            A long run needs more: at <Val v={100} unit="ft" src="input" />, a <Val v={20} unit="A" src="input" /> circuit at{' '}
+            <Val v={120} unit="V" src="input" /> takes <Size s={LONG_RUN.size} /> to keep the drop within <Val v={3} unit="%" src="input" />.
+          </p>
+        </div>
+
+        <LookGuideBody className="mt-14 border-t border-cut-rule pt-10">
+          <OnThisPage items={TOC} />
+
+          <section aria-labelledby="by-rating" className="space-y-5">
+            <h2 id="by-rating" className={H2}>
+              Wire size by breaker rating
+            </h2>
+            <p className={P} data-src={TERM}>
+              Under 110.14(C), the temperature column used may not exceed the rating of any connected termination, conductor or device. Equipment
+              for circuits rated <Val v={TERMINATION_RULES.limitA} unit="A" src={TERM} /> or less, or with terminals marked for <Size s="14" /> through{' '}
+              <Size s="1" />, is used at the <Val v={COLD} unit="°C" src={TERM} /> ampacity unless it is listed and identified for higher-rated
+              conductors; above <Val v={TERMINATION_RULES.limitA} unit="A" src={TERM} />, at the <Val v={WARM} unit="°C" src={TERM} /> ampacity. The
+              site also keeps NM and UF cable at <Val v={COLD} unit="°C" src={TERM} />. Each size below carries the full rating in its column and
+              meets the 240.4(D) limits.
             </p>
-            
-            {/* Quick Answer Box */}
-            <div className="bg-white rounded-lg p-6 border border-blue-300 shadow-sm">
-              <div className="flex items-start gap-3">
-                <Zap className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
-                <div className="w-full">
-                  <h2 className="text-xl font-semibold text-neutral-900 mb-4">Quick Reference: Common Wire Sizes</h2>
-                  <div className="grid lg:grid-cols-2 gap-6">
-                    <div>
-                      <h3 className="font-semibold text-neutral-800 mb-2">Residential Circuits:</h3>
-                      <ul className="space-y-1 text-sm text-neutral-600">
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span><strong>15 A:</strong> 14 AWG copper</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span><strong>20 A:</strong> 12 AWG copper</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span><strong>30 A:</strong> 10 AWG copper</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span><strong>50 A:</strong> 6 AWG copper</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-neutral-800 mb-2">Service/Feeders:</h3>
-                      <ul className="space-y-1 text-sm text-neutral-600">
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span><strong>60 A Sub:</strong> 4 AWG copper</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span><strong>100 A Sub:</strong> 1 AWG copper</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span><strong>200 A Service:</strong> 2/0 copper or 4/0 aluminum (dwelling service, Table 310.12)</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <AlertCircle className="w-4 h-4 text-amber-500" />
-                          <span>Check voltage drop!</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-                    <p className="text-sm text-amber-800">
-                      <strong>Important:</strong> These sizes are based on ampacity alone. Check voltage drop, and apply the
-                      correction for ambient temperature and the adjustment for more than three current-carrying conductors.
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <div className="grid gap-8 md:grid-cols-2 md:gap-6">
+              <RatingTable material="Cu" />
+              <RatingTable material="Al" />
             </div>
-          </div>
-        </div>
-      </section>
+            <SourceLine domains={[AMP, TERM, SMALL, OCPD, EGC]} />
+            <p className={P} data-src={OCPD}>
+              240.4(B) lets a breaker or fuse of up to <Val v={NEXT_SIZE_UP_MAX_A} unit="A" src={OCPD} /> protect a conductor whose ampacity falls
+              between two standard ratings, at the next rating up, when the circuit does not supply more than one receptacle for
+              cord-and-plug-connected portable loads. So a <Val v={R60.Cu.ratingA} unit="A" src={OCPD} /> breaker may protect{' '}
+              <SizeAmps s={B60} column={COLD} metal="copper" /> instead of <Size s={R60.Cu.c60.size} />, and a{' '}
+              <Val v={R100.Cu.ratingA} unit="A" src={OCPD} /> breaker <SizeAmps s={B100} column={COLD} metal="copper" /> instead of{' '}
+              <Size s={R100.Cu.c60.size} />, as long as the load fits the smaller size. The calculator notes these cases under its result.
+            </p>
+            <p className={P} data-src={SVC}>
+              A 120/240 V single-phase service, or a feeder, that carries the entire load of a one-family dwelling or of one dwelling unit is sized
+              from Table 310.12 instead: see the{' '}
+              <Link href="/calculators/service-entrance-calculator" className={LINK}>
+                service entrance calculator
+              </Link>{' '}
+              and the{' '}
+              <Link href="/guides/wire-size-for-200-amp" className={LINK}>
+                200 amp guide
+              </Link>
+              .
+            </p>
+          </section>
 
-      {/* Calculator Component */}
-      <section className="py-8">
-        <div className="container">
-          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-            <WireSizeCalculator />
-            <Byline route="/calculators/wire-size-calculator" sources className="mt-4 text-sm text-neutral-600" />
-          </div>
-        </div>
-      </section>
-
-      {/* Understanding Wire Sizing Section */}
-      <section className="py-8 bg-neutral-50 border-y">
-        <div className="container">
-          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <BookOpen className="w-6 h-6 text-blue-600" />
-              Complete Guide to Wire Sizing
+          <section aria-labelledby="distance" className="space-y-5">
+            <h2 id="distance" className={H2}>
+              Wire size by distance
             </h2>
-            
-            <div className="grid lg:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-xl font-semibold mb-4">How Wire Sizing Works</h3>
-                <p className="text-neutral-700 mb-4">
-                  Wire sizing involves selecting the correct conductor size based on several factors: 
-                  current carrying capacity (ampacity), voltage drop over distance, temperature conditions, 
-                  and installation method. The National Electrical Code (NEC) provides tables and rules 
-                  to ensure safe and efficient electrical installations.
-                </p>
-                
-                <div className="bg-white p-6 rounded-lg border border-neutral-200 mb-6">
-                  <h4 className="text-lg font-semibold mb-3">Key Factors in Wire Sizing</h4>
-                  <p>
-                    <strong>Ampacity:</strong> The maximum current a conductor can carry continuously without exceeding its temperature rating.
-                  </p>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-xl font-semibold mb-4">NEC Wire Sizing Rules</h3>
-                
-                <div className="space-y-4">
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                    <h4 className="font-semibold text-blue-900 mb-2">Table 310.16</h4>
-                    <p className="text-sm text-blue-800">
-                      Primary ampacity table for conductors rated 0-2000 V in raceway, cable, or earth.
-                      Most residential and commercial wiring references this table.
-                    </p>
-                  </div>
+            <p className={P} data-src={CALC}>
+              Voltage drop grows with the length and the current, so a long run can need a larger size than the rating alone. The calculator
+              works out the drop at the load current, with resistance at <Val v={RESISTANCE_TEMP_C} unit="°C" src={CALC} />, and moves up one size
+              at a time until the drop is within your target. The ground wire grows in proportion to the conductor area, as 250.122(B) requires.
+            </p>
+            <Figure
+              caption={
+                <>
+                  <span data-src={CALC}>
+                    The smallest copper size in NM cable for each one-way length, with the circuit carrying its rating and the drop held to{' '}
+                    <Val v={TRACK_20.targetPct} unit="%" src="input" />: a <Val v={TRACK_20.ratingA} unit="A" src="input" /> circuit at{' '}
+                    <Val v={TRACK_20.volts} unit="V" src="input" /> and a <Val v={TRACK_30.ratingA} unit="A" src="input" /> circuit at{' '}
+                    <Val v={TRACK_30.volts} unit="V" src="input" />, single-phase.
+                  </span>
+                  <SourceLine domains={[AMP, SMALL, RES]} />
+                </>
+              }
+            >
+              <LengthBandsChart />
+            </Figure>
+            <p className={P} data-src={CALC}>
+              At <Val v={100} unit="ft" src="input" /> one way, the <Val v={20} unit="A" src="input" /> circuit at <Val v={120} unit="V" src="input" />{' '}
+              would drop <Val v={LONG_RUN_AT_12.vdPct} unit="%" src={CALC} format={{ fixed: 2 }} /> on <Size s={LONG_RUN.minSizeByAmpacity} />.{' '}
+              <Size s={LONG_RUN.size} /> brings it to <Val v={LONG_RUN.vdPct} unit="%" src={CALC} format={{ fixed: 2 }} />, and the ground wire goes
+              from <Size s={R20.Cu.egc} /> to <Size s={LONG_RUN.egc as SizeKey} />.
+            </p>
+            <p className={P} data-src={CONT}>
+              The target is yours. An informational note in the 2023 NEC (215.2(A)) ties a feeder drop of up to{' '}
+              <Val v={VOLTAGE_DROP_NOTE.feederPct} unit="%" src={CONT} />, and <Val v={VOLTAGE_DROP_NOTE.totalPct} unit="%" src={CONT} /> for feeder and
+              branch circuit together, to reasonable efficiency: advice, not a rule. The{' '}
+              <Link href="/calculators/voltage-drop-calculator" className={LINK}>
+                voltage drop calculator
+              </Link>{' '}
+              works out the drop for a size you already have.
+            </p>
+          </section>
 
-                  <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
-                    <h4 className="font-semibold text-amber-900 mb-2">NEC 240.4(D)</h4>
-                    <p className="text-sm text-amber-800">
-                      Small conductor rule: 14 AWG copper limited to 15 A, 12 AWG copper to 20 A, 10 AWG copper to 30 A
-                      overcurrent protection.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Wire Ampacity Reference */}
-      <section className="py-8 bg-neutral-50 border-y">
-        <div className="container">
-          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6">
-              NEC Table 310.16 - Wire Ampacity Ratings
+          <section aria-labelledby="continuous" className="space-y-4">
+            <h2 id="continuous" className={H2}>
+              Continuous loads
             </h2>
-            
-            <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-neutral-50 border-b border-neutral-200">
-                      <th rowSpan={2} className="px-4 py-3 text-left font-medium text-neutral-700">AWG</th>
-                      <th colSpan={3} className="px-4 py-3 text-center font-medium text-neutral-700 border-l">Copper (Amps)</th>
-                      <th colSpan={3} className="px-4 py-3 text-center font-medium text-neutral-700 border-l">Aluminum (Amps)</th>
-                    </tr>
-                    <tr className="bg-neutral-50 border-b border-neutral-200">
-                      <th className="px-3 py-2 text-center text-xs border-l">60 °C</th>
-                      <th className="px-3 py-2 text-center text-xs">75 °C</th>
-                      <th className="px-3 py-2 text-center text-xs">90 °C</th>
-                      <th className="px-3 py-2 text-center text-xs border-l">60 °C</th>
-                      <th className="px-3 py-2 text-center text-xs">75 °C</th>
-                      <th className="px-3 py-2 text-center text-xs">90 °C</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100">
-                    {WIRE_AMPACITY_TABLE.map((row) => (
-                      <tr key={row.awg} className="hover:bg-neutral-50">
-                        <td className="px-4 py-2 font-mono font-semibold">{row.awg}</td>
-                        <td className="px-3 py-2 text-center border-l">{row.copper60C}</td>
-                        <td className="px-3 py-2 text-center">{row.copper75C}</td>
-                        <td className="px-3 py-2 text-center">{row.copper90C}</td>
-                        <td className="px-3 py-2 text-center border-l">{row.aluminum60C}</td>
-                        <td className="px-3 py-2 text-center">{row.aluminum75C}</td>
-                        <td className="px-3 py-2 text-center">{row.aluminum90C}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            
-            <div className="mt-6 grid gap-4">
-              <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
-                <h3 className="font-semibold text-amber-900 mb-2">Ambient Temperature Correction</h3>
-                <p className="text-sm text-amber-800">
-                  Ampacity is corrected when the ambient temperature differs from 30 °C (86 °F). Multiply by the
-                  factor for the {"conductor's"} temperature column.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+            <p className={P} data-src={CONT}>
+              NEC 210.20(A) asks that the breaker or fuse be rated at least the noncontinuous load plus{' '}
+              <Val v={CONTINUOUS_LOAD_PERCENT} unit="%" src={CONT} /> of the continuous load, and 210.19(A) asks the same of the conductors&apos;
+              ampacity.{' '}
+              <span data-src={CALC}>
+                A continuous load of <Val v={CONTINUOUS_LOAD_A} unit="A" src="input" /> needs at least{' '}
+                <Val v={CONTINUOUS_NEEDED_A} unit="A" src={CALC} />: a <Val v={CONTINUOUS_RATING_A} unit="A" src={OCPD} /> breaker on{' '}
+                <Size s={CONTINUOUS.size} /> copper.
+              </span>{' '}
+              Enter the load and set Continuous load to Yes, and the calculator checks the rating against it.
+            </p>
+          </section>
 
-      {/* Temperature Correction Factors */}
-      <section className="py-8">
-        <div className="container">
-          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <Gauge className="w-6 h-6 text-orange-600" />
-              Temperature Correction Factors
+          <section aria-labelledby="heat-bundling" className="space-y-4">
+            <h2 id="heat-bundling" className={H2}>
+              Heat and bundling
             </h2>
-            
-            <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-neutral-50 border-b border-neutral-200">
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Ambient Temperature</th>
-                      <th className="px-4 py-3 text-center font-medium text-neutral-700">60 °C Wire</th>
-                      <th className="px-4 py-3 text-center font-medium text-neutral-700">75 °C Wire</th>
-                      <th className="px-4 py-3 text-center font-medium text-neutral-700">90 °C Wire</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100">
-                    {AMBIENT_ROWS.map((row) => (
-                      <tr key={row.key} className="hover:bg-neutral-50">
-                        <td className="px-4 py-3 font-medium">{ambientLabel(row)}</td>
-                        <td className="px-4 py-3 text-center font-mono">{row.f_60 === null ? '—' : row.f_60.toFixed(2)}</td>
-                        <td className="px-4 py-3 text-center font-mono">{row.f_75 === null ? '—' : row.f_75.toFixed(2)}</td>
-                        <td className="px-4 py-3 text-center font-mono">{row.f_90 === null ? '—' : row.f_90.toFixed(2)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            
-            <div className="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
-              <h3 className="font-semibold text-orange-900 mb-2">How to Apply Temperature Correction</h3>
-              <p className="text-sm text-orange-800 mb-2">
-                Multiply the table ampacity by the correction factor.
+            <p className={P} data-src={COR}>
+              Table 310.16 assumes <Val v={TABLE_AMBIENT.c} unit="°C" src={AMP} /> (<Val v={TABLE_AMBIENT.f} unit="°F" src={AMP} />) and no more than
+              three current-carrying conductors together. Enter a different ambient or more conductors, and the calculator corrects the ampacity by
+              the factors of Tables 310.15(B)(1)(1) and 310.15(C)(1): from the <Val v={C90} unit="°C" src={AMP} /> column for single conductors, which
+              it takes as rated <Val v={C90} unit="°C" src={AMP} />, like THHN, and from the <Val v={COLD} unit="°C" src={TERM} /> column for cable. It
+              then holds the result to the size&apos;s value in the terminal column.
+            </p>
+            <p className={P} data-src={CALC}>
+              On a <Val v={50} unit="A" src="input" /> circuit with <Val v={WARM} unit="°C" src="input" /> terminals, <Size s={BUNDLED_PLAIN.size} />{' '}
+              copper carries <Val v={BUNDLED_PLAIN.minAmpacity} unit="A" src={AMP} />. With seven to nine current-carrying conductors in the
+              raceway, it keeps <Val v={BUNDLE_PERCENT} unit="%" src={COR} /> of its <Val v={C90} unit="°C" src={AMP} /> value of{' '}
+              <Val v={table31016(BUNDLED_PLAIN.size, 'cu_90') as number} unit="A" src={AMP} />, or <Val v={BUNDLED_8_A} unit="A" src={CALC} format={{ upTo: 1 }} />,
+              so the calculator moves to <Size s={BUNDLED.size} />: <Val v={BUNDLED.minAmpacity} unit="A" src={CALC} format={{ upTo: 1 }} />.
+            </p>
+            <p className={P} data-src={TERM}>
+              The site keeps NM and UF cable at <Val v={COLD} unit="°C" src={TERM} />, corrections included, so a hot attic can call for a larger
+              cable than single conductors would need. The{' '}
+              <Link href="/calculators/ampacity-calculator" className={LINK}>
+                ampacity calculator
+              </Link>{' '}
+              shows each correction for one size.
+            </p>
+          </section>
+
+          <section aria-labelledby="faq" className="space-y-6">
+            <h2 id="faq" className={H2}>
+              Questions
+            </h2>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src="input">
+                What size wire for a <Val v={20} unit="A" src="input" /> breaker?
+              </h3>
+              <p className={P} data-src={CALC}>
+                <Size s={R20.Cu.c60.size} /> copper, or <Size s={R20.Al.c60.size} /> aluminum. <Size s={R20.Cu.c60.size} /> copper carries{' '}
+                <Val v={R20.Cu.c60.amps} unit="A" src={AMP} /> in the <Val v={COLD} unit="°C" src={AMP} /> column, and 240.4(D) allows it a breaker of up
+                to <Val v={LIMIT_12} unit="A" src={SMALL} />.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Common Mistakes Section */}
-      <section className="py-8 bg-red-50 border-y">
-        <div className="container">
-          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <AlertTriangle className="w-6 h-6 text-red-600" />
-              Common Wire Sizing Mistakes to Avoid
-            </h2>
-            
-            <div className="grid lg:grid-cols-2 gap-4">
-              {COMMON_MISTAKES.map((mistake, idx) => (
-                <div key={idx} className="bg-white p-4 rounded-lg border border-red-200">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-red-600 font-bold text-sm">{idx + 1}</span>
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-red-900 mb-1">{mistake.mistake}</h3>
-                      <p className="text-sm text-neutral-700 mb-2">
-                        <strong>Consequence:</strong> {mistake.consequence}
-                      </p>
-                      <div className="flex items-start gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                        <p className="text-sm text-green-700">
-                          <strong>Solution:</strong> {mistake.solution}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src="input">
+                What size wire for a <Val v={30} unit="A" src="input" /> breaker?
+              </h3>
+              <p className={P} data-src={CALC}>
+                <Size s={R30.Cu.c60.size} /> copper or <Size s={R30.Al.c60.size} /> aluminum, in both the <Val v={COLD} unit="°C" src={TERM} /> and the{' '}
+                <Val v={WARM} unit="°C" src={TERM} /> column.
+              </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Special Considerations */}
-      <section className="py-8 bg-neutral-50 border-y">
-        <div className="container">
-          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <Shield className="w-6 h-6 text-blue-600" />
-              Special Wire Sizing Considerations
-            </h2>
-            
-            <div className="grid lg:grid-cols-2 gap-4 lg:gap-6">
-              <div>
-                <h3 className="font-semibold text-neutral-900 mb-4">More Than Three Current-Carrying Conductors</h3>
-                <div className="bg-white p-4 rounded-lg border border-neutral-200">
-                  <p className="text-sm text-neutral-700 mb-3">
-                    With more than three current-carrying conductors together, multiply the ampacity by the adjustment
-                    factor in NEC Table 310.15(C)(1).
-                  </p>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>4-6 conductors</span>
-                      <span className="font-mono font-semibold">80 % ampacity</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>7-9 conductors</span>
-                      <span className="font-mono font-semibold">70 % ampacity</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>10-20 conductors</span>
-                      <span className="font-mono font-semibold">50 % ampacity</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src="input">
+                What size wire for a <Val v={40} unit="A" src="input" /> breaker?
+              </h3>
+              <p className={P} data-src={CALC}>
+                <Size s={R40.Cu.c60.size} /> copper in either column. Aluminum takes <Size s={R40.Al.c60.size} /> at <Val v={COLD} unit="°C" src={TERM} />{' '}
+                and <Size s={R40.Al.c75.size} /> at <Val v={WARM} unit="°C" src={TERM} />.
+              </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Installation Tips */}
-      <section className="py-8">
-        <div className="container">
-          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <Wrench className="w-6 h-6 text-blue-600" />
-              Professional Installation Tips
-            </h2>
-            
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-              <div className="bg-white p-4 rounded-lg border border-neutral-200">
-                <h3 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
-                  <Lightbulb className="w-4 h-4" />
-                  Planning Phase
-                </h3>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-                    <span>Calculate both ampacity and voltage drop</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-                    <span>Consider future expansion needs</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-                    <span>Check local code amendments</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="bg-white p-4 rounded-lg border border-neutral-200">
-                <h3 className="font-semibold text-green-900 mb-3 flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4" />
-                  Best Practices
-                </h3>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Label wire runs clearly at both ends</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Use proper torque specifications</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Document calculations for inspector</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="bg-white p-4 rounded-lg border border-neutral-200">
-                <h3 className="font-semibold text-amber-900 mb-3 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4" />
-                  Common Issues
-                </h3>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-                    <span>Undersized neutrals in MWBC</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-                    <span>Missing derating in hot attics</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-                    <span>Wrong insulation type for wet areas</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-                    <span>Mixing wire types in same circuit</span>
-                  </li>
-                </ul>
-              </div>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src="input">
+                What size wire for a <Val v={50} unit="A" src="input" /> breaker?
+              </h3>
+              <p className={P} data-src={CALC}>
+                In NM cable, <SizeAmps s={R50.Cu.c60} column={COLD} metal="copper" />; on <Val v={WARM} unit="°C" src={TERM} /> terminals,{' '}
+                <SizeAmps s={R50.Cu.c75} column={WARM} metal="copper" />. Aluminum takes <Size s={R50.Al.c60.size} /> and <Size s={R50.Al.c75.size} />.
+              </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-8 bg-neutral-50 border-y">
-        <div className="container">
-          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <Info className="w-6 h-6 text-blue-600" />
-              Wire Sizing Frequently Asked Questions
-            </h2>
-            
-            <div className="grid lg:grid-cols-2 gap-4">
-              {faqItems.map((item, idx) => (
-                <div key={idx} className="bg-white p-4 rounded-lg border border-neutral-200">
-                  <h3 className="font-semibold text-neutral-900 mb-2 flex items-start gap-2">
-                    <span className="text-blue-600 flex-shrink-0">Q: </span>
-                    {item.question}
-                  </h3>
-                  <p className="text-sm text-neutral-600 leading-relaxed pl-6">
-                    <span className="text-green-600 font-semibold">A: </span>
-                    {item.answer}
-                  </p>
-                </div>
-              ))}
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src="input">
+                What size wire for a <Val v={60} unit="A" src="input" /> breaker?
+              </h3>
+              <p className={P} data-src={CALC}>
+                On <Val v={WARM} unit="°C" src={TERM} /> terminals, <SizeAmps s={R60.Cu.c75} column={WARM} metal="copper" />. In NM cable,{' '}
+                <SizeAmps s={R60.Cu.c60} column={COLD} metal="copper" /> carries the full rating;{' '}
+                <span data-src={OCPD}>
+                  240.4(B) also allows <SizeAmps s={B60} column={COLD} /> when the load is at most <Val v={B60.amps} unit="A" src={CALC} /> and the
+                  circuit does not supply more than one receptacle for cord-and-plug-connected portable loads.
+                </span>
+              </p>
             </div>
-          </div>
-        </div>
-      </section>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src="input">
+                What size wire for a <Val v={100} unit="A" src="input" /> breaker?
+              </h3>
+              <p className={P} data-src={CALC}>
+                On <Val v={WARM} unit="°C" src={TERM} /> terminals, <Size s={R100.Cu.c75.size} /> copper or <Size s={R100.Al.c75.size} /> aluminum. In the{' '}
+                <Val v={COLD} unit="°C" src={TERM} /> column, <Size s={R100.Cu.c60.size} /> copper or <Size s={R100.Al.c60.size} /> aluminum, and 240.4(B)
+                also allows <SizeAmps s={B100} column={COLD} metal="copper" />. For a dwelling service, Table 310.12 applies instead: see the{' '}
+                <Link href="/calculators/service-entrance-calculator" className={LINK}>
+                  service entrance calculator
+                </Link>
+                .
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-size="14">
+                Can I use <Size s="14" /> wire on a <Val v={20} unit="A" src="input" /> circuit?
+              </h3>
+              <p className={P} data-src={SMALL}>
+                No. 240.4(D) limits <Size s="14" /> copper to a <Val v={LIMIT_14} unit="A" src={SMALL} /> breaker or fuse, although Table
+                310.16 lists it at <Val v={table31016('14', 'cu_75') as number} unit="A" src={AMP} /> in the <Val v={WARM} unit="°C" src={AMP} /> column.
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>What size ground wire do I need?</h3>
+              <p className={P} data-src={EGC}>
+                Table 250.122 sizes it by the breaker or fuse rating: <Size s={R20.Cu.egc} /> copper for <Val v={20} unit="A" src={EGC} />,{' '}
+                <Size s={EGC_30_TO_60[0].egc} /> from <Val v={30} unit="A" src={EGC} /> to <Val v={60} unit="A" src={EGC} /> and <Size s={R100.Cu.egc} /> for{' '}
+                <Val v={100} unit="A" src={EGC} />. When the conductors grow for voltage drop, it grows in proportion. The{' '}
+                <Link href="/calculators/ground-wire-calculator" className={LINK}>
+                  ground wire calculator
+                </Link>{' '}
+                covers every rating.
+              </p>
+            </div>
+          </section>
 
-      {/* Sources */}
-      <section className="py-8">
-        <div className="container">
-          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
+          <section aria-label="Sources and notices" className={LOOK_SOURCES_SECTION}>
             <Sources
-              domains={SOURCE_DOMAINS}
-              headingClassName="text-2xl font-bold text-neutral-900 mb-6"
-              listClassName="space-y-2 text-sm text-neutral-600"
-              linkClassName="text-blue-600 hover:underline"
-              noteClassName="mt-4 text-sm text-neutral-600"
+              domains={[AMP, COR, TERM, CONT, SMALL, OCPD, EGC, SVC, RES, GEO, VOLTS]}
+              headingClassName={LOOK_SOURCES_HEADING}
+              listClassName={LOOK_SOURCES_LIST}
+              linkClassName={LINK}
+              noteClassName={LOOK_SOURCES_NOTE}
             />
-          </div>
-        </div>
-      </section>
-
-      {/* Related Calculators */}
-      <section className="py-8">
-        <div className="container">
-          <div className="max-w-full px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6">
-              Related Electrical Calculators
-            </h2>
-            
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
-              <a href="/calculators/voltage-drop-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 data-name="" className="font-semibold text-neutral-900 mb-1">Voltage Drop Calculator</h3>
-                <p className="text-sm text-neutral-600">Calculate voltage loss over distance for any wire size</p>
-              </a>
-              <a href="/calculators/ampacity-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 data-name="" className="font-semibold text-neutral-900 mb-1">Ampacity Calculator</h3>
-                <p className="text-sm text-neutral-600">Find current carrying capacity with derating factors</p>
-              </a>
-              <a href="/calculators/ground-wire-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 data-name="" className="font-semibold text-neutral-900 mb-1">Ground Wire Calculator</h3>
-                <p className="text-sm text-neutral-600">Size equipment grounding conductors per NEC 250.122</p>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <CombinedSchema webApp={webAppData} />
-    </>
+            <p>
+              The{' '}
+              <Link href="/methodology#wire-size-method" className={LINK}>
+                methodology page
+              </Link>{' '}
+              sets out each step and each source. NFPA 70®, National Electrical Code® and NEC® are registered trademarks of the National Fire
+              Protection Association; wiresizes.com is not affiliated with or endorsed by NFPA.
+            </p>
+          </section>
+        </LookGuideBody>
+      </article>
+    </div>
   );
 }

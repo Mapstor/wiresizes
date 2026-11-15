@@ -3,7 +3,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  BASIS_LINES,
   EGC_LARGER_THAN_CONDUCTOR_NOTE,
   EGC_NONE_MESSAGE,
   EGC_UPSIZED_NOTE,
@@ -43,11 +42,6 @@ describe('exported titles, notes and messages', () => {
   });
 
   it('wire size basis lines and ground-wire notes', () => {
-    assert.deepEqual(BASIS_LINES, [
-      'Sized from the 60 °C column of NEC Table 310.16 (2023), limited by 240.4(D); ground wire from Table 250.122.',
-      'Assumes 30 °C (86 °F) ambient and no more than three current-carrying conductors together. Hotter locations or more conductors need the factors in Tables 310.15(B)(1)(1) and 310.15(C)(1): use the ampacity calculator.',
-      'A 120/240 V dwelling service, or a feeder carrying its entire load, is sized from NEC Table 310.12 instead: see the service entrance calculator.',
-    ]);
     assert.equal(EGC_UPSIZED_NOTE, 'Ground wire increased in proportion to the larger conductors (NEC 250.122(B)).');
     assert.equal(
       EGC_LARGER_THAN_CONDUCTOR_NOTE,

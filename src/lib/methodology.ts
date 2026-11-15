@@ -1,8 +1,7 @@
 // /methodology (WSZ-004b): one section per verified source domain that a live page's <Sources> lists, in reading
 // order, each with the live pages whose Sources list it ("Cited on"), named as the route list names them
-// (src/lib/routes.ts, D-26). nec-110-14c stays off until WSZ-009 adds
-// it to the wire size calculator's Sources (D-06); domains that no live page cites (doe-efficiency-standards and the
-// rest) stay off too (WSZ-017 answers 10 and 12). check-structure 24 compares these
+// (src/lib/routes.ts, D-26). Domains that no live page cites (doe-efficiency-standards and the rest) stay off
+// (WSZ-017 answers 10 and 12). check-structure 24 compares these
 // lists with the built pages, so a domain added to or dropped from a page's Sources fails the build until this file
 // follows. Pure data, no JSX: the tests import it.
 import { pageName } from './routes';
@@ -76,7 +75,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'terminals',
     domain: 'nec-110-14c',
     title: 'Terminal temperatures',
-    citedOn: [AMPACITY, GUIDE_200],
+    citedOn: [WIRE_SIZE, AMPACITY, GUIDE_200],
   },
   {
     id: 'small-conductors',
@@ -94,7 +93,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'continuous-loads',
     domain: 'nec-continuous-load',
     title: 'Continuous loads and the voltage-drop note',
-    citedOn: [VOLTAGE_DROP, LOW_VOLTAGE, GUIDE_200],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, LOW_VOLTAGE, GUIDE_200],
   },
   {
     id: 'grounding',
@@ -106,7 +105,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'service-conductors',
     domain: 'nec-310-12',
     title: 'Dwelling services and feeders',
-    citedOn: [SERVICE_ENTRANCE, GROUND_WIRE, TABLE_310_16, SINGLE_VS_THREE, GUIDE_200],
+    citedOn: [WIRE_SIZE, SERVICE_ENTRANCE, GROUND_WIRE, TABLE_310_16, SINGLE_VS_THREE, GUIDE_200],
   },
   {
     id: 'power-terms',
@@ -148,7 +147,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'nominal-voltages',
     domain: 'us-nominal-voltages',
     title: 'Nominal system voltages',
-    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, POWER_CALCS],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, POWER_CALCS],
   },
   {
     id: 'conversions',

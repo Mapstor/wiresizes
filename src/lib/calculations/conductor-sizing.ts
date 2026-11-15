@@ -23,7 +23,7 @@ import type { AmpacityColumn } from '../verified/nec-310-16';
 import { correction } from '../verified/nec-310-15-B-1-1';
 import type { CorrectionColumn } from '../verified/nec-310-15-B-1-1';
 import { adjustment } from '../verified/nec-310-15-C-1';
-import { max240_4D } from '../verified/nec-240-4-d';
+import { max240_4D, NEXT_SIZE_UP_MAX_A } from '../verified/nec-240-4-d';
 import { ocpdRatings } from '../verified/nec-240-6-a';
 import { egc as tableEgcFor, egcProportional } from '../verified/nec-250-122';
 import type { EgcProportional } from '../verified/nec-250-122';
@@ -33,6 +33,7 @@ import type { Phase } from './inputs';
 import { DEFAULT_VD_TARGET_PCT, LENGTH_MAX_FT, LENGTH_MIN_FT, RESISTANCE_TEMP_C, sizeForDrop, VD_FORMAT, voltageDrop } from './voltage-drop';
 import type { SizeForDrop, VoltageDropResult } from './voltage-drop';
 import { correctedAmpacity } from './ampacity';
+import { CONTINUOUS_LOAD_PERCENT } from '../verified/nec-continuous-load-2023';
 
 export const ENGINE_ID = 'conductor-sizing';
 const CALC = `calc:${ENGINE_ID}`;
@@ -45,22 +46,31 @@ export const DOMAINS = [
   'awg-geometry',
   'nec-110-14c',
   'nec-310-15-corrections',
+  // since WSZ-009b: the 125 % continuous-load rules (210.19(A), 210.20(A))
+  'nec-continuous-load',
 ];
 
 export type SizingError =
   | 'rating-not-standard'
   | 'rating-out-of-range'
   | 'load-above-rating'
+  | 'rating-below-continuous'
   | 'length-out-of-range'
   | 'vd-target-out-of-range'
-  | 'voltage-invalid';
+  | 'voltage-invalid'
+  | 'ambient-no-factor'
+  | 'no-size';
 
 export const SIZING_ERROR_MESSAGES: Record<SizingError, string> = {
   'rating-not-standard': 'Choose a standard breaker or fuse rating from NEC Table 240.6(A).',
   'rating-out-of-range': 'This calculator covers breaker and fuse ratings from 15 A to 400 A.',
   'load-above-rating': 'The load current must be between 0 A and the breaker or fuse rating.',
+  'rating-below-continuous': 'A continuous load needs a breaker or fuse of at least 125 % of the load (NEC 210.20(A)).',
   'length-out-of-range': 'Enter a one-way length from 0 ft to 2000 ft.',
   'vd-target-out-of-range': 'Choose a voltage-drop target from 1 % to 10 %.',
+  'ambient-no-factor':
+    'NEC Table 310.15(B)(1)(1) gives no factor for these conductors at this temperature: they may not be used there.',
+  'no-size': 'With these corrections, no size in NEC Table 310.16 carries this rating.',
   'voltage-invalid':
     'Enter a voltage above 0 V. Three-phase uses the line-to-line voltages 208, 240, 480 or 600 V.',
 };
@@ -75,11 +85,6 @@ export const STANDARD_RATINGS: number[] = ocpdRatings();
 /** Ratings the wire size calculator offers: 15 A to 400 A. */
 export const WIRE_SIZE_RATINGS: number[] = STANDARD_RATINGS.filter((a) => a >= RATING_MIN_A && a <= RATING_MAX_A);
 
-export const BASIS_LINES = [
-  'Sized from the 60 °C column of NEC Table 310.16 (2023), limited by 240.4(D); ground wire from Table 250.122.',
-  'Assumes 30 °C (86 °F) ambient and no more than three current-carrying conductors together. Hotter locations or more conductors need the factors in Tables 310.15(B)(1)(1) and 310.15(C)(1): use the ampacity calculator.',
-  'A 120/240 V dwelling service, or a feeder carrying its entire load, is sized from NEC Table 310.12 instead: see the service entrance calculator.',
-];
 export const EGC_UPSIZED_NOTE = 'Ground wire increased in proportion to the larger conductors (NEC 250.122(B)).';
 export const EGC_LARGER_THAN_CONDUCTOR_NOTE =
   'For this rating, Table 250.122 lists a ground wire larger than the smallest conductor the rating allows.';
@@ -143,6 +148,12 @@ export interface MinimumConductor {
   deratedAmpacity: number | null;
   /** Step 3: the Table 250.122 EGC for the rating. */
   egc: SizeKey | null;
+  /**
+   * 240.4(B): the next smaller size, when 240.4(D) did not move the size, the rating is at most NEXT_SIZE_UP_MAX_A, the
+   * smaller size's ampacity (derated and capped like the others) is not a standard rating and the rating is the next
+   * standard one above it, and 240.4(D) allows the rating on it; otherwise null.
+   */
+  below: { size: SizeKey; ampacity: number } | null;
 }
 
 /** Steps 1 to 3; null when no Table 310.16 size reaches the rating. */
@@ -188,6 +199,20 @@ export function minimumConductor(input: MinimumConductorInput): MinimumConductor
     size = next;
   }
 
+  // 240.4(B): the next smaller size with a value in the column, protected at the next standard rating above its ampacity
+  let below: MinimumConductor['below'] = null;
+  if (size === firstSize && ocpdA <= NEXT_SIZE_UP_MAX_A) {
+    const smaller = TABLE_310_16_SIZES.slice(0, TABLE_310_16_SIZES.indexOf(firstSize))
+      .reverse()
+      .find((key) => ampacityOf(key) !== null);
+    const a = smaller ? ampacityOf(smaller) : null;
+    const limit = smaller ? max240_4D(smaller, material) : null;
+    const limitAllows = !limit || (limit.conditions === null && ocpdA <= limit.max_ocpd_a);
+    if (smaller && a !== null && limitAllows && !STANDARD_RATINGS.includes(a) && STANDARD_RATINGS.find((r) => r > a) === ocpdA) {
+      below = { size: smaller, ampacity: a };
+    }
+  }
+
   return {
     columnC,
     startColumnC,
@@ -198,12 +223,18 @@ export function minimumConductor(input: MinimumConductorInput): MinimumConductor
     deratedAmpacity: startColumnC === null ? null : ampacityOf(size),
     // Step 3: EGC by rating and material
     egc: tableEgcFor(ocpdA, material),
+    below,
   };
 }
 
 export interface SizeConductorInput extends MinimumConductorInput {
   /** Load current for voltage drop; defaults to the rating. */
   loadA?: number | null;
+  /**
+   * The load is continuous. With loadA, the rating must be at least CONTINUOUS_LOAD_PERCENT of it (210.20(A)); without,
+   * the steps give the largest continuous load the rating serves.
+   */
+  continuous?: boolean;
   lengthFt: number;
   volts: number;
   phase: Phase;
@@ -226,6 +257,8 @@ export interface SizeConductorResult {
   deratedAmpacity: number | null;
   /** Size required by the ampacity and 240.4(D) (steps 1 and 2). */
   minSizeByAmpacity: SizeKey;
+  /** minSizeByAmpacity's ampacity: its termination-column value, or with derating its derated value capped at that. */
+  minAmpacity: number;
   vdVolts: number;
   vdPct: number;
   meetsTarget: boolean;
@@ -235,7 +268,12 @@ export interface SizeConductorResult {
   egcUpsized: boolean;
   /** The EGC is null or its area is larger than the returned conductor's area. */
   egcLargerThanConductor: boolean;
-  /** Each step in words; empty in the derating mode. */
+  /**
+   * 240.4(B): the next smaller size the rating may protect, with the largest load it carries (210.19(A)) and the largest
+   * continuous load; null when there is none, when voltage drop chose a larger size, or when the entered load is too large.
+   */
+  nextSizeUp: { size: SizeKey; ampacity: number; maxLoadA: number; maxContinuousA: number } | null;
+  /** Each step in words. */
   steps: string[];
   /** steps[] in parts: steps[k] is partsText(stepParts[k], formatSize). */
   stepParts: TextPart[][];
@@ -247,6 +285,12 @@ export interface SizeConductorError {
 
 export function isSizingError(result: SizeConductorResult | SizeConductorError): result is SizeConductorError {
   return 'error' in result;
+}
+
+/** The smallest standard rating of at least CONTINUOUS_LOAD_PERCENT of a continuous load (210.20(A)), or null past 400 A. */
+export function ratingForContinuous(loadA: number): number | null {
+  const needed = (loadA * CONTINUOUS_LOAD_PERCENT) / 100;
+  return WIRE_SIZE_RATINGS.find((a) => a >= needed) ?? null;
 }
 
 export const WIRE_SIZE_DEFAULTS = {
@@ -288,8 +332,33 @@ function explain(
     { v: vd.vdPct, unit: '%', src: CALC, format: VD_FORMAT },
   ];
   const yourTarget: ValuePart = { v: target, unit: '%', src: 'input' };
-  const steps: TextPart[][] = [
-    [
+  const steps: TextPart[][] = [];
+  const percent125: ValuePart = { v: CONTINUOUS_LOAD_PERCENT, unit: '%', src: 'nec-continuous-load' };
+  if (input.continuous && input.loadA !== null && input.loadA !== undefined) {
+    steps.push([
+      'A continuous load of ',
+      amps(input.loadA, 'input'),
+      ' needs a breaker or fuse rated at least ',
+      percent125,
+      ' of it, ',
+      amps((input.loadA * CONTINUOUS_LOAD_PERCENT) / 100, CALC),
+      ' (NEC 210.20(A)), and conductors with at least that ampacity (NEC 210.19(A)). The ',
+      rating,
+      ' rating meets the first, and a size that carries the rating meets the second.',
+    ]);
+  } else if (input.continuous) {
+    steps.push([
+      'For a continuous load, the breaker or fuse must be rated at least ',
+      percent125,
+      ' of the load (NEC 210.20(A)): a ',
+      rating,
+      ' rating serves a continuous load of up to ',
+      amps((ocpdA * 100) / CONTINUOUS_LOAD_PERCENT, CALC),
+      '.',
+    ]);
+  }
+  if (minimum.startColumnC === null) {
+    steps.push([
       `Smallest ${metal} size with a `,
       { v: minimum.columnC, unit: '°C', src: CALC },
       ' ampacity of at least ',
@@ -299,8 +368,46 @@ function explain(
       ' (',
       amps(table31016(minimum.firstSize, columnKey(material, minimum.columnC)) as number, CALC),
       ').',
-    ],
-  ];
+    ]);
+  } else {
+    const start = minimum.startColumnC;
+    const factor = correction(input.ambientRow as string, `f_${start}` as CorrectionColumn) as number;
+    const percent = adjustment(input.cccBand ?? null);
+    const startA = table31016(minimum.firstSize, columnKey(material, start)) as number;
+    const capA = table31016(minimum.firstSize, columnKey(material, minimum.columnC)) as number;
+    const derated = correctedAmpacity(startA, factor, percent);
+    const corrections: TextPart[][] = [];
+    if (factor !== 1) {
+      corrections.push(['the ambient factor ', { n: factor, src: 'nec-310-15-corrections', format: { fixed: 2 } }, ' (NEC Table 310.15(B)(1)(1))']);
+    }
+    if (percent !== 100) {
+      corrections.push([
+        `the adjustment for ${input.cccBand} current-carrying conductors, `,
+        { v: percent, unit: '%', src: 'nec-310-15-corrections' },
+        ' (NEC Table 310.15(C)(1))',
+      ]);
+    }
+    steps.push([
+      'The corrections start from the ',
+      { v: start, unit: '°C', src: CALC },
+      ' column',
+      ...(start === minimum.columnC ? [] : [' (conductors rated ', { v: start, unit: '°C', src: CALC } as ValuePart, ')']),
+      ': ',
+      ...(corrections.length === 0 ? ['no factor applies'] : corrections.flatMap((c, k) => (k === 0 ? c : [' and ', ...c]))),
+      '.',
+    ]);
+    steps.push([
+      `Smallest ${metal} size whose corrected ampacity, held to its `,
+      { v: minimum.columnC, unit: '°C', src: CALC },
+      ' value, is at least ',
+      rating,
+      ': ',
+      { size: minimum.firstSize },
+      ' (',
+      amps(Math.min(derated, capA), CALC),
+      ').',
+    ]);
+  }
   for (const limit of minimum.limits240_4D) {
     const limitText: TextPart[] = ['NEC 240.4(D) limits ', { size: limit.size }, ` ${metal} to `, amps(limit.maxOcpdA, CALC)];
     steps.push(
@@ -365,13 +472,23 @@ export function sizeConductor(input: SizeConductorInput): SizeConductorResult | 
   if (!STANDARD_RATINGS.includes(ocpdA)) return { error: 'rating-not-standard' };
   if (ocpdA < RATING_MIN_A || ocpdA > RATING_MAX_A) return { error: 'rating-out-of-range' };
   if (!(loadA >= 0 && loadA <= ocpdA)) return { error: 'load-above-rating' };
+  if (input.continuous && input.loadA !== null && input.loadA !== undefined && ocpdA < (input.loadA * CONTINUOUS_LOAD_PERCENT) / 100) {
+    return { error: 'rating-below-continuous' };
+  }
   if (!(lengthFt >= LENGTH_MIN_FT && lengthFt <= LENGTH_MAX_FT)) return { error: 'length-out-of-range' };
   if (!(target >= VD_TARGET_MIN_PCT && target <= VD_TARGET_MAX_PCT)) return { error: 'vd-target-out-of-range' };
   if (!voltsValid(volts, phase)) return { error: 'voltage-invalid' };
 
+  if (input.ambientRow && correction(input.ambientRow, `f_${startColumn(input.wiringMethod ?? 'cable')}` as CorrectionColumn) === null) {
+    return { error: 'ambient-no-factor' };
+  }
+
   // Steps 1 to 3
   const minimum = minimumConductor(input);
-  if (!minimum) throw new Error(`No ${materialName(material)} size in NEC Table 310.16 carries ${ocpdA} A`);
+  if (!minimum) {
+    if (input.ambientRow) return { error: 'no-size' };
+    throw new Error(`No ${materialName(material)} size in NEC Table 310.16 carries ${ocpdA} A`);
+  }
   const step2 = minimum.size;
   const tableEgc = minimum.egc as SizeKey;
 
@@ -390,8 +507,14 @@ export function sizeConductor(input: SizeConductorInput): SizeConductorResult | 
   const egc = proportional ? proportional.egc : tableEgc;
   const egcUpsized = egc === null || areaCmil(egc) > areaCmil(tableEgc);
   const egcLargerThanConductor = egc === null || areaCmil(egc) > areaCmil(size);
-  const stepParts =
-    minimum.startColumnC === null ? explain(input, loadA, target, minimum, atMinimum, steppedUp, proportional) : [];
+  const stepParts = explain(input, loadA, target, minimum, atMinimum, steppedUp, proportional);
+  // 240.4(B): only for the size the rating needs, and only when the entered load fits the smaller size (210.19(A))
+  const below = size === step2 ? minimum.below : null;
+  const neededA = input.loadA === null || input.loadA === undefined ? 0 : input.continuous ? (input.loadA * CONTINUOUS_LOAD_PERCENT) / 100 : input.loadA;
+  const nextSizeUp =
+    below && neededA <= below.ampacity
+      ? { ...below, maxLoadA: below.ampacity, maxContinuousA: (below.ampacity * 100) / CONTINUOUS_LOAD_PERCENT }
+      : null;
 
   return {
     size,
@@ -402,12 +525,14 @@ export function sizeConductor(input: SizeConductorInput): SizeConductorResult | 
     startColumnC: minimum.startColumnC,
     deratedAmpacity: minimum.deratedAmpacity,
     minSizeByAmpacity: step2,
+    minAmpacity: minimum.deratedAmpacity ?? (table31016(step2, columnKey(material, minimum.columnC)) as number),
     vdVolts: vd.vdVolts,
     vdPct: vd.vdPct,
     meetsTarget: vd.vdPct <= target,
     egc,
     egcUpsized,
     egcLargerThanConductor,
+    nextSizeUp,
     steps: stepParts.map((parts) => partsText(parts, formatSize)),
     stepParts,
   };
