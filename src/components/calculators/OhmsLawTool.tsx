@@ -103,6 +103,14 @@ export function OhmsLawTool() {
     setResult(compute(inputs));
     window.requestAnimationFrame(() => focusResults(headingRef.current));
   };
+  // a quantity in both pairs keeps its value; the other field starts empty, with no error until the next Calculate
+  const onPair = (pair: OhmsPair) => {
+    const [oa, ob] = pairOf(inputs.pair).known;
+    const old: Partial<Record<OhmsLawQuantity, string>> = { [oa]: inputs.a, [ob]: inputs.b };
+    const [na, nb] = pairOf(pair).known;
+    fieldErrors.reset();
+    update({ pair, a: old[na] ?? '', b: old[nb] ?? '' });
+  };
   const onReset = () => {
     markChanged();
     fieldErrors.reset();
@@ -132,7 +140,7 @@ export function OhmsLawTool() {
             <SelectInput
               id="known"
               value={inputs.pair}
-              onChange={(v) => update({ pair: v as OhmsPair, a: '', b: '' })}
+              onChange={(v) => onPair(v as OhmsPair)}
               describedById="known-hint"
             >
               {OHMS_PAIRS.map((p) => (

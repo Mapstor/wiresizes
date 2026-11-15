@@ -35,10 +35,10 @@ Drafts are written with AI assistance. Pages are being rebuilt so that every fig
 ### Corrections
 - November 2, 2026: Audited every page. Removed the unsourced claims the audit found, including user counts, endorsements, expert reviews and response-time claims, and deleted or corrected the wrong values it found. Took {N_WITHDRAWN} calculators offline until they are rebuilt from verified sources. Redirected {N_REDIRECTED} overlapping or retired pages to their closest page.
 
-To report an error, email contact@wiresizes.com.
+To report an error, email info@wiresizes.com.
 
 ### Publisher
-wiresizes.com is published by Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia. Company registration number 9041273000, VAT ID SI94001154. Email: contact@wiresizes.com. The privacy notice lists what the site collects.
+wiresizes.com is published by Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia. Company registration number 9041273000, VAT ID SI94001154. Email: info@wiresizes.com. The privacy notice lists what the site collects.
 
 (Link "privacy notice" to /privacy. Link nothing else on this page in WSZ-002.)
 
@@ -51,7 +51,7 @@ Meta description: Email address for corrections, questions about a page and priv
 
 ## Contact
 
-Email contact@wiresizes.com for corrections, questions about a page, or privacy requests. One person runs this site, so a reply can take a few days.
+Email info@wiresizes.com for corrections, questions about a page, or privacy requests. One person runs this site, so a reply can take a few days.
 
 For an electrical emergency, call 911 or your electric utility. This site cannot give advice about a specific installation.
 
@@ -71,7 +71,7 @@ Meta description: What wiresizes.com collects, which services process it, the le
 Last updated: {DATE}
 
 ### Who is responsible
-Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia (company registration number 9041273000, VAT ID SI94001154), publishes wiresizes.com and is the controller of the personal data described here. Contact: contact@wiresizes.com.
+Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia (company registration number 9041273000, VAT ID SI94001154), publishes wiresizes.com and is the controller of the personal data described here. Contact: info@wiresizes.com.
 
 ### What runs on this site
 - **Hosting (Vercel).** Vercel Inc. hosts the site. To deliver pages and protect the service, Vercel's servers receive your IP address and the details your browser sends with each request.
@@ -85,7 +85,7 @@ The site has no ads, no comments, no accounts and no contact form. If you email 
 Hosting, Vercel Web Analytics and Speed Insights: our legitimate interest in running a working website and knowing which pages are read and how fast they load (Article 6(1)(f) GDPR). Google Analytics: your consent where the banner asks for it (Article 6(1)(a) GDPR; for the cookies, the consent rule of the Slovenian Electronic Communications Act, ZEKom-2), and elsewhere our legitimate interest in knowing which pages are read (Article 6(1)(f) GDPR). Email: replying to you (Article 6(1)(f) GDPR).
 
 ### Your rights
-You can ask for access to your data, correction, erasure, restriction of processing and a copy in a portable format, and you can object to processing based on legitimate interest. You can withdraw your consent to Google Analytics at any time under "Cookie settings"; this does not affect processing before the withdrawal. Write to contact@wiresizes.com. You can also complain to the Information Commissioner of the Republic of Slovenia (Informacijski pooblaščenec, www.ip-rs.si) or to the data protection authority where you live.
+You can ask for access to your data, correction, erasure, restriction of processing and a copy in a portable format, and you can object to processing based on legitimate interest. You can withdraw your consent to Google Analytics at any time under "Cookie settings"; this does not affect processing before the withdrawal. Write to info@wiresizes.com. You can also complain to the Information Commissioner of the Republic of Slovenia (Informacijski pooblaščenec, www.ip-rs.si) or to the data protection authority where you live.
 
 (If WSZ-002 removed Google Fonts by self-hosting the fonts, there is nothing to add here. If any other third-party script or service is still running, stop and report it instead of publishing this page. Publish this page only together with step 8b, which builds the cookie banner it describes.)
 
@@ -101,7 +101,7 @@ Meta description: Who operates wiresizes.com, what its tables and calculators ar
 Last updated: {DATE}
 
 ### Operator
-wiresizes.com is operated by Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia (company registration number 9041273000, VAT ID SI94001154). Contact: contact@wiresizes.com.
+wiresizes.com is operated by Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia (company registration number 9041273000, VAT ID SI94001154). Contact: info@wiresizes.com.
 
 ### What the site provides
 Free reference tables and calculators about electrical conductors. Code values are quoted from the NEC edition named on each page; physical values come from NIST publications; calculators apply the formulas shown on their pages.
@@ -140,7 +140,7 @@ Listed equipment comes with installation instructions that can be stricter than 
 The author is a physicist, not a licensed electrician or engineer. Have a licensed electrician do the work wherever your jurisdiction requires one.
 
 ### Errors
-If you find an error, email contact@wiresizes.com. Corrections are listed with dates on the About page.
+If you find an error, email info@wiresizes.com. Corrections are listed with dates on the About page.
 
 ---
 

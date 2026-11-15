@@ -31,6 +31,8 @@ const MAX = 1e9;
 type From = 'btu' | 'w' | 'ton';
 const FROM_LABEL: Record<From, string> = { btu: 'Btu per hour', w: 'Watts', ton: 'Tons' };
 const FROM_UNIT: Record<From, string> = { btu: 'Btu/h', w: 'W', ton: 'tons' };
+// the field's label: the unit symbol after the name, where there is one ("Tons, tons" said it twice)
+const FIELD_LABEL: Record<From, string> = { btu: 'Btu per hour, Btu/h', w: 'Watts, W', ton: 'Tons of refrigeration' };
 
 interface Inputs {
   from: From;
@@ -105,7 +107,7 @@ export function BtuTool() {
             options={(['btu', 'w', 'ton'] as From[]).map((f) => ({ value: f, label: FROM_LABEL[f] }))}
             onChange={(from) => update({ from })}
           />
-          <Field id="value" label={`${FROM_LABEL[inputs.from]}, ${FROM_UNIT[inputs.from]}`} error={shown}>
+          <Field id="value" label={FIELD_LABEL[inputs.from]} error={shown}>
             <TextInput
               id="value"
               value={inputs.value}
