@@ -29,15 +29,21 @@ describe('METHODOLOGY_SECTIONS', () => {
     for (const off of ['doe-efficiency-standards']) assert.ok(!domains.has(off), off);
   });
 
-  it('has nec-110-14c since the 200 A guide (WSZ-008c), the ampacity calculator (WSZ-009a) and the wire size calculator (WSZ-009b) use it', () => {
+  it('has nec-110-14c since the 200 A guide (WSZ-008c), the ampacity calculator (WSZ-009a), the wire size calculator (WSZ-009b) and the circuit breaker calculator (WSZ-009c) use it', () => {
     const s = METHODOLOGY_SECTIONS.find((x) => x.domain === 'nec-110-14c');
-    assert.deepEqual(s?.citedOn, ['/calculators/wire-size-calculator', '/calculators/ampacity-calculator', '/guides/wire-size-for-200-amp']);
+    assert.deepEqual(s?.citedOn, [
+      '/calculators/wire-size-calculator',
+      '/calculators/ampacity-calculator',
+      '/calculators/circuit-breaker-calculator',
+      '/guides/wire-size-for-200-amp',
+    ]);
   });
 
-  it('has nec-continuous-load since the voltage drop and low voltage calculators quote its note (WSZ-006b, WSZ-006c) and the wire size calculator applies it (WSZ-009b)', () => {
+  it('has nec-continuous-load since the voltage drop and low voltage calculators quote its note (WSZ-006b, WSZ-006c) and the wire size and circuit breaker calculators apply it (WSZ-009b, WSZ-009c)', () => {
     const s = METHODOLOGY_SECTIONS.find((x) => x.domain === 'nec-continuous-load');
     assert.deepEqual(s?.citedOn, [
       '/calculators/wire-size-calculator',
+      '/calculators/circuit-breaker-calculator',
       '/calculators/voltage-drop-calculator',
       '/calculators/low-voltage-calculator',
       '/guides/wire-size-for-200-amp',

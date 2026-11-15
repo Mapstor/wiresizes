@@ -26,6 +26,8 @@ import type { TpResult } from '@/lib/calculations/power';
 import { COMPARE_KW, COMPARE_ROWS, GUIDE_EXAMPLES, PF_BARS, PF_BAR_ROWS, PF_EXAMPLE, WATTS_PER_AMP_ROWS } from '@/lib/power-guides';
 import { GUIDE_200 } from '@/lib/service-guides';
 import { LENGTH_MAX_FT_CHART, LENGTH_TRACKS } from '@/lib/wire-size-page';
+import { MIXED } from '@/lib/breaker-page';
+import { CONTINUOUS_LOAD_PERCENT } from '@/lib/verified/nec-continuous-load-2023';
 import type { GuideSide } from '@/lib/service-guides';
 import type { AmpacityRun } from '@/lib/calculations/ampacity';
 import { areaCmil, conductor, formatSize } from '@/lib/verified/awg';
@@ -2418,6 +2420,131 @@ export function LengthBandsChart() {
     <div>
       <LengthBandsPlot narrow={false} />
       <LengthBandsPlot narrow />
+    </div>
+  );
+}
+
+// ── Circuit breaker calculator (WSZ-009c): a mixed load to its breaker and wire, as bars ─────────────────────────────
+
+const BRK = 'calc:breaker-sizing';
+const NONCONT = '#c8803f';
+const BREAKER_BAR = '#57514c';
+
+function BreakerStepsPlot({ narrow }: { narrow: boolean }) {
+  const { continuousA: c, noncontinuousA: n, run } = MIXED;
+  const scaled = (c * CONTINUOUS_LOAD_PERCENT) / 100;
+  const rows: { key: string; label: string; sub: ReactNode; parts: { v: number; fill: string }[]; total: number; src: string }[] = [
+    {
+      key: 'load',
+      label: 'The load',
+      sub: 'as it runs',
+      parts: [
+        { v: n, fill: NONCONT },
+        { v: c, fill: COPPER },
+      ],
+      total: n + c,
+      src: 'input',
+    },
+    {
+      key: 'minimum',
+      label: 'Smallest rating',
+      sub: <>continuous × <Val v={CONTINUOUS_LOAD_PERCENT} unit="%" src={CONT_SRC} svg /></>,
+      parts: [
+        { v: n, fill: NONCONT },
+        { v: scaled, fill: COPPER },
+      ],
+      total: run.minOcpdA,
+      src: BRK,
+    },
+    { key: 'breaker', label: 'Breaker', sub: 'Table 240.6(A)', parts: [{ v: run.breakerA, fill: BREAKER_BAR }], total: run.breakerA, src: BRK },
+    {
+      key: 'wire',
+      label: formatSize(run.size),
+      sub: <><Val v={run.columnC} unit="°C" src={BRK} svg /> column</>,
+      parts: [{ v: run.ampacity, fill: BREAKER_BAR }],
+      total: run.ampacity,
+      src: BRK,
+    },
+  ];
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 104 : 132;
+  const right = narrow ? 48 : 60;
+  const top = narrow ? 30 : 32;
+  const rowH = narrow ? 46 : 50;
+  const barH = narrow ? 20 : 22;
+  const H = top + rows.length * rowH + 40;
+  const pw = W - left - right;
+  const max = Math.max(...rows.map((r) => r.total)) * 1.05;
+  const x = (v: number) => left + (v / max) * pw;
+  const ticks = Array.from({ length: Math.floor(max / 10) + 1 }, (_, k) => k * 10);
+  const id = narrow ? 'breaker-steps-narrow' : 'breaker-steps-wide';
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={BRK}
+    >
+      <title id={`${id}-title`}>
+        {`A load of ${n} A noncontinuous and ${c} A continuous: ${n + c} A as it runs; the smallest rating is ${n} A plus ${CONTINUOUS_LOAD_PERCENT} % of ${c} A, ${run.minOcpdA} A; the next standard breaker is ${run.breakerA} A; ${formatSize(run.size)} copper carries ${run.ampacity} A in the ${run.columnC} °C column.`}
+      </title>
+      <Key x={left} y={14} color={NONCONT} dot>
+        Noncontinuous
+      </Key>
+      <Key x={left + (narrow ? 112 : 130)} y={14} color={COPPER} dot>
+        Continuous
+      </Key>
+      {ticks.map((t) => (
+        <g key={t}>
+          <line x1={x(t)} x2={x(t)} y1={top - 6} y2={top + rows.length * rowH - 12} stroke={GRID} strokeWidth={1} />
+          <text x={x(t)} y={top + rows.length * rowH + 6} textAnchor="middle" fontSize={13} fill={MUTED}>
+            <Val v={t} unit="A" src={BRK} svg />
+          </text>
+        </g>
+      ))}
+      {rows.map((r, k) => {
+        const y = top + k * rowH;
+        // each part starts where the parts before it end, with a 2 px gap between parts
+        const segments = r.parts.map((part, i) => ({ ...part, from: r.parts.slice(0, i).reduce((sum, p) => sum + p.v, 0) }));
+        return (
+          <g key={r.key}>
+            <text x={left - 12} y={y + barH / 2 - 1} textAnchor="end" fontSize={13} fill={INK}>
+              {r.label}
+            </text>
+            <text x={left - 12} y={y + barH / 2 + 15} textAnchor="end" fontSize={13} fill={MUTED}>
+              {r.sub}
+            </text>
+            {segments.map((part, i) => {
+              const x0 = x(part.from) + (i > 0 ? 2 : 0);
+              const w = x(part.from + part.v) - x0;
+              const last = i === segments.length - 1;
+              return last ? (
+                <path key={i} d={barPath(x0, y, w, barH)} fill={part.fill} className="viz-grow" />
+              ) : (
+                <rect key={i} x={x0} y={y} width={w} height={barH} fill={part.fill} className="viz-grow" />
+              );
+            })}
+            <text x={x(r.total) + 8} y={y + barH / 2 + 4.5} fontSize={13} fontWeight={700} fill={INK} className="viz-pop">
+              <Val v={r.total} unit="A" src={r.src} svg />
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+const CONT_SRC = 'nec-continuous-load';
+
+/** The circuit breaker page's mixed example as bars: the load, the smallest rating, the breaker and the wire's ampacity. */
+export function BreakerStepsChart() {
+  return (
+    <div>
+      <BreakerStepsPlot narrow={false} />
+      <BreakerStepsPlot narrow />
     </div>
   );
 }

@@ -24,10 +24,11 @@ describe('page dates', () => {
   });
 
   // Routes added after the launch, with the day each went live (D-17); WSZ-004b added /methodology
-  const ADDED_LATER: Record<string, string> = { '/methodology': '2026-11-10' };
+  // WSZ-009c brought the circuit breaker calculator back from its WSZ-002 withdrawal as a new page
+  const ADDED_LATER: Record<string, string> = { '/methodology': '2026-11-10', '/calculators/circuit-breaker-calculator': '2026-11-15' };
 
   it('every route was published on 2026-02-22, or on the day it was added, and modified on or after it', () => {
-    assert.equal(Object.keys(DATES).length, 33);
+    assert.equal(Object.keys(DATES).length, 34);
     for (const [route, { published, modified }] of Object.entries(DATES)) {
       assert.equal(published, ADDED_LATER[route] ?? '2026-02-22', route);
       assert.match(modified, /^\d{4}-\d{2}-\d{2}$/, route);

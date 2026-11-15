@@ -53,6 +53,12 @@ export const ROUTES: readonly SiteRoute[] = [
     guidesNav: true,
   },
   {
+    path: '/calculators/circuit-breaker-calculator',
+    group: 'wire-sizing',
+    name: 'Circuit Breaker Calculator',
+    line: 'Breaker or fuse size for a continuous and a noncontinuous load under NEC 210.20(A), the next standard rating from Table 240.6(A), and the wire and ground wire it needs.',
+  },
+  {
     path: '/calculators/voltage-drop-calculator',
     group: 'wire-sizing',
     name: 'Voltage Drop Calculator',

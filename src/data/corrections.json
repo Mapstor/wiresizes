@@ -86,5 +86,9 @@
   {
     "date": "2026-11-15",
     "text": "Rebuilt the wire size calculator: it now takes the wiring method and the terminal rating (110.14(C)), the ambient temperature and the number of current-carrying conductors, a continuous load (210.20(A)) and your voltage-drop target, shows each step, and notes where 240.4(B) lets the breaker protect the next smaller size. The page gives the size for every rating in both terminal columns and by run length for two common circuits. Removed the mistakes list, the installation tips and the answer on stranded and solid wire, which cited no source."
+  },
+  {
+    "date": "2026-11-15",
+    "text": "Brought back the circuit breaker calculator, offline since the November 2 audit because its default example contradicted itself and it cited an NEC table row that does not exist. It now sizes the breaker or fuse for a continuous and a noncontinuous load under 210.20(A), gives the next standard rating with the wire and ground wire for it, and notes where 240.4(B) allows a smaller wire."
   }
 ]
