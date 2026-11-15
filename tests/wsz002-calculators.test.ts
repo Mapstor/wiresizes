@@ -21,8 +21,6 @@ import {
 import { NO_SIZE_MESSAGE } from '../src/lib/calculations/dc-sizing';
 import { GROUND_WIRE_DEFAULTS, PROPORTIONAL_NOTE } from '../src/lib/calculations/grounding';
 import {
-  NO_ROW_MESSAGE,
-  SCOPE_LINES,
   SERVICE_LOOKUP_DEFAULTS,
 } from '../src/lib/calculations/service-lookup';
 import { btuPerHourToWatts } from '../src/lib/calculations/conversions';
@@ -61,7 +59,7 @@ describe('exported titles, notes and messages', () => {
     assert.equal(SIZING_ERROR_MESSAGES['voltage-invalid'], VOLTAGE_INVALID_MESSAGE);
   });
 
-  it('ampacity, ground wire, low-voltage and service messages', () => {
+  it('ampacity, ground wire and low-voltage messages', () => {
     assert.equal(NOT_PERMITTED_MESSAGE, 'Not permitted at this ambient temperature for this insulation rating');
     assert.equal(ocpdLimitLabel(20), 'Overcurrent protection limited to 20 A (NEC 240.4(D))');
     assert.equal(
@@ -69,11 +67,6 @@ describe('exported titles, notes and messages', () => {
       'Size increases in proportion if the phase conductors are upsized (NEC 250.122(B)); the wire size calculator does this.',
     );
     assert.equal(NO_SIZE_MESSAGE, 'No size in NEC Table 310.16 is large enough for this load.');
-    assert.equal(NO_ROW_MESSAGE, 'Table 310.12 has no row for this rating.');
-    assert.deepEqual(SCOPE_LINES, [
-      'For a 120/240 V single-phase service or main power feeder of one dwelling unit. Other services are sized from Table 310.16. Where the conductors run hotter than 30 °C or with more than three current-carrying conductors, the corrections in Tables 310.15(B)(1)(1) and 310.15(C)(1) still apply.',
-      "Grounding electrode conductor from NEC Table 250.66 (values from NFPA's 2020 grounding fact sheet).",
-    ]);
   });
 });
 

@@ -15,7 +15,7 @@ import { BUTTON_PRIMARY, BUTTON_SECONDARY, Field, Segmented, SelectInput, descri
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { buildQuery, choiceParam } from '@/lib/calculations/fields';
 import { formatValue } from '@/lib/calculations/format';
-import { ENGINE_ID, GROUND_WIRE_RATINGS, GROUND_WIRE_SIZES, egcFor, gecFor, isEgcError } from '@/lib/calculations/grounding';
+import { ENGINE_ID, GROUND_WIRE_DEFAULTS, GROUND_WIRE_RATINGS, GROUND_WIRE_SIZES, egcFor, gecFor, isEgcError } from '@/lib/calculations/grounding';
 import type { EgcResult, GecResult } from '@/lib/calculations/grounding';
 import { areaCmil, formatSize } from '@/lib/verified/awg';
 import type { Material, SizeKey } from '@/lib/verified/awg';
@@ -43,7 +43,7 @@ interface Inputs {
 
 const DEFAULTS: Inputs = {
   mode: 'egc',
-  ocpd: '20',
+  ocpd: String(GROUND_WIRE_DEFAULTS.ocpdA),
   material: 'Cu',
   upsized: 'no',
   minSize: '12',

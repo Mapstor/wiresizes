@@ -57,7 +57,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'resistance',
     domain: 'conductor-resistance-20c',
     title: 'Conductor resistance and voltage drop',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE],
   },
   {
     id: 'ampacity',

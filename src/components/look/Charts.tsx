@@ -26,7 +26,7 @@ import type { TpResult } from '@/lib/calculations/power';
 import { COMPARE_KW, COMPARE_ROWS, GUIDE_EXAMPLES, PF_BARS, PF_BAR_ROWS, PF_EXAMPLE, WATTS_PER_AMP_ROWS } from '@/lib/power-guides';
 import { areaCmil, conductor } from '@/lib/verified/awg';
 import { TABLE_250_122_ROWS, egcRow } from '@/lib/verified/nec-250-122';
-import { serviceLookup } from '@/lib/calculations/service-lookup';
+import { SERVICE_VOLTS, TABLE_310_12_ROWS, serviceEntrance, isServiceError, serviceLookup } from '@/lib/calculations/service-lookup';
 import { editionGroups, editionLabel, NEC_ADOPTION_DOMAIN, NOT_VERIFIED, stateName } from '@/lib/verified/nec-adoption';
 
 export const COPPER = '#a95a26';
@@ -1929,6 +1929,174 @@ export function ServiceGroundDiscs() {
     <div>
       <ServiceDiscPlot narrow={false} />
       <ServiceDiscPlot narrow />
+    </div>
+  );
+}
+
+// ── Service entrance calculator (WSZ-008b): Table 310.12 as steps, and a 200 A service's voltage drop by length ──────
+
+const SVC_SRC = 'nec-310-12';
+const SVC_CALC = 'calc:service-lookup';
+const SVC_TICK_SIZES = ['4', '1', '2/0', '4/0', '350', '600'];
+
+function ServiceStepPlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 64 : 76;
+  const right = narrow ? 14 : 92;
+  const top = narrow ? 62 : 40;
+  const ph = narrow ? 200 : 230;
+  const H = top + ph + 48;
+  const pw = W - left - right;
+  // each row's step runs from its rating to the next row's; the last one runs past 400 A to the edge
+  const aMin = 100;
+  const aMax = 425;
+  const cMin = Math.log10(areaCmil('4') * 0.8);
+  const cMax = Math.log10(areaCmil('600') * 1.12);
+  const x = (a: number) => left + ((a - aMin) / (aMax - aMin)) * pw;
+  const y = (size: string) => top + ph - ((Math.log10(areaCmil(size)) - cMin) / (cMax - cMin)) * ph;
+  const steps = (pick: (r: (typeof TABLE_310_12_ROWS)[number]) => string) =>
+    TABLE_310_12_ROWS.map((r, k) => {
+      const to = k + 1 < TABLE_310_12_ROWS.length ? TABLE_310_12_ROWS[k + 1].ratingA : aMax;
+      return `${k === 0 ? 'M' : 'L'}${x(r.ratingA).toFixed(1)},${y(pick(r)).toFixed(1)}H${x(to).toFixed(1)}`;
+    }).join('');
+  const last = TABLE_310_12_ROWS[TABLE_310_12_ROWS.length - 1];
+  const id = narrow ? 'service-steps-narrow' : 'service-steps-wide';
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={SVC_SRC}
+    >
+      <title id={`${id}-title`}>
+        {`Service conductor size against the service rating, NEC Table 310.12: from ${TABLE_310_12_ROWS[0].cu} AWG copper and ${TABLE_310_12_ROWS[0].alCca} AWG aluminum at ${TABLE_310_12_ROWS[0].ratingA} A to ${last.cu} kcmil copper and ${last.alCca} kcmil aluminum at ${last.ratingA} A`}
+      </title>
+      <Key x={0} y={16} color={COPPER}>
+        Copper
+      </Key>
+      <Key x={narrow ? 0 : 110} y={narrow ? 36 : 16} color={ALUMINUM}>
+        Aluminum or copper-clad aluminum
+      </Key>
+      {SVC_TICK_SIZES.map((sz) => (
+        <g key={sz}>
+          <line x1={left} x2={W - right} y1={y(sz)} y2={y(sz)} stroke={GRID} strokeWidth={1} />
+          <text x={left - 8} y={y(sz) + 4.5} textAnchor="end" fontSize={13} fill={MUTED} data-size={sz}>
+            <Size s={sz} svg />
+          </text>
+        </g>
+      ))}
+      {[100, 200, 300, 400].map((a) => (
+        <text key={a} x={x(a)} y={top + ph + 20} textAnchor="middle" fontSize={13} fill={MUTED}>
+          <Val v={a} unit="A" src={SVC_SRC} svg />
+        </text>
+      ))}
+      <text x={left + pw / 2} y={H - 6} textAnchor="middle" fontSize={13} fill={MUTED}>
+        Service rating (size on the left)
+      </text>
+      <path d={steps((r) => r.alCca)} fill="none" stroke={ALUMINUM} strokeWidth={2.5} pathLength={1} className="viz-draw" />
+      <path d={steps((r) => r.cu)} fill="none" stroke={COPPER} strokeWidth={2.5} pathLength={1} className="viz-draw" />
+      {!narrow && (
+        <>
+          <text x={W - right + 8} y={y(last.alCca) + 4.5} fontSize={13} fill={INK} className="viz-pop">
+            <Size s={last.alCca} svg />
+          </text>
+          <text x={W - right + 8} y={y(last.cu) + 4.5} fontSize={13} fill={INK} className="viz-pop">
+            <Size s={last.cu} svg />
+          </text>
+        </>
+      )}
+    </svg>
+  );
+}
+
+/** Table 310.12 as two step lines, copper and aluminum, against the service rating. */
+export function ServiceStepChart() {
+  return (
+    <div>
+      <ServiceStepPlot narrow={false} />
+      <ServiceStepPlot narrow />
+    </div>
+  );
+}
+
+/** A 200 A dwelling service at full load: its Table 310.12 copper and aluminum conductors' voltage drop by one-way length. */
+export const SERVICE_DROP = { ratingA: 200, lengthsFt: [0, 100, 200, 300, 400, 500] };
+
+function dropPct(material: 'Cu' | 'Al', lengthFt: number): number {
+  if (lengthFt === 0) return 0;
+  const r = serviceEntrance(SERVICE_DROP.ratingA, material, { lengthFt, amps: SERVICE_DROP.ratingA });
+  if (isServiceError(r) || !r.drop) throw new Error('SERVICE_DROP: no drop');
+  return r.drop.result.vdPct;
+}
+
+function ServiceDropPlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 40 : 48;
+  const right = narrow ? 16 : 24;
+  const top = narrow ? 62 : 44;
+  const ph = narrow ? 170 : 210;
+  const H = top + ph + 46;
+  const pw = W - left - right;
+  const maxFt = SERVICE_DROP.lengthsFt[SERVICE_DROP.lengthsFt.length - 1];
+  const maxPct = 10;
+  const x = (ft: number) => left + (ft / maxFt) * pw;
+  const y = (pct: number) => top + ph - (pct / maxPct) * ph;
+  const s = serviceLookup(SERVICE_DROP.ratingA);
+  if (!s) throw new Error('SERVICE_DROP: no row');
+  const line = (m: 'Cu' | 'Al') => SERVICE_DROP.lengthsFt.map((ft, k) => `${k === 0 ? 'M' : 'L'}${x(ft).toFixed(1)},${y(dropPct(m, ft)).toFixed(1)}`).join('');
+  const endCu = dropPct('Cu', maxFt);
+  const endAl = dropPct('Al', maxFt);
+  const id = narrow ? 'service-drop-narrow' : 'service-drop-wide';
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={SVC_CALC}
+    >
+      <title id={`${id}-title`}>
+        {`Voltage drop of a ${SERVICE_DROP.ratingA} A dwelling service at full load against one-way length: at ${maxFt} ft, ${endCu.toFixed(2)} % on ${s.cu} AWG copper and ${endAl.toFixed(2)} % on ${s.alCca} AWG aluminum of ${SERVICE_VOLTS} V`}
+      </title>
+      <Key x={0} y={16} color={COPPER}>
+        <Size s={s.cu} svg /> copper
+      </Key>
+      <Key x={narrow ? 0 : 150} y={narrow ? 36 : 16} color={ALUMINUM}>
+        <Size s={s.alCca} svg /> aluminum
+      </Key>
+      {[0, 2, 4, 6, 8, 10].map((p) => (
+        <g key={p}>
+          <line x1={left} x2={W - right} y1={y(p)} y2={y(p)} stroke={GRID} strokeWidth={1} />
+          <text x={left - 8} y={y(p) + 4.5} textAnchor="end" fontSize={13} fill={MUTED}>
+            <Num v={p} src={SVC_CALC} svg />
+          </text>
+        </g>
+      ))}
+      {SERVICE_DROP.lengthsFt.map((ft) => (
+        <text key={ft} x={x(ft)} y={top + ph + 20} textAnchor={ft === maxFt ? 'end' : ft === 0 ? 'start' : 'middle'} fontSize={13} fill={MUTED}>
+          <Num v={ft} src={SVC_CALC} svg />
+        </text>
+      ))}
+      <text x={left + pw / 2} y={H - 6} textAnchor="middle" fontSize={13} fill={MUTED}>
+        One-way length, ft (drop in % on the left)
+      </text>
+      <path d={line('Al')} fill="none" stroke={ALUMINUM} strokeWidth={2.5} pathLength={1} className="viz-draw" />
+      <path d={line('Cu')} fill="none" stroke={COPPER} strokeWidth={2.5} pathLength={1} className="viz-draw" />
+    </svg>
+  );
+}
+
+/** A 200 A service at full load: voltage drop against one-way length on its copper and aluminum conductors. */
+export function ServiceDropChart() {
+  return (
+    <div>
+      <ServiceDropPlot narrow={false} />
+      <ServiceDropPlot narrow />
     </div>
   );
 }

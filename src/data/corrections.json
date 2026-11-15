@@ -70,5 +70,9 @@
   {
     "date": "2026-11-15",
     "text": "Rebuilt the ground wire calculator: it now sizes both the equipment grounding conductor from Table 250.122, with the 250.122(B) increase when the circuit wires are upsized, and the grounding electrode conductor from Table 250.66 as NFPA's 2020 grounding fact sheet prints it. Removed lists of electrodes, pool bonding, installation methods and inspection steps, which cited no source."
+  },
+  {
+    "date": "2026-11-15",
+    "text": "Rebuilt the service entrance calculator: every Table 310.12 rating in one table with its Table 250.66 electrode conductor, as NFPA's 2020 grounding fact sheet prints it, and the voltage drop over a length you enter, with a chart of the drop by length."
   }
 ]
