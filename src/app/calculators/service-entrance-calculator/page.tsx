@@ -91,7 +91,7 @@ if (SERVICE_DROP.ratingA !== S200.ratingA) throw new Error('service entrance pag
 
 const TOC: ([string, string] | [string, string, string])[] = [
   ['table-310-12', 'Table 310.12, with electrode conductors'],
-  ['eighty-three', '83 % of the rating'],
+  ['eighty-three', '83 % of the rating', SVC],
   ['voltage-drop', 'Voltage drop on a long run'],
   ['scope', 'Which services the table covers'],
   ['faq', 'Questions'],
@@ -221,7 +221,7 @@ export default function ServiceEntrancePage() {
           </section>
 
           <section aria-labelledby="eighty-three" className="space-y-4">
-            <h2 id="eighty-three" className={H2}>
+            <h2 id="eighty-three" className={H2} data-src={SVC}>
               83 % of the rating
             </h2>
             <p className={P} data-src={SVC}>
