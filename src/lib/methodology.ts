@@ -35,6 +35,7 @@ const WATTS_TO_AMPS = '/calculators/watts-to-amps-calculator';
 const AMPS_TO_WATTS = '/calculators/amps-to-watts-calculator';
 const OHMS_LAW = '/calculators/ohms-law-calculator';
 const POWER_FACTOR = '/guides/power-factor-explained';
+const POWER_CALCS = '/guides/electrical-power-calculations';
 const SERVICE_ENTRANCE = '/calculators/service-entrance-calculator';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
@@ -104,31 +105,31 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'power-terms',
     domain: 'eia-power-glossary',
     title: 'Real, reactive and apparent power',
-    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, OHMS_LAW],
+    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, OHMS_LAW, POWER_CALCS],
   },
   {
     id: 'three-phase-power',
     domain: 'doe-motor-load-efficiency',
     title: 'Three-phase power',
-    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS],
+    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, POWER_CALCS],
   },
   {
     id: 'line-voltages',
     domain: 'mit-polyphase-networks',
     title: 'Line-to-line and line-to-neutral voltage',
-    citedOn: [THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS],
+    citedOn: [THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, POWER_CALCS],
   },
   {
     id: 'power-factor-correction',
     domain: 'doe-power-factor-cost',
     title: 'Power factor correction',
-    citedOn: [THREE_PHASE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, WATTS_TO_AMPS],
+    citedOn: [THREE_PHASE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, WATTS_TO_AMPS, POWER_CALCS],
   },
   {
     id: 'si-units',
     domain: 'nist-sp330-si-units',
     title: 'Watts, volts and ohms',
-    citedOn: [VOLTAGE_DROP, LOW_VOLTAGE, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, OHMS_LAW],
+    citedOn: [VOLTAGE_DROP, LOW_VOLTAGE, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, OHMS_LAW, POWER_CALCS],
   },
   {
     id: 'water-heaters',
@@ -140,7 +141,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'nominal-voltages',
     domain: 'us-nominal-voltages',
     title: 'Nominal system voltages',
-    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS],
+    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, POWER_CALCS],
   },
   {
     id: 'conversions',

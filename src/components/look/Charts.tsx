@@ -23,7 +23,7 @@ import { dropRun, lengthForDrop } from '@/lib/calculations/voltage-drop';
 import { lowVoltageSize, lvLengthForDrop } from '@/lib/calculations/dc-sizing';
 import { SQRT3, TP_WYE_SYSTEMS } from '@/lib/calculations/power';
 import type { TpResult } from '@/lib/calculations/power';
-import { COMPARE_KW, COMPARE_ROWS, PF_BARS, PF_BAR_ROWS, PF_EXAMPLE } from '@/lib/power-guides';
+import { COMPARE_KW, COMPARE_ROWS, GUIDE_EXAMPLES, PF_BARS, PF_BAR_ROWS, PF_EXAMPLE, WATTS_PER_AMP_ROWS } from '@/lib/power-guides';
 import { conductor } from '@/lib/verified/awg';
 import { editionGroups, editionLabel, NEC_ADOPTION_DOMAIN, NOT_VERIFIED, stateName } from '@/lib/verified/nec-adoption';
 
@@ -1604,6 +1604,159 @@ export function VoltsAmpsChart() {
     <div>
       <VoltsAmpsPlot narrow={false} />
       <VoltsAmpsPlot narrow />
+    </div>
+  );
+}
+
+// ── Electrical power calculations (WSZ-007e): one load's power triangle, and watts per ampere ──────────────────────
+
+/** Golden case "50 A three-phase 480 V PF 0.92 to watts" (power), drawn to one scale for kW and kVAR. */
+function WorkedTrianglePlot({ narrow }: { narrow: boolean }) {
+  const r = GUIDE_EXAMPLES.fromAmps;
+  const kw = r.kw;
+  const kvar = r.kvar;
+  const pf = r.pf;
+  if (kw === null || kvar === null || pf === null) throw new Error('WorkedTrianglePlot: the example has no power factor');
+  const W = narrow ? 288 : 560;
+  const x0 = narrow ? 14 : 30;
+  const top = narrow ? 22 : 24;
+  // px per kW and per kVAR: the real power side spans 170 px (phones) or 360 px
+  const k = (narrow ? 170 : 360) / kw;
+  const xP = x0 + kw * k;
+  const base = top + kvar * k;
+  const H = base + (narrow ? 64 : 44);
+  const sig = { sig: 4 };
+  const fs = narrow ? 13 : 14;
+  const arcR = narrow ? 46 : 54;
+  const phi = Math.acos(pf);
+  // the label sits right of the arc, where the long side has risen clear of its cap height
+  const labelX = x0 + arcR + 14;
+  const id = narrow ? 'worked-triangle-narrow' : 'worked-triangle-wide';
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H.toFixed(1)}`}
+      width={W}
+      height={Number(H.toFixed(1))}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={TP}
+    >
+      <title id={`${id}-title`}>
+        {`Power triangle of ${r.amps} A on ${r.volts} V three-phase at power factor ${pf}, drawn to scale: ${Number(kw.toPrecision(4))} kW real power, ${Number(kvar.toPrecision(4))} kVAR reactive power and ${Number(r.kva.toPrecision(4))} kVA apparent power`}
+      </title>
+      {/* real power along the bottom, reactive power up the right side at 90°, apparent power as the long side */}
+      <line x1={x0} y1={base} x2={xP} y2={base} stroke={INK} strokeWidth={3} pathLength={1} className="viz-draw" />
+      <line x1={xP} y1={base} x2={xP} y2={top} stroke={PHASOR} strokeWidth={3} pathLength={1} className="viz-draw" />
+      <line x1={x0} y1={base} x2={xP} y2={top} stroke={MUTED} strokeWidth={2} pathLength={1} className="viz-draw" />
+      <path d={`M${xP - 10},${base}V${base - 10}H${xP}`} fill="none" stroke={MUTED} strokeWidth={1} />
+      <path
+        d={`M${x0 + arcR},${base}A${arcR} ${arcR} 0 0 0 ${(x0 + arcR * Math.cos(phi)).toFixed(1)},${(base - arcR * Math.sin(phi)).toFixed(1)}`}
+        fill="none"
+        stroke={MUTED}
+        strokeWidth={1.5}
+      />
+      <text x={labelX} y={base - 8} fontSize={13} fill={INK} className="viz-pop">
+        PF <Num v={pf} src={TP} svg />
+      </text>
+      <text x={(x0 + xP) / 2} y={base + 24} textAnchor="middle" fontSize={fs} fontWeight={700} fill={INK}>
+        <Val v={kw} unit="kW" src={TP} format={sig} svg /> real power
+      </text>
+      <text x={xP + 10} y={(top + base) / 2} fontSize={fs} fontWeight={700} fill={INK} className="viz-pop">
+        <Val v={kvar} unit="kVAR" src={TP} format={sig} svg />
+      </text>
+      <text x={xP + 10} y={(top + base) / 2 + 18} fontSize={13} fill={MUTED} className="viz-pop">
+        {narrow ? 'reactive' : 'reactive power'}
+      </text>
+      {narrow ? (
+        <Key x={x0} y={base + 52} color={MUTED}>
+          <Val v={r.kva} unit="kVA" src={TP} format={sig} svg /> apparent power
+        </Key>
+      ) : (
+        <text x={(x0 + xP) / 2 - 14} y={(top + base) / 2 - 10} textAnchor="end" fontSize={14} fill={INK} className="viz-pop">
+          <Val v={r.kva} unit="kVA" src={TP} format={sig} svg /> apparent power
+        </text>
+      )}
+    </svg>
+  );
+}
+
+/** The real, reactive and apparent power of 50 A on 480 V three-phase at power factor 0.92, to one scale. */
+export function WorkedPowerTriangle() {
+  return (
+    <div>
+      <WorkedTrianglePlot narrow={false} />
+      <WorkedTrianglePlot narrow />
+    </div>
+  );
+}
+
+function WattsPerAmpPlot({ narrow }: { narrow: boolean }) {
+  const rows = WATTS_PER_AMP_ROWS;
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 104 : 150;
+  const right = narrow ? 62 : 80;
+  const top = 8;
+  const rowH = narrow ? 34 : 36;
+  const barH = narrow ? 16 : 18;
+  const H = top + rows.length * rowH + (narrow ? 46 : 30);
+  const pw = W - left - right;
+  const max = Math.max(...rows.map((r) => r.watts));
+  const w4 = (v: number) => Number(v.toPrecision(4));
+  const id = narrow ? 'watts-per-amp-narrow' : 'watts-per-amp-wide';
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={TP}
+    >
+      <title id={`${id}-title`}>
+        {'Watts per ampere of line current at power factor 1: ' +
+          rows.map((r) => `${w4(r.watts)} W at ${r.volts} V ${r.phases === 1 ? 'single-phase' : 'three-phase'}`).join(', ')}
+      </title>
+      {rows.map((r, i) => {
+        const yb = top + i * rowH + (rowH - barH) / 2;
+        const w = (r.watts / max) * pw;
+        return (
+          <g key={r.key}>
+            <text x={left - 10} y={yb + barH / 2 + 4.5} textAnchor="end" fontSize={13} fill={INK} data-src={NOMINAL}>
+              <Val v={r.volts} unit="V" src={NOMINAL} svg /> {r.phases === 1 ? 'single' : 'three'}
+            </text>
+            <path d={barPath(left, yb, Math.max(2, w), barH)} fill={BAR_GRAY} className="viz-grow" />
+            <text x={left + w + 8} y={yb + barH / 2 + 4.5} fontSize={13} fontWeight={700} fill={INK} className="viz-pop">
+              <Val v={w4(r.watts)} unit="W" src={TP} svg />
+            </text>
+          </g>
+        );
+      })}
+      {narrow ? (
+        <>
+          <text x={0} y={H - 24} fontSize={13} fill={MUTED}>
+            Watts per amp of line current,
+          </text>
+          <text x={0} y={H - 8} fontSize={13} fill={MUTED}>
+            at power factor <Num v={1} src={TP} svg />
+          </text>
+        </>
+      ) : (
+        <text x={left} y={H - 8} fontSize={13} fill={MUTED}>
+          Watts per amp of line current, at power factor <Num v={1} src={TP} svg />
+        </text>
+      )}
+    </svg>
+  );
+}
+
+/** Watts per ampere at power factor 1 at 120 and 240 V single-phase and 208 and 480 V three-phase. */
+export function WattsPerAmpBars() {
+  return (
+    <div>
+      <WattsPerAmpPlot narrow={false} />
+      <WattsPerAmpPlot narrow />
     </div>
   );
 }

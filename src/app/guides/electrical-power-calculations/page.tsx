@@ -1,431 +1,476 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Calculator, Zap, BarChart3, Target, TrendingUp, CheckCircle, ArrowRight, ExternalLink } from 'lucide-react';
+import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
-import { articleDates } from '@/lib/page-dates';
 import { Byline } from '@/components/content/Byline';
+import { DataTable, RSTICKY_TD, RSTICKY_TH, RTD, RTH } from '@/components/content/DataTable';
+import { Figure } from '@/components/content/Figure';
+import { Num } from '@/components/content/Num';
+import { SourceLine } from '@/components/content/SourceLine';
+import { Sources } from '@/components/content/Sources';
+import { Val } from '@/components/content/Val';
+import { LookGuideBody } from '@/components/layout/LookGuideBody';
+import { WattsPerAmpBars, WorkedPowerTriangle } from '@/components/look/Charts';
+import { OnThisPage } from '@/components/look/OnThisPage';
+import { PageTitle } from '@/components/look/PageTitle';
+import {
+  LOOK_BYLINE,
+  LOOK_BYLINE_LINK,
+  LOOK_FORMULA,
+  LOOK_H2 as H2,
+  LOOK_H3 as H3,
+  LOOK_LEAD,
+  LOOK_LINK as LINK,
+  LOOK_P as P,
+  LOOK_PAGE,
+  LOOK_SOURCES_HEADING,
+  LOOK_SOURCES_LIST,
+  LOOK_SOURCES_NOTE,
+  LOOK_SOURCES_SECTION,
+} from '@/components/look/styles';
+import { ENGINE_ID as OHMS_ENGINE } from '@/lib/calculations/ohms-law';
+import { SQRT3 } from '@/lib/calculations/power';
+import { articleDates } from '@/lib/page-dates';
+import { GUIDE_EXAMPLES, WATTS_PER_AMP_ROWS, assertPowerGuideVolts } from '@/lib/power-guides';
+import type { WattsPerAmpRow } from '@/lib/power-guides';
 
-export const metadata = {
-  title: 'Electrical Power Calculations — W, A, V, PF',
-  description: 'Watts, amps, volts, and power factor formulas. Single-phase, three-phase, DC; real, reactive, apparent power. Worked examples.',
-  keywords: 'electrical power calculations, watts amps volts, power factor, ohms law, electrical engineering',
-  alternates: { canonical: '/guides/electrical-power-calculations' },
+// /guides/electrical-power-calculations (WSZ-007e; spec: research/page-specs.md "WSZ-007"): the formulas for power and
+// current on DC, single-phase and three-phase circuits, with worked examples that are golden cases
+// (src/lib/power-guides.ts GUIDE_EXAMPLES). The relations are NIST SP 330's (the watt as a volt times an ampere, the ohm
+// as a volt per ampere), the EIA Glossary's (apparent power = volts × amperes, PF = P ÷ S), DOE/GO-10097-517's
+// (three-phase P = √3 × V × I × PF), MIT 6.061's (√3 between line-to-line and line-to-neutral voltage) and
+// DOE/GO-10096-286's (the power triangle, Q = √(S² − P²)); the voltages are NCUC Rule R8-17's nominal systems. Every
+// number goes through Val/Num with its source.
+const ROUTE = '/guides/electrical-power-calculations';
+const URL = `https://wiresizes.com${ROUTE}`;
+const TITLE = 'Electrical Power Calculations: Watts, Volts and Amps';
+const DESCRIPTION =
+  'Power is volts times amps; AC multiplies by the power factor, three-phase by √3 as well. The formulas for watts, amps and kVA, with worked examples.';
+
+export const metadata: Metadata = {
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: ROUTE },
+  openGraph: {
+    type: 'article',
+    locale: 'en_US',
+    siteName: 'WireSizes.com',
+    title: TITLE,
+    description: DESCRIPTION,
+    url: URL,
+    images: ['/opengraph-image'],
+  },
+  twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION, images: ['/twitter-image'] },
 };
 
-const POWER_TRIANGLE_DATA = [
-  { angle: 0, realPower: 100, reactivePower: 0, apparentPower: 100, powerFactor: 1.0, description: 'Pure Resistive Load' },
-  { angle: 30, realPower: 86.6, reactivePower: 50, apparentPower: 100, powerFactor: 0.866 },
-  { angle: 45, realPower: 70.7, reactivePower: 70.7, apparentPower: 100, powerFactor: 0.707 },
-  { angle: 60, realPower: 50, reactivePower: 86.6, apparentPower: 100, powerFactor: 0.5 },
+const SI = 'nist-sp330-si-units';
+const EIA = 'eia-power-glossary';
+const DOE = 'doe-motor-load-efficiency';
+const MIT = 'mit-polyphase-networks';
+const PFC = 'doe-power-factor-cost';
+const VOLTS = 'us-nominal-voltages';
+const CALC = 'calc:power';
+const OHMS = `calc:${OHMS_ENGINE}`;
+const SIG = { sig: 4 };
+
+assertPowerGuideVolts('electrical power calculations guide');
+const { dc, element, elementOhms, elementAt208, motor, fromAmps, kva } = GUIDE_EXAMPLES;
+if (element.kw === null || motor.kw === null || motor.pf === null || fromAmps.kw === null || fromAmps.kvar === null || fromAmps.pf === null) {
+  throw new Error('electrical power calculations guide: an example lost its power factor');
+}
+const ELEMENT_W = element.kw * 1000;
+const MOTOR_KW = motor.kw;
+const MOTOR_PF = motor.pf;
+const FROM_PF = fromAmps.pf;
+const FROM_KW = fromAmps.kw;
+const FROM_KVAR = fromAmps.kvar;
+const FROM_AMPS_W = Number((FROM_KW * 1000).toPrecision(6));
+
+const [W120, W240, W208, W480] = WATTS_PER_AMP_ROWS;
+
+const TOC: ([string, string] | [string, string, string])[] = [
+  ['formulas', 'The formulas'],
+  ['examples', 'Worked examples'],
+  ['three-powers', 'Real, reactive and apparent power'],
+  ['per-amp', 'Watts per amp'],
+  ['other-voltage', 'A heater on another voltage'],
+  ['faq', 'Questions'],
+  ['sources', 'Sources'],
 ];
 
-const VOLTAGE_SYSTEMS = [
-  { system: 'Single-Phase 120 V', voltage: 120, phases: 1, applications: ['Residential outlets', 'Small appliances', 'Lighting'] },
-  { system: 'Single-Phase 240 V', voltage: 240, phases: 1, applications: ['Water heaters', 'Dryers', 'AC units'] },
-  { system: 'Three-Phase 208 V', voltage: 208, phases: 3, applications: ['Commercial lighting', 'Small motors', 'Office equipment'] },
-  { system: 'Three-Phase 480 V', voltage: 480, phases: 3, applications: ['Industrial motors', 'Large HVAC', 'Manufacturing'] },
+/** The formulas column: left-aligned, with less side padding, so the table fits a 390 px screen. */
+const FORMULA_CELL = '!text-left !pl-3 !pr-1.5';
+/** The formulas table: one row per circuit, each the source that states its formulas. */
+const FORMULA_ROWS = [
+  { circuit: 'DC', power: 'P = V × I', current: 'I = P ÷ V', src: SI },
+  { circuit: 'Single-phase', power: 'P = V × I × PF', current: 'I = P ÷ (V × PF)', src: EIA },
+  { circuit: 'Three-phase', power: 'P = √3 × V × I × PF', current: 'I = P ÷ (√3 × V × PF)', src: DOE },
 ];
 
-const CALCULATION_EXAMPLES = [
-  {
-    title: 'Residential Water Heater',
-    scenario: 'A 4500 W electric water heater on a 240 V circuit',
-    given: ['Power: 4500 W', 'Voltage: 240 V', 'Load Type: Resistive'],
-    solution: 'I = P ÷ V = 4500 W ÷ 240 V = 18.75 A',
-    result: '18.75 Amps',
-    powerFactor: 1.0,
-    calculatorLink: '/calculators/watts-to-amps-calculator'
-  },
-  {
-    title: 'Commercial LED Lighting',
-    scenario: '50 A LED lighting circuit at 277 V with 0.95 power factor',
-    given: ['Current: 50 A', 'Voltage: 277 V', 'Power Factor: 0.95'],
-    solution: 'P = I × V × PF = 50 A × 277 V × 0.95 = 13,158 W',
-    result: '13.16 kW',
-    powerFactor: 0.95,
-    calculatorLink: '/calculators/amps-to-watts-calculator'
-  },
-];
+const articleData = { headline: 'Electrical Power Calculations', description: DESCRIPTION, url: URL, ...articleDates(ROUTE) };
 
-// Article data for schema
-const articleData = {
-  headline: "Electrical Power Calculations Guide",
-  description: "Master electrical power calculations with this guide covering watts, amps, volts, power factor, single-phase and three-phase systems with interactive examples.",
-  url: "https://wiresizes.com/guides/electrical-power-calculations",
-  ...articleDates('/guides/electrical-power-calculations'),
-};
+/** Four significant figures, trailing zeros dropped (66.82, 208.2, 360.3). */
+const r4 = (v: number) => Number(v.toPrecision(4));
 
-export default function ElectricalPowerCalculationsGuide() {
+/** "240 V single" from a row, as the bars name it, the voltage traced to the nominal systems. */
+function System({ r }: { r: WattsPerAmpRow }) {
   return (
-    <div className="space-y-12">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 border">
-        <div className="max-w-4xl">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Electrical Power Calculations Guide
-          </h1>
-          <Byline route="/guides/electrical-power-calculations" className="mb-4 text-sm text-gray-600" />
-          <p className="text-xl text-gray-600 mb-6">
-            Master the fundamental relationships between watts, amps, volts, and power factor.
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <Link 
-              href="/calculators/amps-to-watts-calculator"
-              className="bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors flex items-center gap-2"
-            >
-              <Calculator className="w-5 h-5" />
-              Try Calculator
-            </Link>
-          </div>
-        </div>
-      </div>
+    <>
+      <Val v={r.volts} unit="V" src={VOLTS} /> {r.phases === 1 ? 'single' : 'three'}
+    </>
+  );
+}
 
-      {/* Quick Reference Table */}
-      <div className="bg-white rounded-xl border p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Reference: Electrical Formulas</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b-2 border-gray-200">
-                <th className="text-left py-4 px-4 bg-gray-50 font-semibold">To Find</th>
-                <th className="text-left py-4 px-4 bg-gray-50 font-semibold">Single-Phase Formula</th>
-                <th className="text-left py-4 px-4 bg-gray-50 font-semibold">Three-Phase Formula</th>
-                <th className="text-left py-4 px-4 bg-gray-50 font-semibold">Calculator</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              <tr className="hover:bg-gray-50">
-                <td className="py-4 px-4 font-medium">Watts (P)</td>
-                <td className="py-4 px-4 font-mono text-sm">I × V × PF</td>
-                <td className="py-4 px-4 font-mono text-sm">I × V × √3 × PF</td>
-                <td className="py-4 px-4">
-                  <Link href="/calculators/amps-to-watts-calculator" className="text-blue-600 hover:text-blue-700 text-sm flex items-center gap-1">
-                    Calculator <ExternalLink className="w-3 h-3" />
-                  </Link>
-                </td>
-              </tr>
-              <tr className="hover:bg-gray-50">
-                <td className="py-4 px-4 font-medium">Amps (I)</td>
-                <td className="py-4 px-4 font-mono text-sm">P ÷ (V × PF)</td>
-                <td className="py-4 px-4 font-mono text-sm">P ÷ (V × √3 × PF)</td>
-                <td className="py-4 px-4">
-                  <Link href="/calculators/watts-to-amps-calculator" className="text-blue-600 hover:text-blue-700 text-sm flex items-center gap-1">
-                    Calculator <ExternalLink className="w-3 h-3" />
-                  </Link>
-                </td>
-              </tr>
-              <tr className="hover:bg-gray-50">
-                <td className="py-4 px-4 font-medium">VA (Apparent)</td>
-                <td className="py-4 px-4 font-mono text-sm">I × V</td>
-                <td className="py-4 px-4 font-mono text-sm">I × V × √3</td>
-                <td className="py-4 px-4">
-                  <Link href="/calculators/kva-to-amps-calculator" className="text-blue-600 hover:text-blue-700 text-sm flex items-center gap-1">
-                    Calculator <ExternalLink className="w-3 h-3" />
-                  </Link>
-                </td>
-              </tr>
-              <tr className="hover:bg-gray-50">
-                <td className="py-4 px-4 font-medium">VAR (Reactive)</td>
-                <td className="py-4 px-4 font-mono text-sm">√(VA² - P²)</td>
-                <td className="py-4 px-4 font-mono text-sm">√(VA² - P²)</td>
-                <td className="py-4 px-4">
-                  <span className="text-gray-500 text-sm">In main calculators</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+function PerAmp({ r }: { r: WattsPerAmpRow }) {
+  return <Val v={r4(r.watts)} unit="W" src={CALC} />;
+}
 
-      {/* Power Triangle Visualization */}
-      <div className="bg-white rounded-xl border p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Understanding the Power Triangle</h2>
-        <div className="grid lg:grid-cols-2 gap-8">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Interactive Power Triangle</h3>
-            <div className="bg-gray-50 rounded-lg p-6 mb-4">
-              {/* SVG Power Triangle */}
-              <svg viewBox="0 0 400 300" className="w-full h-64">
-                {/* Grid background */}
-                <defs>
-                  <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e5e7eb" strokeWidth="1"/>
-                  </pattern>
-                </defs>
-                <rect width="400" height="300" fill="url(#grid)" />
-                
-                {/* Power Triangle */}
-                <path
-                  d="M 50 250 L 350 250 L 350 100 Z"
-                  fill="rgba(59, 130, 246, 0.1)"
-                  stroke="rgb(59, 130, 246)"
-                  strokeWidth="3"
-                />
-                
-                {/* Labels */}
-                <text x="200" y="275" textAnchor="middle" className="text-sm font-semibold fill-green-600">
-                  Real Power (P) - Watts
-                </text>
-                <text x="375" y="175" textAnchor="middle" className="text-sm font-semibold fill-red-600" transform="rotate(90, 375, 175)">
-                  Reactive Power (Q) - VAR
-                </text>
-                <text x="200" y="170" textAnchor="middle" className="text-sm font-semibold fill-blue-600" transform="rotate(-26, 200, 170)">
-                  Apparent Power (S) - VA
-                </text>
-                
-                {/* Power Factor Angle */}
-                <path
-                  d="M 50 250 A 40 40 0 0 0 90 230"
-                  fill="none"
-                  stroke="orange"
-                  strokeWidth="2"
-                />
-                <text x="80" y="245" className="text-xs fill-orange-600">φ</text>
-                <text x="20" y="265" className="text-xs fill-orange-600">cos φ = PF</text>
-              </svg>
-            </div>
-            
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="w-4 h-4 bg-green-500 rounded"></div>
-                <span className="text-sm"><strong>Real Power (P)</strong> - Actual work performed (Watts)</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-4 h-4 bg-red-500 rounded"></div>
-                <span className="text-sm"><strong>Reactive Power (Q)</strong> - Magnetic field energy (VAR)</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-4 h-4 bg-blue-500 rounded"></div>
-                <span className="text-sm"><strong>Apparent Power (S)</strong> - Total power drawn (VA)</span>
-              </div>
-            </div>
-          </div>
+export default function ElectricalPowerCalculationsPage() {
+  return (
+    <div className={LOOK_PAGE}>
+      <article className="container pb-16">
+        <ArticleSchema article={articleData} />
 
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Power Factor Impact</h3>
-            <div className="space-y-4">
-              {POWER_TRIANGLE_DATA.map((data, index) => (
-                <div key={index} className="border rounded-lg p-4 hover:bg-gray-50">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-medium">{data.description ?? ''}</span>
-                    <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">
-                      PF = {data.powerFactor}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-2 text-xs text-gray-600">
-                    <div>Real: {data.realPower} W</div>
-                    <div>Reactive: {data.reactivePower} VAR</div>
-                    <div>Apparent: {data.apparentPower} VA</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+        <header className="pt-10 sm:pt-12">
+          <PageTitle main="Electrical Power Calculations" sub="Watts, Volts and Amps" joiner=": " />
+          <Byline route={ROUTE} sources className={LOOK_BYLINE} linkClassName={LOOK_BYLINE_LINK} />
+        </header>
 
-      {/* Voltage Systems Comparison */}
-      <div className="bg-white rounded-xl border p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Common Voltage Systems</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {VOLTAGE_SYSTEMS.map((system, index) => (
-            <div key={index} className="border rounded-lg p-6 hover:shadow-lg transition-shadow">
-              <div className="text-center mb-4">
-                <div className="text-2xl font-bold text-primary-600">{system.voltage} V</div>
-                <div className="text-sm text-gray-600">{system.phases === 1 ? 'Single' : 'Three'} Phase</div>
-              </div>
-              
-              <h3 className="font-semibold text-gray-900 mb-3">{system.system}</h3>
-
-              <div>
-                <div className="text-sm font-medium text-gray-700 mb-2">Applications:</div>
-                <ul className="space-y-1">
-                  {system.applications.map((app, appIndex) => (
-                    <li key={appIndex} className="text-xs text-gray-600 flex items-center gap-2">
-                      <div className="w-1 h-1 bg-primary-500 rounded-full"></div>
-                      {app}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Real-World Calculation Examples */}
-      <div className="bg-white rounded-xl border p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Real-World Calculation Examples</h2>
-        <div className="space-y-8">
-          {CALCULATION_EXAMPLES.map((example, index) => (
-            <div key={index} className="border-l-4 border-primary-500 bg-primary-50 rounded-r-lg p-6">
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="text-xl font-semibold text-primary-900">{example.title}</h3>
-                {example.calculatorLink && (
-                  <Link 
-                    href={example.calculatorLink}
-                    className="bg-primary-600 text-white px-3 py-1 rounded text-sm hover:bg-primary-700 transition-colors flex items-center gap-1"
-                  >
-                    <Calculator className="w-4 h-4" />
-                    Try Calculator
-                  </Link>
-                )}
-              </div>
-              
-              <p className="text-primary-800 mb-4">{example.scenario}</p>
-              
-              <div className="grid md:grid-cols-3 gap-6">
-                <div>
-                  <h4 className="font-semibold text-primary-800 mb-2">Given:</h4>
-                  <ul className="space-y-1">
-                    {example.given.map((item, itemIndex) => (
-                      <li key={itemIndex} className="text-sm text-primary-700 flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-600" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                <div>
-                  <h4 className="font-semibold text-primary-800 mb-2">Solution:</h4>
-                  <div className="bg-white rounded-lg p-3 border">
-                    <code className="text-sm text-gray-800">{example.solution}</code>
-                  </div>
-                </div>
-                
-                <div>
-                  <h4 className="font-semibold text-primary-800 mb-2">Result:</h4>
-                  <div className="text-2xl font-bold text-primary-600 mb-2">{example.result}</div>
-                  <div className="text-xs text-primary-700">
-                    <div>PF: {example.powerFactor}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Key Concepts Summary */}
-      <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Key Concepts to Remember</h2>
-        <div className="grid md:grid-cols-2 gap-8">
-          <div>
-            <h3 className="text-lg font-semibold text-amber-800 mb-4">Three-Phase Benefits</h3>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-3">
-                <BarChart3 className="w-5 h-5 text-purple-600 mt-0.5" />
-                <div>
-                  <div className="font-medium">Balanced Loading</div>
-                  <div className="text-sm text-gray-600">Even distribution reduces neutral current</div>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <Zap className="w-5 h-5 text-green-600 mt-0.5" />
-                <div>
-                  <div className="font-medium">Motor Efficiency</div>
-                  <div className="text-sm text-gray-600">Better starting torque and efficiency</div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      {/* Related Calculators */}
-      <div className="bg-white rounded-xl border p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Practice with Our Calculators</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            { name: 'Amps to Watts', slug: 'amps-to-watts-calculator', icon: Calculator, color: 'blue' },
-            { name: 'Watts to Amps', slug: 'watts-to-amps-calculator', icon: Zap, color: 'green' },
-            { name: "Ohm's Law", slug: 'ohms-law-calculator', icon: BarChart3, color: 'purple' },
-            { name: 'Three Phase', slug: 'three-phase-calculator', icon: Target, color: 'amber' },
-            { name: 'kVA to Amps', slug: 'kva-to-amps-calculator', icon: TrendingUp, color: 'red' },
-          ].map((calc, index) => {
-            const IconComponent = calc.icon;
-            return (
-              <Link 
-                key={index} 
-                href={`/calculators/${calc.slug}`}
-                className={`block p-6 rounded-lg border hover:shadow-lg transition-all hover:border-${calc.color}-300`}
-              >
-                <div className={`w-12 h-12 bg-${calc.color}-100 rounded-lg flex items-center justify-center mb-4`}>
-                  <IconComponent className={`w-6 h-6 text-${calc.color}-600`} />
-                </div>
-                <h3 data-name="" className="font-semibold text-gray-900 mb-2">{calc.name}</h3>
-                <div className={`text-${calc.color}-600 text-sm flex items-center gap-1`}>
-                  Try Calculator <ArrowRight className="w-4 h-4" />
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Next Steps */}
-      <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Continue Your Learning Journey</h2>
-        <p className="text-gray-600 mb-6">
-          Now that you understand power calculations, explore these related topics to build your electrical engineering expertise.
-        </p>
-        <div className="flex flex-wrap gap-4">
-          <Link
-            data-name=""
-            href="/guides/single-vs-three-phase"
-            className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center gap-2"
-          >
-            <ArrowRight className="w-5 h-5" />
-            Single vs Three Phase Systems
-          </Link>
-          <Link
-            data-name=""
-            href="/guides/power-factor-explained"
-            className="border border-green-600 text-green-700 px-6 py-3 rounded-lg font-medium hover:bg-green-50 transition-colors"
-          >
-            Power Factor Deep Dive
-          </Link>
-          <Link
-            data-name=""
-            href="/calculators/wire-size-calculator"
-            className="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors"
-          >
-            Wire Size Calculator
-          </Link>
-        </div>
-      </div>
-
-      {/* Worked Examples — full numerical walkthroughs */}
-      <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-8 border border-slate-200 mb-12">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Worked Examples — Power Calculations With Real Numbers</h2>
-        <p className="text-gray-600 mb-8">
-          Every formula below is applied to a concrete circuit. Memorize the pattern, plug in your
-          numbers.
-        </p>
-
-        <div className="space-y-8">
-          {/* Example: Power factor correction */}
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200">
-            <h3 className="text-xl font-bold text-blue-900 mb-3">Example — Capacitor bank for PF correction</h3>
-            <p className="text-sm text-slate-600 mb-3">
-              <strong>Scenario:</strong> A small machine shop draws 80 kW at
-              PF 0.78 lagging on 480 V three-phase.
-              Compute the kVAR of capacitors needed to correct PF to 0.95
-              and the resulting current reduction.
+        <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-12">
+          <div className="space-y-4">
+            <p className={LOOK_LEAD} data-src={SI}>
+              <strong>Electrical power is voltage times current: P = V × I, in watts.</strong>{' '}
+              <span data-src={EIA}>
+                On AC that product is the apparent power, and the power factor gives the share of it that does work. Three-phase adds a factor of
+                √3.
+              </span>
             </p>
-            <div className="bg-blue-50 rounded p-4 font-mono text-sm space-y-1">
-              <div>Existing reactive power: Q1 = P &times; tan(arccos 0.78) = 80 &times; 0.802 = 64.2 kVAR</div>
-              <div>Target reactive power: Q2 = P &times; tan(arccos 0.95) = 80 &times; 0.329 = 26.3 kVAR</div>
-              <div>Capacitor bank size: Q1 &minus; Q2 = 64.2 &minus; 26.3 = <strong>37.9 kVAR</strong></div>
-              <div>Pre-correction current: I = 80,000 / (1.732 &times; 480 &times; 0.78) = 123.4 A</div>
-              <div>Post-correction current: I = 80,000 / (1.732 &times; 480 &times; 0.95) = 101.3 A</div>
-              <div>Conductor relief: <strong>22.1 A reduction</strong></div>
-            </div>
+            <p className={P} data-src={CALC}>
+              A <Val v={ELEMENT_W} unit="W" src={CALC} /> heating element on <Val v={element.volts} unit="V" src={VOLTS} /> draws{' '}
+              <Val v={element.amps} unit="A" src={CALC} />, and <Val v={fromAmps.amps} unit="A" src={CALC} /> on{' '}
+              <Val v={fromAmps.volts} unit="V" src={VOLTS} /> three-phase at power factor <Num v={FROM_PF} src={CALC} /> is{' '}
+              <Val v={FROM_AMPS_W} unit="W" src={CALC} /> of real power.
+            </p>
           </div>
+          <Figure
+            caption={
+              <>
+                <span data-src={CALC}>
+                  The power of <Val v={fromAmps.amps} unit="A" src={CALC} /> on <Val v={fromAmps.volts} unit="V" src={VOLTS} /> three-phase at
+                  power factor <Num v={FROM_PF} src={CALC} />, drawn to one scale. Apparent power is √3 × V × I, real power is apparent power
+                  times the power factor, and reactive power is the third side of the right triangle.
+                </span>
+                <SourceLine domains={[EIA, MIT, PFC]} />
+              </>
+            }
+          >
+            <WorkedPowerTriangle />
+          </Figure>
         </div>
-      </div>
 
-      <ArticleSchema article={articleData} />
+        <LookGuideBody className="mt-14 border-t border-cut-rule pt-10">
+          <OnThisPage items={TOC} />
+
+          <section aria-labelledby="formulas" className="space-y-5">
+            <h2 id="formulas" className={H2}>
+              The formulas
+            </h2>
+            <p className={P} data-src={SI}>
+              P is the real power in watts, V the voltage, I the current in amperes and PF the power factor. NIST&apos;s guide to the SI defines
+              the watt as a volt times an ampere, which is the DC formula; <span data-src={EIA}>the U.S. Energy Information Administration&apos;s
+              glossary defines the power factor as real power divided by apparent power.</span>
+            </p>
+            <DataTable id="formulas-table" variant="ruled" src={EIA} caption="Power and current by circuit">
+              <thead>
+                <tr>
+                  <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
+                    Circuit
+                  </th>
+                  <th scope="col" className={clsx(RTH, FORMULA_CELL)}>
+                    Power, W, and current, A
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {FORMULA_ROWS.map((r) => (
+                  <tr key={r.circuit} data-src={r.src}>
+                    <th scope="row" className={RSTICKY_TD}>
+                      {r.circuit}
+                    </th>
+                    <td className={clsx(RTD, FORMULA_CELL)}>
+                      <span className="block">{r.power}</span>
+                      <span className="block">{r.current}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </DataTable>
+            <p className={P} data-src={EIA}>
+              On AC, volts times amps is the apparent power S, in volt-amperes. The power factor gives the real power, and the reactive power Q
+              is the third side of the right triangle the two form:
+            </p>
+            <p className={LOOK_FORMULA} data-src={EIA}>
+              Apparent power: S = V × I, or √3 × V × I on three-phase
+            </p>
+            <p className={LOOK_FORMULA} data-src={EIA}>
+              Real power: P = S × PF
+            </p>
+            <p className={LOOK_FORMULA} data-src={PFC}>
+              Reactive power: Q = √(S² − P²)
+            </p>
+            <p className={P} data-src={DOE}>
+              On three-phase, V is the voltage between two lines and I the current in one line, as in the U.S. Department of Energy&apos;s motor
+              fact sheet, which divides the product by <Num v={1000} src={DOE} /> for kilowatts.{' '}
+              <span data-src={MIT}>
+                √3, about <Num v={SQRT3} src={CALC} format={SIG} />, is the ratio of the voltage between two lines to the voltage from a line to
+                neutral.
+              </span>
+            </p>
+          </section>
+
+          <section aria-labelledby="examples" className="space-y-5">
+            <h2 id="examples" className={H2}>
+              Worked examples
+            </h2>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={OHMS}>
+                DC: <Val v={dc.voltage} unit="V" src={OHMS} /> across <Val v={dc.resistance} unit="Ω" src={OHMS} />
+              </h3>
+              <p className={P} data-src={OHMS}>
+                I = V ÷ R = <Val v={dc.voltage} unit="V" src={OHMS} /> ÷ <Val v={dc.resistance} unit="Ω" src={OHMS} /> ={' '}
+                <Val v={r4(dc.current)} unit="A" src={OHMS} />, and P = V × I = <Val v={r4(dc.power)} unit="W" src={OHMS} />. On DC the formula
+                needs no power factor. The{' '}
+                <Link href="/calculators/ohms-law-calculator" className={LINK}>
+                  Ohm&apos;s law calculator
+                </Link>{' '}
+                solves any two of volts, amps, ohms and watts.
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={CALC}>
+                Single-phase: <Val v={ELEMENT_W} unit="W" src={CALC} /> on <Val v={element.volts} unit="V" src={VOLTS} />
+              </h3>
+              <p className={P} data-src={CALC}>
+                A heating element at power factor <Num v={1} src={CALC} />: I = P ÷ (V × PF) = <Val v={ELEMENT_W} unit="W" src={CALC} /> ÷{' '}
+                <Val v={element.volts} unit="V" src={VOLTS} /> = <Val v={element.amps} unit="A" src={CALC} />. The{' '}
+                <Link href="/calculators/watts-to-amps-calculator" className={LINK}>
+                  watts to amps calculator
+                </Link>{' '}
+                does the same for DC, single-phase and three-phase.
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={CALC}>
+                Three-phase: <Val v={MOTOR_KW} unit="kW" src={CALC} /> on <Val v={motor.volts} unit="V" src={VOLTS} /> at power factor{' '}
+                <Num v={MOTOR_PF} src={CALC} />
+              </h3>
+              <p className={P} data-src={CALC}>
+                I = P ÷ (√3 × V × PF) = <Val v={MOTOR_KW * 1000} unit="W" src={CALC} /> ÷ (√3 ×{' '}
+                <Val v={motor.volts} unit="V" src={VOLTS} /> × <Num v={MOTOR_PF} src={CALC} />) ={' '}
+                <Val v={r4(motor.amps)} unit="A" src={CALC} /> in each line. The{' '}
+                <Link href="/calculators/kilowatts-to-amps-calculator" className={LINK}>
+                  kilowatts to amps calculator
+                </Link>{' '}
+                works from kilowatts.
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={CALC}>
+                From current: <Val v={fromAmps.amps} unit="A" src={CALC} /> on <Val v={fromAmps.volts} unit="V" src={VOLTS} /> three-phase at power
+                factor <Num v={FROM_PF} src={CALC} />
+              </h3>
+              <p className={P} data-src={CALC}>
+                S = √3 × V × I = √3 × <Val v={fromAmps.volts} unit="V" src={VOLTS} /> × <Val v={fromAmps.amps} unit="A" src={CALC} /> ={' '}
+                <Val v={r4(fromAmps.kva)} unit="kVA" src={CALC} />; P = S × PF = <Val v={FROM_AMPS_W} unit="W" src={CALC} />; Q = √(S² − P²) ={' '}
+                <Val v={r4(FROM_KVAR)} unit="kVAR" src={CALC} />. These are the three sides of the triangle at the top. The{' '}
+                <Link href="/calculators/amps-to-watts-calculator" className={LINK}>
+                  amps to watts calculator
+                </Link>{' '}
+                gives them for any current.
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={CALC}>
+                From apparent power: <Val v={kva.kva} unit="kVA" src={CALC} /> on <Val v={kva.volts} unit="V" src={VOLTS} /> three-phase
+              </h3>
+              <p className={P} data-src={CALC}>
+                I = S ÷ (√3 × V) = <Val v={kva.kva * 1000} unit="VA" src={CALC} /> ÷ (√3 × <Val v={kva.volts} unit="V" src={VOLTS} />) ={' '}
+                <Val v={r4(kva.amps)} unit="A" src={CALC} />. Apparent power gives the current without a power factor; the real power needs one.
+                The{' '}
+                <Link href="/calculators/kva-to-amps-calculator" className={LINK}>
+                  kVA to amps calculator
+                </Link>{' '}
+                takes it as an option.
+              </p>
+            </div>
+          </section>
+
+          <section aria-labelledby="three-powers" className="space-y-4">
+            <h2 id="three-powers" className={H2}>
+              Real, reactive and apparent power
+            </h2>
+            <p className={P} data-src={EIA}>
+              The U.S. Energy Information Administration&apos;s glossary splits the power an AC load draws in two. <strong>Real power</strong>, in
+              watts, does the work. <strong>Reactive power</strong>, in vars, does none, and motors and other magnetic equipment need it.{' '}
+              <strong>Apparent power</strong>, volts times amperes, carries both, and the power factor is the share that is real, so it is at
+              most <Num v={1} src={EIA} />.
+            </p>
+            <p className={P} data-src={PFC}>
+              The U.S. Department of Energy&apos;s fact sheet on power factor draws the three as a right triangle, reactive power at{' '}
+              <Num v={90} src={PFC} />° to real power, which is why S² = P² + Q². A lower power factor means more current for the same real
+              power; the{' '}
+              <Link href="/guides/power-factor-explained" className={LINK}>
+                power factor guide
+              </Link>{' '}
+              shows how far, and how a capacitor bank brings it back.
+            </p>
+          </section>
+
+          <section aria-labelledby="per-amp" className="space-y-5">
+            <h2 id="per-amp" className={H2}>
+              Watts per amp
+            </h2>
+            <p className={P} data-src={CALC}>
+              One ampere carries more power at a higher voltage, and more again on three-phase: at power factor <Num v={1} src={CALC} />,{' '}
+              <PerAmp r={W120} /> at <Val v={W120.volts} unit="V" src={VOLTS} /> and <PerAmp r={W240} /> at{' '}
+              <Val v={W240.volts} unit="V" src={VOLTS} /> single-phase, <PerAmp r={W208} /> at <Val v={W208.volts} unit="V" src={VOLTS} /> and{' '}
+              <PerAmp r={W480} /> at <Val v={W480.volts} unit="V" src={VOLTS} /> three-phase. Multiply by the power factor when it is below{' '}
+              <Num v={1} src={CALC} />.
+            </p>
+            <p className={P} data-src={MIT}>
+              MIT&apos;s notes on polyphase networks show why three-phase gives more: its power, three times the line-to-neutral voltage times
+              the current, equals √3 times the voltage between lines times the current in one line.
+            </p>
+            <Figure
+              caption={
+                <>
+                  <span data-src={CALC}>
+                    Watts per ampere of line current at power factor <Num v={1} src={CALC} />: P = V × I on single-phase, √3 × V × I on
+                    three-phase.
+                  </span>
+                  <SourceLine domains={[SI, MIT, VOLTS]} />
+                </>
+              }
+            >
+              <WattsPerAmpBars />
+            </Figure>
+            <DataTable id="per-amp-table" variant="ruled" src={CALC} caption="Watts per amp and amps per kilowatt, single- and three-phase, at power factor 1">
+              <thead>
+                <tr>
+                  <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
+                    System
+                  </th>
+                  <th scope="col" className={RTH}>
+                    Watts per amp
+                  </th>
+                  <th scope="col" className={RTH}>
+                    Amps per kW
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {WATTS_PER_AMP_ROWS.map((r) => (
+                  <tr key={r.key}>
+                    <th scope="row" className={RSTICKY_TD}>
+                      <System r={r} />
+                    </th>
+                    <td className={RTD}>
+                      <PerAmp r={r} />
+                    </td>
+                    <td className={RTD}>
+                      <Val v={r4(r.ampsPerKw)} unit="A" src={CALC} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </DataTable>
+          </section>
+
+          <section aria-labelledby="other-voltage" className="space-y-4">
+            <h2 id="other-voltage" className={H2}>
+              A heater on another voltage
+            </h2>
+            <p className={P} data-src={OHMS}>
+              A heater&apos;s rating holds at its rated voltage. Taken as a fixed resistance, the <Val v={ELEMENT_W} unit="W" src={CALC} />,{' '}
+              <Val v={element.volts} unit="V" src={VOLTS} /> element above has R = V² ÷ P = <Val v={r4(elementOhms.resistance)} unit="Ω" src={OHMS} />
+              . On <Val v={elementAt208.voltage} unit="V" src={VOLTS} /> that resistance draws I = V ÷ R ={' '}
+              <Val v={r4(elementAt208.current)} unit="A" src={OHMS} /> and takes P = V × I = <Val v={r4(elementAt208.power)} unit="W" src={OHMS} />,
+              about three quarters of its rating. The{' '}
+              <Link href="/calculators/volts-to-amps-calculator" className={LINK}>
+                volts to amps calculator
+              </Link>{' '}
+              draws the current of both kinds of load against voltage.
+            </p>
+          </section>
+
+          <section aria-labelledby="faq" className="space-y-6">
+            <h2 id="faq" className={H2}>
+              Questions
+            </h2>
+            <div className="space-y-1.5">
+              <h3 className={H3}>How do you calculate electrical power?</h3>
+              <p className={P} data-src={SI}>
+                Multiply volts by amps: P = V × I gives watts on DC. <span data-src={EIA}>On AC, multiply by the power factor as well</span>
+                <span data-src={DOE}>, and on three-phase by √3, with V the voltage between two lines.</span>
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>How many watts is one amp?</h3>
+              <p className={P} data-src={CALC}>
+                It depends on the voltage. At power factor <Num v={1} src={CALC} />: <PerAmp r={W120} /> at{' '}
+                <Val v={W120.volts} unit="V" src={VOLTS} /> and <PerAmp r={W240} /> at <Val v={W240.volts} unit="V" src={VOLTS} /> single-phase;{' '}
+                <PerAmp r={W208} /> at <Val v={W208.volts} unit="V" src={VOLTS} /> and <PerAmp r={W480} /> at{' '}
+                <Val v={W480.volts} unit="V" src={VOLTS} /> three-phase, for each ampere of line current.
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>What is the difference between kW and kVA?</h3>
+              <p className={P} data-src={EIA}>
+                kW is real power, the part that does work; kVA is apparent power, volts times amps. kW = kVA × power factor, so the two are equal
+                only at power factor <Num v={1} src={EIA} />. <span data-src={CALC}>In the example above, <Val v={r4(fromAmps.kva)} unit="kVA" src={CALC} /> at
+                power factor <Num v={FROM_PF} src={CALC} /> is <Val v={r4(FROM_KW)} unit="kW" src={CALC} />.</span>
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={MIT}>
+                Why is there √3 in three-phase formulas?
+              </h3>
+              <p className={P} data-src={MIT}>
+                In a balanced three-phase system the voltage between two lines is √3 times the voltage from a line to neutral. The power, three
+                times the line-to-neutral voltage times the current, is therefore √3 times the line-to-line voltage times the current.
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>How do you calculate amps from watts?</h3>
+              <p className={P} data-src={EIA}>
+                Divide by the voltage, and on AC by the power factor too: I = P ÷ V on DC, I = P ÷ (V × PF) on single-phase,{' '}
+                <span data-src={DOE}>I = P ÷ (√3 × V × PF) on three-phase.</span> The{' '}
+                <Link href="/calculators/watts-to-amps-calculator" className={LINK}>
+                  watts to amps calculator
+                </Link>{' '}
+                does all three.
+              </p>
+            </div>
+          </section>
+
+          <section aria-label="Sources and notices" className={LOOK_SOURCES_SECTION}>
+            <Sources
+              domains={[SI, EIA, DOE, MIT, PFC, VOLTS]}
+              headingClassName={LOOK_SOURCES_HEADING}
+              listClassName={LOOK_SOURCES_LIST}
+              linkClassName={LINK}
+              noteClassName={LOOK_SOURCES_NOTE}
+            />
+            <p>
+              The{' '}
+              <Link href="/methodology#power-terms" className={LINK}>
+                methodology page
+              </Link>{' '}
+              describes each source and how the calculated values are derived.
+            </p>
+          </section>
+        </LookGuideBody>
+      </article>
     </div>
   );
 }

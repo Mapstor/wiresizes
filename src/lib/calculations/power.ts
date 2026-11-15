@@ -2,7 +2,7 @@
 // I = P ÷ (V × PF) single-phase, I = P ÷ (√3 × V × PF) three-phase, DC with PF 1;
 // I = S ÷ V or S ÷ (√3 × V) from apparent power; P = V × I × PF or √3 × V × I × PF;
 // S = P ÷ PF, Q = √(S² − P²). Power factor correction: Qc = P × (tan φ1 − tan φ2), current reduction = 1 − PF1 ÷ PF2.
-import { powerFactorValid, voltsValid, POWER_FACTOR_INVALID_MESSAGE, VOLTAGE_INVALID_MESSAGE } from './inputs';
+import { powerFactorValid, voltsValid } from './inputs';
 import type { Phase } from './inputs';
 
 export const ENGINE_ID = 'power';
@@ -13,12 +13,6 @@ export const DOMAINS = ['eia-power-glossary', 'doe-motor-load-efficiency', 'mit-
 export type Circuit = Phase | 'dc';
 
 export type PowerError = 'value-invalid' | 'voltage-invalid' | 'power-factor-invalid';
-
-export const POWER_ERROR_MESSAGES: Record<PowerError, string> = {
-  'value-invalid': 'Enter a value greater than 0.',
-  'voltage-invalid': VOLTAGE_INVALID_MESSAGE,
-  'power-factor-invalid': POWER_FACTOR_INVALID_MESSAGE,
-};
 
 export interface PowerResult {
   amps: number;
@@ -54,25 +48,6 @@ function check(value: number, volts: number, circuit: Circuit, pf: number): Powe
   if (!voltsValid(volts, circuit)) return 'voltage-invalid';
   if (!powerFactorValid(pf)) return 'power-factor-invalid';
   return null;
-}
-
-export interface PowerInputErrors {
-  value: string | null;
-  volts: string | null;
-  pf: string | null;
-}
-
-/** The message for each invalid input at once (the calculations stop at the first); DC has no power factor. */
-export function powerInputErrors(input: { value: number; volts: number; circuit: Circuit; pf: number }): PowerInputErrors {
-  return {
-    value: powerValueValid(input.value) ? null : POWER_ERROR_MESSAGES['value-invalid'],
-    volts: voltsValid(input.volts, input.circuit) ? null : POWER_ERROR_MESSAGES['voltage-invalid'],
-    pf: input.circuit === 'dc' || powerFactorValid(input.pf) ? null : POWER_ERROR_MESSAGES['power-factor-invalid'],
-  };
-}
-
-export function hasPowerInputError(errors: PowerInputErrors): boolean {
-  return errors.value !== null || errors.volts !== null || errors.pf !== null;
 }
 
 function result(amps: number, watts: number, va: number, pf: number): PowerResult {
@@ -111,31 +86,6 @@ export function fromCurrent(input: PowerInput & { amps: number }): PowerResult |
   if (error) return { error };
   const va = phaseMultiplier(input.circuit) * input.volts * input.amps;
   return result(input.amps, va * pf, va, pf);
-}
-
-export interface VoltageRow {
-  volts: number;
-  amps: number;
-}
-
-/**
- * Current at each listed voltage that is valid for the circuit (three-phase: line-to-line voltages only),
- * computed with the same formula as the headline result.
- */
-export function currentByVoltage(
-  basis: { watts: number } | { va: number },
-  circuit: Circuit,
-  pf: number,
-  voltages: number[],
-): VoltageRow[] {
-  const rows: VoltageRow[] = [];
-  for (const volts of voltages) {
-    const r = 'watts' in basis
-      ? fromRealPower({ watts: basis.watts, volts, circuit, pf })
-      : fromApparentPower({ va: basis.va, volts, circuit, pf });
-    if (!isPowerError(r)) rows.push({ volts, amps: r.amps });
-  }
-  return rows;
 }
 
 export interface PfCorrectionInput {
@@ -178,35 +128,6 @@ export const PHASE_OPTIONS: { value: Phase; label: string }[] = [
   { value: 'single', label: 'Single-phase' },
   { value: 'three', label: 'Three-phase' },
 ];
-
-// Default and reset inputs of each converter
-export const KILOWATTS_TO_AMPS_DEFAULTS = { kilowatts: 5, volts: 480, phase: 'three' as Phase, pf: 0.85 };
-export const KILOWATTS_TO_AMPS_COMPARISON_VOLTS = [120, 208, 240, 480];
-
-export const KVA_TO_AMPS_DEFAULTS = {
-  kva: 50,
-  volts: 480,
-  phase: 'three' as Phase,
-  pf: 0.85,
-  isTransformer: false,
-  primaryVolts: 480,
-};
-export const KVA_TO_AMPS_COMPARISON_VOLTS = [208, 240, 480];
-
-export const WATTS_TO_AMPS_DEFAULTS = { watts: 1000, volts: 120, phase: 'single' as Phase, pf: 1 };
-
-export const VOLTS_TO_AMPS_DEFAULTS = {
-  volts: 240,
-  watts: 1000,
-  phase: 'single' as Phase,
-  pf: 1,
-};
-/** Under the volts-to-amps power factor input. */
-export const POWER_FACTOR_NAMEPLATE_NOTE =
-  'Enter the power factor from the equipment nameplate. Resistive loads such as heaters have a power factor of 1.';
-export const VOLTS_TO_AMPS_COMPARISON_VOLTS = [120, 240, 480];
-
-export const AMPS_TO_WATTS_DEFAULTS = { amps: 20, volts: 120, circuit: 'single' as Circuit, pf: 0.9 };
 
 // ── The three-phase calculator (WSZ-006d; spec: research/page-specs.md "WSZ-006"): the line-to-line voltage plus any
 // two of real power, apparent power, line current and power factor; the rest follows from S = √3 × V × I (MIT 6.061

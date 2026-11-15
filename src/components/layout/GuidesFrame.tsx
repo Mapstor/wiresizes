@@ -27,6 +27,7 @@ const LOOK_GUIDES = new Set([
   '/guides/nec-code-compliance',
   '/guides/single-vs-three-phase',
   '/guides/power-factor-explained',
+  '/guides/electrical-power-calculations',
 ]);
 
 const STYLES = {

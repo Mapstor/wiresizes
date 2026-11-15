@@ -1,12 +1,15 @@
 // The power pages' worked figures, from the power engine (WSZ-007a): the golden power-factor correction, one 10 kW load on
-// three systems, one 100 kW load at 480 V as its power factor falls, and capacitor kVAR per kW of load. Pure data, no JSX:
+// three systems, one 100 kW load at 480 V as its power factor falls, and capacitor kVAR per kW of load; since WSZ-007e
+// also the electrical power calculations guide's worked examples and its watts per ampere. Pure data, no JSX:
 // the charts (src/components/look/Charts.tsx), the three-phase calculator, the two power guides and
 // tests/wsz007a-power-guides.test.ts read the same values. Every voltage is a nominal system voltage of the registry
 // (assertNominal, when a page that uses them builds); research/golden-cases.json pins the results. Server only (the
 // voltage list reads the registry CSV).
 import 'server-only';
-import { fromRealPower, isPowerError, isTpError, kvarAt, threePhase } from '@/lib/calculations/power';
-import type { TpCorrection, TpResult } from '@/lib/calculations/power';
+import { convertFromAmps, convertToAmps, fromRealPower, isPowerError, isTpError, kvarAt, threePhase } from '@/lib/calculations/power';
+import type { ConvResult, TpCorrection, TpResult } from '@/lib/calculations/power';
+import { solvePair } from '@/lib/calculations/ohms-law';
+import type { OhmsLawValues } from '@/lib/calculations/ohms-law';
 import { assertNominal } from '@/lib/verified/us-nominal-voltages';
 
 function solved(r: ReturnType<typeof threePhase>, what: string): TpResult {
@@ -72,7 +75,77 @@ export function kvarPerKw(from: number, to: number): number | null {
   return to > from ? kvarAt(1, from) - kvarAt(1, to) : null;
 }
 
+// ── The electrical power calculations guide (WSZ-007e): each worked example is a golden case ───────────────────────
+
+function conv(r: ConvResult | { error: 'input-invalid' }, what: string): ConvResult {
+  if ('error' in r) throw new Error(`power-guides: ${what} failed`);
+  return r;
+}
+
+function ohms(r: OhmsLawValues | null, what: string): OhmsLawValues {
+  if (!r) throw new Error(`power-guides: ${what} failed`);
+  return r;
+}
+
+/**
+ * Golden cases "4500 W at 240 V" (18.75 A), "50 kW three-phase 480 V, PF 0.9" (66.823 A), "50 A three-phase 480 V
+ * PF 0.92 to watts" (38,243.7 W) and "75 kVA three-phase 208 V" (208.179 A) (power), and "12 V across 4 ohms" (3 A,
+ * 36 W) (ohms-law). The element's resistance at 240 V (R = V² ÷ P) and its current and power at 208 V with that
+ * resistance (I = V ÷ R, P = V × I) follow from the first.
+ */
+export const GUIDE_EXAMPLES = (() => {
+  const element = conv(convertToAmps({ phases: 1, volts: 240, known: 'kw-pf', kw: 4.5, pf: 1 }), '4,500 W at 240 V');
+  const elementOhms = ohms(solvePair('vp', 240, 4500), 'the element at 240 V');
+  return {
+    dc: ohms(solvePair('vr', 12, 4), '12 V across 4 ohms'),
+    element,
+    elementOhms,
+    elementAt208: ohms(solvePair('vr', 208, elementOhms.resistance), 'the element at 208 V'),
+    motor: conv(convertToAmps({ phases: 3, volts: 480, known: 'kw-pf', kw: 50, pf: 0.9 }), '50 kW at 480 V'),
+    fromAmps: conv(convertFromAmps({ phases: 3, volts: 480, amps: 50, pf: 0.92 }), '50 A at 480 V'),
+    kva: conv(convertToAmps({ phases: 3, volts: 208, known: 'kva', kva: 75 }), '75 kVA at 208 V'),
+  };
+})();
+
+/**
+ * Watts per ampere of line current, and amperes per kilowatt, at power factor 1 on four nominal systems: P = V × I or
+ * √3 × V × I, I = P ÷ V or P ÷ (√3 × V).
+ */
+export interface WattsPerAmpRow {
+  key: string;
+  volts: number;
+  phases: 1 | 3;
+  watts: number;
+  ampsPerKw: number;
+}
+export const WATTS_PER_AMP_ROWS: WattsPerAmpRow[] = (
+  [
+    [120, 1],
+    [240, 1],
+    [208, 3],
+    [480, 3],
+  ] as const
+).map(([volts, phases]) => ({
+  key: `${volts}-${phases}`,
+  volts,
+  phases,
+  watts: conv(convertFromAmps({ phases, volts, amps: 1, pf: 1 }), `1 A at ${volts} V`).kva * 1000,
+  ampsPerKw: conv(convertToAmps({ phases, volts, known: 'kw-pf', kw: 1, pf: 1 }), `1 kW at ${volts} V`).amps,
+}));
+
 /** Throws unless every voltage these figures use is a nominal system voltage. */
 export function assertPowerGuideVolts(what: string): void {
-  assertNominal([PF_EXAMPLE_VOLTS, PF_BARS.volts, ...COMPARE_ROWS.map((r) => r.volts)], what);
+  assertNominal(
+    [
+      PF_EXAMPLE_VOLTS,
+      PF_BARS.volts,
+      ...COMPARE_ROWS.map((r) => r.volts),
+      ...WATTS_PER_AMP_ROWS.map((r) => r.volts),
+      GUIDE_EXAMPLES.element.volts,
+      GUIDE_EXAMPLES.motor.volts,
+      GUIDE_EXAMPLES.fromAmps.volts,
+      GUIDE_EXAMPLES.kva.volts,
+    ],
+    what,
+  );
 }
