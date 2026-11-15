@@ -35,9 +35,10 @@ describe('page dates', () => {
     }
   });
 
-  it('the legal pages keep the day WSZ-002 went live; every other route the day of its last body-text change', () => {
+  it('the legal pages carry the day of their last body-text change; every other route its own', () => {
     const legal = ['/contact', '/privacy', '/terms', '/disclaimer'];
-    for (const route of legal) assert.equal(DATES[route].modified, '2026-11-02', route);
+    // WSZ-007d changed the address on all four to info@wiresizes.com (the owner, 2026-11-15)
+    for (const route of legal) assert.equal(DATES[route].modified, '2026-11-15', route);
     for (const [route, { modified }] of Object.entries(DATES)) {
       if (!legal.includes(route)) assert.ok(modified >= '2026-11-03', route);
     }

@@ -57,6 +57,13 @@
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
   }
 
+  /* Azeret Mono's contextual alternates draw (C), (R) and (P) as ©, ® and ℗, and -> as an arrow: "Resistance (R)"
+     showed as "Resistance ®" (Claude in Chrome, 2026-11-15). Both mono faces set text as typed. */
+  .font-mono,
+  .font-figures {
+    font-variant-ligatures: no-contextual;
+  }
+
   /* Focus styles */
   *:focus-visible {
     outline: 2px solid rgb(59 130 246);

@@ -6,7 +6,9 @@ import { powerFactorValid, voltsValid, POWER_FACTOR_INVALID_MESSAGE, VOLTAGE_INV
 import type { Phase } from './inputs';
 
 export const ENGINE_ID = 'power';
-export const DOMAINS = ['power-definitions'];
+// the per-document rows since WSZ-007d retired power-definitions: the EIA Glossary (S = V × I, PF = P ÷ S), DOE/GO-10097-517
+// (three-phase P = √3 × V × I × PF) and MIT 6.061 (√3 between line-to-line and line-to-neutral voltage)
+export const DOMAINS = ['eia-power-glossary', 'doe-motor-load-efficiency', 'mit-polyphase-networks'];
 
 export type Circuit = Phase | 'dc';
 

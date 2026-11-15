@@ -721,6 +721,7 @@ export default function MethodologyPage() {
               ['Power factor', 'PF = P ÷ S'],
               ['Apparent power', 'S = P ÷ PF'],
               ['Current, single-phase AC', 'I = P ÷ (V × PF)'],
+              ['Current from S, single-phase', 'I = S ÷ V'],
             ]}
           />
           <Limits>
@@ -829,48 +830,12 @@ export default function MethodologyPage() {
           </p>
           <SourceFacts s={section('nist-sp330-si-units')} />
           <Formulas src="calc:power" rows={[['Current, DC', 'I = P ÷ V']]} />
-        </SourceSection>
-
-        <SourceSection domain="mfr-water-heaters">
-          <p data-src="mfr-water-heaters">
-            Rheem&apos;s and A.O. Smith&apos;s documents for their <Val v={240} unit="V" src="mfr-water-heaters" /> electric water heaters with
-            two <Val v={4500} unit="W" src="mfr-water-heaters" /> elements wire the elements so only one heats at a time. The watts to amps
-            calculator uses this to show why such a heater draws the current of one element; the current itself is calculated.
-          </p>
-          <SourceFacts s={section('mfr-water-heaters')} />
-        </SourceSection>
-
-        <SourceSection domain="power-definitions">
-          <p>
-            The unit converters and the Ohm&apos;s law calculator cite three U.S. government documents as one source:
-            the U.S. Energy Information Administration&apos;s glossary for real, reactive and apparent power and power
-            factor, a U.S. Department of Energy Motor Challenge fact sheet for the balanced three-phase power formula,
-            and NIST Special Publication 330 for the watt and the ohm. The sections above describe and link each of them;
-            these pages move to them as they are rebuilt.
-          </p>
-          <SourceFacts s={section('power-definitions')} />
-          <p>
-            With P the real power in watts, S the apparent power in volt-amperes, Q the reactive power, V the voltage
-            (line to line on three-phase) and PF the power factor, the calculators use:
-          </p>
-          <Formulas
-            src="calc:power"
-            rows={[
-              ['Current, single-phase AC', 'I = P ÷ (V × PF)'],
-              ['Current, three-phase AC', 'I = P ÷ (√3 × V × PF)'],
-              ['Current, DC', 'I = P ÷ V'],
-              ['Current from S, single-phase', 'I = S ÷ V'],
-              ['Current from S, three-phase', 'I = S ÷ (√3 × V)'],
-              ['Apparent power', 'S = P ÷ PF'],
-              ['Reactive power', 'Q = √(S² − P²)'],
-            ]}
-          />
           <p>
             The{' '}
             <Link href="/calculators/ohms-law-calculator" className={LINK}>
               Ohm&apos;s law calculator
             </Link>{' '}
-            works out the other values from any two you enter:
+            works out the other two of voltage, current, resistance and power from any two you enter:
           </p>
           <Formulas
             src="calc:ohms-law"
@@ -880,9 +845,17 @@ export default function MethodologyPage() {
             ]}
           />
           <Limits>
-            <li>The three-phase formulas assume a balanced load.</li>
-            <li>The calculators use the power factor you enter; DC circuits use 1.</li>
+            <li>Ohm&apos;s law here is for DC, or AC with a purely resistive load; the resistance is taken as constant.</li>
           </Limits>
+        </SourceSection>
+
+        <SourceSection domain="mfr-water-heaters">
+          <p data-src="mfr-water-heaters">
+            Rheem&apos;s and A.O. Smith&apos;s documents for their <Val v={240} unit="V" src="mfr-water-heaters" /> electric water heaters with
+            two <Val v={4500} unit="W" src="mfr-water-heaters" /> elements wire the elements so only one heats at a time. The watts to amps
+            calculator uses this to show why such a heater draws the current of one element; the current itself is calculated.
+          </p>
+          <SourceFacts s={section('mfr-water-heaters')} />
         </SourceSection>
 
         <SourceSection domain="us-nominal-voltages">
@@ -1085,7 +1058,7 @@ export default function MethodologyPage() {
             {errors.title}
           </h2>
           <p>
-            If a number on this site disagrees with its source, email contact@wiresizes.com. Fixes are dated in the
+            If a number on this site disagrees with its source, email info@wiresizes.com. Fixes are dated in the
             corrections list on the{' '}
             <Link href="/about" className={LINK}>
               About page

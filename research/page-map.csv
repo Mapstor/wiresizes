@@ -38,7 +38,7 @@ slug,archetype,disposition,redirect_to,primary_query,data_source,data_sources_al
 /calculators/pool-pump-calculator,tool,rebuild,,pool pump wire size,nec-680-pools-spas,nec-680-pools-spas;mfr-pool-pumps;nec-430-motors,WSZ-011,withdraw,28,2,0,
 /calculators/garage-subpanel-calculator,tool,rebuild,,garage subpanel wire size,nec-310-16,nec-310-16;nec-250-grounding;conductor-resistance-20c;nec-misc-installation,WSZ-008,withdraw,22,1,0,"225/250.32; withdrawn in WSZ-002 (code audit 2026-10-20: invented load calc, panel smaller than computed load, Cu EGC on Al card)"
 /calculators/watts-to-amps-calculator,tool,rebuild,,watts to amps,nist-sp330-si-units,nist-sp330-si-units;eia-power-glossary;doe-motor-load-efficiency;mit-polyphase-networks;doe-power-factor-cost;mfr-water-heaters;us-nominal-voltages,WSZ-007,fix,11,0,0,
-/calculators/ohms-law-calculator,tool,rebuild,,ohms law calculator,power-definitions,power-definitions,WSZ-007,fix,10,0,0,mostly correct already
+/calculators/ohms-law-calculator,tool,rebuild,,ohms law calculator,nist-sp330-si-units,nist-sp330-si-units;eia-power-glossary,WSZ-007,fix,10,0,0,mostly correct already
 /calculators/low-voltage-calculator,tool,rebuild,,12v wire size calculator,conductor-resistance-20c,conductor-resistance-20c;awg-geometry;nec-310-16;nec-continuous-load;nist-sp330-si-units,WSZ-006,fix,2,0,0,P0 formula fix in W1
 /guides,hub,rebuild,,electrical guides,nec-310-16,nec-310-16;nec-2026-edition;nec-2026-issuance;nec-adoption,WSZ-005,fix,9,0,0,
 /about,structural,rebuild,,,,,WSZ-004,strip-fabrications,0,0,0,"Marko Visic, BSc Physics; Moving Data Systems d.o.o."

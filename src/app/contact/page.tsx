@@ -37,8 +37,8 @@ export default function ContactPage() {
       <div className="mt-10 max-w-[35rem] space-y-6 text-[17px] leading-[1.65] text-ink">
         <p>
           Email{' '}
-          <a href="mailto:contact@wiresizes.com" className={LOOK_LINK}>
-            contact@wiresizes.com
+          <a href="mailto:info@wiresizes.com" className={LOOK_LINK}>
+            info@wiresizes.com
           </a>{' '}
           for corrections, questions about a page, or privacy requests. One person runs this site, so a reply can
           take a few days.

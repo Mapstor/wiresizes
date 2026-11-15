@@ -26,12 +26,12 @@ Sections (reader-facing, plain):
 Delete entirely: "reviewed by licensed electrical engineers and master electricians", "Industry Recognition" quotes (NECA/IAEI/EC&M/IEEE), "100,000+ calculations/month", "99.9% uptime SLA", "±0.1% precision", "Accuracy Guarantee", "monthly code review cycles", tool-count claims, "built by electrical professionals", roadmap/promises with deadlines.
 
 ## /contact
-- One address: contact@wiresizes.com (a forwarding alias to the owner's inbox — no mailbox; the owner sets it up at the DNS host). Nothing else.
+- One address: info@wiresizes.com (the owner chose it on 2026-11-15, replacing contact@wiresizes.com; it has to reach the owner's inbox). Nothing else.
 - Delete: emergency@, consulting@, legal@, education@, international@, "24/7", "2-hour response guarantee", "Headquarters: United States", regional desks, hours tables.
 - One line: "For electrical emergencies call 911 or your utility. This site cannot give site-specific advice."
 
 ## /privacy
-- Controller: Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia (company registration number 9041273000, VAT ID SI94001154) + contact@wiresizes.com. No "DPO" unless one is appointed.
+- Controller: Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia (company registration number 9041273000, VAT ID SI94001154) + info@wiresizes.com. No "DPO" unless one is appointed.
 - List exactly what runs. WSZ-001 found (2026-10-20): Google Analytics 4 (gtag.js, measurement ID G-T871GVJZE2, loaded in src/app/layout.tsx), Vercel Web Analytics, Vercel Speed Insights, and Google Fonts was removed in WSZ-002 (fonts self-hosted via @fontsource). No consent tool, no ads. Nothing that doesn't run.
 - GDPR rights + lawful basis; Last updated = real date.
 

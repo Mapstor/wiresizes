@@ -46,7 +46,7 @@ export default function TermsPage() {
         <h2 className={`${LOOK_H2} pt-6`}>Operator</h2>
         <p>
           wiresizes.com is operated by Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia (company
-          registration number 9041273000, VAT ID SI94001154). Contact: contact@wiresizes.com.
+          registration number 9041273000, VAT ID SI94001154). Contact: info@wiresizes.com.
         </p>
 
         <h2 className={`${LOOK_H2} pt-6`}>What the site provides</h2>

@@ -1,6 +1,6 @@
 {
  "generated_from": "data/verified/*.json (pack v3, revised 2026-10-24 after the third review)",
- "count": 214,
+ "count": 218,
  "rules": [
   "Every engine function must reproduce these within tolerance.",
   "Golden values are computed from the verified JSON; if a JSON value changes, regenerate this file, never hand-edit expected values.",
@@ -4365,6 +4365,71 @@
     "other": "exact"
    },
    "basis": "WSZ-009 derating mode: aluminum with confirmed 75 °C terminations: 90 °C start column capped at the 75 °C ampacity. Termination column per nec-110-14c.json; start column 90 °C for individual conductors, 60 °C for cable; derated ampacity = start-column ampacity × Table 310.15(B)(1)(1) factor (start column) × Table 310.15(C)(1) percent, capped at the termination-column ampacity; baseline = smallest size whose derated ampacity is at least the OCPD rating, then 240.4(D); voltage drop at load current with 75 °C resistance; 250.122(B) scaling from the baseline, multiply-first, uncapped."
+  },
+  {
+   "group": "ohms-law",
+   "name": "1500 W at 240 V: current and resistance",
+   "inputs": {
+    "watts": 1500,
+    "volts": 240
+   },
+   "expected": {
+    "amps": 6.25,
+    "ohms": 38.4
+   },
+   "tolerance": {
+    "amps": 0.0005,
+    "ohms": 0.0005
+   },
+   "basis": "I = P/V, R = V²/P (NIST SP 330 Table 4: V = W/A, Ω = V/A)"
+  },
+  {
+   "group": "ohms-law",
+   "name": "8.8 V across a resistor at 20 mA",
+   "inputs": {
+    "volts": 8.8,
+    "amps": 0.02
+   },
+   "expected": {
+    "ohms": 440,
+    "watts": 0.176
+   },
+   "tolerance": {
+    "ohms": 0.0005,
+    "watts": 5e-07
+   },
+   "basis": "R = V/I, P = V × I (NIST SP 330 Table 4); the resistor for a 20 mA load needing 3.2 V from 12 V"
+  },
+  {
+   "group": "ohms-law",
+   "name": "12 V across 4 ohms",
+   "inputs": {
+    "volts": 12,
+    "ohms": 4
+   },
+   "expected": {
+    "amps": 3,
+    "watts": 36
+   },
+   "tolerance": {
+    "amps": 0.0005,
+    "watts": 0.0005
+   },
+   "basis": "I = V/R, P = V²/R (NIST SP 330 Table 4)"
+  },
+  {
+   "group": "conversion",
+   "name": "9,000 Btu/h to watts",
+   "inputs": {
+    "btu_per_h": 9000
+   },
+   "expected": {
+    "watts": 2637.64
+   },
+   "tolerance": {
+    "watts": 0.005
+   },
+   "basis": "NIST SP 811: 1 Btu_IT/h = 0.2930711 W"
   }
  ]
 }
