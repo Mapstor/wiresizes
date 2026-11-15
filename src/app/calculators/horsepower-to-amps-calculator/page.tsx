@@ -112,7 +112,7 @@ function FlcTable({ phase, id, caption, maxWidth }: { phase: ToolPhase; id: stri
       <thead>
         <tr>
           <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
-            Motor
+            hp
           </th>
           {columns.map((c) => (
             <th key={c.column} scope="col" className={clsx(RTH, '!min-w-[4.5em]')}>
@@ -125,7 +125,7 @@ function FlcTable({ phase, id, caption, maxWidth }: { phase: ToolPhase; id: stri
         {rows.map((r) => (
           <tr key={r.hp}>
             <th scope="row" className={clsx(RSTICKY_TD, '!font-normal')}>
-              {hpText(r.hp)} hp
+              {hpText(r.hp)}
             </th>
             {columns.map((c) => {
               const a = r.amps[c.column];
