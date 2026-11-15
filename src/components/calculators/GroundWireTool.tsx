@@ -213,6 +213,7 @@ export function GroundWireTool() {
                       update({ installed });
                     }}
                     describedById={describedBy('installed', shownInstalled, false)}
+                    error={shownInstalled}
                   >
                     {sizeOptions}
                   </SelectInput>
@@ -391,17 +392,20 @@ function GecOutcome({
       <h2 id="result-heading" ref={headingRef} tabIndex={-1} className="font-display text-[15px] font-semibold text-ink focus:outline-none">
         Grounding electrode conductor for <Size s={r.serviceSize} /> {MATERIAL_NAME[r.material]} service conductors
       </h2>
-      <div className="mt-3 flex flex-wrap gap-x-10 gap-y-2" data-src={GND}>
-        <p className={BIG}>
-          <Size s={r.gec.cu} />
-        </p>
-        <p className={BIG}>
-          <Size s={r.gec.alCca} />
-        </p>
+      <div className="mt-3 flex flex-wrap gap-x-10 gap-y-4" data-src={GND}>
+        <div>
+          <p className={BIG}>
+            <Size s={r.gec.cu} />
+          </p>
+          <p className="mt-2 text-[17px] text-ink">copper</p>
+        </div>
+        <div>
+          <p className={BIG}>
+            <Size s={r.gec.alCca} />
+          </p>
+          <p className="mt-2 text-[17px] text-ink">or aluminum or copper-clad aluminum</p>
+        </div>
       </div>
-      <p className="mt-2 text-[17px] text-ink" data-src={GND}>
-        copper, or aluminum or copper-clad aluminum
-      </p>
       <div className="mt-6 overflow-x-auto">
         <table className="w-full max-w-[38rem] border-collapse text-[15px]" data-src={GND}>
           <caption className="sr-only">The Table 250.66 row for this service conductor</caption>
