@@ -253,8 +253,8 @@ export function ResidentialLoadTool() {
             legend="Heating"
             value={inputs.heating}
             options={[
-              { value: 'none', label: 'None or gas' },
-              { value: 'electric', label: 'Electric heat' },
+              { value: 'none', label: 'Gas or none' },
+              { value: 'electric', label: 'Electric' },
               { value: 'heat-pump', label: 'Heat pump' },
             ]}
             onChange={(heating) => update({ heating })}

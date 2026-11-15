@@ -2568,17 +2568,18 @@ function LoadMethodsPlot({ narrow }: { narrow: boolean }) {
     { key: 'optional', label: 'Optional method', amps: optional.amps, va: optional.totalVa, fill: BAR_GRAY, service: service(optional.serviceRow) },
   ];
   const W = narrow ? 288 : 560;
-  const left = narrow ? 112 : 150;
-  const right = narrow ? 64 : 80;
+  const left = narrow ? 104 : 150;
+  const right = narrow ? 56 : 80;
   const top = 8;
   const rowH = narrow ? 64 : 58;
   const barH = narrow ? 20 : 22;
   const H = top + rows.length * rowH + 30;
   const pw = W - left - right;
-  const step = 50;
-  const max = Math.ceil((Math.max(...rows.map((r) => r.amps)) * 1.02) / step) * step;
+  // a phone gets fewer ticks, so their labels never touch
+  const step = narrow ? 100 : 50;
+  const max = Math.ceil((Math.max(...rows.map((r) => r.amps)) * 1.02) / 50) * 50;
   const x = (v: number) => left + (v / max) * pw;
-  const ticks = Array.from({ length: max / step + 1 }, (_, k) => k * step);
+  const ticks = Array.from({ length: Math.floor(max / step) + 1 }, (_, k) => k * step);
   const id = narrow ? 'load-methods-narrow' : 'load-methods-wide';
   const amps = (v: number) => formatValue(v, { upTo: 2 });
   return (
