@@ -2263,7 +2263,7 @@ function AmpacityStepsPlot({ run, id, narrow }: { run: AmpacityRun; id: string; 
       data-src="calc:ampacity"
     >
       <title id={`${fullId}-title`}>
-        {`${run.size} ${run.material === 'Cu' ? 'copper' : 'aluminum'} from the ${run.column} °C column of Table 310.16: ${result.tableAmpacity} A, ${afterAmbient.toFixed(2)} A after the ambient factor ${result.correctionFactor.toFixed(2)}, ${result.ampacity.toFixed(2)} A after ${result.adjustmentPercent} % for bundling; the terminal columns allow ${capLines.map((c) => `${c.tableA} A at ${c.column} °C`).join(' and ')}`}
+        {`${formatSize(run.size)} ${run.material === 'Cu' ? 'copper' : 'aluminum'} from the ${run.column} °C column of Table 310.16: ${result.tableAmpacity} A, ${afterAmbient.toFixed(2)} A after the ambient factor ${result.correctionFactor.toFixed(2)}, ${result.ampacity.toFixed(2)} A after ${result.adjustmentPercent} % for bundling; the terminal columns allow ${capLines.map((c) => `${c.tableA} A at ${c.column} °C`).join(' and ')}`}
       </title>
       {bars.map((b, k) => {
         const y = top + k * rowH;
