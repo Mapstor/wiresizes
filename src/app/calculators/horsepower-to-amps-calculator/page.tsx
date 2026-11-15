@@ -330,8 +330,8 @@ export default function HorsepowerToAmpsPage() {
               current, and the rule uses the nameplate current for low-speed, high-torque and multispeed motors too.
             </p>
             <p className={P}>
-              This site does not size motor conductors, overload protection or the breaker or fuse yet: those Article 430 rules are still being
-              checked against the 2023 text, so the calculator stops at the current (
+              This site does not size motor conductors, overload protection or the breaker or fuse yet: the NEC&apos;s rules for them are still
+              being checked against the 2023 text, so the calculator stops at the current (
               <Link href="/methodology#not-covered" className={LINK}>
                 not covered yet
               </Link>
@@ -404,7 +404,7 @@ export default function HorsepowerToAmpsPage() {
             <div className="space-y-1.5">
               <h3 className={H3}>What size wire does a motor need?</h3>
               <p className={P}>
-                The table current is where that sizing starts, but this site does not yet turn it into a wire size or a breaker: the Article 430 rules
+                The table current is where that sizing starts, but this site does not yet turn it into a wire size or a breaker: the NEC&apos;s rules
                 for motor conductors and protection are still being checked against the 2023 text.
               </p>
             </div>

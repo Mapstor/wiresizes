@@ -645,7 +645,7 @@ export default function MethodologyPage() {
             three-phase. That second current is a comparison, never an answer.
           </p>
           <Limits>
-            <li>No conductor, overload or breaker size: Article 430&apos;s rules for them are not verified here yet.</li>
+            <li>No conductor, overload or breaker size: the NEC&apos;s motor rules for them are not verified here yet.</li>
             <li>Synchronous motors, two-phase motors (Table 430.249) and Table 430.250&apos;s power factor footnote are left out.</li>
           </Limits>
         </section>
