@@ -8,6 +8,7 @@ const footerLinks = {
     { name: 'Wire Size Calculator', href: '/calculators/wire-size-calculator' },
     { name: 'Voltage Drop Calculator', href: '/calculators/voltage-drop-calculator' },
     { name: 'Ampacity Calculator', href: '/calculators/ampacity-calculator' },
+    { name: 'Circuit Breaker Calculator', href: '/calculators/circuit-breaker-calculator' },
     { name: 'Ground Wire Calculator', href: '/calculators/ground-wire-calculator' },
     { name: 'Wire Resistance Calculator', href: '/calculators/wire-resistance-calculator' },
     { name: 'View All Core Tools', href: '/calculators', isViewAll: true },
@@ -26,6 +27,7 @@ const footerLinks = {
     { name: 'Three Phase Calculator', href: '/calculators/three-phase-calculator' },
     { name: 'Low Voltage Calculator', href: '/calculators/low-voltage-calculator' },
     { name: 'Service Entrance Calculator', href: '/calculators/service-entrance-calculator' },
+    { name: 'Residential Load Calculator', href: '/calculators/residential-load-calculator' },
     { name: 'View All Advanced', href: '/calculators', isViewAll: true },
   ],
   guides: [

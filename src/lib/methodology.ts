@@ -37,6 +37,7 @@ const OHMS_LAW = '/calculators/ohms-law-calculator';
 const POWER_FACTOR = '/guides/power-factor-explained';
 const POWER_CALCS = '/guides/electrical-power-calculations';
 const SERVICE_ENTRANCE = '/calculators/service-entrance-calculator';
+const RESIDENTIAL_LOAD = '/calculators/residential-load-calculator';
 const GUIDE_200 = '/guides/wire-size-for-200-amp';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
@@ -106,7 +107,13 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'service-conductors',
     domain: 'nec-310-12',
     title: 'Dwelling services and feeders',
-    citedOn: [WIRE_SIZE, SERVICE_ENTRANCE, GROUND_WIRE, TABLE_310_16, SINGLE_VS_THREE, GUIDE_200],
+    citedOn: [WIRE_SIZE, SERVICE_ENTRANCE, RESIDENTIAL_LOAD, GROUND_WIRE, TABLE_310_16, SINGLE_VS_THREE, GUIDE_200],
+  },
+  {
+    id: 'load-calcs',
+    domain: 'nec-220-load-calcs',
+    title: 'Dwelling load calculations',
+    citedOn: [RESIDENTIAL_LOAD],
   },
   {
     id: 'power-terms',
@@ -178,7 +185,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'nec-2026',
     domain: 'nec-2026-edition',
     title: 'Changes in the 2026 NEC',
-    citedOn: [EDITIONS, TABLE_310_16],
+    citedOn: [EDITIONS, TABLE_310_16, RESIDENTIAL_LOAD],
   },
 ];
 
@@ -191,6 +198,7 @@ export const CITED_PAGE_NAMES: Record<string, string> = Object.fromEntries(
 export const METHODOLOGY_EXTRA_SECTIONS = {
   method: { id: 'wire-size-method', title: 'How the wire size calculator picks a size' },
   breakerMethod: { id: 'breaker-method', title: 'How the circuit breaker calculator picks a breaker' },
+  loadMethod: { id: 'load-method', title: 'How the residential load calculator counts a house' },
   notCovered: { id: 'not-covered', title: 'Not covered yet' },
   errors: { id: 'errors', title: 'Errors and corrections' },
 } as const;

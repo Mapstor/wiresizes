@@ -31,3 +31,21 @@ export function buildQuery(values: Record<string, string | number | boolean | nu
   }
   return params.toString();
 }
+
+/**
+ * A list of numbers as typed: "1500, 1500, 500", "1500 1500 500" or "1,500, 500". A token in thousands form ("1,500")
+ * is one number; any other comma separates two. NaN for a token that is not a number.
+ */
+export function parseNumberList(text: string): number[] {
+  return text
+    .split(/[;\s]+|,\s+/)
+    .filter((t) => t !== '')
+    .flatMap((t) =>
+      /^\d{1,3}(,\d{3})+(\.\d+)?$/.test(t)
+        ? [Number(t.replace(/,/g, ''))]
+        : t
+            .split(',')
+            .filter((u) => u !== '')
+            .map(Number),
+    );
+}

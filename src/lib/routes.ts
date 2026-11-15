@@ -18,6 +18,7 @@ export interface RouteGroup {
 
 export const GROUPS = [
   { id: 'wire-sizing', section: 'calculators', title: 'Wire and conductor sizing' },
+  { id: 'load-calcs', section: 'calculators', title: 'Load calculations' },
   { id: 'conversions', section: 'calculators', title: 'Power and unit conversions' },
   { id: 'tables', section: 'guides', title: 'Charts and code tables' },
   { id: 'service-circuit', section: 'guides', title: 'Wire size by service or circuit' },
@@ -88,6 +89,12 @@ export const ROUTES: readonly SiteRoute[] = [
     group: 'wire-sizing',
     name: 'Low Voltage Calculator',
     line: 'Copper wire size for a low-voltage DC circuit from the load, the one-way length and your voltage-drop target, checked against the current.',
+  },
+  {
+    path: '/calculators/residential-load-calculator',
+    group: 'load-calcs',
+    name: 'Residential Load Calculator',
+    line: "A dwelling's calculated load by the NEC standard and optional methods, side by side with every step, and the service rating and conductors from Table 310.12.",
   },
   {
     path: '/calculators/watts-to-amps-calculator',

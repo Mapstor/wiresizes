@@ -321,8 +321,9 @@ function mainLinks(page) {
 // 11. Every live calculator page renders its form on the server
 {
   const failures = [];
-  // 16 since WSZ-009c brought the circuit breaker calculator back from its WSZ-002 withdrawal
-  if (LIVE_CALCULATORS.length !== 16) failures.push(`${LIVE_CALCULATORS.length} live calculator pages, expected 16`);
+  // 16 since WSZ-009c brought the circuit breaker calculator back from its WSZ-002 withdrawal, 17 since WSZ-010a the
+  // residential load calculator
+  if (LIVE_CALCULATORS.length !== 17) failures.push(`${LIVE_CALCULATORS.length} live calculator pages, expected 17`);
   for (const route of LIVE_CALCULATORS) {
     const page = pageByRoute.get(route);
     const controls = page.events.filter((e) => e.type === 'open' && (e.name === 'input' || e.name === 'select') && inMain(e));
@@ -349,7 +350,7 @@ function mainLinks(page) {
   expectLinks('/calculators', LIVE_CALCULATORS);
   expectLinks('/guides', LIVE_GUIDES);
   for (const route of LIVE_GUIDES) expectLinks(route, LIVE_GUIDES);
-  check('inside <main>, / links to all 16 live calculators and all 9 live guides, /calculators to the calculators, /guides to the guides, and each guide to every other guide', failures, `${2 + 1 + LIVE_GUIDES.length} pages`);
+  check('inside <main>, / links to all 17 live calculators and all 9 live guides, /calculators to the calculators, /guides to the guides, and each guide to every other guide', failures, `${2 + 1 + LIVE_GUIDES.length} pages`);
 }
 
 // 13. Internal links on live pages and the 404 page reach a built page or route, and their #fragments exist
@@ -706,7 +707,7 @@ const usDate = (iso) => `${MONTHS[Number(iso.slice(5, 7)) - 1]} ${Number(iso.sli
     }
   }
   check(
-    'exactly the 16 live calculators, the 9 live guides and /methodology render one byline (name → /about, Updated = page-dates.json modified); "Sources below" only beside a rendered <Sources>',
+    'exactly the 17 live calculators, the 9 live guides and /methodology render one byline (name → /about, Updated = page-dates.json modified); "Sources below" only beside a rendered <Sources>',
     failures,
     `${bylines} bylines, ${withSources} with "Sources below"`,
   );

@@ -29,6 +29,9 @@ import { ocpdRatings } from '@/lib/verified/nec-240-6-a';
 import { TABLE_250_122_ROWS } from '@/lib/verified/nec-250-122';
 import { ADJUSTMENT_ROWS } from '@/lib/verified/nec-310-15-C-1';
 import { SERVICE_AMPACITY_PERCENT, TABLE_310_12_ROWS } from '@/lib/verified/nec-310-12';
+import { OPTIONAL_METHOD, STANDARD_METHOD, TABLE_220_55, cookingRow } from '@/lib/verified/nec-220-2023';
+import type { CookingRow } from '@/lib/verified/nec-220-2023';
+import { DWELLING_VOLTS } from '@/lib/calculations/load-calc-2023';
 import { AMPACITY_COLUMNS, TABLE_310_16_ROWS, TABLE_310_16_SIZES, TABLE_AMBIENT } from '@/lib/verified/nec-310-16';
 import { attribution, attributionParts, coverage, nextCheck } from '@/lib/verified/registry';
 import { NEC_2026_DOMAIN, NEC_2026_EFFECTIVE, NEC_2026_ISSUANCE_DOMAIN, NEC_2026_ISSUED, NEC_2026_MIN_SIZES } from '@/lib/verified/nec-2026-edition';
@@ -101,6 +104,16 @@ const EGC_LAST = TABLE_250_122_ROWS[TABLE_250_122_ROWS.length - 1];
 const SERVICE_FIRST = TABLE_310_12_ROWS[0];
 const SERVICE_LAST = TABLE_310_12_ROWS[TABLE_310_12_ROWS.length - 1];
 const DC_TEMPS = DC_TEMPERATURE_OPTIONS.map((option) => option.value);
+// Dwelling load calculations (WSZ-010a), all read from nec-220-2023.json
+const LS = STANDARD_METHOD;
+const LO = OPTIONAL_METHOD;
+const LH = LO.heatingAc;
+const [L_FIRST, L_SECOND, L_REST] = LS.lightingTiers;
+const [G_FIRST, G_REST] = LO.generalTiers;
+const L_COMBINED = LH.heatPumpWithSupplementalHeat.pct as { compressor: number; supplemental_heat: number };
+const L_RANGE_KW = (cookingRow(1) as CookingRow).cBaseKw;
+const lpct = (item: { pct: number | object }) => item.pct as number;
+const LV = (v: number, unit: 'VA' | 'W' | 'kW' | '%') => <Val v={v} unit={unit} src="nec-220-load-calcs" />;
 // The IEC 60228 sizes the registry row covers, from its coverage text ("0.5–1600 mm² Class 1 series")
 const IEC_RANGE = /([\d.]+)–([\d.]+) mm²/.exec(coverage('iec-60228-metric-sizes'));
 if (!IEC_RANGE) throw new Error('data-sources.csv iec-60228-metric-sizes coverage: no "N–N mm²" range');
@@ -228,13 +241,14 @@ assertNominal(VD_TOOL_SINGLE_QUICK_VOLTS, 'voltage drop calculator quick voltage
 const TOC = [
   METHODOLOGY_EXTRA_SECTIONS.method,
   METHODOLOGY_EXTRA_SECTIONS.breakerMethod,
+  METHODOLOGY_EXTRA_SECTIONS.loadMethod,
   ...METHODOLOGY_SECTIONS.map(({ id, title }) => ({ id, title })),
   METHODOLOGY_EXTRA_SECTIONS.notCovered,
   METHODOLOGY_EXTRA_SECTIONS.errors,
 ];
 
 export default function MethodologyPage() {
-  const { method, breakerMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
+  const { method, breakerMethod, loadMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
   return (
     <div className={LOOK_PAGE}>
     <div className="container pb-16">
@@ -247,8 +261,8 @@ export default function MethodologyPage() {
         <p>
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
           has a section below: what it is and which edition was used, where it was read, how the calculators use it,
-          and where that use stops. The first two sections show how the wire size and circuit breaker calculators put
-          several of them together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
+          and where that use stops. The first three sections show how the wire size, circuit breaker and residential
+          load calculators put several of them together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
           homepage and the calculators and guides pages also list their sources under Sources, near the bottom of the
           page.
         </p>
@@ -416,6 +430,79 @@ export default function MethodologyPage() {
               </a>
               ).
             </li>
+          </Limits>
+        </section>
+
+        <section id={loadMethod.id} data-src="calc:load-calc-2023" aria-labelledby={`${loadMethod.id}-title`} className="scroll-mt-24 space-y-4">
+          <h2 id={`${loadMethod.id}-title`} className={H2}>
+            {loadMethod.title}
+          </h2>
+          <p>
+            The{' '}
+            <Link href="/calculators/residential-load-calculator" className={LINK}>
+              residential load calculator
+            </Link>{' '}
+            runs both methods of NEC 2023 Article 220 on the same inputs for one dwelling unit and shows every step (see{' '}
+            <SectionLink domain="nec-220-load-calcs">Dwelling load calculations</SectionLink>). The standard method adds:
+          </p>
+          <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-cut-line">
+            <li>
+              The floor area at {LV(LS.vaPerFt2, 'VA')} per ft² (220.41) and {LV(LS.smallApplianceCircuitVa, 'VA')} for each
+              small-appliance and laundry circuit (220.52), through Table 220.45.
+            </li>
+            <li>
+              The water heater and the other appliances fastened in place, at {LV(LS.appliancePct, '%')} of their total when
+              there are {LS.minAppliances} or more (220.53).
+            </li>
+            <li>
+              The dryer at {LV(LS.dryerMinW, 'W')} or its nameplate, whichever is larger (220.54), and one range from Table
+              220.55, Column C: {LV(L_RANGE_KW, 'kW')} up to {LV(TABLE_220_55.note1.fromKw, 'kW')}, with Note 1 above that.
+            </li>
+            <li>An EV charger at {LV(LS.evseMinW, 'W')} or its nameplate, whichever is larger (220.57).</li>
+            <li>
+              The larger of the heating at {LV(LS.spaceHeatPct, '%')} (220.51) and the cooling at{' '}
+              {LV(LS.noncoincidentMotorPct, '%')}, read from 220.60 as set out below.
+            </li>
+          </ol>
+          <p>
+            The optional method of 220.82 puts the floor area at {LV(LO.vaPerFt2, 'VA')} per ft²,{' '}
+            {LV(LO.smallApplianceAndLaundryCircuitVa, 'VA')} per small-appliance and laundry circuit and the nameplates of the
+            range, dryer, water heater, other appliances and EV charger into one general load, counts the first{' '}
+            {LV(G_FIRST.upToVa, 'VA')} of it at {LV(G_FIRST.pct, '%')} and the rest at {LV(G_REST.pct, '%')}, and adds the
+            largest heating or cooling selection of 220.82(C) that applies: air conditioning at{' '}
+            {LV(lpct(LH.airConditioning), '%')}; a heat pump at {LV(lpct(LH.heatPumpWithoutSupplementalHeat), '%')}, or at{' '}
+            {LV(L_COMBINED.compressor, '%')} plus {LV(L_COMBINED.supplemental_heat, '%')} of its backup heat; electric heat at{' '}
+            {LV(lpct(LH.spaceHeatFewUnits), '%')} in fewer than {LO.spaceHeatUnitsLimit} separately controlled units, or{' '}
+            {LV(lpct(LH.spaceHeatManyUnits), '%')} in {LO.spaceHeatUnitsLimit} or more. Each method&apos;s total is divided by{' '}
+            <Val v={DWELLING_VOLTS} unit="V" src="nec-310-12" />, and the service is the smallest Table 310.12 rating at or
+            above the current (see <SectionLink domain="nec-310-12">Dwelling services and feeders</SectionLink>).
+          </p>
+          <h3 className={H3}>Readings</h3>
+          <ul className={LIST}>
+            <li>
+              220.60 lets a calculation keep only the largest of loads unlikely to run at the same time; where a motor or
+              air-conditioning load is not the largest of them, it calls for &ldquo;125 percent of either the motor load or
+              air-conditioning load.&rdquo; The calculator compares the heating with the cooling taken at{' '}
+              {LV(LS.noncoincidentMotorPct, '%')} and keeps the larger.
+            </li>
+            <li>
+              The standard method names no heat pump. The calculator counts one as heating together with its backup heat
+              (220.51) and as cooling on its own.
+            </li>
+            <li>
+              The 2023 optional method has no item for an EV charger. The calculator adds its nameplate to the general load,
+              with the appliances 220.82(B) lists as located on a specific circuit.
+            </li>
+          </ul>
+          <Limits>
+            <li>One dwelling unit: no multifamily (220.84), existing dwelling (220.83) or two-unit (220.85) calculation.</li>
+            <li>
+              Motors other than the air conditioning or heat pump count at their rating: the motor and air-conditioning
+              rules 220.50 points to are not applied.
+            </li>
+            <li>One range: a separate cooktop and wall ovens, and the 220.61 neutral load, are not calculated.</li>
+            <li>A heat pump whose compressor is locked out while the backup heat runs is still counted with both.</li>
+            <li>2023 values only; the 2026 values in Article 120 are not verified yet.</li>
           </Limits>
         </section>
 
@@ -863,6 +950,32 @@ export default function MethodologyPage() {
               compares.
             </li>
             <li>The corrections for ambient temperature and bundling still apply.</li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="nec-220-load-calcs">
+          <p>
+            Article 220 of the NEC (2023) sets the load calculation for a dwelling: the standard method&apos;s unit loads
+            and demand factors, from 220.41 to 220.61, and the optional method of 220.82. The values were read from NFPA
+            Public Input 4311, which reproduces the 2023 text under the Article 120 numbers it proposed; the site maps
+            them back to Article 220.
+          </p>
+          <SourceFacts s={section('nec-220-load-calcs')} />
+          <p>
+            The values the calculator uses: {LV(LS.vaPerFt2, 'VA')} per ft² of floor area; {LV(LS.smallApplianceCircuitVa, 'VA')}{' '}
+            for each small-appliance and laundry circuit; Table 220.45&apos;s first {LV(L_FIRST.upToVa, 'VA')} at{' '}
+            {LV(L_FIRST.pct, '%')}, up to {LV(L_SECOND.upToVa, 'VA')} at {LV(L_SECOND.pct, '%')} and the rest at{' '}
+            {LV(L_REST.pct, '%')}; Table 220.55&apos;s Column C and its Note 1, which adds {LV(TABLE_220_55.note1.pctPerKw, '%')}{' '}
+            for each kW, or major fraction of one, over {LV(TABLE_220_55.note1.fromKw, 'kW')}, up to{' '}
+            {LV(TABLE_220_55.note1.maxKw, 'kW')}; and the percents of 220.51, 220.53, 220.54, 220.57, 220.60 and 220.82
+            listed above.
+          </p>
+          <Limits>
+            <li>
+              The numbers of the last two notes to Table 220.55 were inferred from their order, so the site cites those
+              notes without a number.
+            </li>
+            <li>The 2026 edition moved these rules to Article 120; its values have not been verified here.</li>
           </Limits>
         </SourceSection>
 

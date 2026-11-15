@@ -78,7 +78,8 @@ export function TextInput({
   onBlur?: () => void;
   error?: string;
   describedById?: string;
-  inputMode?: 'decimal' | 'numeric';
+  /** 'text' for a list of numbers: a phone's decimal pad has no comma key. */
+  inputMode?: 'decimal' | 'numeric' | 'text';
   className?: string;
 }) {
   return (

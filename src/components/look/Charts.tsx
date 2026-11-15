@@ -18,7 +18,7 @@ import type { CorrectionColumn } from '@/lib/verified/nec-310-15-B-1-1';
 import { ADJUSTMENT_ROWS } from '@/lib/verified/nec-310-15-C-1';
 import { VOLTAGE_DROP_NOTE } from '@/lib/verified/nec-continuous-load-2023';
 import { TABLE_310_16_ROWS, table31016 } from '@/lib/verified/nec-310-16';
-import { decimalsAtSig } from '@/lib/calculations/format';
+import { decimalsAtSig, formatValue } from '@/lib/calculations/format';
 import { dropRun, lengthForDrop } from '@/lib/calculations/voltage-drop';
 import { lowVoltageSize, lvLengthForDrop } from '@/lib/calculations/dc-sizing';
 import { SQRT3, TP_WYE_SYSTEMS } from '@/lib/calculations/power';
@@ -27,6 +27,7 @@ import { COMPARE_KW, COMPARE_ROWS, GUIDE_EXAMPLES, PF_BARS, PF_BAR_ROWS, PF_EXAM
 import { GUIDE_200 } from '@/lib/service-guides';
 import { LENGTH_MAX_FT_CHART, LENGTH_TRACKS } from '@/lib/wire-size-page';
 import { MIXED } from '@/lib/breaker-page';
+import { EXAMPLE, EXAMPLE_CONNECTED_A, EXAMPLE_CONNECTED_VA } from '@/lib/residential-load-page';
 import { CONTINUOUS_LOAD_PERCENT } from '@/lib/verified/nec-continuous-load-2023';
 import type { GuideSide } from '@/lib/service-guides';
 import type { AmpacityRun } from '@/lib/calculations/ampacity';
@@ -2546,6 +2547,97 @@ export function BreakerStepsChart() {
     <div>
       <BreakerStepsPlot narrow={false} />
       <BreakerStepsPlot narrow />
+    </div>
+  );
+}
+
+// ── Residential load calculator (WSZ-010a): one house, its connected load and both NEC methods, in amperes ────────
+
+const LOAD_CALC = 'calc:load-calc-2023';
+const CONNECTED_BAR = '#a39b93';
+
+function LoadMethodsPlot({ narrow }: { narrow: boolean }) {
+  const { standard, optional } = EXAMPLE;
+  const service = (row: { ratingA: number } | null) => {
+    if (!row) throw new Error('LoadMethodsChart: the example has no Table 310.12 service');
+    return row.ratingA;
+  };
+  const rows = [
+    { key: 'connected', label: 'Connected load', amps: EXAMPLE_CONNECTED_A, va: EXAMPLE_CONNECTED_VA, fill: CONNECTED_BAR, service: null },
+    { key: 'standard', label: 'Standard method', amps: standard.amps, va: standard.totalVa, fill: BAR_GRAY, service: service(standard.serviceRow) },
+    { key: 'optional', label: 'Optional method', amps: optional.amps, va: optional.totalVa, fill: BAR_GRAY, service: service(optional.serviceRow) },
+  ];
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 112 : 150;
+  const right = narrow ? 64 : 80;
+  const top = 8;
+  const rowH = narrow ? 64 : 58;
+  const barH = narrow ? 20 : 22;
+  const H = top + rows.length * rowH + 30;
+  const pw = W - left - right;
+  const step = 50;
+  const max = Math.ceil((Math.max(...rows.map((r) => r.amps)) * 1.02) / step) * step;
+  const x = (v: number) => left + (v / max) * pw;
+  const ticks = Array.from({ length: max / step + 1 }, (_, k) => k * step);
+  const id = narrow ? 'load-methods-narrow' : 'load-methods-wide';
+  const amps = (v: number) => formatValue(v, { upTo: 2 });
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={LOAD_CALC}
+    >
+      <title id={`${id}-title`}>
+        {`One house at 240 V: its connected load, ${amps(EXAMPLE_CONNECTED_A)} A; the standard method, ${amps(standard.amps)} A, a ${service(standard.serviceRow)} A service; the optional method of 220.82, ${amps(optional.amps)} A, a ${service(optional.serviceRow)} A service.`}
+      </title>
+      {ticks.map((t) => (
+        <g key={t}>
+          <line x1={x(t)} x2={x(t)} y1={top} y2={top + rows.length * rowH - 14} stroke={GRID} strokeWidth={1} />
+          <text x={x(t)} y={top + rows.length * rowH + 4} textAnchor="middle" fontSize={13} fill={MUTED}>
+            <Val v={t} unit="A" src={LOAD_CALC} svg />
+          </text>
+        </g>
+      ))}
+      {rows.map((r, k) => {
+        const y = top + k * rowH;
+        return (
+          <g key={r.key}>
+            <text x={left - 12} y={y + barH / 2 - 1} textAnchor="end" fontSize={13} fill={INK}>
+              {r.label}
+            </text>
+            <text x={left - 12} y={y + barH / 2 + 15} textAnchor="end" fontSize={13} fill={MUTED}>
+              <Val v={r.va} unit="VA" src={LOAD_CALC} format={{ upTo: 1 }} svg />
+            </text>
+            <path d={barPath(left, y, x(r.amps) - left, barH)} fill={r.fill} className="viz-grow" />
+            <text x={x(r.amps) + 8} y={y + barH / 2 + 4.5} fontSize={13} fontWeight={700} fill={INK} className="viz-pop">
+              <Val v={r.amps} unit="A" src={LOAD_CALC} format={{ upTo: 2 }} svg />
+            </text>
+            <text x={left} y={y + barH + 16} fontSize={13} fill={MUTED}>
+              {r.service === null ? (
+                'every load at its rating'
+              ) : (
+                <>
+                  <Val v={r.service} unit="A" src="nec-310-12" svg /> service
+                </>
+              )}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/** The residential load page's example house in amperes: connected load, standard method, optional method. */
+export function LoadMethodsChart() {
+  return (
+    <div>
+      <LoadMethodsPlot narrow={false} />
+      <LoadMethodsPlot narrow />
     </div>
   );
 }

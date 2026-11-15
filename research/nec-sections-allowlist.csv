@@ -39,9 +39,13 @@ Article 120,article,2026,Load calculations (2026 location),nec-2026-edition,veri
 220.54,section,2023,"Electric clothes dryers, 5000 W or nameplate; Table 220.54",nec-220-load-calcs,verified,
 220.55,table,2023,Demand factors and loads for household cooking appliances,nec-220-load-calcs,verified,Render as 'Table 220.55'; note numbers 4–5 inferred
 220.56,table,2023,"Demand factors for kitchen equipment, other than dwelling units",nec-220-load-calcs,verified,Render as 'Table 220.56'
+220.50,section,2023,"Motors and air-conditioning equipment (430.24–430.26; Article 440, Part IV)",nec-220-load-calcs,verified,Points to Article 430 and 440 rules the site does not apply yet
+220.51,section,2023,"Fixed electric space heating, 100 % of the total connected load",nec-220-load-calcs,verified,
 220.60,section,2023,Noncoincident loads,nec-220-load-calcs,verified,
 220.61,section,2023,Feeder or service neutral load,nec-220-load-calcs,verified,
 220.82,section,2023,"Dwelling unit, optional calculation",nec-220-load-calcs,verified,
+220.82(B),section,2023,"Optional calculation, general loads (first 10 kVA at 100 %, the rest at 40 %)",nec-220-load-calcs,verified,
+220.82(C),section,2023,"Optional calculation, heating and air-conditioning load (largest of six selections)",nec-220-load-calcs,verified,
 220.83,section,2023,Existing dwelling unit,nec-220-load-calcs,verified,
 220.84,section,2023,"Multifamily dwelling, optional calculation; Table 220.84",nec-220-load-calcs,verified,
 220.85,section,2023,Two dwelling units,nec-220-load-calcs,verified,
