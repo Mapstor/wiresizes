@@ -441,7 +441,9 @@ export default function RangeCalculatorPage() {
               </p>
             </div>
             <div className="space-y-1.5">
-              <h3 className={H3}>3-wire or 4-wire for a range?</h3>
+              <h3 className={H3} data-src={MFR_DOMAIN}>
+                3-wire or 4-wire for a range?
+              </h3>
               <p className={P} data-src={MFR_DOMAIN}>
                 4-wire, with a separate ground, in new installations: Whirlpool recommends it and Frigidaire requires it there. The 3-wire{' '}
                 {WHIRLPOOL_RANGE.receptacle3Wire} has no ground and Whirlpool allows it only where local codes permit.

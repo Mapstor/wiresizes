@@ -194,8 +194,8 @@ export function RangeTool() {
             legend="Supply"
             value={String(inputs.volts)}
             options={[
-              { value: '240', label: '120/240 V' },
-              { value: '208', label: '120/208 V' },
+              { value: '240', label: <span data-src={MFR_DOMAIN}>120/240 V</span> },
+              { value: '208', label: <span data-src={MFR_DOMAIN}>120/208 V</span> },
             ]}
             onChange={(v) => update({ volts: v === '208' ? 208 : 240 })}
           />
