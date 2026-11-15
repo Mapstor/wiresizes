@@ -19,7 +19,9 @@
 //   4. (WSZ-014; every module since WSZ-015) No .ts/.tsx module under src/ may call alert(), confirm() or prompt(),
 //      reachable from a live route or not (the withdrawn components too): call expressions in code, bare or on
 //      window, globalThis or self; strings and comments don't count.
-// Exceptions: scripts/check-banned.allow.txt, one per line: `<file> | <matched text> | <reason>` (file may be *).
+// Exceptions: scripts/check-banned.allow.txt, one per line: `<route, file or *> | <matched text> | <reason>`. A route
+// ("/guides/x") matches that page's prerendered HTML in either build layout (WSZ-008c: Vercel's adapter build writes
+// it under .next/server/route-cache/<hash>/$/, so a file path cannot name it); a file matches its repo-relative path.
 
 import { readFileSync, existsSync, statSync } from 'node:fs';
 import { join, dirname, basename, extname } from 'node:path';
@@ -50,14 +52,20 @@ const allow = existsSync(allowPath)
       .map((l) => {
         const [file, match, reason] = l.split('|').map((s) => s.trim());
         if (!file || !match || !reason) throw new Error(`check-banned.allow.txt: need "<file> | <match> | <reason>": ${l}`);
-        return { file, match: match.toLowerCase() };
+        return { file, match: match.toLowerCase(), line: l };
       })
   : [];
 
 const hits = [];
-function report(file, where, match, context) {
+const used = new Set();
+/** route: the page's route for prerendered HTML, so an allowlist line can name it; null for other files. */
+function report(file, where, match, context, route = null) {
   const f = rel(file);
-  if (allow.some((a) => (a.file === '*' || a.file === f) && a.match === match.toLowerCase())) return;
+  const entry = allow.find((a) => (a.file === '*' || a.file === f || (route !== null && a.file === route)) && a.match === match.toLowerCase());
+  if (entry) {
+    used.add(entry);
+    return;
+  }
   hits.push({ file: f, where, match, context: context.replace(/\s+/g, ' ').slice(0, 140) });
 }
 
@@ -65,32 +73,32 @@ function snippet(text, at, len) {
   return text.slice(Math.max(0, at - 50), at + len + 50);
 }
 
-function checkText(file, where, text) {
+function checkText(file, where, text, route = null) {
   const low = text.toLowerCase();
   lowered.forEach((p, k) => {
     let at = low.indexOf(p);
     while (at !== -1) {
-      report(file, where, phrases[k], snippet(text, at, p.length));
+      report(file, where, phrases[k], snippet(text, at, p.length), route);
       at = low.indexOf(p, at + p.length);
     }
   });
   const re = /\$\d/g;
   let m;
-  while ((m = re.exec(text))) report(file, where, m[0], snippet(text, m.index, 2));
+  while ((m = re.exec(text))) report(file, where, m[0], snippet(text, m.index, 2), route);
 }
 
 // 1. Prerendered HTML
 const pages = htmlPages();
-for (const { file } of pages) {
+for (const { file, route } of pages) {
   const events = tokenizeHtml(readFileSync(file, 'utf8'));
-  checkText(file, 'text', visibleText(events));
+  checkText(file, 'text', visibleText(events), route);
   for (const e of events) {
     if (e.type === 'open') {
-      for (const [name, value] of Object.entries(e.attrs)) if (value) checkText(file, `<${e.name} ${name}>`, value);
+      for (const [name, value] of Object.entries(e.attrs)) if (value) checkText(file, `<${e.name} ${name}>`, value, route);
     } else if (isJsonLd(e)) {
-      for (const s of jsonLdStrings(e.body)) checkText(file, 'JSON-LD', s);
+      for (const s of jsonLdStrings(e.body)) checkText(file, 'JSON-LD', s, route);
     } else if (e.type === 'raw' && e.name === 'script') {
-      for (const [name, value] of Object.entries(e.attrs)) if (value) checkText(file, `<script ${name}>`, value);
+      for (const [name, value] of Object.entries(e.attrs)) if (value) checkText(file, `<script ${name}>`, value, route);
     }
   }
 }
@@ -275,5 +283,7 @@ console.log(`  prerendered HTML files: ${pages.length}`);
 console.log(`  text files (sitemap.xml, robots.txt, llms.txt, manifest.json, opengraph-image.tsx): ${textFiles.length}`);
 console.log(`  source modules under src/components and src/lib reachable from live routes: ${libCount}`);
 console.log(`  other source modules reachable from live routes (entries, src/app helpers, src/utils, src/data): ${otherCount}`);
-console.log(`  phrases: ${phrases.length}, allowlist entries: ${allow.length}`);
+const unusedAllow = allow.filter((a) => !used.has(a));
+for (const a of unusedAllow) console.log(`  allowlist line matches nothing: ${a.line}`);
+console.log(`  phrases: ${phrases.length}, allowlist entries: ${allow.length} (${allow.length - unusedAllow.length} in use)`);
 process.exit(hits.length || dialogCalls.length ? 1 : 0);
