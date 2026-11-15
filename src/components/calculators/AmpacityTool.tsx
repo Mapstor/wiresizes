@@ -57,6 +57,12 @@ const DEFAULTS: Inputs = { size: '12', material: 'Cu', method: 'conductors', col
 
 type Errors = { size?: string; temp?: string; count?: string };
 
+/** "whole degrees, −40 to 150 °C": the hint and, after "Enter", the error, so the two take the same room. */
+function tempRange(unit: TempUnit): string {
+  const n = (v: number) => (v < 0 ? `−${formatValue(-v)}` : formatValue(v));
+  return `whole degrees, ${n(TEMP_MIN[unit])} to ${n(TEMP_MAX[unit])} °${unit}`;
+}
+
 function errorsOf(i: Inputs): Errors {
   const e: Errors = {};
   const columns = i.method === 'cable' ? [CABLE_COLUMN] : COLUMNS;
@@ -64,9 +70,7 @@ function errorsOf(i: Inputs): Errors {
     e.size = 'Table 310.16 lists aluminum and copper-clad aluminum from 12 AWG.';
   }
   const t = fieldNumber(i.temp);
-  if (!(Number.isInteger(t) && t >= TEMP_MIN[i.unit] && t <= TEMP_MAX[i.unit])) {
-    e.temp = `Enter a whole number of degrees from ${formatValue(TEMP_MIN[i.unit])} to ${formatValue(TEMP_MAX[i.unit])} °${i.unit}.`;
-  }
+  if (!(Number.isInteger(t) && t >= TEMP_MIN[i.unit] && t <= TEMP_MAX[i.unit])) e.temp = `Enter ${tempRange(i.unit)}.`;
   const n = fieldNumber(i.count);
   if (!(Number.isInteger(n) && n >= 1 && n <= COUNT_MAX)) e.count = `Enter a whole number of conductors from 1 to ${COUNT_MAX}.`;
   return e;
@@ -197,28 +201,30 @@ export function AmpacityTool() {
               NM and UF cable stay in the <Val v={CABLE_COLUMN} unit="°C" src={TERM} /> column, corrections included.
             </p>
           )}
-          <div className="grid grid-cols-[minmax(0,12rem)_auto] items-end gap-x-4">
-            <Field id="temp" label="Ambient temperature" error={shownTemp}>
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4">
+            <Field id="temp" label="Ambient temperature" hint={`In ${tempRange(inputs.unit)}.`} error={shownTemp}>
               <TextInput
                 id="temp"
                 value={inputs.temp}
                 onChange={(temp) => update({ temp })}
                 onBlur={() => fieldErrors.touch('temp')}
                 error={shownTemp}
-                describedById={describedBy('temp', shownTemp, false)}
+                describedById={describedBy('temp', shownTemp, true)}
               />
             </Field>
-            <Segmented
-              name="unit"
-              legend="Temperature unit"
-              srLegend
-              value={inputs.unit}
-              options={[
-                { value: 'C', label: '°C' },
-                { value: 'F', label: '°F' },
-              ]}
-              onChange={(unit) => update({ unit })}
-            />
+            <div className="mt-[29px]">
+              <Segmented
+                name="unit"
+                legend="Temperature unit"
+                srLegend
+                value={inputs.unit}
+                options={[
+                  { value: 'C', label: '°C' },
+                  { value: 'F', label: '°F' },
+                ]}
+                onChange={(unit) => update({ unit })}
+              />
+            </div>
           </div>
           <Field id="count" label="Current-carrying conductors" hint="In the raceway or cable, counted together." error={shownCount}>
             <TextInput
@@ -357,9 +363,9 @@ function Outcome({ r, headingRef, shareUrl }: { r: AmpacityRun; headingRef: Reac
       <div className="mt-6 max-w-[38rem] space-y-4 text-[17px] leading-[1.65] text-ink">
         <p data-src={TERM}>
           <strong>Terminals:</strong> under 110.14(C), equipment for circuits rated <Val v={TERMINATION_RULES.limitA} unit="A" src={TERM} /> or
-          less takes the <Val v={TERMINATION_RULES.columnAtOrBelowLimit} unit="°C" src={TERM} /> row unless every termination is listed and
+          less is used at the <Val v={TERMINATION_RULES.columnAtOrBelowLimit} unit="°C" src={TERM} /> value unless every termination is listed and
           identified for <Val v={TERMINATION_RULES.columnAboveLimit} unit="°C" src={TERM} /> conductors; above{' '}
-          <Val v={TERMINATION_RULES.limitA} unit="A" src={TERM} />, the <Val v={TERMINATION_RULES.columnAboveLimit} unit="°C" src={TERM} /> row.
+          <Val v={TERMINATION_RULES.limitA} unit="A" src={TERM} />, at the <Val v={TERMINATION_RULES.columnAboveLimit} unit="°C" src={TERM} /> value.
           {r.method === 'cable' && <> This site keeps NM and UF cable at <Val v={CABLE_COLUMN} unit="°C" src={TERM} /> whatever the terminals.</>}
         </p>
         {result.ocpdLimitA !== null && (
