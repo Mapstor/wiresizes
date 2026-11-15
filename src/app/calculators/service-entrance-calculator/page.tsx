@@ -30,6 +30,8 @@ import {
   LOOK_SOURCES_NOTE,
   LOOK_SOURCES_SECTION,
 } from '@/components/look/styles';
+import { egcFor, isEgcError } from '@/lib/calculations/grounding';
+import type { EgcResult } from '@/lib/calculations/grounding';
 import { ENGINE_ID, SERVICE_RATINGS, SERVICE_VOLTS, isServiceError, serviceEntrance, serviceLookup } from '@/lib/calculations/service-lookup';
 import type { ServiceLookupResult, ServiceResult } from '@/lib/calculations/service-lookup';
 import { RESISTANCE_TEMP_C } from '@/lib/calculations/voltage-drop';
@@ -48,7 +50,7 @@ const ROUTE = '/calculators/service-entrance-calculator';
 const URL = `https://wiresizes.com${ROUTE}`;
 const TITLE = 'Service Entrance Calculator: Wire Size by Amps';
 const DESCRIPTION =
-  'Service entrance wire by rating (NEC Table 310.12), its grounding electrode conductor (Table 250.66) and the voltage drop: 200 A takes 2/0 AWG copper or 4/0 AWG aluminum.';
+  'Service entrance wire by rating (NEC Table 310.12), with the grounding electrode conductor and voltage drop: 200 A takes 2/0 AWG copper or 4/0 AWG aluminum.';
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -88,6 +90,13 @@ const AL_100 = withRun(200, 'Al', 100);
 const CU_175 = withRun(200, 'Cu', 175);
 const AL_175 = withRun(200, 'Al', 175);
 if (SERVICE_DROP.ratingA !== S200.ratingA) throw new Error('service entrance page: the drop chart is not the 200 A service');
+// the feeder question: Table 250.122 for a 150 A overcurrent device (golden "egc" rows)
+function egc(ocpdA: number): EgcResult {
+  const r = egcFor(ocpdA, 'Cu');
+  if (isEgcError(r)) throw new Error(`service entrance page: no Table 250.122 row for ${ocpdA} A`);
+  return r;
+}
+const EGC_150 = egc(150);
 
 const TOC: ([string, string] | [string, string, string])[] = [
   ['table-310-12', 'Table 310.12, with electrode conductors'],
@@ -131,7 +140,7 @@ export default function ServiceEntrancePage() {
 
         <header className="pt-10 sm:pt-12">
           <PageTitle main="Service Entrance Calculator" sub="Wire Size by Amps" joiner=": " />
-          <p className={clsx(LOOK_LEAD, 'mt-5')}>
+          <p className={clsx(LOOK_LEAD, 'mt-5')} data-src={SVC}>
             The service conductors and grounding electrode conductor for a 120/240 V dwelling service, and their voltage drop.
           </p>
           <Byline route={ROUTE} sources className={LOOK_BYLINE} linkClassName={LOOK_BYLINE_LINK} />
@@ -212,11 +221,13 @@ export default function ServiceEntrancePage() {
               </tbody>
             </DataTable>
             <p className={P} data-src={GND}>
-              In every row of Table 250.66 the aluminum or copper-clad aluminum electrode conductor is larger than the copper one; the{' '}
+              The table gives the copper electrode conductor. An aluminum or copper-clad aluminum one is larger in every row of Table 250.66:{' '}
+              <Size s={S200.gecForCuService.alCca} /> for a <Val v={S200.ratingA} unit="A" src={SVC} /> service, against{' '}
+              <Size s={S200.gecForCuService.cu} /> copper. The{' '}
               <Link href="/calculators/ground-wire-calculator" className={LINK}>
                 ground wire calculator
               </Link>{' '}
-              shows both columns.
+              shows both.
             </p>
           </section>
 
@@ -225,7 +236,8 @@ export default function ServiceEntrancePage() {
               83 % of the rating
             </h2>
             <p className={P} data-src={SVC}>
-              Section 310.12 lets the conductors of a dwelling service, and of its main power feeder, have an ampacity of not less than{' '}
+              Section 310.12 lets the conductors of a dwelling service, and of a feeder that carries the dwelling&apos;s entire load, have an
+              ampacity of not less than{' '}
               <Num v={SERVICE_AMPACITY_PERCENT} src={SVC} /> % of the rating. For{' '}
               <Val v={S200.ratingA} unit="A" src={SVC} /> that is <Val v={MIN_200} unit="A" src={CALC} />. The{' '}
               <Link href="/guides/wire-size-for-200-amp" className={LINK}>
@@ -243,8 +255,8 @@ export default function ServiceEntrancePage() {
               The table sizes a service for its current, not for its length. At full load, <Val v={S200.ratingA} unit="A" src={SVC} /> over{' '}
               <Val v={CU_100.drop?.lengthFt ?? 0} unit="ft" src={VD} /> of <Size s={S200.cu} /> copper drops <Volts r={CU_100} />, <Pct r={CU_100} /> of{' '}
               <Val v={SERVICE_VOLTS} unit="V" src={SVC} />; <Size s={S200.alCca} /> aluminum drops <Volts r={AL_100} />, <Pct r={AL_100} />. The two
-              sizes have nearly the same resistance, so their lines almost meet. The calculator takes the conductors at{' '}
-              <Val v={RESISTANCE_TEMP_C} unit="°C" src={RES} />, from NIST&apos;s copper and aluminum tables.
+              sizes have nearly the same resistance, so the two lines nearly overlap. The calculator takes the resistance at{' '}
+              <Val v={RESISTANCE_TEMP_C} unit="°C" src={RES} />, worked out from the values of NIST&apos;s copper and aluminum wire tables.
             </p>
             <Figure
               caption={
@@ -273,14 +285,19 @@ export default function ServiceEntrancePage() {
               Which services the table covers
             </h2>
             <p className={P} data-src={SVC}>
-              Table 310.12 is for the 120/240 V single-phase service or main power feeder of a one-family dwelling or an individual dwelling unit,
-              from <Val v={ROWS[0].ratingA} unit="A" src={SVC} /> to <Val v={ROWS[ROWS.length - 1].ratingA} unit="A" src={SVC} />. A feeder to a
-              subpanel that is not the main power feeder, and every other service, is sized from Table 310.16, which the{' '}
+              Table 310.12 is for a 120/240 V single-phase service, or a feeder, that carries the entire load of a one-family dwelling or of one
+              dwelling unit in a two-family or multifamily building, from <Val v={ROWS[0].ratingA} unit="A" src={SVC} /> to{' '}
+              <Val v={ROWS[ROWS.length - 1].ratingA} unit="A" src={SVC} />. A feeder that carries part of the load, such as one to a garage
+              subpanel, and every other service are sized from Table 310.16, which the{' '}
               <Link href="/calculators/wire-size-calculator" className={LINK}>
                 wire size calculator
               </Link>{' '}
-              uses. Where the conductors run hotter than <Val v={30} unit="°C" src={SVC} /> or more than three current-carrying conductors share
-              a raceway, the corrections of Tables 310.15(B)(1)(1) and 310.15(C)(1) still apply.
+              uses.
+            </p>
+            <p className={P} data-src={SVC}>
+              The table also assumes no corrections. Where the ambient temperature is above <Val v={30} unit="°C" src={SVC} />, or more than
+              three current-carrying conductors share a raceway or cable, the factors of Tables 310.15(B)(1)(1) and 310.15(C)(1) apply, and the
+              corrected ampacity must still reach <Val v={SERVICE_AMPACITY_PERCENT} unit="%" src={SVC} /> of the rating.
             </p>
           </section>
 
@@ -327,7 +344,13 @@ export default function ServiceEntrancePage() {
                 What size ground wire for a <Val v={S150.ratingA} unit="A" src={SVC} /> service entrance cable?
               </h3>
               <p className={P} data-src={CALC}>
-                The service conductors are <Wires s={S150} />; Table 250.66 gives them an electrode conductor of <Gec s={S150} />.
+                Two wires go by that name. The grounding electrode conductor runs from the service to the ground rod or other electrode: Table
+                250.66 gives <Gec s={S150} /> for service conductors of <Wires s={S150} />. A feeder from the service to another panel carries an
+                equipment grounding conductor instead, from Table 250.122:{' '}
+                <span data-src={GND}>
+                  <Size s={EGC_150.table.cu} /> copper or <Size s={EGC_150.table.alCca} /> aluminum
+                </span>{' '}
+                for a <Val v={EGC_150.ocpdA} unit="A" src={GND} /> overcurrent device.
               </p>
             </div>
           </section>

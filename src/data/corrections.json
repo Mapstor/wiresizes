@@ -73,6 +73,6 @@
   },
   {
     "date": "2026-11-15",
-    "text": "Rebuilt the service entrance calculator: Table 310.12 conductors and their electrode conductor from Table 250.66 as NFPA's 2020 grounding fact sheet prints it, now with the voltage drop over a length you enter, both tables' sizes for every rating, and a chart of the drop by length."
+    "text": "Rebuilt the service entrance calculator: every Table 310.12 rating in one table with its Table 250.66 electrode conductor, as NFPA's 2020 grounding fact sheet prints it, and the voltage drop over a length you enter, with a chart of the drop by length."
   }
 ]

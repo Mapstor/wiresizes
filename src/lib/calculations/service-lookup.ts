@@ -1,4 +1,4 @@
-// 120/240 V single-phase dwelling service or main power feeder: conductor sizes from NEC Table 310.12, then the
+// 120/240 V single-phase dwelling service, or a feeder carrying the dwelling's entire load: conductor sizes from NEC Table 310.12, then the
 // grounding electrode conductor from Table 250.66 for each of those conductors (src/lib/verified/nec-250-66.ts turns
 // each Table 250.66 cell into an area range).
 import { SERVICE_AMPACITY_PERCENT, table31012, TABLE_310_12_ROWS } from '../verified/nec-310-12';
@@ -23,12 +23,6 @@ export { gec as gecForServiceConductor } from '../verified/nec-250-66';
 export function minimumServiceAmpacity(ratingA: number): number {
   return (ratingA * SERVICE_AMPACITY_PERCENT) / 100;
 }
-
-export const NO_ROW_MESSAGE = 'Table 310.12 has no row for this rating.';
-export const SCOPE_LINES = [
-  'For a 120/240 V single-phase service or main power feeder of one dwelling unit. Other services are sized from Table 310.16. Where the conductors run hotter than 30 °C or with more than three current-carrying conductors, the corrections in Tables 310.15(B)(1)(1) and 310.15(C)(1) still apply.',
-  "Grounding electrode conductor from NEC Table 250.66 (values from NFPA's 2020 grounding fact sheet).",
-];
 
 export interface ServiceLookupResult {
   ratingA: number;

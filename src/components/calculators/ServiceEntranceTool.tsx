@@ -15,7 +15,7 @@ import { BUTTON_PRIMARY, BUTTON_SECONDARY, Field, Segmented, SelectInput, TextIn
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
 import { formatValue } from '@/lib/calculations/format';
-import { ENGINE_ID, SERVICE_RATINGS, SERVICE_VOLTS, isServiceError, serviceEntrance } from '@/lib/calculations/service-lookup';
+import { ENGINE_ID, SERVICE_LOOKUP_DEFAULTS, SERVICE_RATINGS, SERVICE_VOLTS, isServiceError, serviceEntrance } from '@/lib/calculations/service-lookup';
 import type { ServiceResult } from '@/lib/calculations/service-lookup';
 import { LENGTH_MAX_FT, RESISTANCE_TEMP_C } from '@/lib/calculations/voltage-drop';
 import { SERVICE_AMPACITY_PERCENT } from '@/lib/verified/nec-310-12';
@@ -34,7 +34,7 @@ interface Inputs {
   length: string;
   amps: string;
 }
-const DEFAULTS: Inputs = { rating: '200', material: 'Cu', length: '', amps: '' };
+const DEFAULTS: Inputs = { rating: String(SERVICE_LOOKUP_DEFAULTS.ratingA), material: 'Cu', length: '', amps: '' };
 
 function errorsOf(i: Inputs): { length?: string; amps?: string } {
   const e: { length?: string; amps?: string } = {};
@@ -109,7 +109,7 @@ export function ServiceEntranceTool() {
     <div>
       <form ref={formRef} onSubmit={onSubmit} noValidate aria-label="Service entrance calculator">
         <div className="grid gap-x-10 gap-y-7 lg:grid-cols-2">
-          <Field id="rating" label="Service rating, A" hint="A 120/240 V single-phase dwelling service or main power feeder.">
+          <Field id="rating" label="Service rating, A" hint={<span data-src={SVC}>A 120/240 V single-phase dwelling service, or a feeder that carries the dwelling&apos;s entire load.</span>}>
             <SelectInput id="rating" value={inputs.rating} onChange={(rating) => update({ rating })} describedById="rating-hint">
               {SERVICE_RATINGS.map((a) => (
                 <option key={a} value={String(a)} data-src={SVC}>
@@ -257,8 +257,9 @@ function Outcome({ r, headingRef, shareUrl }: { r: ServiceResult; headingRef: Re
       </div>
       <div className="mt-8 max-w-[38rem] space-y-3 border-t border-cut-rule pt-4 text-[15px] leading-[1.6] text-[#333333]">
         <p data-src={SVC}>
-          Table 310.12 covers the 120/240 V single-phase service or main power feeder of one dwelling unit. A feeder to a subpanel, or any
-          other service, is sized from Table 310.16; the{' '}
+          Table 310.12 covers a 120/240 V single-phase service, or a feeder, that carries the entire load of one dwelling unit, with no
+          ampacity corrections. A feeder that carries part of the load, such as one to a subpanel, and any other service are sized from
+          Table 310.16; the{' '}
           <Link href="/calculators/wire-size-calculator" className={LINK}>
             wire size calculator
           </Link>{' '}
