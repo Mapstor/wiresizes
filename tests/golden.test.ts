@@ -29,6 +29,7 @@ import * as conversions from '../src/lib/calculations/conversions';
 import * as dcSizing from '../src/lib/calculations/dc-sizing';
 import * as grounding from '../src/lib/calculations/grounding';
 import * as loadCalc from '../src/lib/calculations/load-calc-2023';
+import * as rangeCircuit from '../src/lib/calculations/range-circuit';
 import * as motorFlc from '../src/lib/calculations/motor-flc';
 import * as ohmsLaw from '../src/lib/calculations/ohms-law';
 import * as power from '../src/lib/calculations/power';
@@ -653,6 +654,7 @@ describe('engines', () => {
     'ohms-law': ohmsLaw,
     power,
     resistance,
+    'range-circuit': rangeCircuit,
     'service-lookup': serviceLookup,
     'voltage-drop': voltageDrop,
   };

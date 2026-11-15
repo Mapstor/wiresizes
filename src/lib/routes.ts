@@ -97,6 +97,12 @@ export const ROUTES: readonly SiteRoute[] = [
     line: "A dwelling's calculated load by the NEC standard and optional methods, side by side with every step, and the service rating and conductors from Table 310.12.",
   },
   {
+    path: '/calculators/range-calculator',
+    group: 'load-calcs',
+    name: 'Range Calculator',
+    line: 'Branch-circuit load of a range, or a cooktop and wall ovens, by NEC Table 220.55, its current, and the wire and ground wire for the circuit the range instructions give.',
+  },
+  {
     path: '/calculators/watts-to-amps-calculator',
     group: 'conversions',
     name: 'Watts to Amps Calculator',

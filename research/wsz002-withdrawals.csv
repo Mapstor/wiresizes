@@ -1,5 +1,4 @@
 slug,what_was_wrong,links
-/calculators/range-calculator,"its demand-factor rule did not match NEC Table 220.55, it put a wall oven on a breaker larger than its wire allows, and it said ranges generally don't need GFCI protection, which the 2023 NEC requires",/guides/nec-table-310-16;/guides/awg-wire-size-chart
 /calculators/welder-calculator,it sized the circuit from estimated arc power instead of the welder's rated input current and duty cycle,/guides/nec-table-310-16;/guides/awg-wire-size-chart
 /calculators/box-fill-calculator,some of its box volumes and conductor-counting rules did not match the NEC,/guides/awg-wire-size-chart
 /calculators/well-pump-calculator,it used invented current multipliers and motor currents that disagree with the NEC motor tables,/guides/awg-wire-size-chart;/calculators/voltage-drop-calculator
