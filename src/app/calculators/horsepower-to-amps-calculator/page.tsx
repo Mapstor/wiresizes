@@ -352,7 +352,9 @@ export default function HorsepowerToAmpsPage() {
               Questions
             </h2>
             <div className="space-y-1.5">
-              <h3 className={H3}>How many amps does a 1 hp motor draw?</h3>
+              <h3 className={H3} data-src={FLC}>
+                How many amps does a 1 hp motor draw?
+              </h3>
               <p className={P} data-src={FLC}>
                 Single-phase: <Val v={EXAMPLE_115.flcA as number} unit="A" src={FLC} /> at <Val v={EXAMPLE_115.column.volts} unit="V" src={FLC} /> and{' '}
                 <Val v={EXAMPLE.flcA as number} unit="A" src={FLC} /> at <Val v={EXAMPLE.column.volts} unit="V" src={FLC} /> (Table 430.248).
@@ -364,7 +366,9 @@ export default function HorsepowerToAmpsPage() {
               </p>
             </div>
             <div className="space-y-1.5">
-              <h3 className={H3}>How many amps is a 5 hp motor?</h3>
+              <h3 className={H3} data-src={FLC}>
+                How many amps is a 5 hp motor?
+              </h3>
               <p className={P} data-src={FLC}>
                 Single-phase at <Val v={230} unit="V" src={FLC} />: <Val v={ONE_PHASE_5?.amps['230'] as number} unit="A" src={FLC} />. Three-phase:{' '}
                 <Val v={FIVE_230_A.flcA} unit="A" src={FLC} /> at <Val v={FIVE_230_A.column.volts} unit="V" src={FLC} />,{' '}
@@ -381,7 +385,9 @@ export default function HorsepowerToAmpsPage() {
               </p>
             </div>
             <div className="space-y-1.5">
-              <h3 className={H3}>Is 240 V single-phase or two-phase?</h3>
+              <h3 className={H3} data-src={NOMINAL}>
+                Is 240 V single-phase or two-phase?
+              </h3>
               <p className={P} data-src={NOMINAL}>
                 Single-phase: 120/240 V is a single-phase system in ANSI C84.1&apos;s list (North Carolina rule R8-17). A{' '}
                 <Val v={240} unit="V" src={NOMINAL} /> motor in a house reads the <Val v={230} unit="V" src={FLC} /> column of Table 430.248, not
