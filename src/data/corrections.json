@@ -81,6 +81,6 @@
   },
   {
     "date": "2026-11-15",
-    "text": "Rebuilt the ampacity calculator: it now takes the ambient temperature in °C or °F and the number of current-carrying conductors, and shows the corrected ampacity against the 60 °C and 75 °C terminal limits of 110.14(C) and the 240.4(D) breaker limit, with NM and UF cable kept at 60 °C. Removed the insulation type ratings, the wet-location and harmonic-current notes, the common mistakes and the answers on parallel conductors, voltage and separate conduits, which cited no source."
+    "text": "Rebuilt the ampacity calculator: it now takes the ambient temperature in Celsius or Fahrenheit and the number of current-carrying conductors, and shows the corrected ampacity against the terminal limits of 110.14(C) and the 240.4(D) breaker limit, with NM and UF cable kept in the coolest temperature column. Removed the insulation type ratings, the wet-location and harmonic-current notes, the common mistakes and the answers on parallel conductors, voltage and separate conduits, which cited no source."
   }
 ]
