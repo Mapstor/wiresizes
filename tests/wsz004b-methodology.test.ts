@@ -24,14 +24,19 @@ describe('METHODOLOGY_SECTIONS', () => {
     for (const domain of domains) assert.equal(registry.get(domain)?.status, 'verified', domain);
   });
 
-  it('leaves out nec-110-14c until WSZ-009 and the verified domains no live page cites', () => {
+  it('leaves out the verified domains no live page cites', () => {
     const domains = new Set(METHODOLOGY_SECTIONS.map((s) => s.domain));
-    for (const off of ['nec-110-14c', 'doe-efficiency-standards']) assert.ok(!domains.has(off), off);
+    for (const off of ['doe-efficiency-standards']) assert.ok(!domains.has(off), off);
+  });
+
+  it('has nec-110-14c since the 200 A guide sizes other feeders from the 75 °C column (WSZ-008c)', () => {
+    const s = METHODOLOGY_SECTIONS.find((x) => x.domain === 'nec-110-14c');
+    assert.deepEqual(s?.citedOn, ['/guides/wire-size-for-200-amp']);
   });
 
   it('has nec-continuous-load since the voltage drop and low voltage calculators quote its note (WSZ-006b, WSZ-006c)', () => {
     const s = METHODOLOGY_SECTIONS.find((x) => x.domain === 'nec-continuous-load');
-    assert.deepEqual(s?.citedOn, ['/calculators/voltage-drop-calculator', '/calculators/low-voltage-calculator']);
+    assert.deepEqual(s?.citedOn, ['/calculators/voltage-drop-calculator', '/calculators/low-voltage-calculator', '/guides/wire-size-for-200-amp']);
   });
 
   it('cites only named live pages, each section at least one', () => {

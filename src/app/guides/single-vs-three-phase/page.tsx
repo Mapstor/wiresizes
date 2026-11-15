@@ -295,7 +295,8 @@ export default function SingleVsThreePhasePage() {
               between lines and then to neutral, and the rule&apos;s note calls <Wye w={WYE_208} /> a three-phase, four-wire system.
             </p>
             <p className={P} data-src={SVC}>
-              The NEC sizes the <Split /> single-phase service or main power feeder of one dwelling unit from a table of its own, Table 310.12,
+              The NEC sizes a <Split /> single-phase service, or a feeder, that carries the entire load of one dwelling unit from a table of its
+              own, Table 310.12,
               which the{' '}
               <Link href="/guides/nec-table-310-16#dwellings" className={LINK}>
                 Table 310.16 guide

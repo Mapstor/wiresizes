@@ -1,5 +1,6 @@
-// data/verified/nec-310-12.json: NEC Table 310.12 (2023) conductor sizes for 120/240 V single-phase dwelling services
-// and main power feeders, 100 A to 400 A.
+// data/verified/nec-310-12.json: NEC Table 310.12 (2023) conductor sizes for a 120/240 V single-phase service, or a
+// feeder, that carries the entire load of a dwelling unit, 100 A to 400 A (the file's notes say "main power feeder";
+// D-39 words the scope as the code does).
 import table from '../../../data/verified/nec-310-12.json';
 import type { SizeKey } from './awg';
 
@@ -29,7 +30,7 @@ function rulePercent(prefix: string): number {
 }
 
 /**
- * 310.12(A) and (B), which the table applies: a dwelling service or main power feeder conductor needs an ampacity of
+ * 310.12(A) and (B), which the table applies: a dwelling service, or feeder, conductor needs an ampacity of
  * at least this percent of the service or feeder rating (83). Read from rules_seen; the two rules must agree.
  */
 export const SERVICE_AMPACITY_PERCENT = rulePercent('310.12(A)');

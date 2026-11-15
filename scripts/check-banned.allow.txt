@@ -1,0 +1,8 @@
+# Exceptions to check-banned.mjs, one per line: <route, file or *> | <matched text> | <reason> (a route matches its
+# prerendered HTML in either build layout)
+# WSZ-008c: "copper or 250 kcmil aluminum" was banned (WSZ-002 review finding 6) for the old site's wrong 200 A dwelling
+# service answer and its 75 °C sizing before 110.14(C) was verified. The 200 A guide states it only for a 200 A feeder that
+# is not a dwelling service, from Table 310.16 at the 75 °C column 110.14(C)(1)(b) sets (nec-110-14c, verified), beside
+# the dwelling answer of 2/0 copper or 4/0 aluminum (Table 310.12). Every other page keeps the ban.
+/guides/wire-size-for-200-amp | copper or 250 kcmil aluminum | 200 A feeder outside 310.12, Table 310.16 at 75 °C (WSZ-008c)
+src/app/guides/wire-size-for-200-amp/page.tsx | copper or 250 kcmil aluminum | the guide's meta description, same statement (WSZ-008c)

@@ -602,7 +602,7 @@ export default function NecTable31016Page() {
           Dwelling services and Table 310.12
         </h2>
         <p className={P} data-src={SVC}>
-          For the 120/240 V single-phase service or main power feeder of one dwelling unit, Table 310.12 may be used instead. Its conductors need
+          For a 120/240 V single-phase service, or a feeder, that carries the entire load of one dwelling unit, Table 310.12 may be used instead. Its conductors need
           an ampacity of at least <Val v={SERVICE_AMPACITY_PERCENT} unit="%" src={SVC} /> of the service rating, so the sizes are smaller than
           Table 310.16 alone would give. Corrections for hot surroundings or more than three conductors still apply. The{' '}
           <Link href="/guides/wire-size-for-200-amp" className={LINK}>
@@ -614,7 +614,7 @@ export default function NecTable31016Page() {
           </Link>{' '}
           use this table.
         </p>
-        <DataTable variant="ruled" id="service-table" src={SVC} caption="2023 NEC Table 310.12, dwelling services and main power feeders">
+        <DataTable variant="ruled" id="service-table" src={SVC} caption="2023 NEC Table 310.12, single-phase dwelling services and feeders">
           <thead>
             <tr>
               <th scope="col" className={clsx(RTH, RSTICKY_TH)}>

@@ -16,6 +16,14 @@ export interface Row240_4D extends Limit240_4D {
   material: Material | 'CCA';
 }
 
+/**
+ * 240.4(B) (2023): where a conductor's ampacity is not a standard rating of Table 240.6(A), the next higher standard
+ * rating may protect it, provided the conductors are not part of a branch circuit supplying more than one receptacle for
+ * cord-and-plug-connected portable loads and that rating does not exceed this many amperes.
+ */
+export const NEXT_SIZE_UP_MAX_A: number = table.rule_240_4_b.max_next_higher_rating_a;
+if (!(NEXT_SIZE_UP_MAX_A > 0)) throw new Error('nec-240-4-d.json: rule_240_4_b has no max_next_higher_rating_a');
+
 /** Every row as the file holds it, conditional rows included, in file order. */
 export const ROWS_240_4_D: Row240_4D[] = table.rows.map((r) => ({
   item: r.item,

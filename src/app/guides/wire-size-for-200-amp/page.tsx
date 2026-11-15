@@ -1,470 +1,505 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
-import { ArticleSchema } from '@/components/seo/ArticleSchema'
-import { articleDates } from '@/lib/page-dates';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { clsx } from 'clsx';
+import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { Byline } from '@/components/content/Byline';
-import { formatSize, tableAmpacity } from '@/lib/calculations/sizes';
-import { serviceConductors, TABLE_310_12_ROWS } from '@/lib/calculations/service-lookup';
+import { DataTable, RSTICKY_TD, RSTICKY_TH, RTD, RTH } from '@/components/content/DataTable';
+import { Figure } from '@/components/content/Figure';
+import { Size } from '@/components/content/Size';
+import { SourceLine } from '@/components/content/SourceLine';
+import { Sources } from '@/components/content/Sources';
+import { Val } from '@/components/content/Val';
+import { LookGuideBody } from '@/components/layout/LookGuideBody';
+import { Service200Ladder, ServiceDropChart, ServiceGroundDiscs } from '@/components/look/Charts';
+import { OnThisPage } from '@/components/look/OnThisPage';
+import { PageTitle } from '@/components/look/PageTitle';
+import {
+  LOOK_BYLINE,
+  LOOK_BYLINE_LINK,
+  LOOK_H2 as H2,
+  LOOK_H3 as H3,
+  LOOK_LEAD,
+  LOOK_LINK as LINK,
+  LOOK_P as P,
+  LOOK_PAGE,
+  LOOK_SOURCES_HEADING,
+  LOOK_SOURCES_LIST,
+  LOOK_SOURCES_NOTE,
+  LOOK_SOURCES_SECTION,
+} from '@/components/look/styles';
+import { SERVICE_VOLTS } from '@/lib/calculations/service-lookup';
+import { RESISTANCE_TEMP_C } from '@/lib/calculations/voltage-drop';
+import { articleDates } from '@/lib/page-dates';
+import { GUIDE_200, RATING_ROWS } from '@/lib/service-guides';
+import type { RatingRow } from '@/lib/service-guides';
+import { TERMINATION_RULES } from '@/lib/verified/nec-110-14c';
+import { NEXT_SIZE_UP_MAX_A } from '@/lib/verified/nec-240-4-d';
+import { TABLE_AMBIENT } from '@/lib/verified/nec-310-16';
+import { SERVICE_AMPACITY_PERCENT } from '@/lib/verified/nec-310-12';
+import { CONTINUOUS_LOAD_PERCENT, VOLTAGE_DROP_NOTE } from '@/lib/verified/nec-continuous-load-2023';
 
-import { Calculator, AlertTriangle, CheckCircle2, Info, Zap, Shield, Wrench } from 'lucide-react'
+// /guides/wire-size-for-200-amp (WSZ-008c; spec: research/page-specs-held.md "WSZ-008"; data gate BUILD): the conductor
+// size for a 200 A, 120/240 V dwelling service and why it is smaller than any other 200 A feeder's. Table 310.12
+// (nec-310-12) against Table 310.16 at the column 110.14(C)(1)(b) sets above 100 A (nec-310-16, nec-110-14c); 240.4(B)
+// for 4/0 AWG aluminum on a 200 A breaker (nec-240-ocpd) with the feeder load rule of 215.2(A) (nec-continuous-load);
+// the electrode conductor (Table 250.66) and a feeder's equipment grounding conductor (Table 250.122), NFPA's 2020 fact
+// sheet (nec-250-grounding); the voltage drop at 75 °C (conductor-resistance-20c) beside the 215.2(A) note. Every value
+// comes from src/lib/service-guides.ts. Nothing from nec-misc-installation (candidate): no utility-side or burial
+// claims. The 310.12 scope is worded as D-39 sets it.
+const ROUTE = '/guides/wire-size-for-200-amp';
+const URL = `https://wiresizes.com${ROUTE}`;
+const TITLE = 'Wire Size for 200 Amp Service: 2/0 Copper or 4/0 Aluminum';
+const DESCRIPTION =
+  'A 200 A dwelling service takes 2/0 AWG copper or 4/0 AWG aluminum (NEC Table 310.12); another 200 A feeder takes 3/0 copper or 250 kcmil aluminum.';
 
 export const metadata: Metadata = {
-  title: 'Wire Size for 200 Amp Service',
-  description: '2/0 AWG copper or 4/0 AWG aluminum for a 120/240 V dwelling service (2023 NEC Table 310.12).',
-  keywords: '200 amp wire size, 200 amp service wire, electrical service upgrade, NEC 200 amp requirements, 4/0 aluminum wire',
-  alternates: {
-    canonical: '/guides/wire-size-for-200-amp'
-  }
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: ROUTE },
+  openGraph: {
+    type: 'article',
+    locale: 'en_US',
+    siteName: 'WireSizes.com',
+    title: TITLE,
+    description: DESCRIPTION,
+    url: URL,
+    images: ['/opengraph-image'],
+  },
+  twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION, images: ['/twitter-image'] },
+};
+
+const SVC = 'nec-310-12';
+const AMP = 'nec-310-16';
+const TERM = 'nec-110-14c';
+const OCPD = 'nec-240-ocpd';
+const LOAD = 'nec-continuous-load';
+const GND = 'nec-250-grounding';
+const RES = 'conductor-resistance-20c';
+const GEO = 'awg-geometry';
+const SVC_CALC = 'calc:service-lookup';
+const VD = 'calc:voltage-drop';
+
+const G = GUIDE_200;
+const { cu: CU, al: AL, egc: EGC, service: S } = G;
+const GEC = S.gecForCuService;
+const D100 = G.drop100;
+const D175 = G.drop175;
+if (!AL.protection.nextSizeUp || CU.protection.nextSizeUp) throw new Error('200 A guide: the 240.4(B) paragraph no longer fits the data');
+const FIRST = RATING_ROWS[0];
+const LAST = RATING_ROWS[RATING_ROWS.length - 1];
+
+// phones: the comparison table's header widths and padding give way so its three columns fit 390 px
+const TIGHT_TH = 'max-sm:!min-w-0 max-sm:!px-2';
+const TIGHT_TD = 'max-sm:!px-2';
+/** A row header that names a use in words: the body face, wrapping. */
+const USE_TH = '!whitespace-normal !font-display !font-normal';
+
+const TOC: ([string, string] | [string, string, string])[] = [
+  ['two-tables', 'Why a service takes smaller wire'],
+  ['which-table', 'Which table applies'],
+  ['subpanel', `A ${G.ratingA} A subpanel feeder`, SVC],
+  ['ground-wires', 'Ground wires'],
+  ['voltage-drop', 'Voltage drop on a long run'],
+  ['ratings', 'Other ratings'],
+  ['faq', 'Questions'],
+  ['sources', 'Sources'],
+];
+
+const articleData = { headline: 'Wire Size for 200 Amp Service', description: DESCRIPTION, url: URL, ...articleDates(ROUTE) };
+
+function Pair({ cu, al }: { cu: string; al: string }) {
+  return (
+    <>
+      <Size s={cu} /> copper or <Size s={al} /> aluminum
+    </>
+  );
+}
+function Drop({ volts, pct }: { volts: number; pct: number }) {
+  return (
+    <>
+      <Val v={volts} unit="V" src={VD} format={{ fixed: 2 }} /> (<Val v={pct} unit="%" src={VD} format={{ fixed: 2 }} />)
+    </>
+  );
 }
 
-// 200 A row of NEC Table 310.12 (data/verified/nec-310-12.json) and the 75 °C values of Table 310.16
-const SERVICE_200A = serviceConductors(200);
-const CU_200A = SERVICE_200A ? SERVICE_200A.cu : '2/0';
-const AL_200A = SERVICE_200A ? SERVICE_200A.alCca : '4/0';
-
-// Article data for schema
-const articleData = {
-  headline: 'Wire Size for 200 Amp Service',
-  description: 'Complete guide to wire sizing for 200 amp electrical service. Learn NEC requirements, copper vs aluminum options, installation tips, and safety considerations.',
-  url: 'https://wiresizes.com/guides/wire-size-for-200-amp',
-  ...articleDates('/guides/wire-size-for-200-amp'),
+/** A ratings table: the Table 310.12 size beside the Table 310.16 size and its ampacity, for one material. */
+function RatingsTable({ material }: { material: 'cu' | 'al' }) {
+  const name = material === 'cu' ? 'Copper' : 'Aluminum';
+  return (
+    <DataTable
+      id={`ratings-${material}`}
+      variant="ruled"
+      src={AMP}
+      caption={`${name}: Table 310.12 for a dwelling service, Table 310.16 at ${G.column} °C for another feeder`}
+    >
+      <thead>
+        <tr>
+          <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
+            Rating
+          </th>
+          <th scope="col" className={RTH}>
+            Dwelling
+          </th>
+          <th scope="col" className={RTH}>
+            Other feeder
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {RATING_ROWS.map((r: RatingRow) => (
+          <tr key={r.ratingA}>
+            <th scope="row" className={RSTICKY_TD}>
+              <Val v={r.ratingA} unit="A" src={SVC} />
+            </th>
+            <td className={RTD} data-src={SVC}>
+              <Size s={r.dwelling[material]} />
+            </td>
+            <td className={RTD}>
+              <Size s={r.feeder[material].size} />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </DataTable>
+  );
 }
-
-const faqs = [
-  {
-    question: "Can I use aluminum wire for 200 amp service?",
-    answer: "Yes, aluminum wire is commonly used for 200 amp service. You'll need 4/0 AWG aluminum or aluminum alloy conductors. Aluminum requires rated connectors."
-  },
-  {
-    question: "What size ground wire for 200 amp service?",
-    answer: "Per NEC Table 250.66 (values from NFPA's 2020 grounding fact sheet), 200 amp service requires a 4 AWG copper or 2 AWG aluminum grounding electrode conductor. The equipment grounding conductor size depends on the overcurrent protection per NEC Table 250.122."
-  },
-  {
-    question: "Do I need a permit to upgrade to 200 amp service?",
-    answer: "Permit and licensing rules depend on where you live. Where your jurisdiction requires a permit, an inspection or a licensed electrician, those requirements apply."
-  }
-]
 
 export default function WireSizeFor200AmpPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Wire Size for 200 Amp Service
-            </h1>
-            <Byline route="/guides/wire-size-for-200-amp" className="mb-4 text-sm text-gray-600" />
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Complete guide to selecting and installing the correct wire size for 200 amp electrical service 
-              per 2023 NEC requirements.
+    <div className={LOOK_PAGE}>
+      <article className="container pb-16">
+        <ArticleSchema article={articleData} />
+
+        <header className="pt-10 sm:pt-12">
+          <PageTitle main="Wire Size for 200 Amp Service" sub="2/0 Copper or 4/0 Aluminum" joiner=": " src={SVC} />
+          <Byline route={ROUTE} sources className={LOOK_BYLINE} linkClassName={LOOK_BYLINE_LINK} />
+        </header>
+
+        <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-12">
+          <div className="space-y-4">
+            <p className={LOOK_LEAD} data-src={SVC}>
+              <strong>
+                A <Val v={G.ratingA} unit="A" src={SVC} />, 120/240 V service for one dwelling takes <Pair cu={S.cu} al={S.alCca} />{' '}
+                conductors, from NEC Table 310.12.
+              </strong>{' '}
+              <span data-src={GND}>
+                Its grounding electrode conductor is <Pair cu={GEC.cu} al={GEC.alCca} /> (Table 250.66).
+              </span>
+            </p>
+            <p className={P} data-src={AMP}>
+              Any other <Val v={G.ratingA} unit="A" src={SVC} /> feeder, such as one to a subpanel, is sized from Table 310.16 instead and
+              takes <Pair cu={CU.feeder} al={AL.feeder} />, with a <Pair cu={EGC.table.cu} al={EGC.table.alCca} /> equipment grounding
+              conductor.
             </p>
           </div>
-
-          {/* Quick Answer Box */}
-          <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 mb-12">
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <Zap className="w-6 h-6 text-blue-600" />
-              </div>
-              <div className="flex-1">
-                <h2 className="text-2xl font-bold text-blue-900 mb-3">Quick Answer: 200 Amp Service Wire Size</h2>
-                <p className="text-gray-700 mb-4">2/0 AWG copper or 4/0 AWG aluminum for a 120/240 V dwelling service (2023 NEC Table 310.12).</p>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-white rounded-lg p-4 border border-blue-200">
-                    <h3 className="font-semibold text-blue-900 mb-2">Copper Wire</h3>
-                    <p className="text-3xl font-bold text-blue-600 mb-1">{formatSize(CU_200A)}</p>
-                    <p className="text-sm text-gray-600">
-                      {CU_200A} copper is {tableAmpacity(CU_200A, 'Cu', 75)} A in the 75 °C column of Table 310.16, and Table 310.12 permits it for a 200 A dwelling service.
-                    </p>
-                  </div>
-                  <div className="bg-white rounded-lg p-4 border border-blue-200">
-                    <h3 className="font-semibold text-blue-900 mb-2">Aluminum Wire</h3>
-                    <p className="text-3xl font-bold text-blue-600 mb-1">{formatSize(AL_200A)}</p>
-                    <p className="text-sm text-gray-600">
-                      {AL_200A} aluminum is {tableAmpacity(AL_200A, 'Al', 75)} A in the 75 °C column of Table 310.16, and Table 310.12 permits it for a 200 A dwelling service.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Main Content */}
-          <div className="space-y-12">
-            {/* Understanding 200 Amp Service */}
-            <section className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <Info className="w-5 h-5 text-purple-600" />
-                </div>
-                Understanding 200 Amp Service
-              </h2>
-              
-              <div className="prose max-w-none">
-                <p className="text-gray-700 mb-4">
-                  200 amp service has become the standard for modern homes, providing adequate capacity for 
-                  today's electrical demands including electric vehicle charging, heat pumps, hot tubs, and 
-                  multiple high-power appliances.
-                </p>
-
-                <div className="grid md:grid-cols-2 gap-6 my-6">
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <h3 className="font-semibold text-gray-900 mb-3">When 200 Amp Service is Needed</h3>
-                    <ul className="space-y-2 text-sm text-gray-700">
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                        <span>Electric vehicle charging installation</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                        <span>Heat pump or electric heating systems</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                        <span>Hot tubs, pools, or workshop equipment</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                        <span>Home additions or major renovations</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* NEC Requirements */}
-            <section className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <Shield className="w-5 h-5 text-green-600" />
-                </div>
-                NEC Code Requirements
-              </h2>
-
-              <div className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-blue-50 rounded-lg p-4">
-                    <h3 className="font-semibold text-blue-900 mb-3">Grounding Requirements</h3>
-                    <ul className="space-y-2 text-sm text-blue-800">
-                      <li>• Grounding electrode conductor: 4 AWG Cu or 2 AWG Al</li>
-                      <li>• Equipment grounding: Based on breaker size</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* Copper vs Aluminum Comparison */}
-            <section className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Copper vs Aluminum: Detailed Comparison</h2>
-              
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="border-2 border-orange-200 rounded-lg overflow-hidden">
-                  <div className="bg-orange-100 px-4 py-3">
-                    <h3 className="font-semibold text-orange-900 text-lg">{formatSize(CU_200A)} Copper</h3>
-                  </div>
-                  <div className="p-4 space-y-4">
-                    <div>
-                      <h4 className="font-semibold text-green-700 mb-2">Advantages</h4>
-                      <ul className="text-sm space-y-1 text-gray-700">
-                        <li>• Superior conductivity and durability</li>
-                        <li>• Smaller diameter, easier routing</li>
-                        <li>• Better for long runs (less voltage drop)</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-red-700 mb-2">Disadvantages</h4>
-                      <ul className="text-sm space-y-1 text-gray-700">
-                        <li>• Heavier and harder to pull</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="border-2 border-gray-200 rounded-lg overflow-hidden">
-                  <div className="bg-gray-100 px-4 py-3">
-                    <h3 className="font-semibold text-gray-900 text-lg">4/0 AWG Aluminum</h3>
-                  </div>
-                  <div className="p-4 space-y-4">
-                    <div>
-                      <h4 className="font-semibold text-green-700 mb-2">Advantages</h4>
-                      <ul className="text-sm space-y-1 text-gray-700">
-                        <li>• Lighter weight, easier handling</li>
-                        <li>• Readily available</li>
-                        <li>• Proven reliability with proper installation</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-red-700 mb-2">Disadvantages</h4>
-                      <ul className="text-sm space-y-1 text-gray-700">
-                        <li>• Larger diameter wire</li>
-                        <li>• Special AL-rated connectors needed</li>
-                        <li>• More expansion/contraction</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* Installation Process */}
-            <section className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Wrench className="w-5 h-5 text-blue-600" />
-                </div>
-                Installation Process & Requirements
-              </h2>
-
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Step-by-Step Installation Guide</h3>
-                  
-                  <div className="space-y-4">
-                    <div className="flex gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">1</div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-gray-900">Obtain Permits and Schedule Inspection</h4>
-                        <p className="text-sm text-gray-600 mt-1">Apply for electrical permit from local building department. Schedule rough-in and final inspections.</p>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">2</div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-gray-900">Coordinate with Utility Company</h4>
-                        <p className="text-sm text-gray-600 mt-1">Schedule power disconnect and reconnection. Verify meter base requirements.</p>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">3</div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-gray-900">Install Service Entrance Equipment</h4>
-                        <p className="text-sm text-gray-600 mt-1">Mount meter base, install weatherhead, run service mast per utility requirements.</p>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">4</div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-gray-900">Run Service Entrance Conductors</h4>
-                        <p className="text-sm text-gray-600 mt-1">Pull {CU_200A} copper or {AL_200A} aluminum through conduit.</p>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">5</div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-gray-900">Install Main Panel</h4>
-                        <p className="text-sm text-gray-600 mt-1">Mount 200 amp panel, connect service conductors, install main breaker.</p>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">6</div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-gray-900">Complete Grounding System</h4>
-                        <p className="text-sm text-gray-600 mt-1">Install ground rods, run grounding electrode conductor, bond water and gas pipes.</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-yellow-50 rounded-lg p-4">
-                    <h3 className="font-semibold text-yellow-900 mb-3">Critical Installation Tips</h3>
-                    <ul className="space-y-2 text-sm text-yellow-800">
-                      <li>• Use proper wire pulling lubricant</li>
-                      <li>• Torque all connections to manufacturer specs</li>
-                      <li>• Use listed connectors rated for wire type</li>
-                      <li>• Protect wire from physical damage</li>
-                    </ul>
-                  </div>
-
-                  <div className="bg-red-50 rounded-lg p-4">
-                    <h3 className="font-semibold text-red-900 mb-3">Common Mistakes to Avoid</h3>
-                    <ul className="space-y-2 text-sm text-red-800">
-                      <li>• Using undersized wire for the run length</li>
-                      <li>• Mixing copper and aluminum improperly</li>
-                      <li>• Insufficient torque on connections</li>
-                      <li>• Improper grounding or bonding</li>
-                      <li>• Not checking voltage drop calculations</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* Voltage Drop Calculations */}
-            <section className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Voltage Drop Considerations</h2>
-
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 mb-3">When to Upsize Conductors</h3>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li>• Heavy continuous loads (EV charging, etc.)</li>
-                  <li>• Voltage-sensitive equipment present</li>
-                  <li>• Future expansion anticipated</li>
-                  <li>• Local utility voltage fluctuations</li>
-                </ul>
-              </div>
-            </section>
-
-            {/* Safety Warnings */}
-            <section className="bg-red-50 rounded-xl p-8 border-2 border-red-200">
-              <h2 className="text-2xl font-bold text-red-900 mb-6 flex items-center gap-3">
-                <AlertTriangle className="w-6 h-6 text-red-600" />
-                Critical Safety Information
-              </h2>
-              
-              <div className="space-y-4 text-red-800">
-                <div className="bg-white rounded-lg p-4 border border-red-200">
-                  <h3 className="font-semibold mb-2">Electrical Hazards</h3>
-                  <ul className="text-sm space-y-1">
-                    <li>• Service entrance work involves lethal voltages</li>
-                    <li>• Power must be disconnected by utility company</li>
-                    <li>• Never work on live service equipment</li>
-                  </ul>
-                </div>
-
-                <div className="bg-white rounded-lg p-4 border border-red-200">
-                  <h3 className="font-semibold mb-2">Legal Requirements</h3>
-                  <p className="text-sm">Where your jurisdiction requires a permit, an inspection or a licensed electrician, those requirements apply.</p>
-                </div>
-
-                <div className="bg-white rounded-lg p-4 border border-red-200">
-                  <h3 className="font-semibold mb-2">Common Hazards</h3>
-                  <ul className="text-sm space-y-1">
-                    <li>• Overhead power lines during installation</li>
-                    <li>• Improper grounding creating shock hazards</li>
-                    <li>• Aluminum connection failures from poor installation</li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            {/* Calculator CTA */}
-            <section className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-8 border-2 border-blue-200">
-              <div className="text-center">
-                <Calculator className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-                <h2 className="text-2xl font-bold text-gray-900 mb-3">
-                  Need the Wire Size for Your Circuit?
-                </h2>
-                <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-                  Use our professional wire size calculator to verify the correct wire gauge for your specific 
-                  installation, including voltage drop calculations.
-                </p>
-                <div className="flex flex-wrap gap-4 justify-center">
-                  <Link 
-                    href="/calculators/wire-size-calculator"
-                    className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
-                  >
-                    <Calculator className="w-5 h-5" />
-                    Wire Size Calculator
-                  </Link>
-                  <Link 
-                    href="/calculators/voltage-drop-calculator"
-                    className="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors inline-flex items-center gap-2"
-                  >
-                    <Zap className="w-5 h-5" />
-                    Voltage Drop Calculator
-                  </Link>
-                </div>
-              </div>
-            </section>
-
-            {/* FAQ Section */}
-            <section className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
-              <div className="space-y-6">
-                {faqs.map((faq, index) => (
-                  <div key={index} className="border-b border-gray-200 pb-6 last:border-b-0">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{faq.question}</h3>
-                    <p className="text-gray-700">{faq.answer}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* Related Guides */}
-            <section className="bg-gray-50 rounded-xl p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Related Guides</h2>
-              <div className="grid md:grid-cols-3 gap-6">
-                <Link href="/guides/wire-size-for-100-amp" className="bg-white rounded-lg p-4 hover:shadow-lg transition-shadow">
-                  <h3 data-name="" className="font-semibold text-blue-600 mb-2">Wire Size for 100 Amp Service</h3>
-                  <p className="text-sm text-gray-600">Learn about sizing requirements for 100 amp electrical service.</p>
-                </Link>
-                <Link href="/guides/wire-size-for-ev-charger" className="bg-white rounded-lg p-4 hover:shadow-lg transition-shadow">
-                  <h3 data-name="" className="font-semibold text-blue-600 mb-2">EV Charger Wire Sizing</h3>
-                  <p className="text-sm text-gray-600">Complete guide to wire sizing for electric vehicle charging stations.</p>
-                </Link>
-                <Link href="/guides/nec-table-310-16" className="bg-white rounded-lg p-4 hover:shadow-lg transition-shadow">
-                  <h3 data-name="" className="font-semibold text-blue-600 mb-2">NEC Table 310.16 Guide</h3>
-                  <p className="text-sm text-gray-600">Understanding ampacity tables and temperature ratings.</p>
-                </Link>
-              </div>
-            </section>
-          </div>
-        </div>
-      </div>
-
-      {/* NEC 310.12 — the 83% dwelling-service rule */}
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-8 mt-8 mb-8">
-        <h2 className="text-2xl font-bold text-blue-900 mb-3">NEC 310.12 — The 83 % Dwelling-Service Rule</h2>
-        <p className="text-slate-700 mb-4">
-          The single most important section of the NEC for residential
-          200-amp service sizing is <strong>NEC 310.12</strong>, often
-          called the &ldquo;83 % rule.&rdquo;
-        </p>
-
-        <div className="bg-white rounded-lg p-5 mb-4">
-          <p className="text-sm text-slate-700">
-            Specifically, Table 310.12 sizes service-entrance
-            conductors and feeders that supply the entire load by allowing
-            them to be sized for <strong>83 % of the service rating</strong> —
-            hence the &ldquo;83 % rule&rdquo; nickname.
-          </p>
+          <Figure
+            caption={
+              <>
+                <span data-src={AMP}>
+                  The ampacity at <Val v={G.column} unit="°C" src={TERM} /> of the sizes around a <Val v={G.ratingA} unit="A" src={SVC} />{' '}
+                  service. Table 310.12 lets a dwelling service use conductors with an ampacity of at least{' '}
+                  <Val v={SERVICE_AMPACITY_PERCENT} unit="%" src={SVC} /> of the rating, <Val v={G.minA} unit="A" src={SVC_CALC} />; sized
+                  from Table 310.16, any other feeder takes a size that reaches the full <Val v={G.ratingA} unit="A" src={SVC} />.
+                </span>
+                <SourceLine domains={[AMP, SVC, TERM]} />
+              </>
+            }
+          >
+            <Service200Ladder />
+          </Figure>
         </div>
 
-        <h3 className="font-bold text-blue-900 mb-2">NEC 310.12 Table — service / feeder conductor sizes for residential dwellings:</h3>
-        <div className="bg-white rounded-lg overflow-hidden mb-4">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-blue-100">
+        <LookGuideBody className="mt-14 border-t border-cut-rule pt-10">
+          <OnThisPage items={TOC} />
+
+          <section aria-labelledby="two-tables" className="space-y-5">
+            <h2 id="two-tables" className={H2}>
+              Why a service takes smaller wire
+            </h2>
+            <p className={P} data-src={SVC}>
+              Section 310.12 lets the conductors of a dwelling service have an ampacity of not less than{' '}
+              <Val v={SERVICE_AMPACITY_PERCENT} unit="%" src={SVC} /> of the service rating, and Table 310.12 lists the sizes that meet it.
+              For <Val v={G.ratingA} unit="A" src={SVC} /> that is <Val v={G.minA} unit="A" src={SVC_CALC} />.{' '}
+              <span data-src={AMP}>
+                In Table 310.16, <Size s={CU.dwelling} /> copper carries <Val v={CU.dwellingA} unit="A" src={AMP} /> and <Size s={AL.dwelling} />{' '}
+                aluminum <Val v={AL.dwellingA} unit="A" src={AMP} /> at <Val v={G.column} unit="°C" src={TERM} />: both reach{' '}
+                <Val v={G.minA} unit="A" src={SVC_CALC} />, neither reaches <Val v={G.ratingA} unit="A" src={SVC} />.
+              </span>
+            </p>
+            <p className={P} data-src={AMP}>
+              Sized from Table 310.16, a feeder on a <Val v={G.ratingA} unit="A" src={SVC} /> breaker takes the smallest size whose ampacity
+              reaches <Val v={G.ratingA} unit="A" src={SVC} />, one size up from each: <Size s={CU.feeder} /> copper at{' '}
+              <Val v={CU.feederA} unit="A" src={AMP} /> or <Size s={AL.feeder} /> aluminum at <Val v={AL.feederA} unit="A" src={AMP} />. One
+              allowance for aluminum is under{' '}
+              <a href="#subpanel" className={LINK}>
+                the subpanel feeder
+              </a>
+              .
+            </p>
+            <DataTable id="two-tables-200" variant="ruled" src={AMP} caption={`The conductors for ${G.ratingA} A from each table`}>
+              <thead>
                 <tr>
-                  <th className="px-4 py-2 text-left">Service Rating</th>
-                  <th className="px-4 py-2 text-center">Copper (AWG)</th>
-                  <th className="px-4 py-2 text-center">Aluminum (AWG / kcmil)</th>
+                  <th scope="col" className={clsx(RTH, RSTICKY_TH, TIGHT_TH)}>
+                    Use
+                  </th>
+                  <th scope="col" className={clsx(RTH, TIGHT_TH)}>
+                    Copper
+                  </th>
+                  <th scope="col" className={clsx(RTH, TIGHT_TH)}>
+                    Aluminum
+                  </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
-                {TABLE_310_12_ROWS.map((row) => (
-                  <tr key={row.ratingA} className={row.ratingA === 200 ? 'bg-blue-50 font-bold' : undefined}>
-                    <td className="px-4 py-2 font-mono">{row.ratingA} A</td>
-                    <td className="px-4 py-2 text-center">{formatSize(row.cu)}</td>
-                    <td className="px-4 py-2 text-center">{formatSize(row.alCca)}</td>
-                  </tr>
-                ))}
+              <tbody>
+                <tr>
+                  <th scope="row" className={clsx(RSTICKY_TD, USE_TH, TIGHT_TD)} data-src={SVC}>
+                    Dwelling service, Table 310.12
+                  </th>
+                  <td className={clsx(RTD, TIGHT_TD)}>
+                    <Size s={CU.dwelling} />
+                  </td>
+                  <td className={clsx(RTD, TIGHT_TD)}>
+                    <Size s={AL.dwelling} />
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" className={clsx(RSTICKY_TD, USE_TH, TIGHT_TD)} data-src={AMP}>
+                    Other feeder, Table 310.16
+                  </th>
+                  <td className={clsx(RTD, TIGHT_TD)}>
+                    <Size s={CU.feeder} />
+                  </td>
+                  <td className={clsx(RTD, TIGHT_TD)}>
+                    <Size s={AL.feeder} />
+                  </td>
+                </tr>
               </tbody>
-            </table>
-          </div>
-        </div>
+            </DataTable>
+          </section>
 
-        <h3 className="font-bold text-blue-900 mb-2">When NEC 310.12 does NOT apply</h3>
-        <ul className="text-sm space-y-1 text-slate-700 list-disc list-inside mb-4">
-          <li><strong>Multi-family dwellings serving more than one unit:</strong> the main service feeder must use full Table 310.16 ampacity. Only individual dwelling-unit feeders inside the building qualify for 310.12.</li>
-          <li><strong>Commercial / industrial occupancies:</strong> retail, office, warehouse, manufacturing all use straight 310.16.</li>
-          <li><strong>Three-phase services:</strong> 310.12 explicitly applies to single-phase 120/240 V dwellings only; three-phase services revert to straight 310.16.</li>
-          <li><strong>208 Y / 120 V wye services:</strong> not covered by 310.12; multi-family buildings on 208 Y / 120 V cannot use the 83 % allowance for the main service.</li>
-          <li><strong>Subpanel feeders that don&rsquo;t carry the entire service:</strong> only feeders supplying the entire dwelling load (typically the main service-entrance feeder from the meter to the main panel) qualify; downstream subpanels use full 310.16.</li>
-        </ul>
-      </div>
+          <section aria-labelledby="which-table" className="space-y-4">
+            <h2 id="which-table" className={H2}>
+              Which table applies
+            </h2>
+            <p className={P} data-src={SVC}>
+              Table 310.12 is for a 120/240 V single-phase service, or a feeder, that carries the entire load of a one-family dwelling or of
+              one dwelling unit in a two-family or multifamily building. A feeder that carries part of the
+              load, and every other service or feeder, is sized from Table 310.16.
+            </p>
+            <p className={P} data-src={TERM}>
+              Which column of Table 310.16 depends on the terminals. Under 110.14(C), the temperature rating used may not exceed that of any
+              termination, conductor or device. The terminals of equipment for circuits rated over{' '}
+              <Val v={TERMINATION_RULES.limitA} unit="A" src={TERM} /> are used with <Val v={G.column} unit="°C" src={TERM} /> conductors, or
+              with higher-rated ones at no more than their <Val v={G.column} unit="°C" src={TERM} /> ampacity unless the equipment is listed
+              and identified for more (110.14(C)(1)(b)). That is the column of the <Val v={CU.feederA} unit="A" src={AMP} /> and{' '}
+              <Val v={AL.feederA} unit="A" src={AMP} /> above.
+            </p>
+            <p className={P} data-src={SVC}>
+              Both tables assume no corrections. Where the ambient temperature is above{' '}
+              <Val v={TABLE_AMBIENT.c} unit="°C" src={AMP} />, or more than three current-carrying conductors share a raceway or cable, the
+              factors of Tables 310.15(B)(1)(1) and 310.15(C)(1) apply, and a dwelling service&apos;s corrected ampacity must still reach{' '}
+              <Val v={SERVICE_AMPACITY_PERCENT} unit="%" src={SVC} /> of the rating.
+            </p>
+          </section>
 
-      <ArticleSchema article={articleData} />
+          <section aria-labelledby="subpanel" className="space-y-4">
+            <h2 id="subpanel" className={H2} data-src={SVC}>
+              A <Val v={G.ratingA} unit="A" src={SVC} /> subpanel feeder
+            </h2>
+            <p className={P} data-src={AMP}>
+              A feeder to a subpanel carries part of the load, so Table 310.16 sizes it: <Pair cu={CU.feeder} al={AL.feeder} /> on a{' '}
+              <Val v={G.ratingA} unit="A" src={SVC} /> breaker.
+            </p>
+            <p className={P} data-src={OCPD}>
+              One allowance applies to <Size s={AL.dwelling} /> aluminum. Its <Val v={AL.dwellingA} unit="A" src={AMP} /> is not a standard
+              rating in Table 240.6(A), and 240.4(B) lets the next higher standard rating protect a conductor in that case, up to{' '}
+              <Val v={NEXT_SIZE_UP_MAX_A} unit="A" src={OCPD} />, so a <Val v={AL.protection.ratingA} unit="A" src={OCPD} /> breaker may
+              protect it.{' '}
+              <span data-src={LOAD}>
+                The feeder&apos;s calculated load must still fit its <Val v={AL.dwellingA} unit="A" src={AMP} />, under 215.2(A), with continuous
+                loads counted at <Val v={CONTINUOUS_LOAD_PERCENT} unit="%" src={LOAD} />.
+              </span>{' '}
+              <Size s={CU.dwelling} /> copper gets no such allowance: its <Val v={CU.dwellingA} unit="A" src={AMP} /> is a standard rating, so
+              its largest breaker is <Val v={CU.protection.ratingA} unit="A" src={OCPD} />.
+            </p>
+          </section>
+
+          <section aria-labelledby="ground-wires" className="space-y-5">
+            <h2 id="ground-wires" className={H2}>
+              Ground wires
+            </h2>
+            <p className={P} data-src={GND}>
+              A service has a grounding electrode conductor, which connects it to the ground rod or other electrode. Table 250.66 sizes it by
+              the largest service conductor: <Pair cu={GEC.cu} al={GEC.alCca} /> for <Size s={S.cu} /> copper or <Size s={S.alCca} /> aluminum
+              service conductors. The values are those of NFPA&apos;s 2020 grounding fact sheet.
+            </p>
+            <p className={P} data-src={GND}>
+              A feeder carries an equipment grounding conductor instead, sized by its breaker in Table 250.122:{' '}
+              <Pair cu={EGC.table.cu} al={EGC.table.alCca} /> for <Val v={EGC.ocpdA} unit="A" src={GND} />. The{' '}
+              <Link href="/calculators/ground-wire-calculator" className={LINK}>
+                ground wire calculator
+              </Link>{' '}
+              finds both for any rating.
+            </p>
+            <Figure
+              caption={
+                <>
+                  <span data-src={GND}>
+                    A <Val v={G.ratingA} unit="A" src={SVC} /> dwelling service&apos;s <Size s={S.cu} /> copper conductor (Table 310.12), its{' '}
+                    <Size s={GEC.cu} /> copper electrode conductor (Table 250.66), and the <Size s={EGC.table.cu} /> copper equipment grounding
+                    conductor of a <Val v={EGC.ocpdA} unit="A" src={GND} /> feeder (Table 250.122), drawn to one scale as solid conductors.
+                  </span>
+                  <SourceLine domains={[SVC, GND, GEO]} />
+                </>
+              }
+            >
+              <ServiceGroundDiscs />
+            </Figure>
+          </section>
+
+          <section aria-labelledby="voltage-drop" className="space-y-5">
+            <h2 id="voltage-drop" className={H2}>
+              Voltage drop on a long run
+            </h2>
+            <p className={P} data-src={VD}>
+              The tables size a service for its current, not for its length. At the full <Val v={G.ratingA} unit="A" src={SVC} />,{' '}
+              <Val v={D100.cu.lengthFt} unit="ft" src={VD} /> of <Size s={S.cu} /> copper drops{' '}
+              <Drop volts={D100.cu.result.vdVolts} pct={D100.cu.result.vdPct} /> and <Size s={S.alCca} /> aluminum{' '}
+              <Drop volts={D100.al.result.vdVolts} pct={D100.al.result.vdPct} /> on <Val v={SERVICE_VOLTS} unit="V" src={SVC} />, with the
+              conductors at <Val v={RESISTANCE_TEMP_C} unit="°C" src={RES} />.
+            </p>
+            <p className={P} data-src={LOAD}>
+              For feeders, an informational note to 215.2(A) says that conductors sized to keep the drop at the farthest outlet under{' '}
+              <Val v={VOLTAGE_DROP_NOTE.feederPct} unit="%" src={LOAD} />, with no more than{' '}
+              <Val v={VOLTAGE_DROP_NOTE.totalPct} unit="%" src={LOAD} /> on feeder and branch circuits together, will provide reasonable
+              efficiency. It is advice, not a limit.{' '}
+              <span data-src={VD}>
+                At the full rating, <Size s={S.cu} /> copper reaches <Val v={VOLTAGE_DROP_NOTE.feederPct} unit="%" src={LOAD} /> at{' '}
+                <Val v={G.noteFt.cu} unit="ft" src={VD} format={{ sig: 3 }} /> and <Size s={S.alCca} /> aluminum at{' '}
+                <Val v={G.noteFt.al} unit="ft" src={VD} format={{ sig: 3 }} />.
+              </span>
+            </p>
+            <Figure
+              caption={
+                <>
+                  <span data-src={VD}>
+                    Voltage drop of a <Val v={G.ratingA} unit="A" src={SVC} /> dwelling service at full load, single-phase at{' '}
+                    <Val v={SERVICE_VOLTS} unit="V" src={SVC} />, against the one-way length of its Table 310.12 conductors, with the 215.2(A)
+                    note&apos;s <Val v={VOLTAGE_DROP_NOTE.feederPct} unit="%" src={LOAD} />.
+                  </span>
+                  <SourceLine domains={[SVC, RES, LOAD]} />
+                </>
+              }
+            >
+              <ServiceDropChart note />
+            </Figure>
+            <p className={P} data-src={VD}>
+              The drop falls in proportion to the current, so a smaller load drops less. The{' '}
+              <Link href="/calculators/service-entrance-calculator" className={LINK}>
+                service entrance calculator
+              </Link>{' '}
+              takes your length and load.
+            </p>
+          </section>
+
+          <section aria-labelledby="ratings" className="space-y-5">
+            <h2 id="ratings" className={H2}>
+              Other ratings
+            </h2>
+            <p className={P} data-src={AMP}>
+              The same comparison for each rating of Table 310.12 above <Val v={TERMINATION_RULES.limitA} unit="A" src={TERM} />, from{' '}
+              <Val v={FIRST.ratingA} unit="A" src={SVC} /> to <Val v={LAST.ratingA} unit="A" src={SVC} />. The other-feeder column is the
+              smallest size whose <Val v={G.column} unit="°C" src={TERM} /> ampacity reaches the rating, without the 240.4(B) allowance.
+            </p>
+            <div className="grid gap-8 md:grid-cols-2 md:gap-6">
+              <RatingsTable material="cu" />
+              <RatingsTable material="al" />
+            </div>
+            <p className={P} data-src={TERM}>
+              At <Val v={TERMINATION_RULES.limitA} unit="A" src={TERM} /> and below, 110.14(C)(1)(a) starts from the{' '}
+              <Val v={TERMINATION_RULES.columnAtOrBelowLimit} unit="°C" src={TERM} /> column unless every termination is listed and identified
+              for <Val v={G.column} unit="°C" src={TERM} /> conductors, so that rating is left out here.
+            </p>
+          </section>
+
+          <section aria-labelledby="faq" className="space-y-6">
+            <h2 id="faq" className={H2}>
+              Questions
+            </h2>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={SVC}>
+                What size wire for a <Val v={G.ratingA} unit="A" src={SVC} /> service?
+              </h3>
+              <p className={P} data-src={SVC}>
+                <Pair cu={S.cu} al={S.alCca} /> for a 120/240 V dwelling service, from Table 310.12.
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={SVC}>
+                What size ground wire for a <Val v={G.ratingA} unit="A" src={SVC} /> service?
+              </h3>
+              <p className={P} data-src={GND}>
+                The grounding electrode conductor is <Pair cu={GEC.cu} al={GEC.alCca} /> (Table 250.66). A{' '}
+                <Val v={EGC.ocpdA} unit="A" src={GND} /> feeder&apos;s equipment grounding conductor is{' '}
+                <Pair cu={EGC.table.cu} al={EGC.table.alCca} /> (Table 250.122).
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={SVC}>
+                Copper or aluminum for <Val v={G.ratingA} unit="A" src={SVC} />?
+              </h3>
+              <p className={P} data-src={SVC}>
+                Table 310.12 allows either: <Size s={S.cu} /> copper or <Size s={S.alCca} /> aluminum, two sizes larger.{' '}
+                <span data-src={VD}>
+                  The two have nearly the same resistance, so over <Val v={D100.cu.lengthFt} unit="ft" src={VD} /> they drop{' '}
+                  <Val v={D100.cu.result.vdPct} unit="%" src={VD} format={{ fixed: 2 }} /> and{' '}
+                  <Val v={D100.al.result.vdPct} unit="%" src={VD} format={{ fixed: 2 }} />.
+                </span>
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={SVC}>
+                What size wire for a <Val v={G.ratingA} unit="A" src={SVC} /> subpanel?
+              </h3>
+              <p className={P} data-src={AMP}>
+                <Pair cu={CU.feeder} al={AL.feeder} />, from the <Val v={G.column} unit="°C" src={TERM} /> column of Table 310.16, with a{' '}
+                <Pair cu={EGC.table.cu} al={EGC.table.alCca} /> ground wire. <Size s={AL.dwelling} /> aluminum may sit on a{' '}
+                <Val v={AL.protection.ratingA} unit="A" src={OCPD} /> breaker under 240.4(B) if the load is no more than{' '}
+                <Val v={AL.dwellingA} unit="A" src={AMP} />.
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={VD}>
+                How much voltage drop on <Val v={D175.cu.lengthFt} unit="ft" src={VD} /> of{' '}
+                <Val v={G.ratingA} unit="A" src={SVC} /> service wire?
+              </h3>
+              <p className={P} data-src={VD}>
+                At the full <Val v={G.ratingA} unit="A" src={SVC} />: <Drop volts={D175.cu.result.vdVolts} pct={D175.cu.result.vdPct} /> on{' '}
+                <Size s={S.cu} /> copper and <Drop volts={D175.al.result.vdVolts} pct={D175.al.result.vdPct} /> on <Size s={S.alCca} />{' '}
+                aluminum.
+              </p>
+            </div>
+          </section>
+
+          <section aria-label="Sources and notices" className={LOOK_SOURCES_SECTION}>
+            <Sources
+              domains={[SVC, AMP, TERM, OCPD, LOAD, GND, RES, GEO]}
+              headingClassName={LOOK_SOURCES_HEADING}
+              listClassName={LOOK_SOURCES_LIST}
+              linkClassName={LINK}
+              noteClassName={LOOK_SOURCES_NOTE}
+            />
+            <p>
+              The{' '}
+              <Link href="/methodology#service-conductors" className={LINK}>
+                methodology page
+              </Link>{' '}
+              describes each source and how the values are found. NFPA 70®, National Electrical Code® and NEC® are registered trademarks of the
+              National Fire Protection Association; wiresizes.com is not affiliated with or endorsed by NFPA.
+            </p>
+          </section>
+        </LookGuideBody>
+      </article>
     </div>
-  )
+  );
 }
