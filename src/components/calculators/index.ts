@@ -1,9 +1,7 @@
 export { CalculatorResult } from './CalculatorResult';
 export { CalculatorLayout } from './CalculatorLayout';
 export { WireSizeCalculator } from './WireSizeCalculator';
-export { WattsToAmpsCalculator } from './WattsToAmpsCalculator';
 export { PowerConverterTool } from './PowerConverterTool';
-export { default as AmpsToWattsCalculator } from './AmpsToWattsCalculator';
 export { default as HorsepowerToAmpsCalculator } from './HorsepowerToAmpsCalculator';
 export { BTUToWattsCalculator } from './BTUToWattsCalculator';
 export { OhmsLawCalculator } from './OhmsLawCalculator';

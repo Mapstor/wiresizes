@@ -490,3 +490,33 @@ export function ampsFromResistance(volts: number, ohms: number): OhmResult | { e
 export function isOhmError(r: OhmResult | { error: 'input-invalid' }): r is { error: 'input-invalid' } {
   return 'error' in r;
 }
+
+/** The reverse: power from the current (WSZ-007c, amps to watts). S = V × I single-phase, √3 × V × I three-phase; P = S × PF. */
+export interface FromAmpsInput {
+  phases: ConvPhases;
+  volts: number;
+  amps: number;
+  pf: number;
+}
+
+export function convertFromAmps(input: FromAmpsInput): ConvResult | { error: 'input-invalid' } {
+  const { phases, volts, amps, pf } = input;
+  if (!CONV_PHASES.includes(phases)) return { error: 'input-invalid' };
+  if (!(Number.isFinite(volts) && volts >= TP_VOLTS_MIN && volts <= TP_VOLTS_MAX)) return { error: 'input-invalid' };
+  if (!positive(amps) || amps > CONV_VALUE_MAX) return { error: 'input-invalid' };
+  if (!(positive(pf) && powerFactorValid(pf))) return { error: 'input-invalid' };
+  const kva = phases === 3 ? kvaFromAmps(amps, volts) : (volts * amps) / 1000;
+  const kw = kva * pf;
+  return {
+    input: { phases, volts, known: 'kva', kva, pf },
+    phases,
+    volts,
+    amps,
+    kva,
+    kw,
+    kvar: kvarAt(kw, pf),
+    pf,
+    lineToNeutral: phases === 3 ? volts / SQRT3 : null,
+    wye: phases === 3 ? (TP_WYE_SYSTEMS.find((w) => w.lineVolts === volts) ?? null) : null,
+  };
+}

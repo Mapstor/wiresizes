@@ -87,13 +87,13 @@ export const ROUTES: readonly SiteRoute[] = [
     path: '/calculators/watts-to-amps-calculator',
     group: 'conversions',
     name: 'Watts to Amps Calculator',
-    line: 'Current in amps from power in watts and the voltage, for single-phase and three-phase circuits, with the power factor.',
+    line: 'Amps from watts and the voltage for DC, single-phase and three-phase loads, with a table of amps by watts.',
   },
   {
     path: '/calculators/amps-to-watts-calculator',
     group: 'conversions',
     name: 'Amps to Watts Calculator',
-    line: 'Power in watts from current and voltage, for DC, single-phase and three-phase circuits, with an optional power factor.',
+    line: 'Watts from amps and the voltage for DC, single-phase and three-phase loads, with a table of watts by amps.',
   },
   {
     path: '/calculators/volts-to-amps-calculator',

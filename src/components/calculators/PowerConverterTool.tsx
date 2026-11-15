@@ -1,9 +1,10 @@
 'use client';
 
-// The kilowatts, kVA and volts to amps calculators in the look (WSZ-007b; spec: research/page-specs.md "WSZ-007"; D-35).
-// Every number comes from the power engine's converter path (src/lib/calculations/power.ts: convertToAmps, ampsAtVolts,
-// ampsFromResistance): three-phase loads run through the three-phase calculator's own path, single-phase loads through
-// S = V × I and P = S × PF, and a resistance through Ohm's law. Results appear only after Calculate and explain each
+// The kilowatts, kVA, watts and volts to amps and the amps to watts calculators in the look (WSZ-007b and c; spec:
+// research/page-specs.md "WSZ-007"; D-35). Every number comes from the power engine's converter path
+// (src/lib/calculations/power.ts: convertToAmps, convertFromAmps, ampsAtVolts, ampsFromResistance): three-phase loads run
+// through the three-phase calculator's own path, single-phase loads through S = V × I and P = S × PF, DC through P = V × I
+// (power factor 1), and a resistance through Ohm's law. Results appear only after Calculate and explain each
 // number; a share link restores them.
 import { useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
@@ -25,13 +26,14 @@ import {
   TP_VOLTS_MIN,
   ampsAtVolts,
   ampsFromResistance,
+  convertFromAmps,
   convertToAmps,
   isConvError,
   isOhmError,
 } from '@/lib/calculations/power';
 import type { ConvResult, OhmResult } from '@/lib/calculations/power';
 
-export type ConverterMode = 'kw' | 'kva' | 'volts';
+export type ConverterMode = 'kw' | 'kva' | 'volts' | 'watts' | 'amps';
 
 const CALC = `calc:${ENGINE_ID}`;
 const VOLTS = 'us-nominal-voltages';
@@ -44,7 +46,7 @@ const LINK = 'text-ink underline decoration-cut-line decoration-2 underline-offs
 /** A calculated value as shown: TP_SIG significant figures, without trailing zeros. */
 const r4 = (v: number) => Number(v.toPrecision(TP_SIG));
 
-type Phases = '1' | '3';
+type Phases = '1' | '3' | 'dc';
 type Basis = 'power' | 'resistance';
 type FieldName = 'volts' | 'value' | 'pf' | 'ohms';
 
@@ -62,10 +64,16 @@ const DEFAULTS: Record<ConverterMode, Inputs> = {
   kw: { phases: '1', basis: 'power', volts: '240', value: '7.2', pf: '1', ohms: '' },
   kva: { phases: '3', basis: 'power', volts: '480', value: '75', pf: '', ohms: '' },
   volts: { phases: '1', basis: 'power', volts: '240', value: '4500', pf: '1', ohms: '12.8' },
+  watts: { phases: '1', basis: 'power', volts: '240', value: '4500', pf: '1', ohms: '' },
+  amps: { phases: '3', basis: 'power', volts: '480', value: '50', pf: '0.92', ohms: '' },
 };
+/** Modes with a DC choice beside single-phase and three-phase. */
+const hasDc = (mode: ConverterMode) => mode === 'watts' || mode === 'amps';
+/** The query key of the entered value. */
+const VALUE_KEY: Record<ConverterMode, string> = { kw: 'kw', kva: 'kva', volts: 'w', watts: 'w', amps: 'a' };
 
 /** The power the mode takes: real power in kW, apparent power in kVA, or real power in W. */
-const VALUE: Record<ConverterMode, { label: string; unit: 'kW' | 'kVA' | 'W'; message: string; hint: string }> = {
+const VALUE: Record<ConverterMode, { label: string; unit: 'kW' | 'kVA' | 'W' | 'A'; message: string; hint: string }> = {
   kw: {
     label: 'Real power, kW',
     unit: 'kW',
@@ -83,6 +91,18 @@ const VALUE: Record<ConverterMode, { label: string; unit: 'kW' | 'kVA' | 'W'; me
     unit: 'W',
     message: 'Enter a power above 0 W, up to 1,000,000 W.',
     hint: 'The real power in watts, from the nameplate or a meter.',
+  },
+  watts: {
+    label: 'Power, W',
+    unit: 'W',
+    message: 'Enter a power above 0 W, up to 1,000,000 W.',
+    hint: 'The real power in watts, from the nameplate or a meter.',
+  },
+  amps: {
+    label: 'Current, A',
+    unit: 'A',
+    message: 'Enter a current above 0 A, up to 1,000,000 A.',
+    hint: 'The current the load draws; on three-phase, the current in one line.',
   },
 };
 
@@ -102,7 +122,7 @@ function errorsOf(mode: ConverterMode, inputs: Inputs): Partial<Record<FieldName
       if (inputs.pf.trim() !== '' && !powerFactorValid(fieldNumber(inputs.pf))) {
         errors.pf = 'Enter a power factor above 0 and at most 1, or leave the field empty.';
       }
-    } else if (!powerFactorValid(fieldNumber(inputs.pf))) {
+    } else if (inputs.phases !== 'dc' && !powerFactorValid(fieldNumber(inputs.pf))) {
       errors.pf = POWER_FACTOR_INVALID_MESSAGE;
     }
   } else {
@@ -123,21 +143,23 @@ function compute(mode: ConverterMode, inputs: Inputs): Computed | null {
   }
   const phases = inputs.phases === '3' ? 3 : 1;
   const value = fieldNumber(inputs.value);
-  const pf = inputs.pf.trim() === '' ? null : fieldNumber(inputs.pf);
+  const pf = inputs.phases === 'dc' ? 1 : inputs.pf.trim() === '' ? null : fieldNumber(inputs.pf);
   const conv =
     mode === 'kva'
       ? convertToAmps({ phases, volts, known: 'kva', kva: value, pf })
-      : convertToAmps({ phases, volts, known: 'kw-pf', kw: mode === 'volts' ? value / 1000 : value, pf });
+      : mode === 'amps'
+        ? convertFromAmps({ phases, volts, amps: value, pf: pf ?? 1 })
+        : convertToAmps({ phases, volts, known: 'kw-pf', kw: mode === 'kw' ? value : value / 1000, pf });
   return isConvError(conv) ? null : { inputs, conv };
 }
 
 function inputsFromQuery(mode: ConverterMode, params: URLSearchParams): Inputs {
   const d = DEFAULTS[mode];
   return {
-    phases: choiceParam(params, 'phases', ['1', '3'] as const) ?? d.phases,
+    phases: choiceParam(params, 'phases', hasDc(mode) ? (['1', '3', 'dc'] as const) : (['1', '3'] as const)) ?? d.phases,
     basis: mode === 'volts' ? (choiceParam(params, 'basis', ['power', 'resistance'] as const) ?? d.basis) : 'power',
     volts: numberParam(params, 'volts') ?? d.volts,
-    value: numberParam(params, mode === 'volts' ? 'w' : mode) ?? '',
+    value: numberParam(params, VALUE_KEY[mode]) ?? '',
     pf: numberParam(params, 'pf') ?? '',
     ohms: numberParam(params, 'ohms') ?? '',
   };
@@ -159,8 +181,8 @@ export function PowerConverterTool({ mode }: { mode: ConverterMode }) {
       basis: mode === 'volts' ? i.basis : null,
       phases: p ? i.phases : null,
       volts: i.volts,
-      [mode === 'volts' ? 'w' : mode]: p ? i.value : null,
-      pf: p ? i.pf : null,
+      [VALUE_KEY[mode]]: p ? i.value : null,
+      pf: p && i.phases !== 'dc' ? i.pf : null,
       ohms: p ? null : i.ohms,
     });
   }, [mode, result]);
@@ -206,7 +228,13 @@ export function PowerConverterTool({ mode }: { mode: ConverterMode }) {
       className={width}
     />
   );
-  const label = { kw: 'Kilowatts to amps calculator', kva: 'kVA to amps calculator', volts: 'Volts to amps calculator' }[mode];
+  const label = {
+    kw: 'Kilowatts to amps calculator',
+    kva: 'kVA to amps calculator',
+    volts: 'Volts to amps calculator',
+    watts: 'Watts to amps calculator',
+    amps: 'Amps to watts calculator',
+  }[mode];
 
   return (
     <div>
@@ -231,8 +259,9 @@ export function PowerConverterTool({ mode }: { mode: ConverterMode }) {
                 legend="Circuit"
                 value={inputs.phases}
                 options={[
-                  { value: '1', label: 'Single-phase' },
-                  { value: '3', label: 'Three-phase' },
+                  ...(hasDc(mode) ? [{ value: 'dc' as const, label: 'DC' }] : []),
+                  { value: '1' as const, label: 'Single-phase' },
+                  { value: '3' as const, label: 'Three-phase' },
                 ]}
                 onChange={(phases) => update({ phases })}
               />
@@ -272,6 +301,7 @@ export function PowerConverterTool({ mode }: { mode: ConverterMode }) {
                 <Field id="value" label={VALUE[mode].label} hint={VALUE[mode].hint} error={shown('value')}>
                   {text('value', 'max-w-[11rem]')}
                 </Field>
+                {inputs.phases !== 'dc' && (
                 <Field
                   id="pf"
                   label={pfOptional(mode) ? 'Power factor (optional)' : 'Power factor'}
@@ -286,6 +316,7 @@ export function PowerConverterTool({ mode }: { mode: ConverterMode }) {
                 >
                   {text('pf', 'max-w-[7rem]')}
                 </Field>
+                )}
               </>
             ) : (
               <Field id="ohms" label="Resistance, Ω" hint="The load’s resistance in ohms, measured or from its specifications." error={shown('ohms')}>
@@ -311,7 +342,9 @@ export function PowerConverterTool({ mode }: { mode: ConverterMode }) {
         </p>
       )}
       {result && 'ohm' in result && <OhmOutcome r={result.ohm} headingRef={headingRef} shareUrl={shareUrl} />}
-      {result && 'conv' in result && <ConvOutcome mode={mode} r={result.conv} headingRef={headingRef} shareUrl={shareUrl} />}
+      {result && 'conv' in result && (
+        <ConvOutcome mode={mode} dc={result.inputs.phases === 'dc'} r={result.conv} headingRef={headingRef} shareUrl={shareUrl} />
+      )}
     </div>
   );
 }
@@ -372,37 +405,44 @@ function Footer({ assumed, method }: { assumed: React.ReactNode; method: string 
 
 function ConvOutcome({
   mode,
+  dc,
   r,
   headingRef,
   shareUrl,
 }: {
   mode: ConverterMode;
+  dc: boolean;
   r: ConvResult;
   headingRef: React.RefObject<HTMLHeadingElement | null>;
   shareUrl: () => string;
 }) {
   const three = r.phases === 3;
-  const watts = mode === 'volts';
-  // the volts page works in W and VA, the others in kW and kVA; entered values stay as entered
+  const watts = mode !== 'kw' && mode !== 'kva';
+  const fromAmps = mode === 'amps';
+  // the watt pages work in W and VA, the others in kW and kVA; entered values stay as entered
   const k = watts ? 1000 : 1;
   const pUnit = watts ? 'W' : 'kW';
   const sUnit = watts ? 'VA' : 'kVA';
-  const kwEntered = r.input.known === 'kw-pf';
-  const pShown = r.kw === null ? null : kwEntered ? r.kw * k : r4(r.kw * k);
-  const sShown = kwEntered ? r4(r.kva * k) : r.kva * k;
+  const kwEntered = r.input.known === 'kw-pf' && !fromAmps;
+  const kvaEntered = mode === 'kva';
+  const r6 = (v: number) => Number(v.toPrecision(6));
+  const pShown = r.kw === null ? null : kwEntered ? r.kw * k : fromAmps ? r6(r.kw * k) : r4(r.kw * k);
+  const sShown = kvaEntered ? r.kva * k : r4(r.kva * k);
   const V = <Val v={r.volts} unit="V" src="input" />;
-  const I = <Val v={r4(r.amps)} unit="A" src={CALC} />;
+  const I = fromAmps ? <Val v={r.amps} unit="A" src="input" /> : <Val v={r4(r.amps)} unit="A" src={CALC} />;
   const P = pShown === null ? null : <Val v={pShown} unit={pUnit} src={kwEntered ? 'input' : CALC} />;
-  const S = <Val v={sShown} unit={sUnit} src={kwEntered ? CALC : 'input'} />;
-  const PF = r.pf === null ? null : <Num v={r.pf} src="input" />;
+  const S = <Val v={sShown} unit={sUnit} src={kvaEntered ? 'input' : CALC} />;
+  const PF = r.pf === null || dc ? null : <Num v={r.pf} src="input" />;
   const Q = r.kvar === null || watts ? null : <Val v={r4(r.kvar)} unit="kVAR" src={CALC} />;
-  const circuit = three ? 'three-phase' : 'single-phase';
+  const circuit = dc ? 'DC' : three ? 'three-phase' : 'single-phase';
   const sqrt = three ? '√3 × ' : '';
+  const m = three ? SQRT3 : 1;
+  const pW = pShown === null ? 0 : pShown * (watts ? 1 : 1000);
 
   const rows = [
     { key: 'i', label: three ? 'Current in each line' : 'Current', value: I },
-    ...(P ? [{ key: 'p', label: 'Real power', value: P }] : []),
-    { key: 's', label: 'Apparent power', value: S },
+    ...(P ? [{ key: 'p', label: dc ? 'Power' : 'Real power', value: P }] : []),
+    ...(dc ? [] : [{ key: 's', label: 'Apparent power', value: S }]),
     ...(Q ? [{ key: 'q', label: 'Reactive power', value: Q }] : []),
     ...(PF ? [{ key: 'pf', label: 'Power factor', value: PF }] : []),
     ...(r.wye && r.lineToNeutral !== null
@@ -420,8 +460,8 @@ function ConvOutcome({
       : []),
   ];
 
-  const others = ampsAtVolts(r, three ? THREE_PHASE_VOLTS : SINGLE_PHASE_VOLTS);
-  if (!others.some((o) => o.volts === r.volts)) others.push({ volts: r.volts, amps: r.amps });
+  const others = dc ? [] : ampsAtVolts(r, three ? THREE_PHASE_VOLTS : SINGLE_PHASE_VOLTS);
+  if (!dc && !others.some((o) => o.volts === r.volts)) others.push({ volts: r.volts, amps: r.amps });
   others.sort((a, b) => a.volts - b.volts);
   const bars: ValueBarRow[] = others.map((o) => ({
     key: String(o.volts),
@@ -435,47 +475,78 @@ function ConvOutcome({
   return (
     <section aria-labelledby="result-heading" className="mt-10 border-t-2 border-ink pt-6">
       <h2 id="result-heading" ref={headingRef} tabIndex={-1} className={HEADING}>
-        Current of {kwEntered ? P : S} at {V} {circuit}
+        {fromAmps ? <>Power of {I}</> : <>Current of {kwEntered ? P : S}</>} at {V} {circuit}
         {PF && (
           <>
             , power factor {PF}
           </>
         )}
       </h2>
-      <p className={BIG}>{I}</p>
+      <p className={BIG}>{fromAmps ? P : I}</p>
       <p className="mt-3 max-w-[38rem] text-[17px] leading-[1.6] text-ink">
-        {three ? 'in each of the three lines.' : 'in the circuit.'}{' '}
-        {P && PF ? (
-          <>
-            The load draws {S} of apparent power, of which {P} is real power, the part that does the work.
-          </>
+        {fromAmps ? (
+          dc ? (
+            <>of power.</>
+          ) : (
+            <>
+              of real power, the part that does the work. The load draws {S} of apparent power{three ? ', with this current in each of the three lines' : ''}.
+            </>
+          )
         ) : (
-          <>Add a power factor to get the real and reactive power; the current is the same either way.</>
+          <>
+            {three ? 'in each of the three lines.' : 'in the circuit.'}{' '}
+            {dc ? null : P && PF ? (
+              <>The load draws {S} of apparent power, of which {P} is real power, the part that does the work.</>
+            ) : (
+              <>Add a power factor to get the real and reactive power; the current is the same either way.</>
+            )}
+          </>
         )}
       </p>
 
       <ValuesTable rows={rows} />
 
       <div className={PROSE}>
-        {kwEntered && PF && P && (
-          <p data-src={three ? DOE : EIA}>
-            <strong>The current:</strong> I = P ÷ ({sqrt}V × PF) = <Val v={(pShown as number) * (watts ? 1 : 1000)} unit="W" src="input" /> ÷ (
-            {sqrt}
-            {V} × {PF}) {eq(r.amps, ((pShown as number) * (watts ? 1 : 1000)) / ((three ? SQRT3 : 1) * r.volts * (r.pf as number)))} {I}.
+        {dc && !fromAmps && (
+          <p data-src={SI}>
+            <strong>The current:</strong> I = P ÷ V = <Val v={pW} unit="W" src="input" /> ÷ {V} {eq(r.amps, pW / r.volts)} {I}.
           </p>
         )}
-        {!kwEntered && (
+        {dc && fromAmps && P && (
+          <p data-src={SI}>
+            <strong>The power:</strong> P = V × I = {V} × {I} {eq((r.kw as number) * 1000, r.volts * r.amps)} {P}.
+          </p>
+        )}
+        {!dc && fromAmps && P && PF && (
+          <p data-src={three ? DOE : EIA}>
+            <strong>The real power:</strong> P = {sqrt}V × I × PF = {sqrt}
+            {V} × {I} × {PF} {eq((r.kw as number) * 1000, m * r.volts * r.amps * (r.pf as number))} {P}.
+          </p>
+        )}
+        {!dc && fromAmps && (
+          <p data-src={three ? MIT : EIA}>
+            <strong>The apparent power:</strong> S = {sqrt}V × I = {sqrt}
+            {V} × {I} {eq(r.kva * 1000, m * r.volts * r.amps)} {S}.
+          </p>
+        )}
+        {!dc && kwEntered && PF && P && (
+          <p data-src={three ? DOE : EIA}>
+            <strong>The current:</strong> I = P ÷ ({sqrt}V × PF) = <Val v={pW} unit="W" src="input" /> ÷ ({sqrt}
+            {V} × {PF}) {eq(r.amps, pW / (m * r.volts * (r.pf as number)))} {I}.
+          </p>
+        )}
+        {kvaEntered && (
           <p data-src={three ? MIT : EIA}>
             <strong>The current:</strong> I = S ÷ {three ? '(√3 × V)' : 'V'} = <Val v={sShown * 1000} unit="VA" src="input" /> ÷{' '}
-            {three ? <>(√3 × {V})</> : V} {eq(r.amps, (sShown * 1000) / ((three ? SQRT3 : 1) * r.volts))} {I}.
+            {three ? <>(√3 × {V})</> : V} {eq(r.amps, (sShown * 1000) / (m * r.volts))} {I}.
           </p>
         )}
-        {kwEntered && PF && P && (
+        {!dc && kwEntered && PF && P && (
           <p data-src={EIA}>
             <strong>The apparent power:</strong> S = P ÷ PF = {P} ÷ {PF} {eq(r.kva * k, (pShown as number) / (r.pf as number))} {S}.
           </p>
         )}
-        {!kwEntered && PF && P && (
+        {kvaEntered && PF && P && (
           <p data-src={EIA}>
             <strong>The real power:</strong> P = S × PF = {S} × {PF} {eq((r.kw as number) * k, sShown * (r.pf as number))} {P}.
           </p>
@@ -493,20 +564,26 @@ function ConvOutcome({
         )}
       </div>
 
-      <p className="mt-6 max-w-[38rem] text-[17px] leading-[1.65] text-ink">
-        The same load at {three ? 'the nominal three-phase voltages' : 'other voltages'}: the current falls as the voltage rises.
-      </p>
-      <div className="mt-4 max-w-[40rem]">
-        <ValueBars rows={bars} label={`Current of the same load at ${three ? 'three-phase' : 'single-phase'} voltages`} />
-      </div>
+      {!dc && (
+        <>
+          <p className="mt-6 max-w-[38rem] text-[17px] leading-[1.65] text-ink">
+            The current of the same load at {three ? 'the nominal three-phase voltages' : 'other voltages'}: it falls as the voltage rises.
+          </p>
+          <div className="mt-4 max-w-[40rem]">
+            <ValueBars rows={bars} label={`Current of the same load at ${three ? 'three-phase' : 'single-phase'} voltages`} />
+          </div>
+        </>
+      )}
 
       <Footer
         assumed={
-          three
-            ? 'Assumed: a balanced load with sinusoidal voltage and current, the same current in all three lines. V is the voltage between two lines and I the current in one line; the powers are for the whole load.'
-            : 'Assumed: sinusoidal voltage and current; the current is the current in the circuit’s conductors.'
+          dc
+            ? 'Assumed: a steady DC voltage and current.'
+            : three
+              ? 'Assumed: a balanced load with sinusoidal voltage and current, the same current in all three lines. V is the voltage between two lines and I the current in one line; the powers are for the whole load.'
+              : 'Assumed: sinusoidal voltage and current; the current is the current in the circuit’s conductors.'
         }
-        method={three ? 'three-phase-power' : 'power-terms'}
+        method={dc ? 'si-units' : three ? 'three-phase-power' : 'power-terms'}
       />
       <ResultActions shareUrl={shareUrl} />
     </section>
