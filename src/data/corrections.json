@@ -69,6 +69,6 @@
   },
   {
     "date": "2026-11-15",
-    "text": "Rebuilt the ground wire calculator: it now sizes both the equipment grounding conductor from Table 250.122, with the 250.122(B) increase when the circuit wires are upsized, and the grounding electrode conductor from Table 250.66. Removed lists of electrodes, pool bonding, installation methods and inspection steps, which cited no source."
+    "text": "Rebuilt the ground wire calculator: it now sizes both the equipment grounding conductor from Table 250.122, with the 250.122(B) increase when the circuit wires are upsized, and the grounding electrode conductor from Table 250.66 as NFPA's 2020 grounding fact sheet prints it. Removed lists of electrodes, pool bonding, installation methods and inspection steps, which cited no source."
   }
 ]
