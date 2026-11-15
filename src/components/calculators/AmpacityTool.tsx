@@ -57,7 +57,7 @@ const DEFAULTS: Inputs = { size: '12', material: 'Cu', method: 'conductors', col
 
 type Errors = { size?: string; temp?: string; count?: string };
 
-/** "whole degrees, −40 to 150 °C": the hint and, after "Enter", the error, so the two take the same room. */
+/** "whole degrees, −40 to 150 °C", for the error message. */
 function tempRange(unit: TempUnit): string {
   const n = (v: number) => (v < 0 ? `−${formatValue(-v)}` : formatValue(v));
   return `whole degrees, ${n(TEMP_MIN[unit])} to ${n(TEMP_MAX[unit])} °${unit}`;
@@ -201,31 +201,27 @@ export function AmpacityTool() {
               NM and UF cable stay in the <Val v={CABLE_COLUMN} unit="°C" src={TERM} /> column, corrections included.
             </p>
           )}
-          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4">
-            <Field id="temp" label="Ambient temperature" hint={`In ${tempRange(inputs.unit)}.`} error={shownTemp}>
-              <TextInput
-                id="temp"
-                value={inputs.temp}
-                onChange={(temp) => update({ temp })}
-                onBlur={() => fieldErrors.touch('temp')}
-                error={shownTemp}
-                describedById={describedBy('temp', shownTemp, true)}
-              />
-            </Field>
-            <div className="mt-[29px]">
-              <Segmented
-                name="unit"
-                legend="Temperature unit"
-                srLegend
-                value={inputs.unit}
-                options={[
-                  { value: 'C', label: '°C' },
-                  { value: 'F', label: '°F' },
-                ]}
-                onChange={(unit) => update({ unit })}
-              />
-            </div>
-          </div>
+          <Field id="temp" label="Ambient temperature" hint="Whole degrees." error={shownTemp}>
+            <TextInput
+              id="temp"
+              value={inputs.temp}
+              onChange={(temp) => update({ temp })}
+              onBlur={() => fieldErrors.touch('temp')}
+              error={shownTemp}
+              describedById={describedBy('temp', shownTemp, true)}
+              className="max-w-[12rem]"
+            />
+          </Field>
+          <Segmented
+            name="unit"
+            legend="Temperature unit"
+            value={inputs.unit}
+            options={[
+              { value: 'C', label: '°C' },
+              { value: 'F', label: '°F' },
+            ]}
+            onChange={(unit) => update({ unit })}
+          />
           <Field id="count" label="Current-carrying conductors" hint="In the raceway or cable, counted together." error={shownCount}>
             <TextInput
               id="count"
