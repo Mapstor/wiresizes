@@ -28,6 +28,7 @@ const LOOK_GUIDES = new Set([
   '/guides/single-vs-three-phase',
   '/guides/power-factor-explained',
   '/guides/electrical-power-calculations',
+  '/guides/wire-size-for-200-amp',
 ]);
 
 const STYLES = {

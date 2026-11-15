@@ -24,6 +24,8 @@ import { lowVoltageSize, lvLengthForDrop } from '@/lib/calculations/dc-sizing';
 import { SQRT3, TP_WYE_SYSTEMS } from '@/lib/calculations/power';
 import type { TpResult } from '@/lib/calculations/power';
 import { COMPARE_KW, COMPARE_ROWS, GUIDE_EXAMPLES, PF_BARS, PF_BAR_ROWS, PF_EXAMPLE, WATTS_PER_AMP_ROWS } from '@/lib/power-guides';
+import { GUIDE_200 } from '@/lib/service-guides';
+import type { GuideSide } from '@/lib/service-guides';
 import { areaCmil, conductor } from '@/lib/verified/awg';
 import { TABLE_250_122_ROWS, egcRow } from '@/lib/verified/nec-250-122';
 import { SERVICE_VOLTS, TABLE_310_12_ROWS, serviceEntrance, isServiceError, serviceLookup } from '@/lib/calculations/service-lookup';
@@ -2032,7 +2034,7 @@ function dropPct(material: 'Cu' | 'Al', lengthFt: number): number {
   return r.drop.result.vdPct;
 }
 
-function ServiceDropPlot({ narrow }: { narrow: boolean }) {
+function ServiceDropPlot({ narrow, note }: { narrow: boolean; note: boolean }) {
   const W = narrow ? 288 : 560;
   const left = narrow ? 40 : 48;
   const right = narrow ? 16 : 24;
@@ -2049,7 +2051,8 @@ function ServiceDropPlot({ narrow }: { narrow: boolean }) {
   const line = (m: 'Cu' | 'Al') => SERVICE_DROP.lengthsFt.map((ft, k) => `${k === 0 ? 'M' : 'L'}${x(ft).toFixed(1)},${y(dropPct(m, ft)).toFixed(1)}`).join('');
   const endCu = dropPct('Cu', maxFt);
   const endAl = dropPct('Al', maxFt);
-  const id = narrow ? 'service-drop-narrow' : 'service-drop-wide';
+  const id = `service-drop${note ? '-note' : ''}-${narrow ? 'narrow' : 'wide'}`;
+  const notePct = VOLTAGE_DROP_NOTE.feederPct;
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
@@ -2085,18 +2088,140 @@ function ServiceDropPlot({ narrow }: { narrow: boolean }) {
       <text x={left + pw / 2} y={H - 6} textAnchor="middle" fontSize={13} fill={MUTED}>
         One-way length, ft (drop in % on the left)
       </text>
+      {note && (
+        <g data-src="nec-continuous-load">
+          <line x1={left} x2={W - right} y1={y(notePct)} y2={y(notePct)} stroke={INK} strokeWidth={1.5} strokeDasharray="5 4" />
+          <text x={W - right} y={y(notePct) + 18} textAnchor="end" fontSize={13} fill={INK}>
+            <Val v={notePct} unit="%" src="nec-continuous-load" svg />: the feeder note
+          </text>
+        </g>
+      )}
       <path d={line('Al')} fill="none" stroke={ALUMINUM} strokeWidth={2.5} pathLength={1} className="viz-draw" />
       <path d={line('Cu')} fill="none" stroke={COPPER} strokeWidth={2.5} pathLength={1} className="viz-draw" />
     </svg>
   );
 }
 
-/** A 200 A service at full load: voltage drop against one-way length on its copper and aluminum conductors. */
-export function ServiceDropChart() {
+/**
+ * A 200 A service at full load: voltage drop against one-way length on its copper and aluminum conductors; with `note`,
+ * the 215.2(A) informational note's feeder figure as a dashed line.
+ */
+export function ServiceDropChart({ note = false }: { note?: boolean }) {
   return (
     <div>
-      <ServiceDropPlot narrow={false} />
-      <ServiceDropPlot narrow />
+      <ServiceDropPlot narrow={false} note={note} />
+      <ServiceDropPlot narrow note={note} />
+    </div>
+  );
+}
+
+// ── 200 A guide (WSZ-008c): the 75 °C ampacities around a 200 A service's sizes, against 83 % of 200 A and 200 A ─────
+
+const LADDER_SRC = 'nec-310-16';
+
+function LadderPlot({ narrow }: { narrow: boolean }) {
+  const g = GUIDE_200;
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 84 : 112;
+  const right = narrow ? 14 : 30;
+  const top = narrow ? 64 : 56;
+  const rowH = narrow ? 24 : 26;
+  const headH = narrow ? 24 : 26;
+  const gap = 10;
+  const groups: { side: GuideSide; name: string; color: string }[] = [
+    { side: g.cu, name: 'Copper', color: COPPER },
+    { side: g.al, name: 'Aluminum', color: ALUMINUM },
+  ];
+  const bodyH = groups.reduce((h, grp) => h + headH + grp.side.ladder.length * rowH, 0) + gap;
+  const H = top + bodyH + 44;
+  const pw = W - left - right;
+  const aMin = 140;
+  // room right of the largest dot for its label on a phone
+  const aMax = narrow ? 260 : 250;
+  const x = (a: number) => left + ((a - aMin) / (aMax - aMin)) * pw;
+  const ticks = narrow ? [150, 200, 250] : [150, 175, 200, 225, 250];
+  const plotTop = top - 6;
+  const plotBottom = top + bodyH;
+  const id = narrow ? 'ladder-200-narrow' : 'ladder-200-wide';
+  let yAt = top;
+  const rows = groups.map((grp, gi) => {
+    const head = yAt + (gi === 0 ? 0 : gap);
+    yAt = head + headH;
+    const items = grp.side.ladder.map((r) => {
+      const cy = yAt + rowH / 2;
+      yAt += rowH;
+      return { ...r, cy };
+    });
+    return { ...grp, head, items };
+  });
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={LADDER_SRC}
+    >
+      <title id={`${id}-title`}>
+        {`Allowable ampacity at ${g.column} °C, NEC Table 310.16, of the sizes around a ${g.ratingA} A service: ${g.cu.ladder.map((r) => `${r.size} copper ${r.amps} A`).join(', ')}; ${g.al.ladder.map((r) => `${r.size} aluminum ${r.amps} A`).join(', ')}. Sizes between ${g.minA} A (83 % of ${g.ratingA} A) and ${g.ratingA} A are allowed for a dwelling service by Table 310.12 but not for another ${g.ratingA} A feeder.`}
+      </title>
+      <rect x={x(g.minA)} y={plotTop} width={x(g.ratingA) - x(g.minA)} height={plotBottom - plotTop} fill="#f5f2ee" />
+      <text x={x(g.minA)} y={narrow ? 18 : 20} fontSize={13} fill={INK}>
+        Dwelling service only
+      </text>
+      <text x={x(g.minA)} y={narrow ? 36 : 38} fontSize={13} fill={MUTED}>
+        <Val v={g.minA} unit="A" src="calc:service-lookup" svg /> to <Val v={g.ratingA} unit="A" src="nec-310-12" svg />
+      </text>
+      {ticks.map((t) => (
+        <g key={t}>
+          <line x1={x(t)} x2={x(t)} y1={plotTop} y2={plotBottom} stroke={t === g.ratingA ? INK : GRID} strokeWidth={t === g.ratingA ? 1.5 : 1} />
+          <text x={x(t)} y={plotBottom + 20} textAnchor="middle" fontSize={13} fill={MUTED}>
+            <Val v={t} unit="A" src={LADDER_SRC} svg />
+          </text>
+        </g>
+      ))}
+      {!ticks.includes(g.ratingA) && <line x1={x(g.ratingA)} x2={x(g.ratingA)} y1={plotTop} y2={plotBottom} stroke={INK} strokeWidth={1.5} />}
+      <line x1={x(g.minA)} x2={x(g.minA)} y1={plotTop} y2={plotBottom} stroke={INK} strokeWidth={1.5} strokeDasharray="5 4" />
+      <text x={left + pw / 2} y={H - 4} textAnchor="middle" fontSize={13} fill={MUTED}>
+        Ampacity, {g.column} °C column
+      </text>
+      {rows.map((grp) => (
+        <g key={grp.name}>
+          <text x={0} y={grp.head + headH - 8} fontSize={13} fontWeight={600} fill={INK}>
+            {grp.name}
+          </text>
+          {grp.items.map((r) => {
+            const pick = r.size === grp.side.dwelling || r.size === grp.side.feeder;
+            return (
+              <g key={r.size} className="viz-mark">
+                <text x={left - 12} y={r.cy + 4.5} textAnchor="end" fontSize={13} fill={INK} fontWeight={pick ? 600 : 400}>
+                  <Size s={r.size} svg />
+                </text>
+                <line x1={left} x2={W - right} y1={r.cy} y2={r.cy} stroke={GRID} strokeWidth={1} />
+                <circle cx={x(r.amps)} cy={r.cy} r={6} fill={grp.color} stroke="#ffffff" strokeWidth={2} className="viz-pop" />
+                <text x={x(r.amps) + 11} y={r.cy + 4.5} fontSize={13} fill={INK} stroke="#ffffff" strokeWidth={4} paintOrder="stroke">
+                  <Val v={r.amps} unit="A" src={LADDER_SRC} svg />
+                </text>
+              </g>
+            );
+          })}
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+/**
+ * The 200 A guide's answer as a picture: each size's 75 °C ampacity as a dot, with the band from 83 % of 200 A to
+ * 200 A where Table 310.12 allows a size for a dwelling service that Table 310.16 doesn't allow for another feeder.
+ */
+export function Service200Ladder() {
+  return (
+    <div>
+      <LadderPlot narrow={false} />
+      <LadderPlot narrow />
     </div>
   );
 }

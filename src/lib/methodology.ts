@@ -37,6 +37,7 @@ const OHMS_LAW = '/calculators/ohms-law-calculator';
 const POWER_FACTOR = '/guides/power-factor-explained';
 const POWER_CALCS = '/guides/electrical-power-calculations';
 const SERVICE_ENTRANCE = '/calculators/service-entrance-calculator';
+const GUIDE_200 = '/guides/wire-size-for-200-amp';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
 const EDITIONS = '/guides/nec-code-compliance';
@@ -51,25 +52,31 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'wire-gauge',
     domain: 'awg-geometry',
     title: 'Wire gauge sizes and areas',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, GROUND_WIRE, WIRE_RESISTANCE, LOW_VOLTAGE, SERVICE_ENTRANCE, AWG_CHART, HOME],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, GROUND_WIRE, WIRE_RESISTANCE, LOW_VOLTAGE, SERVICE_ENTRANCE, GUIDE_200, AWG_CHART, HOME],
   },
   {
     id: 'resistance',
     domain: 'conductor-resistance-20c',
     title: 'Conductor resistance and voltage drop',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE, GUIDE_200],
   },
   {
     id: 'ampacity',
     domain: 'nec-310-16',
     title: 'Ampacity',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, HOME],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, HOME],
   },
   {
     id: 'corrections',
     domain: 'nec-310-15-corrections',
     title: 'Ambient temperature and bundling',
     citedOn: [WIRE_SIZE, AMPACITY, TABLE_310_16],
+  },
+  {
+    id: 'terminals',
+    domain: 'nec-110-14c',
+    title: 'Terminal temperatures',
+    citedOn: [GUIDE_200],
   },
   {
     id: 'small-conductors',
@@ -81,25 +88,25 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'breaker-ratings',
     domain: 'nec-240-ocpd',
     title: 'Standard breaker and fuse ratings',
-    citedOn: [WIRE_SIZE, GROUND_WIRE],
+    citedOn: [WIRE_SIZE, GROUND_WIRE, GUIDE_200],
   },
   {
     id: 'continuous-loads',
     domain: 'nec-continuous-load',
     title: 'Continuous loads and the voltage-drop note',
-    citedOn: [VOLTAGE_DROP, LOW_VOLTAGE],
+    citedOn: [VOLTAGE_DROP, LOW_VOLTAGE, GUIDE_200],
   },
   {
     id: 'grounding',
     domain: 'nec-250-grounding',
     title: 'Ground wires and grounding electrode conductors',
-    citedOn: [WIRE_SIZE, GROUND_WIRE, SERVICE_ENTRANCE],
+    citedOn: [WIRE_SIZE, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200],
   },
   {
     id: 'service-conductors',
     domain: 'nec-310-12',
-    title: 'Dwelling services and main feeders',
-    citedOn: [SERVICE_ENTRANCE, GROUND_WIRE, TABLE_310_16, SINGLE_VS_THREE],
+    title: 'Dwelling services and feeders',
+    citedOn: [SERVICE_ENTRANCE, GROUND_WIRE, TABLE_310_16, SINGLE_VS_THREE, GUIDE_200],
   },
   {
     id: 'power-terms',

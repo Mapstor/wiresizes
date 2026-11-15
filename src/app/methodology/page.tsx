@@ -23,7 +23,8 @@ import { NOMINAL_SINGLE_PHASE, NOMINAL_THREE_PHASE, assertNominal } from '@/lib/
 import { CITED_PAGE_NAMES, METHODOLOGY_EXTRA_SECTIONS, METHODOLOGY_ROUTE, METHODOLOGY_SECTIONS } from '@/lib/methodology';
 import type { MethodologySection } from '@/lib/methodology';
 import { AWG_CONSTANTS, AWG_DEFINITION, awgRow, kcmilRow } from '@/lib/verified/awg';
-import { ROWS_240_4_D } from '@/lib/verified/nec-240-4-d';
+import { NEXT_SIZE_UP_MAX_A, ROWS_240_4_D } from '@/lib/verified/nec-240-4-d';
+import { TERMINATION_RULES } from '@/lib/verified/nec-110-14c';
 import { ocpdRatings } from '@/lib/verified/nec-240-6-a';
 import { TABLE_250_122_ROWS } from '@/lib/verified/nec-250-122';
 import { ADJUSTMENT_ROWS } from '@/lib/verified/nec-310-15-C-1';
@@ -542,6 +543,39 @@ export default function MethodologyPage() {
           </Limits>
         </SourceSection>
 
+        <SourceSection domain="nec-110-14c">
+          <p>
+            Section 110.14(C) of the NEC (2023) limits the column of Table 310.16 a conductor is sized from: the
+            temperature rating used may not exceed the lowest rating of any connected termination, conductor or device.
+            The terminals of equipment for circuits rated <Val v={TERMINATION_RULES.limitA} unit="A" src="nec-110-14c" /> or
+            less, or marked for <Size s="14" /> through <Size s="1" /> conductors, are used at the{' '}
+            <Val v={TERMINATION_RULES.columnAtOrBelowLimit} unit="°C" src="nec-110-14c" /> ampacity unless the equipment is
+            listed and identified for higher-rated conductors. Those for circuits rated over{' '}
+            <Val v={TERMINATION_RULES.limitA} unit="A" src="nec-110-14c" />, or marked for conductors larger than{' '}
+            <Size s="1" />, are used at the <Val v={TERMINATION_RULES.columnAboveLimit} unit="°C" src="nec-110-14c" />{' '}
+            ampacity unless listed and identified for more. A conductor with a higher rating may start from its own column
+            for ampacity correction and adjustment.
+          </p>
+          <SourceFacts s={section('nec-110-14c')} />
+          <p>
+            The text was read in NFPA&apos;s Second Draft for the 2023 edition, where revision SR-7793 changed only the
+            informational notes of 110.14(C). The{' '}
+            <Link href="/guides/wire-size-for-200-amp" className={LINK}>
+              200 A guide
+            </Link>{' '}
+            sizes a feeder rated over <Val v={TERMINATION_RULES.limitA} unit="A" src="nec-110-14c" /> from the{' '}
+            <Val v={TERMINATION_RULES.columnAboveLimit} unit="°C" src="nec-110-14c" /> column.
+          </p>
+          <Limits>
+            <li>
+              No calculator sizes from the <Val v={TERMINATION_RULES.columnAboveLimit} unit="°C" src="nec-110-14c" /> column
+              yet: the wire size calculator uses the <Val v={SIZING_COLUMN_C} unit="°C" src="nec-310-16" /> column for every
+              rating.
+            </li>
+            <li>Equipment listed and identified for higher-rated conductors is not covered.</li>
+          </Limits>
+        </SourceSection>
+
         <SourceSection domain="nec-240-4-d">
           <p>
             Section 240.4(D) of the NEC (2023) sets the largest breaker or fuse allowed on small conductors, whatever
@@ -585,7 +619,10 @@ export default function MethodologyPage() {
             Table 240.6(A) of the NEC (2023) lists the standard ampere ratings of fuses and inverse time circuit
             breakers, from <Val v={RATINGS[0]} unit="A" src="nec-240-ocpd" /> to{' '}
             <Val v={RATINGS[RATINGS.length - 1]} unit="A" src="nec-240-ocpd" />. The values come from Eaton&apos;s
-            reprint of the 2023 table, made with NFPA&apos;s permission.
+            reprint of the 2023 table, made with NFPA&apos;s permission. Section 240.4(B) lets the next higher standard
+            rating protect a conductor whose ampacity is not a standard rating, up to{' '}
+            <Val v={NEXT_SIZE_UP_MAX_A} unit="A" src="nec-240-ocpd" />, where the conductors are not part of a branch circuit
+            supplying more than one receptacle for cord-and-plug-connected portable loads.
           </p>
           <SourceFacts s={section('nec-240-ocpd')} />
           <p>
@@ -601,7 +638,11 @@ export default function MethodologyPage() {
             <li>The extra fuse-only ratings named in the text of 240.6(A) are not offered.</li>
             <li>
               The calculators pick a conductor whose ampacity is at least the rating, so they never rely on the
-              next-size-up allowance of 240.4(B).
+              next-size-up allowance of 240.4(B). The{' '}
+              <Link href="/guides/wire-size-for-200-amp#subpanel" className={LINK}>
+                200 A guide
+              </Link>{' '}
+              shows it for a feeder of <Size s="4/0" /> aluminum.
             </li>
           </Limits>
         </SourceSection>
@@ -685,8 +726,9 @@ export default function MethodologyPage() {
 
         <SourceSection domain="nec-310-12">
           <p>
-            Table 310.12 of the NEC (2023) lists conductor sizes for 120/240 V single-phase dwelling services and main
-            power feeders from <Val v={SERVICE_FIRST.ratingA} unit="A" src="nec-310-12" /> to{' '}
+            Table 310.12 of the NEC (2023) lists conductor sizes for a 120/240 V single-phase service, or a feeder, that
+            carries the entire load of a one-family dwelling or of one dwelling unit, from{' '}
+            <Val v={SERVICE_FIRST.ratingA} unit="A" src="nec-310-12" /> to{' '}
             <Val v={SERVICE_LAST.ratingA} unit="A" src="nec-310-12" />, in copper and in aluminum or copper-clad
             aluminum. It applies the rule that these conductors may have an ampacity as low as{' '}
             <Val v={SERVICE_AMPACITY_PERCENT} unit="%" src="nec-310-12" /> of the service rating.
@@ -699,8 +741,12 @@ export default function MethodologyPage() {
           </p>
           <Limits>
             <li>
-              Only for the service or main power feeder of one dwelling unit at 120/240 V single-phase. Other services
-              and feeders are sized from Table 310.16.
+              Only for a 120/240 V single-phase service, or a feeder, that carries the entire load of one dwelling unit.
+              Other services and feeders are sized from Table 310.16, as the{' '}
+              <Link href="/guides/wire-size-for-200-amp" className={LINK}>
+                200 A guide
+              </Link>{' '}
+              compares.
             </li>
             <li>The corrections for ambient temperature and bundling still apply.</li>
           </Limits>
@@ -1029,11 +1075,6 @@ export default function MethodologyPage() {
             tables, has not yet been checked in full against a document that can be cited:
           </p>
           <ul className={LIST}>
-            <li>
-              Sizing from the <Val v={AMPACITY_COLUMNS[1]} unit="°C" src="nec-310-16" /> column of Table 310.16, and
-              the termination temperature rules that decide when it may be used. The wire size calculator uses the{' '}
-              <Val v={SIZING_COLUMN_C} unit="°C" src="nec-310-16" /> column for every rating.
-            </li>
             <li>Ampacity rules for NM and UF cable, and whether neutral and ground wires count as current-carrying.</li>
             <li>Stranded conductor dimensions, and the AC resistance and reactance of conductors.</li>
             <li>Conduit fill: how many conductors fit in a conduit, with conduit and wire areas.</li>

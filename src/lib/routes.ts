@@ -69,7 +69,7 @@ export const ROUTES: readonly SiteRoute[] = [
     path: '/calculators/service-entrance-calculator',
     group: 'wire-sizing',
     name: 'Service Entrance Calculator',
-    line: 'Service or main power feeder conductors for a dwelling from NEC Table 310.12, with the grounding electrode conductor.',
+    line: 'Dwelling service conductors from NEC Table 310.12, with the grounding electrode conductor and the voltage drop over your run.',
   },
   {
     path: '/calculators/wire-resistance-calculator',
@@ -153,13 +153,13 @@ export const ROUTES: readonly SiteRoute[] = [
     path: '/guides/wire-size-for-100-amp',
     group: 'service-circuit',
     name: 'Wire Size for 100 Amp Service',
-    line: 'Copper and aluminum conductors for a dwelling service or main power feeder from NEC Table 310.12, with the grounding conductors.',
+    line: 'Copper and aluminum conductors for a dwelling service from NEC Table 310.12, with the grounding conductors.',
   },
   {
     path: '/guides/wire-size-for-200-amp',
     group: 'service-circuit',
     name: 'Wire Size for 200 Amp Service',
-    line: 'Copper and aluminum service conductors for a dwelling from NEC Table 310.12, with grounding and the installation steps.',
+    line: 'Dwelling service conductors from NEC Table 310.12 beside Table 310.16 for other feeders, with the ground wires and the voltage drop.',
   },
   {
     path: '/guides/wire-size-for-ev-charger',
