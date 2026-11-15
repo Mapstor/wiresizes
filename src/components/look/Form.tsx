@@ -103,12 +103,15 @@ export function SelectInput({
   onChange,
   children,
   describedById,
+  error,
 }: {
   id: string;
   value: string;
   onChange: (value: string) => void;
   children: ReactNode;
   describedById?: string;
+  /** A choice that conflicts with another field: marked invalid like a text field, so Calculate can focus it. */
+  error?: string;
 }) {
   return (
     <div className="relative">
@@ -116,8 +119,9 @@ export function SelectInput({
         id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        aria-invalid={error ? true : undefined}
         aria-describedby={describedById}
-        className={clsx(CONTROL, BORDER_OK, 'appearance-none pr-10')}
+        className={clsx(CONTROL, error ? BORDER_ERROR : BORDER_OK, 'appearance-none pr-10')}
       >
         {children}
       </select>

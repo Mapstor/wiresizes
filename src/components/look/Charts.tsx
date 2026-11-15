@@ -24,7 +24,9 @@ import { lowVoltageSize, lvLengthForDrop } from '@/lib/calculations/dc-sizing';
 import { SQRT3, TP_WYE_SYSTEMS } from '@/lib/calculations/power';
 import type { TpResult } from '@/lib/calculations/power';
 import { COMPARE_KW, COMPARE_ROWS, GUIDE_EXAMPLES, PF_BARS, PF_BAR_ROWS, PF_EXAMPLE, WATTS_PER_AMP_ROWS } from '@/lib/power-guides';
-import { conductor } from '@/lib/verified/awg';
+import { areaCmil, conductor } from '@/lib/verified/awg';
+import { TABLE_250_122_ROWS, egcRow } from '@/lib/verified/nec-250-122';
+import { serviceLookup } from '@/lib/calculations/service-lookup';
 import { editionGroups, editionLabel, NEC_ADOPTION_DOMAIN, NOT_VERIFIED, stateName } from '@/lib/verified/nec-adoption';
 
 export const COPPER = '#a95a26';
@@ -1757,6 +1759,176 @@ export function WattsPerAmpBars() {
     <div>
       <WattsPerAmpPlot narrow={false} />
       <WattsPerAmpPlot narrow />
+    </div>
+  );
+}
+
+// ── Ground wire calculator (WSZ-008a): Table 250.122 as steps, and a 200 A service's wires to one scale ─────────────
+
+const GND = 'nec-250-grounding';
+const GND_CALC = 'calc:grounding';
+const EGC_TICKS_A = [15, 100, 600, 6000];
+const EGC_TICK_SIZES = ['14', '8', '2', '2/0', '250', '750'];
+
+function EgcStepPlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 64 : 76;
+  const right = narrow ? 14 : 92;
+  const top = narrow ? 62 : 40;
+  const ph = narrow ? 200 : 230;
+  const H = top + ph + 48;
+  const pw = W - left - right;
+  const aMin = Math.log10(15);
+  const aMax = Math.log10(6000);
+  const cMin = Math.log10(areaCmil('14') * 0.85);
+  const cMax = Math.log10(areaCmil('1250') * 1.1);
+  const x = (a: number) => left + ((Math.log10(a) - aMin) / (aMax - aMin)) * pw;
+  const y = (size: string) => top + ph - ((Math.log10(areaCmil(size)) - cMin) / (cMax - cMin)) * ph;
+  const steps = (pick: (r: (typeof TABLE_250_122_ROWS)[number]) => string) => {
+    let d = '';
+    let from = 15;
+    TABLE_250_122_ROWS.forEach((r, k) => {
+      const yy = y(pick(r)).toFixed(1);
+      d += `${k === 0 ? 'M' : 'L'}${x(from).toFixed(1)},${yy}H${x(r.rowA).toFixed(1)}`;
+      from = r.rowA;
+    });
+    return d;
+  };
+  const last = TABLE_250_122_ROWS[TABLE_250_122_ROWS.length - 1];
+  const id = narrow ? 'egc-steps-narrow' : 'egc-steps-wide';
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={GND}
+    >
+      <title id={`${id}-title`}>
+        {`Equipment grounding conductor size against the breaker or fuse rating, NEC Table 250.122: from 14 AWG copper and 12 AWG aluminum at 15 A to ${last.cu} kcmil copper and ${last.alCca} kcmil aluminum at 6000 A`}
+      </title>
+      <Key x={0} y={16} color={COPPER}>
+        Copper
+      </Key>
+      <Key x={narrow ? 0 : 110} y={narrow ? 36 : 16} color={ALUMINUM}>
+        Aluminum or copper-clad aluminum
+      </Key>
+      {EGC_TICK_SIZES.map((s) => (
+        <g key={s}>
+          <line x1={left} x2={W - right} y1={y(s)} y2={y(s)} stroke={GRID} strokeWidth={1} />
+          <text x={left - 8} y={y(s) + 4.5} textAnchor="end" fontSize={13} fill={MUTED} data-size={s}>
+            <Size s={s} svg />
+          </text>
+        </g>
+      ))}
+      {EGC_TICKS_A.map((a) => (
+        <text key={a} x={x(a)} y={top + ph + 20} textAnchor={a === 6000 ? 'end' : a === 15 ? 'start' : 'middle'} fontSize={13} fill={MUTED}>
+          <Val v={a} unit="A" src={GND} svg />
+        </text>
+      ))}
+      <text x={left + pw / 2} y={H - 6} textAnchor="middle" fontSize={13} fill={MUTED}>
+        Breaker or fuse rating (size on the left)
+      </text>
+      <path d={steps((r) => r.alCca)} fill="none" stroke={ALUMINUM} strokeWidth={2.5} pathLength={1} className="viz-draw" />
+      <path d={steps((r) => r.cu)} fill="none" stroke={COPPER} strokeWidth={2.5} pathLength={1} className="viz-draw" />
+      {!narrow && (
+        <>
+          <text x={W - right + 8} y={y(last.alCca) + 4.5} fontSize={13} fill={INK} className="viz-pop">
+            <Size s={last.alCca} svg />
+          </text>
+          <text x={W - right + 8} y={y(last.cu) + 4.5} fontSize={13} fill={INK} className="viz-pop">
+            <Size s={last.cu} svg />
+          </text>
+        </>
+      )}
+    </svg>
+  );
+}
+
+/** Table 250.122 as two step lines, copper and aluminum, against the rating on a log scale. */
+export function EgcStepChart() {
+  return (
+    <div>
+      <EgcStepPlot narrow={false} />
+      <EgcStepPlot narrow />
+    </div>
+  );
+}
+
+/** Golden case "200 A 120/240 V dwelling service" (service-lookup): its copper service conductor and GEC, and the EGC of a 200 A feeder. */
+export const SERVICE_200 = (() => {
+  const s = serviceLookup(200);
+  const egc = egcRow(200);
+  if (!s || !egc) throw new Error('SERVICE_200: no 200 A row');
+  const disc = (size: string) => ({ size, diameterIn: (conductor(size)?.diameterMm ?? 0) / 25.4 });
+  return [
+    { key: 'service', label: 'Service', note: 'Table 310.12', src: 'nec-310-12', ...disc(s.cu) },
+    { key: 'gec', label: 'GEC', note: 'Table 250.66', src: GND, ...disc(s.gecForCuService.cu) },
+    { key: 'egc', label: 'EGC', note: 'Table 250.122', src: GND, ...disc(egc.cu) },
+  ];
+})();
+
+function ServiceDiscPlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const pxPerIn = narrow ? 170 : 300;
+  const maxR = (Math.max(...SERVICE_200.map((d) => d.diameterIn)) * pxPerIn) / 2;
+  const top = 30;
+  const cy = top + maxR + 6;
+  const H = cy + maxR + (narrow ? 50 : 54);
+  const id = narrow ? 'service-discs-narrow' : 'service-discs-wide';
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={GND_CALC}
+    >
+      <title id={`${id}-title`}>
+        {`Cross sections drawn to one scale, as solid copper: a 200 A dwelling service's ${SERVICE_200[0].size} AWG conductor, its ${SERVICE_200[1].size} AWG grounding electrode conductor, and the ${SERVICE_200[2].size} AWG equipment grounding conductor of a 200 A feeder`}
+      </title>
+      <defs>
+        <linearGradient id={`${id}-cu`} x1="0.1" y1="0" x2="0.9" y2="1">
+          <stop offset="0" stopColor="#f3c193" />
+          <stop offset="0.45" stopColor="#d6904f" />
+          <stop offset="1" stopColor="#a95a26" />
+        </linearGradient>
+      </defs>
+      {SERVICE_200.map((d, k) => {
+        const cx = (W / 6) * (2 * k + 1);
+        const r = (d.diameterIn * pxPerIn) / 2;
+        return (
+          <g key={d.key}>
+            <text x={cx} y={18} textAnchor="middle" fontSize={narrow ? 14 : 16} fontWeight={800} fill={INK}>
+              {d.label}
+            </text>
+            <g className="viz-pop">
+              <circle cx={cx} cy={cy} r={r} fill={`url(#${id}-cu)`} stroke="#6b3112" strokeWidth={0.8} />
+              {2 * r > 14 && <circle cx={cx} cy={cy} r={r - 2.2} fill="none" stroke="#ffe2c4" strokeOpacity={0.55} strokeWidth={1} />}
+            </g>
+            <text x={cx} y={cy + maxR + 24} textAnchor="middle" fontSize={narrow ? 13 : 14} fontWeight={700} fill={INK} data-src={d.src}>
+              <Size s={d.size} svg />
+            </text>
+            <text x={cx} y={cy + maxR + (narrow ? 42 : 44)} textAnchor="middle" fontSize={13} fill={MUTED} data-src={d.src}>
+              {d.note}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/** A 200 A dwelling service's copper conductor and grounding electrode conductor, and a 200 A feeder's EGC, to one scale. */
+export function ServiceGroundDiscs() {
+  return (
+    <div>
+      <ServiceDiscPlot narrow={false} />
+      <ServiceDiscPlot narrow />
     </div>
   );
 }

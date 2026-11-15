@@ -658,14 +658,14 @@ export default function MethodologyPage() {
           <p>
             The ground wire calculator and the wire size calculator take the ground wire from the first row of Table
             250.122 whose rating is at least the breaker or fuse rating, in the copper column or the aluminum and
-            copper-clad aluminum column. The{' '}
+            copper-clad aluminum column. The ground wire calculator and the{' '}
             <Link href="/calculators/service-entrance-calculator" className={LINK}>
               service entrance calculator
             </Link>{' '}
-            takes the grounding electrode conductor from Table 250.66 for the service conductors it finds. When the
-            wire size calculator chooses larger conductors for voltage drop, it enlarges the ground wire in proportion,
-            as 250.122(B) requires, rounds up to a Table 310.16 size and never goes below the table&apos;s ground
-            wire:
+            take the grounding electrode conductor from Table 250.66 for the largest service conductor. When the wire
+            size calculator chooses larger conductors for voltage drop, or when you tell the ground wire calculator the
+            circuit wires were upsized, the ground wire grows in proportion, as 250.122(B) requires, rounded up to a
+            Table 310.16 size and never below the table&apos;s ground wire:
           </p>
           <Formula src="calc:conductor-sizing" words>
             ground wire area = Table 250.122 area × installed conductor area ÷ minimum conductor area
