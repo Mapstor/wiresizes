@@ -415,8 +415,8 @@ export default function WireSizeCalculatorPage() {
               </h3>
               <p className={P} data-src={CALC}>
                 On <Val v={WARM} unit="°C" src={TERM} /> terminals, <Size s={R100.Cu.c75.size} /> copper or <Size s={R100.Al.c75.size} /> aluminum. In the{' '}
-                <Val v={COLD} unit="°C" src={TERM} /> column, <Size s={R100.Cu.c60.size} /> copper or <Size s={R100.Al.c60.size} /> aluminum, and 240.4(B)
-                also allows <SizeAmps s={B100} column={COLD} metal="copper" />. For a dwelling service, Table 310.12 applies instead: see the{' '}
+                <Val v={COLD} unit="°C" src={TERM} /> column, copper takes <Size s={R100.Cu.c60.size} /> and aluminum <Size s={R100.Al.c60.size} />, and
+                240.4(B) also allows <SizeAmps s={B100} column={COLD} metal="copper" />. For a dwelling service, Table 310.12 applies instead: see the{' '}
                 <Link href="/calculators/service-entrance-calculator" className={LINK}>
                   service entrance calculator
                 </Link>
