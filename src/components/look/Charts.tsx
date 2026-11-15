@@ -1767,7 +1767,7 @@ export function WattsPerAmpBars() {
 
 const GND = 'nec-250-grounding';
 const GND_CALC = 'calc:grounding';
-const EGC_TICKS_A = [15, 100, 1000, 6000];
+const EGC_TICKS_A = [15, 100, 600, 6000];
 const EGC_TICK_SIZES = ['14', '8', '2', '2/0', '250', '750'];
 
 function EgcStepPlot({ narrow }: { narrow: boolean }) {
