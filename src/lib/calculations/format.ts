@@ -98,13 +98,32 @@ export interface ValuePart {
   format?: ValueFormat;
 }
 
+/**
+ * "a" or "an" before a number or a size as it is read aloud: an 8, an 11, an 18, an 80, an 800, an 18,000; a 1/0, a 100,
+ * a 1,800 ("one thousand eight hundred").
+ */
+export function indefiniteArticle(value: number | string): 'a' | 'an' {
+  const text = String(value).replace(/,/g, '');
+  if (!/^\d/.test(text) || text.includes('/')) return 'a';
+  const digits = (/^\d+/.exec(text) as RegExpExecArray)[0];
+  const lead = digits.slice(0, digits.length % 3 || 3);
+  return lead.startsWith('8') || lead === '11' || lead === '18' ? 'an' : 'a';
+}
+
 /** A conductor size in a sentence. */
 export interface SizePart {
   size: SizeKey;
 }
 
-/** A sentence in parts: plain text, values and sizes. */
-export type TextPart = string | ValuePart | SizePart;
+/** A number without a unit symbol in a sentence (a correction factor), with its source; rendered through <Num>. */
+export interface NumberPart {
+  n: number;
+  src: string;
+  format?: ValueFormat;
+}
+
+/** A sentence in parts: plain text, values, unitless numbers and sizes. */
+export type TextPart = string | ValuePart | NumberPart | SizePart;
 
 /**
  * The plain sentence (print payloads, steps[] and tests): values through withUnit, sizes through `sizeName`
@@ -118,6 +137,7 @@ export function partsText(parts: TextPart[], sizeName?: (key: SizeKey) => string
         if (!sizeName) throw new Error(`partsText: size ${part.size} without a size formatter`);
         return sizeName(part.size);
       }
+      if ('n' in part) return formatValue(part.n, part.format);
       return withUnit(part.v, part.unit, part.format);
     })
     .join('');

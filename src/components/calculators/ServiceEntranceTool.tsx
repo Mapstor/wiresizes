@@ -14,7 +14,7 @@ import { ResultActions } from '@/components/look/ResultActions';
 import { BUTTON_PRIMARY, BUTTON_SECONDARY, Field, Segmented, SelectInput, TextInput, describedBy } from '@/components/look/Form';
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
-import { formatValue } from '@/lib/calculations/format';
+import { formatValue, indefiniteArticle } from '@/lib/calculations/format';
 import { ENGINE_ID, SERVICE_LOOKUP_DEFAULTS, SERVICE_RATINGS, SERVICE_VOLTS, isServiceError, serviceEntrance } from '@/lib/calculations/service-lookup';
 import type { ServiceResult } from '@/lib/calculations/service-lookup';
 import { LENGTH_MAX_FT, RESISTANCE_TEMP_C } from '@/lib/calculations/voltage-drop';
@@ -186,7 +186,7 @@ function Outcome({ r, headingRef, shareUrl }: { r: ServiceResult; headingRef: Re
         <Size s={r.size} />
       </p>
       <p className="mt-2 text-[17px] text-ink">
-        {MATERIAL_NAME[r.material]} service conductors, with a <Size s={r.gec.cu} /> copper electrode conductor
+        {MATERIAL_NAME[r.material]} service conductors, with {indefiniteArticle(r.gec.cu)} <Size s={r.gec.cu} /> copper electrode conductor
       </p>
       <div className="mt-6 overflow-x-auto">
         <table className="w-full max-w-[38rem] border-collapse text-[15px]" data-src={CALC}>

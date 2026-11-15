@@ -15,7 +15,7 @@ import { formatValue } from '@/lib/calculations/format';
 import { GROUND_WIRE_RATINGS } from '@/lib/calculations/grounding';
 import { ALUMINUM_ALPHA, COPPER_ALPHA, REFERENCE_TEMP_C } from '@/lib/calculations/resistance';
 import { RESISTANCE_TEMP_C, VD_TOOL_DEFAULT_TEMP_C, VD_TOOL_SINGLE_QUICK_VOLTS } from '@/lib/calculations/voltage-drop';
-import { THREE_PHASE_VOLTS } from '@/lib/calculations/inputs';
+import { SINGLE_PHASE_VOLTS, THREE_PHASE_VOLTS } from '@/lib/calculations/inputs';
 import { TP_WYE_SYSTEMS, isTpError, threePhase } from '@/lib/calculations/power';
 import { DOE_MOTOR, DOE_PF } from '@/lib/verified/power-examples';
 import { CONTINUOUS_LOAD_PERCENT, VOLTAGE_DROP_NOTE } from '@/lib/verified/nec-continuous-load-2023';
@@ -85,6 +85,7 @@ const OUGHT_SIZES = ['4/0', '3/0', '2/0', '1/0'].map((key) => ({ key, n: (awgRow
 const SMALLEST_AWG = '40';
 const FIRST_KCMIL = '250';
 const SIZING_COLUMN_C = terminationColumn(RATING_MIN_A, 'unknown', 'cable');
+const MAX_COLUMN_C = Math.max(...AMPACITY_COLUMNS);
 const LARGEST_SIZE = TABLE_310_16_SIZES[TABLE_310_16_SIZES.length - 1];
 const SMALLEST_SIZE = TABLE_310_16_SIZES[0];
 const SMALLEST_ALUMINUM = (TABLE_310_16_ROWS.find((row) => row.al_60 !== null) as (typeof TABLE_310_16_ROWS)[number]).size;
@@ -280,18 +281,40 @@ export default function MethodologyPage() {
             <Link href="/calculators/wire-size-calculator" className={LINK}>
               wire size calculator
             </Link>{' '}
-            starts from the breaker or fuse rating, the circuit and the length you enter, and works in six steps, once
-            for copper and once for aluminum:
+            starts from the breaker or fuse rating you choose, the conductor material, how the conductors are run and
+            the circuit, and works in these steps:
           </p>
           <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-cut-line">
             <li>
-              Take the smallest size whose ampacity in the <Val v={SIZING_COLUMN_C} unit="°C" src="nec-310-16" /> column
-              of NEC Table 310.16 is at least the rating (see <SectionLink domain="nec-310-16">Ampacity</SectionLink>).
+              Pick the column of Table 310.16: <Val v={TERMINATION_RULES.cableColumn} unit="°C" src="nec-110-14c" /> for NM
+              or UF cable; for single conductors, the column 110.14(C) allows,{' '}
+              <Val v={TERMINATION_RULES.columnAtOrBelowLimit} unit="°C" src="nec-110-14c" /> on circuits rated{' '}
+              <Val v={TERMINATION_RULES.limitA} unit="A" src="nec-110-14c" /> or less and{' '}
+              <Val v={TERMINATION_RULES.columnAboveLimit} unit="°C" src="nec-110-14c" /> above, unless you say the terminals
+              are marked <Val v={TERMINATION_RULES.columnAtOrBelowLimit} unit="°C" src="nec-110-14c" /> or listed and
+              identified for <Val v={TERMINATION_RULES.columnAboveLimit} unit="°C" src="nec-110-14c" /> conductors (see{' '}
+              <SectionLink domain="nec-110-14c">Terminal temperatures</SectionLink>).
+            </li>
+            <li>
+              Take the smallest size whose ampacity in that column is at least the rating (see{' '}
+              <SectionLink domain="nec-310-16">Ampacity</SectionLink>). With an ambient other than the table&apos;s{' '}
+              <Val v={TABLE_AMBIENT.c} unit="°C" src="nec-310-16" />, or more than three current-carrying conductors, the
+              ampacity is first corrected, from the <Val v={MAX_COLUMN_C} unit="°C" src="nec-310-16" /> column for single
+              conductors, which it takes as rated <Val v={MAX_COLUMN_C} unit="°C" src="nec-310-16" />, or from the{' '}
+              <Val v={TERMINATION_RULES.cableColumn} unit="°C" src="nec-110-14c" /> column for cable, and then held to the
+              size&apos;s value in the column of step 1 (see{' '}
+              <SectionLink domain="nec-310-15-corrections">Ambient temperature and bundling</SectionLink>).
             </li>
             <li>
               If that size is {gauges(COPPER_LIMITS)} copper, or {gauges(ALUMINUM_LIMITS)} aluminum, move up while the
               rating is above the size&apos;s 240.4(D) limit (see{' '}
               <SectionLink domain="nec-240-4-d">Small-conductor limits</SectionLink>).
+            </li>
+            <li>
+              With a load current marked continuous, check that the rating is at least{' '}
+              <Val v={CONTINUOUS_LOAD_PERCENT} unit="%" src="nec-continuous-load" /> of it, as 210.20(A) requires; a size
+              that carries the rating then has the ampacity 210.19(A) asks of it (see{' '}
+              <SectionLink domain="nec-continuous-load">Continuous loads</SectionLink>).
             </li>
             <li>
               Take the ground wire for the rating from NEC Table 250.122 (see{' '}
@@ -304,23 +327,35 @@ export default function MethodologyPage() {
             </li>
             <li>
               If the drop is above your target, try each larger size in Table 310.16 until it is not, up to{' '}
-              <Size s={LARGEST_SIZE} />.
-            </li>
-            <li>
-              If step 5 chose a larger size, enlarge the ground wire in proportion to the conductor area, as 250.122(B)
+              <Size s={LARGEST_SIZE} />, and enlarge the ground wire in proportion to the conductor area, as 250.122(B)
               requires.
             </li>
           </ol>
           <p>
-            It assumes an ambient temperature of <Val v={TABLE_AMBIENT.c} unit="°C" src="nec-310-16" /> (
-            <Val v={TABLE_AMBIENT.f} unit="°F" src="nec-310-16" />) and no more than three current-carrying conductors
-            together; the{' '}
-            <Link href="/calculators/ampacity-calculator" className={LINK}>
-              ampacity calculator
-            </Link>{' '}
-            handles other conditions. It does not choose the breaker or fuse rating for a load: it starts from the
-            rating you enter.
+            Where 240.4(B) would let the rating protect the next smaller size, because that size&apos;s ampacity,
+            corrected like the others, falls between two standard ratings with the rating the next one up, and 240.4(D)
+            allows it, the result says so, with the largest load the smaller size may carry under 210.19(A). The
+            calculator&apos;s own answer always carries the full rating. It starts from the rating you choose and does not
+            pick one for a load.
           </p>
+          <Limits>
+            <li>
+              NM and UF cable are corrected from the{' '}
+              <Val v={TERMINATION_RULES.cableColumn} unit="°C" src="nec-110-14c" /> column; the cable articles&apos; own
+              ampacity rules are not covered yet.
+            </li>
+            <li>
+              Single conductors rated below <Val v={MAX_COLUMN_C} unit="°C" src="nec-310-16" /> need the{' '}
+              <Link href="/calculators/ampacity-calculator" className={LINK}>
+                ampacity calculator
+              </Link>
+              , which takes the insulation rating.
+            </li>
+            <li>
+              A load is entered as all continuous or all noncontinuous, and you enter the count of current-carrying
+              conductors: the rules for whether neutral and ground wires count are not covered.
+            </li>
+          </Limits>
         </section>
 
         <SourceSection domain="awg-geometry">
@@ -484,8 +519,9 @@ export default function MethodologyPage() {
             <Size s={LARGEST_SIZE} />.
           </p>
           <p>
-            The wire size calculator uses the <Val v={SIZING_COLUMN_C} unit="°C" src="nec-310-16" /> column. The
-            ampacity calculator shows the column you choose. The voltage drop calculator notes when the current is
+            The wire size calculator uses the column the terminals allow (see{' '}
+            <SectionLink domain="nec-110-14c">Terminal temperatures</SectionLink>). The ampacity calculator shows the
+            column you choose. The voltage drop calculator notes when the current is
             above the size&apos;s <Val v={SIZING_COLUMN_C} unit="°C" src="nec-310-16" /> ampacity, and the low voltage
             calculator never picks a size whose <Val v={SIZING_COLUMN_C} unit="°C" src="nec-310-16" /> copper ampacity
             is below the current.
@@ -529,9 +565,9 @@ export default function MethodologyPage() {
           </Formula>
           <p>
             The ampacity calculator reads the row whose printed range holds the temperature you enter, in °C or °F, and
-            the band that holds your count of current-carrying conductors. The wire size calculator assumes{' '}
-            <Val v={TABLE_AMBIENT.c} unit="°C" src="nec-310-15-corrections" /> and no more than three current-carrying
-            conductors.
+            the band that holds your count of current-carrying conductors. The wire size calculator applies both the
+            same way, from the <Val v={MAX_COLUMN_C} unit="°C" src="nec-310-16" /> column for single conductors and the{' '}
+            <Val v={TERMINATION_RULES.cableColumn} unit="°C" src="nec-110-14c" /> column for cable.
           </p>
           <Limits>
             <li>
@@ -574,15 +610,18 @@ export default function MethodologyPage() {
               200 A guide
             </Link>{' '}
             sizes a feeder rated over <Val v={TERMINATION_RULES.limitA} unit="A" src="nec-110-14c" /> from the{' '}
-            <Val v={TERMINATION_RULES.columnAboveLimit} unit="°C" src="nec-110-14c" /> column.
+            <Val v={TERMINATION_RULES.columnAboveLimit} unit="°C" src="nec-110-14c" /> column, and the{' '}
+            <Link href="/calculators/wire-size-calculator" className={LINK}>
+              wire size calculator
+            </Link>{' '}
+            sizes single conductors from the column these rules give for the rating, or from the one you confirm for the
+            terminals.
           </p>
           <Limits>
             <li>
-              No calculator sizes from the <Val v={TERMINATION_RULES.columnAboveLimit} unit="°C" src="nec-110-14c" /> column
-              yet: the wire size calculator uses the <Val v={SIZING_COLUMN_C} unit="°C" src="nec-310-16" /> column for every
-              rating.
+              Terminals listed and identified for <Val v={MAX_COLUMN_C} unit="°C" src="nec-310-16" /> conductors are not
+              covered.
             </li>
-            <li>Equipment listed and identified for higher-rated conductors is not covered.</li>
           </Limits>
         </SourceSection>
 
@@ -647,12 +686,12 @@ export default function MethodologyPage() {
           <Limits>
             <li>The extra fuse-only ratings named in the text of 240.6(A) are not offered.</li>
             <li>
-              The calculators pick a conductor whose ampacity is at least the rating, so they never rely on the
-              next-size-up allowance of 240.4(B). The{' '}
+              The calculators pick a conductor whose ampacity is at least the rating. The wire size calculator notes where
+              240.4(B) would allow the next smaller size, and the{' '}
               <Link href="/guides/wire-size-for-200-amp#subpanel" className={LINK}>
                 200 A guide
               </Link>{' '}
-              shows it for a feeder of <Size s="4/0" /> aluminum.
+              shows the allowance for a feeder of <Size s="4/0" /> aluminum.
             </li>
           </Limits>
         </SourceSection>
@@ -683,8 +722,12 @@ export default function MethodologyPage() {
             <Link href="/calculators/low-voltage-calculator" className={LINK}>
               low voltage calculator
             </Link>{' '}
-            starts at the same figure. No calculator
-            applies the continuous-load rules yet: the wire size calculator starts from the breaker or fuse rating you enter.
+            starts at the same figure. The{' '}
+            <Link href="/calculators/wire-size-calculator" className={LINK}>
+              wire size calculator
+            </Link>{' '}
+            applies the branch-circuit rules: for a load marked continuous, it asks for a rating of at least{' '}
+            <Val v={CONTINUOUS_LOAD_PERCENT} unit="%" src="nec-continuous-load" /> of the load.
           </p>
           <Limits>
             <li>The matching note for branch circuits has not been read in a 2023 text, so no page quotes it.</li>
@@ -933,11 +976,15 @@ export default function MethodologyPage() {
             <Link href="/calculators/three-phase-calculator" className={LINK}>
               three-phase calculator
             </Link>{' '}
-            offers the same three-phase voltages as buttons and takes any other you type.
+            offers the same three-phase voltages as buttons and takes any other you type. The{' '}
+            <Link href="/calculators/wire-size-calculator" className={LINK}>
+              wire size calculator
+            </Link>{' '}
+            offers {SINGLE_PHASE_VOLTS.join(', ')} V on single-phase and the same three-phase voltages.
           </p>
           <Limits>
             <li>A nominal voltage names the system; the voltage actually delivered varies within the limits the standard sets.</li>
-            <li>Other single-phase voltages can be typed in.</li>
+            <li>Other voltages can be typed into the voltage drop and three-phase calculators.</li>
           </Limits>
         </SourceSection>
 

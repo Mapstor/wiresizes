@@ -82,5 +82,9 @@
   {
     "date": "2026-11-15",
     "text": "Rebuilt the ampacity calculator: it now takes the ambient temperature in Celsius or Fahrenheit and the number of current-carrying conductors, and shows the corrected ampacity against the terminal limits of 110.14(C) and the 240.4(D) breaker limit, with NM and UF cable kept in the coolest temperature column. Removed the insulation type ratings, the wet-location and harmonic-current notes, the common mistakes and the answers on parallel conductors, voltage and separate conduits, which cited no source."
+  },
+  {
+    "date": "2026-11-15",
+    "text": "Rebuilt the wire size calculator: it now takes the wiring method and the terminal rating (110.14(C)), the ambient temperature and the number of current-carrying conductors, a continuous load (210.20(A)) and your voltage-drop target, shows each step, and notes where 240.4(B) lets the breaker protect the next smaller size. The page gives the size for every rating in both terminal columns and by run length for two common circuits. Removed the mistakes list, the installation tips and the answer on stranded and solid wire, which cited no source."
   }
 ]

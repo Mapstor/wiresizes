@@ -25,6 +25,7 @@ import { SQRT3, TP_WYE_SYSTEMS } from '@/lib/calculations/power';
 import type { TpResult } from '@/lib/calculations/power';
 import { COMPARE_KW, COMPARE_ROWS, GUIDE_EXAMPLES, PF_BARS, PF_BAR_ROWS, PF_EXAMPLE, WATTS_PER_AMP_ROWS } from '@/lib/power-guides';
 import { GUIDE_200 } from '@/lib/service-guides';
+import { LENGTH_MAX_FT_CHART, LENGTH_TRACKS } from '@/lib/wire-size-page';
 import type { GuideSide } from '@/lib/service-guides';
 import type { AmpacityRun } from '@/lib/calculations/ampacity';
 import { areaCmil, conductor, formatSize } from '@/lib/verified/awg';
@@ -2303,6 +2304,120 @@ export function AmpacityStepsChart({ run, id }: { run: AmpacityRun; id: string }
     <div>
       <AmpacityStepsPlot run={run} id={id} narrow={false} />
       <AmpacityStepsPlot run={run} id={id} narrow />
+    </div>
+  );
+}
+
+// ── Wire size calculator (WSZ-009b): the size two common circuits need as the run gets longer ─────────────────────
+
+const SIZING = 'calc:conductor-sizing';
+
+function LengthBandsPlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 64 : 78;
+  const right = narrow ? 10 : 24;
+  const top = 4;
+  const headH = narrow ? 28 : 30;
+  const rowH = narrow ? 26 : 28;
+  const barH = narrow ? 14 : 16;
+  const gap = 14;
+  const max = LENGTH_MAX_FT_CHART;
+  const pw = W - left - right;
+  const x = (ft: number) => left + (ft / max) * pw;
+  const ticks = narrow ? [0, 80, 160, 240] : [0, 60, 120, 180, 240];
+  // each track: its heading row, then one row per band, with a gap between the tracks
+  const groups = LENGTH_TRACKS.map((track, gi) => {
+    const before = LENGTH_TRACKS.slice(0, gi).reduce((h, t) => h + gap + headH + t.bands.length * rowH, 0);
+    const head = top + before;
+    const items = track.bands.map((band, k) => ({ ...band, cy: head + headH + k * rowH + rowH / 2, last: k === track.bands.length - 1 }));
+    return { track, head, items };
+  });
+  const lastGroup = groups[groups.length - 1];
+  const plotBottom = lastGroup.head + headH + lastGroup.items.length * rowH + 4;
+  const H = plotBottom + 44;
+  const id = narrow ? 'length-bands-narrow' : 'length-bands-wide';
+  const summary = LENGTH_TRACKS.map(
+    (t) =>
+      `a ${t.ratingA} A circuit at ${t.volts} V needs ${t.bands
+        .map((b, k) => (k === t.bands.length - 1 ? `${formatSize(b.size)} from ${b.fromFt} ft` : `${formatSize(b.size)} to ${b.toFt} ft`))
+        .join(', ')}`,
+  ).join('; ');
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={SIZING}
+    >
+      <title id={`${id}-title`}>
+        {`Smallest copper size for each one-way length in NM cable, the circuit carrying its rating, with the voltage drop held to ${LENGTH_TRACKS[0].targetPct} %: ${summary}.`}
+      </title>
+      {ticks.map((t) => (
+        <g key={t}>
+          <line x1={x(t)} x2={x(t)} y1={top + headH - 6} y2={plotBottom} stroke={GRID} strokeWidth={1} />
+          <text x={x(t)} y={plotBottom + 20} textAnchor="middle" fontSize={13} fill={MUTED}>
+            <Num v={t} src={SIZING} svg />
+          </text>
+        </g>
+      ))}
+      <text x={left + pw / 2} y={H - 4} textAnchor="middle" fontSize={13} fill={MUTED}>
+        Feet, one way
+      </text>
+      {groups.map(({ track, head, items }) => (
+        <g key={track.ratingA}>
+          <text x={0} y={head + headH - 9} fontSize={13} fontWeight={600} fill={INK}>
+            <Val v={track.ratingA} unit="A" src="input" svg /> at <Val v={track.volts} unit="V" src="input" svg />
+          </text>
+          {items.map((b) => {
+            const x0 = x(b.fromFt);
+            const x1 = x(b.toFt);
+            const y = b.cy - barH / 2;
+            const tipW = narrow ? 150 : 164;
+            const tipX = Math.max(0, Math.min(x0, W - tipW - 1));
+            return (
+              <g key={b.size} className="viz-mark">
+                <rect x={0} y={b.cy - rowH / 2} width={W} height={rowH} fill="transparent" />
+                <text x={left - 10} y={b.cy + 4.5} textAnchor="end" fontSize={13} fill={INK}>
+                  <Size s={b.size} svg />
+                </text>
+                <path d={barPath(x0, y, Math.max(x1 - x0, 2), barH)} fill={COPPER} className="viz-grow" />
+                {b.last ? (
+                  <text x={x0 - 6} y={b.cy + 4.5} textAnchor="end" fontSize={13} fill={INK} stroke="#ffffff" strokeWidth={4} paintOrder="stroke">
+                    from <Val v={b.fromFt} unit="ft" src={SIZING} svg />
+                  </text>
+                ) : (
+                  <text x={x1 + 6} y={b.cy + 4.5} fontSize={13} fill={INK} stroke="#ffffff" strokeWidth={4} paintOrder="stroke">
+                    to <Val v={b.toFt} unit="ft" src={SIZING} svg />
+                  </text>
+                )}
+                <g className="viz-tip" aria-hidden="true">
+                  <rect x={tipX} y={b.cy - rowH / 2 - 22} width={tipW} height={22} fill="#ffffff" stroke={INK} strokeWidth={1} />
+                  <text x={tipX + 6} y={b.cy - rowH / 2 - 6.5} fontSize={13} fill={INK}>
+                    <Size s={b.size} svg />: <Val v={b.fromFt} unit="ft" src={SIZING} svg />
+                    {b.last ? ' and up' : <> to <Val v={b.toFt} unit="ft" src={SIZING} svg /></>}
+                  </text>
+                </g>
+              </g>
+            );
+          })}
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+/**
+ * The wire size calculator's answer to "how far": for a 20 A circuit at 120 V and a 30 A circuit at 240 V in copper NM
+ * cable, carrying their ratings, the size each one-way length needs to keep the drop within the default target.
+ */
+export function LengthBandsChart() {
+  return (
+    <div>
+      <LengthBandsPlot narrow={false} />
+      <LengthBandsPlot narrow />
     </div>
   );
 }

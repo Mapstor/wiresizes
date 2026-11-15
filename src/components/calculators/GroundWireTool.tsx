@@ -14,7 +14,7 @@ import { ResultActions } from '@/components/look/ResultActions';
 import { BUTTON_PRIMARY, BUTTON_SECONDARY, Field, Segmented, SelectInput, describedBy } from '@/components/look/Form';
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { buildQuery, choiceParam } from '@/lib/calculations/fields';
-import { formatValue } from '@/lib/calculations/format';
+import { formatValue, indefiniteArticle } from '@/lib/calculations/format';
 import { ENGINE_ID, GROUND_WIRE_DEFAULTS, GROUND_WIRE_RATINGS, GROUND_WIRE_SIZES, egcFor, gecFor, isEgcError } from '@/lib/calculations/grounding';
 import type { EgcResult, GecResult } from '@/lib/calculations/grounding';
 import { areaCmil, formatSize } from '@/lib/verified/awg';
@@ -291,7 +291,7 @@ function EgcOutcome({
   return (
     <section aria-labelledby="result-heading" className="mt-10 border-t-2 border-ink pt-6">
       <h2 id="result-heading" ref={headingRef} tabIndex={-1} className="font-display text-[15px] font-semibold text-ink focus:outline-none">
-        Equipment grounding conductor for a <Val v={r.ocpdA} unit="A" src="input" /> breaker or fuse
+        Equipment grounding conductor for {indefiniteArticle(r.ocpdA)} <Val v={r.ocpdA} unit="A" src="input" /> breaker or fuse
         {up ? ', circuit wires upsized' : ''}
       </h2>
       <p className={`mt-3 ${BIG}`} data-src={up ? CALC : GND}>

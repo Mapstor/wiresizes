@@ -1,6 +1,5 @@
 export { CalculatorResult } from './CalculatorResult';
 export { CalculatorLayout } from './CalculatorLayout';
-export { WireSizeCalculator } from './WireSizeCalculator';
 export { PowerConverterTool } from './PowerConverterTool';
 export { default as HorsepowerToAmpsCalculator } from './HorsepowerToAmpsCalculator';
 export { BtuTool } from './BtuTool';

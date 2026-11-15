@@ -42,7 +42,7 @@ export const ROUTES: readonly SiteRoute[] = [
     path: '/calculators/wire-size-calculator',
     group: 'wire-sizing',
     name: 'Wire Size Calculator',
-    line: 'Copper or aluminum wire size for a breaker or fuse rating, from NEC Table 310.16 and 240.4(D), with the ground wire and a voltage-drop check.',
+    line: 'Copper or aluminum wire size for a breaker or fuse rating, from NEC Table 310.16 at the terminal temperature, with heat, bundling, continuous loads, the ground wire and voltage drop.',
     guidesNav: true,
   },
   {
