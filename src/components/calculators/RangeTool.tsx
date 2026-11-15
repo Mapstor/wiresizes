@@ -211,7 +211,7 @@ export function RangeTool() {
           <Field id="circuit" label="Circuit rating, A" hint="From the instructions or nameplate.">
             <SelectInput id="circuit" value={inputs.circuit} onChange={(circuit) => update({ circuit })} describedById="circuit-hint">
               {RANGE_CIRCUITS.map((a) => (
-                <option key={a} value={String(a)}>
+                <option key={a} value={String(a)} data-src="nec-240-ocpd">
                   {formatValue(a)} A
                 </option>
               ))}
