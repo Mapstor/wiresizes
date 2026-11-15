@@ -227,3 +227,18 @@ describe('WSZ-009b unitless numbers in steps', () => {
     assert.equal(partsText(['factor ', { n: 0.8666, src: 'nec-310-15-corrections', format: { fixed: 2 } }]), 'factor 0.87');
   });
 });
+
+describe('WSZ-009b "a" or "an" before a number', () => {
+  it('follows how the number is read aloud', async () => {
+    const { indefiniteArticle } = await import('../src/lib/calculations/format');
+    const an = [8, 11, 18, 80, 85, 800, 8000, 11000, 18000, '8', '18', '800', '80,000'];
+    const a = [1, 2, 10, 12, 14, 100, 110, 180, 1000, 1100, 1800, 2000, '1/0', '4/0', '250', 'AWG'];
+    for (const v of an) assert.equal(indefiniteArticle(v), 'an', String(v));
+    for (const v of a) assert.equal(indefiniteArticle(v), 'a', String(v));
+    const r80 = sizeConductor({ ...BASE, ocpdA: 80, continuous: true, lengthFt: 0 });
+    assert.ok(!isSizingError(r80));
+    if (isSizingError(r80)) return;
+    assert.ok(text(r80).some((s) => s.startsWith('Ground wire for an 80 A breaker')));
+    assert.ok(text(r80)[0].includes(': an 80 A rating serves'));
+  });
+});

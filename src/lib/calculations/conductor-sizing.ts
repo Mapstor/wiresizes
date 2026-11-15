@@ -14,7 +14,7 @@
 // Without the optional inputs (termination 'unknown', wiring method 'cable', no derating) the results are the 60 °C
 // results of WSZ-002. steps[] explains each step, except in the derating mode, whose text WSZ-009 writes; stepParts
 // holds the same sentences in parts, so the result panel renders their numbers through <Val> and sizes through <Size>.
-import { materialName, partsText } from './format';
+import { indefiniteArticle, materialName, partsText } from './format';
 import type { TextPart, ValuePart } from './format';
 import { areaCmil, formatSize } from '../verified/awg';
 import type { Material, SizeKey } from '../verified/awg';
@@ -350,7 +350,7 @@ function explain(
     steps.push([
       'For a continuous load, the breaker or fuse must be rated at least ',
       percent125,
-      ' of the load (NEC 210.20(A)): a ',
+      ` of the load (NEC 210.20(A)): ${indefiniteArticle(ocpdA)} `,
       rating,
       ' rating serves a continuous load of up to ',
       amps((ocpdA * 100) / CONTINUOUS_LOAD_PERCENT, CALC),
@@ -417,7 +417,7 @@ function explain(
     );
   }
   steps.push([
-    'Ground wire for a ',
+    `Ground wire for ${indefiniteArticle(ocpdA)} `,
     rating,
     ` breaker or fuse, NEC Table 250.122 (${material === 'Cu' ? 'copper' : 'aluminum or copper-clad aluminum'} column): `,
     { size: tableEgc },

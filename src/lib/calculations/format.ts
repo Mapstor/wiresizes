@@ -98,6 +98,18 @@ export interface ValuePart {
   format?: ValueFormat;
 }
 
+/**
+ * "a" or "an" before a number or a size as it is read aloud: an 8, an 11, an 18, an 80, an 800, an 18,000; a 1/0, a 100,
+ * a 1,800 ("one thousand eight hundred").
+ */
+export function indefiniteArticle(value: number | string): 'a' | 'an' {
+  const text = String(value).replace(/,/g, '');
+  if (!/^\d/.test(text) || text.includes('/')) return 'a';
+  const digits = (/^\d+/.exec(text) as RegExpExecArray)[0];
+  const lead = digits.slice(0, digits.length % 3 || 3);
+  return lead.startsWith('8') || lead === '11' || lead === '18' ? 'an' : 'a';
+}
+
 /** A conductor size in a sentence. */
 export interface SizePart {
   size: SizeKey;

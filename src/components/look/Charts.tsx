@@ -2325,18 +2325,15 @@ function LengthBandsPlot({ narrow }: { narrow: boolean }) {
   const pw = W - left - right;
   const x = (ft: number) => left + (ft / max) * pw;
   const ticks = narrow ? [0, 80, 160, 240] : [0, 60, 120, 180, 240];
-  let yAt = top;
+  // each track: its heading row, then one row per band, with a gap between the tracks
   const groups = LENGTH_TRACKS.map((track, gi) => {
-    const head = yAt + (gi === 0 ? 0 : gap);
-    yAt = head + headH;
-    const items = track.bands.map((band, k) => {
-      const cy = yAt + rowH / 2;
-      yAt += rowH;
-      return { ...band, cy, last: k === track.bands.length - 1 };
-    });
+    const before = LENGTH_TRACKS.slice(0, gi).reduce((h, t) => h + gap + headH + t.bands.length * rowH, 0);
+    const head = top + before;
+    const items = track.bands.map((band, k) => ({ ...band, cy: head + headH + k * rowH + rowH / 2, last: k === track.bands.length - 1 }));
     return { track, head, items };
   });
-  const plotBottom = yAt + 4;
+  const lastGroup = groups[groups.length - 1];
+  const plotBottom = lastGroup.head + headH + lastGroup.items.length * rowH + 4;
   const H = plotBottom + 44;
   const id = narrow ? 'length-bands-narrow' : 'length-bands-wide';
   const summary = LENGTH_TRACKS.map(

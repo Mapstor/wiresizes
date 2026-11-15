@@ -18,8 +18,8 @@ import { ResultActions } from '@/components/look/ResultActions';
 import { BUTTON_PRIMARY, BUTTON_SECONDARY, FIELD_HINT, Field, Segmented, SelectInput, TextInput, describedBy } from '@/components/look/Form';
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
-import { formatValue } from '@/lib/calculations/format';
-import { ambientRowFor, bandFor } from '@/lib/calculations/ampacity';
+import { formatValue, indefiniteArticle } from '@/lib/calculations/format';
+import { ambientRowFor, bandFor, warmestTemp } from '@/lib/calculations/ampacity';
 import type { TempUnit } from '@/lib/calculations/ampacity';
 import {
   EGC_LARGER_THAN_CONDUCTOR_NOTE,
@@ -85,6 +85,8 @@ const DEFAULTS: Inputs = {
   count: '3',
 };
 
+// Each hint and each error of a field fits one line down to a 320 px screen, so an error that appears on blur never moves
+// Calculate between mousedown and mouseup (WSZ-009a: the click was lost).
 type Key = 'load' | 'length' | 'temp' | 'count';
 type Errors = Partial<Record<Key, string>>;
 
@@ -99,8 +101,8 @@ function errorsOf(i: Inputs): Errors {
     if (!(a > 0 && a <= rating)) e.load = `Enter up to ${formatValue(rating)} A, or leave it empty.`;
     else if (i.continuous === 'yes') {
       const needed = ratingForContinuous(a);
-      if (needed === null) e.load = `A continuous ${formatValue(a)} A load needs more than ${formatValue(RATING_MAX_A)} A.`;
-      else if (rating < needed) e.load = `A continuous ${formatValue(a)} A load needs a ${formatValue(needed)} A breaker or larger.`;
+      if (needed === null) e.load = `Continuous ${formatValue(a)} A needs over ${formatValue(RATING_MAX_A)} A.`;
+      else if (rating < needed) e.load = `Continuous ${formatValue(a)} A needs ${indefiniteArticle(needed)} ${formatValue(needed)} A breaker.`;
     }
   }
   const ft = fieldNumber(i.length);
@@ -108,7 +110,7 @@ function errorsOf(i: Inputs): Errors {
   const t = fieldNumber(i.temp);
   const [lo, hi] = TEMP_LIMIT[i.unit];
   if (!(Number.isInteger(t) && t >= lo && t <= hi)) e.temp = `Enter whole degrees, ${signed(lo)} to ${signed(hi)} °${i.unit}.`;
-  else if (!ambientRowFor(t, i.unit)) e.temp = 'NEC Table 310.15(B)(1)(1) gives no factor this hot.';
+  else if (!ambientRowFor(t, i.unit)) e.temp = `Table 310.15(B)(1)(1) ends at ${warmestTemp(i.unit)} °${i.unit}.`;
   const n = fieldNumber(i.count);
   if (!(Number.isInteger(n) && n >= 1 && n <= COUNT_MAX)) e.count = `Enter a whole number from 1 to ${COUNT_MAX}.`;
   return e;
@@ -282,7 +284,7 @@ export function WireSizeTool() {
               sure.
             </p>
           )}
-          {text('load', 'Load current, A', 'Optional. Sets the voltage drop and the continuous check.')}
+          {text('load', 'Load current, A', 'Optional: drop and continuous check.')}
           <div>
             <Segmented
               name="continuous"
@@ -328,7 +330,7 @@ export function WireSizeTool() {
             </SelectInput>
           </Field>
           <div className="space-y-4">
-            {text('temp', 'Ambient temperature', 'Where the wire runs, in whole degrees.')}
+            {text('temp', 'Ambient temperature', 'Where the wire runs, whole degrees.')}
             <Segmented
               name="unit"
               legend="Temperature unit"
@@ -341,7 +343,7 @@ export function WireSizeTool() {
               onChange={(unit) => update({ unit })}
             />
           </div>
-          {text('count', 'Current-carrying conductors', 'In the raceway or cable; more than three lowers the ampacity.')}
+          {text('count', 'Current-carrying conductors', 'More than three lowers the ampacity.')}
         </div>
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <button type="submit" className={BUTTON_PRIMARY}>
@@ -400,7 +402,7 @@ function Result({
         {METAL_FULL[inputs.material]}
         {r.egc ? (
           <>
-            , with a <Size s={r.egc} /> ground wire
+            , with {indefiniteArticle(r.egc)} <Size s={r.egc} /> ground wire
           </>
         ) : null}
       </p>

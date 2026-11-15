@@ -64,7 +64,7 @@ const ROUTE = '/calculators/wire-size-calculator';
 const URL = `https://wiresizes.com${ROUTE}`;
 const TITLE = 'Wire Size Calculator: AWG by Breaker Size, NEC Table 310.16';
 const DESCRIPTION =
-  'Copper or aluminum wire size for a 15 to 400 A breaker from NEC Table 310.16, with the terminal temperature, heat, bundling, continuous loads, ground wire and voltage drop.';
+  'Wire size for a 15 to 400 A breaker from NEC Table 310.16, with terminal temperatures, heat, bundling, continuous loads, the ground wire and voltage drop.';
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -89,7 +89,6 @@ const CALC = `calc:${ENGINE_ID}`;
 const [, , C90] = AMPACITY_COLUMNS;
 const COLD = TERMINATION_RULES.columnAtOrBelowLimit;
 const WARM = TERMINATION_RULES.columnAboveLimit;
-const METAL: Record<Material, string> = { Cu: 'copper', Al: 'aluminum' };
 
 // the facts the copy states, checked when the page builds
 const ANSWER_RATINGS = [15, 20, 30, 40, 50];
@@ -149,7 +148,7 @@ function RatingTable({ material }: { material: Material }) {
   const rows: RatingRow[] = RATING_ROWS[material];
   const name = material === 'Cu' ? 'Copper' : 'Aluminum or copper-clad aluminum';
   return (
-    <DataTable id={`by-rating-${material.toLowerCase()}`} variant="ruled" src={CALC} caption={`${name}: smallest size for each rating`}>
+    <DataTable id={`by-rating-${material.toLowerCase()}`} variant="ruled" src={CALC} caption={name}>
       <thead>
         <tr>
           <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
@@ -295,7 +294,7 @@ export default function WireSizeCalculatorPage() {
             </Figure>
             <p className={P} data-src={CALC}>
               At <Val v={100} unit="ft" src="input" /> one way, the <Val v={20} unit="A" src="input" /> circuit at <Val v={120} unit="V" src="input" />{' '}
-              would drop <Val v={LONG_RUN_AT_12.vdPct} unit="%" src={CALC} format={{ fixed: 2 }} /> on <Size s={LONG_RUN.minSizeByAmpacity} />.{' '}
+              would drop <Val v={LONG_RUN_AT_12.vdPct} unit="%" src={CALC} format={{ fixed: 2 }} /> on <Size s={LONG_RUN.minSizeByAmpacity} />;{' '}
               <Size s={LONG_RUN.size} /> brings it to <Val v={LONG_RUN.vdPct} unit="%" src={CALC} format={{ fixed: 2 }} />, and the ground wire goes
               from <Size s={R20.Cu.egc} /> to <Size s={LONG_RUN.egc as SizeKey} />.
             </p>
