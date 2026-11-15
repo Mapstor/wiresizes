@@ -98,16 +98,23 @@ const TOC: ([string, string] | [string, string, string])[] = [
   ['sources', 'Sources'],
 ];
 
+/** The formulas table: one row per circuit, each the source that states its formulas. */
+const FORMULA_ROWS = [
+  { circuit: 'DC', power: 'P = V × I', current: 'I = P ÷ V', src: SI },
+  { circuit: 'Single-phase', power: 'P = V × I × PF', current: 'I = P ÷ (V × PF)', src: EIA },
+  { circuit: 'Three-phase', power: 'P = √3 × V × I × PF', current: 'I = P ÷ (√3 × V × PF)', src: DOE },
+];
+
 const articleData = { headline: 'Electrical Power Calculations', description: DESCRIPTION, url: URL, ...articleDates(ROUTE) };
 
 /** Four significant figures, trailing zeros dropped (66.82, 208.2, 360.3). */
 const r4 = (v: number) => Number(v.toPrecision(4));
 
-/** "240 V single-phase" from a row, the voltage traced to the nominal systems. */
+/** "240 V single" from a row, as the bars name it, the voltage traced to the nominal systems. */
 function System({ r }: { r: WattsPerAmpRow }) {
   return (
     <>
-      <Val v={r.volts} unit="V" src={VOLTS} /> {r.phases === 1 ? 'single-phase' : 'three-phase'}
+      <Val v={r.volts} unit="V" src={VOLTS} /> {r.phases === 1 ? 'single' : 'three'}
     </>
   );
 }
@@ -177,36 +184,23 @@ export default function ElectricalPowerCalculationsPage() {
                   <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
                     Circuit
                   </th>
-                  <th scope="col" className={RTH}>
-                    Power, W
-                  </th>
-                  <th scope="col" className={RTH}>
-                    Current, A
+                  <th scope="col" className={clsx(RTH, '!text-left')}>
+                    Power, W, and current, A
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr data-src={SI}>
-                  <th scope="row" className={RSTICKY_TD}>
-                    DC
-                  </th>
-                  <td className={RTD}>P = V × I</td>
-                  <td className={RTD}>I = P ÷ V</td>
-                </tr>
-                <tr data-src={EIA}>
-                  <th scope="row" className={RSTICKY_TD}>
-                    Single-phase AC
-                  </th>
-                  <td className={RTD}>P = V × I × PF</td>
-                  <td className={RTD}>I = P ÷ (V × PF)</td>
-                </tr>
-                <tr data-src={DOE}>
-                  <th scope="row" className={RSTICKY_TD}>
-                    Three-phase AC
-                  </th>
-                  <td className={RTD}>P = √3 × V × I × PF</td>
-                  <td className={RTD}>I = P ÷ (√3 × V × PF)</td>
-                </tr>
+                {FORMULA_ROWS.map((r) => (
+                  <tr key={r.circuit} data-src={r.src}>
+                    <th scope="row" className={RSTICKY_TD}>
+                      {r.circuit}
+                    </th>
+                    <td className={clsx(RTD, '!text-left')}>
+                      <span className="block">{r.power}</span>
+                      <span className="block">{r.current}</span>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </DataTable>
             <p className={P} data-src={EIA}>
@@ -358,7 +352,7 @@ export default function ElectricalPowerCalculationsPage() {
             >
               <WattsPerAmpBars />
             </Figure>
-            <DataTable id="per-amp-table" variant="ruled" src={CALC} caption="Watts per amp and amps per kilowatt at power factor 1">
+            <DataTable id="per-amp-table" variant="ruled" src={CALC} caption="Watts per amp and amps per kilowatt, single- and three-phase, at power factor 1">
               <thead>
                 <tr>
                   <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
@@ -436,7 +430,9 @@ export default function ElectricalPowerCalculationsPage() {
               </p>
             </div>
             <div className="space-y-1.5">
-              <h3 className={H3}>Why is there √3 in three-phase formulas?</h3>
+              <h3 className={H3} data-src={MIT}>
+                Why is there √3 in three-phase formulas?
+              </h3>
               <p className={P} data-src={MIT}>
                 In a balanced three-phase system the voltage between two lines is √3 times the voltage from a line to neutral. The power, three
                 times the line-to-neutral voltage times the current, is therefore √3 times the line-to-line voltage times the current.

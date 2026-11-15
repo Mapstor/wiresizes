@@ -1627,8 +1627,10 @@ function WorkedTrianglePlot({ narrow }: { narrow: boolean }) {
   const H = base + (narrow ? 64 : 44);
   const sig = { sig: 4 };
   const fs = narrow ? 13 : 14;
-  const arcR = narrow ? 34 : 54;
+  const arcR = narrow ? 46 : 54;
   const phi = Math.acos(pf);
+  // the label sits right of the arc, where the long side has risen clear of its cap height
+  const labelX = x0 + arcR + 14;
   const id = narrow ? 'worked-triangle-narrow' : 'worked-triangle-wide';
   return (
     <svg
@@ -1654,7 +1656,7 @@ function WorkedTrianglePlot({ narrow }: { narrow: boolean }) {
         stroke={MUTED}
         strokeWidth={1.5}
       />
-      <text x={x0 + arcR + 8} y={base - 8} fontSize={13} fill={INK} className="viz-pop">
+      <text x={labelX} y={base - 8} fontSize={13} fill={INK} className="viz-pop">
         PF <Num v={pf} src={TP} svg />
       </text>
       <text x={(x0 + xP) / 2} y={base + 24} textAnchor="middle" fontSize={fs} fontWeight={700} fill={INK}>
