@@ -101,3 +101,63 @@ export function whirlpoolRangeRow(kw: number, volts: 240 | 208): MakerRangeRow |
     return kw >= from && kw <= to;
   }) ?? null;
 }
+
+// ── Dryers ──────────────────────────────────────────────────────────────────
+
+interface DryerJson {
+  brand: string;
+  doc: string;
+  url: string;
+  status: string;
+  circuit_a: number | null;
+  receptacles?: string[] | null;
+  cord?: string;
+  direct_wire?: string;
+  four_wire_statement?: string;
+  conductors?: string;
+  rating?: string;
+}
+
+const dryers = data.dryers as DryerJson[];
+const wDryer = dryers.find((d) => d.brand === 'Whirlpool' && d.doc === 'W10267633A');
+const geDryer = dryers.find((d) => d.brand === 'GE' && d.doc.startsWith('Pub # 31-16135'));
+const geSheet = dryers.find((d) => d.brand === 'GE' && d.doc.startsWith('DBLR333EE'));
+if (!wDryer || wDryer.circuit_a === null || !wDryer.receptacles || !wDryer.cord || !wDryer.direct_wire || !wDryer.four_wire_statement) {
+  throw new Error('mfr-equipment.json: the Whirlpool dryer instructions W10267633A are missing a field');
+}
+if (!geDryer || geDryer.circuit_a === null || !geDryer.conductors) throw new Error('mfr-equipment.json: the GE dryer instructions 31-16135 are missing a field');
+if (!geSheet || geSheet.circuit_a === null || !geSheet.rating) throw new Error('mfr-equipment.json: the GE DBLR333EE spec sheet is missing a field');
+
+const receptacle = (text: string) => read(text, /^NEMA (\d+-\d+R) \((\d)-wire\)$/, 'a receptacle');
+const wCord = read(wDryer.cord, /^UL listed (\d+)-amp, rated ([\d/]+) volt minimum, type (\w+) or (\w+), at least (\d+) ft; four \(4-wire\) or three \(3-wire\) (\d+)-gauge copper wires$/, 'the cord');
+const wDirect = read(wDryer.direct_wire, /^(\d+)-gauge solid copper wire \(do not use aluminum\)$/, 'the direct-wire size');
+const geSize = read(geDryer.conductors, /#(\d+) AWG minimum copper/, 'the conductor size');
+const rating = read(geSheet.rating, /^240V, (\d+)W, (\d+)A, 60 Hz; 208V, (\d+)W, (\d+)A, 60 Hz$/, 'the 240 V and 208 V ratings');
+
+/** Whirlpool's electric dryer installation instructions W10267633A (whirlpool.com). */
+export const WHIRLPOOL_DRYER = {
+  brand: 'Whirlpool',
+  doc: wDryer.doc,
+  url: wDryer.url,
+  circuitA: wDryer.circuit_a,
+  /** The 4-wire and the 3-wire receptacle, in that order. */
+  receptacles: wDryer.receptacles.map((r) => ({ config: receptacle(r)[1], wires: Number(receptacle(r)[2]) })),
+  cord: { amps: Number(wCord[1]), volts: wCord[2], types: [wCord[3], wCord[4]], minFt: Number(wCord[5]), size: wCord[6] as SizeKey },
+  /** Direct wiring: solid copper of this size; the instructions say not to use aluminum. */
+  directWireCu: wDirect[1] as SizeKey,
+  /** The instructions' own sentence on the NEC and the 4-wire connection. */
+  fourWireStatement: wDryer.four_wire_statement,
+};
+
+/** GE's electric dryer installation instructions, Pub # 31-16135. */
+export const GE_DRYER = { brand: 'GE', doc: geDryer.doc, url: geDryer.url, circuitA: geDryer.circuit_a, minCopper: geSize[1] as SizeKey };
+
+/** GE's DBLR333EE dryer spec sheet: its circuit breaker and its ratings at 240 V and 208 V. */
+export const GE_DBLR333EE = {
+  brand: 'GE',
+  model: 'DBLR333EE',
+  url: geSheet.url,
+  breakerA: geSheet.circuit_a,
+  at240: { w: Number(rating[1]), a: Number(rating[2]) },
+  at208: { w: Number(rating[3]), a: Number(rating[4]) },
+};

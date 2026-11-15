@@ -33,7 +33,8 @@ import { OPTIONAL_METHOD, STANDARD_METHOD, TABLE_220_55, cookingRow } from '@/li
 import type { CookingRow } from '@/lib/verified/nec-220-2023';
 import { DWELLING_VOLTS } from '@/lib/calculations/load-calc-2023';
 import { RANGE_CIRCUITS, RANGE_VOLTS } from '@/lib/calculations/range-circuit';
-import { FRIGIDAIRE_RANGE, WHIRLPOOL_RANGE } from '@/lib/verified/mfr-equipment';
+import { FRIGIDAIRE_RANGE, GE_DBLR333EE, GE_DRYER, WHIRLPOOL_DRYER, WHIRLPOOL_RANGE } from '@/lib/verified/mfr-equipment';
+import { DRYER_CIRCUITS } from '@/lib/calculations/dryer-circuit';
 import { NEMA_CONFIGS } from '@/lib/verified/nema-receptacle-configs';
 import { AMPACITY_COLUMNS, TABLE_310_16_ROWS, TABLE_310_16_SIZES, TABLE_AMBIENT } from '@/lib/verified/nec-310-16';
 import { attribution, attributionParts, coverage, nextCheck } from '@/lib/verified/registry';
@@ -246,13 +247,14 @@ const TOC = [
   METHODOLOGY_EXTRA_SECTIONS.breakerMethod,
   METHODOLOGY_EXTRA_SECTIONS.loadMethod,
   METHODOLOGY_EXTRA_SECTIONS.rangeMethod,
+  METHODOLOGY_EXTRA_SECTIONS.dryerMethod,
   ...METHODOLOGY_SECTIONS.map(({ id, title }) => ({ id, title })),
   METHODOLOGY_EXTRA_SECTIONS.notCovered,
   METHODOLOGY_EXTRA_SECTIONS.errors,
 ];
 
 export default function MethodologyPage() {
-  const { method, breakerMethod, loadMethod, rangeMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
+  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
   return (
     <div className={LOOK_PAGE}>
     <div className="container pb-16">
@@ -265,8 +267,8 @@ export default function MethodologyPage() {
         <p>
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
           has a section below: what it is and which edition was used, where it was read, how the calculators use it,
-          and where that use stops. The first four sections show how the wire size, circuit breaker, residential load
-          and range calculators put several of them together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
+          and where that use stops. The first five sections show how the wire size, circuit breaker, residential load,
+          range and dryer calculators put several of them together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
           homepage and the calculators and guides pages also list their sources under Sources, near the bottom of the
           page.
         </p>
@@ -557,6 +559,40 @@ export default function MethodologyPage() {
             <li>One circuit: a feeder or service with several appliances is counted by the residential load calculator.</li>
             <li>No continuous-load factor: a household range is counted at its Table 220.55 load.</li>
             <li>The neutral, taps and cord sets are not sized.</li>
+          </Limits>
+        </section>
+
+        <section id={dryerMethod.id} data-src="calc:dryer-circuit" aria-labelledby={`${dryerMethod.id}-title`} className="scroll-mt-24 space-y-4">
+          <h2 id={`${dryerMethod.id}-title`} className={H2}>
+            {dryerMethod.title}
+          </h2>
+          <p>
+            The{' '}
+            <Link href="/calculators/dryer-calculator" className={LINK}>
+              dryer calculator
+            </Link>{' '}
+            keeps a dryer&apos;s two numbers apart:
+          </p>
+          <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-cut-line">
+            <li>
+              Its load on a feeder or service: each dryer at <Val v={LS.dryerMinW} unit="W" src="nec-220-load-calcs" /> or its
+              nameplate, whichever is larger (220.54), times the number of dryers and Table 220.54&apos;s percent for that
+              number, and the current at the supply voltage.
+            </li>
+            <li>
+              Its own circuit: the rating the dryer&apos;s instructions give, from{' '}
+              <Val v={DRYER_CIRCUITS[0]} unit="A" src="nec-240-ocpd" /> to{' '}
+              <Val v={DRYER_CIRCUITS[DRYER_CIRCUITS.length - 1]} unit="A" src="nec-240-ocpd" />, with the wire and ground wire as
+              steps 1 to 3 of the{' '}
+              <a href={`#${method.id}`} className={LINK}>
+                wire size calculator
+              </a>{' '}
+              size them.
+            </li>
+          </ol>
+          <Limits>
+            <li>The calculator never picks the circuit rating; the dryer&apos;s instructions give it.</li>
+            <li>Dryers on a 3-phase feeder and the 220.61 neutral are not calculated.</li>
           </Limits>
         </section>
 
@@ -1038,7 +1074,9 @@ export default function MethodologyPage() {
             Installation instructions that ranges and dryers ship with. The range calculator quotes two: Whirlpool&apos;s
             freestanding electric range manual {WHIRLPOOL_RANGE.doc} (the same kW table as its earlier W10403811C and
             W10575959A), which gives the circuit for each band of range ratings, the cords and receptacles and the
-            direct-wire sizes, and Frigidaire&apos;s 40-inch electric range instructions {FRIGIDAIRE_RANGE.doc}.
+            direct-wire sizes, and Frigidaire&apos;s 40-inch electric range instructions {FRIGIDAIRE_RANGE.doc}. The dryer
+            calculator quotes Whirlpool&apos;s electric dryer instructions {WHIRLPOOL_DRYER.doc}, GE&apos;s {GE_DRYER.doc} and
+            GE&apos;s {GE_DBLR333EE.model} spec sheet: the circuit, the cord, the conductors and the ratings.
           </p>
           <SourceFacts s={section('mfr-dryer-range')} href={WHIRLPOOL_RANGE.url} />
           <Limits>
@@ -1062,8 +1100,9 @@ export default function MethodologyPage() {
         <SourceSection domain="nec-2023-rule-excerpts">
           <p>
             Single sections of the 2023 NEC that the site cites, read from Leviton&apos;s Captain Code 2023 pages, which
-            reprint them with NFPA&apos;s permission. The range calculator cites 210.8(D): GFCI protection for the branch
-            circuit or outlet that supplies an electric range, a wall-mounted oven or a counter-mounted cooking unit.
+            reprint them with NFPA&apos;s permission. The range and dryer calculators cite 210.8(D): GFCI protection for the
+            branch circuit or outlet that supplies an electric range, a wall-mounted oven, a counter-mounted cooking unit or
+            a clothes dryer.
           </p>
           <SourceFacts s={section('nec-2023-rule-excerpts')} />
           <Limits>

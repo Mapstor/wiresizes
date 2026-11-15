@@ -103,6 +103,12 @@ export const ROUTES: readonly SiteRoute[] = [
     line: 'Branch-circuit load of a range, or a cooktop and wall ovens, by NEC Table 220.55, its current, and the wire and ground wire for the circuit the range instructions give.',
   },
   {
+    path: '/calculators/dryer-calculator',
+    group: 'load-calcs',
+    name: 'Dryer Calculator',
+    line: "An electric dryer's load on a feeder or service under NEC 220.54 and Table 220.54, kept apart from its own circuit, with the wire and ground wire for the circuit the dryer instructions give.",
+  },
+  {
     path: '/calculators/watts-to-amps-calculator',
     group: 'conversions',
     name: 'Watts to Amps Calculator',
