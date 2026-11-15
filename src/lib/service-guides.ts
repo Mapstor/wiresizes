@@ -4,11 +4,11 @@
 // engines; nothing here is typed in.
 import type { Material, SizeKey } from './verified/awg';
 import { TERMINATION_RULES } from './verified/nec-110-14c';
-import { ocpdRatings } from './verified/nec-240-6-a';
-import { NEXT_SIZE_UP_MAX_A } from './verified/nec-240-4-d';
 import { TABLE_310_16_ROWS, columnKey, table31016 } from './verified/nec-310-16';
 import type { AmpacityColumn } from './verified/nec-310-16';
 import { VOLTAGE_DROP_NOTE } from './verified/nec-continuous-load-2023';
+import { maxProtection } from './calculations/breaker-sizing';
+import type { Protection } from './calculations/breaker-sizing';
 import { egcFor, isEgcError } from './calculations/grounding';
 import type { EgcResult } from './calculations/grounding';
 import { SERVICE_VOLTS, TABLE_310_12_ROWS, isServiceError, minimumServiceAmpacity, serviceEntrance, serviceLookup } from './calculations/service-lookup';
@@ -39,27 +39,9 @@ export function feederSize(ratingA: number, material: Material): FeederSize {
   throw new Error(`feederSize: no Table 310.16 size carries ${ratingA} A in ${key}`);
 }
 
-export interface Protection {
-  /** The largest standard rating that may protect the conductor, A. */
-  ratingA: number;
-  /** True when that rating is above the ampacity, under 240.4(B). */
-  nextSizeUp: boolean;
-}
-
-/**
- * The largest standard rating of Table 240.6(A) that may protect a feeder conductor of this ampacity: the ampacity
- * itself when it is a standard rating, otherwise the next higher standard rating where 240.4(B) allows it (not above
- * 800 A), otherwise the next lower one.
- */
-export function maxProtection(ampacity: number): Protection {
-  const ratings = ocpdRatings();
-  if (ratings.includes(ampacity)) return { ratingA: ampacity, nextSizeUp: false };
-  const next = ratings.find((r) => r > ampacity);
-  if (next !== undefined && next <= NEXT_SIZE_UP_MAX_A) return { ratingA: next, nextSizeUp: true };
-  const below = ratings.filter((r) => r < ampacity);
-  if (below.length === 0) throw new Error(`maxProtection: no standard rating below ${ampacity} A`);
-  return { ratingA: below[below.length - 1], nextSizeUp: false };
-}
+// maxProtection and Protection moved to the breaker engine in WSZ-009c; re-exported for the 200 A guide and its tests
+export { maxProtection };
+export type { Protection };
 
 export interface GuideSide {
   material: Material;

@@ -227,13 +227,14 @@ assertNominal(VD_TOOL_SINGLE_QUICK_VOLTS, 'voltage drop calculator quick voltage
 
 const TOC = [
   METHODOLOGY_EXTRA_SECTIONS.method,
+  METHODOLOGY_EXTRA_SECTIONS.breakerMethod,
   ...METHODOLOGY_SECTIONS.map(({ id, title }) => ({ id, title })),
   METHODOLOGY_EXTRA_SECTIONS.notCovered,
   METHODOLOGY_EXTRA_SECTIONS.errors,
 ];
 
 export default function MethodologyPage() {
-  const { method, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
+  const { method, breakerMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
   return (
     <div className={LOOK_PAGE}>
     <div className="container pb-16">
@@ -246,8 +247,8 @@ export default function MethodologyPage() {
         <p>
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
           has a section below: what it is and which edition was used, where it was read, how the calculators use it,
-          and where that use stops. The first section shows how the wire size calculator puts several of them
-          together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
+          and where that use stops. The first two sections show how the wire size and circuit breaker calculators put
+          several of them together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
           homepage and the calculators and guides pages also list their sources under Sources, near the bottom of the
           page.
         </p>
@@ -354,6 +355,66 @@ export default function MethodologyPage() {
             <li>
               A load is entered as all continuous or all noncontinuous, and you enter the count of current-carrying
               conductors: the rules for whether neutral and ground wires count are not covered.
+            </li>
+          </Limits>
+        </section>
+
+        <section id={breakerMethod.id} data-src="calc:breaker-sizing" aria-labelledby={`${breakerMethod.id}-title`} className="scroll-mt-24 space-y-4">
+          <h2 id={`${breakerMethod.id}-title`} className={H2}>
+            {breakerMethod.title}
+          </h2>
+          <p>
+            The{' '}
+            <Link href="/calculators/circuit-breaker-calculator" className={LINK}>
+              circuit breaker calculator
+            </Link>{' '}
+            starts from a continuous and a noncontinuous load in amperes, the conductor material and how the conductors
+            are run:
+          </p>
+          <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-cut-line">
+            <li>
+              The smallest rating the load allows is the noncontinuous load plus{' '}
+              <Val v={CONTINUOUS_LOAD_PERCENT} unit="%" src="nec-continuous-load" /> of the continuous load, as 210.20(A)
+              requires (see <SectionLink domain="nec-continuous-load">Continuous loads</SectionLink>). With no continuous
+              load, it is the load.
+            </li>
+            <li>
+              Take the smallest standard rating of Table 240.6(A) at or above it, from{' '}
+              <Val v={RATING_MIN_A} unit="A" src="nec-240-ocpd" /> (see{' '}
+              <SectionLink domain="nec-240-ocpd">Standard breaker and fuse ratings</SectionLink>).
+            </li>
+            <li>
+              Size the wire for that rating as steps 1 to 3 of the{' '}
+              <a href={`#${method.id}`} className={LINK}>
+                wire size calculator
+              </a>{' '}
+              do, at <Val v={TABLE_AMBIENT.c} unit="°C" src="nec-310-16" /> with no more than three current-carrying
+              conductors: the column the terminals allow, the smallest size whose ampacity is at least the rating, then
+              240.4(D).
+            </li>
+            <li>
+              Take the ground wire for the rating from Table 250.122 (see{' '}
+              <SectionLink domain="nec-250-grounding">Ground wires</SectionLink>).
+            </li>
+          </ol>
+          <p>
+            Where 240.4(B) lets the rating protect the next smaller size, and that size&apos;s ampacity still reaches the
+            smallest rating the load allows, as 210.19(A) asks of the conductors, the result says so. The page&apos;s table
+            of the largest breaker for each wire size runs the same rules the other way: the 240.4(D) limit for{' '}
+            {gauges(COPPER_LIMITS)} copper and {gauges(ALUMINUM_LIMITS)} aluminum; above them, the ampacity when it is a
+            standard rating, or the next standard rating above it under 240.4(B).
+          </p>
+          <Limits>
+            <li>
+              A breaker or fuse whose assembly is listed for operation at{' '}
+              <Val v={100} unit="%" src="nec-continuous-load" /> of its rating (the exception to 215.3) is not covered.
+            </li>
+            <li>
+              Motor, air conditioner and other equipment circuits follow rules of their own (see{' '}
+              <a href={`#${notCovered.id}`} className={LINK}>
+                {notCovered.title}
+              </a>
+              ).
             </li>
           </Limits>
         </section>

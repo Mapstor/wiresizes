@@ -9,7 +9,6 @@ slug,what_was_wrong,links
 /calculators/dryer-calculator,it cited the wrong NEC sections and left out the 2023 GFCI requirement for dryer circuits,/guides/nec-table-310-16
 /calculators/motor-circuit,it rounded feeder protection up and stated overload settings incorrectly,/guides/nec-table-310-16
 /calculators/horsepower-to-amps-calculator,it listed 115 V motor currents under a 230 V heading and mislabeled the NEC motor tables,/calculators/kilowatts-to-amps-calculator
-/calculators/circuit-breaker-calculator,its default example contradicted itself and one of its NEC table rows does not exist,/guides/nec-table-310-16
 /calculators/conduit-fill-calculator,"it said equipment grounding conductors are not counted in conduit fill, and several conduit and wire areas were wrong",/guides/awg-wire-size-chart
 /calculators/residential-load-calculator,it mixed the NEC's standard and optional dwelling methods and put air conditioning in the wrong load group,/guides/nec-table-310-16
 /calculators/rv-hookup-calculator,it overstated where GFCI protection is required and misapplied the RV-park demand factors,/guides/nec-table-310-16;/guides/awg-wire-size-chart

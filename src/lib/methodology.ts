@@ -22,6 +22,7 @@ export interface MethodologySection {
 const WIRE_SIZE = '/calculators/wire-size-calculator';
 const VOLTAGE_DROP = '/calculators/voltage-drop-calculator';
 const AMPACITY = '/calculators/ampacity-calculator';
+const CIRCUIT_BREAKER = '/calculators/circuit-breaker-calculator';
 const GROUND_WIRE = '/calculators/ground-wire-calculator';
 const WIRE_RESISTANCE = '/calculators/wire-resistance-calculator';
 const LOW_VOLTAGE = '/calculators/low-voltage-calculator';
@@ -63,7 +64,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'ampacity',
     domain: 'nec-310-16',
     title: 'Ampacity',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, HOME],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, CIRCUIT_BREAKER, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, HOME],
   },
   {
     id: 'corrections',
@@ -75,31 +76,31 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'terminals',
     domain: 'nec-110-14c',
     title: 'Terminal temperatures',
-    citedOn: [WIRE_SIZE, AMPACITY, GUIDE_200],
+    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, GUIDE_200],
   },
   {
     id: 'small-conductors',
     domain: 'nec-240-4-d',
     title: 'Small-conductor limits',
-    citedOn: [WIRE_SIZE, AMPACITY, AWG_CHART, TABLE_310_16, HOME],
+    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, AWG_CHART, TABLE_310_16, HOME],
   },
   {
     id: 'breaker-ratings',
     domain: 'nec-240-ocpd',
     title: 'Standard breaker and fuse ratings',
-    citedOn: [WIRE_SIZE, GROUND_WIRE, GUIDE_200],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, GROUND_WIRE, GUIDE_200],
   },
   {
     id: 'continuous-loads',
     domain: 'nec-continuous-load',
     title: 'Continuous loads and the voltage-drop note',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, LOW_VOLTAGE, GUIDE_200],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, VOLTAGE_DROP, LOW_VOLTAGE, GUIDE_200],
   },
   {
     id: 'grounding',
     domain: 'nec-250-grounding',
     title: 'Ground wires and grounding electrode conductors',
-    citedOn: [WIRE_SIZE, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200],
   },
   {
     id: 'service-conductors',
@@ -189,6 +190,7 @@ export const CITED_PAGE_NAMES: Record<string, string> = Object.fromEntries(
 /** The sections in a page's reading order that are not one source: the method overview and the closing notes. */
 export const METHODOLOGY_EXTRA_SECTIONS = {
   method: { id: 'wire-size-method', title: 'How the wire size calculator picks a size' },
+  breakerMethod: { id: 'breaker-method', title: 'How the circuit breaker calculator picks a breaker' },
   notCovered: { id: 'not-covered', title: 'Not covered yet' },
   errors: { id: 'errors', title: 'Errors and corrections' },
 } as const;
