@@ -7,6 +7,6 @@ export { BtuTool } from './BtuTool';
 export { OhmsLawTool } from './OhmsLawTool';
 export { ConduitFillCalculator } from './ConduitFillCalculator';
 export { BoxFillCalculator } from './BoxFillCalculator';
-export { GroundWireCalculator } from './GroundWireCalculator';
+export { GroundWireTool } from './GroundWireTool';
 export { AmpacityCalculator } from './AmpacityCalculator';
 export { default as PoolPumpCalculator } from './PoolPumpCalculator';

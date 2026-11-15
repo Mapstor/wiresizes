@@ -5,7 +5,7 @@
   "/calculators/wire-size-calculator": { "published": "2026-02-22", "modified": "2026-11-03" },
   "/calculators/voltage-drop-calculator": { "published": "2026-02-22", "modified": "2026-11-14" },
   "/calculators/ampacity-calculator": { "published": "2026-02-22", "modified": "2026-11-03" },
-  "/calculators/ground-wire-calculator": { "published": "2026-02-22", "modified": "2026-11-03" },
+  "/calculators/ground-wire-calculator": { "published": "2026-02-22", "modified": "2026-11-15" },
   "/calculators/wire-resistance-calculator": { "published": "2026-02-22", "modified": "2026-11-14" },
   "/calculators/watts-to-amps-calculator": { "published": "2026-02-22", "modified": "2026-11-15" },
   "/calculators/amps-to-watts-calculator": { "published": "2026-02-22", "modified": "2026-11-15" },

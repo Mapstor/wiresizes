@@ -1,624 +1,480 @@
-import { Metadata } from 'next';
-import { GroundWireCalculator } from '@/components/calculators/GroundWireCalculator';
-import { Shield, Calculator, TrendingUp, AlertCircle, BookOpen, Zap } from 'lucide-react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+import { clsx } from 'clsx';
+import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 import { Byline } from '@/components/content/Byline';
+import { DataTable, RSTICKY_TD, RSTICKY_TH, RTD, RTH } from '@/components/content/DataTable';
+import { Figure } from '@/components/content/Figure';
+import { Num } from '@/components/content/Num';
+import { Size } from '@/components/content/Size';
+import { SourceLine } from '@/components/content/SourceLine';
 import { Sources } from '@/components/content/Sources';
-import { DOMAINS as GROUNDING_DOMAINS, TABLE_250_122_ROWS } from '@/lib/calculations/grounding';
-import { DOMAINS as SERVICE_LOOKUP_DOMAINS, SCOPE_LINES } from '@/lib/calculations/service-lookup';
-import { formatSize } from '@/lib/verified/awg';
-import { TABLE_250_66_ROWS } from '@/lib/verified/nec-250-66';
+import { Val } from '@/components/content/Val';
+import { GroundWireTool } from '@/components/calculators/GroundWireTool';
+import { LookGuideBody } from '@/components/layout/LookGuideBody';
+import { EgcStepChart, ServiceGroundDiscs } from '@/components/look/Charts';
+import { OnThisPage } from '@/components/look/OnThisPage';
+import { PageTitle } from '@/components/look/PageTitle';
+import {
+  LOOK_BYLINE,
+  LOOK_BYLINE_LINK,
+  LOOK_FORMULA,
+  LOOK_H2 as H2,
+  LOOK_H3 as H3,
+  LOOK_LEAD,
+  LOOK_LINK as LINK,
+  LOOK_P as P,
+  LOOK_PAGE,
+  LOOK_SOURCES_HEADING,
+  LOOK_SOURCES_LIST,
+  LOOK_SOURCES_NOTE,
+  LOOK_SOURCES_SECTION,
+} from '@/components/look/styles';
+import { ENGINE_ID, TABLE_250_122_ROWS, TABLE_250_66_ROWS, egcFor, isEgcError } from '@/lib/calculations/grounding';
+import type { EgcResult } from '@/lib/calculations/grounding';
+import { serviceLookup } from '@/lib/calculations/service-lookup';
+import type { ServiceLookupResult } from '@/lib/calculations/service-lookup';
+import { articleDates } from '@/lib/page-dates';
+import { areaCmil } from '@/lib/verified/awg';
+import type { Material, SizeKey } from '@/lib/verified/awg';
 
-// Sources: the domains of the engines this page uses
-const SOURCE_DOMAINS = [...GROUNDING_DOMAINS, ...SERVICE_LOOKUP_DOMAINS];
+// /calculators/ground-wire-calculator (WSZ-008a; spec: research/page-specs-held.md "WSZ-008"): the two ground wires kept
+// apart. The equipment grounding conductor comes from NEC Table 250.122 by the breaker or fuse rating, grown by the
+// 250.122(B) area ratio when the circuit wires were upsized (verified-sd2023); the grounding electrode conductor from
+// Table 250.66 by the largest service-entrance conductor (NFPA's 2020 fact sheet). The dwelling-service rows come from
+// Table 310.12 (golden "service-lookup" cases), the upsized examples from golden "wire-size-60c" cases. The 250.66(A)/(B)
+// electrode limits and the 250.122 cap are not verified, so the page states neither. The old page's electrode, pool
+// bonding, installation and inspection lists cited no source and are gone.
+const ROUTE = '/calculators/ground-wire-calculator';
+const URL = `https://wiresizes.com${ROUTE}`;
+const TITLE = 'Ground Wire Size Calculator: EGC and GEC';
+const DESCRIPTION =
+  'EGC by breaker rating (NEC Table 250.122) or GEC by service conductor (Table 250.66): 12 AWG copper for 20 A, a 4 AWG copper GEC for a 200 A service.';
 
 export const metadata: Metadata = {
-  title: 'Ground Wire Calculator — NEC 250.122',
-  description: 'Equipment grounding conductor (EGC) size by overcurrent device rating per NEC Table 250.122. Copper and aluminum, 15 A to 6000 A.',
-  keywords: 'ground wire calculator, equipment grounding conductor, NEC 250.122, grounding conductor size, electrical grounding, bonding conductor, service grounding, ground wire sizing',
-  openGraph: {
-    title: 'Ground Wire Calculator - Equipment Grounding Conductor Sizing',
-    description: 'Calculate equipment grounding conductor size per NEC requirements.',
-    type: 'website',
-    url: 'https://wiresizes.com/calculators/ground-wire-calculator',
-    images: ['/opengraph-image']
-  },
-  alternates: { canonical: '/calculators/ground-wire-calculator' },
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: ROUTE },
+  openGraph: { type: 'website', locale: 'en_US', siteName: 'WireSizes.com', url: URL, title: TITLE, description: DESCRIPTION, images: ['/opengraph-image'] },
+  twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION },
 };
 
+const GND = 'nec-250-grounding';
+const OCPD = 'nec-240-ocpd';
+const SVC = 'nec-310-12';
+const GEO = 'awg-geometry';
+const CALC = `calc:${ENGINE_ID}`;
+const LOOKUP = 'calc:service-lookup';
 
-// Web application data for schema
-const webAppData = {
-  name: "Ground Wire Calculator",
-  url: "https://wiresizes.com/calculators/ground-wire-calculator",
-  description: "Calculate grounding conductor size per NEC Table 250.122."
-};
+function egc(ocpdA: number, material: Material, minSize?: SizeKey, installedSize?: SizeKey): EgcResult {
+  const r = egcFor(ocpdA, material, minSize && installedSize ? { minSize, installedSize } : null);
+  if (isEgcError(r)) throw new Error(`ground wire page: no EGC for ${ocpdA} A (${r.error})`);
+  return r;
+}
+function service(ratingA: number): ServiceLookupResult {
+  const r = serviceLookup(ratingA);
+  if (!r) throw new Error(`ground wire page: no Table 310.12 row for ${ratingA} A`);
+  return r;
+}
 
-const groundWireFAQs = [
-  {
-    question: "How do I determine the size of equipment grounding conductors?",
-    answer: "Equipment grounding conductor size is determined by the rating of the circuit overcurrent protective device using NEC Table 250.122. For example, if the circuit breaker is 60 A, the equipment grounding conductor must be minimum 10 AWG copper or 8 AWG aluminum. This table provides minimum sizes - larger sizes may be used but are not required unless specified by other code sections."
-  },
-  {
-    question: "What's the difference between grounding and bonding?",
-    answer: "Grounding connects electrical systems to earth for safety and system operation. Bonding connects metallic parts together to ensure electrical continuity and create a low-impedance path for fault current. Grounding electrode conductors connect to earth, while equipment grounding conductors (bonding conductors) connect equipment to the grounding system."
-  },
-  {
-    question: "When do I need to upsize the equipment grounding conductor?",
-    answer: "NEC 250.122(B) requires upsizing the equipment grounding conductor when circuit conductors are increased in size for voltage drop or other reasons. The equipment grounding conductor must be increased proportionally. For example, if circuit conductors are increased by a factor of 2, the equipment grounding conductor must also be increased by a factor of 2."
-  },
-  {
-    question: "Can I use the conduit as the equipment grounding conductor?",
-    answer: "Yes, metallic conduits and raceways listed in NEC 250.118 can serve as equipment grounding conductors when properly installed with approved fittings and continuity. However, an equipment grounding conductor is still required in some applications like isolated ground circuits, certain flexible conduits, or where specifically required by other code sections."
-  },
-  {
-    question: "How do I size the grounding electrode conductor?",
-    answer: "Grounding electrode conductor size is based on the service conductor size per NEC Table 250.66. For example, 4/0 AWG copper service conductors require a minimum 2 AWG copper grounding electrode conductor."
-  }
+// golden "table-250-122" cases: 20 A, 30 A (the 60 A row), 50 A, 200 A
+const EGC_20 = egc(20, 'Cu');
+const EGC_30 = egc(30, 'Cu');
+const EGC_50 = egc(50, 'Cu');
+const EGC_200 = egc(200, 'Cu');
+// golden "wire-size-60c" cases: 20 A, 16 A load, 150 ft, 120 V, Cu (12 → 6 AWG); 60 A, 48 A load, 200 ft, 240 V, Al (3 → 2 AWG)
+const UP_CU = egc(20, 'Cu', '12', '6');
+const UP_AL = egc(60, 'Al', '3', '2');
+if (!UP_CU.upsized || !UP_AL.upsized) throw new Error('ground wire page: the upsized examples lost their 250.122(B) step');
+const UPC = UP_CU.upsized;
+const UPA = UP_AL.upsized;
+// golden "service-lookup" cases
+const SERVICE_RATINGS = [100, 125, 150, 200, 225, 300, 400];
+const SERVICES = SERVICE_RATINGS.map(service);
+const S100 = service(100);
+const S150 = service(150);
+const S200 = service(200);
+
+const TOC: ([string, string] | [string, string, string])[] = [
+  ['two', 'Two ground wires, two tables'],
+  ['table-250-122', 'Table 250.122: equipment grounding conductors'],
+  ['upsized', 'When the circuit wires are upsized'],
+  ['table-250-66', 'Table 250.66: grounding electrode conductors'],
+  ['services', 'Ground wires for a home’s service'],
+  ['faq', 'Questions'],
+  ['sources', 'Sources'],
 ];
 
-export default function GroundWireCalculatorPage() {
+const articleData = { headline: 'Ground Wire Size Calculator', description: DESCRIPTION, url: URL, ...articleDates(ROUTE) };
+const webAppData = { name: 'Ground Wire Size Calculator', url: URL, description: DESCRIPTION };
+
+function Cmil({ v, src }: { v: number; src: string }) {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <CombinedSchema 
-        webApp={webAppData} 
-      />
-      
-      
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-800 dark:to-gray-900 py-12 rounded-2xl mb-12">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Ground Wire Calculator
-            </h1>
-            <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-              Calculate equipment grounding conductor sizes per NEC requirements.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-              <Shield className="h-12 w-12 text-green-600 mb-4" />
-              <p className="text-xl font-semibold mb-2">NEC Table 250.122</p>
-              <p className="text-gray-600 dark:text-gray-400">
-                Based on official NEC equipment grounding conductor sizing requirements.
-              </p>
-            </div>
-          </div>
+    <span data-src={src} className="whitespace-nowrap">
+      <Num v={Math.round(v)} src={src} /> cmil
+    </span>
+  );
+}
+
+/** "2/0 AWG copper or 4/0 AWG aluminum": a service's Table 310.12 conductors. */
+function ServiceWires({ s }: { s: ServiceLookupResult }) {
+  return (
+    <span data-src={SVC}>
+      <Size s={s.cu} /> copper or <Size s={s.alCca} /> aluminum
+    </span>
+  );
+}
+
+/** "4 AWG copper or 2 AWG aluminum": the Table 250.66 electrode conductor for a service's copper conductors. */
+function ServiceGec({ s }: { s: ServiceLookupResult }) {
+  return (
+    <span data-src={GND}>
+      <Size s={s.gecForCuService.cu} /> copper or <Size s={s.gecForCuService.alCca} /> aluminum
+    </span>
+  );
+}
+
+export default function GroundWirePage() {
+  return (
+    <div className={LOOK_PAGE}>
+      <article className="container pb-16">
+        <ArticleSchema article={articleData} />
+        <CombinedSchema webApp={webAppData} />
+
+        <header className="pt-10 sm:pt-12">
+          <PageTitle main="Ground Wire Calculator" sub="EGC and GEC Sizes" joiner=": " />
+          <p className={clsx(LOOK_LEAD, 'mt-5')}>
+            Size the equipment grounding conductor for a breaker or fuse, or the grounding electrode conductor for a service.
+          </p>
+          <Byline route={ROUTE} sources className={LOOK_BYLINE} linkClassName={LOOK_BYLINE_LINK} />
+        </header>
+
+        <section aria-label="Calculator" className="mt-8 border-t-2 border-ink pt-7">
+          <GroundWireTool />
+        </section>
+
+        <div className="mt-14 max-w-[44rem] space-y-4">
+          <p className={LOOK_LEAD} data-src={GND}>
+            <strong>
+              Which ground wire it is decides the table. NEC Table 250.122 sizes the equipment grounding conductor by the rating of the breaker or
+              fuse ahead of the circuit; Table 250.66 sizes the grounding electrode conductor by the largest service-entrance conductor.
+            </strong>{' '}
+            <span data-src={CALC}>
+              A <Val v={EGC_20.ocpdA} unit="A" src={GND} /> circuit takes <Size s={EGC_20.egc ?? EGC_20.tableEgc} /> copper;
+            </span>{' '}
+            <span data-src={LOOKUP}>
+              a <Val v={S200.ratingA} unit="A" src={SVC} /> dwelling service on <Size s={S200.cu} /> copper takes a{' '}
+              <Size s={S200.gecForCuService.cu} /> copper electrode conductor.
+            </span>
+          </p>
         </div>
-      </section>
 
-      {/* Calculator Component */}
-      <section className="mb-16">
-        <GroundWireCalculator />
-        <Byline route="/calculators/ground-wire-calculator" sources className="mt-4 px-6 text-sm text-gray-600 dark:text-gray-400" linkClassName="text-blue-600 hover:underline dark:text-blue-300" />
-      </section>
+        <LookGuideBody className="mt-14 border-t border-cut-rule pt-10">
+          <OnThisPage items={TOC} />
 
-      {/* Understanding Grounding Systems */}
-      <section className="mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <BookOpen className="h-8 w-8 text-blue-600" />
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Understanding Electrical Grounding and Bonding
+          <section aria-labelledby="two" className="space-y-4">
+            <h2 id="two" className={H2}>
+              Two ground wires, two tables
             </h2>
-          </div>
-          
-          <div className="prose prose-lg dark:prose-invert max-w-none">
-            <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-              Electrical grounding and bonding systems provide essential safety functions in electrical 
-              installations. Proper sizing of grounding and bonding conductors ensures effective fault 
-              current paths, protects personnel from electrical hazards, and maintains system reliability 
-              per National Electrical Code requirements.
+            <p className={P} data-src={GND}>
+              NFPA&apos;s grounding fact sheet prints both tables. <strong>Table 250.122</strong> gives the minimum equipment grounding conductor
+              of a circuit or feeder from the rating of the breaker or fuse ahead of it, read in the first row whose rating the device does not
+              exceed. <strong>Table 250.66</strong> gives the grounding electrode conductor of a service from the largest ungrounded
+              service-entrance conductor.
             </p>
+            <p className={P} data-src={GND}>
+              A <Val v={S200.ratingA} unit="A" src={SVC} /> service therefore has an answer from each table, and the two differ, as the cross
+              sections below show.
+            </p>
+            <Figure
+              caption={
+                <>
+                  <span data-src={GND}>
+                    A <Val v={S200.ratingA} unit="A" src={SVC} /> dwelling service&apos;s <Size s={S200.cu} /> copper conductor (Table 310.12),
+                    its <Size s={S200.gecForCuService.cu} /> copper electrode conductor (Table 250.66), and the{' '}
+                    <Size s={EGC_200.tableEgc} /> copper equipment grounding conductor of a <Val v={EGC_200.ocpdA} unit="A" src={GND} /> feeder
+                    (Table 250.122), drawn to one scale as solid conductors.
+                  </span>
+                  <SourceLine domains={[SVC, GND, GEO]} />
+                </>
+              }
+            >
+              <ServiceGroundDiscs />
+            </Figure>
+          </section>
 
-            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              Types of Grounding Conductors
-            </h3>
-            <div className="grid lg:grid-cols-2 gap-6 mb-8">
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
-                <h4 className="text-xl font-semibold text-blue-800 dark:text-blue-300 mb-3">Equipment Grounding Conductors</h4>
-                <ul className="list-disc pl-4 space-y-2 text-blue-700 dark:text-blue-300 text-sm">
-                  <li><strong>Purpose:</strong> Connect non-current-carrying metal parts to ground</li>
-                  <li><strong>Function:</strong> Provide fault current path back to source</li>
-                  <li><strong>Sizing:</strong> Based on overcurrent device rating (NEC Table 250.122)</li>
-                  <li><strong>Types:</strong> Wire, conduit, cable armor, or other listed methods</li>
-                  <li><strong>Installation:</strong> Run with circuit conductors in same raceway</li>
-                </ul>
-              </div>
-              
-              <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg">
-                <h4 className="text-xl font-semibold text-green-800 dark:text-green-300 mb-3">Grounding Electrode Conductors</h4>
-                <ul className="list-disc pl-4 space-y-2 text-green-700 dark:text-green-300 text-sm">
-                  <li><strong>Purpose:</strong> Connect electrical system to earth ground</li>
-                  <li><strong>Function:</strong> Stabilize system voltage to ground</li>
-                  <li><strong>Sizing:</strong> Based on service conductor size (NEC Table 250.66)</li>
-                  <li><strong>Connection:</strong> To grounding electrodes (rods, pipes, plates)</li>
-                  <li><strong>Protection:</strong> Limited physical protection required</li>
-                </ul>
-              </div>
-            </div>
-
-            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              Grounding System Components
-            </h3>
-            <div className="grid md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg">
-                <h4 className="text-lg font-semibold text-yellow-800 dark:text-yellow-300 mb-3">Grounding Electrodes</h4>
-                <ul className="list-disc pl-4 space-y-1 text-yellow-700 dark:text-yellow-300 text-sm">
-                  <li>Ground rods (8 ft minimum)</li>
-                  <li>Ground plates (2 sq ft minimum)</li>
-                  <li>Concrete-encased electrodes (Ufer)</li>
-                  <li>Metal water piping systems</li>
-                  <li>Building steel (where available)</li>
-                </ul>
-              </div>
-              
-              <div className="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-lg">
-                <h4 className="text-lg font-semibold text-purple-800 dark:text-purple-300 mb-3">Bonding Conductors</h4>
-                <ul className="list-disc pl-4 space-y-1 text-purple-700 dark:text-purple-300 text-sm">
-                  <li>Main bonding jumpers</li>
-                  <li>Equipment bonding jumpers</li>
-                  <li>Intersystem bonding terminals</li>
-                  <li>Supply-side bonding jumpers</li>
-                  <li>Load-side equipment grounds</li>
-                </ul>
-              </div>
-              
-              <div className="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-lg">
-                <h4 className="text-lg font-semibold text-orange-800 dark:text-orange-300 mb-3">Grounded Conductors</h4>
-                <ul className="list-disc pl-4 space-y-1 text-orange-700 dark:text-orange-300 text-sm">
-                  <li>Neutral conductors (grounded)</li>
-                  <li>One phase in corner-grounded systems</li>
-                  <li>Center tap in single-phase systems</li>
-                  <li>Wye point in three-phase systems</li>
-                  <li>Identified by white or gray color</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="bg-red-50 dark:bg-red-900/20 p-6 rounded-lg mb-6">
-              <h4 className="text-lg font-semibold text-red-800 dark:text-red-300 mb-3">
-                Critical Safety Functions
-              </h4>
-              <div className="grid md:grid-cols-2 gap-4 text-red-700 dark:text-red-300 text-sm">
-                <ul className="list-disc pl-4 space-y-1">
-                  <li>Provides low-impedance fault current path</li>
-                  <li>Enables overcurrent devices to operate quickly</li>
-                  <li>Limits voltage rise on non-current-carrying parts</li>
-                  <li>Protects against lightning and static charges</li>
-                </ul>
-                <ul className="list-disc pl-4 space-y-1">
-                  <li>Stabilizes system voltage during normal operation</li>
-                  <li>Provides reference point for voltage measurements</li>
-                  <li>Reduces electromagnetic interference</li>
-                  <li>Ensures personnel safety through fault clearing</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* NEC Grounding Tables */}
-      <section className="mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            NEC Grounding Conductor Sizing Tables
-          </h2>
-          
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Equipment Grounding Conductors */}
-            <div className="space-y-6 min-w-0">
-              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                Equipment Grounding Conductors (NEC Table 250.122)
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full border border-gray-300 dark:border-gray-600 rounded-lg">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Overcurrent Device
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Copper
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Aluminum or copper-clad aluminum
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                    {TABLE_250_122_ROWS.map((row) => (
-                      <tr key={row.rowA}>
-                        <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.rowA} A</td>
-                        <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{formatSize(row.cu)}</td>
-                        <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{formatSize(row.alCca)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Grounding Electrode Conductors */}
-            <div className="space-y-6 min-w-0">
-              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                Grounding Electrode Conductors (NEC Table 250.66)
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full border border-gray-300 dark:border-gray-600 rounded-lg">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Copper Service Conductor (AWG/kcmil)
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Aluminum or Copper-Clad Aluminum Service Conductor (AWG/kcmil)
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Copper GEC
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Aluminum GEC
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                    {TABLE_250_66_ROWS.map((row) => (
-                      <tr key={row.service_cu}>
-                        <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.service_cu}</td>
-                        <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.service_al_cca}</td>
-                        <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{formatSize(row.gec_cu)}</td>
-                        <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{formatSize(row.gec_al_cca)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                <p className="text-sm text-blue-800 dark:text-blue-300">
-                  <strong>Note:</strong> GEC = Grounding Electrode Conductor. Where multiple service disconnecting 
-                  means are used, the grounding electrode conductor size is based on the sum of the circular mil 
-                  areas of the largest service conductors.
-                </p>
-                <p className="text-sm text-blue-800 dark:text-blue-300 mt-2">{SCOPE_LINES[1]}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Grounding System Design */}
-      <section className="mb-16">
-        <div className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Grounding System Design Guidelines
-          </h2>
-          
-          <div className="grid lg:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                  <Shield className="h-6 w-6 text-green-600" />
-                  Service Grounding Requirements
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Grounding Electrode System:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Metal water piping (if available)</li>
-                      <li>• Concrete-encased electrode (Ufer ground)</li>
-                      <li>• Ground ring around building (if applicable)</li>
-                      <li>• Rod, pipe, or plate electrodes</li>
-                      <li>• Structural metal (where effectively grounded)</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Installation Requirements:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• All available electrodes must be bonded together</li>
-                      <li>• Grounding electrode conductor properly sized</li>
-                      <li>• Main bonding jumper in service equipment only</li>
-                      <li>• Equipment grounding conductors to all circuits</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                  <Calculator className="h-6 w-6 text-blue-600" />
-                  Equipment Grounding Design
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Conductor Sizing:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Based on overcurrent device rating</li>
-                      <li>• Minimum size per NEC Table 250.122</li>
-                      <li>• Upsize when circuit conductors are upsized</li>
-                      <li>• No splices except as specifically permitted</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Installation Methods:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Equipment grounding conductor in same raceway</li>
-                      <li>• Metallic raceway systems (properly installed)</li>
-                      <li>• Cable armor or sheath (where permitted)</li>
-                      <li>• Isolated grounding for special applications</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                  <TrendingUp className="h-6 w-6 text-purple-600" />
-                  Special Applications
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Separate Buildings:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Equipment grounding conductor required</li>
-                      <li>• Local grounding electrode at building</li>
-                      <li>• Neutral and ground separated at subpanel</li>
-                      <li>• Exception for livestock buildings with conditions</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Swimming Pools:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Equipotential bonding required</li>
-                      <li>• 8 AWG solid copper minimum for bonding</li>
-                      <li>• All metallic components must be bonded</li>
-                      <li>• Equipment grounding per standard requirements</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                  <AlertCircle className="h-6 w-6 text-orange-600" />
-                  Common Installation Errors
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Avoid These Mistakes:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Bonding neutral and ground at subpanels</li>
-                      <li>• Using undersized equipment grounding conductors</li>
-                      <li>• Improper grounding electrode connections</li>
-                      <li>• Missing equipment grounding conductors</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Quality Assurance:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Test continuity of grounding paths</li>
-                      <li>• Verify proper conductor sizing</li>
-                      <li>• Check all connections are tight</li>
-                      <li>• Ensure proper identification of conductors</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Safety and Code Compliance */}
-      <section className="mb-16">
-        <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <AlertCircle className="h-8 w-8 text-red-600" />
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Safety and Code Compliance
+          <section aria-labelledby="table-250-122" className="space-y-5">
+            <h2 id="table-250-122" className={H2}>
+              Table 250.122: equipment grounding conductors
             </h2>
-          </div>
-          
-          <div className="grid lg:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Critical Safety Requirements
-                </h3>
-                <ul className="space-y-3 text-gray-700 dark:text-gray-300">
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Grounding and bonding are life safety systems - never compromise</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Always use properly sized conductors per NEC tables</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Ensure continuity of all grounding and bonding paths</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Verify all connections are properly torqued and secure</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Test grounding systems for proper operation</span>
-                  </li>
-                </ul>
-              </div>
+            <p className={P} data-src={GND}>
+              The rating is the breaker&apos;s or fuse&apos;s, not the load&apos;s, and a rating between two rows reads the higher one. A{' '}
+              <Val v={EGC_30.ocpdA} unit="A" src={GND} /> breaker falls in the <Val v={EGC_30.rowA} unit="A" src={GND} /> row, so its ground
+              wire is <Size s={EGC_30.table.cu} /> copper, the same as a <Val v={EGC_30.rowA} unit="A" src={GND} /> breaker&apos;s; at{' '}
+              <Val v={EGC_50.ocpdA} unit="A" src={GND} /> it is <Size s={EGC_50.table.cu} /> copper or <Size s={EGC_50.table.alCca} />{' '}
+              aluminum.
+            </p>
+            <Figure
+              caption={
+                <>
+                  <span data-src={GND}>
+                    The equipment grounding conductor against the breaker or fuse rating, on logarithmic scales. Each step is a row of Table
+                    250.122.
+                  </span>
+                  <SourceLine domains={[GND, GEO]} />
+                </>
+              }
+            >
+              <EgcStepChart />
+            </Figure>
+            <DataTable id="table-250-122-rows" variant="ruled" src={GND} caption="NEC Table 250.122, minimum size equipment grounding conductors">
+              <thead>
+                <tr>
+                  <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
+                    Rating, not exceeding
+                  </th>
+                  <th scope="col" className={RTH}>
+                    Copper
+                  </th>
+                  <th scope="col" className={RTH}>
+                    Aluminum or CCA
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {TABLE_250_122_ROWS.map((r) => (
+                  <tr key={r.rowA}>
+                    <th scope="row" className={RSTICKY_TD}>
+                      <Val v={r.rowA} unit="A" src={GND} />
+                    </th>
+                    <td className={RTD}>
+                      <Size s={r.cu} />
+                    </td>
+                    <td className={RTD}>
+                      <Size s={r.alCca} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </DataTable>
+          </section>
 
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  NEC Article 250 Key Points
-                </h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Equipment Grounding:</span>
-                    <span className="text-gray-800 dark:text-gray-200">Required for all circuits</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Conductor Sizing:</span>
-                    <span className="text-gray-800 dark:text-gray-200">Per Table 250.122</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Grounding Electrodes:</span>
-                    <span className="text-gray-800 dark:text-gray-200">Bond all available types</span>
-                  </div>
-                </div>
-              </div>
+          <section aria-labelledby="upsized" className="space-y-4">
+            <h2 id="upsized" className={H2}>
+              When the circuit wires are upsized
+            </h2>
+            <p className={P} data-src={GND}>
+              Section 250.122(B): when the circuit wires are made larger than the rating needs, for any reason other than the ambient temperature
+              and bundling corrections, the equipment grounding conductor grows in proportion to their circular mil area. Voltage drop on a long
+              run is the usual reason.
+            </p>
+            <p className={LOOK_FORMULA} data-src={GND}>
+              ground wire area = table area × installed area ÷ minimum area
+            </p>
+            <h3 className={H3} data-src={CALC}>
+              Copper, <Val v={UP_CU.ocpdA} unit="A" src={GND} />, <Size s={UPC.minSize} /> made <Size s={UPC.installedSize} />
+            </h3>
+            <p className={P} data-src={CALC}>
+              The table gives <Size s={UP_CU.tableEgc} /> (<Cmil v={areaCmil(UP_CU.tableEgc)} src={GEO} />). With the circuit wires at{' '}
+              <Size s={UPC.installedSize} /> instead of <Size s={UPC.minSize} />:{' '}
+              <Cmil v={areaCmil(UP_CU.tableEgc)} src={GEO} /> × <Cmil v={areaCmil(UPC.installedSize)} src={GEO} /> ÷{' '}
+              <Cmil v={areaCmil(UPC.minSize)} src={GEO} /> = <Cmil v={UPC.requiredCmil} src={CALC} />, which is{' '}
+              <Size s={UPC.egc ?? UP_CU.tableEgc} />: the ground wire grows with the circuit wires, size for size.
+            </p>
+            <h3 className={H3} data-src={CALC}>
+              Aluminum, <Val v={UP_AL.ocpdA} unit="A" src={GND} />, <Size s={UPA.minSize} /> made <Size s={UPA.installedSize} />
+            </h3>
+            <p className={P} data-src={CALC}>
+              <Cmil v={areaCmil(UP_AL.tableEgc)} src={GEO} /> (<Size s={UP_AL.tableEgc} />) ×{' '}
+              <Cmil v={areaCmil(UPA.installedSize)} src={GEO} /> ÷ <Cmil v={areaCmil(UPA.minSize)} src={GEO} /> ={' '}
+              <Cmil v={UPA.requiredCmil} src={CALC} />. No size has exactly that area, so the result rounds up to the next one,{' '}
+              <Size s={UPA.egc ?? UP_AL.tableEgc} /> aluminum.
+            </p>
+          </section>
+
+          <section aria-labelledby="table-250-66" className="space-y-5">
+            <h2 id="table-250-66" className={H2}>
+              Table 250.66: grounding electrode conductors
+            </h2>
+            <p className={P} data-src={GND}>
+              The row is set by the largest ungrounded service-entrance conductor, or the equivalent area of a parallel set, in its own material;
+              the row then gives the electrode conductor in copper and in aluminum or copper-clad aluminum. The values are those of NFPA&apos;s
+              2020 grounding fact sheet. A conductor that runs only to a rod, pipe, plate or concrete-encased electrode has rules of its own,
+              which this page doesn&apos;t cover.
+            </p>
+            <DataTable id="table-250-66-rows" variant="ruled" src={GND} caption="NEC Table 250.66, grounding electrode conductors (sizes in AWG or kcmil)">
+              <thead>
+                <tr>
+                  <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
+                    Copper service
+                  </th>
+                  <th scope="col" className={RTH}>
+                    Aluminum or CCA service
+                  </th>
+                  <th scope="col" className={RTH}>
+                    Copper GEC
+                  </th>
+                  <th scope="col" className={RTH}>
+                    Aluminum or CCA GEC
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {TABLE_250_66_ROWS.map((r) => (
+                  <tr key={r.service_cu}>
+                    <th scope="row" className={RSTICKY_TD}>
+                      {r.service_cu}
+                    </th>
+                    <td className={RTD}>{r.service_al_cca}</td>
+                    <td className={RTD}>
+                      <Size s={r.gec_cu} />
+                    </td>
+                    <td className={RTD}>
+                      <Size s={r.gec_al_cca} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </DataTable>
+          </section>
+
+          <section aria-labelledby="services" className="space-y-5">
+            <h2 id="services" className={H2}>
+              Ground wires for a home&apos;s service
+            </h2>
+            <p className={P} data-src={LOOKUP}>
+              For a 120/240 V single-phase dwelling service, Table 310.12 gives the service conductors and Table 250.66 the electrode conductor
+              for them. At <Val v={S200.ratingA} unit="A" src={SVC} />, <ServiceWires s={S200} /> takes a <ServiceGec s={S200} /> electrode
+              conductor; the aluminum service gives the same row. A <Val v={EGC_200.ocpdA} unit="A" src={GND} /> feeder to a subpanel is the
+              other case: its ground wire comes from Table 250.122, <Size s={EGC_200.table.cu} /> copper or <Size s={EGC_200.table.alCca} />{' '}
+              aluminum.
+            </p>
+            <DataTable id="service-ground" variant="ruled" src={LOOKUP} caption="Dwelling services: conductors (Table 310.12) and electrode conductor (Table 250.66)">
+              <thead>
+                <tr>
+                  <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
+                    Service
+                  </th>
+                  <th scope="col" className={RTH}>
+                    Copper
+                  </th>
+                  <th scope="col" className={RTH}>
+                    Aluminum
+                  </th>
+                  <th scope="col" className={RTH}>
+                    GEC, copper
+                  </th>
+                  <th scope="col" className={RTH}>
+                    GEC, aluminum
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {SERVICES.map((s) => (
+                  <tr key={s.ratingA}>
+                    <th scope="row" className={RSTICKY_TD}>
+                      <Val v={s.ratingA} unit="A" src={SVC} />
+                    </th>
+                    <td className={RTD}>
+                      <Size s={s.cu} />
+                    </td>
+                    <td className={RTD}>
+                      <Size s={s.alCca} />
+                    </td>
+                    <td className={RTD}>
+                      <Size s={s.gecForCuService.cu} />
+                    </td>
+                    <td className={RTD}>
+                      <Size s={s.gecForCuService.alCca} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </DataTable>
+            <p className={P} data-src={LOOKUP}>
+              In every row the copper and the aluminum service give the same electrode conductor. The{' '}
+              <Link href="/calculators/service-entrance-calculator" className={LINK}>
+                service entrance calculator
+              </Link>{' '}
+              finds both for a rating.
+            </p>
+          </section>
+
+          <section aria-labelledby="faq" className="space-y-6">
+            <h2 id="faq" className={H2}>
+              Questions
+            </h2>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={SVC}>
+                What size ground wire for a <Val v={S200.ratingA} unit="A" src={SVC} /> service?
+              </h3>
+              <p className={P} data-src={LOOKUP}>
+                The electrode conductor follows the service conductors: on <ServiceWires s={S200} />, Table 250.66 gives{' '}
+                <ServiceGec s={S200} />. <span data-src={GND}>The equipment ground wire of a <Val v={EGC_200.ocpdA} unit="A" src={GND} />{' '}
+                feeder is <Size s={EGC_200.table.cu} /> copper or <Size s={EGC_200.table.alCca} /> aluminum (Table 250.122).</span>
+              </p>
             </div>
-
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Installation Best Practices
-                </h3>
-                <ul className="space-y-3 text-gray-700 dark:text-gray-300">
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Use listed and approved grounding and bonding components</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Follow manufacturer torque specifications for connections</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Protect grounding conductors from physical damage</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Keep grounding and bonding conductors as short as practical</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Document grounding system design and testing</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-                  Disclaimer
-                </h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Grounding and bonding systems are critical for electrical safety and must comply with 
-                  NEC requirements and local codes. This calculator provides guidance based on standard 
-                  applications. Consult qualified electrical professionals for complex installations or 
-                  special circumstances. Proper testing and verification are essential after installation.
-                </p>
-              </div>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={SVC}>
+                What size ground wire for a <Val v={S100.ratingA} unit="A" src={SVC} /> service?
+              </h3>
+              <p className={P} data-src={LOOKUP}>
+                On <ServiceWires s={S100} /> service conductors, a <ServiceGec s={S100} /> electrode conductor.{' '}
+                <span data-src={GND}>
+                  A <Val v={S100.ratingA} unit="A" src={SVC} /> feeder&apos;s equipment ground wire is <Size s={egc(100, 'Cu').tableEgc} /> copper
+                  or <Size s={egc(100, 'Al').tableEgc} /> aluminum.
+                </span>
+              </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Frequently Asked Questions
-          </h2>
-          <div className="space-y-6">
-            {groundWireFAQs.map((faq, index) => (
-              <div key={index} className="border-b border-gray-200 dark:border-gray-700 pb-6">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  {faq.question}
-                </h3>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {faq.answer}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Sources */}
-      <section className="mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <Sources
-            domains={SOURCE_DOMAINS}
-            headingClassName="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center"
-            listClassName="space-y-2 text-gray-700 dark:text-gray-300"
-            linkClassName="text-blue-600 hover:underline dark:text-blue-300"
-            noteClassName="mt-4 text-sm text-gray-600 dark:text-gray-400"
-          />
-        </div>
-      </section>
-
-      {/* Related Calculators */}
-      <section className="mb-16">
-        <div className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Related Electrical Calculators
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Link 
-              href="/calculators/wire-size-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <Calculator className="h-6 w-6 text-blue-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Wire Size Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Size circuit conductors that work with grounding systems
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={SVC}>
+                What size ground wire for a <Val v={S150.ratingA} unit="A" src={SVC} /> service entrance cable?
+              </h3>
+              <p className={P} data-src={LOOKUP}>
+                Table 310.12 gives <ServiceWires s={S150} /> for <Val v={S150.ratingA} unit="A" src={SVC} />, and Table 250.66 a{' '}
+                <ServiceGec s={S150} /> electrode conductor for them.
               </p>
-            </Link>
-            
-
-            <Link 
-              href="/calculators/ampacity-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <Zap className="h-6 w-6 text-purple-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Ampacity Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Determine current capacity of grounding conductors
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={GND}>
+                What size ground wire for a <Val v={EGC_50.ocpdA} unit="A" src={GND} /> circuit?
+              </h3>
+              <p className={P} data-src={GND}>
+                <Size s={EGC_50.table.cu} /> copper or <Size s={EGC_50.table.alCca} /> aluminum: <Val v={EGC_50.ocpdA} unit="A" src={GND} /> falls
+                in the <Val v={EGC_50.rowA} unit="A" src={GND} /> row of Table 250.122. That holds for a{' '}
+                <Val v={EGC_50.ocpdA} unit="A" src={GND} /> EV charger circuit too, unless its wires were upsized.
               </p>
-            </Link>
-
-
-            <Link 
-              href="/calculators/voltage-drop-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <AlertCircle className="h-6 w-6 text-red-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Voltage Drop Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Ensure proper grounding conductor performance
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>Does the ground wire have to be as big as the hot wires?</h3>
+              <p className={P} data-src={GND}>
+                Table 250.122 ties it to the breaker rating, not to the circuit wires: a <Val v={EGC_50.rowA} unit="A" src={GND} /> breaker&apos;s
+                ground wire is <Size s={egc(60, 'Cu').tableEgc} /> copper whatever size the circuit wires are, unless they were upsized past what
+                the rating needs. Then it grows in proportion to their area (250.122(B)).
               </p>
-            </Link>
+            </div>
+          </section>
 
-            <Link 
-              href="/calculators/service-entrance-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <BookOpen className="h-6 w-6 text-yellow-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Service Entrance Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Design complete service grounding systems
-              </p>
-            </Link>
-          </div>
-        </div>
-      </section>
-
+          <section aria-label="Sources and notices" className={LOOK_SOURCES_SECTION}>
+            <Sources
+              domains={[GND, OCPD, SVC, GEO]}
+              headingClassName={LOOK_SOURCES_HEADING}
+              listClassName={LOOK_SOURCES_LIST}
+              linkClassName={LINK}
+              noteClassName={LOOK_SOURCES_NOTE}
+            />
+            <p>
+              The{' '}
+              <Link href="/methodology#grounding" className={LINK}>
+                methodology page
+              </Link>{' '}
+              describes each source and how the values are found. NFPA 70®, National Electrical Code® and NEC® are registered trademarks of the
+              National Fire Protection Association; wiresizes.com is not affiliated with or endorsed by NFPA.
+            </p>
+          </section>
+        </LookGuideBody>
+      </article>
     </div>
   );
 }

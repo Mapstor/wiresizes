@@ -220,7 +220,8 @@ const livePages = pages.filter((p) => !withdrawnSet.has(p.route));
   check('no built page references fonts.googleapis.com or fonts.gstatic.com', failures, `${pages.length} pages`);
 }
 
-// 7. No 110.14(C) or 334.80 on a rendered page
+// 7. No 334.80 or 340.80 on a rendered page: NM and UF cable ampacity stay unverified (nec-cable-rules is a GAP).
+// 110.14(C) left the list in WSZ-008 (verified as nec-110-14c since pack v3).
 {
   const failures = [];
   for (const page of pages) {
@@ -230,9 +231,9 @@ const livePages = pages.filter((p) => !withdrawnSet.has(p.route));
       if (isJsonLd(e)) parts.push(...jsonLdStrings(e.body));
     }
     const text = parts.join(' ');
-    for (const needle of ['110.14(C)', '334.80']) if (text.includes(needle)) failures.push(`${page.route}: ${needle}`);
+    for (const needle of ['334.80', '340.80']) if (text.includes(needle)) failures.push(`${page.route}: ${needle}`);
   }
-  check('no rendered page contains "110.14(C)" or "334.80"', failures, `${pages.length} pages`);
+  check('no rendered page contains "334.80" or "340.80"', failures, `${pages.length} pages`);
 }
 
 // 8. No <tr> directly inside <table>
