@@ -82,7 +82,7 @@ if (!N4.grounding || N3.grounding || N4.amps !== C30 || N3.amps !== C30) throw n
 const TOC: ([string, string] | [string, string, string])[] = [
   ['two-numbers', 'Two numbers for one dryer'],
   ['circuit', 'The circuit, its wire and the cord'],
-  ['wiring', '3-wire or 4-wire'],
+  ['wiring', '3-wire or 4-wire', NEMA_DOMAIN],
   ['several', 'Several dryers: Table 220.54'],
   ['faq', 'Questions'],
   ['sources', 'Sources'],
@@ -177,7 +177,7 @@ export default function DryerCalculatorPage() {
               </thead>
               <tbody>
                 <tr>
-                  <th scope="row" className={clsx(RSTICKY_TD, '!font-normal')}>
+                  <th scope="row" className={clsx(RSTICKY_TD, '!whitespace-normal !font-normal')}>
                     NM cable, <Val v={COLD} unit="°C" src={TERM} />
                   </th>
                   <td className={RTD}>
@@ -188,7 +188,7 @@ export default function DryerCalculatorPage() {
                   </td>
                 </tr>
                 <tr>
-                  <th scope="row" className={clsx(RSTICKY_TD, '!font-normal')}>
+                  <th scope="row" className={clsx(RSTICKY_TD, '!whitespace-normal !font-normal')}>
                     Single conductors, <Val v={WARM} unit="°C" src={TERM} />
                   </th>
                   <td className={RTD}>
@@ -199,7 +199,7 @@ export default function DryerCalculatorPage() {
                   </td>
                 </tr>
                 <tr>
-                  <th scope="row" className={clsx(RSTICKY_TD, '!font-normal')}>
+                  <th scope="row" className={clsx(RSTICKY_TD, '!whitespace-normal !font-normal')}>
                     Ground wire
                   </th>
                   <td className={RTD}>{WIRE_30.egcCu ? <Size s={WIRE_30.egcCu} /> : '–'}</td>
@@ -215,7 +215,7 @@ export default function DryerCalculatorPage() {
           </section>
 
           <section aria-labelledby="wiring" className="space-y-5">
-            <h2 id="wiring" className={H2}>
+            <h2 id="wiring" className={H2} data-src={NEMA_DOMAIN}>
               3-wire or 4-wire
             </h2>
             <p className={P} data-src={NEMA_DOMAIN}>
