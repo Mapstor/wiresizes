@@ -98,6 +98,8 @@ const TOC: ([string, string] | [string, string, string])[] = [
   ['sources', 'Sources'],
 ];
 
+/** The formulas column: left-aligned, with less side padding, so the table fits a 390 px screen. */
+const FORMULA_CELL = '!text-left !pl-3 !pr-1.5';
 /** The formulas table: one row per circuit, each the source that states its formulas. */
 const FORMULA_ROWS = [
   { circuit: 'DC', power: 'P = V × I', current: 'I = P ÷ V', src: SI },
@@ -184,7 +186,7 @@ export default function ElectricalPowerCalculationsPage() {
                   <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
                     Circuit
                   </th>
-                  <th scope="col" className={clsx(RTH, '!text-left')}>
+                  <th scope="col" className={clsx(RTH, FORMULA_CELL)}>
                     Power, W, and current, A
                   </th>
                 </tr>
@@ -195,7 +197,7 @@ export default function ElectricalPowerCalculationsPage() {
                     <th scope="row" className={RSTICKY_TD}>
                       {r.circuit}
                     </th>
-                    <td className={clsx(RTD, '!text-left')}>
+                    <td className={clsx(RTD, FORMULA_CELL)}>
                       <span className="block">{r.power}</span>
                       <span className="block">{r.current}</span>
                     </td>
