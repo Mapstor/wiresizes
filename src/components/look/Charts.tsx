@@ -2448,7 +2448,7 @@ function BreakerStepsPlot({ narrow }: { narrow: boolean }) {
     {
       key: 'minimum',
       label: 'Smallest rating',
-      sub: <>continuous × <Val v={CONTINUOUS_LOAD_PERCENT} unit="%" src={CONT_SRC} svg /></>,
+      sub: <><Val v={CONTINUOUS_LOAD_PERCENT} unit="%" src={CONT_SRC} svg /> rule</>,
       parts: [
         { v: n, fill: NONCONT },
         { v: scaled, fill: COPPER },
@@ -2491,10 +2491,11 @@ function BreakerStepsPlot({ narrow }: { narrow: boolean }) {
       <title id={`${id}-title`}>
         {`A load of ${n} A noncontinuous and ${c} A continuous: ${n + c} A as it runs; the smallest rating is ${n} A plus ${CONTINUOUS_LOAD_PERCENT} % of ${c} A, ${run.minOcpdA} A; the next standard breaker is ${run.breakerA} A; ${formatSize(run.size)} copper carries ${run.ampacity} A in the ${run.columnC} °C column.`}
       </title>
-      <Key x={left} y={14} color={NONCONT} dot>
+      {/* the legend starts at the left edge on a phone, where the plot's left margin leaves no room for both entries */}
+      <Key x={narrow ? 0 : left} y={14} color={NONCONT} dot>
         Noncontinuous
       </Key>
-      <Key x={left + (narrow ? 112 : 130)} y={14} color={COPPER} dot>
+      <Key x={(narrow ? 0 : left) + 130} y={14} color={COPPER} dot>
         Continuous
       </Key>
       {ticks.map((t) => (
