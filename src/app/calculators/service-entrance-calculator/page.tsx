@@ -98,6 +98,10 @@ function egc(ocpdA: number): EgcResult {
 }
 const EGC_150 = egc(150);
 
+// phones: the four columns fit 390 px without the default header width and padding
+const TIGHT_TH = 'max-sm:!min-w-0 max-sm:!px-2';
+const TIGHT_TD = 'max-sm:!px-2';
+
 const TOC: ([string, string] | [string, string, string])[] = [
   ['table-310-12', 'Table 310.12, with electrode conductors'],
   ['eighty-three', '83 % of the rating', SVC],
@@ -187,16 +191,16 @@ export default function ServiceEntrancePage() {
             <DataTable id="service-rows" variant="ruled" src={CALC} caption="NEC Table 310.12 conductors and their Table 250.66 electrode conductor">
               <thead>
                 <tr>
-                  <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
+                  <th scope="col" className={clsx(RTH, RSTICKY_TH, TIGHT_TH)}>
                     Rating
                   </th>
-                  <th scope="col" className={RTH}>
+                  <th scope="col" className={clsx(RTH, TIGHT_TH)}>
                     Copper
                   </th>
-                  <th scope="col" className={RTH}>
+                  <th scope="col" className={clsx(RTH, TIGHT_TH)}>
                     Aluminum
                   </th>
-                  <th scope="col" className={RTH}>
+                  <th scope="col" className={clsx(RTH, TIGHT_TH)}>
                     GEC, Cu
                   </th>
                 </tr>
@@ -204,16 +208,16 @@ export default function ServiceEntrancePage() {
               <tbody>
                 {ROWS.map((s) => (
                   <tr key={s.ratingA}>
-                    <th scope="row" className={RSTICKY_TD}>
+                    <th scope="row" className={clsx(RSTICKY_TD, TIGHT_TD)}>
                       <Val v={s.ratingA} unit="A" src={SVC} />
                     </th>
-                    <td className={RTD}>
+                    <td className={clsx(RTD, TIGHT_TD)}>
                       <Size s={s.cu} />
                     </td>
-                    <td className={RTD}>
+                    <td className={clsx(RTD, TIGHT_TD)}>
                       <Size s={s.alCca} />
                     </td>
-                    <td className={RTD}>
+                    <td className={clsx(RTD, TIGHT_TD)}>
                       <Size s={s.gecForCuService.cu} />
                     </td>
                   </tr>

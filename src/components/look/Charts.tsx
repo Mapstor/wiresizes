@@ -1947,21 +1947,18 @@ function ServiceStepPlot({ narrow }: { narrow: boolean }) {
   const ph = narrow ? 200 : 230;
   const H = top + ph + 48;
   const pw = W - left - right;
-  const aMin = 75;
-  const aMax = 400;
+  // each row's step runs from its rating to the next row's; the last one runs past 400 A to the edge
+  const aMin = 100;
+  const aMax = 425;
   const cMin = Math.log10(areaCmil('4') * 0.8);
   const cMax = Math.log10(areaCmil('600') * 1.12);
   const x = (a: number) => left + ((a - aMin) / (aMax - aMin)) * pw;
   const y = (size: string) => top + ph - ((Math.log10(areaCmil(size)) - cMin) / (cMax - cMin)) * ph;
-  const steps = (pick: (r: (typeof TABLE_310_12_ROWS)[number]) => string) => {
-    let d = '';
-    let from = aMin;
-    TABLE_310_12_ROWS.forEach((r, k) => {
-      d += `${k === 0 ? 'M' : 'L'}${x(from).toFixed(1)},${y(pick(r)).toFixed(1)}H${x(r.ratingA).toFixed(1)}`;
-      from = r.ratingA;
-    });
-    return d;
-  };
+  const steps = (pick: (r: (typeof TABLE_310_12_ROWS)[number]) => string) =>
+    TABLE_310_12_ROWS.map((r, k) => {
+      const to = k + 1 < TABLE_310_12_ROWS.length ? TABLE_310_12_ROWS[k + 1].ratingA : aMax;
+      return `${k === 0 ? 'M' : 'L'}${x(r.ratingA).toFixed(1)},${y(pick(r)).toFixed(1)}H${x(to).toFixed(1)}`;
+    }).join('');
   const last = TABLE_310_12_ROWS[TABLE_310_12_ROWS.length - 1];
   const id = narrow ? 'service-steps-narrow' : 'service-steps-wide';
   return (
@@ -1992,7 +1989,7 @@ function ServiceStepPlot({ narrow }: { narrow: boolean }) {
         </g>
       ))}
       {[100, 200, 300, 400].map((a) => (
-        <text key={a} x={x(a)} y={top + ph + 20} textAnchor={a === 400 ? 'end' : 'middle'} fontSize={13} fill={MUTED}>
+        <text key={a} x={x(a)} y={top + ph + 20} textAnchor="middle" fontSize={13} fill={MUTED}>
           <Val v={a} unit="A" src={SVC_SRC} svg />
         </text>
       ))}
@@ -2089,7 +2086,7 @@ function ServiceDropPlot({ narrow }: { narrow: boolean }) {
         One-way length, ft (drop in % on the left)
       </text>
       <path d={line('Al')} fill="none" stroke={ALUMINUM} strokeWidth={2.5} pathLength={1} className="viz-draw" />
-      <path d={line('Cu')} fill="none" stroke={COPPER} strokeWidth={2.5} strokeDasharray="7 5" pathLength={1} className="viz-draw" />
+      <path d={line('Cu')} fill="none" stroke={COPPER} strokeWidth={2.5} pathLength={1} className="viz-draw" />
     </svg>
   );
 }
