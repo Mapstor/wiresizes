@@ -177,13 +177,13 @@ export const ROUTES: readonly SiteRoute[] = [
     path: '/guides/power-factor-explained',
     group: 'basics',
     name: 'Power Factor Explained',
-    line: 'Real, reactive and apparent power, kW against kVA, and capacitor correction for inductive loads.',
+    line: 'Power factor as real power over apparent power, why a low one raises the current, and the capacitor kVAR that corrects it.',
   },
   {
     path: '/guides/single-vs-three-phase',
     group: 'basics',
     name: 'Single vs Three Phase Systems',
-    line: 'How single-phase and three-phase systems differ in voltages, power, motors and wiring.',
+    line: 'One AC voltage or three: how the power, the current for the same load and the US voltages differ.',
   },
 ];
 

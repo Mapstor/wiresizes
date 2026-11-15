@@ -13,7 +13,8 @@ import { Sources } from '@/components/content/Sources';
 import { Val } from '@/components/content/Val';
 import { ThreePhaseTool } from '@/components/calculators/ThreePhaseTool';
 import { LookGuideBody } from '@/components/layout/LookGuideBody';
-import { PF_EXAMPLE, PowerTriangle, WYE_DRAWN, WyePhasors } from '@/components/look/Charts';
+import { PowerTriangle, WYE_DRAWN, WyePhasors } from '@/components/look/Charts';
+import { PF_EXAMPLE } from '@/lib/power-guides';
 import { OnThisPage } from '@/components/look/OnThisPage';
 import { PageTitle } from '@/components/look/PageTitle';
 import {

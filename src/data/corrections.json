@@ -26,5 +26,13 @@
   {
     "date": "2026-11-14",
     "text": "Rebuilt the three-phase calculator. It now takes any line-to-line voltage and any two of kW, kVA, amps and power factor, gives the reactive power and the line-to-neutral voltage of 208Y/120 V and 480Y/277 V systems, and sizes the capacitor bank for a target power factor. Removed the 600Y/347 V system, which is not among the U.S. nominal voltages the site cites, and sections on safety, load balancing, troubleshooting and international practice that cited no source."
+  },
+  {
+    "date": "2026-11-15",
+    "text": "Rebuilt the single vs three phase guide around one load compared on single-phase and three-phase systems, the power each system delivers over a cycle, and the U.S. nominal voltages for each. Removed lists of advantages and typical uses, claims about motors, and a Canadian voltage system that is not among the U.S. nominal voltages the site cites; none of these cited a source."
+  },
+  {
+    "date": "2026-11-15",
+    "text": "Rebuilt the power factor guide around the U.S. Energy Information Administration's definitions of real, reactive and apparent power, the U.S. Department of Energy's capacitor example worked exactly, and a table of capacitor kVAR per kW. Removed an equipment power factor table and advice on correction methods and monitoring that cited no source."
   }
 ]

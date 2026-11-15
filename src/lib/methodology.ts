@@ -27,6 +27,8 @@ const GROUND_WIRE = '/calculators/ground-wire-calculator';
 const WIRE_RESISTANCE = '/calculators/wire-resistance-calculator';
 const LOW_VOLTAGE = '/calculators/low-voltage-calculator';
 const THREE_PHASE = '/calculators/three-phase-calculator';
+const SINGLE_VS_THREE = '/guides/single-vs-three-phase';
+const POWER_FACTOR = '/guides/power-factor-explained';
 const SERVICE_ENTRANCE = '/calculators/service-entrance-calculator';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
@@ -90,31 +92,31 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'service-conductors',
     domain: 'nec-310-12',
     title: 'Dwelling services and main feeders',
-    citedOn: [SERVICE_ENTRANCE, GROUND_WIRE, TABLE_310_16],
+    citedOn: [SERVICE_ENTRANCE, GROUND_WIRE, TABLE_310_16, SINGLE_VS_THREE],
   },
   {
     id: 'power-terms',
     domain: 'eia-power-glossary',
     title: 'Real, reactive and apparent power',
-    citedOn: [VOLTAGE_DROP, THREE_PHASE],
+    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR],
   },
   {
     id: 'three-phase-power',
     domain: 'doe-motor-load-efficiency',
     title: 'Three-phase power',
-    citedOn: [VOLTAGE_DROP, THREE_PHASE],
+    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR],
   },
   {
     id: 'line-voltages',
     domain: 'mit-polyphase-networks',
     title: 'Line-to-line and line-to-neutral voltage',
-    citedOn: [THREE_PHASE],
+    citedOn: [THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR],
   },
   {
     id: 'power-factor-correction',
     domain: 'doe-power-factor-cost',
     title: 'Power factor correction',
-    citedOn: [THREE_PHASE],
+    citedOn: [THREE_PHASE, POWER_FACTOR],
   },
   {
     id: 'si-units',
@@ -140,7 +142,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'nominal-voltages',
     domain: 'us-nominal-voltages',
     title: 'Nominal system voltages',
-    citedOn: [VOLTAGE_DROP, THREE_PHASE],
+    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR],
   },
   {
     id: 'conversions',

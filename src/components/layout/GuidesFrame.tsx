@@ -21,7 +21,13 @@ interface GuidesFrameProps {
 
 const HUB = '/guides';
 /** Guides that draw their own frame in the picked look (D-33). */
-const LOOK_GUIDES = new Set(['/guides/awg-wire-size-chart', '/guides/nec-table-310-16', '/guides/nec-code-compliance']);
+const LOOK_GUIDES = new Set([
+  '/guides/awg-wire-size-chart',
+  '/guides/nec-table-310-16',
+  '/guides/nec-code-compliance',
+  '/guides/single-vs-three-phase',
+  '/guides/power-factor-explained',
+]);
 
 const STYLES = {
   classic: {
