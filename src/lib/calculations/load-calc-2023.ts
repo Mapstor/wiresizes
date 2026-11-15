@@ -94,7 +94,8 @@ export function cooktopAndOvensBranchLoad(
   ovensKw: number[],
 ): { equivalentRangeKw: number; demandKw: number } | null {
   if (ovensKw.length > TABLE_220_55.note4MaxOvens) return null;
-  const equivalentRangeKw = cooktopKw + sum(ovensKw);
+  // rounded so that 7.2 + 4.8 stays 12, not a hair over it
+  const equivalentRangeKw = Math.round((cooktopKw + sum(ovensKw)) * 1e6) / 1e6;
   const demandKw = rangeDemandKw(1, equivalentRangeKw);
   return demandKw === null ? null : { equivalentRangeKw, demandKw };
 }

@@ -29,12 +29,13 @@ describe('METHODOLOGY_SECTIONS', () => {
     for (const off of ['doe-efficiency-standards']) assert.ok(!domains.has(off), off);
   });
 
-  it('has nec-110-14c since the 200 A guide (WSZ-008c), the ampacity calculator (WSZ-009a), the wire size calculator (WSZ-009b) and the circuit breaker calculator (WSZ-009c) use it', () => {
+  it('has nec-110-14c since the 200 A guide (WSZ-008c), the ampacity calculator (WSZ-009a), the wire size calculator (WSZ-009b), the circuit breaker calculator (WSZ-009c) and the range calculator (WSZ-010b) use it', () => {
     const s = METHODOLOGY_SECTIONS.find((x) => x.domain === 'nec-110-14c');
     assert.deepEqual(s?.citedOn, [
       '/calculators/wire-size-calculator',
       '/calculators/ampacity-calculator',
       '/calculators/circuit-breaker-calculator',
+      '/calculators/range-calculator',
       '/guides/wire-size-for-200-amp',
     ]);
   });

@@ -32,6 +32,9 @@ import { SERVICE_AMPACITY_PERCENT, TABLE_310_12_ROWS } from '@/lib/verified/nec-
 import { OPTIONAL_METHOD, STANDARD_METHOD, TABLE_220_55, cookingRow } from '@/lib/verified/nec-220-2023';
 import type { CookingRow } from '@/lib/verified/nec-220-2023';
 import { DWELLING_VOLTS } from '@/lib/calculations/load-calc-2023';
+import { RANGE_CIRCUITS, RANGE_VOLTS } from '@/lib/calculations/range-circuit';
+import { FRIGIDAIRE_RANGE, WHIRLPOOL_RANGE } from '@/lib/verified/mfr-equipment';
+import { NEMA_CONFIGS } from '@/lib/verified/nema-receptacle-configs';
 import { AMPACITY_COLUMNS, TABLE_310_16_ROWS, TABLE_310_16_SIZES, TABLE_AMBIENT } from '@/lib/verified/nec-310-16';
 import { attribution, attributionParts, coverage, nextCheck } from '@/lib/verified/registry';
 import { NEC_2026_DOMAIN, NEC_2026_EFFECTIVE, NEC_2026_ISSUANCE_DOMAIN, NEC_2026_ISSUED, NEC_2026_MIN_SIZES } from '@/lib/verified/nec-2026-edition';
@@ -242,13 +245,14 @@ const TOC = [
   METHODOLOGY_EXTRA_SECTIONS.method,
   METHODOLOGY_EXTRA_SECTIONS.breakerMethod,
   METHODOLOGY_EXTRA_SECTIONS.loadMethod,
+  METHODOLOGY_EXTRA_SECTIONS.rangeMethod,
   ...METHODOLOGY_SECTIONS.map(({ id, title }) => ({ id, title })),
   METHODOLOGY_EXTRA_SECTIONS.notCovered,
   METHODOLOGY_EXTRA_SECTIONS.errors,
 ];
 
 export default function MethodologyPage() {
-  const { method, breakerMethod, loadMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
+  const { method, breakerMethod, loadMethod, rangeMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
   return (
     <div className={LOOK_PAGE}>
     <div className="container pb-16">
@@ -261,8 +265,8 @@ export default function MethodologyPage() {
         <p>
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
           has a section below: what it is and which edition was used, where it was read, how the calculators use it,
-          and where that use stops. The first three sections show how the wire size, circuit breaker and residential
-          load calculators put several of them together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
+          and where that use stops. The first four sections show how the wire size, circuit breaker, residential load
+          and range calculators put several of them together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
           homepage and the calculators and guides pages also list their sources under Sources, near the bottom of the
           page.
         </p>
@@ -503,6 +507,56 @@ export default function MethodologyPage() {
             <li>One range: a separate cooktop and wall ovens, and the 220.61 neutral load, are not calculated.</li>
             <li>A heat pump whose compressor is locked out while the backup heat runs is still counted with both.</li>
             <li>2023 values only; the 2026 values in Article 120 are not verified yet.</li>
+          </Limits>
+        </section>
+
+        <section id={rangeMethod.id} data-src="calc:range-circuit" aria-labelledby={`${rangeMethod.id}-title`} className="scroll-mt-24 space-y-4">
+          <h2 id={`${rangeMethod.id}-title`} className={H2}>
+            {rangeMethod.title}
+          </h2>
+          <p>
+            The{' '}
+            <Link href="/calculators/range-calculator" className={LINK}>
+              range calculator
+            </Link>{' '}
+            starts from what the circuit supplies, the nameplate ratings in kW, the supply voltage and the circuit rating the
+            appliance&apos;s instructions give:
+          </p>
+          <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-cut-line">
+            <li>
+              The branch-circuit load from Table 220.55 and its notes (see{' '}
+              <SectionLink domain="nec-220-load-calcs">Dwelling load calculations</SectionLink>): one range by Column C with
+              Note 1; one wall-mounted oven or one counter-mounted cooking unit at its nameplate; a counter-mounted cooking
+              unit with not more than two wall-mounted ovens, on one circuit in one room, added and treated as one range.
+            </li>
+            <li>
+              The current: that load divided by the supply, {RANGE_VOLTS.map((v, k) => (
+                <span key={v}>
+                  {k > 0 ? ' or ' : ''}
+                  <Val v={v} unit="V" src="input" />
+                </span>
+              ))}
+              . The circuit rating entered must reach it.
+            </li>
+            <li>
+              The wire for the circuit rating as steps 1 to 3 of the{' '}
+              <a href={`#${method.id}`} className={LINK}>
+                wire size calculator
+              </a>{' '}
+              size it, and the ground wire from Table 250.122.
+            </li>
+          </ol>
+          <p>
+            The calculator offers circuit ratings from <Val v={RANGE_CIRCUITS[0]} unit="A" src="nec-240-ocpd" /> to{' '}
+            <Val v={RANGE_CIRCUITS[RANGE_CIRCUITS.length - 1]} unit="A" src="nec-240-ocpd" />, the standard ratings of
+            Table 240.6(A) between them, and never picks one: the NEC&apos;s minimum circuit for household ranges has not
+            been verified here, so the rating comes from the appliance&apos;s instructions (see{' '}
+            <SectionLink domain="mfr-dryer-range">Range and dryer makers&apos; instructions</SectionLink>).
+          </p>
+          <Limits>
+            <li>One circuit: a feeder or service with several appliances is counted by the residential load calculator.</li>
+            <li>No continuous-load factor: a household range is counted at its Table 220.55 load.</li>
+            <li>The neutral, taps and cord sets are not sized.</li>
           </Limits>
         </section>
 
@@ -976,6 +1030,44 @@ export default function MethodologyPage() {
               notes without a number.
             </li>
             <li>The 2026 edition moved these rules to Article 120; its values have not been verified here.</li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="mfr-dryer-range">
+          <p>
+            Installation instructions that ranges and dryers ship with. The range calculator quotes two: Whirlpool&apos;s
+            freestanding electric range manual {WHIRLPOOL_RANGE.doc} (the same kW table as its earlier W10403811C and
+            W10575959A), which gives the circuit for each band of range ratings, the cords and receptacles and the
+            direct-wire sizes, and Frigidaire&apos;s 40-inch electric range instructions {FRIGIDAIRE_RANGE.doc}.
+          </p>
+          <SourceFacts s={section('mfr-dryer-range')} href={WHIRLPOOL_RANGE.url} />
+          <Limits>
+            <li>Each value belongs to that maker&apos;s appliances and documents; none is used as a rule for others.</li>
+            <li>The calculator asks for the circuit rating; it shows the Whirlpool band only as an example.</li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="nema-receptacle-configs">
+          <p>
+            The ratings, poles and wires of NEMA straight-blade receptacles, {NEMA_CONFIGS.length} configurations in all,
+            read from Hubbell and Leviton device sheets that state compliance with NEMA WD 6. The standard itself is sold
+            through ANSI and was not read.
+          </p>
+          <SourceFacts s={section('nema-receptacle-configs')} />
+          <Limits>
+            <li>Only the configurations in the file; a configuration not in it is not named on the site.</li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="nec-2023-rule-excerpts">
+          <p>
+            Single sections of the 2023 NEC that the site cites, read from Leviton&apos;s Captain Code 2023 pages, which
+            reprint them with NFPA&apos;s permission. The range calculator cites 210.8(D): GFCI protection for the branch
+            circuit or outlet that supplies an electric range, a wall-mounted oven or a counter-mounted cooking unit.
+          </p>
+          <SourceFacts s={section('nec-2023-rule-excerpts')} />
+          <Limits>
+            <li>Only the sections that source covers; state adoptions can amend them.</li>
           </Limits>
         </SourceSection>
 
