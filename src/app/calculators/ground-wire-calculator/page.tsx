@@ -420,7 +420,7 @@ export default function GroundWirePage() {
                 What size ground wire for a <Val v={S100.ratingA} unit="A" src={SVC} /> service?
               </h3>
               <p className={P} data-src={LOOKUP}>
-                On <ServiceWires s={S100} /> service conductors, a <ServiceGec s={S100} /> electrode conductor.{' '}
+                On <ServiceWires s={S100} /> service conductors, the electrode conductor is <ServiceGec s={S100} />.{' '}
                 <span data-src={GND}>
                   A <Val v={S100.ratingA} unit="A" src={SVC} /> feeder&apos;s equipment ground wire is <Size s={egc(100, 'Cu').tableEgc} /> copper
                   or <Size s={egc(100, 'Al').tableEgc} /> aluminum.
@@ -432,8 +432,8 @@ export default function GroundWirePage() {
                 What size ground wire for a <Val v={S150.ratingA} unit="A" src={SVC} /> service entrance cable?
               </h3>
               <p className={P} data-src={LOOKUP}>
-                Table 310.12 gives <ServiceWires s={S150} /> for <Val v={S150.ratingA} unit="A" src={SVC} />, and Table 250.66 a{' '}
-                <ServiceGec s={S150} /> electrode conductor for them.
+                Table 310.12 gives <ServiceWires s={S150} /> for <Val v={S150.ratingA} unit="A" src={SVC} />, and for them Table 250.66 gives an
+                electrode conductor of <ServiceGec s={S150} />.
               </p>
             </div>
             <div className="space-y-1.5">
