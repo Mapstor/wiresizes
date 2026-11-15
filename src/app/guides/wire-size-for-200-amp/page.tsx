@@ -88,6 +88,12 @@ if (!AL.protection.nextSizeUp || CU.protection.nextSizeUp) throw new Error('200 
 const FIRST = RATING_ROWS[0];
 const LAST = RATING_ROWS[RATING_ROWS.length - 1];
 
+// phones: the comparison table's header widths and padding give way so its three columns fit 390 px
+const TIGHT_TH = 'max-sm:!min-w-0 max-sm:!px-2';
+const TIGHT_TD = 'max-sm:!px-2';
+/** A row header that names a use in words: the body face, wrapping. */
+const USE_TH = '!whitespace-normal !font-display !font-normal';
+
 const TOC: ([string, string] | [string, string, string])[] = [
   ['two-tables', 'Why a service takes smaller wire'],
   ['which-table', 'Which table applies'],
@@ -233,37 +239,37 @@ export default function WireSizeFor200AmpPage() {
             <DataTable id="two-tables-200" variant="ruled" src={AMP} caption={`The conductors for ${G.ratingA} A from each table`}>
               <thead>
                 <tr>
-                  <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
+                  <th scope="col" className={clsx(RTH, RSTICKY_TH, TIGHT_TH)}>
                     Use
                   </th>
-                  <th scope="col" className={RTH}>
+                  <th scope="col" className={clsx(RTH, TIGHT_TH)}>
                     Copper
                   </th>
-                  <th scope="col" className={RTH}>
+                  <th scope="col" className={clsx(RTH, TIGHT_TH)}>
                     Aluminum
                   </th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <th scope="row" className={clsx(RSTICKY_TD, 'whitespace-normal font-display font-normal')} data-src={SVC}>
+                  <th scope="row" className={clsx(RSTICKY_TD, USE_TH, TIGHT_TD)} data-src={SVC}>
                     Dwelling service, Table 310.12
                   </th>
-                  <td className={RTD}>
+                  <td className={clsx(RTD, TIGHT_TD)}>
                     <Size s={CU.dwelling} />
                   </td>
-                  <td className={RTD}>
+                  <td className={clsx(RTD, TIGHT_TD)}>
                     <Size s={AL.dwelling} />
                   </td>
                 </tr>
                 <tr>
-                  <th scope="row" className={clsx(RSTICKY_TD, 'whitespace-normal font-display font-normal')} data-src={AMP}>
+                  <th scope="row" className={clsx(RSTICKY_TD, USE_TH, TIGHT_TD)} data-src={AMP}>
                     Other feeder, Table 310.16
                   </th>
-                  <td className={RTD}>
+                  <td className={clsx(RTD, TIGHT_TD)}>
                     <Size s={CU.feeder} />
                   </td>
-                  <td className={RTD}>
+                  <td className={clsx(RTD, TIGHT_TD)}>
                     <Size s={AL.feeder} />
                   </td>
                 </tr>
