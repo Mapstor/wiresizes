@@ -146,7 +146,7 @@ function dryerRow(row: { n: string; pct: number | string }): DryerRow {
 }
 
 const r220_52 = rule<{ A: { va_per_2wire_small_appliance_circuit: number }; B: { va_per_2wire_laundry_circuit_min: number } }>('220.52');
-const r220_53 = rule<{ pct: number; min_appliances: number }>('220.53');
+const r220_53 = rule<{ pct: number; min_appliances: number; qualifying: string }>('220.53');
 const r220_54 = rule<Table220_54Json>('220.54');
 const r220_60 = rule<{ text: string }>('220.60');
 
@@ -164,6 +164,10 @@ export const STANDARD_METHOD = {
   /** 220.53: fastened-in-place appliances at this percent when there are at least minAppliances of them. */
   appliancePct: r220_53.pct,
   minAppliances: r220_53.min_appliances,
+  /** 220.53 counts appliances rated at least this many watts (or 1/4 hp; qualifying text "500 watts or greater"). */
+  applianceMinW: Number(read(r220_53.qualifying, /or (\d+) watts or greater/)[1]),
+  /** ...or rated at least this many horsepower, as printed ("1/4"). */
+  applianceMinHp: read(r220_53.qualifying, /^rated ([\d/]+) hp or greater/)[1],
   /** 220.54: each dryer at the larger of this and its nameplate rating. */
   dryerMinW: r220_54.min_w,
   /** Table 220.54 demand factors by number of dryers. */
@@ -181,6 +185,7 @@ export const STANDARD_METHOD = {
 type HeatingAcPct = number | { compressor: number; supplemental_heat: number };
 
 interface Rule220_82Json {
+  scope_A: string;
   general_first_kva: number;
   general_first_pct: number;
   general_rest_pct: number;
@@ -204,6 +209,8 @@ interface Rule220_83Json {
 }
 
 export const OPTIONAL_METHOD = {
+  /** 220.82(A): a dwelling unit served by service or feeder conductors with an ampacity of at least this. */
+  minAmpacityA: Number(read(r220_82.scope_A, /with an ampacity of (\d+) or greater/)[1]),
   /** 220.82(B)(1): general lighting per ft². */
   vaPerFt2: r220_82.va_per_ft2,
   /** 220.82(B)(2): each small-appliance and laundry branch circuit. */

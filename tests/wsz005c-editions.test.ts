@@ -160,6 +160,7 @@ describe('the 2026 changes and the pages that state them', () => {
     const pages = ['/', '/calculators', '/guides', '/guides/nec-code-compliance', '/guides/nec-table-310-16'].sort();
     assert.deepEqual(cited['nec-adoption'], pages);
     assert.deepEqual(cited[NEC_2026_ISSUANCE_DOMAIN], pages);
-    assert.deepEqual(cited[NEC_2026_DOMAIN], ['/guides/nec-code-compliance', '/guides/nec-table-310-16']);
+    // WSZ-010a: the residential load calculator cites the Article 220 → Article 120 move
+    assert.deepEqual(cited[NEC_2026_DOMAIN], ['/calculators/residential-load-calculator', '/guides/nec-code-compliance', '/guides/nec-table-310-16']);
   });
 });

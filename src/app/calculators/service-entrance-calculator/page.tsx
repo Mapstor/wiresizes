@@ -44,8 +44,8 @@ import type { Material } from '@/lib/verified/awg';
 // the conductors (NEC Table 310.12, 83 % rule of 310.12(A)) and the electrode conductor (Table 250.66, NFPA's 2020 fact
 // sheet); a length and a load add the drop at 75 °C (voltage drop engine, conductor-resistance-20c). The rows are golden
 // "service-lookup" cases; the drop of 4/0 AWG aluminum at 200 A over 100 ft is a golden "voltage-drop" case. The 230.79
-// minimum ratings and 230.24 clearances wait on nec-misc-installation (candidate), so the page states neither, and the
-// load calculation waits on its own page (WSZ-010).
+// minimum ratings and 230.24 clearances wait on nec-misc-installation (candidate), so the page states neither; the
+// load calculation that gives the rating is the residential load calculator (WSZ-010a), linked from the scope section.
 const ROUTE = '/calculators/service-entrance-calculator';
 const URL = `https://wiresizes.com${ROUTE}`;
 const TITLE = 'Service Entrance Calculator: Wire Size by Amps';
@@ -302,6 +302,13 @@ export default function ServiceEntrancePage() {
               The table also assumes no corrections. Where the ambient temperature is above <Val v={30} unit="°C" src={SVC} />, or more than
               three current-carrying conductors share a raceway or cable, the factors of Tables 310.15(B)(1)(1) and 310.15(C)(1) apply, and the
               corrected ampacity must still reach <Val v={SERVICE_AMPACITY_PERCENT} unit="%" src={SVC} /> of the rating.
+            </p>
+            <p className={P}>
+              The rating itself comes from the dwelling&apos;s calculated load. The{' '}
+              <Link href="/calculators/residential-load-calculator" className={LINK}>
+                residential load calculator
+              </Link>{' '}
+              works it out by both NEC methods and gives the smallest rating in the table at or above it.
             </p>
           </section>
 
