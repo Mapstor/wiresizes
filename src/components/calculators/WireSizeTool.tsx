@@ -11,6 +11,7 @@
 // work.
 import { useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
+import { Num } from '@/components/content/Num';
 import { Size } from '@/components/content/Size';
 import { Val } from '@/components/content/Val';
 import { ValText } from '@/components/content/ValText';
@@ -264,18 +265,19 @@ export function WireSizeTool() {
             <div>
               <Segmented
                 name="termination"
-                legend="Terminals"
+                legend="Terminal rating"
                 value={inputs.termination}
                 options={[
                   { value: 'unknown', label: 'Not sure' },
-                  { value: '60', label: <>Marked <Val v={60} unit="°C" src={TERM} /></> },
-                  { value: '75', label: <>Listed <Val v={75} unit="°C" src={TERM} /></> },
+                  { value: '60', label: <Val v={TERMINATION_RULES.columnAtOrBelowLimit} unit="°C" src={TERM} /> },
+                  { value: '75', label: <Val v={TERMINATION_RULES.columnAboveLimit} unit="°C" src={TERM} /> },
                 ]}
                 onChange={(termination) => update({ termination })}
               />
               <p className={FIELD_HINT} data-src={TERM}>
-                Every terminal on the circuit counts. Not sure: <Val v={TERMINATION_RULES.columnAtOrBelowLimit} unit="°C" src={TERM} /> up to{' '}
-                <Val v={TERMINATION_RULES.limitA} unit="A" src={TERM} />, <Val v={TERMINATION_RULES.columnAboveLimit} unit="°C" src={TERM} /> above.
+                <Val v={TERMINATION_RULES.columnAboveLimit} unit="°C" src={TERM} /> only if every terminal is listed for it. Not sure:{' '}
+                <Val v={TERMINATION_RULES.columnAtOrBelowLimit} unit="°C" src={TERM} /> up to <Val v={TERMINATION_RULES.limitA} unit="A" src={TERM} />,{' '}
+                <Val v={TERMINATION_RULES.columnAboveLimit} unit="°C" src={TERM} /> above.
               </p>
             </div>
           ) : (
@@ -312,11 +314,12 @@ export function WireSizeTool() {
               ]}
               onChange={(phase) => update({ phase, volts: String(voltsAfterPhaseChange(Number(inputs.volts), phase)) })}
             />
+            {/* numbers only, so the five single-phase voltages fit one row down to a 320 px screen */}
             <Segmented
               name="volts"
-              legend={inputs.phase === 'three' ? 'Voltage, line to line' : 'Voltage'}
+              legend={inputs.phase === 'three' ? 'Voltage, V, line to line' : 'Voltage, V'}
               value={inputs.volts}
-              options={voltsFor(inputs.phase).map((v) => ({ value: String(v), label: <Val v={v} unit="V" src={VOLTS} /> }))}
+              options={voltsFor(inputs.phase).map((v) => ({ value: String(v), label: <Num v={v} src={VOLTS} /> }))}
               onChange={(volts) => update({ volts })}
             />
           </div>

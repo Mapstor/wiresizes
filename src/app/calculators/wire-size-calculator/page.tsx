@@ -241,7 +241,8 @@ export default function WireSizeCalculatorPage() {
               site also keeps NM and UF cable at <Val v={COLD} unit="°C" src={TERM} />. Each size below carries the full rating in its column and
               meets the 240.4(D) limits.
             </p>
-            <div className="grid gap-8 md:grid-cols-2 md:gap-6">
+            {/* min-w-0: a grid item may shrink below its table, which then scrolls in its own frame on a phone */}
+            <div className="grid gap-8 md:grid-cols-2 md:gap-6 [&>*]:min-w-0">
               <RatingTable material="Cu" />
               <RatingTable material="Al" />
             </div>
