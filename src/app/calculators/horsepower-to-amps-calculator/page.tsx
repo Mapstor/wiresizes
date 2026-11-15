@@ -130,7 +130,14 @@ function FlcTable({ phase, id, caption, maxWidth }: { phase: ToolPhase; id: stri
               const a = r.amps[c.column];
               return (
                 <td key={c.column} className={RTD}>
-                  {a === null ? <span aria-label="no current in the table">–</span> : <Val v={a} unit="A" src={FLC} />}
+                  {a === null ? (
+                    <>
+                      <span aria-hidden="true">–</span>
+                      <span className="sr-only">no value</span>
+                    </>
+                  ) : (
+                    <Num v={a} src={FLC} />
+                  )}
                 </td>
               );
             })}
@@ -231,7 +238,7 @@ export default function HorsepowerToAmpsPage() {
               Single-phase AC motors from {hpText(FIRST.hp)} hp to {hpText(LAST.hp)} hp. In every row the{' '}
               <Val v={EXAMPLE_115.column.volts} unit="V" src={FLC} /> current is twice the <Val v={EXAMPLE.column.volts} unit="V" src={FLC} /> current.
             </p>
-            <FlcTable phase="1" id="table-430-248" caption="NEC 2023 Table 430.248, full-load current" maxWidth="max-w-[34rem]" />
+            <FlcTable phase="1" id="table-430-248" caption="NEC 2023 Table 430.248, full-load current in amperes" maxWidth="max-w-[30rem]" />
             <SourceLine domains={[FLC]} />
           </section>
 
@@ -245,7 +252,7 @@ export default function HorsepowerToAmpsPage() {
               <Val v={ac[ac.length - 1].volts} unit="V" src={FLC} /> column starts at {hpText(FIRST_2300)} hp. The table also lists synchronous motors;
               this page and the calculator give the induction motor currents.
             </p>
-            <FlcTable phase="3" id="table-430-250" caption="NEC 2023 Table 430.250, induction motors, full-load current" maxWidth="max-w-[46rem]" />
+            <FlcTable phase="3" id="table-430-250" caption="NEC 2023 Table 430.250, induction motors, full-load current in amperes" maxWidth="max-w-[42rem]" />
             <SourceLine domains={[FLC]} />
           </section>
 
@@ -256,14 +263,15 @@ export default function HorsepowerToAmpsPage() {
             <p className={P} data-src={FLC}>
               DC motors from {hpText(DC_ROWS[0].hp)} hp to {hpText(DC_ROWS[DC_ROWS.length - 1].hp)} hp, by rated voltage.{' '}
               <span data-src={EIA}>
-                DC has no power factor (on DC one volt-ampere is one watt), so the gap to the rated power is the motor&apos;s efficiency alone:
+                DC has no power factor (on DC one volt-ampere is one watt), so there the gap between the two currents comes from the
+                motor&apos;s efficiency alone:
               </span>{' '}
               <span data-src={CALC}>
                 a {hpText(DC_10.hp)} hp motor at <Val v={DC_10.column.volts} unit="V" src={FLC} /> is <Val v={DC_10.flcA as number} unit="A" src={FLC} />{' '}
                 in the table against <Val v={DC_10.powerAmps} unit="A" src={CALC} format={{ upTo: 2 }} /> for the power alone.
               </span>
             </p>
-            <FlcTable phase="dc" id="table-430-247" caption="NEC 2023 Table 430.247, full-load current" maxWidth="max-w-[42rem]" />
+            <FlcTable phase="dc" id="table-430-247" caption="NEC 2023 Table 430.247, full-load current in amperes" maxWidth="max-w-[38rem]" />
             <SourceLine domains={[FLC, EIA]} />
           </section>
 
