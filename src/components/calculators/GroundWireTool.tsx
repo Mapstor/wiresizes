@@ -145,7 +145,7 @@ export function GroundWireTool() {
   };
   const shownInstalled = fieldErrors.shown('installed', errors.installed);
   const sizeOptions = GROUND_WIRE_SIZES.map((s) => (
-    <option key={s} value={s}>
+    <option key={s} value={s} data-size={s}>
       {formatSize(s)}
     </option>
   ));
@@ -171,7 +171,7 @@ export function GroundWireTool() {
             <Field id="ocpd" label="Breaker or fuse rating, A" hint="The device ahead of the circuit or feeder.">
               <SelectInput id="ocpd" value={inputs.ocpd} onChange={(ocpd) => update({ ocpd })} describedById="ocpd-hint">
                 {GROUND_WIRE_RATINGS.map((a) => (
-                  <option key={a} value={String(a)}>
+                  <option key={a} value={String(a)} data-src={OCPD}>
                     {formatValue(a)} A
                   </option>
                 ))}
