@@ -1067,7 +1067,7 @@ export default function MethodologyPage() {
           </p>
           <SourceFacts s={section('nec-2023-rule-excerpts')} />
           <Limits>
-            <li>Only the sections the registry lists; state adoptions can amend them.</li>
+            <li>Only the sections that source covers; state adoptions can amend them.</li>
           </Limits>
         </SourceSection>
 

@@ -16,3 +16,13 @@
 /guides/nec-code-compliance | 15A-2-103(1)(b | Utah Code section 15A-2-103(1)(b), cited in Utah's scope text; a statute number, not a number and a unit
 /guides/nec-code-compliance | 15A-2-103 | Utah Code section 15A-2-103, named in Utah's source line; a statute number, not a number and a unit
 /guides/nec-code-compliance | 87CSR4 | West Virginia's rule citation 87CSR4 (Code of State Rules, Title 87, Series 4) in its scope text and source line, as the state writes it
+
+# NEMA configuration names and makers' document numbers (WSZ-010b), written as the device sheets and manuals print them
+/calculators/range-calculator | 14-50R | NEMA 14-50 receptacle configuration name (nema-receptacle-configs.json), not a number and a unit
+/calculators/range-calculator | 10-50R | NEMA 10-50 receptacle configuration name (nema-receptacle-configs.json), not a number and a unit
+/calculators/range-calculator | W11640146A | Whirlpool range manual document number (mfr-equipment.json)
+/methodology | W11640146A | Whirlpool range manual document number (mfr-equipment.json)
+/methodology | W10403811C | Whirlpool range installation guide document number (mfr-equipment.json)
+/methodology | W10575959A | Whirlpool range installation guide document number (mfr-equipment.json)
+public/llms.txt | 14-50R | NEMA 14-50 receptacle configuration name, not a number and a unit
+public/llms.txt | 10-50R | NEMA 10-50 receptacle configuration name, not a number and a unit
