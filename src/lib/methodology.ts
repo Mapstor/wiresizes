@@ -40,6 +40,7 @@ const SERVICE_ENTRANCE = '/calculators/service-entrance-calculator';
 const RESIDENTIAL_LOAD = '/calculators/residential-load-calculator';
 const RANGE = '/calculators/range-calculator';
 const DRYER = '/calculators/dryer-calculator';
+const HP_TO_AMPS = '/calculators/horsepower-to-amps-calculator';
 const GUIDE_200 = '/guides/wire-size-for-200-amp';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
@@ -133,19 +134,25 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'rule-excerpts',
     domain: 'nec-2023-rule-excerpts',
     title: 'Other NEC 2023 sections',
-    citedOn: [RANGE, DRYER],
+    citedOn: [RANGE, DRYER, HP_TO_AMPS],
+  },
+  {
+    id: 'motor-currents',
+    domain: 'nec-430-flc',
+    title: 'Motor full-load currents',
+    citedOn: [HP_TO_AMPS],
   },
   {
     id: 'power-terms',
     domain: 'eia-power-glossary',
     title: 'Real, reactive and apparent power',
-    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, OHMS_LAW, POWER_CALCS],
+    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, OHMS_LAW, HP_TO_AMPS, POWER_CALCS],
   },
   {
     id: 'three-phase-power',
     domain: 'doe-motor-load-efficiency',
     title: 'Three-phase power',
-    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, POWER_CALCS],
+    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, HP_TO_AMPS, POWER_CALCS],
   },
   {
     id: 'line-voltages',
@@ -157,7 +164,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'power-factor-correction',
     domain: 'doe-power-factor-cost',
     title: 'Power factor correction',
-    citedOn: [THREE_PHASE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, WATTS_TO_AMPS, POWER_CALCS],
+    citedOn: [THREE_PHASE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, WATTS_TO_AMPS, HP_TO_AMPS, POWER_CALCS],
   },
   {
     id: 'si-units',
@@ -175,13 +182,13 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'nominal-voltages',
     domain: 'us-nominal-voltages',
     title: 'Nominal system voltages',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, POWER_CALCS],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, HP_TO_AMPS, POWER_CALCS],
   },
   {
     id: 'conversions',
     domain: 'nist-sp811-conversions',
     title: 'Unit conversions',
-    citedOn: ['/calculators/btu-to-watts-calculator'],
+    citedOn: ['/calculators/btu-to-watts-calculator', HP_TO_AMPS],
   },
   {
     id: 'metric-sizes',
@@ -221,6 +228,7 @@ export const METHODOLOGY_EXTRA_SECTIONS = {
   loadMethod: { id: 'load-method', title: 'How the residential load calculator counts a house' },
   rangeMethod: { id: 'range-method', title: 'How the range calculator sizes a range circuit' },
   dryerMethod: { id: 'dryer-method', title: 'How the dryer calculator counts a dryer' },
+  hpMethod: { id: 'hp-method', title: 'How the horsepower to amps calculator reads the tables' },
   notCovered: { id: 'not-covered', title: 'Not covered yet' },
   errors: { id: 'errors', title: 'Errors and corrections' },
 } as const;

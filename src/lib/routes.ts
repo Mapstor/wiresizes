@@ -139,6 +139,12 @@ export const ROUTES: readonly SiteRoute[] = [
     line: "Amps from a kVA rating, such as a transformer's or a generator's, single-phase or three-phase, with a table of amps by kVA.",
   },
   {
+    path: '/calculators/horsepower-to-amps-calculator',
+    group: 'conversions',
+    name: 'Horsepower to Amps Calculator',
+    line: "A motor's full-load current by horsepower and voltage, single-phase, three-phase or DC, read from NEC Tables 430.248, 430.250 and 430.247 as 430.6(A) requires, never from a formula.",
+  },
+  {
     path: '/calculators/three-phase-calculator',
     group: 'conversions',
     name: 'Three Phase Calculator',

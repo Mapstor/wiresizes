@@ -21,6 +21,7 @@
 - [Volts to Amps](https://wiresizes.com/calculators/volts-to-amps-calculator): Current from power, voltage and power factor, I = P ÷ (V × PF) single-phase and I = P ÷ (√3 × V × PF) three-phase.
 - [Kilowatts to Amps](https://wiresizes.com/calculators/kilowatts-to-amps-calculator): Current, apparent power and reactive power from kilowatts, voltage and power factor, single- or three-phase.
 - [kVA to Amps](https://wiresizes.com/calculators/kva-to-amps-calculator): Current from apparent power and voltage, single- or three-phase.
+- [Horsepower to Amps](https://wiresizes.com/calculators/horsepower-to-amps-calculator): A motor's full-load current from NEC 2023 Tables 430.248 (single-phase), 430.250 (three-phase induction) and 430.247 (DC) by horsepower and the voltage column the tables' notes give, never from a formula (430.6(A)): a 1 hp single-phase motor is 16 A at 115 V and 8 A at 230 V. Also the rating in watts (746 W per horsepower, NIST SP 811). No wire or breaker sizing for motor circuits.
 - [BTU to Watts](https://wiresizes.com/calculators/btu-to-watts-calculator): Btu per hour to watts and tons of refrigeration and back, with 1 Btu/h = 0.2930711 W (NIST SP 811) and 1 ton = 12,000 Btu/h.
 - [Ohm's Law Calculator](https://wiresizes.com/calculators/ohms-law-calculator): Voltage, current, resistance and power from any two of them, V = I × R and P = V × I.
 

@@ -1,7 +1,6 @@
 export { CalculatorResult } from './CalculatorResult';
 export { CalculatorLayout } from './CalculatorLayout';
 export { PowerConverterTool } from './PowerConverterTool';
-export { default as HorsepowerToAmpsCalculator } from './HorsepowerToAmpsCalculator';
 export { BtuTool } from './BtuTool';
 export { OhmsLawTool } from './OhmsLawTool';
 export { ConduitFillCalculator } from './ConduitFillCalculator';
