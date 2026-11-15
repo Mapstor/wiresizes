@@ -2568,7 +2568,7 @@ function LoadMethodsPlot({ narrow }: { narrow: boolean }) {
     { key: 'optional', label: 'Optional method', amps: optional.amps, va: optional.totalVa, fill: BAR_GRAY, service: service(optional.serviceRow) },
   ];
   const W = narrow ? 288 : 560;
-  const left = narrow ? 104 : 150;
+  const left = narrow ? 120 : 150;
   const right = narrow ? 56 : 80;
   const top = 8;
   const rowH = narrow ? 64 : 58;
