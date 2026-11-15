@@ -19,7 +19,7 @@ export default function NotFound() {
     { 
       href: '/calculators/wire-size-calculator', 
       title: 'Wire Size Calculator',
-      description: 'Calculate AWG wire size for any circuit'
+      description: 'Wire size for a breaker or fuse rating'
     },
     { 
       href: '/calculators/voltage-drop-calculator', 
