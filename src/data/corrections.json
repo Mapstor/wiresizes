@@ -34,5 +34,17 @@
   {
     "date": "2026-11-15",
     "text": "Rebuilt the power factor guide around the U.S. Energy Information Administration's definitions of real, reactive and apparent power, the U.S. Department of Energy's capacitor example worked exactly, and a table of capacitor kVAR per kW. Removed an equipment power factor table and advice on correction methods and monitoring that cited no source."
+  },
+  {
+    "date": "2026-11-15",
+    "text": "Rebuilt the kilowatts to amps calculator. It now gives the apparent and reactive power and the current at other voltages, with worked examples and a table of amps per kW. Removed notes on leading power factor and motor advice that cited no source."
+  },
+  {
+    "date": "2026-11-15",
+    "text": "Rebuilt the kVA to amps calculator. It now takes any voltage and, with a power factor, gives the real and reactive power, with worked examples and a table of amps by kVA. Removed the equipment presets, a transformer option that labelled the voltage as the secondary even when it was off, and an installation note that cited no source."
+  },
+  {
+    "date": "2026-11-15",
+    "text": "Rebuilt the volts to amps calculator to match its description: it now works out the current from the power or from the resistance. Removed the section on how voltage changes current and the examples by type of equipment, such as solar strings and EV charging, which cited no source."
   }
 ]

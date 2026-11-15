@@ -99,19 +99,19 @@ export const ROUTES: readonly SiteRoute[] = [
     path: '/calculators/volts-to-amps-calculator',
     group: 'conversions',
     name: 'Volts to Amps Calculator',
-    line: 'Amps drawn by a load of known wattage at your voltage, single-phase or three-phase, with the current at other voltages beside it.',
+    line: 'Amps from the voltage and either the power in watts or the resistance in ohms, single-phase or three-phase.',
   },
   {
     path: '/calculators/kilowatts-to-amps-calculator',
     group: 'conversions',
     name: 'Kilowatts to Amps Calculator',
-    line: 'Amps from kilowatts for single-phase and three-phase circuits, with the power factor.',
+    line: 'Amps from kilowatts and the power factor, single-phase or three-phase, with a table of amps per kW.',
   },
   {
     path: '/calculators/kva-to-amps-calculator',
     group: 'conversions',
     name: 'kVA to Amps Calculator',
-    line: "Full-load current from a kVA rating, such as a transformer's or a generator's, for single-phase and three-phase systems.",
+    line: "Amps from a kVA rating, such as a transformer's or a generator's, single-phase or three-phase, with a table of amps by kVA.",
   },
   {
     path: '/calculators/three-phase-calculator',

@@ -1,594 +1,310 @@
-import { Metadata } from 'next';
-import { KilowattsToAmpsCalculator } from '@/components/calculators/KilowattsToAmpsCalculator';
-import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Settings } from 'lucide-react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+import { clsx } from 'clsx';
+import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 import { Byline } from '@/components/content/Byline';
+import { DataTable, RSTICKY_TD, RSTICKY_TH, RTD, RTH } from '@/components/content/DataTable';
+import { Num } from '@/components/content/Num';
 import { Sources } from '@/components/content/Sources';
-import { DOMAINS as POWER_DOMAINS } from '@/lib/calculations/power';
+import { Val } from '@/components/content/Val';
+import { PowerConverterTool } from '@/components/calculators/PowerConverterTool';
+import { LookGuideBody } from '@/components/layout/LookGuideBody';
+import { OnThisPage } from '@/components/look/OnThisPage';
+import { PageTitle } from '@/components/look/PageTitle';
+import {
+  LOOK_BYLINE,
+  LOOK_BYLINE_LINK,
+  LOOK_FORMULA,
+  LOOK_H2 as H2,
+  LOOK_H3 as H3,
+  LOOK_LEAD,
+  LOOK_LINK as LINK,
+  LOOK_P as P,
+  LOOK_PAGE,
+  LOOK_SOURCES_HEADING,
+  LOOK_SOURCES_LIST,
+  LOOK_SOURCES_NOTE,
+  LOOK_SOURCES_SECTION,
+} from '@/components/look/styles';
+import { SINGLE_PHASE_VOLTS, THREE_PHASE_VOLTS } from '@/lib/calculations/inputs';
+import { ENGINE_ID, SQRT3, TP_SIG, convertToAmps, isConvError } from '@/lib/calculations/power';
+import type { ConvInput, ConvResult } from '@/lib/calculations/power';
+import { articleDates } from '@/lib/page-dates';
+import { assertNominal } from '@/lib/verified/us-nominal-voltages';
 
-const SOURCE_DOMAINS = POWER_DOMAINS;
+// /calculators/kilowatts-to-amps-calculator (WSZ-007b; spec: research/page-specs.md "WSZ-007"): the converter in the look
+// (D-33, D-35), every number from the power engine's converter path (convertToAmps) or the registry, with its source in
+// data-src. I = P ÷ (V × PF) single-phase (EIA Glossary: apparent power is volts times amperes, power factor is real over
+// apparent power), I = P ÷ (√3 × V × PF) three-phase (DOE/GO-10097-517 Equation 1; MIT 6.061). Worked examples = golden
+// "power" cases 7.2 kW at 240 V and 50 kW at 480 V three-phase, PF 0.9.
+const ROUTE = '/calculators/kilowatts-to-amps-calculator';
+const URL = `https://wiresizes.com${ROUTE}`;
+const TITLE = 'kW to Amps Calculator: Single-Phase and Three-Phase';
+const DESCRIPTION =
+  'Kilowatts to amps: I = kW × 1,000 ÷ (V × PF), or ÷ (√3 × V × PF) on three-phase. 7.2 kW at 240 V is 30 A. With a table of amps per kW.';
 
 export const metadata: Metadata = {
-  title: 'Kilowatts to Amps Calculator — kW → A',
-  description: 'Convert kilowatts to amps for single-phase and three-phase circuits. Includes power-factor input for motors and inductive loads.',
-  keywords: 'kilowatts to amps, kw to amperage calculator, power to current converter, three phase kw to amps, power factor calculator, electrical power conversion',
-  openGraph: {
-    title: 'Kilowatts to Amps Calculator - Convert kW to Amperage',
-    description: 'Convert kilowatts to amps for electrical load calculations. Single and three-phase kW to amperage calculator with power factor.',
-    type: 'website',
-    url: 'https://wiresizes.com/calculators/kilowatts-to-amps-calculator',
-    images: ['/opengraph-image']
-  },
-  alternates: { canonical: '/calculators/kilowatts-to-amps-calculator' },
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: ROUTE },
+  openGraph: { type: 'website', locale: 'en_US', siteName: 'WireSizes.com', url: URL, title: TITLE, description: DESCRIPTION, images: ['/opengraph-image'] },
+  twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION },
 };
 
+const EIA = 'eia-power-glossary';
+const DOE = 'doe-motor-load-efficiency';
+const MIT = 'mit-polyphase-networks';
+const PFC = 'doe-power-factor-cost';
+const VOLTS = 'us-nominal-voltages';
+const CALC = `calc:${ENGINE_ID}`;
+const SIG = { sig: TP_SIG };
 
-// Web application data for schema
-const webAppData = {
-  name: "Kilowatts to Amps Calculator",
-  url: "https://wiresizes.com/calculators/kilowatts-to-amps-calculator",
-  description: "Kilowatts to amps calculator for electrical contractors and engineers. Convert kW to amperage for single-phase and three-phase systems. Includes power factor calculations."
-};
+assertNominal([...SINGLE_PHASE_VOLTS, ...THREE_PHASE_VOLTS], 'kilowatts to amps quick voltages');
 
-const kilowattsToAmpsFAQs = [
-  {
-    question: "How do I convert kilowatts to amps?",
-    answer: "To convert kilowatts to amps, use the formula: Amps = (kW × 1000) ÷ (Voltage × Power Factor) for single-phase, or Amps = (kW × 1000) ÷ (Voltage × √3 × Power Factor) for three-phase. For example, 5 kW at 240 V single-phase with 1.0 power factor: Amps = (5 × 1000) ÷ (240 × 1.0) = 20.8 amps."
-  },
-  {
-    question: "What is power factor and why does it matter?",
-    answer: "Power factor is the ratio of real power (kW) to apparent power (kVA). A power factor of 1.0 means all power is useful (resistive loads), while lower values indicate reactive components. Poor power factor increases current requirements - a 10 kW load at 0.8 PF requires 25 % more current than at 1.0 PF."
-  },
-  {
-    question: "How do I calculate amps for three-phase equipment?",
-    answer: "For three-phase systems, use: Amps = (kW × 1000) ÷ (Line Voltage × 1.732 × Power Factor). The 1.732 factor accounts for the √3 relationship in balanced three-phase systems. For example, a 15 kW three-phase load at 480 V with 0.85 PF: Amps = (15 × 1000) ÷ (480 × 1.732 × 0.85) = 21.2 amps per phase."
-  },
-  {
-    question: "Why do I get different current values for line and phase currents?",
-    answer: "In three-phase systems, line current equals phase current in wye connections, but differs in delta connections. For wye: Line current = Phase current. For delta: Line current = Phase current × 1.732. Most three-phase equipment ratings refer to line current, which is what you measure on the conductors feeding the equipment."
-  },
+function solved(input: ConvInput): ConvResult {
+  const r = convertToAmps(input);
+  if (isConvError(r)) throw new Error('kilowatts to amps page: a worked example failed');
+  return r;
+}
+// the golden worked examples (research/golden-cases.json, group power)
+const EX_1 = solved({ phases: 1, volts: 240, known: 'kw-pf', kw: 7.2, pf: 1 });
+const EX_3 = solved({ phases: 3, volts: 480, known: 'kw-pf', kw: 50, pf: 0.9 });
+const EX_3_PF1 = solved({ phases: 3, volts: 480, known: 'kw-pf', kw: 50, pf: 1 });
+const ONE_KW_120 = solved({ phases: 1, volts: 120, known: 'kw-pf', kw: 1, pf: 1 });
+const ONE_KW_240 = solved({ phases: 1, volts: 240, known: 'kw-pf', kw: 1, pf: 1 });
+
+/** Amps per kW: one kW at each voltage and power factor. */
+const TABLE_PFS = [1, 0.95, 0.9, 0.85, 0.8];
+const perKw = (phases: 1 | 3, volts: number, pf: number) => solved({ phases, volts, known: 'kw-pf', kw: 1, pf }).amps;
+const TABLE_ROWS = [
+  ...SINGLE_PHASE_VOLTS.map((volts) => ({ phases: 1 as const, volts })),
+  ...THREE_PHASE_VOLTS.map((volts) => ({ phases: 3 as const, volts })),
 ];
 
-export default function KilowattsToAmpsCalculatorPage() {
+const TOC: ([string, string] | [string, string, string])[] = [
+  ['examples', 'Worked examples', CALC],
+  ['formula', 'The formula'],
+  ['power-factor', 'Why the power factor matters'],
+  ['per-kw', 'Amps per kW', CALC],
+  ['faq', 'Questions'],
+  ['sources', 'Sources'],
+];
+
+const articleData = { headline: 'Kilowatts to Amps Calculator', description: DESCRIPTION, url: URL, ...articleDates(ROUTE) };
+const webAppData = { name: 'Kilowatts to Amps Calculator', url: URL, description: DESCRIPTION };
+
+export default function KilowattsToAmpsPage() {
+  const amps = (r: ConvResult) => <Val v={r.amps} unit="A" src={CALC} format={SIG} />;
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <CombinedSchema 
-        webApp={webAppData} 
-      />
-      
-      
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-800 dark:to-gray-900 py-12 rounded-2xl mb-12">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Kilowatts to Amps Calculator
-            </h1>
-            <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-              Convert kilowatts to amperage for electrical load calculations.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-              <Zap className="h-12 w-12 text-green-600 mb-4" />
-              <p className="text-xl font-semibold mb-2">Real Power Conversion</p>
-              <p className="text-gray-600 dark:text-gray-400">
-                Convert kilowatts (real power) to amps for single-phase and three-phase circuits.
-              </p>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-              <Calculator className="h-12 w-12 text-emerald-600 mb-4" />
-              <p className="text-xl font-semibold mb-2">Power Factor Integration</p>
-              <p className="text-gray-600 dark:text-gray-400">
-                Accounts for power factor effects on current requirements for realistic calculations.
-              </p>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-              <Settings className="h-12 w-12 text-blue-600 mb-4" />
-              <p className="text-xl font-semibold mb-2">Multi-Phase Systems</p>
-              <p className="text-gray-600 dark:text-gray-400">
-                Supports single-phase and three-phase systems with proper phase relationships.
-              </p>
-            </div>
-          </div>
+    <div className={LOOK_PAGE}>
+      <article className="container pb-16">
+        <ArticleSchema article={articleData} />
+        <CombinedSchema webApp={webAppData} />
+
+        <header className="pt-10 sm:pt-12">
+          <PageTitle main="Kilowatts to Amps Calculator" sub="kW to A, Single and Three Phase" joiner=": " />
+          <p className={clsx(LOOK_LEAD, 'mt-5')}>
+            Enter the power in kilowatts, the voltage and the power factor to get the current, on a single-phase or a three-phase circuit.
+          </p>
+          <Byline route={ROUTE} sources className={LOOK_BYLINE} linkClassName={LOOK_BYLINE_LINK} />
+        </header>
+
+        <section aria-label="Calculator" className="mt-8 border-t-2 border-ink pt-7">
+          <PowerConverterTool mode="kw" />
+        </section>
+
+        <div className="mt-14 max-w-[44rem] space-y-4">
+          <p className={LOOK_LEAD} data-src={EIA}>
+            <strong>Amps equal kilowatts times 1,000, divided by the voltage times the power factor; on three-phase, divide by √3 as well.</strong>{' '}
+            <span data-src={CALC}>
+              <Val v={EX_1.kw ?? 0} unit="kW" src={CALC} /> at <Val v={EX_1.volts} unit="V" src={VOLTS} /> single-phase is {amps(EX_1)}; one
+              kilowatt draws <Val v={ONE_KW_120.amps} unit="A" src={CALC} format={SIG} /> at <Val v={ONE_KW_120.volts} unit="V" src={VOLTS} />{' '}
+              and <Val v={ONE_KW_240.amps} unit="A" src={CALC} format={SIG} /> at <Val v={ONE_KW_240.volts} unit="V" src={VOLTS} /> at power
+              factor <Num v={1} src={CALC} />.
+            </span>
+          </p>
         </div>
-      </section>
 
-      {/* Calculator Component */}
-      <section className="mb-16">
-        <KilowattsToAmpsCalculator />
-        <Byline route="/calculators/kilowatts-to-amps-calculator" sources className="mt-4 px-6 text-sm text-gray-600 dark:text-gray-400" linkClassName="text-blue-600 hover:underline dark:text-blue-300" />
-      </section>
+        <LookGuideBody className="mt-14 border-t border-cut-rule pt-10">
+          <OnThisPage items={TOC} />
 
-      {/* Understanding Power and Current Relationships */}
-      <section className="mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <BookOpen className="h-8 w-8 text-blue-600" />
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Understanding Power and Current Relationships
+          <section aria-labelledby="examples" className="space-y-4">
+            <h2 id="examples" className={H2} data-src={CALC}>
+              Worked examples
             </h2>
-          </div>
-          
-          <div className="prose prose-lg dark:prose-invert max-w-none">
-            <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-              Converting kilowatts to amps is fundamental to electrical system design. This conversion determines 
-              conductor sizing, overcurrent protection, and equipment ratings. Understanding the relationship 
-              between power, voltage, current, and power factor is essential for safe and efficient electrical installations.
-            </p>
-
-            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              Basic Power Relationships
+            <h3 className={H3} data-src={CALC}>
+              <Val v={EX_1.kw ?? 0} unit="kW" src={CALC} /> at <Val v={EX_1.volts} unit="V" src={VOLTS} />, single-phase
             </h3>
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
-                <h4 className="text-xl font-semibold text-blue-800 dark:text-blue-300 mb-3">Single-Phase Power</h4>
-                <div className="space-y-3 text-blue-700 dark:text-blue-300">
-                  <div className="text-lg font-mono">P = V × I × PF</div>
-                  <div className="text-sm">Where:</div>
-                  <ul className="text-sm space-y-1 ml-4">
-                    <li>P = Power in watts</li>
-                    <li>V = Voltage in volts</li>
-                    <li>I = Current in amps</li>
-                    <li>PF = Power Factor</li>
-                  </ul>
-                  <div className="text-sm font-medium mt-3">
-                    Rearranged: I = P ÷ (V × PF)
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg">
-                <h4 className="text-xl font-semibold text-green-800 dark:text-green-300 mb-3">Three-Phase Power</h4>
-                <div className="space-y-3 text-green-700 dark:text-green-300">
-                  <div className="text-lg font-mono">P = V × I × √3 × PF</div>
-                  <div className="text-sm">Where:</div>
-                  <ul className="text-sm space-y-1 ml-4">
-                    <li>√3 = 1.732 (three-phase factor)</li>
-                    <li>V = Line-to-line voltage</li>
-                    <li>I = Line current</li>
-                    <li>Other terms same as single-phase</li>
-                  </ul>
-                  <div className="text-sm font-medium mt-3">
-                    Rearranged: I = P ÷ (V × 1.732 × PF)
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              Power Factor and Its Impact
-            </h3>
-            <p className="text-gray-700 dark:text-gray-300 mb-4">
-              Power factor represents the phase relationship between voltage and current in AC circuits. It directly 
-              affects the current required to deliver a given amount of real power (kilowatts).
+            <p className={P} data-src={CALC}>
+              At power factor <Num v={1} src={CALC} />: I = <Val v={(EX_1.kw ?? 0) * 1000} unit="W" src={CALC} /> ÷ (
+              <Val v={EX_1.volts} unit="V" src={VOLTS} /> × <Num v={1} src={CALC} />) = {amps(EX_1)}.
             </p>
-            
-            <div className="grid lg:grid-cols-3 gap-6 mb-8">
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg">
-                <h4 className="text-lg font-semibold text-yellow-800 dark:text-yellow-300 mb-3">Unity Power Factor (PF = 1.0)</h4>
-                <ul className="list-disc pl-4 space-y-1 text-yellow-700 dark:text-yellow-300 text-sm">
-                  <li>Voltage and current in phase</li>
-                  <li>All power is real power (resistive loads)</li>
-                  <li>Minimum current for given power</li>
-                  <li>Examples: Incandescent lighting, heating elements</li>
-                  <li>Most efficient power transfer</li>
-                </ul>
-              </div>
-              
-              <div className="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-lg">
-                <h4 className="text-lg font-semibold text-orange-800 dark:text-orange-300 mb-3">Leading Power Factor</h4>
-                <ul className="list-disc pl-4 space-y-1 text-orange-700 dark:text-orange-300 text-sm">
-                  <li>Current leads voltage</li>
-                  <li>Capacitive reactive power</li>
-                  <li>Less common in typical loads</li>
-                  <li>Examples: Over-excited synchronous motors</li>
-                  <li>Can help correct lagging power factor</li>
-                </ul>
-              </div>
-              
-              <div className="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-lg">
-                <h4 className="text-lg font-semibold text-purple-800 dark:text-purple-300 mb-3">Lagging Power Factor (PF &lt; 1.0)</h4>
-                <ul className="list-disc pl-4 space-y-1 text-purple-700 dark:text-purple-300 text-sm">
-                  <li>Current lags voltage</li>
-                  <li>Inductive reactive power</li>
-                  <li>Higher current for given power</li>
-                  <li>Examples: Motors, transformers, fluorescent lighting</li>
-                  <li>Most common in industrial settings</li>
-                </ul>
-              </div>
-            </div>
+            <h3 className={H3} data-src={CALC}>
+              <Val v={EX_3.kw ?? 0} unit="kW" src={CALC} /> at <Val v={EX_3.volts} unit="V" src={VOLTS} />, three-phase
+            </h3>
+            <p className={P} data-src={CALC}>
+              At power factor <Num v={EX_3.pf ?? 0} src={CALC} />: I = <Val v={(EX_3.kw ?? 0) * 1000} unit="W" src={CALC} /> ÷ (√3 ×{' '}
+              <Val v={EX_3.volts} unit="V" src={VOLTS} /> × <Num v={EX_3.pf ?? 0} src={CALC} />) = {amps(EX_3)} in each line. At power
+              factor <Num v={1} src={CALC} /> the same load would draw {amps(EX_3_PF1)}. The{' '}
+              <Link href="/calculators/three-phase-calculator" className={LINK}>
+                three-phase calculator
+              </Link>{' '}
+              also gives the reactive power and the capacitor that raises the power factor.
+            </p>
+          </section>
 
-            <div className="bg-red-50 dark:bg-red-900/20 p-6 rounded-lg mb-6">
-              <h4 className="text-lg font-semibold text-red-800 dark:text-red-300 mb-3">
-                Impact of Poor Power Factor
-              </h4>
-              <div className="grid md:grid-cols-2 gap-4 text-red-700 dark:text-red-300 text-sm">
-                <ul className="list-disc pl-4 space-y-1">
-                  <li>Increased current requirements</li>
-                  <li>Higher I²R losses in conductors</li>
-                  <li>Reduced transformer capacity</li>
-                  <li>Voltage drop issues</li>
-                </ul>
-                <ul className="list-disc pl-4 space-y-1">
-                  <li>Utility power factor penalties</li>
-                  <li>Oversized electrical infrastructure</li>
-                  <li>Reduced system efficiency</li>
-                  <li>Equipment overheating</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+          <section aria-labelledby="formula" className="space-y-4">
+            <h2 id="formula" className={H2}>
+              The formula
+            </h2>
+            <p className={LOOK_FORMULA} data-src={EIA}>
+              Single-phase: I = kW × 1,000 ÷ (V × PF)
+            </p>
+            <p className={LOOK_FORMULA} data-src={DOE}>
+              Three-phase: I = kW × 1,000 ÷ (√3 × V × PF)
+            </p>
+            <p className={P} data-src={EIA}>
+              The U.S. Energy Information Administration&apos;s glossary defines apparent power as volts times amperes and the power factor as
+              real power divided by apparent power, so the current is the real power divided by the voltage and the power factor. The kW
+              is multiplied by <Num v={1000} src={CALC} /> to put it in watts.
+            </p>
+            <p className={P} data-src={MIT}>
+              <span data-src={DOE}>
+                On three-phase, V is the voltage between two lines and I the current in one line; the U.S. Department of Energy&apos;s
+                motor fact sheet uses the same formula.
+              </span>{' '}
+              √3, about <Num v={SQRT3} src={CALC} format={SIG} />, is the ratio of the line-to-line to the line-to-neutral voltage, as
+              MIT&apos;s notes on three-phase power show. The{' '}
+              <Link href="/guides/single-vs-three-phase" className={LINK}>
+                single vs three phase guide
+              </Link>{' '}
+              compares the two.
+            </p>
+          </section>
 
-      {/* Detailed Examples Section */}
-      <section className="mb-16">
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Real-World Kilowatts to Amps Calculations
-          </h2>
-          
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Example 4: LED Lighting System */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-yellow-100 dark:bg-yellow-900/30 p-2 rounded-lg">
-                  <Calculator className="h-6 w-6 text-yellow-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  LED Lighting System
-                </h3>
-              </div>
-              <div className="space-y-3">
-                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                  <p className="font-medium text-gray-900 dark:text-white mb-2">Lighting Load:</p>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    25 kW LED lighting system, 277 V single-phase, 0.95 power factor
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Power:</span> 25 kW (25,000 watts)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Voltage:</span> 277 V (277/480 V system)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Power Factor:</span> 0.95 (LED drivers with PFC)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Formula:</span> I = kW × 1000 ÷ (V × PF)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Calculation:</span> I = 25,000 ÷ (277 × 0.95)
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Current:</span> 95.0 amps
-                  </p>
-                </div>
-              </div>
-            </div>
+          <section aria-labelledby="power-factor" className="space-y-4">
+            <h2 id="power-factor" className={H2}>
+              Why the power factor matters
+            </h2>
+            <p className={P} data-src={PFC}>
+              The current follows the apparent power, the real power divided by the power factor. A motor or another inductive load with a
+              low power factor draws more current for the same kilowatts, which the U.S. Department of Energy&apos;s fact sheet on power
+              factor says reduces a system&apos;s capacity and causes voltage drops.
+            </p>
+            <p className={P} data-src={CALC}>
+              <Val v={EX_3.kw ?? 0} unit="kW" src={CALC} /> at <Val v={EX_3.volts} unit="V" src={VOLTS} /> draws {amps(EX_3_PF1)} at power
+              factor <Num v={1} src={CALC} /> and {amps(EX_3)} at <Num v={EX_3.pf ?? 0} src={CALC} />. Use the power factor from the
+              nameplate or a meter; the{' '}
+              <Link href="/guides/power-factor-explained" className={LINK}>
+                power factor guide
+              </Link>{' '}
+              explains it.
+            </p>
+          </section>
 
-          </div>
-        </div>
-      </section>
+          <section aria-labelledby="per-kw" className="space-y-5">
+            <h2 id="per-kw" className={H2} data-src={CALC}>
+              Amps per kW
+            </h2>
+            <p className={P} data-src={CALC}>
+              The current one kilowatt draws at each voltage. Multiply by the load&apos;s kilowatts:{' '}
+              <Val v={EX_3.kw ?? 0} unit="kW" src={CALC} /> × <Num v={perKw(3, EX_3.volts, EX_3.pf ?? 1)} src={CALC} format={SIG} /> ={' '}
+              {amps(EX_3)} at <Val v={EX_3.volts} unit="V" src={VOLTS} /> three-phase, power factor <Num v={EX_3.pf ?? 0} src={CALC} />.
+            </p>
+            <DataTable id="per-kw-table" variant="ruled" src={CALC} caption="Amps per kW, by voltage and power factor">
+              <thead>
+                <tr>
+                  <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
+                    Voltage
+                  </th>
+                  {TABLE_PFS.map((pf) => (
+                    <th key={pf} scope="col" className={RTH}>
+                      PF <Num v={pf} src={CALC} format={{ fixed: 2 }} />
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {TABLE_ROWS.map((row) => (
+                  <tr key={`${row.phases}-${row.volts}`}>
+                    <th scope="row" className={RSTICKY_TD}>
+                      <Val v={row.volts} unit="V" src={VOLTS} /> {row.phases === 1 ? 'single' : 'three'}
+                    </th>
+                    {TABLE_PFS.map((pf) => (
+                      <td key={pf} className={RTD}>
+                        <Num v={perKw(row.phases, row.volts, pf)} src={CALC} format={SIG} />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </DataTable>
+          </section>
 
-      {/* Power Factor Reference Tables */}
-      <section className="mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Power Factor Reference Tables
-          </h2>
-          
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Power Factor Impact on Current */}
-            <div className="space-y-6">
-              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                Current Multiplication Factors
+          <section aria-labelledby="faq" className="space-y-6">
+            <h2 id="faq" className={H2}>
+              Questions
+            </h2>
+            <div className="space-y-1.5">
+              <h3 className={H3}>
+                How many amps is <Val v={1} unit="kW" src={CALC} />?
               </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full border border-gray-300 dark:border-gray-600 rounded-lg">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Power Factor
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Current Multiplier
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        % Increase
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.00</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.00</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0 %</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.95</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.05</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">5 %</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.90</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.11</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">11 %</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.85</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.18</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">18 %</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.80</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.25</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">25 %</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.75</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.33</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">33 %</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.70</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.43</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">43 %</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.60</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1.67</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">67 %</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">0.50</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">2.00</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">100 %</td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg">
-                <p className="text-sm text-orange-800 dark:text-orange-300">
-                  <strong>Example:</strong> A 10 kW load at 0.8 power factor requires 25 % more current than 
-                  the same load at 1.0 power factor. This directly impacts conductor sizing and system losses.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Application Guidelines */}
-      <section className="mb-16">
-        <div className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Application Guidelines and Best Practices
-          </h2>
-          
-          <div className="grid lg:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                  <Calculator className="h-6 w-6 text-green-600" />
-                  Motor Load Calculations
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">NEC Requirements:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Use NEC Table 430.250 for motor full load current</li>
-                      <li>• Don't use nameplate current for conductor sizing</li>
-                      <li>• Consider motor starting current for voltage drop</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Power Factor Considerations:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Partial load: Power factor decreases significantly</li>
-                      <li>• Variable frequency drives improve power factor</li>
-                      <li>• Consider power factor correction for large motors</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                  <Zap className="h-6 w-6 text-blue-600" />
-                  Lighting System Design
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">LED Considerations:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Check driver specifications for actual values</li>
-                      <li>• Some dimming systems affect power factor</li>
-                      <li>• Consider harmonic distortion with large LED loads</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                  <Settings className="h-6 w-6 text-purple-600" />
-                  Power Quality Considerations
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Harmonic Effects:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Non-linear loads create harmonics</li>
-                      <li>• Harmonics increase effective current</li>
-                      <li>• May require conductor derating</li>
-                      <li>• Consider K-rated transformers for harmonic loads</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-gray-300 mb-2">Power Factor Correction:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Capacitors improve power factor</li>
-                      <li>• Reduces current requirements</li>
-                      <li>• May eliminate utility penalties</li>
-                      <li>• Consider automatic power factor correction</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                  <TrendingUp className="h-6 w-6 text-orange-600" />
-                  System Efficiency
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Loss Calculations:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• I²R losses increase with current</li>
-                      <li>• Poor power factor increases losses</li>
-                      <li>• Consider economic analysis of conductor sizing</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Load Growth Planning:</h4>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                      <li>• Design for anticipated load growth</li>
-                      <li>• Consider spare capacity in calculations</li>
-                      <li>• Plan for changing power factor with new equipment</li>
-                      <li>• Document actual vs calculated loads</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Safety and Code Compliance */}
-      <section className="mb-16">
-        <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <AlertCircle className="h-8 w-8 text-red-600" />
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Safety and Code Compliance
-            </h2>
-          </div>
-          
-          <div className="grid gap-8">
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Installation Considerations
-                </h3>
-                <ul className="space-y-3 text-gray-700 dark:text-gray-300">
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Verify actual equipment power factor with manufacturer data</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Consider load diversity and demand factors appropriately</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Plan for worst-case loading conditions</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Document power factor assumptions for future reference</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Consider harmonic effects on neutral conductors</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-                  Disclaimer
-                </h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  This calculator provides estimates based on ideal conditions. Actual current requirements 
-                  may vary due to equipment characteristics, operating conditions, and system harmonics. 
-                  Always verify with manufacturer data and actual measurements. Consult local electrical 
-                  codes and qualified professionals for installation requirements.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Frequently Asked Questions
-          </h2>
-          <div className="space-y-6">
-            {kilowattsToAmpsFAQs.map((faq, index) => (
-              <div key={index} className="border-b border-gray-200 dark:border-gray-700 pb-6">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  {faq.question}
-                </h3>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {faq.answer}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Sources */}
-      <section className="mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <Sources
-            domains={SOURCE_DOMAINS}
-            headingClassName="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center"
-            listClassName="space-y-2 text-gray-700 dark:text-gray-300"
-            linkClassName="text-blue-600 hover:underline dark:text-blue-300"
-            noteClassName="mt-4 text-sm text-gray-600 dark:text-gray-400"
-          />
-        </div>
-      </section>
-
-      {/* Related Calculators */}
-      <section className="mb-16">
-        <div className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Related Electrical Calculators
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Link 
-              href="/calculators/kva-to-amps-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <Calculator className="h-6 w-6 text-blue-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">kVA to Amps Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Convert apparent power (kVA) to current
+              <p className={P} data-src={CALC}>
+                At power factor <Num v={1} src={CALC} />, single-phase: <Val v={ONE_KW_120.amps} unit="A" src={CALC} format={SIG} /> at{' '}
+                <Val v={ONE_KW_120.volts} unit="V" src={VOLTS} /> and <Val v={ONE_KW_240.amps} unit="A" src={CALC} format={SIG} /> at{' '}
+                <Val v={ONE_KW_240.volts} unit="V" src={VOLTS} />. The table above gives the other voltages and power factors.
               </p>
-            </Link>
-            
-            <Link 
-              href="/calculators/watts-to-amps-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <Zap className="h-6 w-6 text-green-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Watts to Amps</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Convert watts to amperage for smaller electrical loads
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>How do you convert kW to amps on three-phase?</h3>
+              <p className={P} data-src={DOE}>
+                Divide the watts by √3 times the line-to-line voltage times the power factor:{' '}
+                <span data-src={CALC}>
+                  <Val v={(EX_3.kw ?? 0) * 1000} unit="W" src={CALC} /> ÷ (√3 × <Val v={EX_3.volts} unit="V" src={VOLTS} /> ×{' '}
+                  <Num v={EX_3.pf ?? 0} src={CALC} />) = {amps(EX_3)}
+                </span>
+                , the current in each line.
               </p>
-            </Link>
-
-
-            <Link 
-              href="/calculators/three-phase-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <TrendingUp className="h-6 w-6 text-orange-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Three Phase Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Comprehensive three-phase power calculations
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>Is kW the same as kVA?</h3>
+              <p className={P} data-src={EIA}>
+                No. kW is real power, the part that does work; kVA is apparent power, volts times amps. kVA = kW ÷ PF, so they are equal only
+                at power factor <Num v={1} src={CALC} />. The{' '}
+                <Link href="/calculators/kva-to-amps-calculator" className={LINK}>
+                  kVA to amps calculator
+                </Link>{' '}
+                starts from kVA.
               </p>
-            </Link>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>What power factor should I enter?</h3>
+              <p className={P} data-src={DOE}>
+                The load&apos;s own: a motor&apos;s nameplate data can list its full-load power factor, and a meter can measure it. With{' '}
+                <Num v={1} src={CALC} /> the calculator gives the least current the load could draw.
+              </p>
+            </div>
+          </section>
 
-            <Link 
-              href="/calculators/wire-size-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <AlertCircle className="h-6 w-6 text-red-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Wire Size Calculator</h3>
-              </div>
-            </Link>
-
-          </div>
-        </div>
-      </section>
-
+          <section aria-label="Sources and notices" className={LOOK_SOURCES_SECTION}>
+            <Sources
+              domains={[EIA, DOE, MIT, PFC, VOLTS]}
+              headingClassName={LOOK_SOURCES_HEADING}
+              listClassName={LOOK_SOURCES_LIST}
+              linkClassName={LINK}
+              noteClassName={LOOK_SOURCES_NOTE}
+            />
+            <p>
+              The{' '}
+              <Link href="/methodology#power-terms" className={LINK}>
+                methodology page
+              </Link>{' '}
+              describes each source and how the calculated values are derived.
+            </p>
+          </section>
+        </LookGuideBody>
+      </article>
     </div>
   );
 }
