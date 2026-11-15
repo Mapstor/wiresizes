@@ -29,9 +29,9 @@ describe('METHODOLOGY_SECTIONS', () => {
     for (const off of ['doe-efficiency-standards']) assert.ok(!domains.has(off), off);
   });
 
-  it('has nec-110-14c since the 200 A guide sizes other feeders from the 75 °C column (WSZ-008c)', () => {
+  it('has nec-110-14c since the 200 A guide (WSZ-008c) and the ampacity calculator (WSZ-009a) use it', () => {
     const s = METHODOLOGY_SECTIONS.find((x) => x.domain === 'nec-110-14c');
-    assert.deepEqual(s?.citedOn, ['/guides/wire-size-for-200-amp']);
+    assert.deepEqual(s?.citedOn, ['/calculators/ampacity-calculator', '/guides/wire-size-for-200-amp']);
   });
 
   it('has nec-continuous-load since the voltage drop and low voltage calculators quote its note (WSZ-006b, WSZ-006c)', () => {

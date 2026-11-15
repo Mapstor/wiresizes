@@ -1,560 +1,383 @@
-import { Metadata } from 'next';
-import { AmpacityCalculator } from '@/components/calculators/AmpacityCalculator';
-import { AlertTriangle, Calculator, Thermometer, BookOpen, Info, CheckCircle, ArrowRight, Gauge, AlertCircle, Shield, Activity } from 'lucide-react';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { clsx } from 'clsx';
+import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 import { Byline } from '@/components/content/Byline';
+import { DataTable, RSTICKY_TD, RSTICKY_TH, RTD, RTH } from '@/components/content/DataTable';
+import { Figure } from '@/components/content/Figure';
+import { Num } from '@/components/content/Num';
+import { Size } from '@/components/content/Size';
+import { SourceLine } from '@/components/content/SourceLine';
 import { Sources } from '@/components/content/Sources';
+import { Val } from '@/components/content/Val';
+import { AmpacityTool } from '@/components/calculators/AmpacityTool';
+import { LookGuideBody } from '@/components/layout/LookGuideBody';
+import { AmpacityStepsChart } from '@/components/look/Charts';
+import { OnThisPage } from '@/components/look/OnThisPage';
+import { PageTitle } from '@/components/look/PageTitle';
 import {
-  AMBIENT_ROWS,
-  ambientLabel,
-  adjustmentPercent,
-  correctionFactor,
-  DOMAINS as AMPACITY_DOMAINS,
-  formatFactor,
-  maxOcpd240_4D,
-} from '@/lib/calculations/ampacity';
-import { DOMAINS as VOLTAGE_DROP_DOMAINS } from '@/lib/calculations/voltage-drop';
-import { formatSize, tableAmpacity } from '@/lib/calculations/sizes';
-import type { Material, SizeKey } from '@/lib/calculations/sizes';
+  LOOK_BYLINE,
+  LOOK_BYLINE_LINK,
+  LOOK_H2 as H2,
+  LOOK_H3 as H3,
+  LOOK_LEAD,
+  LOOK_LINK as LINK,
+  LOOK_P as P,
+  LOOK_PAGE,
+  LOOK_SOURCES_HEADING,
+  LOOK_SOURCES_LIST,
+  LOOK_SOURCES_NOTE,
+  LOOK_SOURCES_SECTION,
+} from '@/components/look/styles';
+import { ENGINE_ID, ampacityRun, isAmpacityError } from '@/lib/calculations/ampacity';
+import type { AmpacityRun } from '@/lib/calculations/ampacity';
+import { articleDates } from '@/lib/page-dates';
+import { TERMINATION_RULES } from '@/lib/verified/nec-110-14c';
+import { max240_4D } from '@/lib/verified/nec-240-4-d';
+import { AMBIENT_ROWS } from '@/lib/verified/nec-310-15-B-1-1';
+import { AMPACITY_COLUMNS, COLUMN_TYPES, TABLE_310_16_ROWS, TABLE_AMBIENT } from '@/lib/verified/nec-310-16';
+import type { AmpacityColumn } from '@/lib/verified/nec-310-16';
+import type { Material, SizeKey } from '@/lib/verified/awg';
 
-// Sources: the domains of the engines this page uses (the calculator shows voltage-drop.ts's 14 AWG aluminum note)
-const SOURCE_DOMAINS = [...AMPACITY_DOMAINS, ...VOLTAGE_DROP_DOMAINS];
+// /calculators/ampacity-calculator (WSZ-009a; spec: research/page-specs-held.md "WSZ-009"; data gate BUILD): a
+// conductor's NEC Table 310.16 value corrected for heat (Table 310.15(B)(1)(1)) and bundling (Table 310.15(C)(1)), then
+// shown against the termination columns of 110.14(C) and the 240.4(D) limit. Examples are golden "ampacity-arithmetic"
+// cases (6 AWG copper at 90 °C, 41–45 °C, 4–6 conductors: 52.2 A; 3/0 AWG copper at 75 °C, 31–35 °C: 188 A). The rooftop
+// adder of 310.15(B)(2) and the counting rules of 310.15(E)/(F) are not covered (registry nec-misc-installation and
+// nec-cable-rules); NM and UF cable stay at 60 °C (engine rule nm-cable).
+const ROUTE = '/calculators/ampacity-calculator';
+const URL = `https://wiresizes.com${ROUTE}`;
+const TITLE = 'Ampacity Calculator: NEC Table 310.16 With Corrections';
+const DESCRIPTION =
+  'Wire ampacity from NEC Table 310.16, corrected for heat and bundling, then capped by the terminals (110.14(C)) and 240.4(D). Copper and aluminum.';
 
 export const metadata: Metadata = {
-  title: 'Ampacity Calculator — NEC Table 310.16',
-  description: 'NEC 310.16 ampacity for any AWG with temperature correction (Table 310.15(B)(1)(1)) and conductor-bundling adjustment (Table 310.15(C)(1)). Copper and aluminum.',
-  keywords: 'ampacity calculator, wire current capacity, NEC table 310.16, conductor ampacity, temperature derating, conduit fill derating, wire amp rating, electrical ampacity',
-  alternates: { canonical: '/calculators/ampacity-calculator' },
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: ROUTE },
+  openGraph: { type: 'website', locale: 'en_US', siteName: 'WireSizes.com', url: URL, title: TITLE, description: DESCRIPTION, images: ['/opengraph-image'] },
+  twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION },
 };
 
-// Web application data for schema
-const webAppData = {
-  name: "Wire Ampacity Calculator - Current Carrying Capacity",
-  url: "https://wiresizes.com/calculators/ampacity-calculator",
-  description: "Calculate wire ampacity with temperature and conduit fill derating factors. Free ampacity calculator for copper and aluminum conductors at different temperature ratings."
-};
+const AMP = 'nec-310-16';
+const COR = 'nec-310-15-corrections';
+const TERM = 'nec-110-14c';
+const SMALL = 'nec-240-4-d';
+const CALC = `calc:${ENGINE_ID}`;
+const COLUMNS: AmpacityColumn[] = AMPACITY_COLUMNS;
+const [C60, C75, C90] = COLUMNS;
 
-// Quick reference: the 60 °C column of NEC Table 310.16 (cu_60 and al_60 of nec-310-16.json).
-// * marks the sizes 240.4(D) limits (the rows of nec-240-4-d.json without conditions).
-function quickReference(material: Material, sizes: SizeKey[]) {
-  return sizes.map((size) => ({
-    size,
-    ampacity: tableAmpacity(size, material, 60),
-    limited: maxOcpd240_4D(size, material)?.conditions === null,
-  }));
+function run(size: SizeKey, material: Material, column: AmpacityColumn, temp: number, count: number): AmpacityRun {
+  const r = ampacityRun({ size, material, method: 'conductors', column, temp, unit: 'C', count });
+  if (isAmpacityError(r) || r.result.ampacity === null) throw new Error(`ampacity page: no run for ${size} ${material}`);
+  return r;
 }
-const COPPER_QUICK_REFERENCE = quickReference('Cu', ['14', '12', '10', '8', '6']);
-const ALUMINUM_QUICK_REFERENCE = quickReference('Al', ['12', '10', '8', '6', '4']);
+function cap(r: AmpacityRun, column: number): number {
+  const c = r.caps.find((x) => x.column === column);
+  if (!c || c.usableA === null || c.tableA === null) throw new Error(`ampacity page: no ${column} °C cap`);
+  return c.usableA;
+}
+function limit(size: SizeKey, material: Material): number {
+  const row = max240_4D(size, material);
+  if (!row || row.conditions !== null) throw new Error(`ampacity page: no plain 240.4(D) row for ${size} ${material}`);
+  return row.max_ocpd_a;
+}
 
-// Key Derating: the 60 °C column of Table 310.15(B)(1)(1) (104 °F is the 36–40 °C row, 122 °F the 46–50 °C row)
-// and Table 310.15(C)(1), with two decimals like the correction table below.
-const FACTOR_104F = formatFactor(correctionFactor('36–40', 'f_60'));
-const FACTOR_122F = formatFactor(correctionFactor('46–50', 'f_60'));
-const FACTOR_4_TO_6 = formatFactor(adjustmentPercent('4–6') / 100);
-const FACTOR_7_TO_9 = formatFactor(adjustmentPercent('7–9') / 100);
+// golden "ampacity-arithmetic": 6 AWG cu_90 at 41–45 °C with 4–6 current-carrying conductors, and 3/0 AWG cu_75 at 31–35 °C
+const HOT = run('6', 'Cu', 90, 45, 6);
+const WARM = run('3/0', 'Cu', 75, 35, 3);
+// 12 AWG copper at 90 °C in the 30 °C the table assumes: the terminals, not the heat, set its usable ampacity
+const TWELVE = run('12', 'Cu', 90, 30, 3);
+const COLD_COLUMN = TERMINATION_RULES.columnAtOrBelowLimit;
+const WARM_COLUMN = TERMINATION_RULES.columnAboveLimit;
 
-// Conduit fill adjustment factors
-const CONDUIT_FILL_FACTORS = [
-  { conductors: "3 or less", adjustment: "100 %" },
-  { conductors: "4-6", adjustment: "80 %" },
-  { conductors: "7-9", adjustment: "70 %" },
-  { conductors: "10-20", adjustment: "50 %" },
-  { conductors: "21-30", adjustment: "45 %" },
-  { conductors: "31-40", adjustment: "40 %" },
-  { conductors: "41+", adjustment: "35 %" }
+const COMMON_CU: SizeKey[] = ['14', '12', '10', '8', '6', '4', '3', '2', '1', '1/0', '2/0', '3/0', '4/0'];
+const COMMON_AL: SizeKey[] = ['12', '10', '8', '6', '4', '3', '2', '1', '1/0', '2/0', '3/0', '4/0'];
+const ROW = new Map(TABLE_310_16_ROWS.map((r) => [r.size, r]));
+function ampacity(size: SizeKey, material: Material, column: AmpacityColumn): number {
+  const r = ROW.get(size);
+  const v = r ? r[`${material === 'Cu' ? 'cu' : 'al'}_${column}`] : null;
+  if (v === null || v === undefined) throw new Error(`ampacity page: no ${size} ${material} at ${column} °C`);
+  return v;
+}
+const SMALL_ROWS: { size: SizeKey; material: Material }[] = [
+  { size: '14', material: 'Cu' },
+  { size: '12', material: 'Cu' },
+  { size: '10', material: 'Cu' },
+  { size: '12', material: 'Al' },
+  { size: '10', material: 'Al' },
+];
+const THHN_90 = COLUMN_TYPES[C90].includes('THHN');
+if (max240_4D('8', 'Cu') !== null) throw new Error('ampacity page: 240.4(D) now lists 8 AWG copper');
+if (HOT.caps.some((c) => c.capped)) throw new Error('ampacity page: the hot example is now capped by its terminals');
+if (WARM.caps.find((c) => c.column === WARM_COLUMN)?.capped !== false) throw new Error('ampacity page: the warm example is capped at 75 °C');
+/** The lowest temperature of the row whose factors are 1.00: below it, the factors are above 1. */
+const UNITY_FROM = (() => {
+  const row = AMBIENT_ROWS.find((r) => r.f_60 === 1 && r.f_75 === 1 && r.f_90 === 1);
+  const m = row ? /^(\d+)–/.exec(row.key) : null;
+  if (!m) throw new Error('ampacity page: no row of factors 1.00');
+  return Number(m[1]);
+})();
+if (!THHN_90) throw new Error('ampacity page: Table 310.16 no longer lists THHN at 90 °C');
+
+const TOC: ([string, string] | [string, string, string])[] = [
+  ['common-sizes', 'Ampacity of common sizes'],
+  ['example', 'Heat, bundling and the terminals'],
+  ['terminals', 'Why the terminals cap it'],
+  ['small-conductors', 'Small conductors: 240.4(D)'],
+  ['faq', 'Questions'],
+  ['sources', 'Sources'],
 ];
 
-// Special ampacity conditions
-const SPECIAL_CONDITIONS = [
-  {
-    condition: "Wet locations",
-    description: "May require different insulation types",
-    details: [
-      "THWN/THWN-2 for wet locations",
-      "No ampacity reduction for wet-rated",
-      "Consider corrosion protection",
-      "Verify termination compatibility"
-    ]
-  },
-  {
-    condition: "Harmonic currents",
-    description: "Non-linear loads affect neutral sizing",
-    details: [
-      "Neutral carries harmonic currents",
-      "Common with LED and electronic loads"
-    ]
-  }
-];
+const articleData = { headline: 'Ampacity Calculator', description: DESCRIPTION, url: URL, ...articleDates(ROUTE) };
+const webAppData = { name: 'Ampacity Calculator', url: URL, description: DESCRIPTION };
 
-// Wire insulation types and ratings
-const INSULATION_TYPES = [
-  { type: "TW", dryRating: "60 °C", wetRating: "60 °C" },
-  { type: "THW", dryRating: "75 °C", wetRating: "75 °C" },
-  { type: "THWN", dryRating: "75 °C", wetRating: "75 °C" },
-  { type: "THHN", dryRating: "90 °C", wetRating: "—" },
-  { type: "THWN-2", dryRating: "90 °C", wetRating: "90 °C" },
-  { type: "XHHW", dryRating: "90 °C", wetRating: "75 °C" },
-  { type: "XHHW-2", dryRating: "90 °C", wetRating: "90 °C" },
-  { type: "USE-2", dryRating: "90 °C", wetRating: "90 °C" }
-];
-
-// Common ampacity mistakes
-const AMPACITY_MISTAKES = [
-  {
-    mistake: "Forgetting ambient temperature derating",
-    consequence: "Wire insulation breakdown, fire hazard",
-    solution: "Apply temperature correction for ambients above 86 °F"
-  },
-  {
-    mistake: "Ignoring the adjustment for more than three current-carrying conductors",
-    consequence: "Excessive heat buildup in raceways",
-    solution: "Apply Table 310.15(C)(1) for more than 3 conductors"
-  },
-];
-
-const faqItems = [
-  {
-    question: "What is ampacity in electrical terms?",
-    answer: "Ampacity is the maximum current in amperes that a conductor can carry continuously under specific conditions without exceeding its temperature rating. It depends on conductor material, insulation type, ambient temperature, and installation method."
-  },
-  {
-    question: "How do I derate wire for temperature?",
-    answer: "Multiply the table ampacity by the temperature correction factor. Always use the correction factor for your wire's temperature rating."
-  },
-  {
-    question: "How many conductors before derating is required?",
-    answer: "More than 3 current-carrying conductors in a raceway or cable require derating per NEC Table 310.15(C)(1). Equipment grounding conductors don't count. Neutrals may or may not count depending on the load type."
-  },
-  {
-    question: "How do I calculate ampacity for parallel conductors?",
-    answer: "Add the ampacities of individual conductors, then apply any derating factors. For example, two parallel 1/0 AWG copper (150 A each at 75 °C) = 300 A total before derating. All parallel conductors must be identical."
-  },
-  {
-    question: "Does wire ampacity change with voltage?",
-    answer: "No, ampacity is independent of voltage. A 12 AWG wire has the same 25 A ampacity (at 75 °C) whether used for 120 V or 480 V. Voltage affects insulation requirements, not current capacity."
-  },
-  {
-    question: "What's the ampacity of aluminum vs copper?",
-    answer: "Aluminum has about 61 % of copper's conductivity. For the same ampacity, aluminum wire must be 1-2 sizes larger. Example: 1 AWG aluminum (100 A) equals 3 AWG copper (100 A) at 75 °C."
-  },
-  {
-    question: "Do I derate for conductors in separate conduits?",
-    answer: "No, derating only applies to conductors in the same raceway or cable. Conductors in separate conduits dissipate heat independently. However, bundled conduits may require special consideration."
-  },
-  {
-    question: "How does wet location affect ampacity?",
-    answer: "Wet location doesn't directly reduce ampacity if using wet-rated insulation (THWN, XHHW). However, the wet rating temperature may be lower (75 °C vs 90 °C for XHHW), affecting available ampacity."
-  },
-  {
-    question: "What is ampacity correction vs adjustment?",
-    answer: "Correction factors apply to ambient temperature (Table 310.15(B)(1)(1)). Adjustment factors apply to number of conductors (Table 310.15(C)(1)). Both multiply together with base ampacity for final value."
-  }
-];
+function SizesTable({ material }: { material: Material }) {
+  const sizes = material === 'Cu' ? COMMON_CU : COMMON_AL;
+  const name = material === 'Cu' ? 'Copper' : 'Aluminum or copper-clad aluminum';
+  return (
+    <DataTable id={`common-${material.toLowerCase()}`} variant="ruled" src={AMP} caption={`${name}, NEC Table 310.16, amperes`}>
+      <thead>
+        <tr>
+          <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
+            Size
+          </th>
+          {COLUMNS.map((c) => (
+            <th key={c} scope="col" className={clsx(RTH, 'max-sm:!min-w-0')}>
+              <Val v={c} unit="°C" src={AMP} />
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {sizes.map((s) => (
+          <tr key={s}>
+            <th scope="row" className={RSTICKY_TD}>
+              <Size s={s} />
+            </th>
+            {COLUMNS.map((c) => (
+              <td key={c} className={RTD}>
+                <Num v={ampacity(s, material, c)} src={AMP} />
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </DataTable>
+  );
+}
 
 export default function AmpacityCalculatorPage() {
   return (
-    <>
-      {/* Quick Answer Section */}
-      <section className="bg-blue-50 border-b border-blue-200">
-        <div className="container py-8">
-          <div className="max-w-6xl mx-auto">
-            <h1 className="text-3xl font-bold text-neutral-900 mb-3">
-              Wire Ampacity Calculator - Current Carrying Capacity
-            </h1>
-            <p className="text-lg text-neutral-700 mb-6">
-              Calculate the actual ampacity of any AWG or kcmil conductor
-              after applying NEC Table 310.15(B)(1)(1) ambient-temperature correction
-              and NEC Table 310.15(C)(1) bundling adjustment for &gt; 3 current-
-              carrying conductors in a raceway. Returns the derated ampacity
-              that determines the maximum load the conductor can carry —
-              not the table value.
+    <div className={LOOK_PAGE}>
+      <article className="container pb-16">
+        <ArticleSchema article={articleData} />
+        <CombinedSchema webApp={webAppData} />
+
+        <header className="pt-10 sm:pt-12">
+          <PageTitle main="Ampacity Calculator" sub="NEC Table 310.16 With Corrections" joiner=": " src={AMP} />
+          <p className={clsx(LOOK_LEAD, 'mt-5')}>
+            A conductor&apos;s ampacity from its size, material and insulation, corrected for heat and bundling, then held to the terminals.
+          </p>
+          <Byline route={ROUTE} sources className={LOOK_BYLINE} linkClassName={LOOK_BYLINE_LINK} />
+        </header>
+
+        <section aria-label="Calculator" className="mt-8 border-t-2 border-ink pt-7">
+          <AmpacityTool />
+        </section>
+
+        <div className="mt-14 max-w-[44rem] space-y-4">
+          <p className={LOOK_LEAD} data-src={AMP}>
+            <strong>
+              NEC Table 310.16 lists the ampacity of each size in three insulation columns, for not more than three current-carrying conductors at{' '}
+              <Val v={TABLE_AMBIENT.c} unit="°C" src={AMP} />.
+            </strong>{' '}
+            <span data-src={CALC}>
+              Heat and bundling lower it, and the terminals cap it: <Size s="12" /> copper is listed at{' '}
+              <Val v={ampacity('12', 'Cu', C90)} unit="A" src={AMP} /> at <Val v={C90} unit="°C" src={AMP} />, but with{' '}
+              <Val v={COLD_COLUMN} unit="°C" src={TERM} /> terminals it may carry <Val v={cap(TWELVE, COLD_COLUMN)} unit="A" src={CALC} />.
+            </span>
+          </p>
+        </div>
+
+        <LookGuideBody className="mt-14 border-t border-cut-rule pt-10">
+          <OnThisPage items={TOC} />
+
+          <section aria-labelledby="common-sizes" className="space-y-5">
+            <h2 id="common-sizes" className={H2}>
+              Ampacity of common sizes
+            </h2>
+            <p className={P} data-src={AMP}>
+              The values of Table 310.16 for building wire from <Size s="14" /> to <Size s="4/0" />. THHN, for one, is among the types the table
+              lists at <Val v={C90} unit="°C" src={AMP} />. The{' '}
+              <Link href="/guides/nec-table-310-16" className={LINK}>
+                Table 310.16 guide
+              </Link>{' '}
+              has every size to <Size s="2000" />, with both correction tables.
             </p>
-            
-            {/* Quick Answer Box */}
-            <div className="bg-white rounded-lg p-6 border border-blue-300 shadow-sm">
-              <div className="flex items-start gap-3">
-                <Gauge className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
-                <div className="w-full">
-                  <h2 className="text-xl font-semibold text-neutral-900 mb-4">Quick Reference: Common Wire Ampacities, 60 °C column (NEC Table 310.16)</h2>
-                  <div className="grid lg:grid-cols-3 gap-6">
-                    <div>
-                      <h3 className="font-semibold text-neutral-800 mb-2">Copper Wire:</h3>
-                      <ul className="space-y-1 text-sm text-neutral-600">
-                        {COPPER_QUICK_REFERENCE.map((row) => (
-                          <li key={row.size} className="flex justify-between">
-                            <span><strong>{formatSize(row.size)}:</strong></span>
-                            <span className="font-mono">{row.ampacity} A{row.limited ? '*' : ''}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-neutral-800 mb-2">Aluminum Wire:</h3>
-                      <ul className="space-y-1 text-sm text-neutral-600">
-                        {ALUMINUM_QUICK_REFERENCE.map((row) => (
-                          <li key={row.size} className="flex justify-between">
-                            <span><strong>{formatSize(row.size)}:</strong></span>
-                            <span className="font-mono">{row.ampacity} A{row.limited ? '*' : ''}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-neutral-800 mb-2">Key Derating:</h3>
-                      <ul className="space-y-1 text-sm text-neutral-600">
-                        <li className="flex items-center gap-2">
-                          <Thermometer className="w-4 h-4 text-orange-500" />
-                          <span>104 °F: × {FACTOR_104F}</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Thermometer className="w-4 h-4 text-red-500" />
-                          <span>122 °F: × {FACTOR_122F}</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Activity className="w-4 h-4 text-blue-500" />
-                          <span>4-6 wires: × {FACTOR_4_TO_6}</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Activity className="w-4 h-4 text-purple-500" />
-                          <span>7-9 wires: × {FACTOR_7_TO_9}</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <AlertCircle className="w-4 h-4 text-amber-500" />
-                          <span>*240.4(D) limits</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-                    <p className="text-sm text-amber-800">
-                      <strong>Important:</strong> *Small conductor rule (NEC 240.4(D)) limits: 14 AWG copper to 15 A, 12 AWG copper to 20 A, 10 AWG copper to 30 A, 12 AWG aluminum to 15 A, 10 AWG aluminum to 25 A maximum overcurrent protection. 
-                      Always apply derating factors for actual conditions.
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <div className="grid gap-8 md:grid-cols-2 md:gap-6">
+              <SizesTable material="Cu" />
+              <SizesTable material="Al" />
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      {/* Calculator Component */}
-      <section className="py-8">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
-            <AmpacityCalculator />
-            <Byline route="/calculators/ampacity-calculator" sources className="mt-4 text-sm text-neutral-600" />
-          </div>
-        </div>
-      </section>
-
-      {/* Understanding Ampacity Section */}
-      <section className="py-8 bg-neutral-50 border-y">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <BookOpen className="w-6 h-6 text-blue-600" />
-              Complete Guide to Wire Ampacity
+          <section aria-labelledby="example" className="space-y-5">
+            <h2 id="example" className={H2}>
+              Heat, bundling and the terminals
             </h2>
-            
-            <div className="grid lg:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-xl font-semibold mb-4">Understanding Ampacity</h3>
-                <p className="text-neutral-700 mb-4">
-                  Ampacity is the maximum current a conductor can carry continuously without damaging its insulation. 
-                  This value depends on the conductor material, insulation temperature rating, ambient temperature, 
-                  and the number of conductors bundled together. The NEC provides detailed tables and adjustment 
-                  factors to ensure safe installations.
+            <p className={P} data-src={CALC}>
+              <Size s={HOT.size} /> copper at <Val v={HOT.column} unit="°C" src={AMP} /> starts at{' '}
+              <Val v={HOT.result.tableAmpacity ?? 0} unit="A" src={AMP} />. At <Val v={HOT.temp} unit="°C" src="input" /> the factor is{' '}
+              <Num v={HOT.result.correctionFactor ?? 0} src={COR} format={{ fixed: 2 }} />, and with <Num v={HOT.count} src="input" /> current-carrying
+              conductors in the raceway the adjustment is <Val v={HOT.result.adjustmentPercent} unit="%" src={COR} />: the corrected ampacity is{' '}
+              <Val v={HOT.result.ampacity ?? 0} unit="A" src={CALC} format={{ upTo: 2 }} />. That is below both termination limits, so it stands.
+            </p>
+            <Figure
+              caption={
+                <>
+                  <span data-src={CALC}>
+                    <Size s={HOT.size} /> copper at <Val v={HOT.column} unit="°C" src={AMP} />, <Val v={HOT.temp} unit="°C" src="input" /> ambient
+                    and <Num v={HOT.count} src="input" /> current-carrying conductors: the Table 310.16 value, after the ambient factor and after the
+                    adjustment, with the size&apos;s <Val v={COLD_COLUMN} unit="°C" src={TERM} /> and <Val v={WARM_COLUMN} unit="°C" src={TERM} />{' '}
+                    values as the terminal limits.
+                  </span>
+                  <SourceLine domains={[AMP, COR, TERM]} />
+                </>
+              }
+            >
+              <AmpacityStepsChart run={HOT} id="ampacity-hot" />
+            </Figure>
+            <p className={P} data-src={CALC}>
+              Heat alone: <Size s={WARM.size} /> copper at <Val v={WARM.column} unit="°C" src={AMP} />, <Val v={WARM.result.tableAmpacity ?? 0} unit="A" src={AMP} /> in
+              the table, carries <Val v={WARM.result.ampacity ?? 0} unit="A" src={CALC} format={{ upTo: 2 }} /> at <Val v={WARM.temp} unit="°C" src="input" />{' '}
+              (factor <Num v={WARM.result.correctionFactor ?? 0} src={COR} format={{ fixed: 2 }} />). On a circuit rated over{' '}
+              <Val v={TERMINATION_RULES.limitA} unit="A" src={TERM} />, its terminals default to <Val v={WARM_COLUMN} unit="°C" src={TERM} />, so that stands.
+            </p>
+          </section>
+
+          <section aria-labelledby="terminals" className="space-y-4">
+            <h2 id="terminals" className={H2}>
+              Why the terminals cap it
+            </h2>
+            <p className={P} data-src={TERM}>
+              Under 110.14(C), the temperature column used may not exceed the rating of any connected termination, conductor or device. Equipment
+              for circuits rated <Val v={TERMINATION_RULES.limitA} unit="A" src={TERM} /> or less, or with terminals marked for <Size s="14" /> through{' '}
+              <Size s="1" />, is used at the <Val v={COLD_COLUMN} unit="°C" src={TERM} /> ampacity unless it is listed and identified for higher-rated
+              conductors; above <Val v={TERMINATION_RULES.limitA} unit="A" src={TERM} />, at the <Val v={WARM_COLUMN} unit="°C" src={TERM} /> ampacity.
+              A conductor rated higher may start from its own column for the corrections, which is what the{' '}
+              <Val v={C90} unit="°C" src={AMP} /> column is for.
+            </p>
+            <p className={P} data-src={CALC}>
+              So <Size s={TWELVE.size} /> copper rated <Val v={TWELVE.column} unit="°C" src={AMP} /> keeps its{' '}
+              <Val v={TWELVE.result.ampacity ?? 0} unit="A" src={CALC} /> only for the corrections; with <Val v={COLD_COLUMN} unit="°C" src={TERM} /> terminals
+              it carries <Val v={cap(TWELVE, COLD_COLUMN)} unit="A" src={CALC} />, and with <Val v={WARM_COLUMN} unit="°C" src={TERM} /> terminals{' '}
+              <Val v={cap(TWELVE, WARM_COLUMN)} unit="A" src={CALC} />. This site keeps NM and UF cable at <Val v={COLD_COLUMN} unit="°C" src={TERM} />,
+              corrections included.
+            </p>
+          </section>
+
+          <section aria-labelledby="small-conductors" className="space-y-5">
+            <h2 id="small-conductors" className={H2}>
+              Small conductors: 240.4(D)
+            </h2>
+            <p className={P} data-src={SMALL}>
+              Whatever their ampacity, 240.4(D) limits the breaker or fuse on the smallest conductors. It is the reason{' '}
+              <Size s="12" /> copper sits on a <Val v={limit('12', 'Cu')} unit="A" src={SMALL} /> breaker even where it carries more.
+            </p>
+            <DataTable id="limits-240-4-d" variant="ruled" src={SMALL} caption="NEC 240.4(D), the largest breaker or fuse">
+              <thead>
+                <tr>
+                  <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
+                    Conductor
+                  </th>
+                  <th scope="col" className={RTH}>
+                    Largest breaker or fuse
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {SMALL_ROWS.map((r) => (
+                  <tr key={`${r.size}-${r.material}`}>
+                    <th scope="row" className={clsx(RSTICKY_TD, '!font-normal')}>
+                      <Size s={r.size} /> {r.material === 'Cu' ? 'copper' : 'aluminum'}
+                    </th>
+                    <td className={RTD}>
+                      <Val v={limit(r.size, r.material)} unit="A" src={SMALL} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </DataTable>
+          </section>
+
+          <section aria-labelledby="faq" className="space-y-6">
+            <h2 id="faq" className={H2}>
+              Questions
+            </h2>
+            {(['12', '10', '14'] as SizeKey[]).map((s) => (
+              <div key={s} className="space-y-1.5">
+                <h3 className={H3} data-size={s}>
+                  What is the ampacity of <Size s={s} /> wire?
+                </h3>
+                <p className={P} data-src={AMP}>
+                  In Table 310.16, <Size s={s} /> copper carries <Val v={ampacity(s, 'Cu', C60)} unit="A" src={AMP} /> at <Val v={C60} unit="°C" src={AMP} />,{' '}
+                  <Val v={ampacity(s, 'Cu', C75)} unit="A" src={AMP} /> at <Val v={C75} unit="°C" src={AMP} /> and{' '}
+                  <Val v={ampacity(s, 'Cu', C90)} unit="A" src={AMP} /> at <Val v={C90} unit="°C" src={AMP} />.{' '}
+                  <span data-src={SMALL}>
+                    240.4(D) limits its breaker to <Val v={limit(s, 'Cu')} unit="A" src={SMALL} />.
+                  </span>
                 </p>
-                
-                <div className="bg-white p-6 rounded-lg border border-neutral-200 mb-6">
-                  <h4 className="text-lg font-semibold mb-3">Ampacity Calculation Steps</h4>
-                  <ol className="space-y-3">
-                    <li className="flex gap-3">
-                      <span className="font-bold text-blue-600">1.</span>
-                      <div>
-                        <strong>Base Ampacity:</strong> Start with Table 310.16 for the conductor size and temperature rating.
-                      </div>
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="font-bold text-blue-600">2.</span>
-                      <div>
-                        <strong>Temperature Correction:</strong> Apply factors from Table 310.15(B)(1)(1).
-                      </div>
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="font-bold text-blue-600">3.</span>
-                      <div>
-                        <strong>Conductor Adjustment:</strong> Apply Table 310.15(C)(1) for more than 3 conductors.
-                      </div>
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="font-bold text-blue-600">4.</span>
-                      <div>
-                        <strong>Final Ampacity:</strong> Base × Correction × Adjustment = Adjusted Ampacity.
-                      </div>
-                    </li>
-                  </ol>
-                </div>
               </div>
+            ))}
+            <div className="space-y-1.5">
+              <h3 className={H3} data-size="8">
+                What is the ampacity of <Size s="8" /> wire?
+              </h3>
+              <p className={P} data-src={AMP}>
+                <Size s="8" /> copper carries <Val v={ampacity('8', 'Cu', C60)} unit="A" src={AMP} />, <Val v={ampacity('8', 'Cu', C75)} unit="A" src={AMP} />{' '}
+                and <Val v={ampacity('8', 'Cu', C90)} unit="A" src={AMP} /> in the three columns; aluminum,{' '}
+                <Val v={ampacity('8', 'Al', C60)} unit="A" src={AMP} />, <Val v={ampacity('8', 'Al', C75)} unit="A" src={AMP} /> and{' '}
+                <Val v={ampacity('8', 'Al', C90)} unit="A" src={AMP} />. 240.4(D) does not reach it.
+              </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Temperature Correction Table */}
-      <section className="py-8 bg-neutral-50 border-y">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <Thermometer className="w-6 h-6 text-orange-600" />
-              Temperature Correction Factors (NEC Table 310.15(B)(1)(1))
-            </h2>
-            
-            <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-neutral-50 border-b border-neutral-200">
-                      <th rowSpan={2} className="px-4 py-3 text-left font-medium text-neutral-700">Ambient Temp</th>
-                      <th colSpan={3} className="px-4 py-3 text-center font-medium text-neutral-700 border-l">Correction Factors for Conductor Temperature Rating</th>
-                    </tr>
-                    <tr className="bg-neutral-50 border-b border-neutral-200">
-                      <th className="px-3 py-2 text-center text-xs border-l">60 °C</th>
-                      <th className="px-3 py-2 text-center text-xs">75 °C</th>
-                      <th className="px-3 py-2 text-center text-xs">90 °C</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100">
-                    {AMBIENT_ROWS.map((row) => (
-                      <tr key={row.key} className="hover:bg-neutral-50">
-                        <td className="px-4 py-2 font-medium">{ambientLabel(row)}</td>
-                        <td className="px-3 py-2 text-center font-mono border-l">{row.f_60 === null ? '—' : row.f_60.toFixed(2)}</td>
-                        <td className="px-3 py-2 text-center font-mono">{row.f_75 === null ? '—' : row.f_75.toFixed(2)}</td>
-                        <td className="px-3 py-2 text-center font-mono">{row.f_90 === null ? '—' : row.f_90.toFixed(2)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>How do I derate wire for temperature?</h3>
+              <p className={P} data-src={COR}>
+                Multiply the Table 310.16 value by the factor of Table 310.15(B)(1)(1) for the ambient temperature, from the same column: at{' '}
+                <Val v={WARM.temp} unit="°C" src="input" />, <Size s={WARM.size} /> copper at <Val v={WARM.column} unit="°C" src={AMP} /> goes from{' '}
+                <Val v={WARM.result.tableAmpacity ?? 0} unit="A" src={AMP} /> to <Val v={WARM.result.ampacity ?? 0} unit="A" src={CALC} format={{ upTo: 2 }} />.
+                Below <Val v={UNITY_FROM} unit="°C" src={COR} /> the factors are above 1.
+              </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Conduit Fill Adjustment */}
-      <section className="py-8">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6">
-              Adjustment Factors for More Than Three Current-Carrying Conductors (NEC Table 310.15(C)(1))
-            </h2>
-            
-            <div className="grid lg:grid-cols-2 gap-6">
-              <div>
-                <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="bg-neutral-50 border-b border-neutral-200">
-                          <th className="px-4 py-3 text-left font-medium text-neutral-700">Number of Conductors</th>
-                          <th className="px-4 py-3 text-left font-medium text-neutral-700">Adjustment Factor</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-neutral-100">
-                        {CONDUIT_FILL_FACTORS.map((factor, idx) => (
-                          <tr key={idx} className="hover:bg-neutral-50">
-                            <td className="px-4 py-3 font-medium">{factor.conductors}</td>
-                            <td className="px-4 py-3 font-mono font-bold text-purple-600">{factor.adjustment}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="font-semibold text-neutral-900 mb-3">Counting Current-Carrying Conductors</h3>
-                <div className="space-y-3">
-                  <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
-                    <p className="text-sm text-amber-800">
-                      <strong>Example:</strong> Six 20 A circuits in one conduit = 12 current-carrying conductors 
-                      (not counting grounds). Apply 50 % derating factor.
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>How many conductors before derating?</h3>
+              <p className={P} data-src={COR}>
+                More than three current-carrying conductors in a raceway or cable: from four to six, Table 310.15(C)(1) takes{' '}
+                <Val v={HOT.result.adjustmentPercent} unit="%" src={COR} /> of the value, and less for more.
+              </p>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      {/* Special Conditions */}
-      <section className="py-8 bg-neutral-50 border-y">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <Shield className="w-6 h-6 text-blue-600" />
-              Special Ampacity Conditions
-            </h2>
-            
-            <div className="grid md:grid-cols-2 gap-6">
-              {SPECIAL_CONDITIONS.map((condition, idx) => (
-                <div key={idx} className="bg-white p-4 rounded-lg border border-neutral-200">
-                  <h3 className="font-semibold text-neutral-900 mb-2">{condition.condition}</h3>
-                  <p className="text-sm text-neutral-600 mb-3">{condition.description}</p>
-                  <ul className="space-y-1">
-                    {condition.details.map((detail, i) => (
-                      <li key={i} className="text-sm text-neutral-700 flex items-start gap-2">
-                        <ArrowRight className="w-3 h-3 text-blue-500 flex-shrink-0 mt-0.5" />
-                        <span>{detail}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Wire Insulation Types */}
-      <section className="py-8">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6">
-              Wire Insulation Types and Temperature Ratings
-            </h2>
-            
-            <div className="bg-white rounded-lg border border-neutral-200 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-neutral-50 border-b border-neutral-200">
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Type</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Dry Rating</th>
-                      <th className="px-4 py-3 text-left font-medium text-neutral-700">Wet Rating</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100">
-                    {INSULATION_TYPES.map((type, idx) => (
-                      <tr key={idx} className="hover:bg-neutral-50">
-                        <td className="px-4 py-3 font-mono font-bold">{type.type}</td>
-                        <td className="px-4 py-3">{type.dryRating}</td>
-                        <td className="px-4 py-3">{type.wetRating}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Common Mistakes */}
-      <section className="py-8 bg-red-50 border-y">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <AlertTriangle className="w-6 h-6 text-red-600" />
-              Common Ampacity Mistakes to Avoid
-            </h2>
-            
-            <div className="grid md:grid-cols-2 gap-4">
-              {AMPACITY_MISTAKES.map((mistake, idx) => (
-                <div key={idx} className="bg-white p-4 rounded-lg border border-red-200">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-red-600 font-bold text-sm">{idx + 1}</span>
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-red-900 mb-1">{mistake.mistake}</h3>
-                      <p className="text-sm text-neutral-700 mb-2">
-                        <strong>Consequence:</strong> {mistake.consequence}
-                      </p>
-                      <div className="flex items-start gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                        <p className="text-sm text-green-700">
-                          <strong>Solution:</strong> {mistake.solution}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-8 bg-neutral-50 border-y">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-              <Info className="w-6 h-6 text-blue-600" />
-              Ampacity Frequently Asked Questions
-            </h2>
-            
-            <div className="grid md:grid-cols-2 gap-4">
-              {faqItems.map((item, idx) => (
-                <div key={idx} className="bg-white p-4 rounded-lg border border-neutral-200">
-                  <h3 className="font-semibold text-neutral-900 mb-2 flex items-start gap-2">
-                    <span className="text-blue-600 flex-shrink-0">Q: </span>
-                    {item.question}
-                  </h3>
-                  <p className="text-sm text-neutral-600 leading-relaxed pl-6">
-                    <span className="text-green-600 font-semibold">A: </span>
-                    {item.answer}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Sources */}
-      <section className="py-8">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
+          <section aria-label="Sources and notices" className={LOOK_SOURCES_SECTION}>
             <Sources
-              domains={SOURCE_DOMAINS}
-              headingClassName="text-2xl font-bold text-neutral-900 mb-6"
-              listClassName="space-y-2 text-sm text-neutral-600"
-              linkClassName="text-blue-600 hover:underline"
-              noteClassName="mt-4 text-sm text-neutral-600"
+              domains={[AMP, COR, TERM, SMALL]}
+              headingClassName={LOOK_SOURCES_HEADING}
+              listClassName={LOOK_SOURCES_LIST}
+              linkClassName={LINK}
+              noteClassName={LOOK_SOURCES_NOTE}
             />
-          </div>
-        </div>
-      </section>
-
-      {/* Related Calculators */}
-      <section className="py-8">
-        <div className="container">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-neutral-900 mb-6">
-              Related Electrical Calculators
-            </h2>
-            
-            <div className="grid md:grid-cols-3 gap-4">
-              <a href="/calculators/wire-size-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 data-name="" className="font-semibold text-neutral-900 mb-1">Wire Size Calculator</h3>
-                <p className="text-sm text-neutral-600">Calculate proper AWG size for your electrical load</p>
-              </a>
-              <a href="/calculators/voltage-drop-calculator" className="block p-4 bg-white rounded-lg border border-neutral-200 hover:border-blue-300 hover:shadow-md transition-all">
-                <h3 data-name="" className="font-semibold text-neutral-900 mb-1">Voltage Drop Calculator</h3>
-                <p className="text-sm text-neutral-600">Calculate voltage loss over distance</p>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <CombinedSchema webApp={webAppData} />
-    </>
+            <p>
+              The{' '}
+              <Link href="/methodology#ampacity" className={LINK}>
+                methodology page
+              </Link>{' '}
+              describes each source and how the values are found. NFPA 70®, National Electrical Code® and NEC® are registered trademarks of the
+              National Fire Protection Association; wiresizes.com is not affiliated with or endorsed by NFPA.
+            </p>
+          </section>
+        </LookGuideBody>
+      </article>
+    </div>
   );
 }
