@@ -161,8 +161,9 @@ describe('WSZ-007b converters: sources and the old components', () => {
         const row = registry.find((r: Record<string, string>) => r.domain === d);
         assert.ok(row && row.status === 'verified' && row.pages_served.split(';').includes(route), `${d} → ${route}`);
       }
+      // WSZ-007e deleted the power-definitions row
       const old = registry.find((r: Record<string, string>) => r.domain === 'power-definitions');
-      assert.ok(old && !old.pages_served.split(';').includes(route), `power-definitions still serves ${route}`);
+      assert.ok(!old || !old.pages_served.split(';').includes(route), `power-definitions still serves ${route}`);
       const mapRow = pageMap.find((r: Record<string, string>) => Object.values(r).includes(route));
       assert.ok(mapRow, route);
       assert.deepEqual(mapRow.data_sources_all.split(';').sort(), [...domains].sort(), route);

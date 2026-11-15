@@ -32,32 +32,3 @@ export function tonsToWatts(tons: number): number {
 export function horsepowerToWatts(hp: number, kind: HorsepowerKind): number {
   return hp * (kind === 'electric' ? W_PER_ELECTRICAL_HP : W_PER_MECHANICAL_HP);
 }
-
-/** Watts expressed in electrical horsepower (746 W). */
-export function wattsToElectricalHorsepower(watts: number): number {
-  return watts / W_PER_ELECTRICAL_HP;
-}
-
-export type BtuMode = 'btu-to-watts' | 'watts-to-btu';
-
-export const BTU_MODE_OPTIONS: { value: BtuMode; label: string }[] = [
-  { value: 'btu-to-watts', label: 'Btu/h to watts' },
-  { value: 'watts-to-btu', label: 'Watts to Btu/h' },
-];
-
-export const BTU_INPUT_INVALID_MESSAGE = 'Enter a value greater than 0.';
-
-export interface ThermalConversion {
-  btuPerHour: number;
-  watts: number;
-  tons: number;
-}
-
-export function thermalConversion(mode: BtuMode, value: number): ThermalConversion | null {
-  if (!(value > 0)) return null;
-  const btuPerHour = mode === 'btu-to-watts' ? value : wattsToBtuPerHour(value);
-  const watts = mode === 'btu-to-watts' ? btuPerHourToWatts(value) : value;
-  return { btuPerHour, watts, tons: btuPerHourToTons(btuPerHour) };
-}
-
-export const BTU_DEFAULTS = { mode: 'btu-to-watts' as BtuMode, value: 24000 };

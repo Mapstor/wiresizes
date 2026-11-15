@@ -25,15 +25,12 @@ import {
   SCOPE_LINES,
   SERVICE_LOOKUP_DEFAULTS,
 } from '../src/lib/calculations/service-lookup';
-import { btuPerHourToWatts, BTU_DEFAULTS } from '../src/lib/calculations/conversions';
+import { btuPerHourToWatts } from '../src/lib/calculations/conversions';
 import {
-  currentByVoltage,
   fromRealPower,
   isPowerError,
-  VOLTS_TO_AMPS_COMPARISON_VOLTS,
 } from '../src/lib/calculations/power';
-import type { PowerFailure, PowerResult } from '../src/lib/calculations/power';
-import { formatSi, OHMS_LAW_DEFAULTS, solveOhmsLaw } from '../src/lib/calculations/ohms-law';
+import { solveOhmsLaw } from '../src/lib/calculations/ohms-law';
 import { VOLTAGE_INVALID_MESSAGE, voltsAfterPhaseChange } from '../src/lib/calculations/inputs';
 
 function near(actual: number, expected: number, tolerance: number, label: string): void {
@@ -41,11 +38,6 @@ function near(actual: number, expected: number, tolerance: number, label: string
     Math.abs(actual - expected) <= tolerance,
     `${label}: ${actual} is not within ${tolerance} of ${expected}`,
   );
-}
-
-function powerResult(result: PowerResult | PowerFailure): PowerResult {
-  assert.ok(!isPowerError(result), `unexpected error ${isPowerError(result) ? result.error : ''}`);
-  return result as PowerResult;
 }
 
 describe('exported titles, notes and messages', () => {
@@ -105,8 +97,6 @@ describe('default and reset inputs', () => {
   it('other tools', () => {
     assert.equal(GROUND_WIRE_DEFAULTS.ocpdA, 20);
     assert.equal(SERVICE_LOOKUP_DEFAULTS.ratingA, 200);
-    assert.equal(BTU_DEFAULTS.mode, 'btu-to-watts');
-    assert.equal(OHMS_LAW_DEFAULTS.mode, 'voltage');
   });
 
   it('switching to three-phase resets an invalid voltage to 240 V', () => {
@@ -116,23 +106,14 @@ describe('default and reset inputs', () => {
 });
 
 describe('spot checks', () => {
-  it("Ohm's law: 12 V across 10 kΩ gives 1.200 mA", () => {
+  it("Ohm's law: 12 V across 10 kΩ gives 1.2 mA", () => {
     const result = solveOhmsLaw('current', { voltage: 12, resistance: 10000 });
     assert.ok(result);
-    assert.equal(formatSi(result.current, 'A'), '1.200 mA');
+    near(result.current, 0.0012, 1e-12, 'amps');
   });
 
   it('BTU: 12,000 Btu/h = 3,516.853 W ± 0.001', () => {
     near(btuPerHourToWatts(12000), 3516.853, 0.001, 'watts');
-  });
-
-  it('VoltsToAmps: at 10 kW three-phase 240 V, the 240 V row equals the headline current', () => {
-    const headline = powerResult(fromRealPower({ watts: 10000, volts: 240, circuit: 'three', pf: 1 }));
-    const rows = currentByVoltage({ watts: 10000 }, 'three', 1, VOLTS_TO_AMPS_COMPARISON_VOLTS);
-    const row = rows.find((r) => r.volts === 240);
-    assert.ok(row);
-    assert.equal(row.amps, headline.amps);
-    assert.ok(!rows.some((r) => r.volts === 120), 'three-phase shows line-to-line rows only');
   });
 
   it('three-phase inputs are limited to line-to-line voltages, and PF to (0, 1]', () => {

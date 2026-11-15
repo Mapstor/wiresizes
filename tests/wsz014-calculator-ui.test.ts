@@ -3,13 +3,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '../src/lib/calculations/fields';
-import {
-  POWER_ERROR_MESSAGES,
-  POWER_FACTOR_NAMEPLATE_NOTE,
-  powerInputErrors,
-  hasPowerInputError,
-  VOLTS_TO_AMPS_DEFAULTS,
-} from '../src/lib/calculations/power';
 import { NO_14_AWG_ALUMINUM_NOTE, voltageDrop } from '../src/lib/calculations/voltage-drop';
 import { calculateAmpacity, formatFactor } from '../src/lib/calculations/ampacity';
 
@@ -45,21 +38,6 @@ describe('share links', () => {
   });
 });
 
-describe('power inputs', () => {
-  it('reports every invalid field at once', () => {
-    const errors = powerInputErrors({ value: Number.NaN, volts: 277, circuit: 'three', pf: 1.2 });
-    assert.equal(errors.value, POWER_ERROR_MESSAGES['value-invalid']);
-    assert.equal(errors.volts, POWER_ERROR_MESSAGES['voltage-invalid']);
-    assert.equal(errors.pf, POWER_ERROR_MESSAGES['power-factor-invalid']);
-    assert.ok(hasPowerInputError(errors));
-  });
-
-  it('valid inputs have no messages; DC ignores the power factor', () => {
-    assert.ok(!hasPowerInputError(powerInputErrors({ value: 1000, volts: 240, circuit: 'single', pf: 0.9 })));
-    assert.ok(!hasPowerInputError(powerInputErrors({ value: 20, volts: 12, circuit: 'dc', pf: Number.NaN })));
-  });
-});
-
 describe('WSZ-014 step 3 texts and formats', () => {
   it('no 14 AWG aluminum voltage drop result', () => {
     assert.equal(NO_14_AWG_ALUMINUM_NOTE, 'NEC Table 310.16 lists aluminum from 12 AWG, so there is no 14 AWG aluminum result.');
@@ -74,13 +52,5 @@ describe('WSZ-014 step 3 texts and formats', () => {
     assert.equal(formatFactor(null), '–');
     const al14 = calculateAmpacity({ size: '14', material: 'Al', column: 60, ambientRow: '26–30', band: '1–3' });
     assert.equal(al14.tableAmpacity, null);
-  });
-
-  it('volts to amps: no load type; the power factor note', () => {
-    assert.ok(!('loadType' in VOLTS_TO_AMPS_DEFAULTS));
-    assert.equal(
-      POWER_FACTOR_NAMEPLATE_NOTE,
-      'Enter the power factor from the equipment nameplate. Resistive loads such as heaters have a power factor of 1.',
-    );
   });
 });

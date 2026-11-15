@@ -62,5 +62,9 @@
   {
     "date": "2026-11-15",
     "text": "Rebuilt the BTU to watts calculator: it now converts Btu per hour, watts and tons of refrigeration either way on NIST SP 811 factors. Removed the HVAC efficiency ratings section and sizing advice, which cited no source."
+  },
+  {
+    "date": "2026-11-15",
+    "text": "Rebuilt the electrical power calculations guide: the formulas for power and current on DC, single-phase and three-phase circuits, with worked examples from the calculators' checked cases, the power triangle drawn to scale and the watts each ampere carries. Removed the lists of uses for each voltage, a claim that three-phase motors start and run better, and a lighting and a capacitor bank example, which cited no source."
   }
 ]

@@ -17,7 +17,7 @@ slug,archetype,disposition,redirect_to,primary_query,data_source,data_sources_al
 /calculators/range-calculator,tool,rebuild,,range wire size,nec-220-load-calcs,nec-220-load-calcs;mfr-dryer-range;nec-2023-rule-excerpts;nec-310-16;nema-receptacle-configs,WSZ-010,withdraw,981,19,0,T220.55 correct
 /calculators/welder-calculator,tool,rebuild,,welder wire size,nec-630-welders,nec-630-welders;mfr-welders;nec-310-16,WSZ-011,withdraw,799,23,0,630.11(A) multipliers
 /calculators/box-fill-calculator,tool,rebuild,,box fill calculator,nec-314-16-box-fill,nec-314-16-box-fill,WSZ-009,withdraw,781,17,0,
-/guides/electrical-power-calculations,guide,rebuild,,electrical power calculations,power-definitions,power-definitions;nist-sp811-conversions;nec-220-load-calcs,WSZ-007,fix,494,4,231,
+/guides/electrical-power-calculations,guide,rebuild,,electrical power calculations,eia-power-glossary,eia-power-glossary;nist-sp330-si-units;doe-motor-load-efficiency;mit-polyphase-networks;doe-power-factor-cost;us-nominal-voltages,WSZ-007,fix,494,4,231,
 /calculators/residential-load-calculator,tool,rebuild-absorb,,residential load calculator,nec-220-load-calcs,nec-220-load-calcs;nec-2026-edition;nec-310-12,WSZ-010,withdraw,352,5,3176,absorbs electrical-load; 2026 Art.120 numbering
 /calculators/volts-to-amps-calculator,tool,rebuild,,volts to amps,nist-sp330-si-units,nist-sp330-si-units;eia-power-glossary;doe-motor-load-efficiency;mit-polyphase-networks;us-nominal-voltages,WSZ-007,fix,422,3,0,
 /calculators/motor-circuit,tool,rebuild,,motor wire size calculator,nec-430-motors,nec-430-motors;nec-310-16;nec-250-grounding,WSZ-011,withdraw,383,7,0,
