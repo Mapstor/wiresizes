@@ -528,8 +528,10 @@ export default function MethodologyPage() {
             corrected ampacity = Table 310.16 value × correction factor × adjustment percent ÷ 100
           </Formula>
           <p>
-            The wire size calculator assumes <Val v={TABLE_AMBIENT.c} unit="°C" src="nec-310-15-corrections" /> and no
-            more than three current-carrying conductors.
+            The ampacity calculator reads the row whose printed range holds the temperature you enter, in °C or °F, and
+            the band that holds your count of current-carrying conductors. The wire size calculator assumes{' '}
+            <Val v={TABLE_AMBIENT.c} unit="°C" src="nec-310-15-corrections" /> and no more than three current-carrying
+            conductors.
           </p>
           <Limits>
             <li>
@@ -560,6 +562,14 @@ export default function MethodologyPage() {
           <p>
             The text was read in NFPA&apos;s Second Draft for the 2023 edition, where revision SR-7793 changed only the
             informational notes of 110.14(C). The{' '}
+            <Link href="/calculators/ampacity-calculator" className={LINK}>
+              ampacity calculator
+            </Link>{' '}
+            shows a corrected ampacity against the{' '}
+            <Val v={TERMINATION_RULES.columnAtOrBelowLimit} unit="°C" src="nec-110-14c" /> and{' '}
+            <Val v={TERMINATION_RULES.columnAboveLimit} unit="°C" src="nec-110-14c" /> values of the same size, never above the
+            conductor&apos;s own column, and keeps NM and UF cable at the{' '}
+            <Val v={TERMINATION_RULES.cableColumn} unit="°C" src="nec-110-14c" /> column. The{' '}
             <Link href="/guides/wire-size-for-200-amp" className={LINK}>
               200 A guide
             </Link>{' '}

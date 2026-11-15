@@ -4,7 +4,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '../src/lib/calculations/fields';
 import { NO_14_AWG_ALUMINUM_NOTE, voltageDrop } from '../src/lib/calculations/voltage-drop';
-import { calculateAmpacity, formatFactor } from '../src/lib/calculations/ampacity';
+import { calculateAmpacity } from '../src/lib/calculations/ampacity';
 
 describe('number fields', () => {
   it('empty or blank text is NaN, numbers parse', () => {
@@ -45,11 +45,7 @@ describe('WSZ-014 step 3 texts and formats', () => {
     assert.notEqual(voltageDrop({ size: '14', material: 'Cu', amps: 10, lengthFt: 50, volts: 120, phase: 'single' }), null);
   });
 
-  it('ampacity: factors with two decimals; no 14 AWG aluminum value', () => {
-    assert.equal(formatFactor(1), '1.00');
-    assert.equal(formatFactor(1.2), '1.20');
-    assert.equal(formatFactor(0.82), '0.82');
-    assert.equal(formatFactor(null), '–');
+  it('ampacity: no 14 AWG aluminum value', () => {
     const al14 = calculateAmpacity({ size: '14', material: 'Al', column: 60, ambientRow: '26–30', band: '1–3' });
     assert.equal(al14.tableAmpacity, null);
   });

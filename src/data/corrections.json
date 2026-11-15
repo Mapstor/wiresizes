@@ -78,5 +78,9 @@
   {
     "date": "2026-11-15",
     "text": "Rebuilt the guide to service wire size: Table 310.12 for a dwelling service beside Table 310.16 at the terminal temperature 110.14(C) sets for other feeders, the 240.4(B) allowance for an aluminum feeder, both ground wires (Table 250.66 as NFPA's 2020 grounding fact sheet prints it, and Table 250.122) and the voltage drop. Removed the installation steps, the safety and mistake lists, a copper and aluminum comparison and claims about what a home needs, which cited no source. Table 310.12's scope now reads as the code words it on every page: a service, or a feeder, that carries the entire load of a dwelling unit."
+  },
+  {
+    "date": "2026-11-15",
+    "text": "Rebuilt the ampacity calculator: it now takes the ambient temperature in °C or °F and the number of current-carrying conductors, and shows the corrected ampacity against the 60 °C and 75 °C terminal limits of 110.14(C) and the 240.4(D) breaker limit, with NM and UF cable kept at 60 °C. Removed the insulation type ratings, the wet-location and harmonic-current notes, the common mistakes and the answers on parallel conductors, voltage and separate conduits, which cited no source."
   }
 ]

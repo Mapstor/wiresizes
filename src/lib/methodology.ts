@@ -52,13 +52,13 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'wire-gauge',
     domain: 'awg-geometry',
     title: 'Wire gauge sizes and areas',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, GROUND_WIRE, WIRE_RESISTANCE, LOW_VOLTAGE, SERVICE_ENTRANCE, GUIDE_200, AWG_CHART, HOME],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, GROUND_WIRE, WIRE_RESISTANCE, LOW_VOLTAGE, SERVICE_ENTRANCE, GUIDE_200, AWG_CHART, HOME],
   },
   {
     id: 'resistance',
     domain: 'conductor-resistance-20c',
     title: 'Conductor resistance and voltage drop',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE, GUIDE_200],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE, GUIDE_200],
   },
   {
     id: 'ampacity',
@@ -76,7 +76,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'terminals',
     domain: 'nec-110-14c',
     title: 'Terminal temperatures',
-    citedOn: [GUIDE_200],
+    citedOn: [AMPACITY, GUIDE_200],
   },
   {
     id: 'small-conductors',

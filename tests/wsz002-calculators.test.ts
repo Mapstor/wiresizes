@@ -14,8 +14,6 @@ import {
 import { ABOVE_TARGET_TITLE, MEETS_TARGET_TITLE, VD_TARGET_OPTIONS } from '../src/lib/calculations/voltage-drop';
 import {
   AMBIENT_ROWS,
-  AMPACITY_DEFAULTS,
-  NOT_PERMITTED_MESSAGE,
   ocpdLimitLabel,
 } from '../src/lib/calculations/ampacity';
 import { NO_SIZE_MESSAGE } from '../src/lib/calculations/dc-sizing';
@@ -60,7 +58,6 @@ describe('exported titles, notes and messages', () => {
   });
 
   it('ampacity, ground wire and low-voltage messages', () => {
-    assert.equal(NOT_PERMITTED_MESSAGE, 'Not permitted at this ambient temperature for this insulation rating');
     assert.equal(ocpdLimitLabel(20), 'Overcurrent protection limited to 20 A (NEC 240.4(D))');
     assert.equal(
       PROPORTIONAL_NOTE,
@@ -71,10 +68,7 @@ describe('exported titles, notes and messages', () => {
 });
 
 describe('default and reset inputs', () => {
-  it('ampacity: 60 °C column, 26–30 °C row, 1–3 conductors', () => {
-    assert.equal(AMPACITY_DEFAULTS.column, 60);
-    assert.equal(AMPACITY_DEFAULTS.ambientRow, '26–30');
-    assert.equal(AMPACITY_DEFAULTS.band, '1–3');
+  it('ampacity: Table 310.15(B)(1)(1) has 16 rows', () => {
     assert.equal(AMBIENT_ROWS.length, 16);
   });
 

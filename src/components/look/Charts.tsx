@@ -26,6 +26,7 @@ import type { TpResult } from '@/lib/calculations/power';
 import { COMPARE_KW, COMPARE_ROWS, GUIDE_EXAMPLES, PF_BARS, PF_BAR_ROWS, PF_EXAMPLE, WATTS_PER_AMP_ROWS } from '@/lib/power-guides';
 import { GUIDE_200 } from '@/lib/service-guides';
 import type { GuideSide } from '@/lib/service-guides';
+import type { AmpacityRun } from '@/lib/calculations/ampacity';
 import { areaCmil, conductor, formatSize } from '@/lib/verified/awg';
 import { TABLE_250_122_ROWS, egcRow } from '@/lib/verified/nec-250-122';
 import { SERVICE_VOLTS, TABLE_310_12_ROWS, serviceEntrance, isServiceError, serviceLookup } from '@/lib/calculations/service-lookup';
@@ -2222,6 +2223,83 @@ export function Service200Ladder() {
     <div>
       <LadderPlot narrow={false} />
       <LadderPlot narrow />
+    </div>
+  );
+}
+
+// ── Ampacity calculator (WSZ-009a): one run's steps as bars, with the termination caps as lines ─────────────────────
+
+function AmpacityStepsPlot({ run, id, narrow }: { run: AmpacityRun; id: string; narrow: boolean }) {
+  const { result, caps } = run;
+  if (result.tableAmpacity === null || result.correctionFactor === null || result.ampacity === null) {
+    throw new Error('AmpacityStepsChart: the run has no corrected ampacity');
+  }
+  const afterAmbient = result.tableAmpacity * result.correctionFactor;
+  const bars = [
+    { key: 'table', label: 'Table 310.16', sub: `${run.column} °C column`, v: result.tableAmpacity, src: AMP },
+    { key: 'ambient', label: 'Heat', sub: `× ${result.correctionFactor.toFixed(2)}`, v: afterAmbient, src: 'calc:ampacity' },
+    { key: 'bundle', label: 'Bundling', sub: `${result.adjustmentPercent} %`, v: result.ampacity, src: 'calc:ampacity' },
+  ];
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 92 : 120;
+  const right = narrow ? 52 : 64;
+  const top = narrow ? 30 : 34;
+  const rowH = narrow ? 46 : 50;
+  const barH = narrow ? 22 : 24;
+  const H = top + bars.length * rowH + 52;
+  const pw = W - left - right;
+  const max = Math.max(result.tableAmpacity, ...caps.map((c) => c.tableA ?? 0)) * 1.08;
+  const x = (v: number) => left + (v / max) * pw;
+  const capLines = caps.filter((c) => c.tableA !== null) as { column: number; tableA: number }[];
+  const fullId = `${id}-${narrow ? 'narrow' : 'wide'}`;
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${fullId}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src="calc:ampacity"
+    >
+      <title id={`${fullId}-title`}>
+        {`${run.size} ${run.material === 'Cu' ? 'copper' : 'aluminum'} from the ${run.column} °C column of Table 310.16: ${result.tableAmpacity} A, ${afterAmbient.toFixed(2)} A after the ambient factor ${result.correctionFactor.toFixed(2)}, ${result.ampacity.toFixed(2)} A after ${result.adjustmentPercent} % for bundling; the terminal columns allow ${capLines.map((c) => `${c.tableA} A at ${c.column} °C`).join(' and ')}`}
+      </title>
+      {bars.map((b, k) => {
+        const y = top + k * rowH;
+        return (
+          <g key={b.key}>
+            <text x={left - 12} y={y + barH / 2 - 1} textAnchor="end" fontSize={13} fill={INK}>
+              {b.label}
+            </text>
+            <text x={left - 12} y={y + barH / 2 + 15} textAnchor="end" fontSize={13} fill={MUTED}>
+              {b.sub}
+            </text>
+            <path d={barPath(left, y, x(b.v) - left, barH)} fill={COPPER} className="viz-grow" />
+            <text x={x(b.v) + 8} y={y + barH / 2 + 4.5} fontSize={13} fill={INK} stroke="#ffffff" strokeWidth={4} paintOrder="stroke">
+              <Val v={Number(b.v.toFixed(2))} unit="A" src={b.src} svg />
+            </text>
+          </g>
+        );
+      })}
+      {capLines.map((c, k) => (
+        <g key={c.column} data-src="nec-110-14c">
+          <line x1={x(c.tableA)} x2={x(c.tableA)} y1={top - 10} y2={top + bars.length * rowH - 12} stroke={INK} strokeWidth={1.5} strokeDasharray={k === 0 ? '5 4' : undefined} />
+          <text x={x(c.tableA)} y={top + bars.length * rowH + (k === 0 ? 6 : 24)} textAnchor="middle" fontSize={13} fill={INK}>
+            <Val v={c.column} unit="°C" src="nec-110-14c" svg /> terminals: <Val v={c.tableA} unit="A" src={AMP} svg />
+          </text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+/** One ampacity run as three bars (table value, after heat, after bundling) against its termination caps. */
+export function AmpacityStepsChart({ run, id }: { run: AmpacityRun; id: string }) {
+  return (
+    <div>
+      <AmpacityStepsPlot run={run} id={id} narrow={false} />
+      <AmpacityStepsPlot run={run} id={id} narrow />
     </div>
   );
 }
