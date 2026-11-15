@@ -60,6 +60,8 @@ export const metadata: Metadata = {
 const SP811 = 'nist-sp811-conversions';
 const CALC = `calc:${ENGINE_ID}`;
 const W6 = (v: number) => Number(v.toPrecision(6));
+// the table's columns: two decimals in every row, so the column lines up
+const TABLE_FMT = { fixed: 2 };
 
 /** Btu per hour to watts and tons, one row each. */
 const TABLE_BTU = [5000, 6000, 8000, 9000, 10000, 12000, 14000, 15000, 18000, 24000, 30000, 36000, 42000, 48000, 60000];
@@ -157,9 +159,11 @@ export default function BtuToWattsPage() {
                     <th scope="row" className={RSTICKY_TD}>
                       <Num v={btu} src={CALC} />
                     </th>
-                    <td className={RTD}>{W(btu)}</td>
                     <td className={RTD}>
-                      <Num v={W6(btuPerHourToTons(btu))} src={CALC} />
+                      <Val v={btuPerHourToWatts(btu)} unit="W" src={CALC} format={TABLE_FMT} />
+                    </td>
+                    <td className={RTD}>
+                      <Num v={btuPerHourToTons(btu)} src={CALC} format={TABLE_FMT} />
                     </td>
                   </tr>
                 ))}

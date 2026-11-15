@@ -51,7 +51,8 @@ export const metadata: Metadata = {
 const SI = 'nist-sp330-si-units';
 const EIA = 'eia-power-glossary';
 const CALC = `calc:${ENGINE_ID}`;
-const SIG = { sig: 4 };
+// four significant figures, trailing zeros dropped, as the tool shows them
+const r4 = (v: number) => Number(v.toPrecision(4));
 
 function solved(pair: OhmsPair, a: number, b: number): OhmsLawValues {
   const r = solvePair(pair, a, b);
@@ -83,10 +84,10 @@ const articleData = { headline: "Ohm's Law Calculator", description: DESCRIPTION
 const webAppData = { name: "Ohm's Law Calculator", url: URL, description: DESCRIPTION };
 
 export default function OhmsLawPage() {
-  const V = (v: number) => <Val v={v} unit="V" src={CALC} format={SIG} />;
-  const I = (v: number) => <Val v={v} unit="A" src={CALC} format={SIG} />;
-  const R = (v: number) => <Val v={v} unit="Ω" src={CALC} format={SIG} />;
-  const W = (v: number) => <Val v={v} unit="W" src={CALC} format={SIG} />;
+  const V = (v: number) => <Val v={r4(v)} unit="V" src={CALC} />;
+  const I = (v: number) => <Val v={r4(v)} unit="A" src={CALC} />;
+  const R = (v: number) => <Val v={r4(v)} unit="Ω" src={CALC} />;
+  const W = (v: number) => <Val v={r4(v)} unit="W" src={CALC} />;
   const plain = (v: number, unit: 'V' | 'A' | 'Ω' | 'W') => <Val v={v} unit={unit} src={CALC} />;
   return (
     <div className={LOOK_PAGE}>
@@ -215,8 +216,8 @@ export default function OhmsLawPage() {
             <div className="space-y-1.5">
               <h3 className={H3}>What is Ohm&apos;s law?</h3>
               <p className={P} data-src={SI}>
-                The voltage across a resistance equals the current through it times the resistance: V = I × R. It follows from the SI definition
-                of the ohm as a volt per ampere.
+                The voltage across a resistance equals the current through it times the resistance: V = I × R. The SI defines the ohm as a
+                volt per ampere, so one volt across one ohm drives one ampere.
               </p>
             </div>
             <div className="space-y-1.5">
