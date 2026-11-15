@@ -26,7 +26,7 @@ import type { TpResult } from '@/lib/calculations/power';
 import { COMPARE_KW, COMPARE_ROWS, GUIDE_EXAMPLES, PF_BARS, PF_BAR_ROWS, PF_EXAMPLE, WATTS_PER_AMP_ROWS } from '@/lib/power-guides';
 import { GUIDE_200 } from '@/lib/service-guides';
 import type { GuideSide } from '@/lib/service-guides';
-import { areaCmil, conductor } from '@/lib/verified/awg';
+import { areaCmil, conductor, formatSize } from '@/lib/verified/awg';
 import { TABLE_250_122_ROWS, egcRow } from '@/lib/verified/nec-250-122';
 import { SERVICE_VOLTS, TABLE_310_12_ROWS, serviceEntrance, isServiceError, serviceLookup } from '@/lib/calculations/service-lookup';
 import { editionGroups, editionLabel, NEC_ADOPTION_DOMAIN, NOT_VERIFIED, stateName } from '@/lib/verified/nec-adoption';
@@ -2165,7 +2165,7 @@ function LadderPlot({ narrow }: { narrow: boolean }) {
       data-src={LADDER_SRC}
     >
       <title id={`${id}-title`}>
-        {`Allowable ampacity at ${g.column} °C, NEC Table 310.16, of the sizes around a ${g.ratingA} A service: ${g.cu.ladder.map((r) => `${r.size} copper ${r.amps} A`).join(', ')}; ${g.al.ladder.map((r) => `${r.size} aluminum ${r.amps} A`).join(', ')}. Sizes between ${g.minA} A (83 % of ${g.ratingA} A) and ${g.ratingA} A are allowed for a dwelling service by Table 310.12 but not for another ${g.ratingA} A feeder.`}
+        {`Allowable ampacity at ${g.column} °C, NEC Table 310.16, of the sizes around a ${g.ratingA} A service: ${g.cu.ladder.map((r) => `${formatSize(r.size)} copper ${r.amps} A`).join(', ')}; ${g.al.ladder.map((r) => `${formatSize(r.size)} aluminum ${r.amps} A`).join(', ')}. Sizes whose ampacity falls between ${g.minA} A (83 % of ${g.ratingA} A) and ${g.ratingA} A meet Table 310.12 for a dwelling service but do not carry the full ${g.ratingA} A.`}
       </title>
       <rect x={x(g.minA)} y={plotTop} width={x(g.ratingA) - x(g.minA)} height={plotBottom - plotTop} fill="#f5f2ee" />
       <text x={x(g.minA)} y={narrow ? 18 : 20} fontSize={13} fill={INK}>

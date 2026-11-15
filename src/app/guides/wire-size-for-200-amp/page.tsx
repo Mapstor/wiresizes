@@ -305,8 +305,8 @@ export default function WireSizeFor200AmpPage() {
               <Val v={G.ratingA} unit="A" src={SVC} /> breaker.
             </p>
             <p className={P} data-src={OCPD}>
-              <Size s={AL.dwelling} /> aluminum is the exception you will meet most. Its <Val v={AL.dwellingA} unit="A" src={AMP} /> is not a
-              standard rating in Table 240.6(A), and 240.4(B) lets the next higher standard rating protect a conductor in that case, up to{' '}
+              One allowance applies to <Size s={AL.dwelling} /> aluminum. Its <Val v={AL.dwellingA} unit="A" src={AMP} /> is not a standard
+              rating in Table 240.6(A), and 240.4(B) lets the next higher standard rating protect a conductor in that case, up to{' '}
               <Val v={NEXT_SIZE_UP_MAX_A} unit="A" src={OCPD} />, so a <Val v={AL.protection.ratingA} unit="A" src={OCPD} /> breaker may
               protect it.{' '}
               <span data-src={LOAD}>
@@ -358,9 +358,9 @@ export default function WireSizeFor200AmpPage() {
             <p className={P} data-src={VD}>
               The tables size a service for its current, not for its length. At the full <Val v={G.ratingA} unit="A" src={SVC} />,{' '}
               <Val v={D100.cu.lengthFt} unit="ft" src={VD} /> of <Size s={S.cu} /> copper drops{' '}
-              <Drop volts={D100.cu.result.vdVolts} pct={D100.cu.result.vdPct} /> of <Val v={SERVICE_VOLTS} unit="V" src={SVC} />, and{' '}
-              <Size s={S.alCca} /> aluminum <Drop volts={D100.al.result.vdVolts} pct={D100.al.result.vdPct} />, with the conductors at{' '}
-              <Val v={RESISTANCE_TEMP_C} unit="°C" src={RES} />.
+              <Drop volts={D100.cu.result.vdVolts} pct={D100.cu.result.vdPct} /> and <Size s={S.alCca} /> aluminum{' '}
+              <Drop volts={D100.al.result.vdVolts} pct={D100.al.result.vdPct} /> on <Val v={SERVICE_VOLTS} unit="V" src={SVC} />, with the
+              conductors at <Val v={RESISTANCE_TEMP_C} unit="°C" src={RES} />.
             </p>
             <p className={P} data-src={LOAD}>
               For feeders, an informational note to 215.2(A) says that conductors sized to keep the drop at the farthest outlet under{' '}
