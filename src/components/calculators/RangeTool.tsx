@@ -348,6 +348,12 @@ function Result({
           </>
         ) : null}
       </p>
+      {!r.circuitCarriesLoad && (
+        <p className={`mt-4 ${NOTE} font-semibold`} data-src={CALC}>
+          The <Val v={r.circuitA} unit="A" src="input" /> circuit is below the <Val v={r.amps} unit="A" src={CALC} format={{ upTo: 2 }} /> the appliance
+          draws by Table 220.55. Use the circuit its instructions give.
+        </p>
+      )}
       <div className="mt-6 overflow-x-auto">
         <table className="w-full max-w-[38rem] border-collapse text-[15px]" data-src={CALC}>
           <caption className="sr-only">Range circuit result</caption>
@@ -385,12 +391,6 @@ function Result({
           </tbody>
         </table>
       </div>
-      {!r.circuitCarriesLoad && (
-        <p className={`mt-5 ${NOTE} font-semibold`} data-src={CALC}>
-          The <Val v={r.circuitA} unit="A" src="input" /> circuit is below the <Val v={r.amps} unit="A" src={CALC} format={{ upTo: 2 }} /> the appliance
-          draws by Table 220.55. Use the circuit its instructions give.
-        </p>
-      )}
       {r.egc && r.egcLargerThanConductor && <p className={`mt-5 ${NOTE}`}>{EGC_LARGER_THAN_CONDUCTOR_NOTE}</p>}
       {maker && (
         <p className={`mt-5 ${NOTE}`} data-src={MFR_DOMAIN}>
