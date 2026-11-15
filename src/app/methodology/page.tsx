@@ -549,8 +549,8 @@ export default function MethodologyPage() {
           <p>
             The calculator offers circuit ratings from <Val v={RANGE_CIRCUITS[0]} unit="A" src="nec-240-ocpd" /> to{' '}
             <Val v={RANGE_CIRCUITS[RANGE_CIRCUITS.length - 1]} unit="A" src="nec-240-ocpd" />, the standard ratings of
-            Table 240.6(A) between them, and never picks one: the household-range rule of 210.19 has not been verified,
-            so the rating comes from the appliance&apos;s instructions (see{' '}
+            Table 240.6(A) between them, and never picks one: the NEC&apos;s minimum circuit for household ranges has not
+            been verified here, so the rating comes from the appliance&apos;s instructions (see{' '}
             <SectionLink domain="mfr-dryer-range">Range and dryer makers&apos; instructions</SectionLink>).
           </p>
           <Limits>
