@@ -101,7 +101,8 @@ const TOC: ([string, string] | [string, string, string])[] = [
 const articleData = { headline: 'Horsepower to Amps Calculator', description: DESCRIPTION, url: URL, ...articleDates(ROUTE) };
 const webAppData = { name: 'Horsepower to Amps Calculator', url: URL, description: DESCRIPTION };
 
-/** One full-load current table as printed, a dash where it prints no current. */
+/** One full-load current table as printed, a dash where it prints no current. The figure columns are narrower than the
+ *  ruled default (7.5em), so Table 430.248's four columns fit a 390 px screen. */
 function FlcTable({ phase, id, caption, maxWidth }: { phase: ToolPhase; id: string; caption: string; maxWidth: string }) {
   const table = phase === 'dc' ? '430.247' : phase === '1' ? '430.248' : '430.250';
   const { rows } = flcTable(table);
@@ -114,7 +115,7 @@ function FlcTable({ phase, id, caption, maxWidth }: { phase: ToolPhase; id: stri
             Motor
           </th>
           {columns.map((c) => (
-            <th key={c.column} scope="col" className={RTH}>
+            <th key={c.column} scope="col" className={clsx(RTH, '!min-w-[4.5em]')}>
               <Val v={c.volts} unit="V" src={FLC} />
             </th>
           ))}
