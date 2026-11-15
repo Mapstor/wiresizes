@@ -5,7 +5,6 @@ slug,what_was_wrong,links
 /calculators/hot-tub-calculator,"it estimated the circuit from the number of seats instead of the spa's rated load, and its voltage-drop examples used wrong resistance values",/guides/nec-table-310-16;/calculators/voltage-drop-calculator
 /calculators/pool-pump-calculator,its motor currents did not match the NEC motor tables and it cited the wrong pool sections,/guides/nec-table-310-16
 /calculators/air-conditioner-calculator,it estimated amps from tonnage instead of using the unit's nameplate minimum circuit ampacity and maximum overcurrent protection,/guides/nec-table-310-16
-/calculators/dryer-calculator,it cited the wrong NEC sections and left out the 2023 GFCI requirement for dryer circuits,/guides/nec-table-310-16
 /calculators/motor-circuit,it rounded feeder protection up and stated overload settings incorrectly,/guides/nec-table-310-16
 /calculators/horsepower-to-amps-calculator,it listed 115 V motor currents under a 230 V heading and mislabeled the NEC motor tables,/calculators/kilowatts-to-amps-calculator
 /calculators/conduit-fill-calculator,"it said equipment grounding conductors are not counted in conduit fill, and several conduit and wire areas were wrong",/guides/awg-wire-size-chart

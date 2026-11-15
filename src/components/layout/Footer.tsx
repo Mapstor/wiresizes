@@ -29,6 +29,7 @@ const footerLinks = {
     { name: 'Service Entrance Calculator', href: '/calculators/service-entrance-calculator' },
     { name: 'Residential Load Calculator', href: '/calculators/residential-load-calculator' },
     { name: 'Range Calculator', href: '/calculators/range-calculator' },
+    { name: 'Dryer Calculator', href: '/calculators/dryer-calculator' },
     { name: 'View All Advanced', href: '/calculators', isViewAll: true },
   ],
   guides: [

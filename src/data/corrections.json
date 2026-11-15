@@ -98,5 +98,9 @@
   {
     "date": "2026-11-15",
     "text": "Brought back the range calculator, offline since the November 2 audit because its demand-factor rule did not match NEC Table 220.55, it put a wall oven on a breaker larger than its wire allowed, and it said ranges generally need no GFCI protection. It now takes a range, or a cooktop with wall ovens, through Table 220.55 and its notes, sizes the wire and ground wire for the circuit the range instructions give, and states the 2023 GFCI rule."
+  },
+  {
+    "date": "2026-11-15",
+    "text": "Brought back the dryer calculator, offline since the November 2 audit because it cited the wrong NEC sections and left out the 2023 GFCI requirement for dryer circuits. It now keeps a dryer's 220.54 load for the service apart from its own circuit, sizes the wire and ground wire for the circuit the dryer instructions give, and states the 2023 GFCI rule."
   }
 ]

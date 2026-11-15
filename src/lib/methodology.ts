@@ -39,6 +39,7 @@ const POWER_CALCS = '/guides/electrical-power-calculations';
 const SERVICE_ENTRANCE = '/calculators/service-entrance-calculator';
 const RESIDENTIAL_LOAD = '/calculators/residential-load-calculator';
 const RANGE = '/calculators/range-calculator';
+const DRYER = '/calculators/dryer-calculator';
 const GUIDE_200 = '/guides/wire-size-for-200-amp';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
@@ -66,7 +67,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'ampacity',
     domain: 'nec-310-16',
     title: 'Ampacity',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, CIRCUIT_BREAKER, RANGE, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, HOME],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, HOME],
   },
   {
     id: 'corrections',
@@ -78,19 +79,19 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'terminals',
     domain: 'nec-110-14c',
     title: 'Terminal temperatures',
-    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, GUIDE_200],
+    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, GUIDE_200],
   },
   {
     id: 'small-conductors',
     domain: 'nec-240-4-d',
     title: 'Small-conductor limits',
-    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, AWG_CHART, TABLE_310_16, HOME],
+    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, AWG_CHART, TABLE_310_16, HOME],
   },
   {
     id: 'breaker-ratings',
     domain: 'nec-240-ocpd',
     title: 'Standard breaker and fuse ratings',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, GROUND_WIRE, GUIDE_200],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, GUIDE_200],
   },
   {
     id: 'continuous-loads',
@@ -102,7 +103,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'grounding',
     domain: 'nec-250-grounding',
     title: 'Ground wires and grounding electrode conductors',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200],
   },
   {
     id: 'service-conductors',
@@ -114,25 +115,25 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'load-calcs',
     domain: 'nec-220-load-calcs',
     title: 'Dwelling load calculations',
-    citedOn: [RESIDENTIAL_LOAD, RANGE],
+    citedOn: [RESIDENTIAL_LOAD, RANGE, DRYER],
   },
   {
     id: 'maker-instructions',
     domain: 'mfr-dryer-range',
     title: 'Range and dryer makers’ instructions',
-    citedOn: [RANGE],
+    citedOn: [RANGE, DRYER],
   },
   {
     id: 'nema-configs',
     domain: 'nema-receptacle-configs',
     title: 'NEMA receptacle configurations',
-    citedOn: [RANGE],
+    citedOn: [RANGE, DRYER],
   },
   {
     id: 'rule-excerpts',
     domain: 'nec-2023-rule-excerpts',
     title: 'Other NEC 2023 sections',
-    citedOn: [RANGE],
+    citedOn: [RANGE, DRYER],
   },
   {
     id: 'power-terms',
@@ -219,6 +220,7 @@ export const METHODOLOGY_EXTRA_SECTIONS = {
   breakerMethod: { id: 'breaker-method', title: 'How the circuit breaker calculator picks a breaker' },
   loadMethod: { id: 'load-method', title: 'How the residential load calculator counts a house' },
   rangeMethod: { id: 'range-method', title: 'How the range calculator sizes a range circuit' },
+  dryerMethod: { id: 'dryer-method', title: 'How the dryer calculator counts a dryer' },
   notCovered: { id: 'not-covered', title: 'Not covered yet' },
   errors: { id: 'errors', title: 'Errors and corrections' },
 } as const;
