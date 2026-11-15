@@ -210,7 +210,7 @@ export default function CircuitBreakerCalculatorPage() {
               A noncontinuous load may use the full rating, and a mixed load fits when the noncontinuous part plus{' '}
               <Val v={CONTINUOUS_LOAD_PERCENT} unit="%" src={CONT} /> of the continuous part stays within it.
             </p>
-            <DataTable id="continuous-table" variant="ruled" src={CALC} caption="Each rating the calculator offers">
+            <DataTable id="continuous-table" variant="ruled" src={CALC} caption="Each rating the calculator offers" className="max-w-[28rem]">
               <thead>
                 <tr>
                   <th scope="col" className={clsx(RTH, RSTICKY_TH)}>

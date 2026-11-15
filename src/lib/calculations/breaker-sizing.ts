@@ -13,7 +13,7 @@ import { egc } from '../verified/nec-250-122';
 import { max240_4D, NEXT_SIZE_UP_MAX_A } from '../verified/nec-240-4-d';
 import { columnKey, table31016 } from '../verified/nec-310-16';
 import type { AmpacityColumn } from '../verified/nec-310-16';
-import { formatSize } from '../verified/awg';
+import { areaCmil, formatSize } from '../verified/awg';
 import type { Material, SizeKey } from '../verified/awg';
 import { indefiniteArticle, materialName, partsText } from './format';
 import type { TextPart, ValuePart } from './format';
@@ -147,6 +147,8 @@ export interface BreakerRun {
   limitedBy240_4D: boolean;
   /** Table 250.122 for the rating. */
   egc: SizeKey | null;
+  /** The ground wire's area is larger than the wire's (Table 250.122 lists it so for the rating). */
+  egcLargerThanConductor: boolean;
   /** The largest continuous load the rating serves (210.20(A)). */
   maxContinuousA: number;
   /** 240.4(B): the next smaller size the rating may protect, when its ampacity still reaches minOcpdA (210.19(A)). */
@@ -245,6 +247,7 @@ export function breakerRun(input: BreakerRunInput): BreakerRun | { error: Breake
     ampacity: table31016(m.size, columnKey(material, m.columnC)) as number,
     limitedBy240_4D: m.limitedBy240_4D,
     egc: m.egc,
+    egcLargerThanConductor: m.egc !== null && areaCmil(m.egc) > areaCmil(m.size),
     maxContinuousA: largestContinuousLoad(breakerA),
     below: m.below && m.below.ampacity >= minOcpdA ? m.below : null,
     steps: stepParts.map((parts) => partsText(parts, formatSize)),
