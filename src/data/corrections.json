@@ -54,5 +54,13 @@
   {
     "date": "2026-11-15",
     "text": "Rebuilt the amps to watts calculator. It now gives the apparent power and the same load's current at other voltages, with the three-phase example worked out and a table of watts by amps. Removed equipment examples (a range, an EV charger, LED lighting) whose power factors and uses cited no source, and the horsepower figure in the result."
+  },
+  {
+    "date": "2026-11-15",
+    "text": "Rebuilt the Ohm's law calculator: it now takes any two of volts, amps, ohms and watts, with all twelve formulas and worked examples. Removed a motor winding example that called a DC resistance reading a locked rotor test, and a resistor value given as standard with no source."
+  },
+  {
+    "date": "2026-11-15",
+    "text": "Rebuilt the BTU to watts calculator: it now converts Btu per hour, watts and tons of refrigeration either way on NIST SP 811 factors. Removed the HVAC efficiency ratings section and sizing advice, which cited no source."
   }
 ]

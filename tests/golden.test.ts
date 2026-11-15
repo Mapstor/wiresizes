@@ -422,6 +422,19 @@ const RUNNERS: Record<string, (c: GoldenCase) => void> = {
     check(c, { pf_from: result.pfFrom, kvar: result.kvar, current_reduction_pct: result.currentReductionPct });
   },
 
+  'ohms-law': (c) => {
+    // WSZ-007d: the Ohm's law calculator's worked examples, any two of volts, amps, ohms and watts
+    const i = c.inputs as { volts: number; amps?: number; ohms?: number; watts?: number };
+    const result =
+      i.watts !== undefined
+        ? ohmsLaw.solvePair('vp', i.volts, i.watts)
+        : i.amps !== undefined
+          ? ohmsLaw.solvePair('vi', i.volts, i.amps)
+          : ohmsLaw.solvePair('vr', i.volts, i.ohms as number);
+    assert.ok(result);
+    check(c, { amps: result.current, ohms: result.resistance, watts: result.power, volts: result.voltage });
+  },
+
   conversion: (c) => {
     const i = c.inputs as { btu_per_h?: number; watts?: number; tons?: number; hp?: number; kind?: HorsepowerKind };
     if (i.btu_per_h !== undefined) {

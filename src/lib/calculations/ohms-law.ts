@@ -4,8 +4,8 @@ import { fieldNumber } from './fields';
 import { formatSignificant } from './format';
 
 export const ENGINE_ID = 'ohms-law';
-// NIST SP 330 (W = V·A, Ω = V/A) is in the power-definitions row
-export const DOMAINS = ['power-definitions'];
+// NIST SP 330 Table 4 (V = W/A, Ω = V/A) gives every relation here (WSZ-007d; power-definitions retired)
+export const DOMAINS = ['nist-sp330-si-units'];
 
 export type OhmsLawMode = 'voltage' | 'current' | 'resistance' | 'power';
 
@@ -126,3 +126,30 @@ export const OHMS_LAW_DEFAULTS = {
   resistance: '' as number | '',
   power: '' as number | '',
 };
+
+// ── Any two of the four (WSZ-007d, the Ohm's law calculator in the look) ──────────────────────────────────────────
+
+export type OhmsPair = 'vi' | 'vr' | 'vp' | 'ir' | 'ip' | 'rp';
+
+/** The six pairs a reader can know, in the order the calculator lists them. */
+export const OHMS_PAIRS: { value: OhmsPair; label: string; known: [OhmsLawQuantity, OhmsLawQuantity] }[] = [
+  { value: 'vi', label: 'Volts and amps', known: ['voltage', 'current'] },
+  { value: 'vr', label: 'Volts and ohms', known: ['voltage', 'resistance'] },
+  { value: 'vp', label: 'Volts and watts', known: ['voltage', 'power'] },
+  { value: 'ir', label: 'Amps and ohms', known: ['current', 'resistance'] },
+  { value: 'ip', label: 'Amps and watts', known: ['current', 'power'] },
+  { value: 'rp', label: 'Ohms and watts', known: ['resistance', 'power'] },
+];
+
+/** Largest value the calculator takes for any quantity. */
+export const OHMS_VALUE_MAX = 1e9;
+
+/** All four quantities from any two, or null when a value is not above 0 or past the limit. */
+export function solvePair(pair: OhmsPair, a: number, b: number): OhmsLawValues | null {
+  const entry = OHMS_PAIRS.find((p) => p.value === pair);
+  if (!entry) return null;
+  if (![a, b].every((v) => Number.isFinite(v) && v > 0 && v <= OHMS_VALUE_MAX)) return null;
+  const [qa, qb] = entry.known;
+  const target = QUANTITIES.find((q) => q !== qa && q !== qb) as OhmsLawMode;
+  return solveOhmsLaw(target, { [qa]: a, [qb]: b });
+}

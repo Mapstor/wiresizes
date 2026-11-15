@@ -87,9 +87,9 @@ describe('WSZ-007c sources and the old components', () => {
       assert.ok(mapRow, route);
       assert.deepEqual(mapRow.data_sources_all.split(';').sort(), [...domains].sort(), route);
     }
+    // WSZ-007d moved Ohm's law off it too; WSZ-007e deletes the row with the guide's rebuild
     const old = registry.find((r: Record<string, string>) => r.domain === 'power-definitions');
-    assert.ok(old);
-    assert.deepEqual(old.pages_served.split(';').sort(), ['/calculators/ohms-law-calculator', '/guides/electrical-power-calculations']);
+    for (const route of Object.keys(CITED)) assert.ok(!old || !old.pages_served.split(';').includes(route), route);
   });
   it('the two old calculator components are gone', async () => {
     const { existsSync } = await import('node:fs');

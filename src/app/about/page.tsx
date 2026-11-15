@@ -93,12 +93,12 @@ export default function AboutPage() {
             </li>
           ))}
         </ul>
-        <p>To report an error, email contact@wiresizes.com.</p>
+        <p>To report an error, email info@wiresizes.com.</p>
 
         <h2 className={`${LOOK_H2} pt-6`}>Publisher</h2>
         <p>
           wiresizes.com is published by Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia. Company
-          registration number 9041273000, VAT ID SI94001154. Email: contact@wiresizes.com. The{' '}
+          registration number 9041273000, VAT ID SI94001154. Email: info@wiresizes.com. The{' '}
           <Link href="/privacy" className={LOOK_LINK}>
             privacy notice
           </Link>{' '}

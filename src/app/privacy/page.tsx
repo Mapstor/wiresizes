@@ -47,7 +47,7 @@ export default function PrivacyPage() {
         <p>
           Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia (company registration number 9041273000, VAT
           ID SI94001154), publishes wiresizes.com and is the controller of the personal data described here.
-          Contact: contact@wiresizes.com.
+          Contact: info@wiresizes.com.
         </p>
 
         <h2 className={`${LOOK_H2} pt-6`}>What runs on this site</h2>
@@ -97,7 +97,7 @@ export default function PrivacyPage() {
           You can ask for access to your data, correction, erasure, restriction of processing and a copy in a
           portable format, and you can object to processing based on legitimate interest. You can withdraw your
           consent to Google Analytics at any time under &quot;Cookie settings&quot;; this does not affect processing
-          before the withdrawal. Write to contact@wiresizes.com. You can also complain to the Information
+          before the withdrawal. Write to info@wiresizes.com. You can also complain to the Information
           Commissioner of the Republic of Slovenia (Informacijski pooblaščenec, www.ip-rs.si) or to the data
           protection authority where you live.
         </p>

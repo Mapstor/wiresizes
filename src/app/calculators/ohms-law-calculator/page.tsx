@@ -1,764 +1,270 @@
-import { Metadata } from 'next';
-import { OhmsLawCalculator } from '@/components/calculators/OhmsLawCalculator';
-import { Zap, Calculator, TrendingUp, AlertCircle, BookOpen, Settings } from 'lucide-react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+import { clsx } from 'clsx';
+import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
 import { Byline } from '@/components/content/Byline';
+import { DataTable, RSTICKY_TD, RSTICKY_TH, RTD, RTH } from '@/components/content/DataTable';
+import { Num } from '@/components/content/Num';
 import { Sources } from '@/components/content/Sources';
-import { DOMAINS as OHMS_LAW_DOMAINS } from '@/lib/calculations/ohms-law';
+import { Val } from '@/components/content/Val';
+import { OhmsLawTool } from '@/components/calculators/OhmsLawTool';
+import { LookGuideBody } from '@/components/layout/LookGuideBody';
+import { OnThisPage } from '@/components/look/OnThisPage';
+import { PageTitle } from '@/components/look/PageTitle';
+import {
+  LOOK_BYLINE,
+  LOOK_BYLINE_LINK,
+  LOOK_H2 as H2,
+  LOOK_H3 as H3,
+  LOOK_LEAD,
+  LOOK_LINK as LINK,
+  LOOK_P as P,
+  LOOK_PAGE,
+  LOOK_SOURCES_HEADING,
+  LOOK_SOURCES_LIST,
+  LOOK_SOURCES_NOTE,
+  LOOK_SOURCES_SECTION,
+} from '@/components/look/styles';
+import { ENGINE_ID, solvePair } from '@/lib/calculations/ohms-law';
+import type { OhmsLawValues, OhmsPair } from '@/lib/calculations/ohms-law';
+import { articleDates } from '@/lib/page-dates';
 
-const SOURCE_DOMAINS = OHMS_LAW_DOMAINS;
+// /calculators/ohms-law-calculator (WSZ-007d; spec: research/page-specs.md "WSZ-007": keep the correct examples, remove
+// "+40% hot winding"): the calculator in the look (D-33, D-35), every number from the Ohm's law engine (solvePair) with its
+// source in data-src. The relations are the SI definitions of NIST SP 330 Table 4 (V = W/A, Ω = V/A); the power factor
+// note is the EIA Glossary's. Worked examples = golden "ohms-law" cases.
+const ROUTE = '/calculators/ohms-law-calculator';
+const URL = `https://wiresizes.com${ROUTE}`;
+const TITLE = "Ohm's Law Calculator: Volts, Amps, Ohms and Watts";
+const DESCRIPTION =
+  'Enter any two of volts, amps, ohms and watts to get the other two. V = I × R and P = V × I, with all twelve formulas and worked examples.';
 
 export const metadata: Metadata = {
-  title: "Ohm's Law Calculator — V, I, R, P",
-  description: "Solve any of voltage, current, resistance, or power given two values. V = IR, P = VI, with the full Ohm's Law / power triangle.",
-  keywords: 'ohms law calculator, voltage current resistance power, V=IR calculator, electrical calculations, circuit analysis, power calculations, electrical formulas',
-  openGraph: {
-    title: "Ohm's Law Calculator - Voltage Current Resistance Power Calculator",
-    description: "Calculate voltage, current, resistance, and power using Ohm's law.",
-    type: 'website',
-    url: 'https://wiresizes.com/calculators/ohms-law-calculator',
-    images: ['/opengraph-image']
-  },
-  alternates: { canonical: '/calculators/ohms-law-calculator' },
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: ROUTE },
+  openGraph: { type: 'website', locale: 'en_US', siteName: 'WireSizes.com', url: URL, title: TITLE, description: DESCRIPTION, images: ['/opengraph-image'] },
+  twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION },
 };
 
+const SI = 'nist-sp330-si-units';
+const EIA = 'eia-power-glossary';
+const CALC = `calc:${ENGINE_ID}`;
+const SIG = { sig: 4 };
 
-// Web application data for schema
-const webAppData = {
-  name: "Ohm's Law Calculator",
-  url: "https://wiresizes.com/calculators/ohms-law-calculator",
-  description: "Ohm's law calculator for electrical engineers and technicians. Calculate voltage, current, resistance, and power using V=IR and P=VI formulas. AC and DC circuit calculations."
-};
+function solved(pair: OhmsPair, a: number, b: number): OhmsLawValues {
+  const r = solvePair(pair, a, b);
+  if (!r) throw new Error('Ohm’s law page: a worked example failed');
+  return r;
+}
+// golden "ohms-law" cases (research/golden-cases.json)
+const HEATER = solved('vp', 240, 1500);
+const LED = { supply: 12, load: 3.2, milliamps: 20 };
+const RESISTOR = solved('vi', LED.supply - LED.load, LED.milliamps / 1000);
+const TWELVE = solved('vr', 12, 4);
 
-const ohmsLawFAQs = [
-  {
-    question: "What is Ohm's Law and how do I use it?",
-    answer: "Ohm's law states that voltage equals current times resistance (V = I × R). It's fundamental to electrical calculations. Given any two values, you can calculate the third: V = I × R, I = V ÷ R, or R = V ÷ I. Additionally, power relationships are P = V × I, P = I² × R, or P = V² ÷ R. These formulas apply to DC circuits and AC circuits with resistive loads."
-  },
-  {
-    question: "How do I calculate power using Ohm's Law?",
-    answer: "Power can be calculated using three formulas: P = V × I (power = voltage × current), P = I² × R (power = current squared × resistance), or P = V² ÷ R (power = voltage squared ÷ resistance). Choose the formula based on which values you know. For example, if you know voltage (120 V) and current (10 A), then P = 120 × 10 = 1200 watts."
-  },
-  {
-    question: "Does Ohm's Law apply to AC circuits?",
-    answer: "Ohm's law applies to AC circuits, but with important considerations. For purely resistive AC circuits, use RMS values for voltage and current. For reactive circuits (with inductance or capacitance), impedance (Z) replaces resistance: V = I × Z. The phase relationship between voltage and current also affects power calculations, requiring the power factor: P = V × I × cos(φ)."
-  },
-  {
-    question: "What's the difference between resistance and impedance?",
-    answer: "Resistance (R) is opposition to current flow in DC circuits or AC circuits with pure resistive loads, measured in ohms. Impedance (Z) is the total opposition to current flow in AC circuits, including both resistance and reactance (from inductance and capacitance), also measured in ohms. At DC and low frequencies, R ≈ Z, but they differ significantly at higher frequencies."
-  },
-  {
-    question: "How do I use Ohm's Law for series and parallel circuits?",
-    answer: "In series circuits: total voltage = sum of individual voltages, current is the same throughout, total resistance = sum of individual resistances. In parallel circuits: voltage is the same across all branches, total current = sum of branch currents, 1/Rtotal = 1/R1 + 1/R2 + 1/R3... Apply Ohm's law to each component individually and to the total circuit."
-  }
+const FORMULAS: { find: string; symbol: string; rows: [string, string, string] }[] = [
+  { find: 'Voltage', symbol: 'V', rows: ['I × R', 'P ÷ I', '√(P × R)'] },
+  { find: 'Current', symbol: 'I', rows: ['V ÷ R', 'P ÷ V', '√(P ÷ R)'] },
+  { find: 'Resistance', symbol: 'R', rows: ['V ÷ I', 'V² ÷ P', 'P ÷ I²'] },
+  { find: 'Power', symbol: 'P', rows: ['V × I', 'I² × R', 'V² ÷ R'] },
 ];
 
-export default function OhmsLawCalculatorPage() {
+const TOC: ([string, string] | [string, string, string])[] = [
+  ['formulas', 'The twelve formulas'],
+  ['examples', 'Worked examples', CALC],
+  ['ac-dc', 'AC and DC'],
+  ['faq', 'Questions'],
+  ['sources', 'Sources'],
+];
+
+const articleData = { headline: "Ohm's Law Calculator", description: DESCRIPTION, url: URL, ...articleDates(ROUTE) };
+const webAppData = { name: "Ohm's Law Calculator", url: URL, description: DESCRIPTION };
+
+export default function OhmsLawPage() {
+  const V = (v: number) => <Val v={v} unit="V" src={CALC} format={SIG} />;
+  const I = (v: number) => <Val v={v} unit="A" src={CALC} format={SIG} />;
+  const R = (v: number) => <Val v={v} unit="Ω" src={CALC} format={SIG} />;
+  const W = (v: number) => <Val v={v} unit="W" src={CALC} format={SIG} />;
+  const plain = (v: number, unit: 'V' | 'A' | 'Ω' | 'W') => <Val v={v} unit={unit} src={CALC} />;
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <CombinedSchema 
-        webApp={webAppData} 
-      />
-      
-      
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-yellow-50 to-orange-100 dark:from-gray-800 dark:to-gray-900 py-12 rounded-2xl mb-12">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Ohm&apos;s Law Calculator
-            </h1>
-            <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-              Calculate voltage, current, resistance, and power using fundamental electrical laws.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-              <Zap className="h-12 w-12 text-yellow-600 mb-4" />
-              <p className="text-xl font-semibold mb-2">Four-Way Calculations</p>
-              <p className="text-gray-600 dark:text-gray-400">
-                Calculate any electrical parameter when given two others: V, I, R, or P.
-              </p>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-              <Calculator className="h-12 w-12 text-orange-600 mb-4" />
-              <p className="text-xl font-semibold mb-2">Multiple Formulas</p>
-              <p className="text-gray-600 dark:text-gray-400">
-                Uses all Ohm&apos;s law and power formulas for comprehensive electrical analysis.
-              </p>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-              <Settings className="h-12 w-12 text-red-600 mb-4" />
-              <p className="text-xl font-semibold mb-2">AC/DC Applications</p>
-              <p className="text-gray-600 dark:text-gray-400">
-                Applicable to DC circuits and AC circuits with proper considerations.
-              </p>
-            </div>
-          </div>
+    <div className={LOOK_PAGE}>
+      <article className="container pb-16">
+        <ArticleSchema article={articleData} />
+        <CombinedSchema webApp={webAppData} />
+
+        <header className="pt-10 sm:pt-12">
+          <PageTitle main="Ohm's Law Calculator" sub="Volts, Amps, Ohms and Watts" joiner=": " />
+          <p className={clsx(LOOK_LEAD, 'mt-5')}>Enter any two of voltage, current, resistance and power to get the other two.</p>
+          <Byline route={ROUTE} sources className={LOOK_BYLINE} linkClassName={LOOK_BYLINE_LINK} />
+        </header>
+
+        <section aria-label="Calculator" className="mt-8 border-t-2 border-ink pt-7">
+          <OhmsLawTool />
+        </section>
+
+        <div className="mt-14 max-w-[44rem] space-y-4">
+          <p className={LOOK_LEAD} data-src={SI}>
+            <strong>Ohm&apos;s law: voltage equals current times resistance, V = I × R. With power, P = V × I, any two of the four give the other two.</strong>{' '}
+            <span data-src={CALC}>
+              A {plain(HEATER.power, 'W')} heater on {plain(HEATER.voltage, 'V')} draws {I(HEATER.current)} and has a resistance of {R(HEATER.resistance)}.
+            </span>
+          </p>
         </div>
-      </section>
 
-      {/* Calculator Component */}
-      <section className="mb-16">
-        <OhmsLawCalculator />
-        <Byline route="/calculators/ohms-law-calculator" sources className="mt-4 px-6 text-sm text-gray-600 dark:text-gray-400" linkClassName="text-blue-600 hover:underline dark:text-blue-300" />
-      </section>
+        <LookGuideBody className="mt-14 border-t border-cut-rule pt-10">
+          <OnThisPage items={TOC} />
 
-      {/* Understanding Ohm's Law */}
-      <section className="mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <BookOpen className="h-8 w-8 text-blue-600" />
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Understanding Ohm&apos;s Law and Power Relationships
+          <section aria-labelledby="formulas" className="space-y-5">
+            <h2 id="formulas" className={H2}>
+              The twelve formulas
             </h2>
-          </div>
-          
-          <div className="prose prose-lg dark:prose-invert max-w-none">
-            <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-              Ohm&apos;s law is the fundamental relationship governing electrical circuits, establishing the 
-              connection between voltage, current, and resistance. Combined with power formulas, these 
-              relationships form the foundation of electrical engineering and circuit analysis.
+            <p className={P} data-src={SI}>
+              NIST&apos;s guide to the SI defines the volt as a watt per ampere and the ohm as a volt per ampere. From those two definitions come
+              three ways to find each quantity:
             </p>
+            <DataTable id="ohms-formulas" variant="ruled" src={SI} caption="Each quantity from each pair of the others">
+              <thead>
+                <tr>
+                  <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
+                    To find
+                  </th>
+                  <th scope="col" className={RTH}>
+                    From two
+                  </th>
+                  <th scope="col" className={RTH}>
+                    Or
+                  </th>
+                  <th scope="col" className={RTH}>
+                    Or
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {FORMULAS.map((f) => (
+                  <tr key={f.symbol}>
+                    <th scope="row" className={RSTICKY_TD}>
+                      {f.find} ({f.symbol})
+                    </th>
+                    {f.rows.map((r) => (
+                      <td key={r} className={RTD}>
+                        {f.symbol} = {r}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </DataTable>
+          </section>
 
-            <div className="grid lg:grid-cols-2 gap-8 mb-8">
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
-                <h3 className="text-2xl font-semibold text-blue-800 dark:text-blue-300 mb-4">
-                  Ohm&apos;s Law Formulas
-                </h3>
-                <div className="space-y-4">
-                  <div className="bg-white dark:bg-gray-700 p-4 rounded-lg">
-                    <div className="text-center">
-                      <div className="text-3xl font-mono text-blue-800 dark:text-blue-300 mb-2">V = I × R</div>
-                      <div className="text-sm text-blue-700 dark:text-blue-300">Voltage = Current × Resistance</div>
-                    </div>
-                  </div>
-                  <div className="bg-white dark:bg-gray-700 p-4 rounded-lg">
-                    <div className="text-center">
-                      <div className="text-3xl font-mono text-blue-800 dark:text-blue-300 mb-2">I = V ÷ R</div>
-                      <div className="text-sm text-blue-700 dark:text-blue-300">Current = Voltage ÷ Resistance</div>
-                    </div>
-                  </div>
-                  <div className="bg-white dark:bg-gray-700 p-4 rounded-lg">
-                    <div className="text-center">
-                      <div className="text-3xl font-mono text-blue-800 dark:text-blue-300 mb-2">R = V ÷ I</div>
-                      <div className="text-sm text-blue-700 dark:text-blue-300">Resistance = Voltage ÷ Current</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg">
-                <h3 className="text-2xl font-semibold text-green-800 dark:text-green-300 mb-4">
-                  Power Formulas
-                </h3>
-                <div className="space-y-4">
-                  <div className="bg-white dark:bg-gray-700 p-4 rounded-lg">
-                    <div className="text-center">
-                      <div className="text-3xl font-mono text-green-800 dark:text-green-300 mb-2">P = V × I</div>
-                      <div className="text-sm text-green-700 dark:text-green-300">Power = Voltage × Current</div>
-                    </div>
-                  </div>
-                  <div className="bg-white dark:bg-gray-700 p-4 rounded-lg">
-                    <div className="text-center">
-                      <div className="text-3xl font-mono text-green-800 dark:text-green-300 mb-2">P = I² × R</div>
-                      <div className="text-sm text-green-700 dark:text-green-300">Power = Current² × Resistance</div>
-                    </div>
-                  </div>
-                  <div className="bg-white dark:bg-gray-700 p-4 rounded-lg">
-                    <div className="text-center">
-                      <div className="text-3xl font-mono text-green-800 dark:text-green-300 mb-2">P = V² ÷ R</div>
-                      <div className="text-sm text-green-700 dark:text-green-300">Power = Voltage² ÷ Resistance</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg mb-8">
-              <h3 className="text-xl font-semibold text-yellow-800 dark:text-yellow-300 mb-4">
-                Ohm&apos;s Law Wheel - The Complete Picture
-              </h3>
-              <p className="text-yellow-700 dark:text-yellow-300 mb-4">
-                The Ohm&apos;s law wheel shows all 12 possible calculations using the fundamental relationships. 
-                Any two known values allow calculation of the remaining two parameters.
-              </p>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="font-medium text-yellow-800 dark:text-yellow-300 mb-2">If you know V and I:</h4>
-                  <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
-                    <li>• R = V ÷ I</li>
-                    <li>• P = V × I</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-medium text-yellow-800 dark:text-yellow-300 mb-2">If you know V and R:</h4>
-                  <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
-                    <li>• I = V ÷ R</li>
-                    <li>• P = V² ÷ R</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-medium text-yellow-800 dark:text-yellow-300 mb-2">If you know V and P:</h4>
-                  <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
-                    <li>• I = P ÷ V</li>
-                    <li>• R = V² ÷ P</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-medium text-yellow-800 dark:text-yellow-300 mb-2">If you know I and R:</h4>
-                  <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
-                    <li>• V = I × R</li>
-                    <li>• P = I² × R</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Real World Examples */}
-      <section className="mb-16">
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Real-World Ohm&apos;s Law Applications
-          </h2>
-          
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Example 1: Heater Element */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-red-100 dark:bg-red-900/30 p-2 rounded-lg">
-                  <Zap className="h-6 w-6 text-red-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Electric Heater Element
-                </h3>
-              </div>
-              <div className="space-y-3">
-                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                  <p className="font-medium text-gray-900 dark:text-white mb-2">Given Values:</p>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    1500 W heater element operating at 240 V
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Known:</span> P = 1500 W, V = 240 V
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Find Current:</span> I = P ÷ V = 1500 W ÷ 240 V = 6.25 A
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Find Resistance:</span> R = V² ÷ P = 240² ÷ 1500 = 38.4 Ω
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Verification:</span> P = I² × R = 6.25² × 38.4 = 1500 W ✓
-                  </p>
-                </div>
-                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: Element draws 6.25 A and has 38.4 Ω resistance
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Example 2: LED Circuit */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
-                  <Calculator className="h-6 w-6 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  LED Current Limiting Resistor
-                </h3>
-              </div>
-              <div className="space-y-3">
-                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                  <p className="font-medium text-gray-900 dark:text-white mb-2">Design Requirement:</p>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    LED (3.2 V forward voltage, 20 mA) powered from 12 V supply
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Supply Voltage:</span> 12 V
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">LED Voltage Drop:</span> 3.2 V
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Resistor Voltage:</span> 12 V - 3.2 V = 8.8 V
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Required Current:</span> 20 mA = 0.02 A
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Resistor Value:</span> R = V ÷ I = 8.8 V ÷ 0.02 A = 440 Ω
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Power Rating:</span> P = I² × R = 0.02² × 440 = 0.176 W
-                  </p>
-                </div>
-                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: Use 470 Ω resistor (next standard value), 1/4 W rating
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Example 3: Motor Analysis */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-lg">
-                  <Settings className="h-6 w-6 text-green-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Motor Winding Resistance
-                </h3>
-              </div>
-              <div className="space-y-3">
-                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                  <p className="font-medium text-gray-900 dark:text-white mb-2">Motor Test:</p>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    Motor winding resistance measurement with locked rotor test
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Test Voltage:</span> 24 V DC applied to winding
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Measured Current:</span> 8.5 A
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Winding Resistance:</span> R = V ÷ I = 24 V ÷ 8.5 A = 2.82 Ω
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Test Power:</span> P = V × I = 24 V × 8.5 A = 204 W
-                  </p>
-                </div>
-                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: Winding resistance 2.82 Ω cold
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Example 4: Voltage Divider */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-lg">
-                  <TrendingUp className="h-6 w-6 text-purple-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Voltage Divider Circuit
-                </h3>
-              </div>
-              <div className="space-y-3">
-                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                  <p className="font-medium text-gray-900 dark:text-white mb-2">Circuit Design:</p>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    Create 5 V output from 12 V supply using voltage divider
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Input Voltage:</span> 12 V
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Output Voltage:</span> 5 V desired
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Voltage Ratio:</span> 5 V ÷ 12 V = 0.417
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Using R1 = 10 kΩ (top):</span> R2 = R1 × (Vout ÷ (Vin - Vout))
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">R2 Calculation:</span> R2 = 10 kΩ × (5 V ÷ 7 V) = 7.14 kΩ
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Total Current:</span> I = 12 V ÷ 17.14 kΩ = 0.7 mA
-                  </p>
-                </div>
-                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Result: Use 10 kΩ and 6.8 kΩ resistors (standard values) for ~4.85 V output
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Example 5: Power Supply Design */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg lg:col-span-2">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-orange-100 dark:bg-orange-900/30 p-2 rounded-lg">
-                  <AlertCircle className="h-6 w-6 text-orange-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Linear Power Supply Design
-                </h3>
-              </div>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                  <p className="font-medium text-gray-900 dark:text-white mb-2">Design Requirements:</p>
-                  <p className="text-gray-700 dark:text-gray-300 mb-4">
-                    5 V regulated output, 2 A maximum current, input voltage 12 V
-                  </p>
-                  <div className="space-y-2">
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Input Voltage:</span> 12 V
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Output Voltage:</span> 5 V
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Maximum Current:</span> 2 A
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Voltage Drop Across Regulator:</span> 12 V - 5 V = 7 V
-                    </p>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                    <h4 className="font-medium text-blue-800 dark:text-blue-300 mb-2">Power Calculations:</h4>
-                    <p className="text-sm text-blue-700 dark:text-blue-300">
-                      Output Power: P = V × I = 5 V × 2 A = 10 W<br/>
-                      Regulator Dissipation: P = 7 V × 2 A = 14 W<br/>
-                      Total Input Power: 10 W + 14 W = 24 W<br/>
-                      Efficiency: 10 W ÷ 24 W = 41.7 %
-                    </p>
-                  </div>
-                  <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
-                    <h4 className="font-medium text-red-800 dark:text-red-300 mb-2">Thermal Considerations:</h4>
-                    <p className="text-sm text-red-700 dark:text-red-300">
-                      Heat sink required for 14 W dissipation<br/>
-                      Thermal resistance calculation needed<br/>
-                      Consider switching regulator for higher efficiency
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Circuit Analysis Tables */}
-      <section className="mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Circuit Analysis Reference Tables
-          </h2>
-          
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Series Circuit Rules */}
-            <div className="space-y-6">
-              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                Series Circuit Relationships
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full border border-gray-300 dark:border-gray-600 rounded-lg">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Parameter
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Relationship
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Current (I)</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Same throughout circuit</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Voltage (V)</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">V_total = V1 + V2 + V3...</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Resistance (R)</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">R_total = R1 + R2 + R3...</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Power (P)</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">P_total = P1 + P2 + P3...</td></tr>
-                  </tbody>
-                </table>
-              </div>
-              
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                <h4 className="font-medium text-blue-800 dark:text-blue-300 mb-2">Series Example:</h4>
-                <p className="text-sm text-blue-700 dark:text-blue-300">
-                  Three resistors: 10 Ω, 20 Ω, 30 Ω in series with 12 V supply:<br/>
-                  • R_total = 10 + 20 + 30 = 60 Ω<br/>
-                  • I = 12 V ÷ 60 Ω = 0.2 A<br/>
-                  • V1 = 0.2 A × 10 Ω = 2 V<br/>
-                  • V2 = 0.2 A × 20 Ω = 4 V<br/>
-                  • V3 = 0.2 A × 30 Ω = 6 V<br/>
-                  • Total: 2 V + 4 V + 6 V = 12 V ✓
-                </p>
-              </div>
-            </div>
-
-            {/* Parallel Circuit Rules */}
-            <div className="space-y-6">
-              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                Parallel Circuit Relationships
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full border border-gray-300 dark:border-gray-600 rounded-lg">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Parameter
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600">
-                        Relationship
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Voltage (V)</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Same across all branches</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Current (I)</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">I_total = I1 + I2 + I3...</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Resistance (R)</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1/R_total = 1/R1 + 1/R2 + 1/R3...</td></tr>
-                    <tr><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Power (P)</td><td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">P_total = P1 + P2 + P3...</td></tr>
-                  </tbody>
-                </table>
-              </div>
-              
-              <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-                <h4 className="font-medium text-green-800 dark:text-green-300 mb-2">Parallel Example:</h4>
-                <p className="text-sm text-green-700 dark:text-green-300">
-                  Three resistors: 10 Ω, 20 Ω, 30 Ω in parallel with 12 V supply:<br/>
-                  • 1/R_total = 1/10 + 1/20 + 1/30 = 0.183<br/>
-                  • R_total = 5.45 Ω<br/>
-                  • I1 = 12 V ÷ 10 Ω = 1.2 A<br/>
-                  • I2 = 12 V ÷ 20 Ω = 0.6 A<br/>
-                  • I3 = 12 V ÷ 30 Ω = 0.4 A<br/>
-                  • I_total = 1.2 + 0.6 + 0.4 = 2.2 A
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Safety and Best Practices */}
-      <section className="mb-16">
-        <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <AlertCircle className="h-8 w-8 text-red-600" />
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Safety and Best Practices
+          <section aria-labelledby="examples" className="space-y-4">
+            <h2 id="examples" className={H2} data-src={CALC}>
+              Worked examples
             </h2>
-          </div>
-          
-          <div className="grid lg:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Electrical Safety Considerations
-                </h3>
-                <ul className="space-y-3 text-gray-700 dark:text-gray-300">
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Always de-energize circuits before making resistance measurements</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Verify meter settings and ranges before measurements</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Consider power dissipation in components to prevent overheating</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Account for temperature effects on component values</span>
-                  </li>
-                </ul>
-              </div>
+            <h3 className={H3} data-src={CALC}>
+              A heater: {plain(HEATER.power, 'W')} on {plain(HEATER.voltage, 'V')}
+            </h3>
+            <p className={P} data-src={CALC}>
+              I = P ÷ V = {plain(HEATER.power, 'W')} ÷ {plain(HEATER.voltage, 'V')} = {I(HEATER.current)}. R = V² ÷ P = ({plain(HEATER.voltage, 'V')})² ÷{' '}
+              {plain(HEATER.power, 'W')} = {R(HEATER.resistance)}. Check: P = I² × R = ({I(HEATER.current)})² × {R(HEATER.resistance)} ={' '}
+              {W(HEATER.current * HEATER.current * HEATER.resistance)}.
+            </p>
+            <h3 className={H3} data-src={CALC}>
+              A resistor in series with a small load
+            </h3>
+            <p className={P} data-src={CALC}>
+              A load that needs <Num v={LED.milliamps} src={CALC} /> mA at {plain(LED.load, 'V')}, from a {plain(LED.supply, 'V')} supply: the resistor
+              takes the other {V(RESISTOR.voltage)}. R = V ÷ I = {V(RESISTOR.voltage)} ÷ {I(RESISTOR.current)} = {R(RESISTOR.resistance)}, and it
+              turns P = V × I = {W(RESISTOR.power)} into heat. Pick a resistor rated above that power.
+            </p>
+            <h3 className={H3} data-src={CALC}>
+              {plain(TWELVE.voltage, 'V')} across {plain(TWELVE.resistance, 'Ω')}
+            </h3>
+            <p className={P} data-src={CALC}>
+              I = V ÷ R = {I(TWELVE.current)}; P = V² ÷ R = {W(TWELVE.power)}.
+            </p>
+          </section>
 
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Measurement Accuracy
-                </h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Voltage Measurement:</span>
-                    <span className="text-gray-800 dark:text-gray-200">Use high-impedance meters</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Current Measurement:</span>
-                    <span className="text-gray-800 dark:text-gray-200">Account for meter burden</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Resistance Measurement:</span>
-                    <span className="text-gray-800 dark:text-gray-200">Use 4-wire method for low values</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">AC Measurements:</span>
-                    <span className="text-gray-800 dark:text-gray-200">Use true RMS meters</span>
-                  </div>
-                </div>
-              </div>
+          <section aria-labelledby="ac-dc" className="space-y-4">
+            <h2 id="ac-dc" className={H2}>
+              AC and DC
+            </h2>
+            <p className={P} data-src={SI}>
+              On DC the formulas hold as written. On AC they hold for a purely resistive load, whose current is in step with its voltage.
+            </p>
+            <p className={P} data-src={EIA}>
+              For a motor or another load whose power factor is below <Num v={1} src={CALC} />, volts times amps is the apparent power, not the
+              power: the U.S. Energy Information Administration&apos;s glossary defines the power factor as real power divided by apparent power.
+              The{' '}
+              <Link href="/calculators/watts-to-amps-calculator" className={LINK}>
+                watts to amps calculator
+              </Link>{' '}
+              takes the power factor, and the{' '}
+              <Link href="/guides/power-factor-explained" className={LINK}>
+                power factor guide
+              </Link>{' '}
+              explains it.
+            </p>
+          </section>
+
+          <section aria-labelledby="faq" className="space-y-6">
+            <h2 id="faq" className={H2}>
+              Questions
+            </h2>
+            <div className="space-y-1.5">
+              <h3 className={H3}>What is Ohm&apos;s law?</h3>
+              <p className={P} data-src={SI}>
+                The voltage across a resistance equals the current through it times the resistance: V = I × R. It follows from the SI definition
+                of the ohm as a volt per ampere.
+              </p>
             </div>
-
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Application Limitations
-                </h3>
-                <ul className="space-y-3 text-gray-700 dark:text-gray-300">
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Ohm&apos;s law applies directly to linear, resistive circuits only</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>For reactive AC circuits, use impedance (Z) instead of resistance (R)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Power calculations in AC circuits require power factor considerations</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Semiconductor devices have non-linear voltage-current relationships</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>High-frequency effects may invalidate simple resistance models</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-                  Disclaimer
-                </h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  This calculator provides theoretical calculations based on ideal conditions. 
-                  Actual circuit behavior may vary due to component tolerances, temperature effects, 
-                  frequency dependencies, and parasitic elements. Always verify calculations with 
-                  actual measurements and follow applicable safety standards.
-                </p>
-              </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>How do you find watts from volts and ohms?</h3>
+              <p className={P} data-src={CALC}>
+                P = V² ÷ R: {plain(TWELVE.voltage, 'V')} across {plain(TWELVE.resistance, 'Ω')} is {W(TWELVE.power)}.
+              </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Frequently Asked Questions
-          </h2>
-          <div className="space-y-6">
-            {ohmsLawFAQs.map((faq, index) => (
-              <div key={index} className="border-b border-gray-200 dark:border-gray-700 pb-6">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  {faq.question}
-                </h3>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {faq.answer}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Sources */}
-      <section className="mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <Sources
-            domains={SOURCE_DOMAINS}
-            headingClassName="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center"
-            listClassName="space-y-2 text-gray-700 dark:text-gray-300"
-            linkClassName="text-blue-600 hover:underline dark:text-blue-300"
-            noteClassName="mt-4 text-sm text-gray-600 dark:text-gray-400"
-          />
-        </div>
-      </section>
-
-      {/* Related Calculators */}
-      <section className="mb-16">
-        <div className="bg-gradient-to-br from-yellow-50 to-orange-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Related Electrical Calculators
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Link 
-              href="/calculators/watts-to-amps-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <Calculator className="h-6 w-6 text-blue-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Watts to Amps</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Convert power to current using Ohm&apos;s law relationships
+            <div className="space-y-1.5">
+              <h3 className={H3}>How do you find resistance from watts and volts?</h3>
+              <p className={P} data-src={CALC}>
+                R = V² ÷ P: a {plain(HEATER.power, 'W')} element rated for {plain(HEATER.voltage, 'V')} has {R(HEATER.resistance)}.
               </p>
-            </Link>
-            
-            <Link 
-              href="/calculators/voltage-drop-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <Zap className="h-6 w-6 text-green-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Voltage Drop Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Apply Ohm&apos;s law to calculate voltage drop in conductors
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3}>What about the resistance of a wire?</h3>
+              <p className={P}>
+                The{' '}
+                <Link href="/calculators/wire-resistance-calculator" className={LINK}>
+                  wire resistance calculator
+                </Link>{' '}
+                gives it from the size, length and temperature, and the{' '}
+                <Link href="/calculators/voltage-drop-calculator" className={LINK}>
+                  voltage drop calculator
+                </Link>{' '}
+                applies V = I × R to a run.
               </p>
-            </Link>
+            </div>
+          </section>
 
-            <Link 
-              href="/calculators/wire-resistance-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <Settings className="h-6 w-6 text-purple-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Wire Resistance</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Calculate conductor resistance for Ohm&apos;s law applications
-              </p>
-            </Link>
-
-            <Link 
-              href="/calculators/kilowatts-to-amps-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <TrendingUp className="h-6 w-6 text-orange-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">kW to Amps</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Convert kilowatts to amperage using power formulas
-              </p>
-            </Link>
-
-            <Link 
-              href="/calculators/three-phase-calculator"
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <AlertCircle className="h-6 w-6 text-red-600" />
-                <h3 data-name="" className="text-lg font-semibold text-gray-900 dark:text-white">Three Phase Calculator</h3>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Apply Ohm&apos;s law to three-phase power systems
-              </p>
-            </Link>
-
-          </div>
-        </div>
-      </section>
-
+          <section aria-label="Sources and notices" className={LOOK_SOURCES_SECTION}>
+            <Sources
+              domains={[SI, EIA]}
+              headingClassName={LOOK_SOURCES_HEADING}
+              listClassName={LOOK_SOURCES_LIST}
+              linkClassName={LINK}
+              noteClassName={LOOK_SOURCES_NOTE}
+            />
+            <p>
+              The{' '}
+              <Link href="/methodology#si-units" className={LINK}>
+                methodology page
+              </Link>{' '}
+              describes each source and how the calculated values are derived.
+            </p>
+          </section>
+        </LookGuideBody>
+      </article>
     </div>
   );
 }

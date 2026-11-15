@@ -189,7 +189,7 @@ export function ThreePhaseTool() {
           <span data-src={EIA}>
             {inputs.known === 'kva-pf'
               ? 'From 0 to 1. The current doesn’t depend on it; the real and reactive power do.'
-              : 'From 0 to 1, from the nameplate or a meter. A heater, which draws no reactive power, has 1.'}
+              : 'From 0 to 1, from the nameplate or a meter.'}
           </span>
         ),
       },

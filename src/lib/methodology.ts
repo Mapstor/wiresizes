@@ -33,6 +33,7 @@ const KVA_TO_AMPS = '/calculators/kva-to-amps-calculator';
 const VOLTS_TO_AMPS = '/calculators/volts-to-amps-calculator';
 const WATTS_TO_AMPS = '/calculators/watts-to-amps-calculator';
 const AMPS_TO_WATTS = '/calculators/amps-to-watts-calculator';
+const OHMS_LAW = '/calculators/ohms-law-calculator';
 const POWER_FACTOR = '/guides/power-factor-explained';
 const SERVICE_ENTRANCE = '/calculators/service-entrance-calculator';
 const AWG_CHART = '/guides/awg-wire-size-chart';
@@ -103,7 +104,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'power-terms',
     domain: 'eia-power-glossary',
     title: 'Real, reactive and apparent power',
-    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS],
+    citedOn: [VOLTAGE_DROP, THREE_PHASE, SINGLE_VS_THREE, POWER_FACTOR, KW_TO_AMPS, KVA_TO_AMPS, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, OHMS_LAW],
   },
   {
     id: 'three-phase-power',
@@ -127,22 +128,13 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'si-units',
     domain: 'nist-sp330-si-units',
     title: 'Watts, volts and ohms',
-    citedOn: [VOLTAGE_DROP, LOW_VOLTAGE, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS],
+    citedOn: [VOLTAGE_DROP, LOW_VOLTAGE, VOLTS_TO_AMPS, WATTS_TO_AMPS, AMPS_TO_WATTS, OHMS_LAW],
   },
   {
     id: 'water-heaters',
     domain: 'mfr-water-heaters',
     title: 'Water heater elements',
     citedOn: [WATTS_TO_AMPS],
-  },
-  {
-    // the converters and Ohm's law until WSZ-007 moves them to the rows above (one per document, WSZ-006d)
-    id: 'power',
-    domain: 'power-definitions',
-    title: 'Power, current and power factor',
-    citedOn: [
-      '/calculators/ohms-law-calculator',
-    ],
   },
   {
     id: 'nominal-voltages',

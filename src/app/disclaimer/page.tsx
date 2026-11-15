@@ -63,7 +63,7 @@ export default function DisclaimerPage() {
 
         <h2 className={`${LOOK_H2} pt-6`}>Errors</h2>
         <p>
-          If you find an error, email contact@wiresizes.com. Corrections are listed with dates on the About page.
+          If you find an error, email info@wiresizes.com. Corrections are listed with dates on the About page.
         </p>
       </div>
       <BasicPageSchema path="/disclaimer" name={TITLE} description={DESCRIPTION} />

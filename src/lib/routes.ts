@@ -123,13 +123,13 @@ export const ROUTES: readonly SiteRoute[] = [
     path: '/calculators/ohms-law-calculator',
     group: 'conversions',
     name: "Ohm's Law Calculator",
-    line: 'Voltage, current, resistance or power from any two of them.',
+    line: 'Any two of volts, amps, ohms and watts give the other two, with all twelve formulas.',
   },
   {
     path: '/calculators/btu-to-watts-calculator',
     group: 'conversions',
     name: 'BTU to Watts Calculator',
-    line: 'Btu per hour to watts and back, with the equivalent in tons of refrigeration.',
+    line: "Btu per hour, watts and tons of refrigeration from any one of them, on NIST's conversion factors.",
   },
   {
     path: '/guides/awg-wire-size-chart',
