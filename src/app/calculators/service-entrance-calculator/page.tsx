@@ -50,7 +50,7 @@ const ROUTE = '/calculators/service-entrance-calculator';
 const URL = `https://wiresizes.com${ROUTE}`;
 const TITLE = 'Service Entrance Calculator: Wire Size by Amps';
 const DESCRIPTION =
-  'Service entrance wire by rating (NEC Table 310.12), with the grounding electrode conductor and voltage drop: 200 A takes 2/0 AWG copper or 4/0 AWG aluminum.';
+  'Service entrance wire by rating (NEC Table 310.12), grounding electrode conductor and voltage drop: 200 A takes 2/0 AWG copper or 4/0 AWG aluminum.';
 
 export const metadata: Metadata = {
   title: TITLE,

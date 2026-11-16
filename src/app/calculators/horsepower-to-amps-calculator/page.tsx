@@ -46,7 +46,7 @@ const ROUTE = '/calculators/horsepower-to-amps-calculator';
 const URL = `https://wiresizes.com${ROUTE}`;
 const TITLE = 'HP to Amps Calculator: Motor Full-Load Current, NEC Tables';
 const DESCRIPTION =
-  'Full-load amps of a single-phase, three-phase or DC motor by horsepower and voltage, read from NEC Tables 430.247, 430.248 and 430.250 as 430.6(A) requires.';
+  'Full-load amps of a single-phase, three-phase or DC motor by horsepower and voltage, from NEC Tables 430.247, 430.248 and 430.250 as 430.6(A) requires.';
 
 export const metadata: Metadata = {
   title: TITLE,
