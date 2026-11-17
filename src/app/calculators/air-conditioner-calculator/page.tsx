@@ -64,7 +64,7 @@ const ROUTE = '/calculators/air-conditioner-calculator';
 const URL = `https://wiresizes.com${ROUTE}`;
 const TITLE = 'Air Conditioner Wire Size Calculator: MCA, MOCP and Breaker Size';
 const DESCRIPTION =
-  'Copper wire, ground wire and breaker for an air conditioner from the MCA and MOCP on its nameplate, with the voltage drop over your run and real Carrier and Amana units.';
+  'Copper wire, ground wire and breaker for an air conditioner from the MCA and MOCP on its nameplate, with voltage drop and real Carrier and Amana units.';
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -115,7 +115,11 @@ function C({ v }: { v: number }) {
   return <Val v={v} unit="°C" src={TERM} />;
 }
 function Tons({ v }: { v: number }) {
-  return <span data-src={MFR}>{formatValue(v)}-ton</span>;
+  return (
+    <span data-src={MFR} className="whitespace-nowrap">
+      {formatValue(v)}-ton
+    </span>
+  );
 }
 
 function UnitTable() {
@@ -131,12 +135,6 @@ function UnitTable() {
           <th scope="col" className={clsx(RTH, RSTICKY_TH)}>
             Unit
           </th>
-          <th scope="col" className={clsx(RTH, 'max-sm:!min-w-0')}>
-            MCA
-          </th>
-          <th scope="col" className={clsx(RTH, 'max-sm:!min-w-0')}>
-            MOCP
-          </th>
           <th scope="col" className={clsx(RTH, 'max-sm:!min-w-0')} data-src={TERM}>
             Copper <C v={AC_LOW} />
           </th>
@@ -146,20 +144,21 @@ function UnitTable() {
           <th scope="col" className={clsx(RTH, 'max-sm:!min-w-0')}>
             Ground
           </th>
+          <th scope="col" className={clsx(RTH, 'max-sm:!min-w-0')}>
+            MCA
+          </th>
+          <th scope="col" className={clsx(RTH, 'max-sm:!min-w-0')}>
+            MOCP
+          </th>
         </tr>
       </thead>
       <tbody>
         {UNIT_ROWS.map((r) => (
           <tr key={`${r.unit.brand}-${r.unit.model}`}>
             <th scope="row" className={clsx(RSTICKY_TD, '!whitespace-nowrap')} data-src={MFR}>
-              {formatValue(r.unit.tons)} ton, {r.unit.brand}
+              {formatValue(r.unit.tons)} ton<span className="max-sm:hidden">,</span> <br className="sm:hidden" />
+              {r.unit.brand}
             </th>
-            <td className={RTD}>
-              <A v={r.unit.mcaA} />
-            </td>
-            <td className={RTD}>
-              <A v={r.unit.mocpA} />
-            </td>
             <td className={RTD}>
               <Size s={r.cu60.size} />
             </td>
@@ -168,6 +167,12 @@ function UnitTable() {
             </td>
             <td className={RTD} data-src={GND}>
               <Size s={r.cu60.egc} />
+            </td>
+            <td className={RTD}>
+              <A v={r.unit.mcaA} />
+            </td>
+            <td className={RTD}>
+              <A v={r.unit.mocpA} />
             </td>
           </tr>
         ))}
@@ -273,7 +278,7 @@ export default function AirConditionerCalculatorPage() {
               Carrier&apos;s 26SCA5 and Amana&apos;s ALXS3N product data, both from 2025, give the MCA and MOCP of their{' '}
               <span data-src={MFR}>1.5- to 5-ton</span> split-system air conditioners. The table runs each through the calculator: copper at{' '}
               <C v={AC_LOW} />, which covers NM and UF cable and terminals not listed for more, at <C v={AC_HIGH} /> where the breaker, the
-              disconnect and the unit are all listed for it, and the ground wire for the <C v={AC_LOW} /> wire. Tonnage alone does not set the wire:
+              disconnect and the unit are all listed for it, the ground wire for the <C v={AC_LOW} /> wire, then the nameplate&apos;s two numbers. Tonnage alone does not set the wire:
               Carrier&apos;s <Tons v={CARRIER_HALF.unit.tons} /> unit needs <Size s={CARRIER_HALF.cu60.size} />, Amana&apos;s{' '}
               <Size s={AMANA_HALF.cu60.size} />.
             </p>
@@ -303,8 +308,8 @@ export default function AirConditionerCalculatorPage() {
             <p className={P} data-src={NEC440}>
               There the wire is sized to the MCA, and the compressor&apos;s breaker or fuse may go up to{' '}
               <Val v={COMPRESSOR_PROTECTION.maxPct} unit="%" src={NEC440} /> of its rated-load current, or{' '}
-              <Val v={COMPRESSOR_PROTECTION.startPct} unit="%" src={NEC440} /> where that will not carry the starting current (440.22(A)). The maker
-              works the result into the MOCP. Carrier&apos;s <Tons v={EXAMPLE.unit.tons} /> unit, MCA <A v={EXAMPLE.unit.mcaA} />, runs on{' '}
+              <Val v={COMPRESSOR_PROTECTION.startPct} unit="%" src={NEC440} /> where that will not carry the starting current (440.22(A)); the MOCP on
+              the nameplate is that limit worked out for the unit. Carrier&apos;s <Tons v={EXAMPLE.unit.tons} /> unit, MCA <A v={EXAMPLE.unit.mcaA} />, runs on{' '}
               <Size s={ex.size} /> copper with a <A v={EXAMPLE.unit.mocpA} /> breaker; its <Tons v={TWO_TON.unit.tons} /> unit, MCA{' '}
               <A v={TWO_TON.unit.mcaA} />, on <Size s={TWO_TON.cu60.size} /> with a <A v={TWO_TON.unit.mocpA} /> breaker.
             </p>
@@ -397,8 +402,17 @@ export default function AirConditionerCalculatorPage() {
               </h3>
               <p className={P} data-src={CALC}>
                 <Size s={FIVE_TON.cu60.size} /> copper at <C v={AC_LOW} /> or <Size s={FIVE_TON.cu75.size} /> at <C v={AC_HIGH} /> for Carrier&apos;s
-                and Amana&apos;s <Tons v={FIVE_TON.unit.tons} /> units (MCA <A v={FIVE_TON.unit.mcaA} /> and <A v={AMANA_FIVE.unit.mcaA} />), on a
-                breaker of up to <A v={FIVE_TON.unit.mocpA} />, with a <Size s={FIVE_TON.cu60.egc} /> ground wire.
+                and Amana&apos;s <Tons v={FIVE_TON.unit.tons} /> units (MCA{' '}
+                {FIVE_TON.unit.mcaA === AMANA_FIVE.unit.mcaA ? (
+                  <>
+                    <A v={FIVE_TON.unit.mcaA} /> for both
+                  </>
+                ) : (
+                  <>
+                    <A v={FIVE_TON.unit.mcaA} /> and <A v={AMANA_FIVE.unit.mcaA} />
+                  </>
+                )}
+                ), on a breaker of up to <A v={FIVE_TON.unit.mocpA} />, with a <Size s={FIVE_TON.cu60.egc} /> ground wire.
               </p>
             </div>
             <div className="space-y-1.5">

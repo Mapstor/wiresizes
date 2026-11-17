@@ -1258,9 +1258,10 @@ export default function MethodologyPage() {
           </Formula>
           <Limits>
             <li>
-              The ground wire is never reduced to the size of the circuit conductors. The sentence that allows that has
-              been found only in the 2026 draft, not in the 2023 text, so for some ratings the calculators show a
-              ground wire larger than the smallest conductor the rating allows, with a note.
+              Only the air conditioner calculator keeps the ground wire to the size of the circuit conductors, as
+              250.122(A) allows; that sentence of the 2023 text was read in two of NFPA&apos;s public inputs for the 2026
+              edition (2573 and 3150). The other calculators do not apply it yet, so for some ratings they show a ground
+              wire larger than the smallest conductor the rating allows, with a note.
             </li>
             <li>
               Limits on grounding electrode conductors to ground rods and concrete-encased electrodes are not covered

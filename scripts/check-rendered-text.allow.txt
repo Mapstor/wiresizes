@@ -40,3 +40,15 @@ public/llms.txt | 10-30R | NEMA 10-30 receptacle configuration name, not a numbe
 /methodology | TT-30R | NEMA TT-30 receptacle configuration name (nema-receptacle-configs.json), not a number and a unit
 /methodology | 14-50R | NEMA 14-50 receptacle configuration name (nema-receptacle-configs.json), not a number and a unit
 public/llms.txt | TT-30R | NEMA TT-30 receptacle configuration name, not a number and a unit
+/calculators/air-conditioner-calculator | 26SCA5 | Carrier air conditioner model name (mfr-equipment.json ac_units), not a number and a unit
+/calculators/air-conditioner-calculator | 26SCA5C | Carrier coastal air conditioner model name (mfr-equipment.json ac_unit_notes), not a number and a unit
+/calculators/air-conditioner-calculator | 26SCA5-02PD | Carrier product data catalog number (mfr-equipment.json ac_unit_notes)
+/calculators/air-conditioner-calculator | ALXS3N | Amana air conditioner model name (mfr-equipment.json ac_units), not a number and a unit
+/calculators/air-conditioner-calculator | SS-ALXS3N-R32 | Amana specification sheet number (mfr-equipment.json ac_unit_notes)
+/methodology | 26SCA5 | Carrier air conditioner model name (mfr-equipment.json ac_units), not a number and a unit
+/methodology | 26SCA5C | Carrier coastal air conditioner model name (mfr-equipment.json ac_unit_notes), not a number and a unit
+/methodology | 26SCA5-02PD | Carrier product data catalog number (mfr-equipment.json ac_unit_notes)
+/methodology | ALXS3N | Amana air conditioner model name (mfr-equipment.json ac_units), not a number and a unit
+/methodology | SS-ALXS3N-R32 | Amana specification sheet number (mfr-equipment.json ac_unit_notes)
+public/llms.txt | 26SCA5 | Carrier air conditioner model name, not a number and a unit
+public/llms.txt | ALXS3N | Amana air conditioner model name, not a number and a unit
