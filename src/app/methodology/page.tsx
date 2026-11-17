@@ -1497,7 +1497,7 @@ export default function MethodologyPage() {
           <SourceFacts s={section('nec-630-welders')} />
           <Limits>
             <li>
-              630.11, the rule for the ampacity of a welder&apos;s supply conductors, is in no record of NFPA&apos;s last three revision cycles
+              The section that sets the ampacity of a welder&apos;s supply conductors is in no record of NFPA&apos;s last three revision cycles
               that the site has read, so no calculator applies it.
             </li>
           </Limits>

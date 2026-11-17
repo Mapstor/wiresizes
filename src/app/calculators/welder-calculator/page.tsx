@@ -158,7 +158,7 @@ function MakersTable() {
             <td className={RTD}>
               <Size s={w.minConductor} />
             </td>
-            <td className={clsx(RTD, '!min-w-[9rem] !whitespace-normal')} data-src={MFR}>
+            <td className={clsx(RTD, '!min-w-[9rem] !whitespace-normal !font-display')} data-src={MFR}>
               {w.fuseTimeDelayA !== null && w.fuseNormalA !== null ? (
                 <>
                   <A v={w.fuseTimeDelayA} /> time-delay, <A v={w.fuseNormalA} /> normal
@@ -167,7 +167,7 @@ function MakersTable() {
                 <A v={manualOcpd(w)} />
               )}
             </td>
-            <td className={clsx(RTD, '!min-w-[8rem] !whitespace-normal')} data-src={MFR}>
+            <td className={clsx(RTD, '!min-w-[8rem] !whitespace-normal !font-display')} data-src={MFR}>
               {w.i1maxA !== null ? (
                 <>
                   I1max <A v={w.i1maxA} />
@@ -180,7 +180,7 @@ function MakersTable() {
                 'not given'
               )}
             </td>
-            <td className={clsx(RTD, '!min-w-[7rem] !whitespace-normal')} data-src={MFR}>
+            <td className={clsx(RTD, '!min-w-[7rem] !whitespace-normal !font-display')} data-src={MFR}>
               {w.maxLengthFt !== null ? (
                 <Val v={w.maxLengthFt} unit="ft" src={MFR} />
               ) : w.longRun ? (
