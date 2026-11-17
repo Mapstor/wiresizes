@@ -29,7 +29,7 @@ describe('METHODOLOGY_SECTIONS', () => {
     for (const off of ['doe-efficiency-standards']) assert.ok(!domains.has(off), off);
   });
 
-  it('has nec-110-14c since the 200 A guide (WSZ-008c), the ampacity calculator (WSZ-009a), the wire size calculator (WSZ-009b), the circuit breaker calculator (WSZ-009c), the range (WSZ-010b) and dryer (WSZ-010c) calculators the 100 A guide (WSZ-008d) and the EV charger guide (WSZ-008e) use it', () => {
+  it('has nec-110-14c since the 200 A guide (WSZ-008c), the ampacity calculator (WSZ-009a), the wire size calculator (WSZ-009b), the circuit breaker calculator (WSZ-009c), the range (WSZ-010b) and dryer (WSZ-010c) calculators the 100 A guide (WSZ-008d), the EV charger guide (WSZ-008e) and the garage subpanel calculator (WSZ-008f) use it', () => {
     const s = METHODOLOGY_SECTIONS.find((x) => x.domain === 'nec-110-14c');
     assert.deepEqual(s?.citedOn, [
       '/calculators/wire-size-calculator',
@@ -40,10 +40,11 @@ describe('METHODOLOGY_SECTIONS', () => {
       '/guides/wire-size-for-200-amp',
       '/guides/wire-size-for-100-amp',
       '/guides/wire-size-for-ev-charger',
+      '/calculators/garage-subpanel-calculator',
     ]);
   });
 
-  it('has nec-continuous-load since the voltage drop and low voltage calculators quote its note (WSZ-006b, WSZ-006c), the wire size and circuit breaker calculators apply it (WSZ-009b, WSZ-009c) the two service guides quote it (WSZ-008c, WSZ-008d) and the EV charger guide applies it (WSZ-008e)', () => {
+  it('has nec-continuous-load since the voltage drop and low voltage calculators quote its note (WSZ-006b, WSZ-006c), the wire size and circuit breaker calculators apply it (WSZ-009b, WSZ-009c) the two service guides quote it (WSZ-008c, WSZ-008d), the EV charger guide applies it (WSZ-008e) and the garage subpanel calculator quotes its note (WSZ-008f)', () => {
     const s = METHODOLOGY_SECTIONS.find((x) => x.domain === 'nec-continuous-load');
     assert.deepEqual(s?.citedOn, [
       '/calculators/wire-size-calculator',
@@ -53,6 +54,7 @@ describe('METHODOLOGY_SECTIONS', () => {
       '/guides/wire-size-for-200-amp',
       '/guides/wire-size-for-100-amp',
       '/guides/wire-size-for-ev-charger',
+      '/calculators/garage-subpanel-calculator',
     ]);
   });
 

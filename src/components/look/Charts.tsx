@@ -39,6 +39,7 @@ import { SERVICE_VOLTS, TABLE_310_12_ROWS, serviceEntrance, isServiceError, serv
 import { editionGroups, editionLabel, NEC_ADOPTION_DOMAIN, NOT_VERIFIED, stateName } from '@/lib/verified/nec-adoption';
 import { GUIDE_100, SUBPANEL_DROP_LENGTHS, feederDrop } from '@/lib/subpanel-guide';
 import { EV_DROP_MAX_FT, EV_HIGH, EV_LOW, EV_ROWS } from '@/lib/ev-guide';
+import { GENERAL_COVERS } from '@/lib/garage-page';
 import type { EvRow } from '@/lib/ev-guide';
 import type { LadderRow } from '@/lib/subpanel-guide';
 
@@ -2980,8 +2981,8 @@ const FEEDER_WIRES = [
   { key: 'egc', label: 'EGC', to: 'ground' },
 ] as const;
 
-function FeederPlot({ narrow }: { narrow: boolean }) {
-  const g = GUIDE_100;
+function FeederPlot({ narrow, ratingA }: { narrow: boolean; ratingA: number }) {
+  const g = { ratingA };
   const id = narrow ? 'detached-feeder-narrow' : 'detached-feeder-wide';
   const title = `A ${g.ratingA} A feeder from a house panel to a panel in a separate building, drawn as four wires: two ungrounded conductors to the building's disconnecting means (225.31), the neutral to a neutral bar that is not connected to the equipment grounding conductor or the grounding electrode, and the equipment grounding conductor to a ground bar bonded to the enclosure and to the building's grounding electrode system (250.32(A) and (B)(1)).`;
   if (!narrow) {
@@ -3135,11 +3136,11 @@ function FeederPlot({ narrow }: { narrow: boolean }) {
 }
 
 /** A feeder to a separate building as four wires, with the neutral kept apart from the ground bar (250.32(B)(1)). */
-export function DetachedFeederDiagram() {
+export function DetachedFeederDiagram({ ratingA = GUIDE_100.ratingA }: { ratingA?: number }) {
   return (
     <div>
-      <FeederPlot narrow={false} />
-      <FeederPlot narrow />
+      <FeederPlot narrow={false} ratingA={ratingA} />
+      <FeederPlot narrow ratingA={ratingA} />
     </div>
   );
 }
@@ -3395,6 +3396,145 @@ export function EvDropChart() {
     <div>
       <EvDropPlot narrow={false} />
       <EvDropPlot narrow />
+    </div>
+  );
+}
+
+// ── Garage subpanel calculator (WSZ-008f): minimum cover of the three feeder wiring methods under open ground ────────
+
+const BURY_SRC = 'nec-300-5-burial';
+const METAL_RACEWAY = '#57514c';
+const SOIL = '#f5f2ee';
+/** Each method's name on a phone, where the full names of the caption do not fit. */
+const BURY_SHORT: Record<string, [string, string]> = {
+  direct: ['Buried', 'directly'],
+  nonmetallic: ['Nonmetallic', 'conduit'],
+  rmc: ['Metal conduit', 'RMC or IMC'],
+};
+const BURY_WIDE: Record<string, [string, string]> = {
+  direct: ['Cable or conductors', 'buried directly'],
+  nonmetallic: ['Nonmetallic conduit', 'listed for direct burial'],
+  rmc: ['Rigid or intermediate', 'metal conduit'],
+};
+
+function BurialPlot({ narrow }: { narrow: boolean }) {
+  const runs = GENERAL_COVERS;
+  const W = narrow ? 288 : 560;
+  const grade = narrow ? 76 : 66;
+  const pxPerIn = narrow ? 7 : 8;
+  const maxIn = Math.max(...runs.map((r) => r.cover.inches));
+  const ticks = [0, 6, 12, 18, 24].filter((t) => t <= maxIn);
+  const bottom = grade + maxIn * pxPerIn + (narrow ? 44 : 46);
+  const H = bottom + 8;
+  const left = narrow ? 0 : 64;
+  const colW = (W - left) / runs.length;
+  const xs = runs.map((_, k) => left + colW * (k + 0.5));
+  const y = (inches: number) => grade + inches * pxPerIn;
+  const id = narrow ? 'burial-depth-narrow' : 'burial-depth-wide';
+  const words = runs.map((r) => `${r.label.toLowerCase()} ${r.cover.inches} in (${r.cover.mm} mm)`).join(', ');
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={BURY_SRC}
+    >
+      <title id={`${id}-title`}>{`Minimum cover under open ground, NEC Table 300.5(A), from the top of the run to finished grade: ${words}.`}</title>
+      <rect x={0} y={grade} width={W} height={bottom - grade} fill={SOIL} />
+      {!narrow &&
+        ticks.map((t) => (
+          <g key={t}>
+            <line x1={left - 6} x2={W} y1={y(t)} y2={y(t)} stroke={t === 0 ? INK : GRID} strokeWidth={t === 0 ? 2 : 1} />
+            <text x={left - 12} y={y(t) + 4.5} textAnchor="end" fontSize={13} fill={MUTED}>
+              <Val v={t} unit="in" src={BURY_SRC} svg />
+            </text>
+          </g>
+        ))}
+      {narrow && <line x1={0} x2={W} y1={grade} y2={grade} stroke={INK} strokeWidth={2} />}
+      <text x={W - 2} y={grade - 8} textAnchor="end" fontSize={13} fill={MUTED}>
+        Finished grade
+      </text>
+      {runs.map((r, k) => {
+        const x = xs[k];
+        const [l1, l2] = (narrow ? BURY_SHORT : BURY_WIDE)[r.method];
+        const top = y(r.cover.inches);
+        const raceway = r.method !== 'direct';
+        const radius = raceway ? (narrow ? 12 : 14) : narrow ? 6 : 7;
+        const cy = top + radius;
+        // On a phone the last run's numbers sit to its left, inside the drawing.
+        const flip = narrow && k === runs.length - 1;
+        const labelX = flip ? x - (8 + radius) : x + (narrow ? 8 : 10) + radius;
+        const anchor = flip ? 'end' : 'start';
+        return (
+          <g key={r.method} className="viz-mark">
+            <text x={x} y={narrow ? 16 : 18} textAnchor="middle" fontSize={narrow ? 13 : 14} fontWeight={700} fill={INK}>
+              {l1}
+            </text>
+            <text x={x} y={narrow ? 32 : 35} textAnchor="middle" fontSize={13} fill={INK}>
+              {l2}
+            </text>
+            <line x1={x} x2={x} y1={grade + 2} y2={top - 1} stroke={INK} strokeWidth={1.5} strokeDasharray="3 3" />
+            <line x1={x - 6} x2={x + 6} y1={top} y2={top} stroke={INK} strokeWidth={1.5} />
+            <g className="viz-pop">
+              {raceway ? (
+                <>
+                  <circle cx={x} cy={cy} r={radius} fill="#ffffff" stroke={r.method === 'rmc' ? METAL_RACEWAY : MUTED} strokeWidth={r.method === 'rmc' ? 3.5 : 2} />
+                  {[
+                    [-4, -3],
+                    [4, -3],
+                    [-4, 4],
+                    [4, 4],
+                  ].map(([dx, dy], j) => (
+                    <circle key={j} cx={x + dx * (narrow ? 0.85 : 1)} cy={cy + dy * (narrow ? 0.85 : 1)} r={narrow ? 2.4 : 2.8} fill={COPPER} />
+                  ))}
+                </>
+              ) : (
+                <circle cx={x} cy={cy} r={radius} fill={COPPER} stroke="#6b3112" strokeWidth={0.8} />
+              )}
+            </g>
+            <text
+              x={labelX}
+              y={top + (r.cover.inches <= 6 ? radius + 4.5 : -(narrow ? 18 : 20))}
+              textAnchor={anchor}
+              fontSize={narrow ? 14 : 15}
+              fontWeight={700}
+              fill={INK}
+              stroke={SOIL}
+              strokeWidth={4}
+              paintOrder="stroke"
+              className="viz-pop"
+            >
+              <Val v={r.cover.inches} unit="in" src={BURY_SRC} svg />
+            </text>
+            <text
+              x={labelX}
+              y={top + (r.cover.inches <= 6 ? radius + 21 : -(narrow ? 3 : 4))}
+              textAnchor={anchor}
+              fontSize={13}
+              fill={MUTED}
+              stroke={SOIL}
+              strokeWidth={4}
+              paintOrder="stroke"
+              className="viz-pop"
+            >
+              <Val v={r.cover.mm} unit="mm" src={BURY_SRC} svg />
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/** Table 300.5(A)'s minimum cover under open ground for direct burial, nonmetallic conduit and RMC or IMC, to scale. */
+export function BurialDepthChart() {
+  return (
+    <div>
+      <BurialPlot narrow={false} />
+      <BurialPlot narrow />
     </div>
   );
 }

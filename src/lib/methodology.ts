@@ -44,6 +44,7 @@ const HP_TO_AMPS = '/calculators/horsepower-to-amps-calculator';
 const GUIDE_200 = '/guides/wire-size-for-200-amp';
 const GUIDE_100 = '/guides/wire-size-for-100-amp';
 const GUIDE_EV = '/guides/wire-size-for-ev-charger';
+const GARAGE = '/calculators/garage-subpanel-calculator';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
 const EDITIONS = '/guides/nec-code-compliance';
@@ -64,13 +65,13 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'resistance',
     domain: 'conductor-resistance-20c',
     title: 'Conductor resistance and voltage drop',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE],
   },
   {
     id: 'ampacity',
     domain: 'nec-310-16',
     title: 'Ampacity',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, GUIDE_100, HOME, GUIDE_EV],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, GUIDE_100, HOME, GUIDE_EV, GARAGE],
   },
   {
     id: 'corrections',
@@ -82,31 +83,31 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'terminals',
     domain: 'nec-110-14c',
     title: 'Terminal temperatures',
-    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, GUIDE_200, GUIDE_100, GUIDE_EV],
+    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE],
   },
   {
     id: 'small-conductors',
     domain: 'nec-240-4-d',
     title: 'Small-conductor limits',
-    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, AWG_CHART, TABLE_310_16, HOME],
+    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, AWG_CHART, TABLE_310_16, HOME, GARAGE],
   },
   {
     id: 'breaker-ratings',
     domain: 'nec-240-ocpd',
     title: 'Standard breaker and fuse ratings',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, GUIDE_200, GUIDE_100, GUIDE_EV],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE],
   },
   {
     id: 'continuous-loads',
     domain: 'nec-continuous-load',
     title: 'Continuous loads and the voltage-drop note',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, VOLTAGE_DROP, LOW_VOLTAGE, GUIDE_200, GUIDE_100, GUIDE_EV],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, VOLTAGE_DROP, LOW_VOLTAGE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE],
   },
   {
     id: 'grounding',
     domain: 'nec-250-grounding',
     title: 'Ground wires and grounding electrode conductors',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE],
   },
   {
     id: 'service-conductors',
@@ -118,13 +119,19 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'separate-buildings',
     domain: 'nec-feeders-outbuildings',
     title: 'Feeders to a separate building',
-    citedOn: [GUIDE_100],
+    citedOn: [GUIDE_100, GARAGE],
   },
   {
     id: 'separate-building-grounding',
     domain: 'nec-250-32',
     title: 'Grounding at a separate building',
-    citedOn: [GUIDE_100],
+    citedOn: [GUIDE_100, GARAGE],
+  },
+  {
+    id: 'burial-depth',
+    domain: 'nec-300-5-burial',
+    title: 'Underground cover',
+    citedOn: [GARAGE],
   },
   {
     id: 'cable-ampacity',
@@ -154,7 +161,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'load-calcs',
     domain: 'nec-220-load-calcs',
     title: 'Dwelling load calculations',
-    citedOn: [RESIDENTIAL_LOAD, RANGE, DRYER, GUIDE_EV],
+    citedOn: [RESIDENTIAL_LOAD, RANGE, DRYER, GUIDE_EV, GARAGE],
   },
   {
     id: 'maker-instructions',
@@ -267,6 +274,7 @@ export const METHODOLOGY_EXTRA_SECTIONS = {
   rangeMethod: { id: 'range-method', title: 'How the range calculator sizes a range circuit' },
   dryerMethod: { id: 'dryer-method', title: 'How the dryer calculator counts a dryer' },
   hpMethod: { id: 'hp-method', title: 'How the horsepower to amps calculator reads the tables' },
+  garageMethod: { id: 'garage-method', title: 'How the garage subpanel calculator sizes a feeder' },
   notCovered: { id: 'not-covered', title: 'Not covered yet' },
   errors: { id: 'errors', title: 'Errors and corrections' },
 } as const;

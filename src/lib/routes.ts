@@ -79,6 +79,12 @@ export const ROUTES: readonly SiteRoute[] = [
     line: 'Dwelling service conductors from NEC Table 310.12, with the grounding electrode conductor and the voltage drop over your run.',
   },
   {
+    path: '/calculators/garage-subpanel-calculator',
+    group: 'wire-sizing',
+    name: 'Garage Subpanel Calculator',
+    line: 'The feeder to a subpanel in a detached garage: wire and ground wire, the four wires, the garage disconnect, the voltage drop and how deep to bury the run.',
+  },
+  {
     path: '/calculators/wire-resistance-calculator',
     group: 'wire-sizing',
     name: 'Wire Resistance Calculator',
