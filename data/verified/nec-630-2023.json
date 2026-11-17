@@ -1,0 +1,56 @@
+{
+ "id": "nec-630-2023",
+ "title": "NEC (NFPA 70) 2023, Article 630 electric welders: 630.8, 630.12 and 630.13",
+ "status": "per rule (see each status)",
+ "retrieved": "2026-11-17",
+ "evidence": "research/sources/round8/WSZ-037-welder-sources.md",
+ "rules": [
+  {
+   "ref": "630.12",
+   "edition": "2023",
+   "status": "VERIFIED-2023",
+   "values": {
+    "next_higher_standard": "where the values determined by 630.12 do not correspond to the standard ampere ratings of 240.6, or the rating or setting results in unnecessary opening of the overcurrent device, the next higher standard rating or setting is permitted",
+    "welder_max_pct_of_i1max": 200,
+    "welder_alternative": "if I1max is not given, not more than 200 percent of the rated primary current of the welder",
+    "separate_device_not_required": "an overcurrent device is not required for a welder whose supply conductors are protected at not more than 200 percent of I1max or at the rated primary current",
+    "conductor_max_pct_of_ampacity": 200,
+    "i1max_note": "I1max is the maximum value of the rated supply current at maximum rated output",
+    "i1eff_note": "I1eff is the maximum value of the effective supply current, calculated from the rated supply current (I1), the corresponding duty cycle (X) and the supply current at no-load (I0)"
+   },
+   "sources": [
+    {"doc": "CMP-12 Second Draft, 2026 cycle (A2025), Second Revision 7788", "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P12_SD_PrelimSR.pdf#page=75", "pdf_page": 75, "note": "the whole of 630.12 with 'overcurrent device' struck for 'OCPD'; struck and unmarked text is the 2023 text (no First Revision on 630.12)"},
+    {"doc": "CMP-12 public inputs, 2026 cycle (A2025), Public Input 2333", "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P12_PISubmittals.pdf#page=253", "pdf_page": 253, "note": "630.12(A) unmarked"}
+   ]
+  },
+  {
+   "ref": "630.13",
+   "edition": "2023",
+   "status": "verified-sd2023",
+   "values": {
+    "required": "a disconnecting means in the supply circuit for each arc welder not equipped with an integral disconnect",
+    "type": "a switch, circuit breaker, or listed cord-and-plug connector",
+    "rating": "not less than that necessary to accommodate the overcurrent protection of 630.12"
+   },
+   "sources": [
+    {"doc": "CMP-12 Second Draft statements, 2023 cycle (A2022), Second Revision 7589", "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2022_NEC_P12_SD_SRStatements.pdf#page=46", "pdf_page": 46}
+   ]
+  },
+  {
+   "ref": "630.8",
+   "edition": "2023",
+   "status": "VERIFIED-2023",
+   "values": {
+    "receptacles": "125-volt, 15- and 20-ampere receptacles for electrical hand tools or portable lighting equipment, supplied by single-phase branch circuits rated 150 volts or less to ground",
+    "where": "work areas where welders are operated",
+    "volts": 125,
+    "amps": [15, 20],
+    "max_volts_to_ground": 150
+   },
+   "sources": [
+    {"doc": "CMP-12 public inputs, 2026 cycle (A2025), Public Inputs 2238, 243 and 577 (each proposes deleting 630.8 and prints its 2023 text struck)", "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P12_PISubmittals.pdf#page=250", "pdf_page": 250}
+   ]
+  }
+ ],
+ "unverified": "630.11 (ampacity of supply conductors, Table 630.11(A) duty-cycle multipliers, 630.11(B) groups of welders): in no CMP-12 record of the 2020, 2023 or 2026 cycles read (no input, revision or comment touched it); 630.32 and the resistance welder rules not read."
+}

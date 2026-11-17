@@ -266,6 +266,7 @@ const TOC = [
   METHODOLOGY_EXTRA_SECTIONS.wellPumpMethod,
   METHODOLOGY_EXTRA_SECTIONS.hotTubMethod,
   METHODOLOGY_EXTRA_SECTIONS.acMethod,
+  METHODOLOGY_EXTRA_SECTIONS.welderMethod,
   ...METHODOLOGY_SECTIONS.map(({ id, title }) => ({ id, title })),
   METHODOLOGY_EXTRA_SECTIONS.notCovered,
   METHODOLOGY_EXTRA_SECTIONS.errors,
@@ -289,7 +290,7 @@ const HP_EATON_LAST = (() => {
 })();
 
 export default function MethodologyPage() {
-  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, garageMethod, boxFillMethod, rvMethod, wellPumpMethod, hotTubMethod, acMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
+  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, garageMethod, boxFillMethod, rvMethod, wellPumpMethod, hotTubMethod, acMethod, welderMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
   return (
     <div className={LOOK_PAGE}>
     <div className="container pb-16">
@@ -302,9 +303,9 @@ export default function MethodologyPage() {
         <p>
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
           has a section below: what it is and which edition was used, where it was read, how the calculators use it,
-          and where that use stops. The first twelve sections show how the wire size, circuit breaker, residential load,
-          range, dryer, horsepower to amps, garage subpanel, box fill, RV hookup, well pump, hot tub and air conditioner calculators work
-          from them. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
+          and where that use stops. The first thirteen sections show how the wire size, circuit breaker, residential load,
+          range, dryer, horsepower to amps, garage subpanel, box fill, RV hookup, well pump, hot tub, air conditioner and welder calculators
+          work from them. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
           homepage and the calculators and guides pages also list their sources under Sources, near the bottom of the
           page.
         </p>
@@ -847,6 +848,43 @@ export default function MethodologyPage() {
           <Limits>
             <li>Copper only, as both makers&apos; documents ask; single-phase supply at 240 V or 208 V.</li>
             <li>It does not work out an MCA or MOCP, and applies no temperature or bundling correction.</li>
+          </Limits>
+        </section>
+
+        <section id={welderMethod.id} data-src="calc:welder" aria-labelledby={`${welderMethod.id}-title`} className="scroll-mt-24 space-y-4">
+          <h2 id={`${welderMethod.id}-title`} className={H2}>
+            {welderMethod.title}
+          </h2>
+          <p>
+            The{' '}
+            <Link href="/calculators/welder-calculator" className={LINK}>
+              welder calculator
+            </Link>{' '}
+            takes I1max, the minimum supply wire and the breaker or fuse from the welder&apos;s manual (see{' '}
+            <SectionLink domain="mfr-welders">Welder makers&apos; electrical service guides</SectionLink>), and the run:
+          </p>
+          <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-cut-line">
+            <li>
+              The breaker against 630.12(A): at most 200 % of I1max, or the next standard rating where that is not one (see{' '}
+              <SectionLink domain="nec-630-welders">Welder circuits</SectionLink>).
+            </li>
+            <li>
+              The copper size: from the manual&apos;s minimum, the first size whose ampacity in the column the{' '}
+              <SectionLink domain="nec-110-14c">terminal rules</SectionLink> allow lets 630.12(B) (at most 200 % of the ampacity) take the
+              breaker. Table 240.4(G) sends welder circuits to 630.12, so the 240.4(D) limits do not apply.
+            </li>
+            <li>The voltage drop at I1max over the one-way length; past the target, the next size up.</li>
+            <li>
+              The ground wire: Table 250.122&apos;s size for the breaker, not larger than the manual&apos;s minimum wire (250.122(A)), grown in
+              proportion when the wire is larger (250.122(B)).
+            </li>
+          </ol>
+          <Limits>
+            <li>
+              The NEC&apos;s own rule for sizing a welder&apos;s supply conductors has not been read in a 2023 source; the calculator starts from
+              the manual&apos;s minimum wire.
+            </li>
+            <li>One welder on its own circuit, single phase, copper; no temperature or bundling correction.</li>
           </Limits>
         </section>
 
@@ -1449,6 +1487,35 @@ export default function MethodologyPage() {
           </Limits>
         </SourceSection>
 
+        <SourceSection domain="nec-630-welders">
+          <p>
+            Article 630 of the NEC covers electric welders. The site reads three of its sections in the 2023 text: 630.12, the welder&apos;s and
+            the conductors&apos; overcurrent limits, from the 2026 edition&apos;s Second Draft, whose revision shows the 2023 wording it replaces,
+            and a public input that reprints 630.12(A); 630.8, GFCI protection for the receptacles in a welding area, from three public inputs
+            that reprint it; and 630.13, the disconnect, from the 2023 edition&apos;s own Second Draft.
+          </p>
+          <SourceFacts s={section('nec-630-welders')} />
+          <Limits>
+            <li>
+              630.11, the rule for the ampacity of a welder&apos;s supply conductors, is in no record of NFPA&apos;s last three revision cycles
+              that the site has read, so no calculator applies it.
+            </li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="mfr-welders">
+          <p>
+            Miller&apos;s owner&apos;s manuals for the Millermatic 211 PRO and Multimatic 215 PRO (April 2026), the Multimatic 220 AC/DC (July
+            2023) and the Millermatic 211 (March 2016), and Lincoln Electric&apos;s operator&apos;s manuals for the POWER MIG 210 MP (May 2022) and
+            the AC-225C (January 2010), each read from the maker&apos;s own site. Each has an electrical service guide: the supply current, the
+            fuse or breaker, the smallest copper supply wire and, for Miller, the longest run and the NEC edition it follows.
+          </p>
+          <SourceFacts s={section('mfr-welders')} />
+          <Limits>
+            <li>Six machines; other welders&apos; manuals may ask for something else.</li>
+          </Limits>
+        </SourceSection>
+
         <SourceSection domain="nec-cable-rules">
           <p>
             Section 334.80 of the NEC (2023) sets the ampacity of NM cable, and 310.15(E) says when a neutral counts as a
@@ -1956,7 +2023,7 @@ export default function MethodologyPage() {
             <li>Motor circuits: conductor size, overload protection and the breaker or fuse.</li>
             <li>Three-phase air conditioners, and indoor units with electric heat.</li>
             <li>Pool pump circuits, and the NEC&apos;s own Article 680 rules for pools, spas and hot tubs.</li>
-            <li>Welder circuits.</li>
+            <li>Welder supply conductors by the NEC&apos;s own rule, groups of welders and resistance welders.</li>
             <li>Three-phase and larger submersible well pump motors, and other pump makers&apos; tables.</li>
           </ul>
         </section>

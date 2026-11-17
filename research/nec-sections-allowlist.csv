@@ -123,3 +123,9 @@ Article 680,article,2023,Part IV: spas and hot tubs (680.40),nec-680-pools-spas,
 Article 440,article,2023,Air-conditioning and refrigerating equipment,nec-440-hvac,verified,Location only; 440.4(B) and 440.14 as public inputs 487 and 1635 reprint them (WSZ-036)
 440.22(A),section,2023,"Motor-compressor branch-circuit short-circuit and ground-fault protective device: up to 175 % of RLA or BCSC, 225 % where needed to start",nec-440-hvac,verified,"2023-cycle Second Draft SR-7605 (main rule) and Eaton's 2023 reprint, with NFPA's permission (175, 225 and 15 A)"
 110.26(A),section,2023,Working space (as 440.14 names it),nec-440-hvac,verified,"Location only; named by 440.14 (public input 1635, WSZ-036); its own values are not used"
+630.12,section,2023,Welder overcurrent protection: not more than 200 % of I1max (or rated primary current); conductors not more than 200 % of ampacity; next higher standard rating permitted,nec-630-welders,verified,"Second Revision 7788 (2026 cycle, struck and unmarked text) and public input 2333 (WSZ-037)"
+630.12(A),section,2023,"For welders: not more than 200 % of I1max, or of the rated primary current",nec-630-welders,verified,Public input 2333 and Second Revision 7788 (WSZ-037)
+630.12(B),section,2023,For conductors: not more than 200 % of the conductor ampacity,nec-630-welders,verified,Second Revision 7788 (WSZ-037)
+630.13,section,2023,Disconnecting means for each arc welder,nec-630-welders,verified,"2023-cycle Second Revision 7589, verified-sd2023 (WSZ-037)"
+630.8,section,2023,GFCI for 125 V 15 and 20 A receptacles for hand tools or portable lighting in welding work areas,nec-630-welders,verified,"Public inputs 2238, 243 and 577 print the 2023 text (WSZ-037)"
+Article 630,article,2023,Electric welders,nec-630-welders,verified,"Location only; 630.8, 630.12 and 630.13 as NFPA records print them (WSZ-037)"

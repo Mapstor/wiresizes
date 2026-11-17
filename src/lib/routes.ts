@@ -121,6 +121,12 @@ export const ROUTES: readonly SiteRoute[] = [
     line: 'Copper wire, ground wire and breaker for an air conditioner from the MCA and MOCP on its nameplate, with the voltage drop over the run.',
   },
   {
+    path: '/calculators/welder-calculator',
+    group: 'wire-sizing',
+    name: 'Welder Wire Size Calculator',
+    line: "Copper wire, breaker and ground wire for a welder from its manual, with the NEC's breaker limits for welders and the voltage drop over the run.",
+  },
+  {
     path: '/calculators/box-fill-calculator',
     group: 'wire-sizing',
     name: 'Box Fill Calculator',
