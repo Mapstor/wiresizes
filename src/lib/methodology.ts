@@ -46,6 +46,7 @@ const GUIDE_100 = '/guides/wire-size-for-100-amp';
 const GUIDE_EV = '/guides/wire-size-for-ev-charger';
 const GARAGE = '/calculators/garage-subpanel-calculator';
 const BOX_FILL = '/calculators/box-fill-calculator';
+const CONDUIT_FILL = '/calculators/conduit-fill-calculator';
 const RV_HOOKUP = '/calculators/rv-hookup-calculator';
 const WELL_PUMP = '/calculators/well-pump-calculator';
 const HOT_TUB = '/calculators/hot-tub-calculator';
@@ -144,6 +145,12 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     domain: 'nec-314-16-box-fill',
     title: 'Box fill',
     citedOn: [BOX_FILL],
+  },
+  {
+    id: 'conduit-fill',
+    domain: 'nec-ch9-fill',
+    title: 'Conduit fill',
+    citedOn: [CONDUIT_FILL],
   },
   {
     id: 'rv-parks',
@@ -330,6 +337,7 @@ export const METHODOLOGY_EXTRA_SECTIONS = {
   hpMethod: { id: 'hp-method', title: 'How the horsepower to amps calculator reads the tables' },
   garageMethod: { id: 'garage-method', title: 'How the garage subpanel calculator sizes a feeder' },
   boxFillMethod: { id: 'box-fill-method', title: 'How the box fill calculator adds the fill' },
+  conduitFillMethod: { id: 'conduit-fill-method', title: 'How the conduit fill calculator reads Annex C' },
   rvMethod: { id: 'rv-method', title: 'How the RV hookup calculator sizes an outlet and a park' },
   wellPumpMethod: { id: 'well-pump-method', title: 'How the well pump calculator reads Franklin’s tables' },
   hotTubMethod: { id: 'hot-tub-method', title: 'How the hot tub calculator sizes a hot tub circuit' },

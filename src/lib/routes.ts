@@ -133,6 +133,12 @@ export const ROUTES: readonly SiteRoute[] = [
     line: 'Whether an electrical box is large enough: the NEC 314.16 fill for its conductors, devices, ground wires and clamps against the volume of a metal box from Table 314.16(A) or the volume marked on the box.',
   },
   {
+    path: '/calculators/conduit-fill-calculator',
+    group: 'wire-sizing',
+    name: 'Conduit Fill Calculator',
+    line: 'How many wires of one size fit in each trade size of conduit and tubing, and the smallest trade size for a number of them, from the NEC 2023 Annex C tables.',
+  },
+  {
     path: '/calculators/residential-load-calculator',
     group: 'load-calcs',
     name: 'Residential Load Calculator',

@@ -30,6 +30,7 @@ const footerLinks = {
     { name: 'Service Entrance Calculator', href: '/calculators/service-entrance-calculator' },
     { name: 'Garage Subpanel Calculator', href: '/calculators/garage-subpanel-calculator' },
     { name: 'Box Fill Calculator', href: '/calculators/box-fill-calculator' },
+    { name: 'Conduit Fill Calculator', href: '/calculators/conduit-fill-calculator' },
     { name: 'RV Hookup Calculator', href: '/calculators/rv-hookup-calculator' },
     { name: 'Well Pump Calculator', href: '/calculators/well-pump-calculator' },
     { name: 'Hot Tub Calculator', href: '/calculators/hot-tub-calculator' },
