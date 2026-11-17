@@ -50,6 +50,7 @@ const RV_HOOKUP = '/calculators/rv-hookup-calculator';
 const WELL_PUMP = '/calculators/well-pump-calculator';
 const HOT_TUB = '/calculators/hot-tub-calculator';
 const AIR_CONDITIONER = '/calculators/air-conditioner-calculator';
+const WELDER = '/calculators/welder-calculator';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
 const EDITIONS = '/guides/nec-code-compliance';
@@ -70,13 +71,13 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'resistance',
     domain: 'conductor-resistance-20c',
     title: 'Conductor resistance and voltage drop',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER],
   },
   {
     id: 'ampacity',
     domain: 'nec-310-16',
     title: 'Ampacity',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, GUIDE_100, HOME, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, GUIDE_100, HOME, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER],
   },
   {
     id: 'corrections',
@@ -88,19 +89,19 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'terminals',
     domain: 'nec-110-14c',
     title: 'Terminal temperatures',
-    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER],
+    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER],
   },
   {
     id: 'small-conductors',
     domain: 'nec-240-4-d',
     title: 'Small-conductor limits',
-    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, AWG_CHART, TABLE_310_16, HOME, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER],
+    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, AWG_CHART, TABLE_310_16, HOME, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER],
   },
   {
     id: 'breaker-ratings',
     domain: 'nec-240-ocpd',
     title: 'Standard breaker and fuse ratings',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER],
   },
   {
     id: 'continuous-loads',
@@ -112,7 +113,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'grounding',
     domain: 'nec-250-grounding',
     title: 'Ground wires and grounding electrode conductors',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER],
   },
   {
     id: 'service-conductors',
@@ -166,13 +167,25 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'air-conditioning',
     domain: 'nec-440-hvac',
     title: 'Air conditioner circuits, NEC Article 440',
-    citedOn: [AIR_CONDITIONER],
+    citedOn: [AIR_CONDITIONER, WELDER],
   },
   {
     id: 'ac-makers',
     domain: 'mfr-hvac-specs',
     title: 'Air conditioner makers’ product data',
     citedOn: [AIR_CONDITIONER],
+  },
+  {
+    id: 'welders',
+    domain: 'nec-630-welders',
+    title: 'Welder circuits, NEC Article 630',
+    citedOn: [WELDER],
+  },
+  {
+    id: 'welder-makers',
+    domain: 'mfr-welders',
+    title: 'Welder makers’ electrical service guides',
+    citedOn: [WELDER],
   },
   {
     id: 'cable-ampacity',
@@ -214,7 +227,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'nema-configs',
     domain: 'nema-receptacle-configs',
     title: 'NEMA receptacle configurations',
-    citedOn: [RANGE, DRYER, GUIDE_EV, RV_HOOKUP],
+    citedOn: [RANGE, DRYER, GUIDE_EV, RV_HOOKUP, WELDER],
   },
   {
     id: 'rule-excerpts',
@@ -321,6 +334,7 @@ export const METHODOLOGY_EXTRA_SECTIONS = {
   wellPumpMethod: { id: 'well-pump-method', title: 'How the well pump calculator reads Franklin’s tables' },
   hotTubMethod: { id: 'hot-tub-method', title: 'How the hot tub calculator sizes a hot tub circuit' },
   acMethod: { id: 'ac-method', title: 'How the air conditioner calculator sizes a circuit' },
+  welderMethod: { id: 'welder-method', title: 'How the welder calculator sizes a circuit' },
   notCovered: { id: 'not-covered', title: 'Not covered yet' },
   errors: { id: 'errors', title: 'Errors and corrections' },
 } as const;

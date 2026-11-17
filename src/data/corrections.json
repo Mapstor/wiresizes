@@ -1,142 +1,146 @@
 [
-  {
-    "date": "2026-11-02",
-    "text": "Audited every page. Removed the unsourced claims the audit found, including user counts, endorsements, expert reviews and response-time claims, and deleted or corrected the wrong values it found. Took 15 calculators offline until they are rebuilt from verified sources. Redirected 6 overlapping or retired pages to their closest page."
-  },
-  {
-    "date": "2026-11-11",
-    "text": "Rebuilt the AWG wire size chart and the NEC Table 310.16 page from NIST, IEC and NFPA sources. The chart now covers every AWG gauge in NIST's copper wire tables and the kcmil sizes Table 310.16 lists, each value with its source, and statements on both pages that no cited source supports were removed."
-  },
-  {
-    "date": "2026-11-12",
-    "text": "Replaced the NEC code compliance guide, whose summaries of overcurrent protection and grounding cited code sections this site had not checked against a source, with NEC edition by state: the edition each state has adopted, read from state government records."
-  },
-  {
-    "date": "2026-11-14",
-    "text": "Rebuilt the wire resistance calculator from NIST's copper wire tables. It now covers every AWG gauge and the kcmil sizes, and prints each resistance to the figures NIST publishes, where it had added a digit. Removed sections on skin effect, testing and safety factors that cited no source."
-  },
-  {
-    "date": "2026-11-14",
-    "text": "Rebuilt the voltage drop calculator on NIST's wire tables. It now takes the conductor temperature, DC circuits, a load in watts and up to four sets in parallel, can find the smallest size for a target, and quotes the NEC's informational note on voltage drop as advice. Removed sections on troubleshooting, installation practice and the effects of voltage drop that cited no source."
-  },
-  {
-    "date": "2026-11-14",
-    "text": "Rebuilt the low voltage calculator. It now takes the load in amps or watts and any DC voltage, gives the copper area in circular mils and mm², and shows the drop of the chosen size and the sizes around it. Removed safety and installation advice that cited no source."
-  },
-  {
-    "date": "2026-11-14",
-    "text": "Rebuilt the three-phase calculator. It now takes any line-to-line voltage and any two of kW, kVA, amps and power factor, gives the reactive power and the line-to-neutral voltage of 208Y/120 V and 480Y/277 V systems, and sizes the capacitor bank for a target power factor. Removed the 600Y/347 V system, which is not among the U.S. nominal voltages the site cites, and sections on safety, load balancing, troubleshooting and international practice that cited no source."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Rebuilt the single vs three phase guide around one load compared on single-phase and three-phase systems, the power each system delivers over a cycle, and the U.S. nominal voltages for each. Removed lists of advantages and typical uses, claims about motors, and a Canadian voltage system that is not among the U.S. nominal voltages the site cites; none of these cited a source."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Rebuilt the power factor guide around the U.S. Energy Information Administration's definitions of real, reactive and apparent power, the U.S. Department of Energy's capacitor example worked exactly, and a table of capacitor kVAR per kW. Removed an equipment power factor table and advice on correction methods and monitoring that cited no source."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Rebuilt the kilowatts to amps calculator. It now gives the apparent and reactive power and the current at other voltages, with worked examples and a table of amps per kW. Removed notes on leading power factor and motor advice that cited no source."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Rebuilt the kVA to amps calculator. It now takes any voltage and, with a power factor, gives the real and reactive power, with worked examples and a table of amps by kVA. Removed the equipment presets, a transformer option that labelled the voltage as the secondary even when it was off, and an installation note that cited no source."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Rebuilt the volts to amps calculator to match its description: it now works out the current from the power or from the resistance. Removed the section on how voltage changes current and the examples by type of equipment, such as solar strings and EV charging, which cited no source."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Rebuilt the watts to amps calculator. It now takes DC, single-phase and three-phase loads at any voltage, with a worked water heater example from the makers' documents and a table of amps by watts. Removed lists of common applications and notes that cited no source."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Rebuilt the amps to watts calculator. It now gives the apparent power and the same load's current at other voltages, with the three-phase example worked out and a table of watts by amps. Removed equipment examples (a range, an EV charger, LED lighting) whose power factors and uses cited no source, and the horsepower figure in the result."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Rebuilt the Ohm's law calculator: it now takes any two of volts, amps, ohms and watts, with all twelve formulas and worked examples. Removed a motor winding example that called a DC resistance reading a locked rotor test, and a resistor value given as standard with no source."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Rebuilt the BTU to watts calculator: it now converts Btu per hour, watts and tons of refrigeration either way on NIST SP 811 factors. Removed the HVAC efficiency ratings section and sizing advice, which cited no source."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Rebuilt the electrical power calculations guide: the formulas for power and current on DC, single-phase and three-phase circuits, with worked examples from the calculators' checked cases, the power triangle drawn to scale and the watts each ampere carries. Removed the lists of uses for each voltage, a claim that three-phase motors start and run better, and a lighting and a capacitor bank example, which cited no source."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Rebuilt the ground wire calculator: it now sizes both the equipment grounding conductor from Table 250.122, with the 250.122(B) increase when the circuit wires are upsized, and the grounding electrode conductor from Table 250.66 as NFPA's 2020 grounding fact sheet prints it. Removed lists of electrodes, pool bonding, installation methods and inspection steps, which cited no source."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Rebuilt the service entrance calculator: every Table 310.12 rating in one table with its Table 250.66 electrode conductor, as NFPA's 2020 grounding fact sheet prints it, and the voltage drop over a length you enter, with a chart of the drop by length."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Rebuilt the guide to service wire size: Table 310.12 for a dwelling service beside Table 310.16 at the terminal temperature 110.14(C) sets for other feeders, the 240.4(B) allowance for an aluminum feeder, both ground wires (Table 250.66 as NFPA's 2020 grounding fact sheet prints it, and Table 250.122) and the voltage drop. Removed the installation steps, the safety and mistake lists, a copper and aluminum comparison and claims about what a home needs, which cited no source. Table 310.12's scope now reads as the code words it on every page: a service, or a feeder, that carries the entire load of a dwelling unit."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Rebuilt the ampacity calculator: it now takes the ambient temperature in Celsius or Fahrenheit and the number of current-carrying conductors, and shows the corrected ampacity against the terminal limits of 110.14(C) and the 240.4(D) breaker limit, with NM and UF cable kept in the coolest temperature column. Removed the insulation type ratings, the wet-location and harmonic-current notes, the common mistakes and the answers on parallel conductors, voltage and separate conduits, which cited no source."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Rebuilt the wire size calculator: it now takes the wiring method and the terminal rating (110.14(C)), the ambient temperature and the number of current-carrying conductors, a continuous load (210.20(A)) and your voltage-drop target, shows each step, and notes where 240.4(B) lets the breaker protect the next smaller size. The page gives the size for every rating in both terminal columns and by run length for two common circuits. Removed the mistakes list, the installation tips and the answer on stranded and solid wire, which cited no source."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Brought back the circuit breaker calculator, offline since the November 2 audit because its default example contradicted itself and it cited an NEC table row that does not exist. It now sizes the breaker or fuse for a continuous and a noncontinuous load under 210.20(A), gives the next standard rating with the wire and ground wire for it, and notes where 240.4(B) allows a smaller wire."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Brought back the residential load calculator, offline since the November 2 audit because it mixed the NEC's standard and optional dwelling methods and put air conditioning in the wrong load group. It now runs both methods of NEC 2023 Article 220 side by side on the same inputs, with every step, and gives the service from Table 310.12 for each."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Brought back the range calculator, offline since the November 2 audit because its demand-factor rule did not match NEC Table 220.55, it put a wall oven on a breaker larger than its wire allowed, and it said ranges generally need no GFCI protection. It now takes a range, or a cooktop with wall ovens, through Table 220.55 and its notes, sizes the wire and ground wire for the circuit the range instructions give, and states the 2023 GFCI rule."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Brought back the dryer calculator, offline since the November 2 audit because it cited the wrong NEC sections and left out the 2023 GFCI requirement for dryer circuits. It now keeps a dryer's 220.54 load for the service apart from its own circuit, sizes the wire and ground wire for the circuit the dryer instructions give, and states the 2023 GFCI rule."
-  },
-  {
-    "date": "2026-11-15",
-    "text": "Brought back the horsepower to amps calculator, offline since the November 2 audit because it put one voltage's motor currents under another voltage's heading and named the wrong NEC motor tables. It now reads a motor's full-load current from NEC Tables 430.247, 430.248 and 430.250 by horsepower and the voltage column the tables' notes give, as 430.6(A) requires; it no longer computes the current from a formula or gives a wire size."
-  },
-  {
-    "date": "2026-11-17",
-    "text": "Rebuilt the subpanel and service wire size guide: Table 310.16 at the terminal temperature 110.14(C) sets for a subpanel feeder, NM cable held to the column 334.80 sets, the 240.4(B) allowance for copper one size smaller, Table 310.12 for a dwelling service, both ground wires, the four-wire feeder to a detached garage under 225.31, 225.39 and 250.32(B)(1), and the voltage drop over a long run. Removed a main breaker rule the site had not checked against a source, step-by-step installation advice, and notes on hot attics and wet locations, which cited no source."
-  },
-  {
-    "date": "2026-11-17",
-    "text": "Rebuilt the EV charger wire guide: each charger output's breaker from NEC 625.41 and 625.42, checked against Tesla's, ChargePoint's and Emporia's own tables; the copper size in NM cable and with terminations rated for the higher column; the makers' terminal limits; the receptacle and GFCI rules of 625.44 and 625.54; and the voltage drop over a long run. Removed aluminum sizes that the chargers' terminals do not accept, and charging-level figures and safety tips that cited no source."
-  },
-  {
-    "date": "2026-11-17",
-    "text": "Brought back the garage subpanel calculator, offline since the November 2 audit because it estimated the garage's load with invented demand factors credited to NEC sections that say something else and showed copper ground wire sizes on aluminum results. It now sizes the feeder for the breaker you choose from NEC Table 310.16 at the terminal temperature, gives the ground wire from Table 250.122 in the chosen metal, the four wires of 250.32, the garage disconnect of 225.39 and the minimum cover of Table 300.5(A); it no longer estimates the load."
-  },
-  {
-    "date": "2026-11-17",
-    "text": "Brought back the box fill calculator, offline since the November 2 audit because some of its box volumes and conductor-counting rules did not match the NEC. It now counts the fill by NEC 314.16 as the 2023 edition words it: each conductor at its Table 314.16(B)(1) volume, two allowances per device yoke, one for up to four ground wires and a quarter for each more, one for internal clamps and one per type of support fitting, against the volume of a Table 314.16(A) metal box or the volume marked on the box."
-  },
-  {
-    "date": "2026-11-17",
-    "text": "Brought back the RV hookup calculator, offline since the November 2 audit because it overstated where GFCI protection is required and misapplied the RV park demand factors. It now sizes the wire for the two common RV outlets from NEC Table 310.16 at the terminal temperature with the voltage drop over the run, gives GFCI as 210.8(F) and 551.71(F) set it, and calculates an RV park feeder from the 2023 per-site loads of 551.73(A) and the demand factors of Table 551.73(A)."
-  },
-  {
-    "date": "2026-11-17",
-    "text": "Brought back the well pump calculator, offline since the November 2 audit because it used invented current multipliers and motor currents that disagreed with the NEC motor tables. It now reads Franklin Electric's 2026 AIM Manual for the company's single-phase submersible motors: the copper cable size for the whole run from Franklin's cable table, aluminum two sizes larger, the breaker and fuse sizes Franklin lists, and the motor's amps."
-  },
-  {
-    "date": "2026-11-17",
-    "text": "Brought back the hot tub calculator, offline since the November 2 audit because it estimated the circuit from the number of seats instead of the hot tub's rated load and its voltage-drop examples used wrong resistance values. It now sizes the copper circuit for the breaker the hot tub's manual asks for, from NEC Table 310.16 at the terminal temperature, with the Table 250.122 ground wire and the voltage drop over the run, and lists what three makers' current manuals require."
-  },
-  {
-    "date": "2026-11-17",
-    "text": "Brought back the air conditioner calculator, offline since the November 2 audit because it estimated amps from tonnage instead of using the unit's nameplate. It now sizes the copper wire to the minimum circuit ampacity (MCA) on the nameplate, from NEC Table 310.16 at the terminal temperature, with a breaker up to the nameplate's maximum (MOCP) as Table 240.4(G) and Article 440 allow, the Table 250.122 ground wire no larger than the circuit wire as 250.122(A) allows, and the voltage drop over the run, and shows the nameplate numbers of two makers' current units."
-  }
+ {
+  "date": "2026-11-02",
+  "text": "Audited every page. Removed the unsourced claims the audit found, including user counts, endorsements, expert reviews and response-time claims, and deleted or corrected the wrong values it found. Took 15 calculators offline until they are rebuilt from verified sources. Redirected 6 overlapping or retired pages to their closest page."
+ },
+ {
+  "date": "2026-11-11",
+  "text": "Rebuilt the AWG wire size chart and the NEC Table 310.16 page from NIST, IEC and NFPA sources. The chart now covers every AWG gauge in NIST's copper wire tables and the kcmil sizes Table 310.16 lists, each value with its source, and statements on both pages that no cited source supports were removed."
+ },
+ {
+  "date": "2026-11-12",
+  "text": "Replaced the NEC code compliance guide, whose summaries of overcurrent protection and grounding cited code sections this site had not checked against a source, with NEC edition by state: the edition each state has adopted, read from state government records."
+ },
+ {
+  "date": "2026-11-14",
+  "text": "Rebuilt the wire resistance calculator from NIST's copper wire tables. It now covers every AWG gauge and the kcmil sizes, and prints each resistance to the figures NIST publishes, where it had added a digit. Removed sections on skin effect, testing and safety factors that cited no source."
+ },
+ {
+  "date": "2026-11-14",
+  "text": "Rebuilt the voltage drop calculator on NIST's wire tables. It now takes the conductor temperature, DC circuits, a load in watts and up to four sets in parallel, can find the smallest size for a target, and quotes the NEC's informational note on voltage drop as advice. Removed sections on troubleshooting, installation practice and the effects of voltage drop that cited no source."
+ },
+ {
+  "date": "2026-11-14",
+  "text": "Rebuilt the low voltage calculator. It now takes the load in amps or watts and any DC voltage, gives the copper area in circular mils and mm², and shows the drop of the chosen size and the sizes around it. Removed safety and installation advice that cited no source."
+ },
+ {
+  "date": "2026-11-14",
+  "text": "Rebuilt the three-phase calculator. It now takes any line-to-line voltage and any two of kW, kVA, amps and power factor, gives the reactive power and the line-to-neutral voltage of 208Y/120 V and 480Y/277 V systems, and sizes the capacitor bank for a target power factor. Removed the 600Y/347 V system, which is not among the U.S. nominal voltages the site cites, and sections on safety, load balancing, troubleshooting and international practice that cited no source."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Rebuilt the single vs three phase guide around one load compared on single-phase and three-phase systems, the power each system delivers over a cycle, and the U.S. nominal voltages for each. Removed lists of advantages and typical uses, claims about motors, and a Canadian voltage system that is not among the U.S. nominal voltages the site cites; none of these cited a source."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Rebuilt the power factor guide around the U.S. Energy Information Administration's definitions of real, reactive and apparent power, the U.S. Department of Energy's capacitor example worked exactly, and a table of capacitor kVAR per kW. Removed an equipment power factor table and advice on correction methods and monitoring that cited no source."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Rebuilt the kilowatts to amps calculator. It now gives the apparent and reactive power and the current at other voltages, with worked examples and a table of amps per kW. Removed notes on leading power factor and motor advice that cited no source."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Rebuilt the kVA to amps calculator. It now takes any voltage and, with a power factor, gives the real and reactive power, with worked examples and a table of amps by kVA. Removed the equipment presets, a transformer option that labelled the voltage as the secondary even when it was off, and an installation note that cited no source."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Rebuilt the volts to amps calculator to match its description: it now works out the current from the power or from the resistance. Removed the section on how voltage changes current and the examples by type of equipment, such as solar strings and EV charging, which cited no source."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Rebuilt the watts to amps calculator. It now takes DC, single-phase and three-phase loads at any voltage, with a worked water heater example from the makers' documents and a table of amps by watts. Removed lists of common applications and notes that cited no source."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Rebuilt the amps to watts calculator. It now gives the apparent power and the same load's current at other voltages, with the three-phase example worked out and a table of watts by amps. Removed equipment examples (a range, an EV charger, LED lighting) whose power factors and uses cited no source, and the horsepower figure in the result."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Rebuilt the Ohm's law calculator: it now takes any two of volts, amps, ohms and watts, with all twelve formulas and worked examples. Removed a motor winding example that called a DC resistance reading a locked rotor test, and a resistor value given as standard with no source."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Rebuilt the BTU to watts calculator: it now converts Btu per hour, watts and tons of refrigeration either way on NIST SP 811 factors. Removed the HVAC efficiency ratings section and sizing advice, which cited no source."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Rebuilt the electrical power calculations guide: the formulas for power and current on DC, single-phase and three-phase circuits, with worked examples from the calculators' checked cases, the power triangle drawn to scale and the watts each ampere carries. Removed the lists of uses for each voltage, a claim that three-phase motors start and run better, and a lighting and a capacitor bank example, which cited no source."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Rebuilt the ground wire calculator: it now sizes both the equipment grounding conductor from Table 250.122, with the 250.122(B) increase when the circuit wires are upsized, and the grounding electrode conductor from Table 250.66 as NFPA's 2020 grounding fact sheet prints it. Removed lists of electrodes, pool bonding, installation methods and inspection steps, which cited no source."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Rebuilt the service entrance calculator: every Table 310.12 rating in one table with its Table 250.66 electrode conductor, as NFPA's 2020 grounding fact sheet prints it, and the voltage drop over a length you enter, with a chart of the drop by length."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Rebuilt the guide to service wire size: Table 310.12 for a dwelling service beside Table 310.16 at the terminal temperature 110.14(C) sets for other feeders, the 240.4(B) allowance for an aluminum feeder, both ground wires (Table 250.66 as NFPA's 2020 grounding fact sheet prints it, and Table 250.122) and the voltage drop. Removed the installation steps, the safety and mistake lists, a copper and aluminum comparison and claims about what a home needs, which cited no source. Table 310.12's scope now reads as the code words it on every page: a service, or a feeder, that carries the entire load of a dwelling unit."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Rebuilt the ampacity calculator: it now takes the ambient temperature in Celsius or Fahrenheit and the number of current-carrying conductors, and shows the corrected ampacity against the terminal limits of 110.14(C) and the 240.4(D) breaker limit, with NM and UF cable kept in the coolest temperature column. Removed the insulation type ratings, the wet-location and harmonic-current notes, the common mistakes and the answers on parallel conductors, voltage and separate conduits, which cited no source."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Rebuilt the wire size calculator: it now takes the wiring method and the terminal rating (110.14(C)), the ambient temperature and the number of current-carrying conductors, a continuous load (210.20(A)) and your voltage-drop target, shows each step, and notes where 240.4(B) lets the breaker protect the next smaller size. The page gives the size for every rating in both terminal columns and by run length for two common circuits. Removed the mistakes list, the installation tips and the answer on stranded and solid wire, which cited no source."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Brought back the circuit breaker calculator, offline since the November 2 audit because its default example contradicted itself and it cited an NEC table row that does not exist. It now sizes the breaker or fuse for a continuous and a noncontinuous load under 210.20(A), gives the next standard rating with the wire and ground wire for it, and notes where 240.4(B) allows a smaller wire."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Brought back the residential load calculator, offline since the November 2 audit because it mixed the NEC's standard and optional dwelling methods and put air conditioning in the wrong load group. It now runs both methods of NEC 2023 Article 220 side by side on the same inputs, with every step, and gives the service from Table 310.12 for each."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Brought back the range calculator, offline since the November 2 audit because its demand-factor rule did not match NEC Table 220.55, it put a wall oven on a breaker larger than its wire allowed, and it said ranges generally need no GFCI protection. It now takes a range, or a cooktop with wall ovens, through Table 220.55 and its notes, sizes the wire and ground wire for the circuit the range instructions give, and states the 2023 GFCI rule."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Brought back the dryer calculator, offline since the November 2 audit because it cited the wrong NEC sections and left out the 2023 GFCI requirement for dryer circuits. It now keeps a dryer's 220.54 load for the service apart from its own circuit, sizes the wire and ground wire for the circuit the dryer instructions give, and states the 2023 GFCI rule."
+ },
+ {
+  "date": "2026-11-15",
+  "text": "Brought back the horsepower to amps calculator, offline since the November 2 audit because it put one voltage's motor currents under another voltage's heading and named the wrong NEC motor tables. It now reads a motor's full-load current from NEC Tables 430.247, 430.248 and 430.250 by horsepower and the voltage column the tables' notes give, as 430.6(A) requires; it no longer computes the current from a formula or gives a wire size."
+ },
+ {
+  "date": "2026-11-17",
+  "text": "Rebuilt the subpanel and service wire size guide: Table 310.16 at the terminal temperature 110.14(C) sets for a subpanel feeder, NM cable held to the column 334.80 sets, the 240.4(B) allowance for copper one size smaller, Table 310.12 for a dwelling service, both ground wires, the four-wire feeder to a detached garage under 225.31, 225.39 and 250.32(B)(1), and the voltage drop over a long run. Removed a main breaker rule the site had not checked against a source, step-by-step installation advice, and notes on hot attics and wet locations, which cited no source."
+ },
+ {
+  "date": "2026-11-17",
+  "text": "Rebuilt the EV charger wire guide: each charger output's breaker from NEC 625.41 and 625.42, checked against Tesla's, ChargePoint's and Emporia's own tables; the copper size in NM cable and with terminations rated for the higher column; the makers' terminal limits; the receptacle and GFCI rules of 625.44 and 625.54; and the voltage drop over a long run. Removed aluminum sizes that the chargers' terminals do not accept, and charging-level figures and safety tips that cited no source."
+ },
+ {
+  "date": "2026-11-17",
+  "text": "Brought back the garage subpanel calculator, offline since the November 2 audit because it estimated the garage's load with invented demand factors credited to NEC sections that say something else and showed copper ground wire sizes on aluminum results. It now sizes the feeder for the breaker you choose from NEC Table 310.16 at the terminal temperature, gives the ground wire from Table 250.122 in the chosen metal, the four wires of 250.32, the garage disconnect of 225.39 and the minimum cover of Table 300.5(A); it no longer estimates the load."
+ },
+ {
+  "date": "2026-11-17",
+  "text": "Brought back the box fill calculator, offline since the November 2 audit because some of its box volumes and conductor-counting rules did not match the NEC. It now counts the fill by NEC 314.16 as the 2023 edition words it: each conductor at its Table 314.16(B)(1) volume, two allowances per device yoke, one for up to four ground wires and a quarter for each more, one for internal clamps and one per type of support fitting, against the volume of a Table 314.16(A) metal box or the volume marked on the box."
+ },
+ {
+  "date": "2026-11-17",
+  "text": "Brought back the RV hookup calculator, offline since the November 2 audit because it overstated where GFCI protection is required and misapplied the RV park demand factors. It now sizes the wire for the two common RV outlets from NEC Table 310.16 at the terminal temperature with the voltage drop over the run, gives GFCI as 210.8(F) and 551.71(F) set it, and calculates an RV park feeder from the 2023 per-site loads of 551.73(A) and the demand factors of Table 551.73(A)."
+ },
+ {
+  "date": "2026-11-17",
+  "text": "Brought back the well pump calculator, offline since the November 2 audit because it used invented current multipliers and motor currents that disagreed with the NEC motor tables. It now reads Franklin Electric's 2026 AIM Manual for the company's single-phase submersible motors: the copper cable size for the whole run from Franklin's cable table, aluminum two sizes larger, the breaker and fuse sizes Franklin lists, and the motor's amps."
+ },
+ {
+  "date": "2026-11-17",
+  "text": "Brought back the hot tub calculator, offline since the November 2 audit because it estimated the circuit from the number of seats instead of the hot tub's rated load and its voltage-drop examples used wrong resistance values. It now sizes the copper circuit for the breaker the hot tub's manual asks for, from NEC Table 310.16 at the terminal temperature, with the Table 250.122 ground wire and the voltage drop over the run, and lists what three makers' current manuals require."
+ },
+ {
+  "date": "2026-11-17",
+  "text": "Brought back the air conditioner calculator, offline since the November 2 audit because it estimated amps from tonnage instead of using the unit's nameplate. It now sizes the copper wire to the minimum circuit ampacity (MCA) on the nameplate, from NEC Table 310.16 at the terminal temperature, with a breaker up to the nameplate's maximum (MOCP) as Table 240.4(G) and Article 440 allow, the Table 250.122 ground wire no larger than the circuit wire as 250.122(A) allows, and the voltage drop over the run, and shows the nameplate numbers of two makers' current units."
+ },
+ {
+  "date": "2026-11-17",
+  "text": "Brought back the welder calculator, offline since the November 2 audit because it sized the circuit from estimated arc power instead of the welder's rated input current. It now starts from the minimum wire in the welder's manual, applies the NEC's 2023 breaker limits for welders in 630.12 with the next standard rating and the voltage drop over the run, gives the Table 250.122 ground wire, and lists the electrical service guides of six Miller and Lincoln welders."
+ }
 ]

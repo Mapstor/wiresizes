@@ -52,3 +52,10 @@ public/llms.txt | TT-30R | NEMA TT-30 receptacle configuration name, not a numbe
 /methodology | SS-ALXS3N-R32 | Amana specification sheet number (mfr-equipment.json ac_unit_notes)
 public/llms.txt | 26SCA5 | Carrier air conditioner model name, not a number and a unit
 public/llms.txt | ALXS3N | Amana air conditioner model name, not a number and a unit
+/calculators/welder-calculator | I1max | NEC 630.12's symbol for a welder's maximum rated supply current (nec-630-2023.json), not a number and a unit
+/calculators/welder-calculator | AC-225C | Lincoln welder model name (mfr-welders.json), not a number and a unit
+/calculators/welder-calculator | 6-50R | NEMA 6-50 receptacle configuration name (nema-receptacle-configs.json), not a number and a unit
+/calculators/welder-calculator | 6-50P | NEMA 6-50 plug configuration name (mfr-welders.json), not a number and a unit
+/methodology | I1max | NEC 630.12's symbol for a welder's maximum rated supply current (nec-630-2023.json), not a number and a unit
+/methodology | AC-225C | Lincoln welder model name (mfr-welders.json), not a number and a unit
+public/llms.txt | I1max | NEC 630.12's symbol for a welder's maximum rated supply current, not a number and a unit

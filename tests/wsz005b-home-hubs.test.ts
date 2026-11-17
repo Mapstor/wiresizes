@@ -22,7 +22,7 @@ describe('the route list', () => {
     assert.equal(new Set(PATHS).size, PATHS.length);
     const live = DATED.filter((route) => route.startsWith('/calculators/') || route.startsWith('/guides/')).sort();
     assert.deepEqual([...PATHS].sort(), live);
-    assert.equal(sectionRoutes('calculators').length, 26);
+    assert.equal(sectionRoutes('calculators').length, 27);
     assert.equal(sectionRoutes('guides').length, 9);
   });
 
@@ -85,7 +85,7 @@ describe('the route list', () => {
     assert.deepEqual(Object.keys(HUB_NAMES).sort(), ['/', '/calculators', '/guides']);
     for (const r of ROUTES) assert.equal(pageName(r.path), r.name);
     assert.equal(pageName('/'), 'Homepage');
-    assert.throws(() => pageName('/calculators/welder-calculator'), /no page name/);
+    assert.throws(() => pageName('/calculators/motor-circuit'), /no page name/);
     assert.throws(() => sectionOf('/about'), /neither a calculator nor a guide/);
   });
 });

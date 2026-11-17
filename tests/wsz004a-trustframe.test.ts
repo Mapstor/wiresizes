@@ -39,10 +39,11 @@ describe('page dates', () => {
     '/calculators/well-pump-calculator': '2026-11-17',
     '/calculators/hot-tub-calculator': '2026-11-17',
     '/calculators/air-conditioner-calculator': '2026-11-17',
+    '/calculators/welder-calculator': '2026-11-17',
   };
 
   it('every route was published on 2026-02-22, or on the day it was added, and modified on or after it', () => {
-    assert.equal(Object.keys(DATES).length, 44);
+    assert.equal(Object.keys(DATES).length, 45);
     for (const [route, { published, modified }] of Object.entries(DATES)) {
       assert.equal(published, ADDED_LATER[route] ?? '2026-02-22', route);
       assert.match(modified, /^\d{4}-\d{2}-\d{2}$/, route);
@@ -65,7 +66,7 @@ describe('page dates', () => {
   it('pageDates and articleDates read the file, and an unknown route throws', () => {
     assert.deepEqual(pageDates('/guides/nec-table-310-16'), DATES['/guides/nec-table-310-16']);
     assert.deepEqual(articleDates('/guides/awg-wire-size-chart'), { datePublished: '2026-02-22', dateModified: DATES['/guides/awg-wire-size-chart'].modified });
-    assert.throws(() => pageDates('/calculators/welder-calculator'), /no entry/);
+    assert.throws(() => pageDates('/calculators/motor-circuit'), /no entry/);
   });
 
   it('the sitemap lists every dated route once, with lastmod = modified as YYYY-MM-DD', () => {
