@@ -376,10 +376,18 @@ export default function WireSizeFor100AmpPage() {
             <p className={P} data-src={OUT}>
               Under 225.31 the building gets its own disconnecting means, inside or outside, at a readily accessible place nearest the point
               where the feeder enters. Under 225.39 its rating covers the calculated load and is at least{' '}
-              <Val v={DISCONNECT_MIN_A.allOthers} unit="A" src={OUT} /> for a garage or other building fed by a feeder, or{' '}
+              <Val v={DISCONNECT_MIN_A.allOthers} unit="A" src={OUT} /> for a garage or other building, or{' '}
               <Val v={DISCONNECT_MIN_A.oneFamilyDwelling} unit="A" src={OUT} />, {DISCONNECT_MIN_A.oneFamilyDwellingWires}-wire, where the
-              building is a one-family dwelling. Section 225.30 allows one feeder or branch circuit to the building unless
-              one of its listed conditions permits more.
+              building is a one-family dwelling; the floor drops to <Val v={DISCONNECT_MIN_A.twoCircuits} unit="A" src={OUT} /> where the
+              building has no more than two 2-wire branch circuits. Section 225.30 allows one feeder or branch circuit to the building
+              unless one of its listed conditions permits more.
+            </p>
+            <p className={P}>
+              The{' '}
+              <Link href="/calculators/garage-subpanel-calculator" className={LINK}>
+                garage subpanel calculator
+              </Link>{' '}
+              sizes this feeder for other breakers and gives the burial depth for the run.
             </p>
           </section>
 

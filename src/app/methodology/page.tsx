@@ -52,6 +52,9 @@ import { ADOPTION_AS_OF, ADOPTION_TABLE_HREF, joinNames, NEC_ADOPTION_DOMAIN, NO
 import { PageTitle } from '@/components/look/PageTitle';
 import { LOOK_BYLINE, LOOK_BYLINE_LINK, LOOK_H2, LOOK_H3, LOOK_LINK, LOOK_PAGE } from '@/components/look/styles';
 
+/** Small counts written out in running text. */
+const COUNT_WORDS: Record<number, string> = { 2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'six' };
+
 // /methodology (WSZ-004b): one section per verified source the live calculators cite (src/lib/methodology.ts lists
 // them and the pages that cite each; check-structure 24 holds that list to the built pages), the wire size method,
 // and the topics not covered yet. Copy written in the WSZ-004b session (WSZ-017 answer 11 gave it to chat; cloud
@@ -682,12 +685,14 @@ export default function MethodologyPage() {
               <SectionLink domain="nec-250-32">Grounding at a separate building</SectionLink>).
             </li>
             <li>
-              The garage&apos;s disconnect: at least <Val v={DISCONNECT_MIN_A.allOthers} unit="A" src="nec-feeders-outbuildings" /> for a building fed
-              by a feeder (225.39; see <SectionLink domain="nec-feeders-outbuildings">Feeders to a separate building</SectionLink>).
+              The garage&apos;s disconnect: at least the calculated load and never below{' '}
+              <Val v={DISCONNECT_MIN_A.allOthers} unit="A" src="nec-feeders-outbuildings" />, or{' '}
+              <Val v={DISCONNECT_MIN_A.twoCircuits} unit="A" src="nec-feeders-outbuildings" /> with no more than two 2-wire branch circuits (225.39;
+              see <SectionLink domain="nec-feeders-outbuildings">Feeders to a separate building</SectionLink>).
             </li>
             <li>
-              The minimum cover from Table 300.5(A) for the wiring method, {BURIAL_METHODS.length} of them, and the place the run is buried,{' '}
-              {BURIAL_PLACES.length} of them (see <SectionLink domain="nec-300-5-burial">Underground cover</SectionLink>).
+              The minimum cover from Table 300.5(A) for {COUNT_WORDS[BURIAL_METHODS.length]} wiring methods and{' '}
+              {COUNT_WORDS[BURIAL_PLACES.length]} places to bury the run (see <SectionLink domain="nec-300-5-burial">Underground cover</SectionLink>).
             </li>
           </ol>
           <Limits>
