@@ -154,7 +154,7 @@ export function ConduitFillTool() {
           <Field id="raceway" label="Conduit or tubing" hint="The Annex C table for this raceway is used.">
             <SelectInput id="raceway" value={inputs.raceway} onChange={(raceway) => update({ raceway })} describedById="raceway-hint">
               {RACEWAYS.map((r) => (
-                <option key={r.id} value={r.id}>
+                <option key={r.id} value={r.id} data-src={SRC}>
                   {r.name}
                 </option>
               ))}
@@ -163,7 +163,7 @@ export function ConduitFillTool() {
           <Field id="type" label="Conductor insulation type" hint="As printed on the wire.">
             <SelectInput id="type" value={inputs.type} onChange={(t) => update({ type: t })} describedById="type-hint">
               {CONDUCTOR_TYPES.map((t) => (
-                <option key={t.id} value={t.id}>
+                <option key={t.id} value={t.id} data-src={SRC}>
                   {t.label}
                 </option>
               ))}
