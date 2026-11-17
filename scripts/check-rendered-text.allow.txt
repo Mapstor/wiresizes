@@ -59,3 +59,5 @@ public/llms.txt | ALXS3N | Amana air conditioner model name, not a number and a 
 /methodology | I1max | NEC 630.12's symbol for a welder's maximum rated supply current (nec-630-2023.json), not a number and a unit
 /methodology | AC-225C | Lincoln welder model name (mfr-welders.json), not a number and a unit
 public/llms.txt | I1max | NEC 630.12's symbol for a welder's maximum rated supply current, not a number and a unit
+/calculators/conduit-fill-calculator | 5A | NEC Chapter 9 Table 5A, the compact-stranding conductor table (WSZ-039)
+/methodology | 5A | NEC Chapter 9 Table 5A, the compact-stranding conductor table (WSZ-039)

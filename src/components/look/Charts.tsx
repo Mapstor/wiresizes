@@ -47,6 +47,7 @@ import { DROP_ROWS as HT_DROP_ROWS, HT_DROP_PCT, HT_MAIN_A } from '@/lib/hot-tub
 import { AC_DROP_PCT, AC_VOLTS, DROP_ROWS as AC_DROP_ROWS, EXAMPLE as AC_EXAMPLE } from '@/lib/ac-page';
 import { DROP_ROWS as WD_DROP_ROWS, EXAMPLE_WELDER as WD_EXAMPLE, WD_DROP_PCT } from '@/lib/welder-page';
 import { WD_VOLTS } from '@/lib/calculations/welder';
+import { COMPARE as CF_COMPARE, COMPARE_SIZE as CF_SIZE, COMPARE_TRADE as CF_TRADE } from '@/lib/conduit-fill-page';
 import type { BoxFillResult, FillRule } from '@/lib/calculations/box-fill';
 import type { EvRow } from '@/lib/ev-guide';
 import type { LadderRow } from '@/lib/subpanel-guide';
@@ -3988,3 +3989,82 @@ export function WelderDropChart() {
     </div>
   );
 }
+
+// ── Conduit fill (WSZ-039): Annex C, one conductor in trade size 1 of every raceway that lists it ─────────────────────
+
+const CF_SRC = 'nec-ch9-fill';
+/** Short raceway names for the chart's labels; the page's table and tool use the full names. */
+const CF_SHORT: Record<string, string> = {
+  emt: 'EMT',
+  ent: 'ENT',
+  fmc: 'FMC',
+  imc: 'IMC',
+  'lfnc-a': 'LFNC-A',
+  'lfnc-b': 'LFNC-B',
+  'lfnc-c': 'LFNC-C',
+  lfmc: 'LFMC',
+  rmc: 'RMC',
+  'pvc-80': 'PVC Sch. 80',
+  'pvc-40': 'PVC Sch. 40',
+  'pvc-a': 'PVC Type A',
+};
+
+function RacewayPlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 92 : 112;
+  const right = 36;
+  const rowH = narrow ? 22 : 24;
+  const barH = narrow ? 14 : 16;
+  const top = 26;
+  const H = top + CF_COMPARE.length * rowH + 8;
+  const max = Math.max(...CF_COMPARE.map((r) => r.n));
+  const x = (n: number) => left + (n / max) * (W - left - right);
+  const id = narrow ? 'cf-raceways-narrow' : 'cf-raceways-wide';
+  for (const r of CF_COMPARE) if (!CF_SHORT[r.id]) throw new Error(`conduit fill chart: no short name for ${r.id}`);
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={CF_SRC}
+    >
+      <title id={`${id}-title`}>
+        {`NEC Annex C, the most ${CF_SIZE} AWG THHN conductors in trade size ${CF_TRADE} of each raceway: ${CF_COMPARE.map((r) => `${CF_SHORT[r.id]} ${r.n}`).join(', ')}.`}
+      </title>
+      <text x={0} y={14} fontSize={13} fill={MUTED}>
+        Raceway
+      </text>
+      <text x={W - 1} y={14} textAnchor="end" fontSize={13} fill={MUTED}>
+        Conductors
+      </text>
+      {CF_COMPARE.map((r, k) => {
+        const y = top + k * rowH;
+        return (
+          <g key={r.id}>
+            <text x={left - 10} y={y + barH / 2 + 4.5} textAnchor="end" fontSize={13} fill={INK}>
+              {CF_SHORT[r.id]}
+            </text>
+            <path d={barPath(left, y, x(r.n) - left, barH)} fill={r.id === 'emt' || r.id === 'pvc-40' ? COPPER : '#8a7f74'} className="viz-grow" />
+            <text x={x(r.n) + 6} y={y + barH / 2 + 4.5} fontSize={13} fontWeight={700} fill={INK} className="viz-pop">
+              <Num v={r.n} src={CF_SRC} svg />
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/** Annex C as bars: how many 12 AWG THHN fit in trade size 1 of each raceway, most first. */
+export function ConduitRacewayChart() {
+  return (
+    <div>
+      <RacewayPlot narrow={false} />
+      <RacewayPlot narrow />
+    </div>
+  );
+}
+

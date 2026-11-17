@@ -266,6 +266,7 @@ const TOC = [
   METHODOLOGY_EXTRA_SECTIONS.hpMethod,
   METHODOLOGY_EXTRA_SECTIONS.garageMethod,
   METHODOLOGY_EXTRA_SECTIONS.boxFillMethod,
+  METHODOLOGY_EXTRA_SECTIONS.conduitFillMethod,
   METHODOLOGY_EXTRA_SECTIONS.rvMethod,
   METHODOLOGY_EXTRA_SECTIONS.wellPumpMethod,
   METHODOLOGY_EXTRA_SECTIONS.hotTubMethod,
@@ -294,7 +295,7 @@ const HP_EATON_LAST = (() => {
 })();
 
 export default function MethodologyPage() {
-  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, garageMethod, boxFillMethod, rvMethod, wellPumpMethod, hotTubMethod, acMethod, welderMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
+  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, garageMethod, boxFillMethod, conduitFillMethod, rvMethod, wellPumpMethod, hotTubMethod, acMethod, welderMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
   return (
     <div className={LOOK_PAGE}>
     <div className="container pb-16">
@@ -739,6 +740,38 @@ export default function MethodologyPage() {
           <Limits>
             <li>The reader counts the conductors; the calculator does not trace cables or splices.</li>
             <li>No terminal blocks (314.16(B)(6)) and no conduit bodies.</li>
+          </Limits>
+        </section>
+
+        <section id={conduitFillMethod.id} data-src="calc:conduit-fill" aria-labelledby={`${conduitFillMethod.id}-title`} className="scroll-mt-24 space-y-4">
+          <h2 id={`${conduitFillMethod.id}-title`} className={H2}>
+            {conduitFillMethod.title}
+          </h2>
+          <p>
+            The{' '}
+            <Link href="/calculators/conduit-fill-calculator" className={LINK}>
+              conduit fill calculator
+            </Link>{' '}
+            reads one row of Annex C (see <SectionLink domain="nec-ch9-fill">Conduit fill</SectionLink>):
+          </p>
+          <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-cut-line">
+            <li>The raceway picks the table, Table C.1 for EMT to Table C.13 for Type EB PVC, and compact stranding its (A) table.</li>
+            <li>
+              The insulation type and the wire size pick the row. THW and TW take <Size s="14" /> to <Size s="8" /> from their own rows and larger sizes from
+              the rows they share with RHH and RHW without an outer covering; XHHW takes its smaller sizes from the rows it shares with ZW.
+            </li>
+            <li>
+              &ldquo;How many fit&rdquo; reads the count under the trade size; &ldquo;Conduit size&rdquo; takes the smallest trade size whose
+              count is at least the number entered.
+            </li>
+          </ol>
+          <p>
+            Every count is the annex&apos;s own, which applies Chapter 9 Table 1, Table 4 and Table 5 (Table 5A for compact stranding) with
+            Note 7&apos;s rounding; the calculator computes no area.
+          </p>
+          <Limits>
+            <li>Conductors all of one size and type; no mixed sizes, which need Table 4 and Table 5.</li>
+            <li>No fixture wires, cables or cable trays, and no nipple fill (Note 4).</li>
           </Limits>
         </section>
 
@@ -1430,6 +1463,22 @@ export default function MethodologyPage() {
           </Limits>
         </SourceSection>
 
+        <SourceSection domain="nec-ch9-fill">
+          <p>
+            Chapter 9 of the NEC (2023) limits how much of a conduit&apos;s cross section conductors may fill (Table 1 and its Notes), and
+            Informative Annex C applies those limits, with the conduit areas of Table 4 and the conductor areas of Table 5 (Table 5A for
+            compact stranding), to list the most conductors of one size in each trade size of thirteen raceway types. Annex C&apos;s Tables
+            C.1 to C.13(A) are read from public input 1588 of the 2026 cycle, which CMP-8 filed from Tentative Interim Amendment 23-7 and
+            which prints the whole 2023 annex; its revision marks touch only the cable tray tables, which the site does not use. Table 1
+            and its Notes are read from First Revision 7763 of the 2026 First Draft, whose unmarked and struck text is the 2023 text.
+          </p>
+          <SourceFacts s={section('nec-ch9-fill')} />
+          <Limits>
+            <li>Table 4 beyond intermediate metal conduit, and Table 5, are not verified, so the site calculates no conductor or conduit area.</li>
+            <li>Two printing slips in the record, a missing dash on two RMC rows and a THHN label in the LFNC-C table, are read as the other tables print them.</li>
+          </Limits>
+        </SourceSection>
+
         <SourceSection domain="nec-551-rv-demand">
           <p>
             Part VI of Article 551 of the NEC (2023) covers RV parks: 551.71 sets the receptacles each site has and where they need GFCI
@@ -2025,7 +2074,7 @@ export default function MethodologyPage() {
           <ul className={LIST}>
             <li>The ampacity rule for UF cable, and whether ground wires count as current-carrying.</li>
             <li>Stranded conductor dimensions, and the AC resistance and reactance of conductors.</li>
-            <li>Conduit fill: how many conductors fit in a conduit, with conduit and wire areas.</li>
+            <li>Conduit fill for conductors of different sizes, which needs the NEC&apos;s conduit and wire area tables.</li>
             <li>
               Grounding electrode conductors to ground rods and concrete-encased electrodes, and how electrodes are
               installed.

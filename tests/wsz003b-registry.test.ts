@@ -25,7 +25,7 @@ describe('attribution()', () => {
 
   it('throws for a candidate or GAP domain', () => {
     assert.throws(() => attribution('nec-misc-installation'), /"candidate", not verified/);
-    assert.throws(() => attribution('nec-ch9-fill'), /"GAP", not verified/);
+    assert.throws(() => attribution('nec-430-motors'), /"GAP", not verified/);
   });
 });
 
