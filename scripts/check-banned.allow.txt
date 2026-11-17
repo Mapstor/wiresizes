@@ -14,3 +14,4 @@ src/app/guides/wire-size-for-200-amp/page.tsx | copper or 250 kcmil aluminum | t
 /guides/wire-size-for-100-amp | 1 AWG copper or 1/0 aluminum | the guide's meta description, same statement (WSZ-008d)
 src/app/guides/wire-size-for-100-amp/page.tsx | 1 AWG copper or 1/0 aluminum | the guide's meta description in its source (WSZ-008d)
 public/llms.txt | 1 AWG copper or 1/0 AWG aluminum | the guide's llms.txt line, same statement (WSZ-008d)
+/calculators/garage-subpanel-calculator | 1 AWG copper or 1/0 AWG aluminum | 100 A feeder at the 60 °C column of 110.14(C)(1)(a), the 100 A question (WSZ-008f)

@@ -41,6 +41,8 @@ import { DRYER_CIRCUITS } from '@/lib/calculations/dryer-circuit';
 import { DISCONNECT_ABOVE, EV_OCPD_PERCENT, INDIVIDUAL_CIRCUIT } from '@/lib/verified/nec-625';
 import { CHARGEPOINT, EMPORIA, TESLA } from '@/lib/verified/mfr-evse';
 import { OUTDOOR_GFCI } from '@/lib/verified/nec-210-8-f';
+import { GARAGE_RATINGS } from '@/lib/calculations/garage-subpanel';
+import { BURIAL_METHODS, BURIAL_PLACES } from '@/lib/verified/nec-300-5';
 import { NEMA_CONFIGS } from '@/lib/verified/nema-receptacle-configs';
 import { AMPACITY_COLUMNS, TABLE_310_16_ROWS, TABLE_310_16_SIZES, TABLE_AMBIENT } from '@/lib/verified/nec-310-16';
 import { attribution, attributionParts, coverage, nextCheck } from '@/lib/verified/registry';
@@ -49,6 +51,9 @@ import { formatDate } from '@/lib/page-dates';
 import { ADOPTION_AS_OF, ADOPTION_TABLE_HREF, joinNames, NEC_ADOPTION_DOMAIN, NOT_VERIFIED, stateName } from '@/lib/verified/nec-adoption';
 import { PageTitle } from '@/components/look/PageTitle';
 import { LOOK_BYLINE, LOOK_BYLINE_LINK, LOOK_H2, LOOK_H3, LOOK_LINK, LOOK_PAGE } from '@/components/look/styles';
+
+/** Small counts written out in running text. */
+const COUNT_WORDS: Record<number, string> = { 2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'six' };
 
 // /methodology (WSZ-004b): one section per verified source the live calculators cite (src/lib/methodology.ts lists
 // them and the pages that cite each; check-structure 24 holds that list to the built pages), the wire size method,
@@ -255,6 +260,7 @@ const TOC = [
   METHODOLOGY_EXTRA_SECTIONS.rangeMethod,
   METHODOLOGY_EXTRA_SECTIONS.dryerMethod,
   METHODOLOGY_EXTRA_SECTIONS.hpMethod,
+  METHODOLOGY_EXTRA_SECTIONS.garageMethod,
   ...METHODOLOGY_SECTIONS.map(({ id, title }) => ({ id, title })),
   METHODOLOGY_EXTRA_SECTIONS.notCovered,
   METHODOLOGY_EXTRA_SECTIONS.errors,
@@ -278,7 +284,7 @@ const HP_EATON_LAST = (() => {
 })();
 
 export default function MethodologyPage() {
-  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
+  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, garageMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
   return (
     <div className={LOOK_PAGE}>
     <div className="container pb-16">
@@ -291,8 +297,8 @@ export default function MethodologyPage() {
         <p>
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
           has a section below: what it is and which edition was used, where it was read, how the calculators use it,
-          and where that use stops. The first six sections show how the wire size, circuit breaker, residential load,
-          range, dryer and horsepower to amps calculators put several of them together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
+          and where that use stops. The first seven sections show how the wire size, circuit breaker, residential load,
+          range, dryer, horsepower to amps and garage subpanel calculators put several of them together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
           homepage and the calculators and guides pages also list their sources under Sources, near the bottom of the
           page.
         </p>
@@ -651,6 +657,48 @@ export default function MethodologyPage() {
           <Limits>
             <li>No conductor, overload or breaker size: the NEC&apos;s motor rules for them are not verified here yet.</li>
             <li>Synchronous motors, two-phase motors (Table 430.249) and Table 430.250&apos;s power factor footnote are left out.</li>
+          </Limits>
+        </section>
+
+        <section id={garageMethod.id} data-src="calc:garage-subpanel" aria-labelledby={`${garageMethod.id}-title`} className="scroll-mt-24 space-y-4">
+          <h2 id={`${garageMethod.id}-title`} className={H2}>
+            {garageMethod.title}
+          </h2>
+          <p>
+            The{' '}
+            <Link href="/calculators/garage-subpanel-calculator" className={LINK}>
+              garage subpanel calculator
+            </Link>{' '}
+            sizes the feeder from a house panel to a subpanel in a separate building, for a breaker from{' '}
+            <Val v={GARAGE_RATINGS[0]} unit="A" src="nec-240-ocpd" /> to <Val v={GARAGE_RATINGS[GARAGE_RATINGS.length - 1]} unit="A" src="nec-240-ocpd" />:
+          </p>
+          <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-cut-line">
+            <li>
+              The conductors, the ground wire and the voltage drop as the{' '}
+              <a href={`#${method.id}`} className={LINK}>
+                wire size calculator
+              </a>{' '}
+              works them out, with the calculated load you enter, if any, for the drop and for one size smaller under 240.4(B).
+            </li>
+            <li>
+              Four wires: two hots, the neutral and the equipment grounding conductor (250.32(B)(1); see{' '}
+              <SectionLink domain="nec-250-32">Grounding at a separate building</SectionLink>).
+            </li>
+            <li>
+              The garage&apos;s disconnect: at least the calculated load and never below{' '}
+              <Val v={DISCONNECT_MIN_A.allOthers} unit="A" src="nec-feeders-outbuildings" />, or{' '}
+              <Val v={DISCONNECT_MIN_A.twoCircuits} unit="A" src="nec-feeders-outbuildings" /> with no more than two 2-wire branch circuits (225.39;
+              see <SectionLink domain="nec-feeders-outbuildings">Feeders to a separate building</SectionLink>).
+            </li>
+            <li>
+              The minimum cover from Table 300.5(A) for {COUNT_WORDS[BURIAL_METHODS.length]} wiring methods and{' '}
+              {COUNT_WORDS[BURIAL_PLACES.length]} places to bury the run (see <SectionLink domain="nec-300-5-burial">Underground cover</SectionLink>).
+            </li>
+          </ol>
+          <Limits>
+            <li>The calculator never picks the feeder&apos;s rating; a load calculation does.</li>
+            <li>It sizes the hots; the neutral is sized for the 220.61 neutral load, at most the hots&apos; size.</li>
+            <li>No conduit size, no electrode size and no depth for EMT.</li>
           </Limits>
         </section>
 
@@ -1148,6 +1196,24 @@ export default function MethodologyPage() {
           </p>
           <Limits>
             <li>Which electrodes make up the system, and how they are installed, are not covered yet.</li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="nec-300-5-burial">
+          <p>
+            Table 300.5(A) of the NEC (2023) gives the minimum cover, in inches and millimeters, for underground wiring of
+            up to 1000 V by wiring method and location. It is read from NFPA&apos;s Second Revision SR-8551 of the 2023
+            cycle; the first row also matches three state and city summaries of the 2023 edition.
+          </p>
+          <SourceFacts s={section('nec-300-5-burial')} />
+          <p>
+            The garage subpanel calculator uses three of its columns (direct burial, rigid or intermediate metal conduit,
+            and nonmetallic raceways listed for direct burial) and five of its rows. Cover is measured from the top of the
+            cable, conductor or raceway to the top of finished grade, concrete or a similar cover (Note 1).
+          </p>
+          <Limits>
+            <li>No depth for EMT: the 2023 column it falls in was not read clearly.</li>
+            <li>The row for runs under a building is left out: its conditions were not read clearly.</li>
           </Limits>
         </SourceSection>
 
