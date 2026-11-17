@@ -149,6 +149,6 @@
  },
  {
   "date": "2026-11-17",
-  "text": "Brought back the conduit fill calculator, offline since the November 2 audit because it said ground wires are not counted in conduit fill and several conduit and wire areas were wrong. It now gives the 2023 NEC's own Annex C counts for conductors all of one size: the most that fit in each trade size of 13 kinds of conduit and tubing, or the smallest trade size for a number of them, with ground wires of the same size counted, as Chapter 9 requires. Conductors of different sizes are not calculated yet."
+  "text": "Brought back the conduit fill calculator, offline since the site's November audit because it said ground wires are not counted in conduit fill and several conduit and wire areas were wrong. It now gives the 2023 NEC's own Annex C counts for conductors all of one size: the most that fit in each trade size of every kind of conduit and tubing the annex lists, or the smallest trade size for a number of them, with ground wires of the same size counted, as the NEC requires. Conductors of different sizes are not calculated yet."
  }
 ]

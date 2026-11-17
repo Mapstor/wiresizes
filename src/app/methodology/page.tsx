@@ -2074,7 +2074,7 @@ export default function MethodologyPage() {
           <ul className={LIST}>
             <li>The ampacity rule for UF cable, and whether ground wires count as current-carrying.</li>
             <li>Stranded conductor dimensions, and the AC resistance and reactance of conductors.</li>
-            <li>Conduit fill for conductors of different sizes, with conduit and wire areas (Chapter 9 Tables 4 and 5).</li>
+            <li>Conduit fill for conductors of different sizes, which needs the NEC&apos;s conduit and wire area tables.</li>
             <li>
               Grounding electrode conductors to ground rods and concrete-encased electrodes, and how electrodes are
               installed.
