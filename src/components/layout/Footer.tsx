@@ -31,6 +31,7 @@ const footerLinks = {
     { name: 'Garage Subpanel Calculator', href: '/calculators/garage-subpanel-calculator' },
     { name: 'Box Fill Calculator', href: '/calculators/box-fill-calculator' },
     { name: 'RV Hookup Calculator', href: '/calculators/rv-hookup-calculator' },
+    { name: 'Well Pump Calculator', href: '/calculators/well-pump-calculator' },
     { name: 'Residential Load Calculator', href: '/calculators/residential-load-calculator' },
     { name: 'Range Calculator', href: '/calculators/range-calculator' },
     { name: 'Dryer Calculator', href: '/calculators/dryer-calculator' },

@@ -263,6 +263,7 @@ const TOC = [
   METHODOLOGY_EXTRA_SECTIONS.garageMethod,
   METHODOLOGY_EXTRA_SECTIONS.boxFillMethod,
   METHODOLOGY_EXTRA_SECTIONS.rvMethod,
+  METHODOLOGY_EXTRA_SECTIONS.wellPumpMethod,
   ...METHODOLOGY_SECTIONS.map(({ id, title }) => ({ id, title })),
   METHODOLOGY_EXTRA_SECTIONS.notCovered,
   METHODOLOGY_EXTRA_SECTIONS.errors,
@@ -286,7 +287,7 @@ const HP_EATON_LAST = (() => {
 })();
 
 export default function MethodologyPage() {
-  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, garageMethod, boxFillMethod, rvMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
+  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, garageMethod, boxFillMethod, rvMethod, wellPumpMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
   return (
     <div className={LOOK_PAGE}>
     <div className="container pb-16">
@@ -299,8 +300,8 @@ export default function MethodologyPage() {
         <p>
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
           has a section below: what it is and which edition was used, where it was read, how the calculators use it,
-          and where that use stops. The first nine sections show how the wire size, circuit breaker, residential load,
-          range, dryer, horsepower to amps, garage subpanel, box fill and RV hookup calculators work from them. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
+          and where that use stops. The first ten sections show how the wire size, circuit breaker, residential load,
+          range, dryer, horsepower to amps, garage subpanel, box fill, RV hookup and well pump calculators work from them. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
           homepage and the calculators and guides pages also list their sources under Sources, near the bottom of the
           page.
         </p>
@@ -762,6 +763,33 @@ export default function MethodologyPage() {
           <Limits>
             <li>No tent sites, no supply that serves two RVs, and no park buildings or pools, which 551.73 adds on their own.</li>
             <li>The park result is a calculated load; it does not size the feeder conductors or the service.</li>
+          </Limits>
+        </section>
+
+        <section id={wellPumpMethod.id} data-src="calc:well-pump" aria-labelledby={`${wellPumpMethod.id}-title`} className="scroll-mt-24 space-y-4">
+          <h2 id={`${wellPumpMethod.id}-title`} className={H2}>
+            {wellPumpMethod.title}
+          </h2>
+          <p>
+            The{' '}
+            <Link href="/calculators/well-pump-calculator" className={LINK}>
+              well pump calculator
+            </Link>{' '}
+            reads Franklin Electric&apos;s tables for its 4-inch single-phase submersible motors (see{' '}
+            <SectionLink domain="mfr-well-pump">Submersible well pumps</SectionLink>):
+          </p>
+          <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-cut-line">
+            <li>
+              The copper size: the smallest size whose longest run in the cable table, at a 5 % drop or 0.6 times that for 3 %, reaches the
+              whole cable length; with jacketed cable it skips the shaded cells, which Franklin rates for single conductors only.
+            </li>
+            <li>The run&apos;s share of that size&apos;s longest run, the number Franklin adds up when a run joins two sizes.</li>
+            <li>Aluminum two sizes larger than the copper size, as Franklin asks; none past 4/0 AWG.</li>
+            <li>The breaker and fuses from Franklin&apos;s table for the motor, the NEC maximum and the typical size, and the motor&apos;s amps.</li>
+          </ol>
+          <Limits>
+            <li>Franklin&apos;s 4-inch single-phase motors only: no three-phase, 6-inch or 8-inch motors, and no other makers&apos; tables.</li>
+            <li>No NEC motor rule is applied on its own; the NEC values are the ones Franklin lists.</li>
           </Limits>
         </section>
 
@@ -1309,6 +1337,21 @@ export default function MethodologyPage() {
           </Limits>
         </SourceSection>
 
+        <SourceSection domain="mfr-well-pump">
+          <p>
+            Franklin Electric&apos;s AIM Manual (application, installation and maintenance of its 60 Hz submersible motors, 2026 edition) lists
+            the longest copper cable for each motor at a 5 % voltage drop when the motor runs at its maximum nameplate amps, with the rule
+            for 3 %, for aluminum and for shaded cells; the fuse and breaker sizes for each motor, both the NEC maximum and the size typical
+            on submersibles; and the motors&apos; amps. The values are read from Franklin&apos;s own PDF, and the shaded cells from the
+            fill of the table cells.
+          </p>
+          <SourceFacts s={section('mfr-well-pump')} />
+          <Limits>
+            <li>Only the 4-inch single-phase tables; the three-phase, 6-inch and 8-inch tables are not used.</li>
+            <li>The amps are Franklin&apos;s standard motors without the &ldquo;G&rdquo; suffix; other series draw slightly different currents.</li>
+          </Limits>
+        </SourceSection>
+
         <SourceSection domain="nec-cable-rules">
           <p>
             Section 334.80 of the NEC (2023) sets the ampacity of NM cable, and 310.15(E) says when a neutral counts as a
@@ -1817,7 +1860,7 @@ export default function MethodologyPage() {
             <li>Air conditioner and heat pump circuits.</li>
             <li>Pool pump, spa and hot tub circuits.</li>
             <li>Welder circuits.</li>
-            <li>Submersible well pump cable lengths from the pump maker&apos;s current tables.</li>
+            <li>Three-phase and larger submersible well pump motors, and other pump makers&apos; tables.</li>
           </ul>
         </section>
 

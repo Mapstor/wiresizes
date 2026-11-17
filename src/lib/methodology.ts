@@ -47,6 +47,7 @@ const GUIDE_EV = '/guides/wire-size-for-ev-charger';
 const GARAGE = '/calculators/garage-subpanel-calculator';
 const BOX_FILL = '/calculators/box-fill-calculator';
 const RV_HOOKUP = '/calculators/rv-hookup-calculator';
+const WELL_PUMP = '/calculators/well-pump-calculator';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
 const EDITIONS = '/guides/nec-code-compliance';
@@ -146,6 +147,12 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     domain: 'nec-551-rv-demand',
     title: 'RV parks',
     citedOn: [RV_HOOKUP],
+  },
+  {
+    id: 'well-pumps',
+    domain: 'mfr-well-pump',
+    title: 'Submersible well pumps (Franklin Electric)',
+    citedOn: [WELL_PUMP],
   },
   {
     id: 'cable-ampacity',
@@ -291,6 +298,7 @@ export const METHODOLOGY_EXTRA_SECTIONS = {
   garageMethod: { id: 'garage-method', title: 'How the garage subpanel calculator sizes a feeder' },
   boxFillMethod: { id: 'box-fill-method', title: 'How the box fill calculator adds the fill' },
   rvMethod: { id: 'rv-method', title: 'How the RV hookup calculator sizes an outlet and a park' },
+  wellPumpMethod: { id: 'well-pump-method', title: 'How the well pump calculator reads Franklin’s tables' },
   notCovered: { id: 'not-covered', title: 'Not covered yet' },
   errors: { id: 'errors', title: 'Errors and corrections' },
 } as const;

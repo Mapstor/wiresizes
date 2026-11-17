@@ -42,6 +42,7 @@ import { EV_DROP_MAX_FT, EV_HIGH, EV_LOW, EV_ROWS } from '@/lib/ev-guide';
 import { GENERAL_COVERS } from '@/lib/garage-page';
 import { EXAMPLE_12, EXAMPLE_14, EXAMPLE_BOX } from '@/lib/box-fill-page';
 import { DEMAND_FACTORS } from '@/lib/verified/nec-551';
+import { CHART_ROWS as WP_ROWS, CHART_SIZE as WP_SIZE } from '@/lib/well-pump-page';
 import type { BoxFillResult, FillRule } from '@/lib/calculations/box-fill';
 import type { EvRow } from '@/lib/ev-guide';
 import type { LadderRow } from '@/lib/subpanel-guide';
@@ -3722,6 +3723,70 @@ export function RvDemandChart() {
     <div>
       <DemandPlot narrow={false} />
       <DemandPlot narrow />
+    </div>
+  );
+}
+
+const WP_SRC = 'mfr-well-pump';
+
+function PumpLengthPlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 58 : 70;
+  const right = narrow ? 66 : 74;
+  const rowH = narrow ? 30 : 32;
+  const barH = narrow ? 16 : 18;
+  const top = 28;
+  const H = top + WP_ROWS.length * rowH + 4;
+  const pw = W - left - right;
+  const maxFt = 1100;
+  const x = (ft: number) => left + (ft / maxFt) * pw;
+  const id = narrow ? 'wp-length-narrow' : 'wp-length-wide';
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={WP_SRC}
+    >
+      <title id={`${id}-title`}>
+        {`Franklin Electric AIM Manual 2026, the longest cable run on ${WP_SIZE} AWG copper at a 5 % voltage drop for its 4-inch 230 V single-phase motors: ${WP_ROWS.map((r) => `${r.hp} hp ${r.ft.toLocaleString('en-US')} ft`).join(', ')}.`}
+      </title>
+      <text x={0} y={14} fontSize={13} fill={MUTED}>
+        Motor
+      </text>
+      <text x={W - 1} y={14} textAnchor="end" fontSize={13} fill={MUTED}>
+        Longest run, {WP_SIZE} AWG
+      </text>
+      {[0, 500, 1000].map((t) => (
+        <line key={t} x1={x(t)} x2={x(t)} y1={top - 6} y2={H - 4} stroke={GRID} strokeWidth={1} />
+      ))}
+      {WP_ROWS.map((r, k) => {
+        const y = top + k * rowH;
+        return (
+          <g key={r.hp}>
+            <text x={left - 10} y={y + barH / 2 + 4.5} textAnchor="end" fontSize={13} fill={INK}>
+              {r.hp} hp
+            </text>
+            <path d={barPath(left, y, x(r.ft) - left, barH)} fill={COPPER} className="viz-grow" />
+            <text x={x(r.ft) + 6} y={y + barH / 2 + 4.5} fontSize={13} fontWeight={700} fill={INK} className="viz-pop">
+              <Val v={r.ft} unit="ft" src={WP_SRC} svg />
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/** Franklin's 230 V single-phase motors: the longest run on 10 AWG copper at a 5 % drop. */
+export function WellPumpLengthChart() {
+  return (
+    <div>
+      <PumpLengthPlot narrow={false} />
+      <PumpLengthPlot narrow />
     </div>
   );
 }

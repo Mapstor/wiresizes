@@ -126,5 +126,9 @@
   {
     "date": "2026-11-17",
     "text": "Brought back the RV hookup calculator, offline since the November 2 audit because it overstated where GFCI protection is required and misapplied the RV park demand factors. It now sizes the wire for the two common RV outlets from NEC Table 310.16 at the terminal temperature with the voltage drop over the run, gives GFCI as 210.8(F) and 551.71(F) set it, and calculates an RV park feeder from the 2023 per-site loads of 551.73(A) and the demand factors of Table 551.73(A)."
+  },
+  {
+    "date": "2026-11-17",
+    "text": "Brought back the well pump calculator, offline since the November 2 audit because it used invented current multipliers and motor currents that disagreed with the NEC motor tables. It now reads Franklin Electric's 2026 AIM Manual for the company's single-phase submersible motors: the copper cable size for the whole run from Franklin's cable table, aluminum two sizes larger, the breaker and fuse sizes Franklin lists, and the motor's amps."
   }
 ]
