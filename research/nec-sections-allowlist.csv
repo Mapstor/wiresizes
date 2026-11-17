@@ -18,9 +18,12 @@ ref,kind,edition,topic,domain,status,render_note
 430.6(A),section,2023,Table FLC for conductors and SC/GF protection; nameplate for overloads,nec-2023-rule-excerpts,verified,
 551.71,section,2023,RV site receptacle types and GFCI,nec-2023-rule-excerpts,verified,
 551.71(F),section,2023,GFCI for 125 V 15/20 A RV site receptacles,nec-2023-rule-excerpts,verified,
-625.40,section,2023,Individual branch circuit for EVSE above 16 A or 120 V,nec-2023-rule-excerpts,verified,
-625.42,section,2023,EV charging is a continuous load,nec-2023-rule-excerpts,verified,
-625.43,section,2023,"Disconnect for EVSE above 60 A or 150 V to ground: readily accessible, lockable",nec-2023-rule-excerpts,verified,
+625.40,section,2023,Individual branch circuit for EVSE above 16 A or 120 V,nec-625-ev,verified,
+625.41,section,2023,Overcurrent protection for EVSE circuits: 125 % of the maximum load,nec-625-ev,verified,
+625.42,section,2023,EV charging is a continuous load,nec-625-ev,verified,
+625.42(A),section,2023,Energy management system: the maximum load it permits,nec-625-ev,verified,
+625.42(B),section,2023,EVSE with restricted ampere adjustment: rating equal to the setting,nec-625-ev,verified,
+625.43,section,2023,"Disconnect for EVSE above 60 A or 150 V to ground: readily accessible, lockable",nec-625-ev,verified,
 680.5,section,2023,GFCI and SPGFCI classes for pools and spas,nec-2023-rule-excerpts,verified,
 680.22(A)(4),section,2023,Receptacles within 20 ft of a pool need GFCI,nec-2023-rule-excerpts,verified,
 Article 220,article,2023,Branch-circuit/feeder/service load calculations (2023 location),nec-2026-edition,verified,Location only; no values until G7 closes
@@ -51,7 +54,7 @@ Article 120,article,2026,Load calculations (2026 location),nec-2026-edition,veri
 220.85,section,2023,Two dwelling units,nec-220-load-calcs,verified,
 220.87,section,2023,Determining existing loads,nec-220-load-calcs,verified,Items (1) and (2) only
 120.54,table,2026,Demand factors for household electric clothes dryers (2026),nec-220-load-calcs,verified-other-edition,Render as 'Table 120.54 (2026)'
-625.44,section,2020,EVSE connection methods,nec-2023-rule-excerpts,verified-other-edition,State the 2020 edition; never present the 2020 receptacle list as 2023 (2023 adds a 60 A 125/250 V option)
+625.44,section,2023,"EVSE connection methods: receptacles for portable and fastened-in-place EVSE (125/250 V single-phase 30, 50 or 60 A included); all other EVSE permanently wired",nec-625-ev,verified,2023 text from NFPA public inputs 652 and 1788 (WSZ-031)
 680.26(B)(2),section,2023,"Pool perimeter surface bonding (3 ft, 8 AWG solid copper, 18–24 in, 4–6 in)",nec-680-pools-spas,verified,Values only; wording from TIA 23-9 with flattened markup
 230.67,section,2023,Surge protection for dwelling services (Type 1 or Type 2),nec-misc-installation,verified,
 110.14(C),section,2023,"Termination temperature: the lowest-rated termination, conductor or device governs",nec-110-14c,verified,"2023-cycle Second Draft SR-7793; values and rules only, never quote the Informational Note"
@@ -59,7 +62,7 @@ Article 120,article,2026,Load calculations (2026 location),nec-2026-edition,veri
 110.14(C)(1)(b),section,2023,"Over 100 A, or terminals for conductors larger than 1 AWG: 75 °C; higher ampacity only if listed and identified",nec-110-14c,verified,
 110.14(C)(2),section,2023,Separately installed pressure connectors: ampacity at the connector's listed and identified temperature rating,nec-110-14c,verified,
 240.4(B),section,2023,"Next higher standard OCPD rating up to 800 A, three conditions",nec-240-ocpd,verified,2023-cycle SD SR-8283
-625.54,section,2023,GFCI for all receptacles installed for EV charging,nec-2023-rule-excerpts,held,Held (decision D-09): GFCI protection was a 2022 appeal topic and no post-issuance 2023 source prints 625.54. Don't cite it.
+625.54,section,2023,GFCI protection for all receptacles installed for EV charging (receptacles only in 2023),nec-625-ev,verified,"D-09 hold closed 2026-11-17 (WSZ-031): NFPA public inputs 1372 and 1440 and First Revision 8378 print the issued 2023 text. Say it covers receptacles; never say it covers hardwired chargers in 2023"
 430.247,table,2023,"Full-load current, DC motors",nec-430-flc,verified,Render as 'Table 430.247'
 430.248,table,2023,"Full-load current, single-phase AC motors",nec-430-flc,verified,Render as 'Table 430.248'
 430.249,table,2023,"Full-load current, two-phase AC motors",nec-430-flc,verified,Render as 'Table 430.249'
@@ -91,3 +94,4 @@ Article 310,article,2023,Conductors for General Wiring,nec-310-16,verified,"Loca
 225.31,section,2023,"Disconnecting means at a separate building: inside or outside, readily accessible, nearest the point where the conductors enter",nec-feeders-outbuildings,verified,
 250.32,section,2023,"Buildings or structures supplied by a feeder or branch circuit: grounding electrode system (A) and the EGC with the feeder, neutral not bonded (B)(1)",nec-250-32,verified,"Cite (A) or (B)(1) for a specific rule"
 Article 225,article,2023,"Outside branch circuits and feeders (Part II: buildings supplied by a feeder or branch circuit)",nec-feeders-outbuildings,verified,"The whole 2023 article is reprinted in public input 140 (WSZ-029)"
+Article 625,article,2023,Electric vehicle power transfer systems,nec-625-ev,verified,Sections 625.40 to 625.44 and 625.54 only (WSZ-031)

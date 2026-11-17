@@ -1,0 +1,87 @@
+{
+ "id": "mfr-evse",
+ "title": "Level 2 EV chargers: the makers' breaker tables, terminals and wire statements (Tesla, ChargePoint, Emporia)",
+ "status": "verified",
+ "retrieved": "2026-11-17",
+ "evidence": [
+  "research/sources/round8/WSZ-031-ev-sources.md",
+  "research/sources/equipment.md"
+ ],
+ "attribution": "Source: Tesla, ChargePoint and Emporia installation instructions (as linked) — retrieved Nov 2026",
+ "makers": [
+  {
+   "id": "tesla",
+   "maker": "Tesla",
+   "model": "Gen 3 Wall Connector (PN 1457768-**-*) and Universal Wall Connector",
+   "url": "https://energylibrary.tesla.com/docs/Public/Charging/WallConnector/Gen3/Install/1PNA/en-us/GUID-251A1719-ECFA-40C1-8AB8-C71112A66BEC.html",
+   "manual_url": "https://energylibrary.tesla.com/docs/Public/Charging/WallConnector/Gen3/Install/1PNA/g3_wc_install_1pna.pdf",
+   "circuits": [
+    { "breaker_a": 60, "output_a": 48, "kw_240v": 11.5, "plug_in": false },
+    { "breaker_a": 50, "output_a": 40, "kw_240v": 9.6, "plug_in": false },
+    { "breaker_a": 40, "output_a": 32, "kw_240v": 7.6, "plug_in": false },
+    { "breaker_a": 30, "output_a": 24, "kw_240v": 5.7, "plug_in": false },
+    { "breaker_a": 20, "output_a": 16, "kw_240v": 3.8, "plug_in": false },
+    { "breaker_a": 15, "output_a": 12, "kw_240v": 2.8, "plug_in": false }
+   ],
+   "terminal_awg": { "smallest": "12", "largest": "4" },
+   "copper_only": true,
+   "wire_at_max_output": { "breaker_60c": "4", "breaker_75c": "6" },
+   "quotes": {
+    "breaker_60c": "For 60°C rated circuit breaker, use minimum 4AWG, 90°C THWN-2-rated copper wire for conductors.",
+    "breaker_75c": "For 75°C rated circuit breaker, use minimum 6AWG, 90°C THWN-2-rated copper wire for conductors.",
+    "no_plug": "Do NOT install cord-and-plug type connections.",
+    "terminals": "12-4 AWG (3.5 - 25 mm2), copper only",
+    "disconnect": "External disconnect switches are neither required nor recommended.",
+    "commissioning": "Circuit breaker size is programmed during the commissioning process."
+   },
+   "wire_rating_c": 90
+  },
+  {
+   "id": "chargepoint",
+   "maker": "ChargePoint",
+   "model": "Home Flex",
+   "url": "https://docs.chargepoint.com/ref-docs-sec/content/pdfs/home/cph50/cph50-ig.pdf",
+   "circuits": [
+    { "breaker_a": 70, "output_a": 50, "plug_in": false },
+    { "breaker_a": 60, "output_a": 48, "plug_in": false },
+    { "breaker_a": 50, "output_a": 40, "plug_in": true },
+    { "breaker_a": 40, "output_a": 32, "plug_in": true },
+    { "breaker_a": 30, "output_a": 24, "plug_in": false },
+    { "breaker_a": 20, "output_a": 16, "plug_in": false }
+   ],
+   "terminal_awg": { "largest": "6" },
+   "terminal_rating_c": 105,
+   "copper_only": true,
+   "plugs": ["14-50", "6-50"],
+   "quotes": {
+    "continuous": "The circuit must be rated for 125% of the maximum load.",
+    "terminal": "The field-wiring terminal is rated to 105 °C (221 °F) and accepts a maximum of 16 mm2 (6 AWG) wire.",
+    "gfci": "If local codes require a GFCI breaker for plug-in installation, ChargePoint recommends a hardwire installation.",
+    "gfci_reason": "A GFCI breaker in the panel causes nuisance tripping.",
+    "setting": "Home Flex must be set to match the rating of the circuit as determined by the available panel capacity.",
+    "wire": "Use 90°C wire copper conductors only."
+   },
+   "wire_rating_c": 90
+  },
+  {
+   "id": "emporia",
+   "maker": "Emporia",
+   "model": "EV Charger",
+   "url": "https://help.emporiaenergy.com/en/articles/9084258-wire-gauge-breaker-size",
+   "circuits": [
+    { "breaker_a": 60, "output_a": 48, "plug_in": false },
+    { "breaker_a": 50, "output_a": 40, "plug_in": true }
+   ],
+   "terminal_awg": { "largest": "6" },
+   "copper_only": true,
+   "plugs": ["14-50"],
+   "quotes": {
+    "plug_in": "NEMA 14-50 plug-in: Requires a dedicated 50A breaker — supports up to 40A charging",
+    "hardwired": "Hardwired: Requires a 60A breaker — supports up to 48A charging",
+    "terminal": "Wire terminals accommodate up to 6 AWG; 4 AWG will not fit",
+    "copper": "copper only, aluminum conductors are not compatible"
+   }
+  }
+ ],
+ "notes": "Tesla's and ChargePoint's tables agree at 16, 24, 32, 40 and 48 A. Emporia's manual 603-00009 Rev D (the earlier source) returns HTTP 404 since 2026-11-17; its help article replaces it."
+}

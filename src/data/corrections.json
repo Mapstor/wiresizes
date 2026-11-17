@@ -110,5 +110,9 @@
   {
     "date": "2026-11-17",
     "text": "Rebuilt the subpanel and service wire size guide: Table 310.16 at the terminal temperature 110.14(C) sets for a subpanel feeder, NM cable held to the column 334.80 sets, the 240.4(B) allowance for copper one size smaller, Table 310.12 for a dwelling service, both ground wires, the four-wire feeder to a detached garage under 225.31, 225.39 and 250.32(B)(1), and the voltage drop over a long run. Removed a main breaker rule the site had not checked against a source, step-by-step installation advice, and notes on hot attics and wet locations, which cited no source."
+  },
+  {
+    "date": "2026-11-17",
+    "text": "Rebuilt the EV charger wire guide: each charger output's breaker from NEC 625.41 and 625.42, checked against Tesla's, ChargePoint's and Emporia's own tables; the copper size in NM cable and with terminations rated for the higher column; the makers' terminal limits; the receptacle and GFCI rules of 625.44 and 625.54; and the voltage drop over a long run. Removed aluminum sizes that the chargers' terminals do not accept, and charging-level figures and safety tips that cited no source."
   }
 ]

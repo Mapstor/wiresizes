@@ -118,6 +118,7 @@
   {
    "ref": "625.44",
    "edition": "2020",
+   "superseded_by": "data/verified/nec-625-2023.json (WSZ-031): the 2023 text from NFPA public inputs 652 and 1788",
    "status": "VERIFIED-other-edition",
    "rule_summary": "Portable EVSE: receptacle 125 V 1-ph 15/20 A; 250 V 1-ph 15/20 A; 250 V 1-ph 30/50 A (2-pole 3-wire or 3-pole 4-wire); 60 V dc 15/20 A. Fastened-in-place: 125/250 V 1-ph up to 50 A; 250 V 3-ph up to 50 A; 250 V 1-ph 30/50 A (3-pole 4-wire); 60 V dc 15/20 A. All other EVSE/WPTE permanently wired.",
    "values": {
@@ -424,6 +425,7 @@
   {
    "ref": "625.54",
    "edition": "2023",
+   "superseded_by": "data/verified/nec-625-2023.json (WSZ-031, 2026-11-17): NFPA public inputs 1372 and 1440 and First Revision 8378 print the issued 2023 text, without the trailing 'in accordance with 210.8'; the hold below is closed",
    "status": "HELD (decision D-09): core sentence verified-sd2023 (SR-7731, two pulls, canary '210.12' rejected); condition 3 open: GFCI protection was a 2022 appeal topic and no tier 1-3 post-issuance 2023 source prints 625.54. The trailing 'in accordance with 210.8' is CONFLICTING. Do not render.",
    "values": {
     "gfci_required_for": "all receptacles installed for the connection of electric vehicle charging"
@@ -870,6 +872,6 @@
   }
  ],
  "notes": [
-  "Render only items whose status starts with VERIFIED-2023 or verified-sd2023 (decision D-09), with the edition named; 625.54 (2023) is held. VERIFIED-other-edition items may be cited only with their edition stated."
+  "Render only items whose status starts with VERIFIED-2023 or verified-sd2023 (decision D-09), with the edition named; 625.54 (2023) was held here and is verified in nec-625-2023.json since 2026-11-17 (WSZ-031). VERIFIED-other-edition items may be cited only with their edition stated."
  ]
 }

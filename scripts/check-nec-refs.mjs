@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // WSZ-003b gate c: every NEC reference in a live page's rendered text ("Table 310.16", "310.12", "240.4(D)",
-// "Article 120") matches a ref of research/nec-sections-allowlist.csv. A held ref (625.54, D-09) does not count as
+// "Article 120") matches a ref of research/nec-sections-allowlist.csv. A held ref (status held) does not count as
 // allowed. Node built-ins only. Run after `rm -rf .next && npm run build` (postbuild runs it).
 //
 // Rendered text: <title>, the meta description, og:* and twitter:* meta tags, alt, title and aria-label attributes,
