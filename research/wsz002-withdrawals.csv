@@ -1,6 +1,5 @@
 slug,what_was_wrong,links
 /calculators/welder-calculator,it sized the circuit from estimated arc power instead of the welder's rated input current and duty cycle,/guides/nec-table-310-16;/guides/awg-wire-size-chart
-/calculators/well-pump-calculator,it used invented current multipliers and motor currents that disagree with the NEC motor tables,/guides/awg-wire-size-chart;/calculators/voltage-drop-calculator
 /calculators/hot-tub-calculator,"it estimated the circuit from the number of seats instead of the spa's rated load, and its voltage-drop examples used wrong resistance values",/guides/nec-table-310-16;/calculators/voltage-drop-calculator
 /calculators/pool-pump-calculator,its motor currents did not match the NEC motor tables and it cited the wrong pool sections,/guides/nec-table-310-16
 /calculators/air-conditioner-calculator,it estimated amps from tonnage instead of using the unit's nameplate minimum circuit ampacity and maximum overcurrent protection,/guides/nec-table-310-16

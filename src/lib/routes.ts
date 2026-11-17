@@ -103,6 +103,12 @@ export const ROUTES: readonly SiteRoute[] = [
     line: 'Wire size for an RV outlet at a house, with the voltage drop over the run and GFCI, and the calculated load of an RV park feeder from NEC 551.73.',
   },
   {
+    path: '/calculators/well-pump-calculator',
+    group: 'wire-sizing',
+    name: 'Well Pump Wire Size Calculator',
+    line: "Copper or aluminum cable for a submersible well pump by its length, with the breaker, fuses and motor amps, from Franklin Electric's tables for its single-phase motors.",
+  },
+  {
     path: '/calculators/box-fill-calculator',
     group: 'wire-sizing',
     name: 'Box Fill Calculator',
