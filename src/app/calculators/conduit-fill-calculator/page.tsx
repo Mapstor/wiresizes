@@ -150,7 +150,7 @@ export default function ConduitFillCalculatorPage() {
 
         <header className="pt-10 sm:pt-12">
           <PageTitle main="Conduit Fill Calculator" sub="How Many Wires Fit, NEC Annex C" joiner=": " />
-          <p className={clsx(LOOK_LEAD, 'mt-5')}>
+          <p className={clsx(LOOK_LEAD, 'mt-5')} data-src={SRC}>
             The most wires of one size that fit in each trade size of {RACEWAYS.length} kinds of conduit and tubing, from the tables in the
             2023 NEC&apos;s Annex C, and the smallest trade size for the wires you need to pull.
           </p>
@@ -318,14 +318,18 @@ export default function ConduitFillCalculatorPage() {
               Questions
             </h2>
             <div className="space-y-1.5">
-              <h3 className={H3}>How many 12 gauge wires fit in 3/4 EMT?</h3>
+              <h3 className={H3} data-src={SRC}>
+                How many 12 gauge wires fit in 3/4 EMT?
+              </h3>
               <p className={P} data-src={SRC}>
                 <Num v={FAQ_12_34.thhn} src={SRC} /> THHN or THWN-2, <Num v={FAQ_12_34.xhhw} src={SRC} /> XHHW and{' '}
                 <Num v={FAQ_12_34.thw} src={SRC} /> THW or TW, by Annex C Table {EMT.raceway.table}.
               </p>
             </div>
             <div className="space-y-1.5">
-              <h3 className={H3}>How many 10 gauge THHN fit in 1/2 EMT?</h3>
+              <h3 className={H3} data-src={SRC}>
+                How many 10 gauge THHN fit in 1/2 EMT?
+              </h3>
               <p className={P} data-src={SRC}>
                 <Num v={FAQ_10_12} src={SRC} />. Trade size 3/4 holds <Num v={A10.counts[1].n} src={SRC} />.
               </p>
@@ -338,7 +342,9 @@ export default function ConduitFillCalculatorPage() {
               </p>
             </div>
             <div className="space-y-1.5">
-              <h3 className={H3}>What is the 40 percent rule?</h3>
+              <h3 className={H3} data-src={SRC}>
+                What is the 40 percent rule?
+              </h3>
               <p className={P} data-src={SRC}>
                 Chapter 9, Table 1: more than two conductors may fill no more than <Pct v={FILL_PERCENT.overTwo} /> of a conduit&apos;s cross
                 section. One conductor may fill <Pct v={FILL_PERCENT.one} />, two <Pct v={FILL_PERCENT.two} />.

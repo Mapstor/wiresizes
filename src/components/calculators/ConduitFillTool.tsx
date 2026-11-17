@@ -206,7 +206,7 @@ export function ConduitFillTool() {
             <Field id="trade" label="Trade size" hint="Metric designator in brackets.">
               <SelectInput id="trade" value={inputs.trade} onChange={(trade) => update({ trade })} describedById="trade-hint">
                 {o.trades.map((k) => (
-                  <option key={k} value={k}>
+                  <option key={k} value={k} data-src={SRC}>
                     {TRADE_SIZES[Number(k)].trade} ({TRADE_SIZES[Number(k)].metric})
                   </option>
                 ))}
