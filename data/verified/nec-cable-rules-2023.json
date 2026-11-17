@@ -1,0 +1,112 @@
+{
+ "id": "nec-cable-rules-2023",
+ "title": "Cable ampacity and conductor counting, NEC 334.80 and 310.15(E) (2023); 340.80 and 310.15(F) not verified",
+ "status": "verified (per rule; 340.80 and 310.15(F) not verified)",
+ "retrieved": "2026-11-17",
+ "source": {
+  "publisher": "NFPA",
+  "document": "NFPA 70 2026-cycle (A2025) CMP-6 Public Input report (70_A2025_NEC_P06_PISubmittals.pdf) and CMP-6 First Draft (70_A2025_NEC_P06_FD_PrelimFR.pdf): 2023 text of 334.80 and 310.15(E)",
+  "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_PISubmittals.pdf#page=261",
+  "attribution": "Source: NFPA 70 (NEC) 2023, 334.80 and 310.15(E), as reprinted in NFPA's 2026-cycle public inputs — retrieved Nov 2026",
+  "evidence": [
+   "research/sources/round8/WSZ-029-public-inputs.md"
+  ]
+ },
+ "rules": [
+  {
+   "ref": "334.80",
+   "edition": "2023",
+   "status": "VERIFIED-2023 (PI 3051 reprint, marks only add (A)-(C) labels; PI 1129 reprint, marks are its own proposals; FR-8100 base text the same)",
+   "rule_summary": "Types NM and NMC cable: ampacity per 310.14, not more than that of a 60 °C (140 °F) rated conductor; the 90 °C (194 °F) rating may be used for ampacity adjustment and correction if the final ampacity does not exceed the 60 °C value; in cable trays per 392.80(A). More than two NM cables with two or more current-carrying conductors through one opening in wood framing sealed with thermal insulation, caulk or sealing foam, or in contact with thermal insulation, without spacing: adjust per Table 310.15(C)(1), and the 310.14(A)(2) Exception does not apply.",
+   "values": {
+    "max_column_c": 60,
+    "derating_from_column_c": 90,
+    "bundling_trigger_cables": "more than two",
+    "bundling_table": "Table 310.15(C)(1)"
+   },
+   "quote_segments": [
+    "The ampacity of Types NM and NMC cable shall be determined in accordance with 310.14.",
+    "The ampacity shall not exceed that of a 60°C (140°F) rated conductor.",
+    "provided the final calculated ampacity does not exceed that of a 60°C (140°F) rated conductor."
+   ],
+   "source": [
+    {
+     "document": "Public Input No. 3051-NFPA 70-2023 [Section No. 334.80] (Mike Holt, filed Aug 29, 2023)",
+     "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_PISubmittals.pdf#page=261",
+     "pdf_page": 261,
+     "marks": "adds the labels (A) General, (B) Cables Through Same Opening, (C) Cables in Contact with Thermal Insulation"
+    },
+    {
+     "document": "Public Input No. 1129-NFPA 70-2023 [Section No. 334.80] (Greg Chontow, Boro of Hopatcong NJ, filed Jun 19, 2023)",
+     "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_PISubmittals.pdf#page=260",
+     "pdf_page": 260,
+     "marks": "strikes the 60 °C sentence and changes the second 60°C (140°F) to 75°C (167°F): its proposals"
+    },
+    {
+     "document": "First Revision No. 8100-NFPA 70-2024 [Section No. 334.80] (2026 First Draft base text)",
+     "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_FD_PrelimFR.pdf#page=89",
+     "pdf_page": 89
+    }
+   ],
+   "retrieved": "2026-11-17"
+  },
+  {
+   "ref": "310.15(E)",
+   "edition": "2023",
+   "status": "VERIFIED-2023 for the three items (PI 779 and PI 3112 reprints; FR-8035 strikes the 2023 lead-in and item (1), confirming them as 2023 text). Lead-in wording: conflicting marks between PI 3112 and PI 779/FR-8035, not needed",
+   "rule_summary": "Neutral conductor counting for 310.15(C)(1): (1) a neutral that carries only the unbalanced current from other conductors of the same circuit is not required to be counted; (2) in a 3-wire circuit of two phase conductors and the neutral of a 4-wire, 3-phase wye system, the neutral carries about the same current as the line-to-neutral loads and is counted; (3) on a 4-wire, 3-phase wye circuit where most of the load is nonlinear, harmonic currents flow in the neutral and it is counted.",
+   "values": {
+    "unbalanced_neutral_counted": false,
+    "three_wire_from_wye_neutral_counted": true,
+    "nonlinear_wye_neutral_counted": true
+   },
+   "quote_segments": [
+    "that carries only the unbalanced current from other conductors of the same",
+    "circuit shall not be required to be counted when applying the provisions of 310.15(C)(1).",
+    "harmonic currents are present in the neutral conductor; the neutral conductor shall"
+   ],
+   "source": [
+    {
+     "document": "Public Input No. 779-NFPA 70-2023 [Section No. 310.15(E)]",
+     "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_PISubmittals.pdf#page=136",
+     "pdf_page": 136
+    },
+    {
+     "document": "Public Input No. 3112-NFPA 70-2023 [Section No. 310.15(E)] (Mike Holt, filed Aug 29, 2023)",
+     "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_PISubmittals.pdf#page=135",
+     "pdf_page": 135
+    },
+    {
+     "document": "First Revision No. 8035-NFPA 70-2024 [Section No. 310.15(E)]",
+     "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P06_FD_PrelimFR.pdf#page=43",
+     "pdf_page": 43
+    }
+   ],
+   "retrieved": "2026-11-17"
+  },
+  {
+   "ref": "340.80",
+   "edition": "2023",
+   "status": "UNVERIFIED: no 2026-cycle public input or First Revision reprints it (CMP-6 PIs on Article 340 cover 340.6, 340.10, 340.12, 340.24 and 340.104 only). Never cite it; check-structure check 7 keeps it off rendered pages",
+   "rule_summary": null,
+   "values": {},
+   "quote_segments": [],
+   "retrieved": "2026-11-17"
+  },
+  {
+   "ref": "310.15(F)",
+   "edition": "2023",
+   "status": "UNVERIFIED: no 2026-cycle public input or First Revision reprints it. Not on the section allowlist; no page states whether grounding or bonding conductors are counted",
+   "rule_summary": null,
+   "values": {},
+   "quote_segments": [],
+   "retrieved": "2026-11-17"
+  }
+ ],
+ "tias": "TIAs 23-1 to 23-20 touch none of these sections (R4-7); TIA_70_23_21.pdf to _28.pdf return 404 (2026-11-17)",
+ "render": [
+  "334.80: NM and NMC cable at the 60 °C column; 90 °C only as the starting point for correction and adjustment, final value capped at 60 °C; bundling rule for more than two cables (VERIFIED-2023).",
+  "310.15(E) items (1)-(3) in plain words (VERIFIED-2023).",
+  "Never 340.80 or 310.15(F)."
+ ]
+}

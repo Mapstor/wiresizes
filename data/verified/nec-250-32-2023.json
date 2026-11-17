@@ -1,0 +1,84 @@
+{
+ "id": "nec-250-32-2023",
+ "title": "Buildings or structures supplied by a feeder or branch circuit, NEC 250.32(A) and 250.32(B)(1) (2023)",
+ "status": "verified (per rule)",
+ "retrieved": "2026-11-17",
+ "source": {
+  "publisher": "NFPA",
+  "document": "NFPA 70 2026-cycle (A2025) CMP-5 Public Input report (70_A2025_NEC_P05_PISubmittals.pdf): public inputs on NFPA 70-2023 reprint 250.32(A) and 250.32(B)(1) as they stand in the 2023 edition",
+  "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P05_PISubmittals.pdf#page=151",
+  "attribution": "Source: NFPA 70 (NEC) 2023, 250.32, as reprinted in NFPA's 2026-cycle public inputs — retrieved Nov 2026",
+  "evidence": [
+   "research/sources/round8/WSZ-029-public-inputs.md",
+   "research/sources/round4/R4-2-ocpd-grounding.md"
+  ]
+ },
+ "rules": [
+  {
+   "ref": "250.32(A)",
+   "edition": "2023",
+   "status": "VERIFIED-2023 (PI 2649 reprint; its only marks change 'Part III of Article 250' to 'Article 250, Part III'); matches the 2023 government paraphrase and the 2017 county text of R4-2",
+   "rule_summary": "A building or structure supplied by a feeder or branch circuit has a grounding electrode system and grounding electrode conductor installed per Part III of Article 250. Exception: not required where a single branch circuit (a multiwire branch circuit counts as one) with an equipment grounding conductor supplies the building or structure.",
+   "values": {
+    "single_branch_circuit_exception": true
+   },
+   "quote_segments": [
+    "shall have a grounding",
+    "electrode system and grounding electrode conductor installed in accordance with",
+    "if only a single branch circuit, including a multiwire branch circuit, supplies the building or structure",
+    "and the branch circuit includes an equipment grounding conductor"
+   ],
+   "source": {
+    "document": "Public Input No. 2649-NFPA 70-2023 [Section No. 250.32(A)] (David Williams, filed Aug 23, 2023)",
+    "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P05_PISubmittals.pdf#page=148",
+    "pdf_page": 148
+   },
+   "retrieved": "2026-11-17"
+  },
+  {
+   "ref": "250.32(B)(1)",
+   "edition": "2023",
+   "status": "VERIFIED-2023 including the neutral sentence and Exceptions No. 1 and 2 (PI 227 reprint, marks only '(s)' struck and 'conductor' added; PI 1556 and PI 4533 print the same neutral sentence unmarked)",
+   "rule_summary": "Supplied by a feeder or branch circuit: an equipment grounding conductor as described in 250.118 runs with the supply conductors and connects to the building or structure disconnecting means and to the grounding electrode(s); it is used to ground or bond equipment, structures or frames and is sized per 250.122. Any installed grounded (neutral) conductor is not connected to the equipment grounding conductor or to the grounding electrode(s). Exception No. 1: an installation made under an earlier edition that permitted it may use the grounded conductor as the ground-fault return path only while no equipment grounding conductor runs with the supply, no continuous metallic paths bonded to the grounding system join the buildings, and no ground-fault protection of equipment is on the supply side; the grounded conductor is then at least the larger of the 220.61 neutral load and the 250.122 size. Exception No. 2: where system bonding jumpers are installed under 250.30(A)(1) Exception No. 2, the feeder grounded conductor connects to the equipment grounding conductors, grounding electrode conductor and the first disconnect enclosure.",
+   "values": {
+    "egc_with_feeder": true,
+    "egc_size_rule": "250.122",
+    "neutral_bonded_at_separate_building": false,
+    "existing_installation_conditions": 3
+   },
+   "quote_segments": [
+    "An equipment grounding conductor, as described in 250.118, shall be run with the supply",
+    "conductors and be connected to the building or structure disconnecting means and to the grounding",
+    "grounding conductor shall be sized in accordance with 250.122.",
+    "Any installed grounded conductor",
+    "shall not be connected to the equipment grounding conductor or to the grounding electrode(s)."
+   ],
+   "source": [
+    {
+     "document": "Public Input No. 227-NFPA 70-2023 [Section No. 250.32(B)(1)] (Mark Hilbert, filed Jan 25, 2023)",
+     "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P05_PISubmittals.pdf#page=151",
+     "pdf_page": 151,
+     "marks": "'(s)' struck, 'conductor' added in the first sentence; nothing else marked"
+    },
+    {
+     "document": "Public Input No. 1556-NFPA 70-2023 (Norman Feck, State of Colorado)",
+     "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P05_PISubmittals.pdf#page=149",
+     "pdf_page": 149,
+     "marks": "adds main-bonding-jumper text to Exception No. 1; neutral sentence unmarked"
+    },
+    {
+     "document": "Public Input No. 4533-NFPA 70-2023 (Peter Noval Jr)",
+     "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P05_PISubmittals.pdf#page=153",
+     "pdf_page": 153,
+     "marks": "adds a sentence on bonding to the grounding electrode conductor; neutral sentence unmarked"
+    }
+   ],
+   "retrieved": "2026-11-17"
+  }
+ ],
+ "tias": "TIAs 23-1 to 23-20 touch none of these sections (R4-7); TIA_70_23_21.pdf to _28.pdf return 404 (2026-11-17)",
+ "render": [
+  "250.32(A): a grounding electrode system at the separate building, except where one branch circuit with an EGC supplies it (VERIFIED-2023).",
+  "250.32(B)(1): EGC run with the feeder, sized per 250.122; the neutral is not bonded to the EGC or the electrode at the separate building; Exception No. 1 only for existing installations under its three conditions (VERIFIED-2023)."
+ ]
+}

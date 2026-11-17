@@ -131,9 +131,10 @@ describe('WSZ-008a sources and removals', () => {
     assert.ok(gates.necRefs.enforce.includes(ROUTE));
   });
 
-  it('check-structure forbids 334.80 and 340.80 (NM and UF stay unverified), not 110.14(C)', () => {
+  it('check-structure forbids 340.80 (UF stays unverified), not 334.80 (verified in WSZ-029) or 110.14(C)', () => {
     const gate = read('../scripts/check-structure.mjs');
-    assert.match(gate, /\['334\.80', '340\.80'\]/);
+    assert.match(gate, /text\.includes\('340\.80'\)/);
+    assert.ok(!gate.includes("'334.80'"));
     assert.ok(!gate.includes("['110.14(C)'"));
   });
 });

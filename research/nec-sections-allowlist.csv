@@ -64,7 +64,7 @@ Article 120,article,2026,Load calculations (2026 location),nec-2026-edition,veri
 430.248,table,2023,"Full-load current, single-phase AC motors",nec-430-flc,verified,Render as 'Table 430.248'
 430.249,table,2023,"Full-load current, two-phase AC motors",nec-430-flc,verified,Render as 'Table 430.249'
 430.250,table,2023,"Full-load current, three-phase AC motors",nec-430-flc,verified,Render as 'Table 430.250'; synchronous 460/575/2300 V cells for 50–200 hp never
-225.18,section,2023,Overhead clearances for outside branch circuits and feeders (10/12/15/18/24½ ft),nec-feeders-outbuildings,verified,2023 values (VERIFIED-2023 base text); the nec-feeders-outbuildings domain as a whole is still GAP
+225.18,section,2023,Overhead clearances for outside branch circuits and feeders (10/12/15/18/24½ ft),nec-feeders-outbuildings,verified,2023 values (First Draft base text and the public input 140 reprint)
 225.31(B),section,2023,"Disconnect location for a building supplied by a feeder: readily accessible, nearest the point of entrance; 4 exceptions",nec-feeders-outbuildings,verified,"2023 sentences only, not the 2026 insertions"
 300.5(A),table,2023,Minimum cover requirements (Table 300.5(A)),nec-300-5-burial,verified,Render as 'Table 300.5(A)'; no EMT depth
 680.13,section,2023,"Maintenance disconnect: at least 5 ft, within sight, readily accessible",nec-680-pools-spas,verified,"Values only, plain words (2023 government summary)"
@@ -82,3 +82,9 @@ Article 310,article,2023,Conductors for General Wiring,nec-310-16,verified,"Loca
 215.2(A),section,2023,"Feeder conductor ampacity; Informational Note No. 2: 3 % voltage drop at the farthest outlet, 5 % on feeder and branch circuit together, for reasonable efficiency",nec-continuous-load,verified,The note is advice about efficiency: never call it a limit or a requirement
 215.3,section,2023,Feeder overcurrent device: noncontinuous load plus 125 % of the continuous load,nec-continuous-load,verified,
 230.42(A),section,2023,Service-entrance conductors: ampacity at least the noncontinuous load plus 125 % of the continuous load,nec-continuous-load,verified,(A)(2) unverified; Exception No. 2 conflicting
+225.30,section,2023,"Number of supplies to a building supplied by a feeder: one feeder or branch circuit unless (A)–(F) permit more; a multiwire branch circuit counts as one",nec-feeders-outbuildings,verified,
+225.39,section,2023,"Building disconnect rating: at least the calculated load and at least 15 A (one circuit), 30 A (two 2-wire circuits), 100 A 3-wire (one-family dwelling), 60 A (all others)",nec-feeders-outbuildings,verified,
+250.32(A),section,2023,"Grounding electrode system at a building supplied by a feeder; not required for a single branch circuit with an EGC",nec-250-32,verified,
+250.32(B)(1),section,2023,"EGC run with the feeder and sized per 250.122; the neutral is not connected to the EGC or the electrode at the separate building",nec-250-32,verified,"Exception No. 1 applies to existing installations only, under its three conditions"
+334.80,section,2023,"NM and NMC cable ampacity: 60 °C column; 90 °C only for correction and adjustment, capped at the 60 °C value; bundling rule",nec-cable-rules,verified,
+310.15(E),section,2023,"Neutral counting: an unbalanced-current neutral is not counted; the neutral of a 3-wire circuit from a 4-wire wye, and a mostly nonlinear wye neutral, are",nec-cable-rules,verified,"Items only; never 310.15(F)"
