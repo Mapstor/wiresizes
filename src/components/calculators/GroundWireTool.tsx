@@ -386,8 +386,8 @@ function EgcOutcome({
           </p>
         ) : (
           <p data-src={GND}>
-            It need not be larger than the circuit wires themselves (250.122(A)). If the circuit wires are larger than the rating needs, for
-            voltage drop say, the ground wire grows in proportion (250.122(B)):
+            {cap ? '' : 'It need not be larger than the circuit wires themselves (250.122(A)). '}If the circuit wires are larger than the rating
+            needs, for voltage drop say, the ground wire grows in proportion (250.122(B)):
             choose &ldquo;Yes, larger&rdquo; above, or let the{' '}
             <Link href="/calculators/wire-size-calculator" className={LINK}>
               wire size calculator
