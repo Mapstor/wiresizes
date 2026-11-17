@@ -399,7 +399,7 @@ export default function WellPumpCalculatorPage() {
                 What size wire for a <Hp hp="1" /> well pump?
               </h3>
               <p className={P} data-src={MFR}>
-                It depends on the length. At <Val v={230} unit="V" src={MFR} />, Franklin allows <LengthList hp="1" /> at a{' '}
+                By length: at <Val v={230} unit="V" src={MFR} />, Franklin allows <LengthList hp="1" /> at a{' '}
                 <Val v={CABLE_RULES.dropPct} unit="%" src={MFR} /> drop.
               </p>
             </div>
