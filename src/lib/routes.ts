@@ -183,8 +183,8 @@ export const ROUTES: readonly SiteRoute[] = [
   {
     path: '/guides/wire-size-for-100-amp',
     group: 'service-circuit',
-    name: 'Wire Size for 100 Amp Service',
-    line: 'Copper and aluminum conductors for a dwelling service from NEC Table 310.12, with the grounding conductors.',
+    name: 'Wire Size for 100 Amp Subpanel or Service',
+    line: 'A subpanel feeder by the rating of its terminals, a dwelling service from NEC Table 310.12, the ground wires, a feeder to a detached garage and the voltage drop.',
   },
   {
     path: '/guides/wire-size-for-200-amp',

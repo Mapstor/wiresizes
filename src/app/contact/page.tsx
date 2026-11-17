@@ -44,13 +44,16 @@ export default function ContactPage() {
           take a few days.
         </p>
         <p>
-          For an electrical emergency, call 911 or your electric utility. This site cannot give advice about a
-          specific installation.
+          For an electrical emergency, call{' '}
+          <a href="tel:911" className={LOOK_LINK}>
+            911
+          </a>{' '}
+          or your electric utility. This site cannot give advice about a specific installation.
         </p>
-        <p>
+        <address className="not-italic">
           Publisher: Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia. Company registration number
           9041273000, VAT ID SI94001154.
-        </p>
+        </address>
       </div>
       <BasicPageSchema path="/contact" name={TITLE} description={DESCRIPTION} />
     </div>

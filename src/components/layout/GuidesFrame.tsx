@@ -29,6 +29,7 @@ const LOOK_GUIDES = new Set([
   '/guides/power-factor-explained',
   '/guides/electrical-power-calculations',
   '/guides/wire-size-for-200-amp',
+  '/guides/wire-size-for-100-amp',
 ]);
 
 const STYLES = {

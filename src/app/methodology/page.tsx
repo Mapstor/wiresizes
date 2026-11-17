@@ -12,6 +12,7 @@ import { RATING_MAX_A, RATING_MIN_A, terminationColumn } from '@/lib/calculation
 import { BTU_PER_H_PER_TON, W_PER_BTU_PER_H, W_PER_ELECTRICAL_HP } from '@/lib/calculations/conversions';
 import { voltageColumns } from '@/lib/calculations/motor-flc';
 import { flcTable } from '@/lib/verified/nec-430-440-2023';
+import { DISCONNECT_MIN_A, NM_CABLE } from '@/lib/verified/nec-separate-buildings';
 import { DC_TEMPERATURE_OPTIONS } from '@/lib/calculations/dc-sizing';
 import { formatValue } from '@/lib/calculations/format';
 import { GROUND_WIRE_RATINGS } from '@/lib/calculations/grounding';
@@ -1097,6 +1098,80 @@ export default function MethodologyPage() {
           </Limits>
         </SourceSection>
 
+        <SourceSection domain="nec-feeders-outbuildings">
+          <p>
+            Article 225 of the NEC (2023) covers outside branch circuits and feeders, among them a feeder to a separate
+            building on the same property. Its 2023 text is read from NFPA&apos;s report of public inputs for the 2026
+            edition: Public Input 140 reprints the whole article as the 2023 edition prints it, with its own proposed
+            words marked, and Public Input 3246, which renumbers the article, prints 225.39 word for word the same.
+          </p>
+          <SourceFacts s={section('nec-feeders-outbuildings')} />
+          <p>
+            The{' '}
+            <Link href="/guides/wire-size-for-100-amp" className={LINK}>
+              100 A guide
+            </Link>{' '}
+            uses three of its rules. Section 225.30 allows one feeder or branch circuit to a building unless one of its
+            listed conditions permits more. Section 225.31 gives the building its own disconnecting means, inside or
+            outside, readily accessible and nearest the point where the conductors enter. Section 225.39 sets the
+            disconnect&apos;s least rating: <Val v={DISCONNECT_MIN_A.oneCircuit} unit="A" src="nec-feeders-outbuildings" />{' '}
+            for one branch circuit, <Val v={DISCONNECT_MIN_A.twoCircuits} unit="A" src="nec-feeders-outbuildings" /> for
+            two 2-wire branch circuits,{' '}
+            <Val v={DISCONNECT_MIN_A.oneFamilyDwelling} unit="A" src="nec-feeders-outbuildings" />,{' '}
+            {DISCONNECT_MIN_A.oneFamilyDwellingWires}-wire, for a one-family dwelling and{' '}
+            <Val v={DISCONNECT_MIN_A.allOthers} unit="A" src="nec-feeders-outbuildings" /> for all others, and never
+            less than the calculated load.
+          </p>
+          <Limits>
+            <li>Burial depth and other wiring methods for the run to the building are not covered yet.</li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="nec-250-32">
+          <p>
+            Section 250.32 of the NEC (2023) covers grounding at a building supplied by a feeder or branch circuit. Its
+            2023 text is read from NFPA&apos;s report of public inputs for the 2026 edition, where three submitters
+            reprint 250.32(B)(1) as the 2023 edition prints it, each with a different proposed change marked, and a
+            fourth reprints 250.32(A).
+          </p>
+          <SourceFacts s={section('nec-250-32')} />
+          <p>
+            Section 250.32(A) gives the building its own grounding electrode system, unless a single branch circuit with
+            an equipment grounding conductor supplies it. Section 250.32(B)(1) runs the equipment grounding conductor
+            with the feeder, connects it to the building&apos;s disconnecting means and electrodes, sizes it by Table
+            250.122, and keeps the neutral from being connected to it or to the electrode at that building. Its
+            Exception No. 1 lets a three-wire feeder installed under an earlier edition stay while three conditions
+            hold.
+          </p>
+          <Limits>
+            <li>Which electrodes make up the system, and how they are installed, are not covered yet.</li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="nec-cable-rules">
+          <p>
+            Section 334.80 of the NEC (2023) sets the ampacity of NM cable, and 310.15(E) says when a neutral counts as a
+            current-carrying conductor. Both are read from NFPA&apos;s public inputs and First Revisions for the 2026
+            edition, which reprint the 2023 text with the proposed changes marked.
+          </p>
+          <SourceFacts s={section('nec-cable-rules')} />
+          <p>
+            NM cable&apos;s ampacity may not exceed that of a{' '}
+            <Val v={NM_CABLE.maxColumnC} unit="°C" src="nec-cable-rules" /> conductor. Its{' '}
+            <Val v={NM_CABLE.correctionsFromC} unit="°C" src="nec-cable-rules" /> rating may be the starting point for
+            temperature and bundling corrections, with the result held to the{' '}
+            <Val v={NM_CABLE.maxColumnC} unit="°C" src="nec-cable-rules" /> value. A neutral that carries only the
+            unbalanced current of its own circuit is not counted; the neutral of a 3-wire circuit taken from a 4-wire wye
+            system is counted, and so is a wye neutral whose load is mostly nonlinear.
+          </p>
+          <Limits>
+            <li>
+              The ampacity rule for UF cable and whether grounding conductors count are not covered yet: no
+              NFPA document for the 2026 edition reprints their 2023 text.
+            </li>
+          </Limits>
+        </SourceSection>
+
         <SourceSection domain="nec-220-load-calcs">
           <p>
             Article 220 of the NEC (2023) sets the load calculation for a dwelling: the standard method&apos;s unit loads
@@ -1519,15 +1594,14 @@ export default function MethodologyPage() {
             {notCovered.title}
           </h2>
           <p>
-            No calculator on the site covers the topics below. For most of them, the 2023 NEC text or the
-            maker&apos;s current tables have not yet been checked in full against a document that can be cited:
+            No calculator on the site covers the topics below. Their 2023 NEC text, or the maker&apos;s current
+            tables, has not yet been checked in full against a document that can be cited:
           </p>
           <ul className={LIST}>
-            <li>Ampacity rules for NM and UF cable, and whether neutral and ground wires count as current-carrying.</li>
+            <li>The ampacity rule for UF cable, and whether ground wires count as current-carrying.</li>
             <li>Stranded conductor dimensions, and the AC resistance and reactance of conductors.</li>
             <li>Conduit fill: how many conductors fit in a conduit, with conduit and wire areas.</li>
             <li>Box fill: how many conductors and devices fit in a box.</li>
-            <li>Feeders to a detached garage or another separate building.</li>
             <li>
               Grounding electrode conductors to ground rods and concrete-encased electrodes, and how electrodes are
               installed.

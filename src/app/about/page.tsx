@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
 import CORRECTIONS from '@/data/corrections.json';
@@ -13,6 +14,38 @@ import { LOOK_H2, LOOK_LINK, LOOK_PAGE } from '@/components/look/styles';
 const TITLE = 'About wiresizes.com';
 const DESCRIPTION =
   'Who writes wiresizes.com, which sources its numbers come from, how pages are checked, and the dated list of corrections.';
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+// A correction line as text, with a month-and-day date ("the November 2 audit") as <time> in the line's own year, and a
+// three-phase system name ("208Y/120 V") traced to the U.S. nominal voltages it is checked against.
+const CORRECTION_PARTS = new RegExp(`\\b(${MONTHS.join('|')}) (\\d{1,2})\\b|\\b\\d{3}Y/\\d{3} V\\b`, 'g');
+
+function CorrectionText({ date, text }: { date: string; text: string }) {
+  const year = date.slice(0, 4);
+  const parts: ReactNode[] = [];
+  let at = 0;
+  for (const m of text.matchAll(CORRECTION_PARTS)) {
+    const i = m.index ?? 0;
+    if (i > at) parts.push(text.slice(at, i));
+    if (m[1]) {
+      const month = String(MONTHS.indexOf(m[1]) + 1).padStart(2, '0');
+      parts.push(
+        <time key={i} dateTime={`${year}-${month}-${m[2].padStart(2, '0')}`}>
+          {m[0]}
+        </time>,
+      );
+    } else {
+      parts.push(
+        <span key={i} data-src="us-nominal-voltages">
+          {m[0]}
+        </span>,
+      );
+    }
+    at = i + m[0].length;
+  }
+  if (at < text.length) parts.push(text.slice(at));
+  return <>{parts}</>;
+}
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -64,10 +97,21 @@ export default function AboutPage() {
         <ul className="list-disc space-y-2 pl-6 marker:text-cut-line">
           <li>NFPA 70, the National Electrical Code (NEC), 2023 edition, unless a page names another edition.</li>
           <li>
-            NIST Handbook 100, Copper Wire Tables, for wire diameters, areas and copper resistance. NIST Handbook 109
+            <a href="/methodology#wire-gauge" data-src="awg-geometry" className={LOOK_LINK}>
+              NIST Handbook 100
+            </a>
+            , Copper Wire Tables, for wire diameters, areas and copper resistance.{' '}
+            <a href="/methodology#resistance" data-src="conductor-resistance-20c" className={LOOK_LINK}>
+              NIST Handbook 109
+            </a>{' '}
             for aluminum.
           </li>
-          <li>NIST Special Publication 811 for unit conversion factors.</li>
+          <li>
+            <a href="/methodology#conversions" data-src="nist-sp811-conversions" className={LOOK_LINK}>
+              NIST Special Publication 811
+            </a>{' '}
+            for unit conversion factors.
+          </li>
           <li>{"Manufacturers' installation instructions, for pages about specific equipment."}</li>
         </ul>
         <p>
@@ -89,16 +133,19 @@ export default function AboutPage() {
         <ul className="list-disc space-y-2 pl-6 marker:text-cut-line">
           {CORRECTIONS.map((correction) => (
             <li key={`${correction.date} ${correction.text}`}>
-              <time dateTime={correction.date}>{formatDate(correction.date)}</time>: {correction.text}
+              <time dateTime={correction.date}>{formatDate(correction.date)}</time>: <CorrectionText date={correction.date} text={correction.text} />
             </li>
           ))}
         </ul>
         <p>To report an error, email info@wiresizes.com.</p>
 
         <h2 className={`${LOOK_H2} pt-6`}>Publisher</h2>
-        <p>
+        <address className="not-italic">
           wiresizes.com is published by Moving Data Systems d.o.o., Smolnik 62, 2342 Ruše, Slovenia. Company
-          registration number 9041273000, VAT ID SI94001154. Email: info@wiresizes.com. The{' '}
+          registration number 9041273000, VAT ID SI94001154. Email: info@wiresizes.com.
+        </address>
+        <p>
+          The{' '}
           <Link href="/privacy" className={LOOK_LINK}>
             privacy notice
           </Link>{' '}

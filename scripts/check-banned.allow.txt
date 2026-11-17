@@ -6,3 +6,11 @@
 # the dwelling answer of 2/0 copper or 4/0 aluminum (Table 310.12). Every other page keeps the ban.
 /guides/wire-size-for-200-amp | copper or 250 kcmil aluminum | 200 A feeder outside 310.12, Table 310.16 at 75 °C (WSZ-008c)
 src/app/guides/wire-size-for-200-amp/page.tsx | copper or 250 kcmil aluminum | the guide's meta description, same statement (WSZ-008c)
+# WSZ-008d: "1 AWG copper or 1/0 aluminum" and "1 AWG copper or 1/0 AWG aluminum" were banned (WSZ-002 review finding 11)
+# for the old site's wrong answers before 110.14(C) was verified. The 100 A guide states them only for a 100 A feeder at
+# the 60 °C column 110.14(C)(1)(a) sets for circuits of 100 A or less (nec-110-14c, nec-310-16), beside the 75 °C answer
+# and the dwelling service answer of 4 AWG copper or 2 AWG aluminum (Table 310.12). Every other page keeps the ban.
+/guides/wire-size-for-100-amp | 1 AWG copper or 1/0 AWG aluminum | 100 A feeder at the 60 °C column of 110.14(C)(1)(a) (WSZ-008d)
+/guides/wire-size-for-100-amp | 1 AWG copper or 1/0 aluminum | the guide's meta description, same statement (WSZ-008d)
+src/app/guides/wire-size-for-100-amp/page.tsx | 1 AWG copper or 1/0 aluminum | the guide's meta description in its source (WSZ-008d)
+public/llms.txt | 1 AWG copper or 1/0 AWG aluminum | the guide's llms.txt line, same statement (WSZ-008d)
