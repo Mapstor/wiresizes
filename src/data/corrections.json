@@ -134,5 +134,9 @@
   {
     "date": "2026-11-17",
     "text": "Brought back the hot tub calculator, offline since the November 2 audit because it estimated the circuit from the number of seats instead of the hot tub's rated load and its voltage-drop examples used wrong resistance values. It now sizes the copper circuit for the breaker the hot tub's manual asks for, from NEC Table 310.16 at the terminal temperature, with the Table 250.122 ground wire and the voltage drop over the run, and lists what three makers' current manuals require."
+  },
+  {
+    "date": "2026-11-17",
+    "text": "Brought back the air conditioner calculator, offline since the November 2 audit because it estimated amps from tonnage instead of using the unit's nameplate. It now sizes the copper wire to the minimum circuit ampacity (MCA) on the nameplate, from NEC Table 310.16 at the terminal temperature, with a breaker up to the nameplate's maximum (MOCP) as Table 240.4(G) and Article 440 allow, the Table 250.122 ground wire no larger than the circuit wire as 250.122(A) allows, and the voltage drop over the run, and shows the nameplate numbers of two makers' current units."
   }
 ]

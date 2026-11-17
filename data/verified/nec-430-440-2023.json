@@ -1117,22 +1117,26 @@
   },
   {
    "ref": "440.4(B)",
-   "edition": "2026 draft",
-   "status": "VERIFIED-draft",
+   "edition": "2023",
+   "status": "VERIFIED-2023",
    "values": {
     "nameplate": [
      "minimum supply circuit conductor ampacity",
      "maximum rating of the branch-circuit SC/GF protective device",
      "SCCR of motor controllers or industrial control panel"
-    ]
+    ],
+    "ampacity_basis": "Part IV, counting all motors and other loads operated at the same time",
+    "protective_device_basis": "not to exceed the value calculated by Part III",
+    "exception_2": "the minimum supply circuit conductor ampacity and the maximum protective device rating not required on a room air conditioner complying with 440.62(A)",
+    "exception_1": "equipment for a single 15- or 20-ampere 120-volt, or 15-ampere 208- or 240-volt, single-phase branch circuit may be marked as a single load"
    },
    "quote_segments": [
     "minimum supply circuit conductor ampacity, the maximum rating ",
     "of the branch-circuit short-circuit and ground-fault protective device"
    ],
-   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P11_SD_PrelimSR.pdf",
-   "permission_notice": "NFPA's own document",
-   "retrieved": "2026-10-20"
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P11_PISubmittals.pdf#page=159",
+   "permission_notice": "NFPA's own document (public input 487, filed against NFPA 70-2023; the 2023 text unmarked)",
+   "retrieved": "2026-11-17"
   },
   {
    "ref": "440.11",
@@ -1150,17 +1154,21 @@
   },
   {
    "ref": "440.14",
-   "edition": "2026 draft",
-   "status": "VERIFIED-draft",
+   "edition": "2023",
+   "status": "VERIFIED-2023",
    "values": {
-    "location": "within sight from, and readily accessible from, the equipment"
+    "location": "within sight from, and readily accessible from, the equipment",
+    "on_or_within_equipment": "permitted",
+    "working_space": "110.26(A)",
+    "not_on_access_panels_or_over_nameplate": true
    },
    "quote_segments": [
-    "Disconnecting means shall be located within sight from, and readily accessible from, the air-conditioning"
+    "Disconnecting means shall be located within sight from, and readily accessible from, the air-conditioning",
+    "The disconnecting means shall be permitted to be installed on or within the air-conditioning or refrigerating"
    ],
-   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P11_FD_PrelimFR.pdf",
-   "permission_notice": "NFPA's own document",
-   "retrieved": "2026-10-20"
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P11_PISubmittals.pdf#page=193",
+   "permission_notice": "NFPA's own document (public input 1635, filed against NFPA 70-2023; the 2023 text unmarked)",
+   "retrieved": "2026-11-17"
   },
   {
    "ref": "440.22(A)",
@@ -1278,6 +1286,24 @@
    ],
    "permission_notice": "NFPA documents; MN DLI has no notice",
    "retrieved": "2026-10-20"
+  },
+  {
+   "ref": "240.4(G)",
+   "edition": "2023",
+   "status": "VERIFIED-2023",
+   "values": {
+    "rule": "overcurrent protection for the specific conductors of Table 240.4(G) is permitted as that table references",
+    "air_conditioning": "air-conditioning and refrigeration equipment circuit conductors: Article 440, Parts III, IV, VI",
+    "motors": "motor and motor-control circuit conductors: Article 430, Parts II, III, IV, V, VI, VII",
+    "welders": "electric welder circuit conductors: Article 630, 630.12 and 630.32"
+   },
+   "quote_segments": [
+    "Overcurrent protection for the specific conductors shall be permitted to be provided as referenced in Table",
+    "Air-conditioning and refrigeration equipment"
+   ],
+   "source_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P10_PISubmittals.pdf#page=433",
+   "permission_notice": "NFPA's own document (public input 706, filed against NFPA 70-2023; the table's rows unmarked but for the new Services row)",
+   "retrieved": "2026-11-17"
   }
  ],
  "unverified_rules": [

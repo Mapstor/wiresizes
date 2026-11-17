@@ -265,6 +265,7 @@ const TOC = [
   METHODOLOGY_EXTRA_SECTIONS.rvMethod,
   METHODOLOGY_EXTRA_SECTIONS.wellPumpMethod,
   METHODOLOGY_EXTRA_SECTIONS.hotTubMethod,
+  METHODOLOGY_EXTRA_SECTIONS.acMethod,
   ...METHODOLOGY_SECTIONS.map(({ id, title }) => ({ id, title })),
   METHODOLOGY_EXTRA_SECTIONS.notCovered,
   METHODOLOGY_EXTRA_SECTIONS.errors,
@@ -288,7 +289,7 @@ const HP_EATON_LAST = (() => {
 })();
 
 export default function MethodologyPage() {
-  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, garageMethod, boxFillMethod, rvMethod, wellPumpMethod, hotTubMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
+  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, garageMethod, boxFillMethod, rvMethod, wellPumpMethod, hotTubMethod, acMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
   return (
     <div className={LOOK_PAGE}>
     <div className="container pb-16">
@@ -301,8 +302,9 @@ export default function MethodologyPage() {
         <p>
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
           has a section below: what it is and which edition was used, where it was read, how the calculators use it,
-          and where that use stops. The first eleven sections show how the wire size, circuit breaker, residential load,
-          range, dryer, horsepower to amps, garage subpanel, box fill, RV hookup, well pump and hot tub calculators work from them. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
+          and where that use stops. The first twelve sections show how the wire size, circuit breaker, residential load,
+          range, dryer, horsepower to amps, garage subpanel, box fill, RV hookup, well pump, hot tub and air conditioner calculators work
+          from them. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
           homepage and the calculators and guides pages also list their sources under Sources, near the bottom of the
           page.
         </p>
@@ -814,6 +816,37 @@ export default function MethodologyPage() {
           <Limits>
             <li>Copper only, as the makers ask; no aluminum.</li>
             <li>No NEC Article 680 rule is applied; the GFCI and disconnect lines are the makers&apos;.</li>
+          </Limits>
+        </section>
+
+        <section id={acMethod.id} data-src="calc:ac-circuit" aria-labelledby={`${acMethod.id}-title`} className="scroll-mt-24 space-y-4">
+          <h2 id={`${acMethod.id}-title`} className={H2}>
+            {acMethod.title}
+          </h2>
+          <p>
+            The{' '}
+            <Link href="/calculators/air-conditioner-calculator" className={LINK}>
+              air conditioner calculator
+            </Link>{' '}
+            takes the two numbers 440.4(B) puts on the nameplate, the minimum circuit ampacity (MCA) and the maximum breaker or fuse (MOCP), and
+            the run (see <SectionLink domain="nec-440-hvac">Air conditioner circuits</SectionLink>):
+          </p>
+          <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-cut-line">
+            <li>
+              The copper size: the smallest size whose Table 310.16 ampacity, in the column the{' '}
+              <SectionLink domain="nec-110-14c">terminal rules</SectionLink> allow for a circuit of the MOCP&apos;s rating, is at least the MCA. The
+              240.4(D) limits do not cap the breaker, since Table 240.4(G) sends air-conditioning circuit conductors to Article 440.
+            </li>
+            <li>The voltage drop at the MCA over the one-way length; past the target, the next size up, as the wire size calculator does.</li>
+            <li>
+              The ground wire: Table 250.122&apos;s size for a breaker at the MOCP, not larger than the circuit conductors (250.122(A)), and grown
+              in proportion when the drop moves the conductors up (250.122(B)).
+            </li>
+            <li>The breaker or fuse: no larger than the MOCP.</li>
+          </ol>
+          <Limits>
+            <li>Copper only, as both makers&apos; documents ask; single-phase supply at 240 V or 208 V.</li>
+            <li>It does not work out an MCA or MOCP, and applies no temperature or bundling correction.</li>
           </Limits>
         </section>
 
@@ -1388,6 +1421,33 @@ export default function MethodologyPage() {
           </Limits>
         </SourceSection>
 
+        <SourceSection domain="nec-440-hvac">
+          <p>
+            Article 440 of the NEC covers air-conditioning and refrigerating equipment. The site reads three of its rules in the 2023 text that
+            NFPA&apos;s public inputs for the 2026 edition reprint with the proposed changes marked: 440.4(B), the nameplate&apos;s minimum supply
+            circuit conductor ampacity and maximum protective device; 440.14, the place of the disconnect; and Table 240.4(G), which sends
+            air-conditioning circuit conductors to Parts III, IV and VI of Article 440. The motor-compressor limits of 440.22(A) are read from
+            the 2023-cycle Second Draft and Eaton&apos;s reprint of the 2023 values, made with NFPA&apos;s permission.
+          </p>
+          <SourceFacts s={section('nec-440-hvac')} />
+          <Limits>
+            <li>The rules for working out an MCA or MOCP, and the room air conditioner rules, have not been checked against a source.</li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="mfr-hvac-specs">
+          <p>
+            Carrier&apos;s product data for its 26SCA5 air conditioners (Catalog No. 26SCA5-02PD, June 2025) and Amana&apos;s specification
+            sheet for its ALXS3N air conditioners (SS-ALXS3N-R32, April 2025) give the MCA and MOCP of each size from 1.5 to 5 tons at 208/230 V
+            single phase. Both ask for copper wire; Amana asks for time-delay fuses or HACR-type breakers. Carrier&apos;s coastal 26SCA5C sheet
+            prints a higher MOCP for two sizes.
+          </p>
+          <SourceFacts s={section('mfr-hvac-specs')} />
+          <Limits>
+            <li>Two makers&apos; current models only; read the nameplate of the unit being installed.</li>
+          </Limits>
+        </SourceSection>
+
         <SourceSection domain="nec-cable-rules">
           <p>
             Section 334.80 of the NEC (2023) sets the ampacity of NM cable, and 310.15(E) says when a neutral counts as a
@@ -1893,7 +1953,7 @@ export default function MethodologyPage() {
             </li>
             <li>Working space around electrical equipment and clearances for service conductors.</li>
             <li>Motor circuits: conductor size, overload protection and the breaker or fuse.</li>
-            <li>Air conditioner and heat pump circuits.</li>
+            <li>Three-phase air conditioners, and indoor units with electric heat.</li>
             <li>Pool pump circuits, and the NEC&apos;s own Article 680 rules for pools, spas and hot tubs.</li>
             <li>Welder circuits.</li>
             <li>Three-phase and larger submersible well pump motors, and other pump makers&apos; tables.</li>
