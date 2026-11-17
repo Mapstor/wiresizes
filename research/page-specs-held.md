@@ -34,6 +34,7 @@ The code rules each page needs are named by registry domain. A page is built onl
 - Wedge: charger output → breaker → conductor, chained with the rules and the manufacturers' own tables. Tesla Gen 3: 48 A needs a 60 A breaker and at least 4 AWG Cu with a 60 °C-rated breaker, or 6 AWG with a 75 °C-rated breaker. ChargePoint and Emporia terminals take 6 AWG at most. NM cable (60 °C) vs THHN in conduit changes the answer.
 - Data: mfr-evse, nec-2023-rule-excerpts (625.40/.42/.43, 220.57), nec-continuous-load (625.41, 210.19/210.20), nec-310-16, nec-110-14c (incl. 334.80 NM at 60 °C), nec-250-grounding (EGC), irs-30c-credit, nec-ch9-fill (conduit sizes, only if verified), conductor-resistance-20c.
 - Tool: charger output (A) or kW at 240 V → breaker, minimum copper by wiring method (NM cable / THHN in conduit, terminals 60 or 75 °C), EGC, voltage drop at the length entered.
+- Status (WSZ-008e, 2026-11-17): built. Sources closed by WSZ-031 (nec-625-ev; 625.41 and 625.54 verified). The tool is served by links that open the wire size calculator on each output's breaker and continuous load (it already takes NM cable or 75 °C terminals, length, ambient and the drop target); the two absorbed calculators had 2 and 11 Bing impressions, too few for a second engine. No conduit sizes: nec-ch9-fill is still GAP.
 
 ### /calculators/ground-wire-calculator (Bing 299)
 - Queries: "what size ground wire for 200 amp service" 16 · "…150 amp service entrance cable" · "…100 amp service" · "grounding wire size for 240v 50 amp ev charger" · "hot tub ground wire 10 gauge or 8".
