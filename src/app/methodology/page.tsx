@@ -264,6 +264,7 @@ const TOC = [
   METHODOLOGY_EXTRA_SECTIONS.boxFillMethod,
   METHODOLOGY_EXTRA_SECTIONS.rvMethod,
   METHODOLOGY_EXTRA_SECTIONS.wellPumpMethod,
+  METHODOLOGY_EXTRA_SECTIONS.hotTubMethod,
   ...METHODOLOGY_SECTIONS.map(({ id, title }) => ({ id, title })),
   METHODOLOGY_EXTRA_SECTIONS.notCovered,
   METHODOLOGY_EXTRA_SECTIONS.errors,
@@ -287,7 +288,7 @@ const HP_EATON_LAST = (() => {
 })();
 
 export default function MethodologyPage() {
-  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, garageMethod, boxFillMethod, rvMethod, wellPumpMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
+  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, garageMethod, boxFillMethod, rvMethod, wellPumpMethod, hotTubMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
   return (
     <div className={LOOK_PAGE}>
     <div className="container pb-16">
@@ -300,8 +301,8 @@ export default function MethodologyPage() {
         <p>
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
           has a section below: what it is and which edition was used, where it was read, how the calculators use it,
-          and where that use stops. The first ten sections show how the wire size, circuit breaker, residential load,
-          range, dryer, horsepower to amps, garage subpanel, box fill, RV hookup and well pump calculators work from them. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
+          and where that use stops. The first eleven sections show how the wire size, circuit breaker, residential load,
+          range, dryer, horsepower to amps, garage subpanel, box fill, RV hookup, well pump and hot tub calculators work from them. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
           homepage and the calculators and guides pages also list their sources under Sources, near the bottom of the
           page.
         </p>
@@ -790,6 +791,29 @@ export default function MethodologyPage() {
           <Limits>
             <li>Franklin&apos;s 4-inch single-phase motors only: no three-phase, 6-inch or 8-inch motors, and no other makers&apos; tables.</li>
             <li>No NEC motor rule is applied on its own; the NEC values are the ones Franklin lists.</li>
+          </Limits>
+        </section>
+
+        <section id={hotTubMethod.id} data-src="calc:hot-tub" aria-labelledby={`${hotTubMethod.id}-title`} className="scroll-mt-24 space-y-4">
+          <h2 id={`${hotTubMethod.id}-title`} className={H2}>
+            {hotTubMethod.title}
+          </h2>
+          <p>
+            The{' '}
+            <Link href="/calculators/hot-tub-calculator" className={LINK}>
+              hot tub calculator
+            </Link>{' '}
+            takes the breaker the hot tub&apos;s manual asks for and sizes the circuit as the{' '}
+            <a href={`#${method.id}`} className={LINK}>
+              wire size calculator
+            </a>{' '}
+            sizes it, in copper, at 240 V for hardwired hot tubs and 120 V for plug-in ones, with the voltage drop at the full rating. It counts
+            four wires at 240 V and three at 120 V, and reports the makers&apos; GFCI and disconnect requirements (see{' '}
+            <SectionLink domain="mfr-spas">Hot tub makers&apos; instructions</SectionLink>).
+          </p>
+          <Limits>
+            <li>Copper only, as the makers ask; no aluminum.</li>
+            <li>No NEC Article 680 rule is applied; the GFCI and disconnect lines are the makers&apos;.</li>
           </Limits>
         </section>
 
@@ -1352,6 +1376,18 @@ export default function MethodologyPage() {
           </Limits>
         </SourceSection>
 
+        <SourceSection domain="mfr-spas">
+          <p>
+            Three hot tub makers&apos; 2026 documents give the circuit their hot tubs need: Hot Spring&apos;s pre-delivery instructions, Bullfrog&apos;s
+            A Series owner&apos;s manual and Marquis&apos;s Elite owner&apos;s manual. Each names the breaker, the GFCI protection, the number of wires
+            and copper wiring; Marquis also names the conductor sizes, and Marquis and Hot Spring the place of the disconnect.
+          </p>
+          <SourceFacts s={section('mfr-spas')} />
+          <Limits>
+            <li>Three makers&apos; current models only; other makers and older models may ask for something else.</li>
+          </Limits>
+        </SourceSection>
+
         <SourceSection domain="nec-cable-rules">
           <p>
             Section 334.80 of the NEC (2023) sets the ampacity of NM cable, and 310.15(E) says when a neutral counts as a
@@ -1858,7 +1894,7 @@ export default function MethodologyPage() {
             <li>Working space around electrical equipment and clearances for service conductors.</li>
             <li>Motor circuits: conductor size, overload protection and the breaker or fuse.</li>
             <li>Air conditioner and heat pump circuits.</li>
-            <li>Pool pump, spa and hot tub circuits.</li>
+            <li>Pool pump circuits, and the NEC&apos;s own Article 680 rules for pools, spas and hot tubs.</li>
             <li>Welder circuits.</li>
             <li>Three-phase and larger submersible well pump motors, and other pump makers&apos; tables.</li>
           </ul>

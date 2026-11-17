@@ -109,6 +109,12 @@ export const ROUTES: readonly SiteRoute[] = [
     line: "Copper or aluminum cable for a submersible well pump by its length, with the breaker, fuses and motor amps, from Franklin Electric's tables for its single-phase motors.",
   },
   {
+    path: '/calculators/hot-tub-calculator',
+    group: 'wire-sizing',
+    name: 'Hot Tub Wire Size Calculator',
+    line: "Copper wire for a hot tub from the breaker its manual asks for, with the ground wire and the voltage drop over the run, and the makers' GFCI and disconnect requirements.",
+  },
+  {
     path: '/calculators/box-fill-calculator',
     group: 'wire-sizing',
     name: 'Box Fill Calculator',
