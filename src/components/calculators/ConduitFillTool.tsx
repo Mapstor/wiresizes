@@ -14,6 +14,7 @@ import { ResultActions } from '@/components/look/ResultActions';
 import { BUTTON_PRIMARY, BUTTON_SECONDARY, Field, Segmented, SelectInput, TextInput, describedBy } from '@/components/look/Form';
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
+import { formatValue } from '@/lib/calculations/format';
 import { formatSize } from '@/lib/verified/awg';
 import {
   CONDUIT_FILL_CALC,
@@ -62,7 +63,7 @@ type Errors = Partial<Record<'conductors', string>>;
 function errorsOf(i: Inputs): Errors {
   if (i.mode !== 'size') return {};
   const n = fieldNumber(i.conductors);
-  return Number.isInteger(n) && n >= 1 && n <= FILL_LIMITS.conductors ? {} : { conductors: `Enter a whole number, 1 to ${FILL_LIMITS.conductors}.` };
+  return Number.isInteger(n) && n >= 1 && n <= FILL_LIMITS.conductors ? {} : { conductors: `Enter a whole number, 1 to ${formatValue(FILL_LIMITS.conductors)}.` };
 }
 
 type Outcome = { inputs: Inputs; r: ConduitFillResult } | { inputs: Inputs; error: string };
@@ -277,7 +278,8 @@ function Result({ r, headingRef, shareUrl }: { r: ConduitFillResult; headingRef:
           <>
             <p className={BIG}>{r.smallest.trade.trade}</p>
             <p className="mt-2 text-[17px] text-ink" data-src={SRC}>
-              trade size ({r.smallest.trade.metric}) for <Num v={r.conductors ?? 0} src="input" />, which holds up to <Num v={r.smallest.max} src={SRC} />
+              trade size (metric {r.smallest.trade.metric}) for <Num v={r.conductors ?? 0} src="input" /> conductors; it holds up to{' '}
+              <Num v={r.smallest.max} src={SRC} />
             </p>
           </>
         ) : (

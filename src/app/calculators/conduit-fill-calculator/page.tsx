@@ -76,6 +76,9 @@ if (EMT.raceway.id !== 'emt' || PVC40.raceway.id !== 'pvc-40') throw new Error('
 const [A14, A12, A10] = ANSWER;
 const MOST = COMPARE[0];
 const FEWEST = COMPARE[COMPARE.length - 1];
+/** How the comparison sentence names a raceway: the PVC kinds by their short names, the rest as the tables do. */
+const PROSE_NAME: Record<string, string> = { 'pvc-80': 'Schedule 80 PVC', 'pvc-40': 'Schedule 40 PVC', 'pvc-a': 'Type A PVC' };
+const proseName = (r: { id: string; name: string }) => PROSE_NAME[r.id] ?? racewayInSentence(r.name);
 function must<T>(v: T | null | undefined, what: string): T {
   if (v === null || v === undefined) throw new Error(`conduit fill page: ${what}`);
   return v;
@@ -109,7 +112,7 @@ function QuickTable({ q }: { q: (typeof QUICK)[number] }) {
       id={`thhn-${q.raceway.id}`}
       variant="ruled"
       src={SRC}
-      caption={`THHN, THWN, THWN-2 in ${racewayInSentence(q.raceway.name)}: the most conductors of one size, NEC Annex C Table ${q.raceway.table}`}
+      caption={`THHN, THWN, THWN-2 in ${racewayInSentence(q.raceway.name)}: the most conductors of one size by trade size, NEC Annex C Table ${q.raceway.table}`}
     >
       <thead>
         <tr>
@@ -250,8 +253,8 @@ export default function ConduitFillCalculatorPage() {
             <p className={P} data-src={SRC}>
               The same trade size holds different counts in different raceways, because Annex C works from each one&apos;s own inside area
               (Table 4). In trade size{' '}
-              {COMPARE_TRADE}, {racewayInSentence(MOST.name)} holds the most <Size s={COMPARE_SIZE} /> THHN, <Num v={MOST.n} src={SRC} />, and{' '}
-              {racewayInSentence(FEWEST.name)} the fewest, <Num v={FEWEST.n} src={SRC} />. EMT holds <Num v={EMT_ONE.n} src={SRC} /> and
+              {COMPARE_TRADE}, {proseName(MOST)} holds the most <Size s={COMPARE_SIZE} /> THHN, <Num v={MOST.n} src={SRC} />, and{' '}
+              {proseName(FEWEST)} the fewest, <Num v={FEWEST.n} src={SRC} />. EMT holds <Num v={EMT_ONE.n} src={SRC} /> and
               Schedule 40 PVC <Num v={PVC40_ONE.n} src={SRC} />.{' '}
               {NO_TRADE_ONE.length > 0 && <>{NO_TRADE_ONE.map((r) => r.name).join(', ')} has no trade size {COMPARE_TRADE} in its table.</>}
             </p>

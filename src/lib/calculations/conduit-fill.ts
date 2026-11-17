@@ -5,7 +5,7 @@
 // areas, because Table 4 (other than IMC) and Table 5 are not verified (conductors of different sizes are not
 // covered). Pure; no estimates.
 import type { TextPart } from './format';
-import { partsText } from './format';
+import { formatValue, partsText } from './format';
 import { formatSize } from '../verified/awg';
 import { CONDUIT_FILL_DOMAIN, FILL_NOTES, FILL_PERCENT, TRADE_SIZES, annexCRows, conductorType, raceway, racewayTradeIndexes } from '../verified/nec-annex-c';
 import type { Raceway, TradeSize } from '../verified/nec-annex-c';
@@ -62,7 +62,7 @@ export type ConduitFillError = 'size-not-listed' | 'trade-not-listed' | 'count-i
 export const CONDUIT_FILL_ERROR_MESSAGES: Record<ConduitFillError, string> = {
   'size-not-listed': 'Annex C does not list this size for this conductor type.',
   'trade-not-listed': 'Annex C does not list this trade size for this raceway.',
-  'count-invalid': `Enter a whole number of conductors from 1 to ${FILL_LIMITS.conductors}.`,
+  'count-invalid': `Enter a whole number of conductors from 1 to ${formatValue(FILL_LIMITS.conductors)}.`,
 };
 
 export function isConduitFillError(r: ConduitFillResult | { error: ConduitFillError }): r is { error: ConduitFillError } {
