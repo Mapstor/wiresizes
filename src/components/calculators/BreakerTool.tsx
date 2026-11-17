@@ -19,7 +19,7 @@ import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calcula
 import { formatValue, indefiniteArticle } from '@/lib/calculations/format';
 import { BREAKER_ERROR_MESSAGES, ENGINE_ID, breakerRun, isBreakerError, minimumRating } from '@/lib/calculations/breaker-sizing';
 import type { BreakerRun } from '@/lib/calculations/breaker-sizing';
-import { EGC_LARGER_THAN_CONDUCTOR_NOTE, RATING_MAX_A } from '@/lib/calculations/conductor-sizing';
+import { RATING_MAX_A } from '@/lib/calculations/conductor-sizing';
 import type { Termination, WiringMethod } from '@/lib/calculations/conductor-sizing';
 import { TERMINATION_RULES } from '@/lib/verified/nec-110-14c';
 import { CONTINUOUS_LOAD_PERCENT } from '@/lib/verified/nec-continuous-load-2023';
@@ -316,7 +316,6 @@ function Result({
           </tbody>
         </table>
       </div>
-      {r.egc && r.egcLargerThanConductor && <p className={`mt-5 ${NOTE}`}>{EGC_LARGER_THAN_CONDUCTOR_NOTE}</p>}
       {below && (
         <p className={`mt-5 ${NOTE}`} data-src={OCPD}>
           NEC 240.4(B) also lets this <Val v={r.breakerA} unit="A" src={CALC} /> breaker or fuse protect <Size s={below.size} /> {METAL[inputs.material]},

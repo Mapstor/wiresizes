@@ -5,12 +5,14 @@
 //    for individual conductors, 60 °C for cable) × Table 310.15(B)(1)(1) factor for that column × Table 310.15(C)(1)
 //    percent, capped at the termination-column ampacity;
 // 2. NEC 240.4(D) rows without conditions move the size up while the rating exceeds their limit;
-// 3. equipment grounding conductor (EGC) from Table 250.122 by rating, copper or aluminum/CCA column;
+// 3. equipment grounding conductor (EGC) from Table 250.122 by rating, copper or aluminum/CCA column, not larger than the
+//    step-2 conductor (250.122(A), verified 2023 in WSZ-036; D-08 lifted in WSZ-038);
 // 4. voltage drop at the load current with 75 °C resistance from awg.json;
 // 5. larger Table 310.16 sizes until the drop meets the reader's target, 2000 kcmil at most (voltage-drop.ts);
-// 6. if step 5 upsized, the EGC grows in proportion (250.122(B), egcProportional): table EGC area × chosen area ÷
-//    step-2 area, multiplied first, smallest Table 310.16 size at or above it, never smaller than the table EGC, not
-//    capped. It starts from the step-2 size, so increases needed for correction and adjustment never scale the EGC.
+// 6. if step 5 upsized, the EGC grows in proportion (250.122(B), egcProportional): step-3 EGC area × chosen area ÷
+//    step-2 area, multiplied first, smallest Table 310.16 size at or above it, never smaller than the step-3 EGC and
+//    never larger than the chosen size. It starts from the step-2 size, so increases needed for correction and
+//    adjustment never scale the EGC.
 // Without the optional inputs (termination 'unknown', wiring method 'cable', no derating) the results are the 60 °C
 // results of WSZ-002. steps[] explains each step, except in the derating mode, whose text WSZ-009 writes; stepParts
 // holds the same sentences in parts, so the result panel renders their numbers through <Val> and sizes through <Size>.
@@ -86,9 +88,22 @@ export const STANDARD_RATINGS: number[] = ocpdRatings();
 export const WIRE_SIZE_RATINGS: number[] = STANDARD_RATINGS.filter((a) => a >= RATING_MIN_A && a <= RATING_MAX_A);
 
 export const EGC_UPSIZED_NOTE = 'Ground wire increased in proportion to the larger conductors (NEC 250.122(B)).';
-export const EGC_LARGER_THAN_CONDUCTOR_NOTE =
-  'For this rating, Table 250.122 lists a ground wire larger than the smallest conductor the rating allows.';
 export const EGC_NONE_MESSAGE = 'No size in NEC Table 310.16 is large enough for this ground wire.';
+
+/** 250.122(A): the Table 250.122 EGC, not required to be larger than the circuit conductors. */
+function cappedEgc(tableEgc: SizeKey | null, conductor: SizeKey): { tableEgc: SizeKey | null; egc: SizeKey | null; egcCapped: boolean } {
+  const egcCapped = tableEgc !== null && areaCmil(tableEgc) > areaCmil(conductor);
+  return { tableEgc, egc: egcCapped ? conductor : tableEgc, egcCapped };
+}
+
+/** The ground wire step: Table 250.122's size after `lead`, and 250.122(A)'s cap at the circuit conductors when it applies. */
+export function egcStepParts(lead: TextPart[], m: Pick<MinimumConductor, 'tableEgc' | 'egc' | 'egcCapped' | 'size'>, material: Material): TextPart[] {
+  const column = material === 'Cu' ? 'copper' : 'aluminum or copper-clad aluminum';
+  const parts: TextPart[] = [...lead, ` NEC Table 250.122 (${column} column): `, { size: m.tableEgc as SizeKey }];
+  if (m.egcCapped) parts.push('; 250.122(A) does not require it to be larger than the ', { size: m.size }, ' circuit conductors, so ', { size: m.egc as SizeKey });
+  parts.push('.');
+  return parts;
+}
 
 /** 'unknown'; '60': terminations marked 60 °C; '75': the reader confirmed every termination is listed and identified for 75 °C conductors. */
 export type Termination = 'unknown' | '60' | '75';
@@ -147,13 +162,34 @@ export interface MinimumConductor {
   /** Derating: the size's derated ampacity, capped at its termination-column ampacity; null without derating. */
   deratedAmpacity: number | null;
   /** Step 3: the Table 250.122 EGC for the rating. */
+  tableEgc: SizeKey | null;
+  /** Step 3: the EGC to install: tableEgc, not larger than the step-2 size (250.122(A)). */
   egc: SizeKey | null;
+  /** 250.122(A) held the EGC at the step-2 size (Table 250.122 lists a larger one for the rating). */
+  egcCapped: boolean;
   /**
    * 240.4(B): the next smaller size, when 240.4(D) did not move the size, the rating is at most NEXT_SIZE_UP_MAX_A, the
    * smaller size's ampacity (derated and capped like the others) is not a standard rating and the rating is the next
    * standard one above it, and 240.4(D) allows the rating on it; otherwise null.
    */
   below: { size: SizeKey; ampacity: number } | null;
+}
+
+/**
+ * The ratings and materials where 250.122(A) holds the Table 250.122 EGC at the step-2 size: every offered rating, both
+ * materials and both termination columns, without derating (derating only makes the conductor larger, so it adds none).
+ */
+export function egcCapCases(): { ocpdA: number; material: Material; tableEgc: SizeKey; size: SizeKey }[] {
+  const seen = new Map<string, { ocpdA: number; material: Material; tableEgc: SizeKey; size: SizeKey }>();
+  for (const ocpdA of WIRE_SIZE_RATINGS) {
+    for (const material of ['Cu', 'Al'] as const) {
+      for (const [termination, wiringMethod] of [['unknown', 'cable'], ['60', 'conductors'], ['75', 'conductors']] as const) {
+        const m = minimumConductor({ ocpdA, material, termination, wiringMethod });
+        if (m && m.egcCapped && m.tableEgc !== null) seen.set(`${ocpdA}|${material}|${m.size}`, { ocpdA, material, tableEgc: m.tableEgc, size: m.size });
+      }
+    }
+  }
+  return [...seen.values()];
 }
 
 /** Steps 1 to 3; null when no Table 310.16 size reaches the rating. */
@@ -221,8 +257,8 @@ export function minimumConductor(input: MinimumConductorInput): MinimumConductor
     size,
     limitedBy240_4D: size !== firstSize,
     deratedAmpacity: startColumnC === null ? null : ampacityOf(size),
-    // Step 3: EGC by rating and material
-    egc: tableEgcFor(ocpdA, material),
+    // Step 3: EGC by rating and material, not larger than the circuit conductors (250.122(A))
+    ...cappedEgc(tableEgcFor(ocpdA, material), size),
     below,
   };
 }
@@ -266,8 +302,10 @@ export interface SizeConductorResult {
   egc: SizeKey | null;
   /** The returned EGC is larger than the Table 250.122 size (or none is large enough). */
   egcUpsized: boolean;
-  /** The EGC is null or its area is larger than the returned conductor's area. */
+  /** The EGC is null (no size is large enough); 250.122(A) keeps it from being larger than the conductor otherwise. */
   egcLargerThanConductor: boolean;
+  /** 250.122(A) held the step-3 EGC at the step-2 size. */
+  egcCapped: boolean;
   /**
    * 240.4(B): the next smaller size the rating may protect, with the largest load it carries (210.19(A)) and the largest
    * continuous load; null when there is none, when voltage drop chose a larger size, or when the entered load is too large.
@@ -324,7 +362,7 @@ function explain(
 ): TextPart[][] {
   const { ocpdA, lengthFt, volts, phase, material } = input;
   const metal = materialName(material);
-  const tableEgc = minimum.egc as SizeKey;
+  const baseEgc = minimum.egc as SizeKey;
   const rating = amps(ocpdA, 'input');
   const drop = (vd: VoltageDropResult): TextPart[] => [
     { v: vd.vdVolts, unit: 'V', src: CALC, format: VD_FORMAT },
@@ -416,13 +454,7 @@ function explain(
         : [...limitText, ' overcurrent protection, so the size moves up to ', { size: limit.movedTo }, '.'],
     );
   }
-  steps.push([
-    `Ground wire for ${indefiniteArticle(ocpdA)} `,
-    rating,
-    ` breaker or fuse, NEC Table 250.122 (${material === 'Cu' ? 'copper' : 'aluminum or copper-clad aluminum'} column): `,
-    { size: tableEgc },
-    '.',
-  ]);
+  steps.push(egcStepParts([`Ground wire for ${indefiniteArticle(ocpdA)} `, rating, ' breaker or fuse,'], minimum, material));
   steps.push([
     'Voltage drop with ',
     { size: minimum.size },
@@ -451,7 +483,7 @@ function explain(
   if (steppedUp && proportional) {
     const formula: TextPart[] = [
       'Ground wire increased in proportion to the larger conductors (NEC 250.122(B)): ',
-      cmil(areaCmil(tableEgc)),
+      cmil(areaCmil(baseEgc)),
       ' × ',
       cmil(areaCmil(steppedUp.size)),
       ' ÷ ',
@@ -490,7 +522,7 @@ export function sizeConductor(input: SizeConductorInput): SizeConductorResult | 
     throw new Error(`No ${materialName(material)} size in NEC Table 310.16 carries ${ocpdA} A`);
   }
   const step2 = minimum.size;
-  const tableEgc = minimum.egc as SizeKey;
+  const baseEgc = minimum.egc as SizeKey;
 
   // Step 4: voltage drop at the load current
   const circuit = { material, amps: loadA, lengthFt, volts, phase };
@@ -503,11 +535,13 @@ export function sizeConductor(input: SizeConductorInput): SizeConductorResult | 
   const vd = steppedUp ? steppedUp.result : atMinimum;
 
   // Step 6: proportional EGC when step 5 upsized
-  const proportional = size !== step2 ? egcProportional(tableEgc, step2, size) : null;
-  const egc = proportional ? proportional.egc : tableEgc;
-  const egcUpsized = egc === null || areaCmil(egc) > areaCmil(tableEgc);
+  const proportional = size !== step2 ? egcProportional(baseEgc, step2, size) : null;
+  const grown = proportional ? proportional.egc : baseEgc;
+  // never larger than the chosen conductors (250.122(A)); the area ratio can only reach that size
+  const egc = grown !== null && areaCmil(grown) > areaCmil(size) ? size : grown;
+  const egcUpsized = egc === null || areaCmil(egc) > areaCmil(baseEgc);
   const egcLargerThanConductor = egc === null || areaCmil(egc) > areaCmil(size);
-  const stepParts = explain(input, loadA, target, minimum, atMinimum, steppedUp, proportional);
+  const stepParts = explain(input, loadA, target, minimum, atMinimum, steppedUp, proportional ? { ...proportional, egc } : null);
   // 240.4(B): only for the size the rating needs, and only when the entered load fits the smaller size (210.19(A))
   const below = size === step2 ? minimum.below : null;
   const neededA = input.loadA === null || input.loadA === undefined ? 0 : input.continuous ? (input.loadA * CONTINUOUS_LOAD_PERCENT) / 100 : input.loadA;
@@ -532,6 +566,7 @@ export function sizeConductor(input: SizeConductorInput): SizeConductorResult | 
     egc,
     egcUpsized,
     egcLargerThanConductor,
+    egcCapped: minimum.egcCapped,
     nextSizeUp,
     steps: stepParts.map((parts) => partsText(parts, formatSize)),
     stepParts,

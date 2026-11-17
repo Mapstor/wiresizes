@@ -3,7 +3,7 @@
 // more dryers. Its own branch circuit is the rating the dryer's instructions give; the calculator sizes the wire and
 // ground wire for that rating as the wire size calculator does (minimumConductor) and never picks the rating.
 import { dryerDemandPct, dryerLoadW } from './load-calc-2023';
-import { minimumConductor } from './conductor-sizing';
+import { egcStepParts, minimumConductor } from './conductor-sizing';
 import type { Termination, WiringMethod } from './conductor-sizing';
 import { indefiniteArticle, materialName, partsText } from './format';
 import type { TextPart, ValuePart } from './format';
@@ -48,7 +48,8 @@ export interface DryerRun {
   ampacity: number;
   limitedBy240_4D: boolean;
   egc: SizeKey | null;
-  egcLargerThanConductor: boolean;
+  /** 250.122(A) held the ground wire at the wire's size (Table 250.122 lists a larger one for the rating). */
+  egcCapped: boolean;
   steps: string[];
   stepParts: TextPart[][];
 }
@@ -116,13 +117,7 @@ export function dryerRun(input: DryerRunInput): DryerRun | { error: DryerError }
     );
   }
   if (m.egc) {
-    steps.push([
-      `Ground wire for ${indefiniteArticle(input.circuitA)} `,
-      amps(input.circuitA, 'input'),
-      ` circuit, NEC Table 250.122 (${input.material === 'Cu' ? 'copper' : 'aluminum or copper-clad aluminum'} column): `,
-      { size: m.egc },
-      '.',
-    ]);
+    steps.push(egcStepParts([`Ground wire for ${indefiniteArticle(input.circuitA)} `, amps(input.circuitA, 'input'), ' circuit,'], m, input.material));
   }
   return {
     perDryerW,
@@ -135,7 +130,7 @@ export function dryerRun(input: DryerRunInput): DryerRun | { error: DryerError }
     ampacity: table31016(m.size, col) as number,
     limitedBy240_4D: m.limitedBy240_4D,
     egc: m.egc,
-    egcLargerThanConductor: m.egc !== null && areaCmil(m.egc) > areaCmil(m.size),
+    egcCapped: m.egcCapped,
     steps: steps.map((parts) => partsText(parts, formatSize)),
     stepParts: steps,
   };

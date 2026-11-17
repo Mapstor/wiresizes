@@ -17,7 +17,7 @@ import { areaCmil, formatSize } from '../verified/awg';
 import type { Material, SizeKey } from '../verified/awg';
 import { indefiniteArticle, materialName, partsText } from './format';
 import type { TextPart, ValuePart } from './format';
-import { minimumConductor, RATING_MAX_A, RATING_MIN_A } from './conductor-sizing';
+import { egcStepParts, minimumConductor, RATING_MAX_A, RATING_MIN_A } from './conductor-sizing';
 import type { MinimumConductor, Termination, WiringMethod } from './conductor-sizing';
 
 export const ENGINE_ID = 'breaker-sizing';
@@ -147,8 +147,8 @@ export interface BreakerRun {
   limitedBy240_4D: boolean;
   /** Table 250.122 for the rating. */
   egc: SizeKey | null;
-  /** The ground wire's area is larger than the wire's (Table 250.122 lists it so for the rating). */
-  egcLargerThanConductor: boolean;
+  /** 250.122(A) held the ground wire at the wire's size (Table 250.122 lists a larger one for the rating). */
+  egcCapped: boolean;
   /** The largest continuous load the rating serves (210.20(A)). */
   maxContinuousA: number;
   /** 240.4(B): the next smaller size the rating may protect, when its ampacity still reaches minOcpdA (210.19(A)). */
@@ -218,13 +218,7 @@ function explain(input: BreakerRunInput, minOcpdA: number, breakerA: number, m: 
     );
   }
   if (m.egc) {
-    steps.push([
-      `Ground wire for ${indefiniteArticle(breakerA)} `,
-      amps(breakerA, CALC),
-      ` breaker or fuse, NEC Table 250.122 (${material === 'Cu' ? 'copper' : 'aluminum or copper-clad aluminum'} column): `,
-      { size: m.egc },
-      '.',
-    ]);
+    steps.push(egcStepParts([`Ground wire for ${indefiniteArticle(breakerA)} `, amps(breakerA, CALC), ' breaker or fuse,'], m, material));
   }
   return steps;
 }
@@ -247,7 +241,7 @@ export function breakerRun(input: BreakerRunInput): BreakerRun | { error: Breake
     ampacity: table31016(m.size, columnKey(material, m.columnC)) as number,
     limitedBy240_4D: m.limitedBy240_4D,
     egc: m.egc,
-    egcLargerThanConductor: m.egc !== null && areaCmil(m.egc) > areaCmil(m.size),
+    egcCapped: m.egcCapped,
     maxContinuousA: largestContinuousLoad(breakerA),
     below: m.below && m.below.ampacity >= minOcpdA ? m.below : null,
     steps: stepParts.map((parts) => partsText(parts, formatSize)),

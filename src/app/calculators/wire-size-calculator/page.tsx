@@ -29,7 +29,7 @@ import {
   LOOK_SOURCES_NOTE,
   LOOK_SOURCES_SECTION,
 } from '@/components/look/styles';
-import { ENGINE_ID } from '@/lib/calculations/conductor-sizing';
+import { egcCapCases, ENGINE_ID } from '@/lib/calculations/conductor-sizing';
 import { RESISTANCE_TEMP_C } from '@/lib/calculations/voltage-drop';
 import { articleDates } from '@/lib/page-dates';
 import {
@@ -108,6 +108,11 @@ function plainLimit(size: SizeKey): number {
 const LIMIT_14 = plainLimit('14');
 const LIMIT_12 = plainLimit(R20.Cu.c60.size);
 const EGC_30_TO_60 = RATING_ROWS.Cu.filter((r) => r.ratingA >= 30 && r.ratingA <= 60);
+// 250.122(A), WSZ-038: the one rating and material where Table 250.122 lists a ground wire larger than the conductor
+const CAP_CASES = egcCapCases();
+if (CAP_CASES.length !== 1) throw new Error(`wire size page: expected one 250.122(A) case, got ${CAP_CASES.length}`);
+const CAP = CAP_CASES[0];
+if (RATING_ROWS[CAP.material].find((r) => r.ratingA === CAP.ocpdA)?.egc !== CAP.size) throw new Error('wire size page: the table lost the 250.122(A) cap');
 const THHN_90 = COLUMN_TYPES[C90].includes('THHN');
 const BUNDLE_PERCENT = adjustment('7–9');
 const [TRACK_20, TRACK_30] = LENGTH_TRACKS;
@@ -240,6 +245,11 @@ export default function WireSizeCalculatorPage() {
               conductors; above <Val v={TERMINATION_RULES.limitA} unit="A" src={TERM} />, at the <Val v={WARM} unit="°C" src={TERM} /> ampacity. The
               site also keeps NM and UF cable at <Val v={COLD} unit="°C" src={TERM} />. Each size below carries the full rating in its column and
               meets the 240.4(D) limits.
+            </p>
+            <p className={P} data-src={CALC}>
+              The ground wire is Table 250.122&apos;s size for the rating, held at the circuit wire&apos;s size where the table lists a larger one,
+              as 250.122(A) allows. That happens once: at <Val v={CAP.ocpdA} unit="A" src={OCPD} /> on aluminum the table lists{' '}
+              <Size s={CAP.tableEgc} />, and the circuit wire is <Size s={CAP.size} />.
             </p>
             {/* min-w-0: a grid item may shrink below its table, which then scrolls in its own frame on a phone */}
             <div className="grid gap-8 md:grid-cols-2 md:gap-6 [&>*]:min-w-0">
@@ -437,7 +447,8 @@ export default function WireSizeCalculatorPage() {
               <p className={P} data-src={EGC}>
                 Table 250.122 sizes it by the breaker or fuse rating: <Size s={R20.Cu.egc} /> copper for <Val v={20} unit="A" src={EGC} />,{' '}
                 <Size s={EGC_30_TO_60[0].egc} /> from <Val v={30} unit="A" src={EGC} /> to <Val v={60} unit="A" src={EGC} /> and <Size s={R100.Cu.egc} /> for{' '}
-                <Val v={100} unit="A" src={EGC} />. When the conductors grow for voltage drop, it grows in proportion. The{' '}
+                <Val v={100} unit="A" src={EGC} />. It never has to be larger than the circuit wires (250.122(A)), and when the conductors grow
+                for voltage drop, it grows in proportion. The{' '}
                 <Link href="/calculators/ground-wire-calculator" className={LINK}>
                   ground wire calculator
                 </Link>{' '}

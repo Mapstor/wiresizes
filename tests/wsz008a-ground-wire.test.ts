@@ -113,13 +113,12 @@ describe('WSZ-008a sources and removals', () => {
     assert.deepEqual(mapRow.data_sources_all.split(';').sort(), [...CITED].sort());
   });
 
-  it('states neither the unverified electrode limits nor the cap at the circuit conductors', () => {
-    // the code comments name them to say why they are left out; the rendered text must not
+  it('states none of the unverified electrode limits, and states the 250.122(A) cap it now applies (WSZ-038)', () => {
+    // the code comments name the electrode limits to say why they are left out; the rendered text must not
     const code = (src: string) => src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
     for (const text of [code(page), code(tool)]) {
       assert.ok(!/250\.66\s*\((A|B)\)/.test(text));
-      assert.ok(!/250\.122\s*\(A\)/.test(text));
-      assert.ok(!/not required to be larger/i.test(text));
+      assert.match(text, /250\.122\(A\)/);
     }
   });
 

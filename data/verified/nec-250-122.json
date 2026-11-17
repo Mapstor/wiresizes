@@ -13,7 +13,7 @@
  "notes": [
   "Size by the rating of the overcurrent device ahead of the circuit, \"not exceeding\".",
   "250.122(B) (2023): wire-type EGCs grow in proportion to the increase in circular mil area of the ungrounded conductors when those are increased for any reason other than as required in 310.15(B) or 310.15(C). The 2026 draft relabels it 250.122(D).",
-  "250.122(A) cap ('not required to be larger than the circuit conductors'): VERIFIED-2023 since WSZ-036 (rule_250_122_a: public inputs 2573 and 3150 of the 2026 cycle print the 2023 sentence unmarked). Applied by the air conditioner calculator; the other engines still flag a larger ground wire without capping it."
+  "250.122(A) cap ('not required to be larger than the circuit conductors'): VERIFIED-2023 since WSZ-036 (rule_250_122_a: public inputs 2573 and 3150 of the 2026 cycle print the 2023 sentence unmarked). Applied by every engine that sizes a ground wire since WSZ-038 (D-08 lifted): the Table 250.122 EGC is held at the smallest conductor the rating allows, then grown by 250.122(B)."
  ],
  "rows": [
   {

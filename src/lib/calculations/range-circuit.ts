@@ -7,7 +7,7 @@
 // from Table 220.55 and the maker's stated circuit (nec-continuous-load-2023.json notes). The notes of Table 220.55
 // after Note 3 are cited without a number (their numbers were inferred, nec-220-2023.json notes).
 import { cooktopAndOvensBranchLoad, note1Steps, rangeDemandKw, singleUnitBranchLoadKw } from './load-calc-2023';
-import { minimumConductor } from './conductor-sizing';
+import { egcStepParts, minimumConductor } from './conductor-sizing';
 import type { Termination, WiringMethod } from './conductor-sizing';
 import { indefiniteArticle, materialName, partsText } from './format';
 import type { TextPart, ValuePart } from './format';
@@ -59,7 +59,8 @@ export interface RangeRun {
   ampacity: number;
   limitedBy240_4D: boolean;
   egc: SizeKey | null;
-  egcLargerThanConductor: boolean;
+  /** 250.122(A) held the ground wire at the wire's size (Table 250.122 lists a larger one for the rating). */
+  egcCapped: boolean;
   steps: string[];
   stepParts: TextPart[][];
 }
@@ -171,13 +172,7 @@ export function rangeRun(input: RangeRunInput): RangeRun | { error: RangeError }
     );
   }
   if (m.egc) {
-    steps.push([
-      `Ground wire for ${indefiniteArticle(input.circuitA)} `,
-      amps(input.circuitA, 'input'),
-      ` circuit, NEC Table 250.122 (${input.material === 'Cu' ? 'copper' : 'aluminum or copper-clad aluminum'} column): `,
-      { size: m.egc },
-      '.',
-    ]);
+    steps.push(egcStepParts([`Ground wire for ${indefiniteArticle(input.circuitA)} `, amps(input.circuitA, 'input'), ' circuit,'], m, input.material));
   }
   return {
     loadKw,
@@ -190,7 +185,7 @@ export function rangeRun(input: RangeRunInput): RangeRun | { error: RangeError }
     ampacity: table31016(m.size, col) as number,
     limitedBy240_4D: m.limitedBy240_4D,
     egc: m.egc,
-    egcLargerThanConductor: m.egc !== null && areaCmil(m.egc) > areaCmil(m.size),
+    egcCapped: m.egcCapped,
     steps: steps.map((parts) => partsText(parts, formatSize)),
     stepParts: steps,
   };

@@ -142,5 +142,9 @@
  {
   "date": "2026-11-17",
   "text": "Brought back the welder calculator, offline since the November 2 audit because it sized the circuit from estimated arc power instead of the welder's rated input current. It now starts from the minimum wire in the welder's manual, applies the NEC's 2023 breaker limits for welders in 630.12 with the next standard rating and the voltage drop over the run, gives the Table 250.122 ground wire, and lists the electrical service guides of six Miller and Lincoln welders."
+ },
+ {
+  "date": "2026-11-17",
+  "text": "Ground wires: the wire size, circuit breaker, range, dryer and ground wire calculators now keep the ground wire no larger than the circuit wires, as NEC 250.122(A) allows; the air conditioner and welder calculators already did. For one breaker rating on aluminum wire, Table 250.122 lists a ground wire one size larger than the smallest wire that rating allows, and until the 2023 wording of 250.122(A) was confirmed in NFPA's records the calculators showed that larger ground wire with a note."
  }
 ]

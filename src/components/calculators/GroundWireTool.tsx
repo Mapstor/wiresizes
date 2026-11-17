@@ -24,6 +24,7 @@ const CALC = `calc:${ENGINE_ID}`;
 const GND = 'nec-250-grounding';
 const OCPD = 'nec-240-ocpd';
 const GEO = 'awg-geometry';
+const SIZING = 'calc:conductor-sizing';
 const LINK = 'text-ink underline decoration-cut-line decoration-2 underline-offset-[3px]';
 
 type Mode = 'egc' | 'gec';
@@ -110,7 +111,14 @@ function queryOf(i: Inputs): string {
   });
 }
 
-export function GroundWireTool() {
+/** 250.122(A): a rating and material whose Table 250.122 EGC is larger than the smallest conductor the rating allows. */
+export interface EgcCapCase {
+  ocpdA: number;
+  material: Material;
+  size: SizeKey;
+}
+
+export function GroundWireTool({ capCases = [] }: { capCases?: EgcCapCase[] }) {
   const [inputs, setInputs] = useState<Inputs>(DEFAULTS);
   const [result, setResult] = useState<Outcome | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -260,7 +268,14 @@ export function GroundWireTool() {
           The inputs have changed since this result. Press Calculate to update it.
         </p>
       )}
-      {result?.mode === 'egc' && <EgcOutcome r={result.r} headingRef={headingRef} shareUrl={shareUrl} />}
+      {result?.mode === 'egc' && (
+        <EgcOutcome
+          r={result.r}
+          cap={capCases.find((c) => c.ocpdA === result.r.ocpdA && c.material === result.r.material) ?? null}
+          headingRef={headingRef}
+          shareUrl={shareUrl}
+        />
+      )}
       {result?.mode === 'gec' && <GecOutcome r={result.r} headingRef={headingRef} shareUrl={shareUrl} />}
     </div>
   );
@@ -280,10 +295,12 @@ function Cmil({ v, src }: { v: number; src: string }) {
 
 function EgcOutcome({
   r,
+  cap,
   headingRef,
   shareUrl,
 }: {
   r: EgcResult;
+  cap: EgcCapCase | null;
   headingRef: React.RefObject<HTMLHeadingElement | null>;
   shareUrl: () => string;
 }) {
@@ -334,10 +351,22 @@ function EgcOutcome({
           <strong>Table 250.122:</strong> the first row whose rating the device does not exceed gives <Size s={r.tableEgc} />{' '}
           {MATERIAL_NAME[r.material]}.
         </p>
+        {!up && cap && (
+          <p data-src={SIZING}>
+            <strong>250.122(A):</strong> the ground wire need not be larger than the circuit wires. The smallest{' '}
+            {MATERIAL_NAME[r.material]} wire {indefiniteArticle(r.ocpdA)} <Val v={r.ocpdA} unit="A" src="input" /> breaker or fuse allows is{' '}
+            <Size s={cap.size} />, and on <Size s={cap.size} /> circuit wires a <Size s={cap.size} /> ground wire is enough.
+          </p>
+        )}
+        {up && up.capped && (
+          <p data-src={GND}>
+            <strong>250.122(A):</strong> the ground wire need not be larger than the circuit wires, so it starts from <Size s={up.base} />.
+          </p>
+        )}
         {up && (
           <p data-src={CALC}>
             <strong>250.122(B):</strong> the circuit wires went from <Size s={up.minSize} /> to <Size s={up.installedSize} />, so the ground
-            wire grows by the same ratio of area: <Cmil v={areaCmil(r.tableEgc)} src={GEO} /> × <Cmil v={areaCmil(up.installedSize)} src={GEO} /> ÷{' '}
+            wire grows by the same ratio of area: <Cmil v={areaCmil(up.base)} src={GEO} /> × <Cmil v={areaCmil(up.installedSize)} src={GEO} /> ÷{' '}
             <Cmil v={areaCmil(up.minSize)} src={GEO} /> = <Cmil v={up.requiredCmil} src={CALC} />.{' '}
             {up.egc ? (
               <>
@@ -357,7 +386,8 @@ function EgcOutcome({
           </p>
         ) : (
           <p data-src={GND}>
-            If the circuit wires are larger than the rating needs, for voltage drop say, the ground wire grows in proportion (250.122(B)):
+            {cap ? '' : 'It need not be larger than the circuit wires themselves (250.122(A)). '}If the circuit wires are larger than the rating
+            needs, for voltage drop say, the ground wire grows in proportion (250.122(B)):
             choose &ldquo;Yes, larger&rdquo; above, or let the{' '}
             <Link href="/calculators/wire-size-calculator" className={LINK}>
               wire size calculator

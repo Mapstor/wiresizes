@@ -18,7 +18,6 @@ import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calcula
 import { formatValue, indefiniteArticle } from '@/lib/calculations/format';
 import { DRYERS_MAX, DRYER_CIRCUITS, ENGINE_ID, dryerRun, isDryerError } from '@/lib/calculations/dryer-circuit';
 import type { DryerRun, DryerVolts } from '@/lib/calculations/dryer-circuit';
-import { EGC_LARGER_THAN_CONDUCTOR_NOTE } from '@/lib/calculations/conductor-sizing';
 import type { Termination, WiringMethod } from '@/lib/calculations/conductor-sizing';
 import { TERMINATION_RULES } from '@/lib/verified/nec-110-14c';
 import { MFR_DOMAIN } from '@/lib/verified/mfr-equipment';
@@ -238,7 +237,6 @@ export function DryerTool() {
   );
 }
 
-const NOTE = 'max-w-[38rem] text-[17px] leading-[1.65] text-ink';
 const BIG = 'mt-2 font-mono text-[34px] font-medium leading-none tracking-[-0.02em] text-ink sm:text-[46px]';
 
 function Result({
@@ -299,7 +297,6 @@ function Result({
           </p>
         </div>
       </div>
-      {r.egc && r.egcLargerThanConductor && <p className={`mt-5 ${NOTE}`}>{EGC_LARGER_THAN_CONDUCTOR_NOTE}</p>}
       <ol className="mt-6 max-w-[38rem] list-decimal space-y-2 pl-6 text-[17px] leading-[1.65] text-ink" data-src={CALC}>
         {r.stepParts.map((parts, k) => (
           <li key={k}>

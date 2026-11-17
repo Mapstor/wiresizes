@@ -17,7 +17,6 @@ import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calcula
 import { formatValue, indefiniteArticle } from '@/lib/calculations/format';
 import { ENGINE_ID, RANGE_CIRCUITS, RANGE_ERROR_MESSAGES, isRangeError, rangeRun } from '@/lib/calculations/range-circuit';
 import type { CookingSetup, RangeRun, RangeVolts } from '@/lib/calculations/range-circuit';
-import { EGC_LARGER_THAN_CONDUCTOR_NOTE } from '@/lib/calculations/conductor-sizing';
 import type { Termination, WiringMethod } from '@/lib/calculations/conductor-sizing';
 import { TERMINATION_RULES } from '@/lib/verified/nec-110-14c';
 import { TABLE_220_55 } from '@/lib/verified/nec-220-2023';
@@ -391,7 +390,6 @@ function Result({
           </tbody>
         </table>
       </div>
-      {r.egc && r.egcLargerThanConductor && <p className={`mt-5 ${NOTE}`}>{EGC_LARGER_THAN_CONDUCTOR_NOTE}</p>}
       {maker && (
         <p className={`mt-5 ${NOTE}`} data-src={MFR_DOMAIN}>
           For a range of this rating, Whirlpool&apos;s freestanding range manual ({WHIRLPOOL_RANGE.doc}) calls for{' '}

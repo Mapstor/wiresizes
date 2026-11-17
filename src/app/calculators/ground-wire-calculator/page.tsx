@@ -32,6 +32,7 @@ import {
   LOOK_SOURCES_SECTION,
 } from '@/components/look/styles';
 import { ENGINE_ID, TABLE_250_122_ROWS, TABLE_250_66_ROWS, egcFor, isEgcError } from '@/lib/calculations/grounding';
+import { egcCapCases, RATING_MAX_A, RATING_MIN_A } from '@/lib/calculations/conductor-sizing';
 import type { EgcResult } from '@/lib/calculations/grounding';
 import { serviceLookup } from '@/lib/calculations/service-lookup';
 import type { ServiceLookupResult } from '@/lib/calculations/service-lookup';
@@ -66,6 +67,11 @@ const SVC = 'nec-310-12';
 const GEO = 'awg-geometry';
 const CALC = `calc:${ENGINE_ID}`;
 const LOOKUP = 'calc:service-lookup';
+const SIZING = 'calc:conductor-sizing';
+// 250.122(A), WSZ-038: the one rating and material where Table 250.122 lists a ground wire larger than the conductor
+const CAP_CASES = egcCapCases();
+if (CAP_CASES.length !== 1) throw new Error(`ground wire page: expected one 250.122(A) case, got ${CAP_CASES.length}`);
+const CAP = CAP_CASES[0];
 
 function egc(ocpdA: number, material: Material, minSize?: SizeKey, installedSize?: SizeKey): EgcResult {
   const r = egcFor(ocpdA, material, minSize && installedSize ? { minSize, installedSize } : null);
@@ -87,6 +93,7 @@ const EGC_200 = egc(200, 'Cu');
 const UP_CU = egc(20, 'Cu', '12', '6');
 const UP_AL = egc(60, 'Al', '3', '2');
 if (!UP_CU.upsized || !UP_AL.upsized) throw new Error('ground wire page: the upsized examples lost their 250.122(B) step');
+if (UP_CU.upsized.capped || UP_AL.upsized.capped) throw new Error('ground wire page: an upsized example is now held by 250.122(A)');
 const UPC = UP_CU.upsized;
 const UPA = UP_AL.upsized;
 // golden "service-lookup" cases
@@ -151,7 +158,7 @@ export default function GroundWirePage() {
         </header>
 
         <section aria-label="Calculator" className="mt-8 border-t-2 border-ink pt-7">
-          <GroundWireTool />
+          <GroundWireTool capCases={CAP_CASES} />
         </section>
 
         <div className="mt-14 max-w-[44rem] space-y-4">
@@ -214,6 +221,17 @@ export default function GroundWirePage() {
               wire is <Size s={EGC_30.table.cu} /> copper, the same as a <Val v={EGC_30.rowA} unit="A" src={GND} /> breaker&apos;s; at{' '}
               <Val v={EGC_50.ocpdA} unit="A" src={GND} /> it is <Size s={EGC_50.table.cu} /> copper or <Size s={EGC_50.table.alCca} />{' '}
               aluminum.
+            </p>
+            <p className={P} data-src={SIZING}>
+              Section 250.122(A) adds that the ground wire does not have to be larger than the circuit wires it runs with. From{' '}
+              <Val v={RATING_MIN_A} unit="A" src={OCPD} /> to <Val v={RATING_MAX_A} unit="A" src={OCPD} />, that matters at one rating:
+              at <Val v={CAP.ocpdA} unit="A" src={OCPD} /> the aluminum column lists <Size s={CAP.tableEgc} />, while the smallest aluminum
+              wire the rating allows is <Size s={CAP.size} />, so a <Size s={CAP.size} /> ground wire is enough on{' '}
+              <Size s={CAP.size} /> circuit wires. The calculator above says so, and the{' '}
+              <Link href="/calculators/wire-size-calculator" className={LINK}>
+                wire size calculator
+              </Link>{' '}
+              applies it.
             </p>
             <Figure
               caption={

@@ -3,7 +3,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  EGC_LARGER_THAN_CONDUCTOR_NOTE,
   EGC_NONE_MESSAGE,
   EGC_UPSIZED_NOTE,
   SIZING_ERROR_MESSAGES,
@@ -43,10 +42,6 @@ describe('exported titles, notes and messages', () => {
 
   it('wire size basis lines and ground-wire notes', () => {
     assert.equal(EGC_UPSIZED_NOTE, 'Ground wire increased in proportion to the larger conductors (NEC 250.122(B)).');
-    assert.equal(
-      EGC_LARGER_THAN_CONDUCTOR_NOTE,
-      'For this rating, Table 250.122 lists a ground wire larger than the smallest conductor the rating allows.',
-    );
     assert.equal(EGC_NONE_MESSAGE, 'No size in NEC Table 310.16 is large enough for this ground wire.');
     assert.equal(SIZING_ERROR_MESSAGES['voltage-invalid'], VOLTAGE_INVALID_MESSAGE);
   });

@@ -25,7 +25,7 @@ export interface RatingRow {
   c60: SizedAt;
   /** Single conductors on terminals listed for 75 °C. */
   c75: SizedAt;
-  /** The Table 250.122 ground wire for the rating. */
+  /** The ground wire for the rating: Table 250.122's size, held at the conductor by 250.122(A) (the same in both columns). */
   egc: SizeKey;
   /** 240.4(B): the next smaller size the rating may protect in each column, or null. */
   below60: SizedAt | null;
@@ -48,6 +48,8 @@ export function ratingRows(material: Material): RatingRow[] {
     const m60 = minimum(ratingA, material, 'cable', 'unknown');
     const m75 = minimum(ratingA, material, 'conductors', '75');
     if (m60.columnC !== 60 || m75.columnC !== 75) throw new Error('wire size page: the columns moved');
+    // one ground wire column serves both conductor columns, so 250.122(A) must give both the same size
+    if (m60.egc !== m75.egc) throw new Error(`wire size page: the ${ratingA} A ${material} ground wire differs between the columns`);
     return {
       ratingA,
       c60: sizedAt(m60.size, material, 60),
