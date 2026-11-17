@@ -1294,11 +1294,13 @@ export default function MethodologyPage() {
             take the grounding electrode conductor from Table 250.66 for the largest service conductor.
           </p>
           <p>
-            Section 250.122(A) does not require the ground wire to be larger than the circuit conductors, so every
-            calculator holds the table&apos;s size at the size of the smallest conductor the rating allows where the table
-            lists a larger one. That sentence of the 2023 text was read in two of NFPA&apos;s public inputs for the 2026
-            edition (2573 and 3150). Only one rating meets it: a{' '}
-            <Val v={EGC_CAP_CASE.ocpdA} unit="A" src="nec-250-grounding" /> breaker on aluminum, where the table gives{' '}
+            Section 250.122(A) does not require the ground wire to be larger than the circuit conductors. Every
+            calculator that sizes the circuit wires therefore holds the table&apos;s size at the smallest conductor the
+            rating allows, where the table lists a larger one, and the ground wire calculator says so for that rating.
+            That sentence of the 2023 text was read in two of NFPA&apos;s public inputs for the 2026 edition (2573 and
+            3150). From <Val v={RATING_MIN_A} unit="A" src="nec-240-ocpd" /> to{' '}
+            <Val v={RATING_MAX_A} unit="A" src="nec-240-ocpd" /> only one rating meets it: a{' '}
+            <Val v={EGC_CAP_CASE.ocpdA} unit="A" src="nec-240-ocpd" /> breaker on aluminum, where the table gives{' '}
             <Size s={EGC_CAP_CASE.tableEgc} /> and the conductor is <Size s={EGC_CAP_CASE.size} />.
           </p>
           <p>

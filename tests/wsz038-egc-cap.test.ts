@@ -63,8 +63,11 @@ describe('WSZ-038 250.122(A) ground wire cap', () => {
     for (const tool of ['WireSizeTool', 'BreakerTool', 'DryerTool', 'RangeTool', 'GarageSubpanelTool']) {
       assert.ok(!read(`../src/components/calculators/${tool}.tsx`).includes('egcLargerThanConductor'), tool);
     }
+    const tool = read('../src/components/calculators/GroundWireTool.tsx');
+    assert.match(tool, /!up && cap &&/);
+    assert.match(read('../src/app/calculators/ground-wire-calculator/page.tsx'), /<GroundWireTool capCases=\{CAP_CASES\} \/>/);
     const method = read('../src/app/methodology/page.tsx');
     assert.ok(!method.includes('do not apply it yet'));
-    assert.match(method, /every\s+calculator holds the table/);
+    assert.match(method, /Every\s+calculator that sizes the circuit wires therefore holds/);
   });
 });

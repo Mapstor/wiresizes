@@ -24,6 +24,7 @@ const CALC = `calc:${ENGINE_ID}`;
 const GND = 'nec-250-grounding';
 const OCPD = 'nec-240-ocpd';
 const GEO = 'awg-geometry';
+const SIZING = 'calc:conductor-sizing';
 const LINK = 'text-ink underline decoration-cut-line decoration-2 underline-offset-[3px]';
 
 type Mode = 'egc' | 'gec';
@@ -110,7 +111,14 @@ function queryOf(i: Inputs): string {
   });
 }
 
-export function GroundWireTool() {
+/** 250.122(A): a rating and material whose Table 250.122 EGC is larger than the smallest conductor the rating allows. */
+export interface EgcCapCase {
+  ocpdA: number;
+  material: Material;
+  size: SizeKey;
+}
+
+export function GroundWireTool({ capCases = [] }: { capCases?: EgcCapCase[] }) {
   const [inputs, setInputs] = useState<Inputs>(DEFAULTS);
   const [result, setResult] = useState<Outcome | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -260,7 +268,14 @@ export function GroundWireTool() {
           The inputs have changed since this result. Press Calculate to update it.
         </p>
       )}
-      {result?.mode === 'egc' && <EgcOutcome r={result.r} headingRef={headingRef} shareUrl={shareUrl} />}
+      {result?.mode === 'egc' && (
+        <EgcOutcome
+          r={result.r}
+          cap={capCases.find((c) => c.ocpdA === result.r.ocpdA && c.material === result.r.material) ?? null}
+          headingRef={headingRef}
+          shareUrl={shareUrl}
+        />
+      )}
       {result?.mode === 'gec' && <GecOutcome r={result.r} headingRef={headingRef} shareUrl={shareUrl} />}
     </div>
   );
@@ -280,10 +295,12 @@ function Cmil({ v, src }: { v: number; src: string }) {
 
 function EgcOutcome({
   r,
+  cap,
   headingRef,
   shareUrl,
 }: {
   r: EgcResult;
+  cap: EgcCapCase | null;
   headingRef: React.RefObject<HTMLHeadingElement | null>;
   shareUrl: () => string;
 }) {
@@ -334,6 +351,13 @@ function EgcOutcome({
           <strong>Table 250.122:</strong> the first row whose rating the device does not exceed gives <Size s={r.tableEgc} />{' '}
           {MATERIAL_NAME[r.material]}.
         </p>
+        {!up && cap && (
+          <p data-src={SIZING}>
+            <strong>250.122(A):</strong> the ground wire need not be larger than the circuit wires. The smallest{' '}
+            {MATERIAL_NAME[r.material]} wire {indefiniteArticle(r.ocpdA)} <Val v={r.ocpdA} unit="A" src="input" /> breaker or fuse allows is{' '}
+            <Size s={cap.size} />, and on <Size s={cap.size} /> circuit wires a <Size s={cap.size} /> ground wire is enough.
+          </p>
+        )}
         {up && up.capped && (
           <p data-src={GND}>
             <strong>250.122(A):</strong> the ground wire need not be larger than the circuit wires, so it starts from <Size s={up.base} />.
