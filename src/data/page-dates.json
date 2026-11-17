@@ -12,6 +12,7 @@
   "/calculators/dryer-calculator": { "published": "2026-11-15", "modified": "2026-11-15" },
   "/calculators/garage-subpanel-calculator": { "published": "2026-11-17", "modified": "2026-11-17" },
   "/calculators/box-fill-calculator": { "published": "2026-11-17", "modified": "2026-11-17" },
+  "/calculators/rv-hookup-calculator": { "published": "2026-11-17", "modified": "2026-11-17" },
   "/calculators/ground-wire-calculator": { "published": "2026-02-22", "modified": "2026-11-15" },
   "/calculators/wire-resistance-calculator": { "published": "2026-02-22", "modified": "2026-11-14" },
   "/calculators/watts-to-amps-calculator": { "published": "2026-02-22", "modified": "2026-11-15" },

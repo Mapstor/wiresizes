@@ -35,10 +35,11 @@ describe('page dates', () => {
     '/calculators/horsepower-to-amps-calculator': '2026-11-15',
     '/calculators/garage-subpanel-calculator': '2026-11-17',
     '/calculators/box-fill-calculator': '2026-11-17',
+    '/calculators/rv-hookup-calculator': '2026-11-17',
   };
 
   it('every route was published on 2026-02-22, or on the day it was added, and modified on or after it', () => {
-    assert.equal(Object.keys(DATES).length, 40);
+    assert.equal(Object.keys(DATES).length, 41);
     for (const [route, { published, modified }] of Object.entries(DATES)) {
       assert.equal(published, ADDED_LATER[route] ?? '2026-02-22', route);
       assert.match(modified, /^\d{4}-\d{2}-\d{2}$/, route);

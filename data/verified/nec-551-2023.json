@@ -1,0 +1,162 @@
+{
+ "id": "nec-551-2023",
+ "title": "NEC 2023 Article 551 Part VI: RV park receptacles, GFCI and calculated load",
+ "status": "VERIFIED-2023 (each item; WSZ-033)",
+ "retrieved": "2026-11-17",
+ "evidence": "research/sources/round8/WSZ-033-rv-sources.md; research/sources/round4/R4-5-outbuilding-pool-rv.md",
+ "items": {
+  "551.71": {
+   "ref": "551.71(A)-(D), (F)",
+   "edition": "2023",
+   "status": "VERIFIED-2023",
+   "status_basis": "First Revision 8657 of the 2026-cycle CMP-7 First Draft prints all of 2023 551.71 as its base text (struck where the 2026 edition rewrites it); public inputs 1549 and 1766 (551.71(B)), 1550 (C) and 1551 (D), filed in 2023 against NFPA 70-2023, print the same sentences; (A), (B), (C) and (F)(2) also match Leviton's 2023 reprint with NFPA's permission notice (nec-2023-rules-round2.json).",
+   "values": {
+    "A_20A_125V": "every site with electrical supply: at least one 20 A, 125 V weather-resistant receptacle",
+    "B_30A_125V_min_pct_all_sites": 70,
+    "C_50A_125_250V_min_pct_existing": 20,
+    "C_50A_125_250V_min_pct_new": 40,
+    "C_every_50A_site_also_30A": true,
+    "C_wr_50A_effective": "2026-01-01",
+    "D_tent_sites_15_20A_may_be_excluded_from_percentages": true,
+    "F1_gfci_other_than_site_equipment": "as required in 210.8(B)",
+    "F2_gfci_site_equipment": "only 125-volt, single-phase, 15- and 20-ampere receptacles"
+   },
+   "text_2023": {
+    "B": "A minimum of 70 percent of all recreational vehicle sites with electrical supply shall each be equipped with a 30-ampere, 125-volt weather-resistant receptacle conforming to Figure 551.46(C)(1). This supply shall be permitted to include additional receptacle configurations conforming to 551.81. The remainder of all recreational vehicle sites with electrical supply shall be equipped with one or more of the receptacle configurations conforming to 551.81.",
+    "C": "A minimum of 20 percent of existing and 40 percent of all new recreational vehicle sites with electrical supply, shall each be equipped with a 50-ampere, 125/250-volt weather-resistant receptacle conforming to the configuration as identified in Figure 551.46(C)(1). Every recreational vehicle site equipped with a 50-ampere receptacle shall also be equipped with a 30-ampere, 125-volt receptacle conforming to Figure 551.46(C)(1). These electrical supplies shall be permitted to include additional receptacles that have configurations in accordance with 551.81. The weather-resistant requirement for 50-ampere, 125/250-volt receptacles shall become effective January 1, 2026.",
+    "D": "Dedicated tent sites with a 15- or 20-ampere electrical supply shall be permitted to be excluded when determining the percentage of recreational vehicle sites with 30- or 50-ampere receptacles.",
+    "F": "(1) Receptacles Installed in Other Than Recreational Vehicle Site Equipment. Ground-fault circuit-interrupter protection shall be provided as required in 210.8(B). (2) Receptacles Installed in Recreational Vehicle Site Equipment. Ground-fault circuit-interrupter protection shall only be required for 125-volt, single-phase, 15- and 20-ampere receptacles."
+   },
+   "sources": [
+    {
+     "document": "NFPA 70 2026-cycle (A2025) CMP-7 First Draft, First Revision 8657 [551.71]",
+     "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P07_FD_PrelimFR.pdf#page=48",
+     "pdf_pages": "48-51"
+    },
+    {
+     "document": "NFPA 70 2026-cycle (A2025) CMP-7 Public Input report, Public Inputs 1549, 1766, 1550, 1551",
+     "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P07_PISubmittals.pdf#page=282",
+     "pdf_pages": "282-285"
+    }
+   ]
+  },
+  "551.73": {
+   "ref": "551.73(A), (B), Table 551.73(A)",
+   "edition": "2023",
+   "status": "VERIFIED-2023",
+   "status_basis": "Public Input 3113 (filed in 2023 against NFPA 70-2023 to move the section to Article 220) strikes all of 2023 551.73, so every word it prints is 2023 text; Public Input 638 (551.73(B)) prints (B) and Table 551.73(A) unmarked; First Revision 8591 of the 2026-cycle First Draft prints the same table as base text. The three agree on all 14 rows.",
+   "values": {
+    "site_va": {
+     "50A_208Y120_or_120_240": 12000,
+     "20A_and_30A": 3600,
+     "20A_only": 2400,
+     "20A_only_tent": 600
+    },
+    "demand_factor_table": [
+     {
+      "from": 1,
+      "to": 1,
+      "pct": 100
+     },
+     {
+      "from": 2,
+      "to": 2,
+      "pct": 90
+     },
+     {
+      "from": 3,
+      "to": 3,
+      "pct": 80
+     },
+     {
+      "from": 4,
+      "to": 4,
+      "pct": 75
+     },
+     {
+      "from": 5,
+      "to": 5,
+      "pct": 65
+     },
+     {
+      "from": 6,
+      "to": 6,
+      "pct": 60
+     },
+     {
+      "from": 7,
+      "to": 9,
+      "pct": 55
+     },
+     {
+      "from": 10,
+      "to": 12,
+      "pct": 50
+     },
+     {
+      "from": 13,
+      "to": 15,
+      "pct": 48
+     },
+     {
+      "from": 16,
+      "to": 18,
+      "pct": 47
+     },
+     {
+      "from": 19,
+      "to": 21,
+      "pct": 45
+     },
+     {
+      "from": 22,
+      "to": 24,
+      "pct": 43
+     },
+     {
+      "from": 25,
+      "to": 35,
+      "pct": 42
+     },
+     {
+      "from": 36,
+      "to": null,
+      "pct": 41
+     }
+    ],
+    "B_example": {
+     "sites": 20,
+     "pct": 45,
+     "site_va": 3600,
+     "per_site_va": 1620,
+     "total_va": 32400
+    },
+    "two_vehicle_supply": "where one supply serves two RVs, the load is calculated only for the two receptacles with the highest rating",
+    "other_amenities": "service buildings, recreational buildings and swimming pools are calculated separately and added where on a common service",
+    "demand_factors_are_minimum": true
+   },
+   "text_2023": {
+    "A": "Electrical services and feeders shall be calculated on the basis of not less than all of the following: (1) 12,000 volt-amperes per site equipped with 50-ampere, 208Y/120-volt or 120/240-volt supply facilities (2) 3600 volt-amperes per site equipped with both 20-ampere and 30-ampere supply facilities (3) 2400 volt-amperes per site equipped with only 20-ampere supply facilities (4) 600 volt-amperes per site equipped with only 20-ampere supply facilities that are dedicated to tent sites. The demand factors set forth in Table 551.73(A) shall be the minimum allowable demand factors that shall be permitted in calculating load for service and feeders.",
+    "B": "The demand factor for a given number of sites shall apply to all sites indicated. For example, 20 sites calculated at 45 percent of 3600 volt-amperes results in a permissible demand of 1620 volt-amperes per site or a total of 32,400 volt-amperes for 20 sites."
+   },
+   "sources": [
+    {
+     "document": "NFPA 70 2026-cycle (A2025) CMP-7 Public Input report, Public Input 3113 [551.73] (Mike Holt)",
+     "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P07_PISubmittals.pdf#page=294",
+     "pdf_pages": "294"
+    },
+    {
+     "document": "Same report, Public Input 638 [551.73(B)]",
+     "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P07_PISubmittals.pdf#page=296",
+     "pdf_pages": "296"
+    },
+    {
+     "document": "NFPA 70 2026-cycle (A2025) CMP-7 First Draft, First Revision 8591 [551.73(B)]",
+     "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P07_FD_PrelimFR.pdf#page=56",
+     "pdf_pages": "56-57"
+    }
+   ],
+   "superseded_leads": "9,600 VA per 50 A site (trade press, an older edition) is not the 2023 value."
+  }
+ }
+}

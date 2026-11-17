@@ -97,6 +97,12 @@ export const ROUTES: readonly SiteRoute[] = [
     line: 'Copper wire size for a low-voltage DC circuit from the load, the one-way length and your voltage-drop target, checked against the current.',
   },
   {
+    path: '/calculators/rv-hookup-calculator',
+    group: 'wire-sizing',
+    name: 'RV Hookup Calculator',
+    line: 'Wire size for an RV outlet at a house, with the voltage drop over the run and GFCI, and the calculated load of an RV park feeder from NEC 551.73.',
+  },
+  {
     path: '/calculators/box-fill-calculator',
     group: 'wire-sizing',
     name: 'Box Fill Calculator',
