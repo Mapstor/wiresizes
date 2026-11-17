@@ -42,6 +42,7 @@ const RANGE = '/calculators/range-calculator';
 const DRYER = '/calculators/dryer-calculator';
 const HP_TO_AMPS = '/calculators/horsepower-to-amps-calculator';
 const GUIDE_200 = '/guides/wire-size-for-200-amp';
+const GUIDE_100 = '/guides/wire-size-for-100-amp';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
 const EDITIONS = '/guides/nec-code-compliance';
@@ -56,19 +57,19 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'wire-gauge',
     domain: 'awg-geometry',
     title: 'Wire gauge sizes and areas',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, GROUND_WIRE, WIRE_RESISTANCE, LOW_VOLTAGE, SERVICE_ENTRANCE, GUIDE_200, AWG_CHART, HOME],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, GROUND_WIRE, WIRE_RESISTANCE, LOW_VOLTAGE, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, AWG_CHART, HOME],
   },
   {
     id: 'resistance',
     domain: 'conductor-resistance-20c',
     title: 'Conductor resistance and voltage drop',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE, GUIDE_200],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100],
   },
   {
     id: 'ampacity',
     domain: 'nec-310-16',
     title: 'Ampacity',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, HOME],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, GUIDE_100, HOME],
   },
   {
     id: 'corrections',
@@ -80,7 +81,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'terminals',
     domain: 'nec-110-14c',
     title: 'Terminal temperatures',
-    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, GUIDE_200],
+    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, GUIDE_200, GUIDE_100],
   },
   {
     id: 'small-conductors',
@@ -92,25 +93,43 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'breaker-ratings',
     domain: 'nec-240-ocpd',
     title: 'Standard breaker and fuse ratings',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, GUIDE_200],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, GUIDE_200, GUIDE_100],
   },
   {
     id: 'continuous-loads',
     domain: 'nec-continuous-load',
     title: 'Continuous loads and the voltage-drop note',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, VOLTAGE_DROP, LOW_VOLTAGE, GUIDE_200],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, VOLTAGE_DROP, LOW_VOLTAGE, GUIDE_200, GUIDE_100],
   },
   {
     id: 'grounding',
     domain: 'nec-250-grounding',
     title: 'Ground wires and grounding electrode conductors',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100],
   },
   {
     id: 'service-conductors',
     domain: 'nec-310-12',
     title: 'Dwelling services and feeders',
-    citedOn: [WIRE_SIZE, SERVICE_ENTRANCE, RESIDENTIAL_LOAD, GROUND_WIRE, TABLE_310_16, SINGLE_VS_THREE, GUIDE_200],
+    citedOn: [WIRE_SIZE, SERVICE_ENTRANCE, RESIDENTIAL_LOAD, GROUND_WIRE, TABLE_310_16, SINGLE_VS_THREE, GUIDE_200, GUIDE_100],
+  },
+  {
+    id: 'separate-buildings',
+    domain: 'nec-feeders-outbuildings',
+    title: 'Feeders to a separate building',
+    citedOn: [GUIDE_100],
+  },
+  {
+    id: 'separate-building-grounding',
+    domain: 'nec-250-32',
+    title: 'Grounding at a separate building',
+    citedOn: [GUIDE_100],
+  },
+  {
+    id: 'cable-ampacity',
+    domain: 'nec-cable-rules',
+    title: 'NM cable and neutral counting',
+    citedOn: [GUIDE_100],
   },
   {
     id: 'load-calcs',

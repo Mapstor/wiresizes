@@ -37,6 +37,8 @@ import { areaCmil, conductor, formatSize } from '@/lib/verified/awg';
 import { TABLE_250_122_ROWS, egcRow } from '@/lib/verified/nec-250-122';
 import { SERVICE_VOLTS, TABLE_310_12_ROWS, serviceEntrance, isServiceError, serviceLookup } from '@/lib/calculations/service-lookup';
 import { editionGroups, editionLabel, NEC_ADOPTION_DOMAIN, NOT_VERIFIED, stateName } from '@/lib/verified/nec-adoption';
+import { GUIDE_100, SUBPANEL_DROP_LENGTHS, feederDrop } from '@/lib/subpanel-guide';
+import type { LadderRow } from '@/lib/subpanel-guide';
 
 export const COPPER = '#a95a26';
 export const ALUMINUM = '#2f6aa3';
@@ -1866,27 +1868,34 @@ export function EgcStepChart() {
   );
 }
 
-/** Golden case "200 A 120/240 V dwelling service" (service-lookup): its copper service conductor and GEC, and the EGC of a 200 A feeder. */
-export const SERVICE_200 = (() => {
-  const s = serviceLookup(200);
-  const egc = egcRow(200);
-  if (!s || !egc) throw new Error('SERVICE_200: no 200 A row');
+/** A dwelling service's copper conductor (Table 310.12) and electrode conductor (Table 250.66), and the EGC of a feeder on a breaker of the same rating (Table 250.122). */
+export function serviceDiscs(ratingA: number) {
+  const s = serviceLookup(ratingA);
+  const egc = egcRow(ratingA);
+  if (!s || !egc) throw new Error(`serviceDiscs: no ${ratingA} A row`);
   const disc = (size: string) => ({ size, diameterIn: (conductor(size)?.diameterMm ?? 0) / 25.4 });
   return [
     { key: 'service', label: 'Service', note: 'Table 310.12', src: 'nec-310-12', ...disc(s.cu) },
     { key: 'gec', label: 'GEC', note: 'Table 250.66', src: GND, ...disc(s.gecForCuService.cu) },
     { key: 'egc', label: 'EGC', note: 'Table 250.122', src: GND, ...disc(egc.cu) },
   ];
-})();
+}
 
-function ServiceDiscPlot({ narrow }: { narrow: boolean }) {
+/** Golden case "200 A 120/240 V dwelling service" (service-lookup): its copper service conductor and GEC, and the EGC of a 200 A feeder. */
+export const SERVICE_200 = serviceDiscs(200);
+
+// one scale for every rating, so the 100 A and 200 A guides draw a 4 AWG conductor the same size
+const DISC_PX_PER_IN = { narrow: 170, wide: 300 };
+
+function ServiceDiscPlot({ narrow, ratingA }: { narrow: boolean; ratingA: number }) {
+  const discs = ratingA === 200 ? SERVICE_200 : serviceDiscs(ratingA);
   const W = narrow ? 288 : 560;
-  const pxPerIn = narrow ? 170 : 300;
-  const maxR = (Math.max(...SERVICE_200.map((d) => d.diameterIn)) * pxPerIn) / 2;
+  const pxPerIn = narrow ? DISC_PX_PER_IN.narrow : DISC_PX_PER_IN.wide;
+  const maxR = (Math.max(...discs.map((d) => d.diameterIn)) * pxPerIn) / 2;
   const top = 30;
   const cy = top + maxR + 6;
   const H = cy + maxR + (narrow ? 50 : 54);
-  const id = narrow ? 'service-discs-narrow' : 'service-discs-wide';
+  const id = `service-discs${ratingA === 200 ? '' : `-${ratingA}`}-${narrow ? 'narrow' : 'wide'}`;
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
@@ -1898,7 +1907,7 @@ function ServiceDiscPlot({ narrow }: { narrow: boolean }) {
       data-src={GND_CALC}
     >
       <title id={`${id}-title`}>
-        {`Cross sections drawn to one scale, as solid copper: a 200 A dwelling service's ${SERVICE_200[0].size} AWG conductor, its ${SERVICE_200[1].size} AWG grounding electrode conductor, and the ${SERVICE_200[2].size} AWG equipment grounding conductor of a 200 A feeder`}
+        {`Cross sections drawn to one scale, as solid copper: a ${ratingA} A dwelling service's ${discs[0].size} AWG conductor, its ${discs[1].size} AWG grounding electrode conductor, and the ${discs[2].size} AWG equipment grounding conductor of a ${ratingA} A feeder`}
       </title>
       <defs>
         <linearGradient id={`${id}-cu`} x1="0.1" y1="0" x2="0.9" y2="1">
@@ -1907,7 +1916,7 @@ function ServiceDiscPlot({ narrow }: { narrow: boolean }) {
           <stop offset="1" stopColor="#a95a26" />
         </linearGradient>
       </defs>
-      {SERVICE_200.map((d, k) => {
+      {discs.map((d, k) => {
         const cx = (W / 6) * (2 * k + 1);
         const r = (d.diameterIn * pxPerIn) / 2;
         return (
@@ -1932,12 +1941,12 @@ function ServiceDiscPlot({ narrow }: { narrow: boolean }) {
   );
 }
 
-/** A 200 A dwelling service's copper conductor and grounding electrode conductor, and a 200 A feeder's EGC, to one scale. */
-export function ServiceGroundDiscs() {
+/** A dwelling service's copper conductor and grounding electrode conductor, and a feeder's EGC at the same rating, to one scale. */
+export function ServiceGroundDiscs({ ratingA = 200 }: { ratingA?: number }) {
   return (
     <div>
-      <ServiceDiscPlot narrow={false} />
-      <ServiceDiscPlot narrow />
+      <ServiceDiscPlot narrow={false} ratingA={ratingA} />
+      <ServiceDiscPlot narrow ratingA={ratingA} />
     </div>
   );
 }
@@ -2727,6 +2736,408 @@ export function HpRatioBars() {
     <div>
       <HpRatioPlot narrow={false} />
       <HpRatioPlot narrow />
+    </div>
+  );
+}
+
+// ── 100 A guide (WSZ-008d): 60 °C and 75 °C ampacity of the sizes around 100 A; the drop of a 100 A feeder by length;
+// a feeder to a separate building as four wires ────────────────────────────────────────────────────────────────
+
+const OCPD_SRC = 'nec-240-ocpd';
+
+function SubpanelLadderPlot({ narrow }: { narrow: boolean }) {
+  const g = GUIDE_100;
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 84 : 88;
+  const right = narrow ? 16 : 56;
+  const top = narrow ? 92 : 70;
+  const rowH = narrow ? 24 : 26;
+  const headH = narrow ? 24 : 26;
+  const gap = 10;
+  const groups: { rows: LadderRow[]; name: string; color: string; picks: string[] }[] = [
+    { rows: g.ladder.cu, name: 'Copper', color: COPPER, picks: [g.service.cu, g.at75.cu.size, g.at60.cu.size] },
+    { rows: g.ladder.al, name: 'Aluminum', color: ALUMINUM, picks: [g.service.alCca, g.at75.al.size, g.at60.al.size] },
+  ];
+  const bodyH = groups.reduce((h, grp) => h + headH + grp.rows.length * rowH, 0) + gap;
+  const H = top + bodyH + 44;
+  const pw = W - left - right;
+  const aMin = 60;
+  const aMax = 160;
+  const x = (a: number) => left + ((a - aMin) / (aMax - aMin)) * pw;
+  const ticks = narrow ? [60, 100, 140] : [60, 80, 100, 120, 140, 160];
+  const plotTop = top - 6;
+  const plotBottom = top + bodyH;
+  const id = narrow ? 'ladder-100-narrow' : 'ladder-100-wide';
+  let yAt = top;
+  const rows = groups.map((grp, gi) => {
+    const head = yAt + (gi === 0 ? 0 : gap);
+    yAt = head + headH;
+    const items = grp.rows.map((r) => {
+      const cy = yAt + rowH / 2;
+      yAt += rowH;
+      return { ...r, cy };
+    });
+    return { ...grp, head, items };
+  });
+  const words = (rs: LadderRow[], m: string) => rs.map((r) => `${formatSize(r.size)} ${m} ${r.a60} A at 60 °C, ${r.a75} A at 75 °C`).join('; ');
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={AMP}
+    >
+      <title id={`${id}-title`}>
+        {`Allowable ampacity, NEC Table 310.16, of the sizes around ${g.ratingA} A in the 60 °C and 75 °C columns: ${words(g.ladder.cu, 'copper')}; ${words(g.ladder.al, 'aluminum')}. A ${g.ratingA} A feeder needs a size that reaches ${g.ratingA} A in the column its terminals allow; a dwelling service may stop at ${g.minA} A (Table 310.12).`}
+      </title>
+      <g>
+        <circle cx={6} cy={15} r={5.5} fill="#ffffff" stroke={INK} strokeWidth={2} />
+        <text x={18} y={20} fontSize={14} fill={INK}>
+          <Val v={g.low} unit="°C" src={AMP} svg /> column
+        </text>
+        <circle cx={narrow ? 6 : 150} cy={narrow ? 37 : 15} r={5.5} fill={INK} />
+        <text x={narrow ? 18 : 162} y={narrow ? 42 : 20} fontSize={14} fill={INK}>
+          <Val v={g.high} unit="°C" src={AMP} svg /> column
+        </text>
+      </g>
+      <rect x={x(g.minA)} y={plotTop} width={x(g.ratingA) - x(g.minA)} height={plotBottom - plotTop} fill="#f5f2ee" />
+      <text x={x(g.minA)} y={narrow ? 64 : 44} fontSize={13} fill={INK}>
+        Dwelling service only
+      </text>
+      <text x={x(g.minA)} y={narrow ? 80 : 60} fontSize={13} fill={MUTED}>
+        <Val v={g.minA} unit="A" src="calc:service-lookup" svg /> to <Val v={g.ratingA} unit="A" src={OCPD_SRC} svg />
+      </text>
+      {ticks.map((t) => (
+        <g key={t}>
+          <line x1={x(t)} x2={x(t)} y1={plotTop} y2={plotBottom} stroke={t === g.ratingA ? INK : GRID} strokeWidth={t === g.ratingA ? 1.5 : 1} />
+          <text x={x(t)} y={plotBottom + 20} textAnchor="middle" fontSize={13} fill={MUTED}>
+            <Val v={t} unit="A" src={AMP} svg />
+          </text>
+        </g>
+      ))}
+      <line x1={x(g.minA)} x2={x(g.minA)} y1={plotTop} y2={plotBottom} stroke={INK} strokeWidth={1.5} strokeDasharray="5 4" />
+      <text x={left + pw / 2} y={H - 4} textAnchor="middle" fontSize={13} fill={MUTED}>
+        Ampacity (size on the left)
+      </text>
+      {rows.map((grp) => (
+        <g key={grp.name}>
+          <text x={0} y={grp.head + headH - 8} fontSize={13} fontWeight={600} fill={INK}>
+            {grp.name}
+          </text>
+          {grp.items.map((r) => {
+            const pick = grp.picks.includes(r.size);
+            return (
+              <g key={r.size} className="viz-mark">
+                <text x={left - 12} y={r.cy + 4.5} textAnchor="end" fontSize={13} fill={INK} fontWeight={pick ? 600 : 400}>
+                  <Size s={r.size} svg />
+                </text>
+                <line x1={left} x2={W - right} y1={r.cy} y2={r.cy} stroke={GRID} strokeWidth={1} />
+                <line x1={x(r.a60)} x2={x(r.a75)} y1={r.cy} y2={r.cy} stroke={CONNECT} strokeWidth={3} />
+                <circle cx={x(r.a60)} cy={r.cy} r={5.5} fill="#ffffff" stroke={grp.color} strokeWidth={2.5} className="viz-pop" />
+                <circle cx={x(r.a75)} cy={r.cy} r={6} fill={grp.color} stroke="#ffffff" strokeWidth={2} className="viz-pop" />
+                {!narrow && (
+                  <>
+                    <text x={x(r.a60) - 10} y={r.cy + 4.5} textAnchor="end" fontSize={13} fill={INK} stroke="#ffffff" strokeWidth={4} paintOrder="stroke">
+                      <Val v={r.a60} unit="A" src={AMP} svg />
+                    </text>
+                    <text x={x(r.a75) + 10} y={r.cy + 4.5} fontSize={13} fill={INK} stroke="#ffffff" strokeWidth={4} paintOrder="stroke">
+                      <Val v={r.a75} unit="A" src={AMP} svg />
+                    </text>
+                  </>
+                )}
+              </g>
+            );
+          })}
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+/**
+ * The 100 A guide's answer as a picture: each size's 60 °C (open) and 75 °C (filled) ampacity, with the band from 83 % of
+ * 100 A to 100 A where Table 310.12 allows a size for a dwelling service that no 100 A feeder may use.
+ */
+export function Subpanel100Ladder() {
+  return (
+    <div>
+      <SubpanelLadderPlot narrow={false} />
+      <SubpanelLadderPlot narrow />
+    </div>
+  );
+}
+
+const SUBPANEL_LINES = [
+  { key: 'cu60', material: 'Cu' as const, size: GUIDE_100.at60.cu.size, column: GUIDE_100.low, color: COPPER, dash: undefined },
+  { key: 'al60', material: 'Al' as const, size: GUIDE_100.at60.al.size, column: GUIDE_100.low, color: ALUMINUM, dash: undefined },
+  { key: 'cu75', material: 'Cu' as const, size: GUIDE_100.at75.cu.size, column: GUIDE_100.high, color: COPPER, dash: '6 4' },
+  { key: 'al75', material: 'Al' as const, size: GUIDE_100.at75.al.size, column: GUIDE_100.high, color: ALUMINUM, dash: '6 4' },
+];
+
+function SubpanelDropPlot({ narrow }: { narrow: boolean }) {
+  const g = GUIDE_100;
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 40 : 48;
+  const right = narrow ? 16 : 24;
+  const top = narrow ? 100 : 62;
+  const ph = narrow ? 170 : 210;
+  const H = top + ph + 46;
+  const pw = W - left - right;
+  const maxFt = SUBPANEL_DROP_LENGTHS[SUBPANEL_DROP_LENGTHS.length - 1];
+  const pct = (m: 'Cu' | 'Al', size: string, ft: number) => (ft === 0 ? 0 : feederDrop(size, m, g.ratingA, ft).vdPct);
+  const maxPct = 12;
+  const x = (ft: number) => left + (ft / maxFt) * pw;
+  const y = (p: number) => top + ph - (p / maxPct) * ph;
+  const notePct = VOLTAGE_DROP_NOTE.feederPct;
+  const id = narrow ? 'subpanel-drop-narrow' : 'subpanel-drop-wide';
+  const ends = SUBPANEL_LINES.map((l) => `${formatSize(l.size)} ${l.material === 'Cu' ? 'copper' : 'aluminum'} ${pct(l.material, l.size, maxFt).toFixed(2)} %`).join(', ');
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src="calc:voltage-drop"
+    >
+      <title id={`${id}-title`}>
+        {`Voltage drop of a ${g.ratingA} A feeder at full load, single-phase at ${SERVICE_VOLTS} V, against one-way length, on the 60 °C picks (solid) and the 75 °C picks (dashed): at ${maxFt} ft, ${ends}`}
+      </title>
+      {SUBPANEL_LINES.map((l, k) => {
+        const kx = narrow ? 0 : k % 2 === 0 ? 0 : 270;
+        const ky = narrow ? 16 + k * 20 : 16 + Math.floor(k / 2) * 22;
+        return (
+          <g key={l.key}>
+            <line x1={kx} x2={kx + 18} y1={ky - 5} y2={ky - 5} stroke={l.color} strokeWidth={3} strokeDasharray={l.dash} />
+            <text x={kx + 25} y={ky} fontSize={14} fill={INK}>
+              <Size s={l.size} svg /> {l.material === 'Cu' ? 'copper' : 'aluminum'}, <Val v={l.column} unit="°C" src="nec-110-14c" svg />
+            </text>
+          </g>
+        );
+      })}
+      {[0, 3, 6, 9, 12].map((p) => (
+        <g key={p}>
+          <line x1={left} x2={W - right} y1={y(p)} y2={y(p)} stroke={GRID} strokeWidth={1} />
+          <text x={left - 8} y={y(p) + 4.5} textAnchor="end" fontSize={13} fill={MUTED}>
+            <Num v={p} src="calc:voltage-drop" svg />
+          </text>
+        </g>
+      ))}
+      {SUBPANEL_DROP_LENGTHS.map((ft) => (
+        <text key={ft} x={x(ft)} y={top + ph + 20} textAnchor={ft === maxFt ? 'end' : ft === 0 ? 'start' : 'middle'} fontSize={13} fill={MUTED}>
+          <Num v={ft} src="calc:voltage-drop" svg />
+        </text>
+      ))}
+      <text x={left + pw / 2} y={H - 6} textAnchor="middle" fontSize={13} fill={MUTED}>
+        One-way length, ft (drop in % on the left)
+      </text>
+      <g data-src="nec-continuous-load">
+        <line x1={left} x2={W - right} y1={y(notePct)} y2={y(notePct)} stroke={INK} strokeWidth={1.5} strokeDasharray="2 3" />
+        <text x={W - right} y={y(notePct) + 18} textAnchor="end" fontSize={13} fill={INK} stroke="#ffffff" strokeWidth={4} paintOrder="stroke">
+          <Val v={notePct} unit="%" src="nec-continuous-load" svg />: the feeder note
+        </text>
+      </g>
+      {SUBPANEL_LINES.map((l) => (
+        <path
+          key={l.key}
+          d={SUBPANEL_DROP_LENGTHS.map((ft, k) => `${k === 0 ? 'M' : 'L'}${x(ft).toFixed(1)},${y(pct(l.material, l.size, ft)).toFixed(1)}`).join('')}
+          fill="none"
+          stroke={l.color}
+          strokeWidth={2.5}
+          strokeDasharray={l.dash}
+          className={l.dash ? undefined : 'viz-draw'}
+          pathLength={l.dash ? undefined : 1}
+        />
+      ))}
+    </svg>
+  );
+}
+
+/** A 100 A feeder at full load: voltage drop by one-way length on the 60 °C and 75 °C picks, with the 215.2(A) note. */
+export function SubpanelDropChart() {
+  return (
+    <div>
+      <SubpanelDropPlot narrow={false} />
+      <SubpanelDropPlot narrow />
+    </div>
+  );
+}
+
+const SEPARATE = 'nec-250-32';
+const OUTBUILDING = 'nec-feeders-outbuildings';
+
+/** One wire of the feeder: its name, and where it lands at the separate building. */
+const FEEDER_WIRES = [
+  { key: 'l1', label: 'L1', to: 'disconnect' },
+  { key: 'l2', label: 'L2', to: 'disconnect' },
+  { key: 'n', label: 'N', to: 'neutral' },
+  { key: 'egc', label: 'EGC', to: 'ground' },
+] as const;
+
+function FeederPlot({ narrow }: { narrow: boolean }) {
+  const g = GUIDE_100;
+  const id = narrow ? 'detached-feeder-narrow' : 'detached-feeder-wide';
+  const title = `A ${g.ratingA} A feeder from a house panel to a panel in a separate building, drawn as four wires: two ungrounded conductors to the building's disconnecting means (225.31), the neutral to a neutral bar that is not connected to the equipment grounding conductor or the grounding electrode, and the equipment grounding conductor to a ground bar bonded to the enclosure and to the building's grounding electrode system (250.32(A) and (B)(1)).`;
+  if (!narrow) {
+    const W = 560;
+    const H = 330;
+    const ys = { l1: 98, l2: 118, n: 176, egc: 226 };
+    return (
+      <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img" aria-labelledby={`${id}-title`} className="swap-md-wide h-auto w-full max-w-[560px] font-display" data-src={SEPARATE}>
+        <title id={`${id}-title`}>{title}</title>
+        <text x={91} y={42} textAnchor="middle" fontSize={15} fontWeight={700} fill={INK}>
+          House panel
+        </text>
+        <text x={469} y={42} textAnchor="middle" fontSize={15} fontWeight={700} fill={INK}>
+          Separate building
+        </text>
+        <rect x={16} y={56} width={150} height={200} rx={6} fill="#ffffff" stroke={INK} strokeWidth={1.5} />
+        <rect x={394} y={56} width={150} height={200} rx={6} fill="#ffffff" stroke={INK} strokeWidth={1.5} />
+        <g data-src={OCPD_SRC}>
+          <rect x={40} y={86} width={92} height={44} rx={4} fill="#f5f2ee" stroke={INK} strokeWidth={1} />
+          <text x={86} y={105} textAnchor="middle" fontSize={13} fill={INK}>
+            Breaker
+          </text>
+          <text x={86} y={122} textAnchor="middle" fontSize={13} fontWeight={700} fill={INK}>
+            <Val v={g.ratingA} unit="A" src={OCPD_SRC} svg />
+          </text>
+        </g>
+        <g data-src={OUTBUILDING}>
+          <rect x={420} y={86} width={100} height={44} rx={4} fill="#f5f2ee" stroke={INK} strokeWidth={1} />
+          <text x={470} y={105} textAnchor="middle" fontSize={13} fill={INK}>
+            Disconnect
+          </text>
+          <text x={470} y={122} textAnchor="middle" fontSize={13} fill={MUTED}>
+            225.31
+          </text>
+        </g>
+        <rect x={430} y={168} width={80} height={16} rx={2} fill="#ffffff" stroke={INK} strokeWidth={1.2} />
+        <text x={470} y={204} textAnchor="middle" fontSize={13} fill={INK}>
+          Neutral bar
+        </text>
+        <rect x={430} y={218} width={80} height={16} rx={2} fill="#ffffff" stroke={INK} strokeWidth={1.2} />
+        <line x1={510} x2={544} y1={226} y2={226} stroke={INK} strokeWidth={2} />
+        <text x={455} y={250} textAnchor="middle" fontSize={13} fill={INK}>
+          Ground bar
+        </text>
+        {FEEDER_WIRES.map((w) => {
+          const y = ys[w.key];
+          const x0 = w.to === 'disconnect' ? 132 : 120;
+          const x1 = w.to === 'disconnect' ? 420 : 430;
+          return (
+            <g key={w.key}>
+              {w.to !== 'disconnect' && <circle cx={120} cy={y} r={3.5} fill={INK} />}
+              <line x1={x0} x2={x1} y1={y} y2={y} stroke={w.key === 'egc' ? MUTED : INK} strokeWidth={2.5} className="viz-draw" pathLength={1} />
+              <text x={280} y={y - 6} textAnchor="middle" fontSize={13} fontWeight={600} fill={INK} stroke="#ffffff" strokeWidth={4} paintOrder="stroke">
+                {w.label}
+              </text>
+            </g>
+          );
+        })}
+        <text x={280} y={150} textAnchor="middle" fontSize={13} fill={MUTED} data-src={SEPARATE}>
+          Four wires: two hots, neutral, EGC
+        </text>
+        <text x={280} y={203} textAnchor="middle" fontSize={13} fill={MUTED} data-src={SEPARATE}>
+          Neutral not joined to EGC or electrode
+        </text>
+        <line x1={500} x2={500} y1={234} y2={296} stroke={MUTED} strokeWidth={2.5} />
+        <line x1={482} x2={518} y1={296} y2={296} stroke={INK} strokeWidth={2.5} />
+        <line x1={489} x2={511} y1={304} y2={304} stroke={INK} strokeWidth={2.5} />
+        <line x1={495} x2={505} y1={312} y2={312} stroke={INK} strokeWidth={2.5} />
+        <text x={470} y={305} textAnchor="end" fontSize={13} fill={INK} data-src={SEPARATE}>
+          Grounding electrode system, 250.32(A)
+        </text>
+      </svg>
+    );
+  }
+  const W = 288;
+  const H = 424;
+  const xs = { l1: 70, l2: 100, n: 160, egc: 214 };
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img" aria-labelledby={`${id}-title`} className="swap-md-narrow h-auto max-w-[420px] font-display" data-src={SEPARATE}>
+      <title id={`${id}-title`}>{title}</title>
+      <text x={0} y={18} fontSize={15} fontWeight={700} fill={INK}>
+        House panel
+      </text>
+      <rect x={20} y={28} width={248} height={70} rx={6} fill="#ffffff" stroke={INK} strokeWidth={1.5} />
+      <g data-src={OCPD_SRC}>
+        <rect x={44} y={40} width={84} height={44} rx={4} fill="#f5f2ee" stroke={INK} strokeWidth={1} />
+        <text x={86} y={59} textAnchor="middle" fontSize={13} fill={INK}>
+          Breaker
+        </text>
+        <text x={86} y={76} textAnchor="middle" fontSize={13} fontWeight={700} fill={INK}>
+          <Val v={g.ratingA} unit="A" src={OCPD_SRC} svg />
+        </text>
+      </g>
+      <rect x={20} y={150} width={248} height={150} rx={6} fill="#ffffff" stroke={INK} strokeWidth={1.5} />
+      <g data-src={OUTBUILDING}>
+        <rect x={40} y={162} width={90} height={44} rx={4} fill="#f5f2ee" stroke={INK} strokeWidth={1} />
+        <text x={85} y={181} textAnchor="middle" fontSize={13} fill={INK}>
+          Disconnect
+        </text>
+        <text x={85} y={198} textAnchor="middle" fontSize={13} fill={MUTED}>
+          225.31
+        </text>
+      </g>
+      <rect x={140} y={220} width={40} height={14} rx={2} fill="#ffffff" stroke={INK} strokeWidth={1.2} />
+      <text x={160} y={252} textAnchor="middle" fontSize={13} fill={INK}>
+        Neutral
+      </text>
+      <rect x={194} y={220} width={40} height={14} rx={2} fill="#ffffff" stroke={INK} strokeWidth={1.2} />
+      <line x1={234} x2={268} y1={227} y2={227} stroke={INK} strokeWidth={2} />
+      <text x={208} y={270} textAnchor="end" fontSize={13} fill={INK}>
+        Ground
+      </text>
+      <text x={32} y={290} fontSize={15} fontWeight={700} fill={INK}>
+        Separate building
+      </text>
+      {FEEDER_WIRES.map((w) => {
+        const x = xs[w.key];
+        const y0 = w.to === 'disconnect' ? 84 : 92;
+        const y1 = w.to === 'disconnect' ? 162 : 220;
+        return (
+          <g key={w.key}>
+            {w.to !== 'disconnect' && <circle cx={x} cy={92} r={3.5} fill={INK} />}
+            <line x1={x} x2={x} y1={y0} y2={y1} stroke={w.key === 'egc' ? MUTED : INK} strokeWidth={2.5} className="viz-draw" pathLength={1} />
+            <text x={x + 6} y={128} fontSize={13} fontWeight={600} fill={INK}>
+              {w.label}
+            </text>
+          </g>
+        );
+      })}
+      <line x1={214} x2={214} y1={234} y2={322} stroke={MUTED} strokeWidth={2.5} />
+      <line x1={196} x2={232} y1={322} y2={322} stroke={INK} strokeWidth={2.5} />
+      <line x1={203} x2={225} y1={330} y2={330} stroke={INK} strokeWidth={2.5} />
+      <line x1={209} x2={219} y1={338} y2={338} stroke={INK} strokeWidth={2.5} />
+      <text x={186} y={326} textAnchor="end" fontSize={13} fill={INK} data-src={SEPARATE}>
+        Grounding electrode
+      </text>
+      <text x={186} y={342} textAnchor="end" fontSize={13} fill={INK} data-src={SEPARATE}>
+        system, 250.32(A)
+      </text>
+      <text x={0} y={380} fontSize={13} fill={MUTED} data-src={SEPARATE}>
+        Four wires: two hots, neutral, EGC.
+      </text>
+      <text x={0} y={399} fontSize={13} fill={MUTED} data-src={SEPARATE}>
+        The neutral is not joined to the EGC
+      </text>
+      <text x={0} y={418} fontSize={13} fill={MUTED} data-src={SEPARATE}>
+        or the electrode at the building.
+      </text>
+    </svg>
+  );
+}
+
+/** A feeder to a separate building as four wires, with the neutral kept apart from the ground bar (250.32(B)(1)). */
+export function DetachedFeederDiagram() {
+  return (
+    <div>
+      <FeederPlot narrow={false} />
+      <FeederPlot narrow />
     </div>
   );
 }
