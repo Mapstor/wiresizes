@@ -1519,8 +1519,8 @@ export default function MethodologyPage() {
             {notCovered.title}
           </h2>
           <p>
-            No calculator on the site covers the topics below. Their 2023 NEC text, or the maker&apos;s current
-            tables, has not yet been checked in full against a document that can be cited:
+            No calculator on the site covers the topics below. For most of them, the 2023 NEC text or the
+            maker&apos;s current tables have not yet been checked in full against a document that can be cited:
           </p>
           <ul className={LIST}>
             <li>Ampacity rules for NM and UF cable, and whether neutral and ground wires count as current-carrying.</li>
