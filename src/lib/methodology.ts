@@ -46,6 +46,7 @@ const GUIDE_100 = '/guides/wire-size-for-100-amp';
 const GUIDE_EV = '/guides/wire-size-for-ev-charger';
 const GARAGE = '/calculators/garage-subpanel-calculator';
 const BOX_FILL = '/calculators/box-fill-calculator';
+const RV_HOOKUP = '/calculators/rv-hookup-calculator';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
 const EDITIONS = '/guides/nec-code-compliance';
@@ -66,13 +67,13 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'resistance',
     domain: 'conductor-resistance-20c',
     title: 'Conductor resistance and voltage drop',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP],
   },
   {
     id: 'ampacity',
     domain: 'nec-310-16',
     title: 'Ampacity',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, GUIDE_100, HOME, GUIDE_EV, GARAGE],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, GUIDE_100, HOME, GUIDE_EV, GARAGE, RV_HOOKUP],
   },
   {
     id: 'corrections',
@@ -84,19 +85,19 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'terminals',
     domain: 'nec-110-14c',
     title: 'Terminal temperatures',
-    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE],
+    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP],
   },
   {
     id: 'small-conductors',
     domain: 'nec-240-4-d',
     title: 'Small-conductor limits',
-    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, AWG_CHART, TABLE_310_16, HOME, GARAGE],
+    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, AWG_CHART, TABLE_310_16, HOME, GARAGE, RV_HOOKUP],
   },
   {
     id: 'breaker-ratings',
     domain: 'nec-240-ocpd',
     title: 'Standard breaker and fuse ratings',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP],
   },
   {
     id: 'continuous-loads',
@@ -108,7 +109,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'grounding',
     domain: 'nec-250-grounding',
     title: 'Ground wires and grounding electrode conductors',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP],
   },
   {
     id: 'service-conductors',
@@ -139,6 +140,12 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     domain: 'nec-314-16-box-fill',
     title: 'Box fill',
     citedOn: [BOX_FILL],
+  },
+  {
+    id: 'rv-parks',
+    domain: 'nec-551-rv-demand',
+    title: 'RV parks',
+    citedOn: [RV_HOOKUP],
   },
   {
     id: 'cable-ampacity',
@@ -180,13 +187,13 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'nema-configs',
     domain: 'nema-receptacle-configs',
     title: 'NEMA receptacle configurations',
-    citedOn: [RANGE, DRYER, GUIDE_EV],
+    citedOn: [RANGE, DRYER, GUIDE_EV, RV_HOOKUP],
   },
   {
     id: 'rule-excerpts',
     domain: 'nec-2023-rule-excerpts',
     title: 'Other NEC 2023 sections',
-    citedOn: [RANGE, DRYER, HP_TO_AMPS, GUIDE_EV],
+    citedOn: [RANGE, DRYER, HP_TO_AMPS, GUIDE_EV, RV_HOOKUP],
   },
   {
     id: 'motor-currents',
@@ -283,6 +290,7 @@ export const METHODOLOGY_EXTRA_SECTIONS = {
   hpMethod: { id: 'hp-method', title: 'How the horsepower to amps calculator reads the tables' },
   garageMethod: { id: 'garage-method', title: 'How the garage subpanel calculator sizes a feeder' },
   boxFillMethod: { id: 'box-fill-method', title: 'How the box fill calculator adds the fill' },
+  rvMethod: { id: 'rv-method', title: 'How the RV hookup calculator sizes an outlet and a park' },
   notCovered: { id: 'not-covered', title: 'Not covered yet' },
   errors: { id: 'errors', title: 'Errors and corrections' },
 } as const;

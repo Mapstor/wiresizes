@@ -122,5 +122,9 @@
   {
     "date": "2026-11-17",
     "text": "Brought back the box fill calculator, offline since the November 2 audit because some of its box volumes and conductor-counting rules did not match the NEC. It now counts the fill by NEC 314.16 as the 2023 edition words it: each conductor at its Table 314.16(B)(1) volume, two allowances per device yoke, one for up to four ground wires and a quarter for each more, one for internal clamps and one per type of support fitting, against the volume of a Table 314.16(A) metal box or the volume marked on the box."
+  },
+  {
+    "date": "2026-11-17",
+    "text": "Brought back the RV hookup calculator, offline since the November 2 audit because it overstated where GFCI protection is required and misapplied the RV park demand factors. It now sizes the wire for the two common RV outlets from NEC Table 310.16 at the terminal temperature with the voltage drop over the run, gives GFCI as 210.8(F) and 551.71(F) set it, and calculates an RV park feeder from the 2023 per-site loads of 551.73(A) and the demand factors of Table 551.73(A)."
   }
 ]

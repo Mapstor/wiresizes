@@ -35,3 +35,8 @@ public/llms.txt | 10-30R | NEMA 10-30 receptacle configuration name, not a numbe
 /methodology | W10267633A | Whirlpool dryer instructions document number (mfr-equipment.json)
 /methodology | 500A187P054 | GE dryer instructions part number (mfr-equipment.json)
 /methodology | DBLR333EE | GE dryer model number (mfr-equipment.json)
+/calculators/rv-hookup-calculator | TT-30R | NEMA TT-30 receptacle configuration name (nema-receptacle-configs.json), not a number and a unit
+/calculators/rv-hookup-calculator | 14-50R | NEMA 14-50 receptacle configuration name (nema-receptacle-configs.json), not a number and a unit
+/methodology | TT-30R | NEMA TT-30 receptacle configuration name (nema-receptacle-configs.json), not a number and a unit
+/methodology | 14-50R | NEMA 14-50 receptacle configuration name (nema-receptacle-configs.json), not a number and a unit
+public/llms.txt | TT-30R | NEMA TT-30 receptacle configuration name, not a number and a unit

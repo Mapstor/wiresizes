@@ -6,4 +6,3 @@ slug,what_was_wrong,links
 /calculators/air-conditioner-calculator,it estimated amps from tonnage instead of using the unit's nameplate minimum circuit ampacity and maximum overcurrent protection,/guides/nec-table-310-16
 /calculators/motor-circuit,it rounded feeder protection up and stated overload settings incorrectly,/guides/nec-table-310-16
 /calculators/conduit-fill-calculator,"it said equipment grounding conductors are not counted in conduit fill, and several conduit and wire areas were wrong",/guides/awg-wire-size-chart
-/calculators/rv-hookup-calculator,it overstated where GFCI protection is required and misapplied the RV-park demand factors,/guides/nec-table-310-16;/guides/awg-wire-size-chart

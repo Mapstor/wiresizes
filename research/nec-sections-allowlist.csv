@@ -107,3 +107,11 @@ Article 625,article,2023,Electric vehicle power transfer systems,nec-625-ev,veri
 314.16(B)(6),section,2023,"Terminal block fill: one allowance per terminal block assembly, on the largest conductor terminated to it",nec-314-16-box-fill,verified,
 314.27(E),section,2023,A weight-supporting ceiling receptacle counts in the box fill as a device (314.16(B)(4)),nec-314-16-box-fill,verified,Second Revision 7535 text (D-09)
 300.14,section,2023,The free conductor length at boxes; named by 314.16(B)(1) for the loop rule,nec-314-16-box-fill,verified,Reference only: the site states no length from 300.14
+551.71(A),section,2023,Every RV site with electrical supply: a 20 A 125 V weather-resistant receptacle,nec-551-rv-demand,verified,First Revision 8657 base text (WSZ-033)
+551.71(B),section,2023,At least 70 % of RV sites: a 30 A 125 V weather-resistant receptacle,nec-551-rv-demand,verified,
+551.71(C),section,2023,"At least 20 % of existing and 40 % of new RV sites: a 50 A 125/250 V receptacle, each with a 30 A",nec-551-rv-demand,verified,
+551.71(D),section,2023,Dedicated 15 or 20 A tent sites may be left out of the 30 A and 50 A percentages,nec-551-rv-demand,verified,
+551.73,section,2023,RV park calculated load for services and feeders,nec-551-rv-demand,verified,Public Input 3113 (WSZ-033)
+551.73(A),section,2023,"Per-site loads 12,000 / 3600 / 2400 / 600 VA; Table 551.73(A) demand factors",nec-551-rv-demand,verified,Also renders as 'Table 551.73(A)'
+551.73(B),section,2023,The demand factor for a number of sites applies to all of them,nec-551-rv-demand,verified,
+Article 551,article,2023,"Part VI, Recreational Vehicle Parks (551.71, 551.73)",nec-551-rv-demand,verified,"Location only; Part VI's title as public input 2560 states it (P07 public inputs, p. 175, WSZ-033)"

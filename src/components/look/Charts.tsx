@@ -41,6 +41,7 @@ import { GUIDE_100, SUBPANEL_DROP_LENGTHS, feederDrop } from '@/lib/subpanel-gui
 import { EV_DROP_MAX_FT, EV_HIGH, EV_LOW, EV_ROWS } from '@/lib/ev-guide';
 import { GENERAL_COVERS } from '@/lib/garage-page';
 import { EXAMPLE_12, EXAMPLE_14, EXAMPLE_BOX } from '@/lib/box-fill-page';
+import { DEMAND_FACTORS } from '@/lib/verified/nec-551';
 import type { BoxFillResult, FillRule } from '@/lib/calculations/box-fill';
 import type { EvRow } from '@/lib/ev-guide';
 import type { LadderRow } from '@/lib/subpanel-guide';
@@ -3653,6 +3654,74 @@ export function BoxFillBars() {
     <div>
       <BoxFillPlot narrow={false} />
       <BoxFillPlot narrow />
+    </div>
+  );
+}
+
+// ── RV parks (WSZ-011b): Table 551.73(A), the demand factor by number of sites ──────────────────────────────────────
+
+const RV_SRC = 'nec-551-rv-demand';
+
+function DemandPlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 58 : 70;
+  const right = narrow ? 44 : 52;
+  const rowH = narrow ? 22 : 24;
+  const barH = narrow ? 14 : 16;
+  const top = 26;
+  const H = top + DEMAND_FACTORS.length * rowH + 8;
+  const pw = W - left - right;
+  const x = (pct: number) => left + (pct / 100) * pw;
+  const id = narrow ? 'rv-demand-narrow' : 'rv-demand-wide';
+  const label = (r: (typeof DEMAND_FACTORS)[number]) => (r.to === null ? `${r.from} +` : r.from === r.to ? `${r.from}` : `${r.from}–${r.to}`);
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={RV_SRC}
+    >
+      <title id={`${id}-title`}>
+        {`NEC Table 551.73(A), the demand factor for RV park feeders and services by number of sites: ${DEMAND_FACTORS.map((r) => `${label(r)} sites ${r.pct} %`).join(', ')}.`}
+      </title>
+      <text x={0} y={14} fontSize={13} fill={MUTED}>
+        Sites
+      </text>
+      <text x={W - 1} y={14} textAnchor="end" fontSize={13} fill={MUTED}>
+        Demand factor
+      </text>
+      {[0, 50, 100].map((t) => (
+        <line key={t} x1={x(t)} x2={x(t)} y1={top - 4} y2={H - 6} stroke={GRID} strokeWidth={1} />
+      ))}
+      {DEMAND_FACTORS.map((r, k) => {
+        const y = top + k * rowH;
+        return (
+          <g key={r.from}>
+            <text x={left - 10} y={y + barH / 2 + 4.5} textAnchor="end" fontSize={13} fill={INK}>
+              <Num v={r.from} src={RV_SRC} svg />
+              {r.to === null ? ' +' : r.from === r.to ? '' : '–'}
+              {r.to !== null && r.to !== r.from ? <Num v={r.to} src={RV_SRC} svg /> : null}
+            </text>
+            <path d={barPath(left, y, x(r.pct) - left, barH)} fill={COPPER} className="viz-grow" />
+            <text x={x(r.pct) + 6} y={y + barH / 2 + 4.5} fontSize={13} fontWeight={700} fill={INK} className="viz-pop">
+              <Val v={r.pct} unit="%" src={RV_SRC} svg />
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/** Table 551.73(A) as bars: the share of the sites' load an RV park feeder or service is calculated for. */
+export function RvDemandChart() {
+  return (
+    <div>
+      <DemandPlot narrow={false} />
+      <DemandPlot narrow />
     </div>
   );
 }

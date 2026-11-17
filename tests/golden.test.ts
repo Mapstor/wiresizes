@@ -33,6 +33,7 @@ import * as rangeCircuit from '../src/lib/calculations/range-circuit';
 import * as dryerCircuit from '../src/lib/calculations/dryer-circuit';
 import * as garageSubpanel from '../src/lib/calculations/garage-subpanel';
 import * as boxFillEngine from '../src/lib/calculations/box-fill';
+import * as rvHookup from '../src/lib/calculations/rv-hookup';
 import * as motorFlc from '../src/lib/calculations/motor-flc';
 import * as ohmsLaw from '../src/lib/calculations/ohms-law';
 import * as power from '../src/lib/calculations/power';
@@ -661,6 +662,7 @@ describe('engines', () => {
     'dryer-circuit': dryerCircuit,
     'garage-subpanel': garageSubpanel,
     'box-fill': boxFillEngine,
+    'rv-hookup': rvHookup,
     'service-lookup': serviceLookup,
     'voltage-drop': voltageDrop,
   };

@@ -262,6 +262,7 @@ const TOC = [
   METHODOLOGY_EXTRA_SECTIONS.hpMethod,
   METHODOLOGY_EXTRA_SECTIONS.garageMethod,
   METHODOLOGY_EXTRA_SECTIONS.boxFillMethod,
+  METHODOLOGY_EXTRA_SECTIONS.rvMethod,
   ...METHODOLOGY_SECTIONS.map(({ id, title }) => ({ id, title })),
   METHODOLOGY_EXTRA_SECTIONS.notCovered,
   METHODOLOGY_EXTRA_SECTIONS.errors,
@@ -285,7 +286,7 @@ const HP_EATON_LAST = (() => {
 })();
 
 export default function MethodologyPage() {
-  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, garageMethod, boxFillMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
+  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, garageMethod, boxFillMethod, rvMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
   return (
     <div className={LOOK_PAGE}>
     <div className="container pb-16">
@@ -298,8 +299,8 @@ export default function MethodologyPage() {
         <p>
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
           has a section below: what it is and which edition was used, where it was read, how the calculators use it,
-          and where that use stops. The first eight sections show how the wire size, circuit breaker, residential load,
-          range, dryer, horsepower to amps, garage subpanel and box fill calculators work from them. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
+          and where that use stops. The first nine sections show how the wire size, circuit breaker, residential load,
+          range, dryer, horsepower to amps, garage subpanel, box fill and RV hookup calculators work from them. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
           homepage and the calculators and guides pages also list their sources under Sources, near the bottom of the
           page.
         </p>
@@ -728,6 +729,39 @@ export default function MethodologyPage() {
           <Limits>
             <li>The reader counts the conductors; the calculator does not trace cables or splices.</li>
             <li>No terminal blocks (314.16(B)(6)) and no conduit bodies.</li>
+          </Limits>
+        </section>
+
+        <section id={rvMethod.id} data-src="calc:rv-hookup" aria-labelledby={`${rvMethod.id}-title`} className="scroll-mt-24 space-y-4">
+          <h2 id={`${rvMethod.id}-title`} className={H2}>
+            {rvMethod.title}
+          </h2>
+          <p>
+            The{' '}
+            <Link href="/calculators/rv-hookup-calculator" className={LINK}>
+              RV hookup calculator
+            </Link>{' '}
+            does two jobs:
+          </p>
+          <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-cut-line">
+            <li>
+              One RV outlet at a house: the circuit of a TT-30R or a 14-50R, sized for its breaker as the{' '}
+              <a href={`#${method.id}`} className={LINK}>
+                wire size calculator
+              </a>{' '}
+              sizes it, with the voltage drop at the full rating (120 V for a TT-30R, 240 V between the hots for a 14-50R) and
+              the GFCI rule of 210.8(F) for outdoor outlets at dwellings (see{' '}
+              <SectionLink domain="nema-receptacle-configs">NEMA receptacle configurations</SectionLink>).
+            </li>
+            <li>
+              An RV park feeder or service: each site&apos;s load from 551.73(A), times the Table 551.73(A) demand factor for the number of
+              sites, as current at 120/240 V single-phase and 208Y/120 V three-phase, with the receptacle shares of 551.71 (see{' '}
+              <SectionLink domain="nec-551-rv-demand">RV parks</SectionLink>).
+            </li>
+          </ol>
+          <Limits>
+            <li>No tent sites, no supply that serves two RVs, and no park buildings or pools, which 551.73 adds on their own.</li>
+            <li>The park result is a calculated load; it does not size the feeder conductors or the service.</li>
           </Limits>
         </section>
 
@@ -1261,6 +1295,20 @@ export default function MethodologyPage() {
           </Limits>
         </SourceSection>
 
+        <SourceSection domain="nec-551-rv-demand">
+          <p>
+            Part VI of Article 551 of the NEC (2023) covers RV parks: 551.71 sets the receptacles each site has and where they need GFCI
+            protection, and 551.73 the load a park&apos;s feeders and service are calculated for, with Table 551.73(A)&apos;s demand factors
+            by number of sites. Both are read from NFPA&apos;s public inputs and First Revisions for the 2026 edition: public input 3113
+            strikes the whole 2023 section 551.73 to move it, public input 638 and First Revision 8591 print the same table, and First
+            Revision 8657 prints the 2023 section 551.71 it rewrites.
+          </p>
+          <SourceFacts s={section('nec-551-rv-demand')} />
+          <Limits>
+            <li>The 2026 edition&apos;s rewrite of 551.71 is not used.</li>
+          </Limits>
+        </SourceSection>
+
         <SourceSection domain="nec-cable-rules">
           <p>
             Section 334.80 of the NEC (2023) sets the ampacity of NM cable, and 310.15(E) says when a neutral counts as a
@@ -1769,7 +1817,6 @@ export default function MethodologyPage() {
             <li>Air conditioner and heat pump circuits.</li>
             <li>Pool pump, spa and hot tub circuits.</li>
             <li>Welder circuits.</li>
-            <li>RV site and RV park loads.</li>
             <li>Submersible well pump cable lengths from the pump maker&apos;s current tables.</li>
           </ul>
         </section>
