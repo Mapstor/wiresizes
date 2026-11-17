@@ -202,7 +202,7 @@ export function BoxFillTool() {
     <Field id={id} label={label} hint={hint}>
       <SelectInput id={id} value={inputs[id]} onChange={(v) => update({ [id]: v as BoxSize } as Partial<Inputs>)} describedById={`${id}-hint`}>
         {SIZE_ORDER.map((s) => (
-          <option key={s} value={s}>
+          <option key={s} value={s} data-size={s}>
             {s} AWG
           </option>
         ))}
