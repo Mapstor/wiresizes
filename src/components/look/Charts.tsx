@@ -43,6 +43,7 @@ import { GENERAL_COVERS } from '@/lib/garage-page';
 import { EXAMPLE_12, EXAMPLE_14, EXAMPLE_BOX } from '@/lib/box-fill-page';
 import { DEMAND_FACTORS } from '@/lib/verified/nec-551';
 import { CHART_ROWS as WP_ROWS, CHART_SIZE as WP_SIZE } from '@/lib/well-pump-page';
+import { DROP_ROWS as HT_DROP_ROWS, HT_DROP_PCT, HT_MAIN_A } from '@/lib/hot-tub-page';
 import type { BoxFillResult, FillRule } from '@/lib/calculations/box-fill';
 import type { EvRow } from '@/lib/ev-guide';
 import type { LadderRow } from '@/lib/subpanel-guide';
@@ -3787,6 +3788,70 @@ export function WellPumpLengthChart() {
     <div>
       <PumpLengthPlot narrow={false} />
       <PumpLengthPlot narrow />
+    </div>
+  );
+}
+
+const HT_SRC = 'calc:hot-tub';
+
+function TubDropPlot({ narrow }: { narrow: boolean }) {
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 64 : 76;
+  const right = narrow ? 66 : 74;
+  const rowH = narrow ? 30 : 32;
+  const barH = narrow ? 16 : 18;
+  const top = 28;
+  const H = top + HT_DROP_ROWS.length * rowH + 4;
+  const pw = W - left - right;
+  const maxFt = 500;
+  const x = (ft: number) => left + (Math.min(ft, maxFt) / maxFt) * pw;
+  const id = narrow ? 'ht-drop-narrow' : 'ht-drop-wide';
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={HT_SRC}
+    >
+      <title id={`${id}-title`}>
+        {`The longest one-way run before a ${HT_MAIN_A} A, 240 V hot tub circuit drops ${HT_DROP_PCT} % at the full rating, copper at 75 °C: ${HT_DROP_ROWS.map((r) => `${r.size} AWG ${Math.round(r.ft)} ft`).join(', ')}.`}
+      </title>
+      <text x={0} y={14} fontSize={13} fill={MUTED}>
+        Copper
+      </text>
+      <text x={W - 1} y={14} textAnchor="end" fontSize={13} fill={MUTED}>
+        Longest run at {HT_DROP_PCT} %
+      </text>
+      {[0, 250, 500].map((t) => (
+        <line key={t} x1={x(t)} x2={x(t)} y1={top - 6} y2={H - 4} stroke={GRID} strokeWidth={1} />
+      ))}
+      {HT_DROP_ROWS.map((r, k) => {
+        const y = top + k * rowH;
+        return (
+          <g key={r.size}>
+            <text x={left - 10} y={y + barH / 2 + 4.5} textAnchor="end" fontSize={13} fill={INK}>
+              <Size s={r.size} svg />
+            </text>
+            <path d={barPath(left, y, x(r.ft) - left, barH)} fill={COPPER} className="viz-grow" />
+            <text x={x(r.ft) + 6} y={y + barH / 2 + 4.5} fontSize={13} fontWeight={700} fill={INK} className="viz-pop">
+              <Val v={r.ft} unit="ft" src={HT_SRC} svg format={{ sig: 3 }} />
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/** A 50 A, 240 V hot tub circuit: the longest one-way copper run at a 3 % drop, by size. */
+export function HotTubDropChart() {
+  return (
+    <div>
+      <TubDropPlot narrow={false} />
+      <TubDropPlot narrow />
     </div>
   );
 }

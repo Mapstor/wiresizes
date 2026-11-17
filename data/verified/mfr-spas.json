@@ -1,0 +1,132 @@
+{
+ "domain": "mfr-spas",
+ "status": "VERIFIED-MFR-2026",
+ "retrieved": "2026-11-17",
+ "evidence": "research/sources/equipment.md §4 (2026-10) and research/sources/round8/WSZ-035-spa-sources.md (re-read 2026-11-17)",
+ "documents": [
+  {
+   "id": "HS-PD",
+   "maker": "Hot Spring",
+   "document": "Hot Spring Spa Pre-Delivery Instructions, Highlife Collection 2026 (part no. 62982.26 A, Rev A, 01/26)",
+   "url": "https://www.hotspring.com/wp-content/uploads/2026/08/hot-spring-highlife-collection-pre-delivery-instruction-2026.pdf",
+   "pdf_pages": 20,
+   "sha256_prefix": "492a9d1a25b32588"
+  },
+  {
+   "id": "BF-A",
+   "maker": "Bullfrog Spas",
+   "document": "A Series Owner's Manual, v1.9 (2026)",
+   "url": "https://www.bullfrogspas.com/wp-content/uploads/2026/08/2026_A-Series-Owners-Manual_English_v1.9.pdf",
+   "pdf_pages": 33,
+   "sha256_prefix": "afe646e555f7e300"
+  },
+  {
+   "id": "MQ-E",
+   "maker": "Marquis",
+   "document": "ELITE Owner's Manual (2026)",
+   "url": "https://www.marquisspas.com/media/177635/2026-elite-owners-manual.pdf",
+   "pdf_pages": 71,
+   "sha256_prefix": "c80b6c86773cea66"
+  }
+ ],
+ "makers": [
+  {
+   "maker": "Hot Spring",
+   "model": "Highlife collection",
+   "volts": 240,
+   "breaker_a": [
+    50
+   ],
+   "gfci": "GFCI breakers in the spa's subpanel, fed by a 50 A two-pole breaker (not GFCI) in the main panel",
+   "wires": 4,
+   "conductors": "four wires (two lines, a neutral, a ground); ground at least 10 AWG",
+   "copper_only": true,
+   "disconnect": "the subpanel within sight of the spa and at least 5 ft from the water's edge",
+   "doc": "HS-PD",
+   "pdf_page": 12,
+   "volts_printed": 230
+  },
+  {
+   "maker": "Hot Spring",
+   "model": "Jetsetter, plug-in",
+   "volts": 120,
+   "breaker_a": [
+    20
+   ],
+   "gfci": "a 20 A GFCI breaker in the main panel",
+   "wires": 3,
+   "conductors": "12 AWG, ground included; larger on long runs, at a 3 % drop",
+   "copper_only": null,
+   "disconnect": null,
+   "doc": "HS-PD",
+   "pdf_page": 11,
+   "volts_printed": 115
+  },
+  {
+   "maker": "Bullfrog",
+   "model": "A Series",
+   "volts": 240,
+   "breaker_a": [
+    50,
+    60
+   ],
+   "gfci": "GFCI protected",
+   "wires": 4,
+   "conductors": "four wires (line 1, line 2, neutral, ground); wire size by the length of the run",
+   "copper_only": true,
+   "disconnect": null,
+   "doc": "BF-A",
+   "pdf_page": 28,
+   "conversion_a": 30,
+   "volts_printed": 240
+  },
+  {
+   "maker": "Bullfrog",
+   "model": "A Series, plug-in",
+   "volts": 120,
+   "breaker_a": [
+    15
+   ],
+   "gfci": "the cord's built-in GFCI",
+   "wires": 3,
+   "conductors": "a dedicated, grounded circuit and outlet",
+   "copper_only": null,
+   "disconnect": null,
+   "doc": "BF-A",
+   "pdf_page": 28,
+   "volts_printed": 120
+  },
+  {
+   "maker": "Marquis",
+   "model": "Elite",
+   "volts": 240,
+   "breaker_a": [
+    50
+   ],
+   "gfci": "Class A GFCI",
+   "wires": 4,
+   "conductors": "three 6 AWG copper plus an 8 AWG copper ground",
+   "copper_only": true,
+   "disconnect": "within sight of the equipment and at least 5 ft from the inside walls of the spa",
+   "doc": "MQ-E",
+   "pdf_page": 15,
+   "volts_printed": 240
+  },
+  {
+   "maker": "Marquis",
+   "model": "Elite, plug-in",
+   "volts": 120,
+   "breaker_a": [
+    15
+   ],
+   "gfci": "the 15 ft GFCI power cord",
+   "wires": 3,
+   "conductors": "two wires plus ground; the receptacle at least 5 ft from the spa",
+   "copper_only": null,
+   "disconnect": null,
+   "doc": "MQ-E",
+   "pdf_page": 16,
+   "volts_printed": 120
+  }
+ ]
+}

@@ -130,5 +130,9 @@
   {
     "date": "2026-11-17",
     "text": "Brought back the well pump calculator, offline since the November 2 audit because it used invented current multipliers and motor currents that disagreed with the NEC motor tables. It now reads Franklin Electric's 2026 AIM Manual for the company's single-phase submersible motors: the copper cable size for the whole run from Franklin's cable table, aluminum two sizes larger, the breaker and fuse sizes Franklin lists, and the motor's amps."
+  },
+  {
+    "date": "2026-11-17",
+    "text": "Brought back the hot tub calculator, offline since the November 2 audit because it estimated the circuit from the number of seats instead of the hot tub's rated load and its voltage-drop examples used wrong resistance values. It now sizes the copper circuit for the breaker the hot tub's manual asks for, from NEC Table 310.16 at the terminal temperature, with the Table 250.122 ground wire and the voltage drop over the run, and lists what three makers' current manuals require."
   }
 ]
