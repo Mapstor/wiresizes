@@ -195,8 +195,8 @@ export const ROUTES: readonly SiteRoute[] = [
   {
     path: '/guides/wire-size-for-ev-charger',
     group: 'service-circuit',
-    name: 'EV Charger Wire Size Guide',
-    line: 'How the EV charging levels differ, and the circuit and wire size for a charger at home.',
+    name: 'Wire Size for EV Charger',
+    line: 'The breaker and copper wire for a home EV charger by its output, in NM cable or single conductors, plug-in or hardwired, with the makers’ own tables.',
   },
   {
     path: '/guides/electrical-power-calculations',

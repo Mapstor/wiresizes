@@ -43,6 +43,7 @@ const DRYER = '/calculators/dryer-calculator';
 const HP_TO_AMPS = '/calculators/horsepower-to-amps-calculator';
 const GUIDE_200 = '/guides/wire-size-for-200-amp';
 const GUIDE_100 = '/guides/wire-size-for-100-amp';
+const GUIDE_EV = '/guides/wire-size-for-ev-charger';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
 const EDITIONS = '/guides/nec-code-compliance';
@@ -63,13 +64,13 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'resistance',
     domain: 'conductor-resistance-20c',
     title: 'Conductor resistance and voltage drop',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV],
   },
   {
     id: 'ampacity',
     domain: 'nec-310-16',
     title: 'Ampacity',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, GUIDE_100, HOME],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, GUIDE_100, HOME, GUIDE_EV],
   },
   {
     id: 'corrections',
@@ -81,7 +82,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'terminals',
     domain: 'nec-110-14c',
     title: 'Terminal temperatures',
-    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, GUIDE_200, GUIDE_100],
+    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, GUIDE_200, GUIDE_100, GUIDE_EV],
   },
   {
     id: 'small-conductors',
@@ -93,19 +94,19 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'breaker-ratings',
     domain: 'nec-240-ocpd',
     title: 'Standard breaker and fuse ratings',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, GUIDE_200, GUIDE_100],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, GUIDE_200, GUIDE_100, GUIDE_EV],
   },
   {
     id: 'continuous-loads',
     domain: 'nec-continuous-load',
     title: 'Continuous loads and the voltage-drop note',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, VOLTAGE_DROP, LOW_VOLTAGE, GUIDE_200, GUIDE_100],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, VOLTAGE_DROP, LOW_VOLTAGE, GUIDE_200, GUIDE_100, GUIDE_EV],
   },
   {
     id: 'grounding',
     domain: 'nec-250-grounding',
     title: 'Ground wires and grounding electrode conductors',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV],
   },
   {
     id: 'service-conductors',
@@ -129,13 +130,31 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'cable-ampacity',
     domain: 'nec-cable-rules',
     title: 'NM cable and neutral counting',
-    citedOn: [GUIDE_100],
+    citedOn: [GUIDE_100, GUIDE_EV],
+  },
+  {
+    id: 'ev-charging',
+    domain: 'nec-625-ev',
+    title: 'EV charger circuits, NEC Article 625',
+    citedOn: [GUIDE_EV],
+  },
+  {
+    id: 'ev-makers',
+    domain: 'mfr-evse',
+    title: 'EV charger makers’ instructions',
+    citedOn: [GUIDE_EV],
+  },
+  {
+    id: 'ev-credit',
+    domain: 'irs-30c-credit',
+    title: 'The federal credit for home chargers',
+    citedOn: [GUIDE_EV],
   },
   {
     id: 'load-calcs',
     domain: 'nec-220-load-calcs',
     title: 'Dwelling load calculations',
-    citedOn: [RESIDENTIAL_LOAD, RANGE, DRYER],
+    citedOn: [RESIDENTIAL_LOAD, RANGE, DRYER, GUIDE_EV],
   },
   {
     id: 'maker-instructions',
@@ -147,13 +166,13 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'nema-configs',
     domain: 'nema-receptacle-configs',
     title: 'NEMA receptacle configurations',
-    citedOn: [RANGE, DRYER],
+    citedOn: [RANGE, DRYER, GUIDE_EV],
   },
   {
     id: 'rule-excerpts',
     domain: 'nec-2023-rule-excerpts',
     title: 'Other NEC 2023 sections',
-    citedOn: [RANGE, DRYER, HP_TO_AMPS],
+    citedOn: [RANGE, DRYER, HP_TO_AMPS, GUIDE_EV],
   },
   {
     id: 'motor-currents',
@@ -231,7 +250,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'nec-2026',
     domain: 'nec-2026-edition',
     title: 'Changes in the 2026 NEC',
-    citedOn: [EDITIONS, TABLE_310_16, RESIDENTIAL_LOAD],
+    citedOn: [EDITIONS, TABLE_310_16, RESIDENTIAL_LOAD, GUIDE_EV],
   },
 ];
 

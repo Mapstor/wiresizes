@@ -38,6 +38,8 @@ import { TABLE_250_122_ROWS, egcRow } from '@/lib/verified/nec-250-122';
 import { SERVICE_VOLTS, TABLE_310_12_ROWS, serviceEntrance, isServiceError, serviceLookup } from '@/lib/calculations/service-lookup';
 import { editionGroups, editionLabel, NEC_ADOPTION_DOMAIN, NOT_VERIFIED, stateName } from '@/lib/verified/nec-adoption';
 import { GUIDE_100, SUBPANEL_DROP_LENGTHS, feederDrop } from '@/lib/subpanel-guide';
+import { EV_DROP_MAX_FT, EV_HIGH, EV_LOW, EV_ROWS } from '@/lib/ev-guide';
+import type { EvRow } from '@/lib/ev-guide';
 import type { LadderRow } from '@/lib/subpanel-guide';
 
 export const COPPER = '#a95a26';
@@ -3138,6 +3140,261 @@ export function DetachedFeederDiagram() {
     <div>
       <FeederPlot narrow={false} />
       <FeederPlot narrow />
+    </div>
+  );
+}
+
+// ── EV charger guide (WSZ-008e): charger output → breaker → copper, and how far each circuit runs before 3 % ────────
+
+const EV_MFR = 'mfr-evse';
+const EV_RULE = 'nec-625-ev';
+const EV_SIZING = 'calc:conductor-sizing';
+const EV_VD = 'calc:voltage-drop';
+// one scale within each chart; smaller than the service discs' so five rows fit
+const EV_DISC_PX_PER_IN = { narrow: 130, wide: 170 };
+
+function discR(size: string, pxPerIn: number): number {
+  return (((conductor(size)?.diameterMm ?? 0) / 25.4) * pxPerIn) / 2;
+}
+
+function EvCircuitPlot({ narrow }: { narrow: boolean }) {
+  const rows = EV_ROWS;
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 56 : 92;
+  const barRight = narrow ? 160 : 318;
+  const top = narrow ? 56 : 58;
+  const rowH = narrow ? 54 : 50;
+  const barH = narrow ? 20 : 24;
+  const maxA = Math.max(...rows.map((r) => r.breakerA));
+  const x = (a: number) => left + (a / maxA) * (barRight - left);
+  const pxPerIn = narrow ? EV_DISC_PX_PER_IN.narrow : EV_DISC_PX_PER_IN.wide;
+  // wide: each disc with its size name to the right; phone: the name under the disc
+  const colNm = narrow ? 224 : 384;
+  const col75 = narrow ? 264 : 474;
+  const ticks = [0, maxA / 3, (2 * maxA) / 3, maxA];
+  const bodyBottom = top + rows.length * rowH;
+  const H = bodyBottom + (narrow ? 22 : 30);
+  const id = narrow ? 'ev-circuit-narrow' : 'ev-circuit-wide';
+  const words = rows
+    .map((r) => `${r.outputA} A (${r.kw} kW) on a ${r.breakerA} A breaker: ${formatSize(r.nm.size)} in NM cable, ${formatSize(r.c75.size)} at 75 °C`)
+    .join('; ');
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={EV_SIZING}
+    >
+      <title id={`${id}-title`}>{`Level 2 EV charger circuits, copper: ${words}. Cross sections drawn to one scale.`}</title>
+      <defs>
+        <linearGradient id={`${id}-cu`} x1="0.1" y1="0" x2="0.9" y2="1">
+          <stop offset="0" stopColor="#f3c193" />
+          <stop offset="0.45" stopColor="#d6904f" />
+          <stop offset="1" stopColor="#a95a26" />
+        </linearGradient>
+      </defs>
+      <g>
+        <rect x={0.75} y={7.75} width={16.5} height={10.5} rx={2} fill="#ffffff" stroke={COPPER} strokeWidth={1.5} />
+        <text x={24} y={18} fontSize={14} fill={INK}>
+          Breaker
+        </text>
+        <rect x={narrow ? 92 : 96} y={7} width={18} height={12} rx={2} fill={COPPER} />
+        <text x={narrow ? 116 : 120} y={18} fontSize={14} fill={INK}>
+          Charger output
+        </text>
+      </g>
+      <text x={colNm} y={narrow ? 42 : 18} textAnchor={narrow ? 'middle' : 'start'} dx={narrow ? 0 : -18} fontSize={13} fontWeight={600} fill={INK} data-src="nec-cable-rules">
+        {narrow ? 'NM' : 'NM cable'}
+      </text>
+      <text x={col75} y={narrow ? 42 : 18} textAnchor={narrow ? 'middle' : 'start'} dx={narrow ? 0 : -18} fontSize={13} fontWeight={600} fill={INK} data-src="nec-110-14c">
+        <Val v={EV_HIGH} unit="°C" src="nec-110-14c" svg />
+      </text>
+      {!narrow && (
+        <>
+          <text x={colNm - 18} y={36} fontSize={13} fill={MUTED} data-src="nec-cable-rules">
+            <Val v={EV_LOW} unit="°C" src="nec-cable-rules" svg /> column
+          </text>
+          <text x={col75 - 18} y={36} fontSize={13} fill={MUTED} data-src="nec-110-14c">
+            terminals
+          </text>
+        </>
+      )}
+      {ticks.map((t) => (
+        <g key={t}>
+          <line x1={x(t)} x2={x(t)} y1={top - 4} y2={bodyBottom - rowH + barH + 10} stroke={GRID} strokeWidth={1} />
+          <text x={x(t)} y={bodyBottom + (narrow ? 6 : 10)} textAnchor="middle" fontSize={13} fill={MUTED}>
+            <Val v={t} unit="A" src={EV_RULE} svg />
+          </text>
+        </g>
+      ))}
+      {rows.map((r: EvRow, k) => {
+        const barY = top + k * rowH + 4;
+        const cy = barY + barH / 2;
+        const discY = narrow ? cy - 1 : cy;
+        const discs = [
+          { key: 'nm', size: r.nm.size, cx: colNm, src: 'nec-cable-rules' },
+          { key: 'c75', size: r.c75.size, cx: col75, src: 'nec-110-14c' },
+        ];
+        return (
+          <g key={r.outputA} className="viz-mark">
+            <text x={left - 10} y={cy + (narrow ? -1 : 0)} textAnchor="end" fontSize={narrow ? 14 : 15} fontWeight={700} fill={INK}>
+              <Val v={r.outputA} unit="A" src={EV_MFR} svg />
+            </text>
+            <text x={left - 10} y={cy + (narrow ? 15 : 17)} textAnchor="end" fontSize={13} fill={MUTED}>
+              <Val v={r.kw} unit="kW" src={EV_MFR} svg />
+            </text>
+            <path d={barPath(left, barY, x(r.breakerA) - left, barH)} fill="#fbf4ee" stroke={COPPER} strokeWidth={1.5} />
+            <path d={barPath(left, barY, x(r.outputA) - left, barH)} fill={COPPER} className="viz-grow" />
+            <text x={x(r.breakerA) + 8} y={cy + 4.5} fontSize={13} fontWeight={700} fill={INK} className="viz-pop">
+              <Val v={r.breakerA} unit="A" src={EV_RULE} svg />
+            </text>
+            {discs.map((d) => {
+              const rr = discR(d.size, pxPerIn);
+              return (
+                <g key={d.key}>
+                  <g className="viz-pop">
+                    <circle cx={d.cx} cy={discY} r={rr} fill={`url(#${id}-cu)`} stroke="#6b3112" strokeWidth={0.8} />
+                    {2 * rr > 14 && <circle cx={d.cx} cy={discY} r={rr - 2.2} fill="none" stroke="#ffe2c4" strokeOpacity={0.55} strokeWidth={1} />}
+                  </g>
+                  {narrow ? (
+                    <text x={d.cx} y={discY + 30} textAnchor="middle" fontSize={13} fontWeight={600} fill={INK} data-src={d.src}>
+                      <tspan data-size={d.size}>{formatSize(d.size).replace(' AWG', '')}</tspan>
+                    </text>
+                  ) : (
+                    <text x={d.cx + 22} y={discY + 4.5} fontSize={14} fontWeight={600} fill={INK} data-src={d.src}>
+                      <Size s={d.size} svg />
+                    </text>
+                  )}
+                </g>
+              );
+            })}
+          </g>
+        );
+      })}
+      {narrow && (
+        <text x={(colNm + col75) / 2} y={bodyBottom + 6} textAnchor="middle" fontSize={13} fill={MUTED}>
+          AWG
+        </text>
+      )}
+    </svg>
+  );
+}
+
+/**
+ * The EV guide's answer as a picture: each charger output (filled) inside its breaker (outlined, 125 % of the output),
+ * and the copper it takes in NM cable (60 °C column) and with 75 °C terminations, the cross sections to one scale.
+ */
+export function EvCircuitChart() {
+  return (
+    <div>
+      <EvCircuitPlot narrow={false} />
+      <EvCircuitPlot narrow />
+    </div>
+  );
+}
+
+function EvDropPlot({ narrow }: { narrow: boolean }) {
+  const rows = EV_ROWS;
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 50 : 72;
+  const right = narrow ? 18 : 30;
+  const top = narrow ? 74 : 52;
+  const rowH = narrow ? 46 : 44;
+  const pw = W - left - right;
+  const x = (ft: number) => left + (ft / EV_DROP_MAX_FT) * pw;
+  const ticks = [0, 100, 200, EV_DROP_MAX_FT];
+  const bodyBottom = top + rows.length * rowH;
+  const H = bodyBottom + 46;
+  const id = narrow ? 'ev-drop-narrow' : 'ev-drop-wide';
+  const words = rows
+    .map((r) =>
+      r.nm.size === r.c75.size
+        ? `${r.outputA} A on ${formatSize(r.c75.size)}: ${Math.round(r.noteFt.c75)} ft`
+        : `${r.outputA} A on ${formatSize(r.c75.size)}: ${Math.round(r.noteFt.c75)} ft, on ${formatSize(r.nm.size)}: ${Math.round(r.noteFt.nm)} ft`,
+    )
+    .join('; ');
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={EV_VD}
+    >
+      <title id={`${id}-title`}>{`One-way length at which each charger's full output drops 3 % at 240 V, copper at 75 °C: ${words}`}</title>
+      <g>
+        <circle cx={7} cy={13} r={5.5} fill="#ffffff" stroke={COPPER} strokeWidth={2.5} />
+        <text x={19} y={18} fontSize={14} fill={INK}>
+          NM cable size
+        </text>
+        <circle cx={narrow ? 7 : 150} cy={narrow ? 35 : 13} r={6} fill={COPPER} />
+        <text x={narrow ? 19 : 162} y={narrow ? 40 : 18} fontSize={14} fill={INK}>
+          <Val v={EV_HIGH} unit="°C" src="nec-110-14c" svg /> size
+        </text>
+      </g>
+      {ticks.map((t) => (
+        <g key={t}>
+          <line x1={x(t)} x2={x(t)} y1={top - 8} y2={bodyBottom - 10} stroke={GRID} strokeWidth={1} />
+          <text x={x(t)} y={bodyBottom + 8} textAnchor={t === EV_DROP_MAX_FT ? 'end' : t === 0 ? 'start' : 'middle'} fontSize={13} fill={MUTED}>
+            <Num v={t} src={EV_VD} svg />
+          </text>
+        </g>
+      ))}
+      <text x={left + pw / 2} y={H - 6} textAnchor="middle" fontSize={13} fill={MUTED}>
+        One-way length, ft
+      </text>
+      {rows.map((r, k) => {
+        const cy = top + k * rowH + rowH / 2 + 4;
+        const same = r.nm.size === r.c75.size;
+        const xa = x(r.noteFt.c75);
+        const xb = x(r.noteFt.nm);
+        return (
+          <g key={r.outputA} className="viz-mark">
+            <text x={left - 12} y={cy + 4.5} textAnchor="end" fontSize={14} fontWeight={700} fill={INK}>
+              <Val v={r.outputA} unit="A" src={EV_MFR} svg />
+            </text>
+            <line x1={left} x2={W - right} y1={cy} y2={cy} stroke={GRID} strokeWidth={1} />
+            {!same && <line x1={xa} x2={xb} y1={cy} y2={cy} stroke={CONNECT} strokeWidth={3} />}
+            {!same && <circle cx={xb} cy={cy} r={5.5} fill="#ffffff" stroke={COPPER} strokeWidth={2.5} className="viz-pop" />}
+            <circle cx={xa} cy={cy} r={6} fill={COPPER} stroke="#ffffff" strokeWidth={2} className="viz-pop" />
+            {same && <circle cx={xa} cy={cy} r={9} fill="none" stroke={COPPER} strokeWidth={1.5} className="viz-pop" />}
+            <text x={xa} y={cy - 12} textAnchor="middle" fontSize={13} fill={INK} stroke="#ffffff" strokeWidth={4} paintOrder="stroke">
+              <Size s={r.c75.size} svg />
+            </text>
+            {!same && (
+              <text x={xb} y={cy - 12} textAnchor="middle" fontSize={13} fill={INK} stroke="#ffffff" strokeWidth={4} paintOrder="stroke">
+                <Size s={r.nm.size} svg />
+              </text>
+            )}
+            {!narrow && (
+              <text x={Math.max(xa, xb) + 14} y={cy + 4.5} fontSize={13} fill={INK} className="viz-tip">
+                <Val v={r.noteFt.c75} unit="ft" src={EV_VD} format={{ sig: 3 }} svg />
+                {!same && (
+                  <>
+                    {', '}
+                    <Val v={r.noteFt.nm} unit="ft" src={EV_VD} format={{ sig: 3 }} svg />
+                  </>
+                )}
+              </text>
+            )}
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/** How far each charger circuit runs at full output before the drop reaches 3 % (the 215.2(A) note's figure). */
+export function EvDropChart() {
+  return (
+    <div>
+      <EvDropPlot narrow={false} />
+      <EvDropPlot narrow />
     </div>
   );
 }

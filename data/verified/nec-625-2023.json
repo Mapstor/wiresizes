@@ -1,0 +1,81 @@
+{
+ "id": "nec-625-2023",
+ "title": "Electric vehicle power transfer systems, NEC Article 625 (2023): branch circuit, overcurrent protection, rating, disconnect, connection methods and GFCI",
+ "status": "verified (per rule; see each rule)",
+ "retrieved": "2026-11-17",
+ "source": {
+  "publisher": "NFPA",
+  "document": "NEC CMP-12 Public Input report, 2026 cycle (A2025): 2023 base text inside Public Inputs 652, 744, 1026, 1120, 1366, 1368, 1369, 1372, 1440, 1755, 1757 and 1788; First Draft First Revisions 8269 and 8378",
+  "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P12_PISubmittals.pdf#page=153",
+  "first_draft_url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P12_FD_PrelimFR.pdf#page=87",
+  "attribution": "Source: NFPA 70 (NEC) 2023, Article 625, as reprinted in NFPA's 2026-cycle public inputs — retrieved Nov 2026",
+  "evidence": [
+   "research/sources/round8/WSZ-031-ev-sources.md",
+   "research/sources/round4/R4-4-motors-hvac-welders-ev.md"
+  ],
+  "tias": "TIAs 23-1 to 23-20 on NFPA 70-2023 touch no Article 625 section (research/sources/round4/R4-7-tias-nist-makers.md §2.1)"
+ },
+ "rules": [
+  {
+   "ref": "625.40",
+   "edition": "2023",
+   "status": "VERIFIED-2023 (PI 1366 p. 153 and PI 1755 p. 154, two submitters; agrees with the Leviton 2023 reprint and SR-7714)",
+   "rule_summary": "Each outlet installed to supply EVSE greater than 16 A or 120 V is supplied by an individual branch circuit. Exception: branch circuits may feed multiple EVSEs as permitted by 625.42(A) or (B).",
+   "values": {
+    "individual_circuit_above_a": 16,
+    "individual_circuit_above_v": 120
+   }
+  },
+  {
+   "ref": "625.41",
+   "edition": "2023",
+   "status": "VERIFIED-2023 (PI 1026 p. 155 and PI 744 p. 164, unmarked base text; First Revision 8269, First Draft p. 87, strikes the same text)",
+   "rule_summary": "Overcurrent protection for feeders and branch circuits supplying EVSE and WPTE, including bidirectional EVSE and WPTE, is sized for continuous duty, with a rating of not less than 125 percent of the maximum load of the equipment; with noncontinuous loads on the same feeder, not less than the noncontinuous loads plus 125 percent of the continuous loads.",
+   "values": {
+    "ocpd_pct_of_max_load": 125
+   }
+  },
+  {
+   "ref": "625.42",
+   "edition": "2023",
+   "status": "VERIFIED-2023 (PI 1368 p. 165 and PI 1757 p. 167, two submitters; the continuous-load sentence also in the Leviton 2023 reprint)",
+   "rule_summary": "The EVSE has sufficient rating for the load served. Electric vehicle charging loads are continuous loads for the purposes of Article 625. Service and feeder are sized by the product ratings unless controls limit the overall rating under 625.42(A) (energy management system per 750.30: the maximum load the EMS permits) or 625.42(B) (EVSE with restricted access to an ampere adjusting means per 750.30(C): the adjusted rating on the rating label, and an ampere rating equal to the adjusted setting).",
+   "values": {
+    "charging_load_is_continuous": true,
+    "adjustable_rating_equals_setting": true
+   }
+  },
+  {
+   "ref": "625.43",
+   "edition": "2023",
+   "status": "VERIFIED-2023 (PI 1120 p. 182 and PI 1369 p. 183, two submitters; agrees with the Leviton 2023 reprint)",
+   "rule_summary": "For EVSE and WPTE rated more than 60 A or more than 150 V to ground, a disconnecting means is provided in a readily accessible location, lockable open per 110.25; a plaque on the equipment gives its location when it is remote.",
+   "values": {
+    "disconnect_above_a": 60,
+    "disconnect_above_v_to_ground": 150
+   }
+  },
+  {
+   "ref": "625.44",
+   "edition": "2023",
+   "status": "VERIFIED-2023 (PI 652 p. 199, the whole 2023 section struck; PI 1788 p. 197, the same lists struck)",
+   "rule_summary": "EVSE and WPTE connect by one of 625.44(A) to (C). (A) Portable equipment: nonlocking grounding receptacles at 125 V or 250 V single phase, 15 or 20 A; 250 V single phase, 30 or 50 A (2-pole 3-wire or 3-pole 4-wire), or 125/250 V single phase, 30, 50 or 60 A; 60 V dc, 15 or 20 A. (B) Fastened-in-place equipment: nonlocking grounding receptacles, 2-pole 3-wire 125 V or 250 V single phase up to 50 A; 3-pole 4-wire 250 V three phase up to 50 A; 3-pole 4-wire 125/250 V single phase, 30, 50 or 60 A; 2-pole 3-wire 60 V dc, 15 or 20 A. (C) All other EVSE and WPTE: permanently wired and fixed in place.",
+   "values": {
+    "portable_125_250v_1ph_a": [30, 50, 60],
+    "fastened_125_250v_1ph_3pole_4wire_a": [30, 50, 60],
+    "fastened_2pole_3wire_1ph_max_a": 50,
+    "fixed_in_place": "permanently wired"
+   }
+  },
+  {
+   "ref": "625.54",
+   "edition": "2023",
+   "status": "VERIFIED-2023 (PI 1372 p. 219 and PI 1440 p. 220, two submitters, both filed in July 2023 against the issued edition; First Revision 8378, First Draft p. 99, same base text). Closes the D-09 hold.",
+   "rule_summary": "All receptacles installed for the connection of electric vehicle charging have ground-fault circuit-interrupter protection for personnel. The 2023 rule covers receptacles only: First Revision 8378 adds 'and outlets' for the 2026 edition, which its committee statement says extends GFCI protection to hardwired EVSE. The issued 2023 text has no trailing 'in accordance with 210.8' (the SR-7731 Second Draft wording).",
+   "values": {
+    "gfci_required_for": "receptacles",
+    "covers_hardwired_2023": false
+   }
+  }
+ ]
+}

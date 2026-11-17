@@ -38,6 +38,9 @@ import { DWELLING_VOLTS } from '@/lib/calculations/load-calc-2023';
 import { RANGE_CIRCUITS, RANGE_VOLTS } from '@/lib/calculations/range-circuit';
 import { FRIGIDAIRE_RANGE, GE_DBLR333EE, GE_DRYER, WHIRLPOOL_DRYER, WHIRLPOOL_RANGE } from '@/lib/verified/mfr-equipment';
 import { DRYER_CIRCUITS } from '@/lib/calculations/dryer-circuit';
+import { DISCONNECT_ABOVE, EV_OCPD_PERCENT, INDIVIDUAL_CIRCUIT } from '@/lib/verified/nec-625';
+import { CHARGEPOINT, EMPORIA, TESLA } from '@/lib/verified/mfr-evse';
+import { OUTDOOR_GFCI } from '@/lib/verified/nec-210-8-f';
 import { NEMA_CONFIGS } from '@/lib/verified/nema-receptacle-configs';
 import { AMPACITY_COLUMNS, TABLE_310_16_ROWS, TABLE_310_16_SIZES, TABLE_AMBIENT } from '@/lib/verified/nec-310-16';
 import { attribution, attributionParts, coverage, nextCheck } from '@/lib/verified/registry';
@@ -1172,6 +1175,49 @@ export default function MethodologyPage() {
           </Limits>
         </SourceSection>
 
+        <SourceSection domain="nec-625-ev">
+          <p>
+            Article 625 of the NEC (2023) covers the circuit of an electric vehicle charger. Its sections 625.40 to 625.44
+            and 625.54 are read from NFPA&apos;s public inputs and First Revisions for the 2026 edition, which reprint the
+            2023 text with the proposed changes marked; each section is in two inputs from different submitters, filed in
+            2023 against the issued edition.
+          </p>
+          <SourceFacts s={section('nec-625-ev')} />
+          <p>
+            A charger above <Val v={INDIVIDUAL_CIRCUIT.aboveA} unit="A" src="nec-625-ev" /> or{' '}
+            <Val v={INDIVIDUAL_CIRCUIT.aboveV} unit="V" src="nec-625-ev" /> gets its own branch circuit (625.40). Charging is a
+            continuous load (625.42), and the breaker is at least <Val v={EV_OCPD_PERCENT} unit="%" src="nec-625-ev" /> of the
+            charger&apos;s maximum load (625.41). A charger rated above <Val v={DISCONNECT_ABOVE.a} unit="A" src="nec-625-ev" />{' '}
+            or <Val v={DISCONNECT_ABOVE.voltsToGround} unit="V" src="nec-625-ev" /> to ground needs a lockable disconnect
+            (625.43). Section 625.44 lists the receptacles a charger may plug into, and 625.54 requires GFCI protection for
+            every receptacle installed for EV charging.
+          </p>
+          <Limits>
+            <li>The 2023 text only. Charging stations with several chargers, bidirectional charging and wireless charging are not covered.</li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="mfr-evse">
+          <p>
+            The installation instructions of three Level 2 chargers: {TESLA.maker}&apos;s Wall Connector, {CHARGEPOINT.maker}
+            &apos;s {CHARGEPOINT.model} and {EMPORIA.maker}&apos;s {EMPORIA.model}. Each gives the breaker for each output
+            setting, the largest wire its terminals take and whether it may plug into a receptacle; Tesla also gives the
+            least wire size at full power for a breaker rated 60 °C and one rated 75 °C.
+          </p>
+          <SourceFacts s={section('mfr-evse')} href={TESLA.url} />
+          <Limits>
+            <li>Each value belongs to that maker&apos;s chargers and documents; none is used as a rule for others.</li>
+          </Limits>
+        </SourceSection>
+
+        <SourceSection domain="irs-30c-credit">
+          <p>
+            The IRS page on the alternative fuel vehicle refueling property credit, which gives the dates of the credit for
+            a charger at a home.
+          </p>
+          <SourceFacts s={section('irs-30c-credit')} />
+        </SourceSection>
+
         <SourceSection domain="nec-220-load-calcs">
           <p>
             Article 220 of the NEC (2023) sets the load calculation for a dwelling: the standard method&apos;s unit loads
@@ -1233,7 +1279,10 @@ export default function MethodologyPage() {
             branch circuit or outlet that supplies an electric range, a wall-mounted oven, a counter-mounted cooking unit or
             a clothes dryer. The horsepower to amps calculator cites 430.6(A): the full-load current tables, not the
             nameplate current, for a motor&apos;s conductor ampacity, switch ratings and short-circuit and ground-fault
-            protection, and the nameplate current for its separate overload protection.
+            protection, and the nameplate current for its separate overload protection. The EV charger guide cites
+            210.8(F), as amended by Tentative Interim Amendment 23-3: GFCI protection for outdoor outlets at a dwelling on
+            single-phase branch circuits rated <Val v={OUTDOOR_GFCI.maxVoltsToGround} unit="V" src="nec-2023-rule-excerpts" /> or
+            less to ground and <Val v={OUTDOOR_GFCI.maxA} unit="A" src="nec-2023-rule-excerpts" /> or less.
           </p>
           <SourceFacts s={section('nec-2023-rule-excerpts')} />
           <Limits>

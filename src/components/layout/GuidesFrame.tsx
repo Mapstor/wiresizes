@@ -30,6 +30,7 @@ const LOOK_GUIDES = new Set([
   '/guides/electrical-power-calculations',
   '/guides/wire-size-for-200-amp',
   '/guides/wire-size-for-100-amp',
+  '/guides/wire-size-for-ev-charger',
 ]);
 
 const STYLES = {
