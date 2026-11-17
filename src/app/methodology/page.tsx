@@ -1817,7 +1817,6 @@ export default function MethodologyPage() {
             <li>Air conditioner and heat pump circuits.</li>
             <li>Pool pump, spa and hot tub circuits.</li>
             <li>Welder circuits.</li>
-            <li>RV site and RV park loads.</li>
             <li>Submersible well pump cable lengths from the pump maker&apos;s current tables.</li>
           </ul>
         </section>
