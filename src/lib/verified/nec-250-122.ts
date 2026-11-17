@@ -18,6 +18,13 @@ export const TABLE_250_122_ROWS: EgcRow[] = table.rows.map((row) => ({
   alCca: row.al_cca,
 }));
 
+/** 250.122(A) (2023, WSZ-036): the equipment grounding conductor is not required to be larger than the circuit conductors. */
+export const EGC_CAP_250_122_A: string = (() => {
+  const r = (table as { rule_250_122_a?: { status: string; rule: string } }).rule_250_122_a;
+  if (!r || !r.status.startsWith('VERIFIED-2023')) throw new Error('nec-250-122.json: 250.122(A) is not VERIFIED-2023');
+  return r.rule;
+})();
+
 /** The first row whose rating the device does not exceed, or null above 6000 A (and for 0 A or less). */
 export function egcRow(ocpdA: number): EgcRow | null {
   if (!(ocpdA > 0)) return null;

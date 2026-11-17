@@ -115,6 +115,12 @@ export const ROUTES: readonly SiteRoute[] = [
     line: "Copper wire for a hot tub from the breaker its manual asks for, with the ground wire and the voltage drop over the run, and the makers' GFCI and disconnect requirements.",
   },
   {
+    path: '/calculators/air-conditioner-calculator',
+    group: 'wire-sizing',
+    name: 'Air Conditioner Wire Size Calculator',
+    line: 'Copper wire, ground wire and breaker for an air conditioner from the MCA and MOCP on its nameplate, with the voltage drop over the run.',
+  },
+  {
     path: '/calculators/box-fill-calculator',
     group: 'wire-sizing',
     name: 'Box Fill Calculator',

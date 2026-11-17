@@ -68,7 +68,7 @@
    "doc": "Catalog No. 26SCA5-02PD",
    "rev": "06/25",
    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/08/26SCA5-02PD.pdf",
-   "status": "MCA VERIFIED (mfr); MOCP CONFLICTING"
+   "status": "VERIFIED (mfr) 2026-11-17: MCA and MOCP as 26SCA5-02PD prints them; the coastal 26SCA5C-01PD, a separate model, prints the higher MOCP in mocp_conflict"
   },
   {
    "brand": "Carrier",
@@ -85,7 +85,7 @@
    "doc": "Catalog No. 26SCA5-02PD",
    "rev": "06/25",
    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/08/26SCA5-02PD.pdf",
-   "status": "MCA VERIFIED (mfr); MOCP CONFLICTING"
+   "status": "VERIFIED (mfr) 2026-11-17: MCA and MOCP as 26SCA5-02PD prints them; the coastal 26SCA5C-01PD, a separate model, prints the higher MOCP in mocp_conflict"
   },
   {
    "brand": "Carrier",
@@ -354,6 +354,48 @@
    "status": "VERIFIED (mfr)"
   }
  ],
+ "ac_unit_notes": {
+  "status": "VERIFIED (mfr) 2026-11-17: both documents downloaded and read with pdftotext; every MCA and MOCP row above matches",
+  "documents": [
+   {
+    "brand": "Carrier",
+    "doc": "Catalog No. 26SCA5-02PD",
+    "rev": "Edition Date 06/25",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/08/26SCA5-02PD.pdf",
+    "pdf_page": 9,
+    "sha256_16": "4d7d1fbd35a3e9b5",
+    "copper": "Copper wire must be used from service disconnect to unit.",
+    "protective_device": "MAX FUSE or CKT BRK AMPS, the fuse a time-delay fuse"
+   },
+   {
+    "brand": "Amana",
+    "doc": "SS-ALXS3N-R32",
+    "rev": "04/25",
+    "url": "https://apps.goodmanmfg.com/brochures/files/68ee7585b25f3SS-ALXS3N-R32.pdf",
+    "pdf_page": 3,
+    "copper_pdf_pages": [
+     20,
+     21
+    ],
+    "sha256_16": "7bfaf03a42e45e97",
+    "copper": "USE COPPER CONDUCTORS ONLY.",
+    "protective_device": "Must use time-delay fuses or HACR-type circuit breakers of the same size as noted.",
+    "wire_size": "Wire size should be determined in accordance with National Electrical Codes; extensive wire runs will require larger wire sizes",
+    "nameplate": "Always check the S&R plate for electrical data on the unit being installed."
+   }
+  ],
+  "coastal_sibling": {
+   "doc": "Catalog No. 26SCA5C-01PD",
+   "rev": "Edition Date 08/24",
+   "url": "https://www.shareddocs.com/hvac/docs/1009/Public/02/26SCA5C-01PD.pdf",
+   "pdf_page": 9,
+   "sha256_16": "adabe9158ee481fc",
+   "mocp_42_48": [
+    40,
+    50
+   ]
+  }
+ },
  "dryers": [
   {
    "brand": "Whirlpool",

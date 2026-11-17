@@ -13,7 +13,7 @@
  "notes": [
   "Size by the rating of the overcurrent device ahead of the circuit, \"not exceeding\".",
   "250.122(B) (2023): wire-type EGCs grow in proportion to the increase in circular mil area of the ungrounded conductors when those are increased for any reason other than as required in 310.15(B) or 310.15(C). The 2026 draft relabels it 250.122(D).",
-  "250.122(A) cap ('not required to be larger than the circuit conductors'): seen only in the 2026 Second Draft (SR-8360, single pull, VERIFIED-draft), whose statement implies the sentence was already in the 2023 base text; the 2023 wording has not been seen. Don't render it and don't apply it until it is verified. Until then the tools show the Table 250.122 EGC uncapped: only 25 A aluminum gets an EGC (8 AWG) larger than its conductor (10 AWG)."
+  "250.122(A) cap ('not required to be larger than the circuit conductors'): VERIFIED-2023 since WSZ-036 (rule_250_122_a: public inputs 2573 and 3150 of the 2026 cycle print the 2023 sentence unmarked). Applied by the air conditioner calculator; the other engines still flag a larger ground wire without capping it."
  ],
  "rows": [
   {
@@ -128,5 +128,24 @@
   "condition_3": "met: the same main sentence is the base text of the 2026 Second Draft (SR-8360, relettered (D)), so it reached the 2023 edition. The 2022 Technical Meeting / Standards Council record itself was not seen (IAEI NFPA Code Talk, 31 Aug 2022, gives totals only).",
   "evidence": "research/sources/round4/R4-2-ocpd-grounding.md §3.3",
   "exception_status": "CONFLICTING: the exception and informational note differ between SR-8071 (long exception plus GEMI note) and the 2026 SD's short exception (SR-8360); a 2022 CAM or Standards Council amendment is one possible cause, a 2026 First Revision the other; neither record seen. Never render them."
+ },
+ "rule_250_122_a": {
+  "status": "VERIFIED-2023 (two public inputs filed against NFPA 70-2023 print the sentence unmarked; WSZ-036)",
+  "rule": "The equipment grounding conductor shall not be required to be larger than the circuit conductors supplying the equipment.",
+  "sources": [
+   {
+    "doc": "CMP-5 public inputs, 2026 cycle (A2025)",
+    "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P05_PISubmittals.pdf#page=433",
+    "pdf_page": 433,
+    "input": "Public Input 2573"
+   },
+   {
+    "doc": "CMP-5 public inputs, 2026 cycle (A2025)",
+    "url": "https://docinfofiles.nfpa.org/files/AboutTheCodes/70/70_A2025_NEC_P05_PISubmittals.pdf#page=435",
+    "pdf_page": 435,
+    "input": "Public Input 3150"
+   }
+  ],
+  "retrieved": "2026-11-17"
  }
 }

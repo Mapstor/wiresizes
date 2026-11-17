@@ -29,7 +29,7 @@ describe('METHODOLOGY_SECTIONS', () => {
     for (const off of ['doe-efficiency-standards']) assert.ok(!domains.has(off), off);
   });
 
-  it('has nec-110-14c since the 200 A guide (WSZ-008c), the ampacity calculator (WSZ-009a), the wire size calculator (WSZ-009b), the circuit breaker calculator (WSZ-009c), the range (WSZ-010b) and dryer (WSZ-010c) calculators the 100 A guide (WSZ-008d), the EV charger guide (WSZ-008e), the garage subpanel calculator (WSZ-008f), the RV hookup calculator (WSZ-011b) and the hot tub calculator (WSZ-011d) use it', () => {
+  it('has nec-110-14c since the 200 A guide (WSZ-008c), the ampacity calculator (WSZ-009a), the wire size calculator (WSZ-009b), the circuit breaker calculator (WSZ-009c), the range (WSZ-010b) and dryer (WSZ-010c) calculators the 100 A guide (WSZ-008d), the EV charger guide (WSZ-008e), the garage subpanel calculator (WSZ-008f), the RV hookup calculator (WSZ-011b), the hot tub calculator (WSZ-011d) and the air conditioner calculator (WSZ-011e) use it', () => {
     const s = METHODOLOGY_SECTIONS.find((x) => x.domain === 'nec-110-14c');
     assert.deepEqual(s?.citedOn, [
       '/calculators/wire-size-calculator',
@@ -43,6 +43,7 @@ describe('METHODOLOGY_SECTIONS', () => {
       '/calculators/garage-subpanel-calculator',
       '/calculators/rv-hookup-calculator',
       '/calculators/hot-tub-calculator',
+      '/calculators/air-conditioner-calculator',
     ]);
   });
 

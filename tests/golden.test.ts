@@ -36,6 +36,7 @@ import * as boxFillEngine from '../src/lib/calculations/box-fill';
 import * as rvHookup from '../src/lib/calculations/rv-hookup';
 import * as wellPumpEngine from '../src/lib/calculations/well-pump';
 import * as hotTubEngine from '../src/lib/calculations/hot-tub';
+import * as acCircuitEngine from '../src/lib/calculations/ac-circuit';
 import * as motorFlc from '../src/lib/calculations/motor-flc';
 import * as ohmsLaw from '../src/lib/calculations/ohms-law';
 import * as power from '../src/lib/calculations/power';
@@ -667,6 +668,7 @@ describe('engines', () => {
     'rv-hookup': rvHookup,
     'well-pump': wellPumpEngine,
     'hot-tub': hotTubEngine,
+    'ac-circuit': acCircuitEngine,
     'service-lookup': serviceLookup,
     'voltage-drop': voltageDrop,
   };

@@ -33,6 +33,7 @@ const footerLinks = {
     { name: 'RV Hookup Calculator', href: '/calculators/rv-hookup-calculator' },
     { name: 'Well Pump Calculator', href: '/calculators/well-pump-calculator' },
     { name: 'Hot Tub Calculator', href: '/calculators/hot-tub-calculator' },
+    { name: 'Air Conditioner Calculator', href: '/calculators/air-conditioner-calculator' },
     { name: 'Residential Load Calculator', href: '/calculators/residential-load-calculator' },
     { name: 'Range Calculator', href: '/calculators/range-calculator' },
     { name: 'Dryer Calculator', href: '/calculators/dryer-calculator' },

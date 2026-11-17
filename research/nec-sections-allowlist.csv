@@ -116,3 +116,10 @@ Article 625,article,2023,Electric vehicle power transfer systems,nec-625-ev,veri
 551.73(B),section,2023,The demand factor for a number of sites applies to all of them,nec-551-rv-demand,verified,
 Article 551,article,2023,"Part VI, Recreational Vehicle Parks (551.71, 551.73)",nec-551-rv-demand,verified,"Location only; Part VI's title as public input 2560 states it (P07 public inputs, p. 175, WSZ-033)"
 Article 680,article,2023,Part IV: spas and hot tubs (680.40),nec-680-pools-spas,verified,"Location only; 680.40 (2023) as public input 1286 reprints it (P17 public inputs, p. 411, WSZ-035)"
+440.4(B),section,2023,Nameplate of multimotor and combination-load equipment: minimum supply circuit conductor ampacity and maximum protective device rating,nec-440-hvac,verified,Public input 487 (WSZ-036)
+440.14,section,2023,Air-conditioning disconnecting means within sight from and readily accessible from the equipment,nec-440-hvac,verified,Public input 1635 (WSZ-036)
+240.4(G),section,2023,Overcurrent protection for specific conductor applications (Table 240.4(G)),nec-440-hvac,verified,Also renders as 'Table 240.4(G)'; public input 706 (WSZ-036)
+250.122(A),section,2023,EGC not smaller than Table 250.122 and not required to be larger than the circuit conductors,nec-250-grounding,verified,Public inputs 2573 and 3150 (WSZ-036)
+Article 440,article,2023,Air-conditioning and refrigerating equipment,nec-440-hvac,verified,Location only; 440.4(B) and 440.14 as public inputs 487 and 1635 reprint them (WSZ-036)
+440.22(A),section,2023,"Motor-compressor branch-circuit short-circuit and ground-fault protective device: up to 175 % of RLA or BCSC, 225 % where needed to start",nec-440-hvac,verified,"2023-cycle Second Draft SR-7605 (main rule) and Eaton's 2023 reprint, with NFPA's permission (175, 225 and 15 A)"
+110.26(A),section,2023,Working space (as 440.14 names it),nec-440-hvac,verified,"Location only; named by 440.14 (public input 1635, WSZ-036); its own values are not used"
