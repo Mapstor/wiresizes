@@ -118,5 +118,9 @@
   {
     "date": "2026-11-17",
     "text": "Brought back the garage subpanel calculator, offline since the November 2 audit because it estimated the garage's load with invented demand factors credited to NEC sections that say something else and showed copper ground wire sizes on aluminum results. It now sizes the feeder for the breaker you choose from NEC Table 310.16 at the terminal temperature, gives the ground wire from Table 250.122 in the chosen metal, the four wires of 250.32, the garage disconnect of 225.39 and the minimum cover of Table 300.5(A); it no longer estimates the load."
+  },
+  {
+    "date": "2026-11-17",
+    "text": "Brought back the box fill calculator, offline since the November 2 audit because some of its box volumes and conductor-counting rules did not match the NEC. It now counts the fill by NEC 314.16 as the 2023 edition words it: each conductor at its Table 314.16(B)(1) volume, two allowances per device yoke, one for up to four ground wires and a quarter for each more, one for internal clamps and one per type of support fitting, against the volume of a Table 314.16(A) metal box or the volume marked on the box."
   }
 ]

@@ -32,6 +32,7 @@ import * as loadCalc from '../src/lib/calculations/load-calc-2023';
 import * as rangeCircuit from '../src/lib/calculations/range-circuit';
 import * as dryerCircuit from '../src/lib/calculations/dryer-circuit';
 import * as garageSubpanel from '../src/lib/calculations/garage-subpanel';
+import * as boxFillEngine from '../src/lib/calculations/box-fill';
 import * as motorFlc from '../src/lib/calculations/motor-flc';
 import * as ohmsLaw from '../src/lib/calculations/ohms-law';
 import * as power from '../src/lib/calculations/power';
@@ -659,6 +660,7 @@ describe('engines', () => {
     'range-circuit': rangeCircuit,
     'dryer-circuit': dryerCircuit,
     'garage-subpanel': garageSubpanel,
+    'box-fill': boxFillEngine,
     'service-lookup': serviceLookup,
     'voltage-drop': voltageDrop,
   };

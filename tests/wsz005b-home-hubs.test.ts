@@ -22,7 +22,7 @@ describe('the route list', () => {
     assert.equal(new Set(PATHS).size, PATHS.length);
     const live = DATED.filter((route) => route.startsWith('/calculators/') || route.startsWith('/guides/')).sort();
     assert.deepEqual([...PATHS].sort(), live);
-    assert.equal(sectionRoutes('calculators').length, 21);
+    assert.equal(sectionRoutes('calculators').length, 22);
     assert.equal(sectionRoutes('guides').length, 9);
   });
 

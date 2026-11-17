@@ -182,7 +182,7 @@ export function ogSourceTexts(source) {
 const UNITS = [
   '[Aa]mps?', '[Vv]olts?', '[Oo]hms?', '[Ff]eet', '[Ff]oot', '[Ii]nch(?:es)?', '[Tt]ons?',
   'kVAR', 'kVA', 'kV', 'kW', 'VA', 'kcmil', 'cmil', 'mm²', 'mm', 'km', 'kg', 'lbs?', 'hp', 'Btu/h', 'BTU/h',
-  '°C', '°F', '%', 'Ω', 'A', 'V', 'W', 'm', 'ft²', 'ft', 'in(?!\\s+\\p{Ll})',
+  '°C', '°F', '%', 'Ω', 'A', 'V', 'W', 'cm³', 'in³', 'm', 'ft²', 'ft', 'in(?!\\s+\\p{Ll})',
 ];
 const NUMBER = String.raw`(?<![\p{L}\p{N}.,/])[-−]?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?`;
 const UNIT_NUMBER_RE = new RegExp(`(${NUMBER})[ \\u00a0]?(${UNITS.join('|')})(?![\\p{L}\\p{N}])`, 'gu');

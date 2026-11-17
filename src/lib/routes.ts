@@ -97,6 +97,12 @@ export const ROUTES: readonly SiteRoute[] = [
     line: 'Copper wire size for a low-voltage DC circuit from the load, the one-way length and your voltage-drop target, checked against the current.',
   },
   {
+    path: '/calculators/box-fill-calculator',
+    group: 'wire-sizing',
+    name: 'Box Fill Calculator',
+    line: 'Whether an electrical box is large enough: the NEC 314.16 fill for its conductors, devices, ground wires and clamps against the volume of a metal box from Table 314.16(A) or the volume marked on the box.',
+  },
+  {
     path: '/calculators/residential-load-calculator',
     group: 'load-calcs',
     name: 'Residential Load Calculator',

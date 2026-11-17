@@ -95,3 +95,15 @@ Article 310,article,2023,Conductors for General Wiring,nec-310-16,verified,"Loca
 250.32,section,2023,"Buildings or structures supplied by a feeder or branch circuit: grounding electrode system (A) and the EGC with the feeder, neutral not bonded (B)(1)",nec-250-32,verified,"Cite (A) or (B)(1) for a specific rule"
 Article 225,article,2023,"Outside branch circuits and feeders (Part II: buildings supplied by a feeder or branch circuit)",nec-feeders-outbuildings,verified,"The whole 2023 article is reprinted in public input 140 (WSZ-029)"
 Article 625,article,2023,Electric vehicle power transfer systems,nec-625-ev,verified,Sections 625.40 to 625.44 and 625.54 only (WSZ-031)
+314.16,section,2023,"Box and conduit body fill: an approved size, and the box volume never less than the fill calculation",nec-314-16-box-fill,verified,First Revision 7726 text (WSZ-032)
+314.16(A),section,2023,"Box volume: the assembled sections and marked rings, domed covers and extensions; Table 314.16(A) metal boxes (24 rows)",nec-314-16-box-fill,verified,Also renders as 'Table 314.16(A)' (Public Input 3972 and First Revision 7727)
+314.16(A)(2),section,2023,"Other boxes: boxes of 100 in.³ or less not in Table 314.16(A), and nonmetallic boxes, marked with their volume",nec-314-16-box-fill,verified,
+314.16(B),section,2023,"Box fill calculation: the volumes of (B)(1) through (B)(6) added together; none for small fittings such as locknuts and bushings",nec-314-16-box-fill,verified,
+314.16(B)(1),section,2023,"Conductor fill: each conductor entering or passing through counts once, a long loop twice, one wholly inside not at all; Table 314.16(B)(1) volume per conductor",nec-314-16-box-fill,verified,Also renders as 'Table 314.16(B)(1)'; 2023 wording unchanged from 2020 (WSZ-032)
+314.16(B)(2),section,2023,"Clamp fill: one allowance for internal cable clamps, on the largest conductor in the box",nec-314-16-box-fill,verified,First Revision 7731 (WSZ-032)
+314.16(B)(3),section,2023,"Support fittings fill: one allowance for each type of luminaire stud or hickey, on the largest conductor in the box",nec-314-16-box-fill,verified,2023 wording unchanged from 2020 (WSZ-032)
+314.16(B)(4),section,2023,"Device or equipment fill: a double allowance per yoke or strap, on the largest conductor connected to it; per gang for wide devices",nec-314-16-box-fill,verified,
+314.16(B)(5),section,2023,"Equipment grounding conductor fill: one allowance for up to four EGCs entering, a quarter allowance for each more",nec-314-16-box-fill,verified,Second Revision 7528 text (D-09)
+314.16(B)(6),section,2023,"Terminal block fill: one allowance per terminal block assembly, on the largest conductor terminated to it",nec-314-16-box-fill,verified,
+314.27(E),section,2023,A weight-supporting ceiling receptacle counts in the box fill as a device (314.16(B)(4)),nec-314-16-box-fill,verified,Second Revision 7535 text (D-09)
+300.14,section,2023,The free conductor length at boxes; named by 314.16(B)(1) for the loop rule,nec-314-16-box-fill,verified,Reference only: the site states no length from 300.14

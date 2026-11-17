@@ -11,7 +11,7 @@ import { attributionParts } from '../src/lib/verified/registry';
 describe('unit symbols', () => {
   it('withUnit takes every unit symbol of the list', () => {
     // 22 since WSZ-006: m and km for the wire resistance calculator's metric lengths
-    assert.equal(UNIT_SYMBOLS.length, 23);
+    assert.equal(UNIT_SYMBOLS.length, 25);
     for (const unit of UNIT_SYMBOLS) assert.equal(withUnit(2, unit), `2 ${unit}`);
   });
 
