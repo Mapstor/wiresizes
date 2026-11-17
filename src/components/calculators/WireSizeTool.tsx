@@ -23,7 +23,6 @@ import { formatValue, indefiniteArticle } from '@/lib/calculations/format';
 import { ambientRowFor, bandFor, warmestTemp } from '@/lib/calculations/ampacity';
 import type { TempUnit } from '@/lib/calculations/ampacity';
 import {
-  EGC_LARGER_THAN_CONDUCTOR_NOTE,
   ENGINE_ID,
   RATING_MAX_A,
   SIZING_ERROR_MESSAGES,
@@ -458,7 +457,6 @@ function Result({
             Even the largest size in Table 310.16 stays above your <Val v={Number(inputs.target)} unit="%" src="input" /> target.
           </p>
         )}
-        {r.egc && r.egcLargerThanConductor && <p className={NOTE}>{EGC_LARGER_THAN_CONDUCTOR_NOTE}</p>}
         {below && (
           <p className={NOTE} data-src={OCPD}>
             NEC 240.4(B) also lets this <Val v={rating} unit="A" src="input" /> breaker or fuse protect <Size s={below.size} /> {METAL[inputs.material]},

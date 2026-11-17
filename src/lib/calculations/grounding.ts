@@ -1,9 +1,10 @@
 // Ground wires (WSZ-008a): the equipment grounding conductor (EGC) from NEC Table 250.122, the first row whose
 // overcurrent device rating is not exceeded (copper column, or the aluminum or copper-clad aluminum column), grown by
 // the 250.122(B) area ratio when the circuit conductors were upsized; and the grounding electrode conductor (GEC) from
-// NEC Table 250.66 by the largest ungrounded service-entrance conductor. The 250.66(A)/(B) limits for rod, pipe, plate
-// and concrete-encased electrodes and the 250.122 cap at the circuit conductor size are not verified, so neither is
-// applied (data/verified/nec-250-66.json and nec-250-122.json notes).
+// NEC Table 250.66 by the largest ungrounded service-entrance conductor. With the circuit wires given (upsized), the
+// table EGC is first held at the minimum size, since 250.122(A) does not require it to be larger than the circuit
+// conductors (verified 2023 in WSZ-036, applied in WSZ-038). The 250.66(A)/(B) limits for rod, pipe, plate and
+// concrete-encased electrodes are not verified and not applied (data/verified/nec-250-66.json notes).
 import { areaCmil } from '../verified/awg';
 import type { Material, SizeKey } from '../verified/awg';
 import { ocpdRatings } from '../verified/nec-240-6-a';
@@ -48,8 +49,11 @@ export interface EgcResult {
   table: { cu: SizeKey; alCca: SizeKey };
   /** The table EGC in the chosen material. */
   tableEgc: SizeKey;
-  /** 250.122(B): the table EGC's area × installed area ÷ minimum area, and the size that reaches it (null: none does). */
-  upsized: (EgcUpsize & { requiredCmil: number; egc: SizeKey | null }) | null;
+  /**
+   * 250.122(B): the base EGC's area × installed area ÷ minimum area, and the size that reaches it, never larger than the
+   * installed size (null: none does). The base is the table EGC, held at the minimum size by 250.122(A) (capped).
+   */
+  upsized: (EgcUpsize & { base: SizeKey; capped: boolean; requiredCmil: number; egc: SizeKey | null }) | null;
   /** The EGC to install: the proportional size when upsized, else the table size; null when no size is large enough. */
   egc: SizeKey | null;
 }
@@ -71,8 +75,11 @@ export function egcFor(ocpdA: number, material: Material, upsize?: EgcUpsize | n
     const { minSize, installedSize } = upsize;
     if (!GROUND_WIRE_SIZES.includes(minSize) || !GROUND_WIRE_SIZES.includes(installedSize)) return { error: 'sizes-invalid' };
     if (!(areaCmil(installedSize) > areaCmil(minSize))) return { error: 'sizes-invalid' };
-    const p = egcProportional(tableEgc, minSize, installedSize);
-    upsized = { minSize, installedSize, requiredCmil: p.requiredCmil, egc: p.egc };
+    const capped = areaCmil(tableEgc) > areaCmil(minSize);
+    const base = capped ? minSize : tableEgc;
+    const p = egcProportional(base, minSize, installedSize);
+    const egc = p.egc !== null && areaCmil(p.egc) > areaCmil(installedSize) ? installedSize : p.egc;
+    upsized = { minSize, installedSize, base, capped, requiredCmil: p.requiredCmil, egc };
   }
   return {
     ocpdA,

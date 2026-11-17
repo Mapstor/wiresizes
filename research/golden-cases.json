@@ -1,5 +1,5 @@
 {
- "generated_from": "data/verified/*.json (pack v3, revised 2026-10-24 after the third review)",
+ "generated_from": "data/verified/*.json (pack v3, revised 2026-10-24 after the third review); the four 25 A aluminum EGC cases recomputed 2026-11-17 (WSZ-038) by the capped rule",
  "count": 218,
  "rules": [
   "Every engine function must reproduce these within tolerance.",
@@ -7,7 +7,7 @@
   "'exact' means string/number equality with the JSON value.",
   "Size keys: groups wire-size-60c, wire-size-errors, wire-size-termination, wire-size-derated, service-lookup, table-*, 240-4-D, ampacity-*, breaker-sizing, voltage-drop, dc-sizing, resistance and parallel use nec-310-16.json keys ('1/0', '4/0', '250'); groups awg-table, awg-geometry and weight use awg.json names ('0', '0000').",
   "Group wire-size-termination: termination is 'unknown', '60' or '75' ('75' means the reader confirmed that every termination is listed and identified for 75 °C conductors); wiring_method is 'cable' (NM, UF or not sure: always 60 °C) or 'conductors' (individual conductors: termination rules apply).",
-  "EGC cap: until the NEC 250.122(A) sentence is verified, the EGC is not capped at the conductor size. Only 25 A aluminum gets a Table 250.122 EGC (8 AWG) larger than its conductor (10 AWG). egc null means no Table 310.16 size reaches the required area. wire-size-60c and wire-size-derated cases carry egc_larger_than_conductor.",
+  "EGC cap (WSZ-038): NEC 250.122(A) is verified for 2023 (WSZ-036, public inputs 2573 and 3150): the EGC is not required to be larger than the circuit conductors, so the engines hold the Table 250.122 EGC at the step-2 conductor and grow it from there by 250.122(B). Only 25 A aluminum has a Table 250.122 EGC (8 AWG) larger than its conductor (10 AWG). egc_larger_than_conductor is now false in every case; wire-size-60c and wire-size-derated cases still carry it.",
   "Group wire-size-derated (WSZ-009): ambient_c_row is a Table 310.15(B)(1)(1) row key, ccc_band a Table 310.15(C)(1) row key or null for 1–3 conductors; termination and wiring_method as in wire-size-termination; start_column_c is 90 for individual conductors and 60 for cable; derated_ampacity is the baseline size's derated ampacity capped at its termination-column ampacity."
  ],
  "cases": [
@@ -4089,7 +4089,7 @@
   },
   {
    "group": "wire-size-60c",
-   "name": "25 A OCPD, 25 A load, 50 ft, 240 V, single-phase, Al (Table 250.122 EGC larger than the conductor)",
+   "name": "25 A OCPD, 25 A load, 50 ft, 240 V, single-phase, Al (Table 250.122 EGC held at the conductor by 250.122(A))",
    "inputs": {
     "ocpd_a": 25,
     "load_a": 25,
@@ -4106,9 +4106,9 @@
     "vd_volts": 5.003,
     "vd_percent": 2.084,
     "meets_target": true,
-    "egc": "8",
+    "egc": "10",
     "egc_upsized": false,
-    "egc_larger_than_conductor": true
+    "egc_larger_than_conductor": false
    },
    "tolerance": {
     "vd_volts": 0.005,
@@ -4119,7 +4119,7 @@
   },
   {
    "group": "wire-size-60c",
-   "name": "25 A OCPD, 25 A load, 400 ft, 120 V, single-phase, Al (oversize table EGC scaled by 250.122(B))",
+   "name": "25 A OCPD, 25 A load, 400 ft, 120 V, single-phase, Al (EGC held at the conductor, then scaled by 250.122(B))",
    "inputs": {
     "ocpd_a": 25,
     "load_a": 25,
@@ -4136,9 +4136,9 @@
     "vd_volts": 3.122,
     "vd_percent": 2.602,
     "meets_target": true,
-    "egc": "250",
+    "egc": "2/0",
     "egc_upsized": true,
-    "egc_larger_than_conductor": true
+    "egc_larger_than_conductor": false
    },
    "tolerance": {
     "vd_volts": 0.005,
@@ -4161,7 +4161,7 @@
     "size": "10",
     "ampacity": 30.0,
     "limited_by_240_4_D": false,
-    "egc": "8"
+    "egc": "10"
    },
    "tolerance": {
     "exact": true
@@ -4170,7 +4170,7 @@
   },
   {
    "group": "wire-size-60c",
-   "name": "25 A OCPD, 25 A load, 1500 ft, 120 V, single-phase, Al, 1 % target (no Table 310.16 size is large enough for the EGC)",
+   "name": "25 A OCPD, 25 A load, 1500 ft, 120 V, single-phase, Al, 1 % target (the held EGC scales to the conductor size)",
    "inputs": {
     "ocpd_a": 25,
     "load_a": 25,
@@ -4187,9 +4187,9 @@
     "vd_volts": 1.039,
     "vd_percent": 0.866,
     "meets_target": true,
-    "egc": null,
+    "egc": "1500",
     "egc_upsized": true,
-    "egc_larger_than_conductor": true
+    "egc_larger_than_conductor": false
    },
    "tolerance": {
     "vd_volts": 0.005,

@@ -119,10 +119,11 @@ describe('WSZ-009c breakerRun', () => {
     }
   });
 
-  it('flags a ground wire larger than the wire, as Table 250.122 lists for 25 A aluminum', () => {
+  it('holds the ground wire at the wire size where Table 250.122 lists a larger one, as for 25 A aluminum (250.122(A), WSZ-038)', () => {
     const r = ok({ continuousA: 0, noncontinuousA: 25, material: 'Al' });
-    assert.deepEqual([r.size, r.egc, r.egcLargerThanConductor], ['10', '8', true]);
-    assert.equal(ok({ continuousA: 16, noncontinuousA: 0, material: 'Cu' }).egcLargerThanConductor, false);
+    assert.deepEqual([r.size, r.egc, r.egcCapped], ['10', '10', true]);
+    assert.ok(r.steps.some((s) => /Table 250\.122 \(aluminum or copper-clad aluminum column\): 8 AWG; 250\.122\(A\) does not require it to be larger than the 10 AWG circuit conductors, so 10 AWG\./.test(s)));
+    assert.equal(ok({ continuousA: 16, noncontinuousA: 0, material: 'Cu' }).egcCapped, false);
   });
 
   it('notes the 240.4(B) size only when it still carries the minimum the load needs (210.19(A))', () => {

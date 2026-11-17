@@ -39,16 +39,17 @@ export function egc(ocpdA: number, material: Material): SizeKey | null {
 }
 
 export interface EgcProportional {
-  /** Table EGC area × installed area ÷ minimum area, in cmil. */
+  /** Starting EGC area × installed area ÷ minimum area, in cmil. */
   requiredCmil: number;
   /** null when no Table 310.16 size reaches the required area. */
   egc: SizeKey | null;
 }
 
 /**
- * 250.122(B) (rule_250_122_b.method) when the ungrounded conductors are larger than the minimum size: the table EGC's
- * area × the installed size's area ÷ the minimum size's area, multiplied before dividing; the smallest Table 310.16
- * size at or above it, never smaller than the table EGC, and not capped at the conductor (D-08).
+ * 250.122(B) (rule_250_122_b.method) when the ungrounded conductors are larger than the minimum size: the starting
+ * EGC's area × the installed size's area ÷ the minimum size's area, multiplied before dividing; the smallest Table
+ * 310.16 size at or above it, never smaller than the starting EGC. Callers pass the Table 250.122 EGC already held at
+ * the minimum size by 250.122(A) (D-08 lifted in WSZ-038) and keep the result at or below the installed size.
  */
 export function egcProportional(egcSize: SizeKey, minSize: SizeKey, installedSize: SizeKey): EgcProportional {
   const requiredCmil = (areaCmil(egcSize) * areaCmil(installedSize)) / areaCmil(minSize);

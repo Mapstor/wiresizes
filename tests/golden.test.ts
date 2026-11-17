@@ -630,13 +630,12 @@ for (const group of GROUPS) {
   });
 }
 
-it('egcLargerThanConductor is true only in the three 25 A aluminum cases', () => {
-  const flagged = CASES.filter((c) => c.group === 'wire-size-60c').filter((c) => {
-    const result = sizeConductorCase(c);
-    return !isSizingError(result) && result.egcLargerThanConductor;
-  });
-  assert.equal(flagged.length, 3);
-  for (const c of flagged) {
+it('250.122(A) holds the EGC at the conductor: egcLargerThanConductor is never true, and only the 25 A aluminum cases are capped (WSZ-038)', () => {
+  const results = CASES.filter((c) => c.group === 'wire-size-60c').map((c) => ({ c, result: sizeConductorCase(c) }));
+  assert.equal(results.filter(({ result }) => !isSizingError(result) && result.egcLargerThanConductor).length, 0);
+  const capped = results.filter(({ result }) => !isSizingError(result) && result.egcCapped);
+  assert.equal(capped.length, 3);
+  for (const { c } of capped) {
     assert.equal(c.inputs.ocpd_a, 25);
     assert.equal(c.inputs.material, 'Al');
   }

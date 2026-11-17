@@ -15,7 +15,6 @@ import { BUTTON_PRIMARY, BUTTON_SECONDARY, FIELD_HINT, Field, Segmented, SelectI
 import { focusResults, useFieldErrors, useUrlState } from '@/lib/hooks/useCalculatorForm';
 import { buildQuery, choiceParam, fieldNumber, numberParam } from '@/lib/calculations/fields';
 import { formatValue, indefiniteArticle } from '@/lib/calculations/format';
-import { EGC_LARGER_THAN_CONDUCTOR_NOTE } from '@/lib/calculations/conductor-sizing';
 import type { Termination, WiringMethod } from '@/lib/calculations/conductor-sizing';
 import { LENGTH_MAX_FT, LENGTH_MIN_FT, VD_TARGET_OPTIONS } from '@/lib/calculations/voltage-drop';
 import { GARAGE_CALC, GARAGE_RATINGS, garageRun, isGarageError } from '@/lib/calculations/garage-subpanel';
@@ -312,7 +311,6 @@ export function GarageSubpanelTool() {
   );
 }
 
-const NOTE = 'max-w-[38rem] text-[17px] leading-[1.65] text-ink';
 const BIG = 'mt-2 font-mono text-[34px] font-medium leading-none tracking-[-0.02em] text-ink sm:text-[46px]';
 const PANEL = 'border-t border-cut-rule pt-4';
 const PANEL_H = 'font-display text-[17px] font-semibold text-ink';
@@ -404,7 +402,6 @@ function Result({
           </p>
         </div>
       </div>
-      {f.egc && f.egcLargerThanConductor && <p className={`mt-5 ${NOTE}`}>{EGC_LARGER_THAN_CONDUCTOR_NOTE}</p>}
       <ol className="mt-6 max-w-[38rem] list-decimal space-y-2 pl-6 text-[17px] leading-[1.65] text-ink" data-src={CALC}>
         {r.stepParts.map((parts, k) => (
           <li key={k}>

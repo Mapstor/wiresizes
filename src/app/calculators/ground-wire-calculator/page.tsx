@@ -87,6 +87,7 @@ const EGC_200 = egc(200, 'Cu');
 const UP_CU = egc(20, 'Cu', '12', '6');
 const UP_AL = egc(60, 'Al', '3', '2');
 if (!UP_CU.upsized || !UP_AL.upsized) throw new Error('ground wire page: the upsized examples lost their 250.122(B) step');
+if (UP_CU.upsized.capped || UP_AL.upsized.capped) throw new Error('ground wire page: an upsized example is now held by 250.122(A)');
 const UPC = UP_CU.upsized;
 const UPA = UP_AL.upsized;
 // golden "service-lookup" cases
@@ -214,6 +215,13 @@ export default function GroundWirePage() {
               wire is <Size s={EGC_30.table.cu} /> copper, the same as a <Val v={EGC_30.rowA} unit="A" src={GND} /> breaker&apos;s; at{' '}
               <Val v={EGC_50.ocpdA} unit="A" src={GND} /> it is <Size s={EGC_50.table.cu} /> copper or <Size s={EGC_50.table.alCca} />{' '}
               aluminum.
+            </p>
+            <p className={P} data-src={GND}>
+              Section 250.122(A) adds that the ground wire does not have to be larger than the circuit wires it runs with. The{' '}
+              <Link href="/calculators/wire-size-calculator" className={LINK}>
+                wire size calculator
+              </Link>{' '}
+              applies both: the table&apos;s size, held at the circuit wire&apos;s size where the table lists a larger one.
             </p>
             <Figure
               caption={

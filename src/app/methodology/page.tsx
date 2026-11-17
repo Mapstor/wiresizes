@@ -8,7 +8,7 @@ import { Byline } from '@/components/content/Byline';
 import { Size } from '@/components/content/Size';
 import { Val } from '@/components/content/Val';
 import { BasicPageSchema } from '@/components/seo/BasicPageSchema';
-import { RATING_MAX_A, RATING_MIN_A, terminationColumn } from '@/lib/calculations/conductor-sizing';
+import { egcCapCases, RATING_MAX_A, RATING_MIN_A, terminationColumn } from '@/lib/calculations/conductor-sizing';
 import { BTU_PER_H_PER_TON, W_PER_BTU_PER_H, W_PER_ELECTRICAL_HP } from '@/lib/calculations/conversions';
 import { voltageColumns } from '@/lib/calculations/motor-flc';
 import { flcTable } from '@/lib/verified/nec-430-440-2023';
@@ -116,6 +116,10 @@ const FIRST_ADJUSTMENT = ADJUSTMENT_ROWS[0];
 const LAST_ADJUSTMENT = ADJUSTMENT_ROWS[ADJUSTMENT_ROWS.length - 1];
 const EGC_FIRST = TABLE_250_122_ROWS[0];
 const EGC_LAST = TABLE_250_122_ROWS[TABLE_250_122_ROWS.length - 1];
+// 250.122(A), WSZ-038: the page names the one rating and material where the table EGC is larger than the conductor
+const EGC_CAP_CASES = egcCapCases();
+if (EGC_CAP_CASES.length !== 1) throw new Error(`methodology: expected one 250.122(A) case, got ${EGC_CAP_CASES.length}`);
+const EGC_CAP_CASE = EGC_CAP_CASES[0];
 const SERVICE_FIRST = TABLE_310_12_ROWS[0];
 const SERVICE_LAST = TABLE_310_12_ROWS[TABLE_310_12_ROWS.length - 1];
 const DC_TEMPS = DC_TEMPERATURE_OPTIONS.map((option) => option.value);
@@ -375,7 +379,8 @@ export default function MethodologyPage() {
               <SectionLink domain="nec-continuous-load">Continuous loads</SectionLink>).
             </li>
             <li>
-              Take the ground wire for the rating from NEC Table 250.122 (see{' '}
+              Take the ground wire for the rating from NEC Table 250.122, held at the conductor&apos;s size where the table
+              lists a larger one, as 250.122(A) allows (see{' '}
               <SectionLink domain="nec-250-grounding">Ground wires</SectionLink>).
             </li>
             <li>
@@ -450,7 +455,7 @@ export default function MethodologyPage() {
               240.4(D).
             </li>
             <li>
-              Take the ground wire for the rating from Table 250.122 (see{' '}
+              Take the ground wire for the rating from Table 250.122, not larger than the wire (250.122(A); see{' '}
               <SectionLink domain="nec-250-grounding">Ground wires</SectionLink>).
             </li>
           </ol>
@@ -582,7 +587,7 @@ export default function MethodologyPage() {
               <a href={`#${method.id}`} className={LINK}>
                 wire size calculator
               </a>{' '}
-              size it, and the ground wire from Table 250.122.
+              size it, and the ground wire from Table 250.122, not larger than that wire (250.122(A)).
             </li>
           </ol>
           <p>
@@ -1286,21 +1291,25 @@ export default function MethodologyPage() {
             <Link href="/calculators/service-entrance-calculator" className={LINK}>
               service entrance calculator
             </Link>{' '}
-            take the grounding electrode conductor from Table 250.66 for the largest service conductor. When the wire
-            size calculator chooses larger conductors for voltage drop, or when you tell the ground wire calculator the
-            circuit wires were upsized, the ground wire grows in proportion, as 250.122(B) requires, rounded up to a
-            Table 310.16 size and never below the table&apos;s ground wire:
+            take the grounding electrode conductor from Table 250.66 for the largest service conductor.
+          </p>
+          <p>
+            Section 250.122(A) does not require the ground wire to be larger than the circuit conductors, so every
+            calculator holds the table&apos;s size at the size of the smallest conductor the rating allows where the table
+            lists a larger one. That sentence of the 2023 text was read in two of NFPA&apos;s public inputs for the 2026
+            edition (2573 and 3150). Only one rating meets it: a{' '}
+            <Val v={EGC_CAP_CASE.ocpdA} unit="A" src="nec-250-grounding" /> breaker on aluminum, where the table gives{' '}
+            <Size s={EGC_CAP_CASE.tableEgc} /> and the conductor is <Size s={EGC_CAP_CASE.size} />.
+          </p>
+          <p>
+            When the wire size calculator chooses larger conductors for voltage drop, or when you tell the ground wire
+            calculator the circuit wires were upsized, the ground wire grows in proportion, as 250.122(B) requires,
+            rounded up to a Table 310.16 size and never larger than the circuit conductors:
           </p>
           <Formula src="calc:conductor-sizing" words>
-            ground wire area = Table 250.122 area × installed conductor area ÷ minimum conductor area
+            ground wire area = starting ground wire area × installed conductor area ÷ minimum conductor area
           </Formula>
           <Limits>
-            <li>
-              Only the air conditioner calculator keeps the ground wire to the size of the circuit conductors, as
-              250.122(A) allows; that sentence of the 2023 text was read in two of NFPA&apos;s public inputs for the 2026
-              edition (2573 and 3150). The other calculators do not apply it yet, so for some ratings they show a ground
-              wire larger than the smallest conductor the rating allows, with a note.
-            </li>
             <li>
               Limits on grounding electrode conductors to ground rods and concrete-encased electrodes are not covered
               yet.
