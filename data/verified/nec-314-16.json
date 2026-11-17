@@ -1,9 +1,9 @@
 {
  "id": "nec-314-16",
- "title": "Box fill, NEC 314.16 (partial)",
- "status": "partial — see per-item status",
- "retrieved": "2026-10-20",
- "evidence": "research/sources/round2/A5-ch9-boxfill.md; research/sources/round4/R4-3-ch9-boxfill.md",
+ "title": "Box fill, NEC 314.16 (2023)",
+ "status": "verified: Table 314.16(A) all rows, Table 314.16(B)(1), 314.16 lead-in, (A), (B) and (B)(1)-(B)(6), 314.27(E) (WSZ-032); see each item",
+ "retrieved": "2026-11-17",
+ "evidence": "research/sources/round2/A5-ch9-boxfill.md; research/sources/round4/R4-3-ch9-boxfill.md; research/sources/round8/WSZ-032-box-fill-sources.md",
  "items": {
   "314.16(A)": {
    "ref": "314.16(A)",
@@ -31,8 +31,9 @@
   "Table 314.16(A)": {
    "ref": "Table 314.16(A)",
    "title": "Metal Boxes",
+   "status": "VERIFIED-2023 (all 24 rows and the footnote; WSZ-032)",
    "footnote_2011": "*Where no volume allowances are required by 314.16(B)(2) through 314.16(B)(5).",
-   "footnote_2023": "UNVERIFIED",
+   "footnote_2023": "*Where no volume allowances are required by 314.16(B)(2) through (B)(6).",
    "rows": [
     {
      "box": "100 x 32 (4 x 1-1/4) round/octagonal",
@@ -121,13 +122,12 @@
      "max_10": 12,
      "max_8": 10,
      "max_6": 6,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
-     "box": "120 x 32 (4L x 1-1/4 as extracted) square",
+     "box": "120 x 32 (4-11/16 x 1-1/4) square",
      "volume_cm3": 418,
      "volume_in3": 25.5,
      "max_18": 17,
@@ -137,13 +137,12 @@
      "max_10": 10,
      "max_8": 8,
      "max_6": 5,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
-     "box": "120 x 38 (4L x 1-1/2 as extracted) square",
+     "box": "120 x 38 (4-11/16 x 1-1/2) square",
      "volume_cm3": 484,
      "volume_in3": 29.5,
      "max_18": 19,
@@ -153,13 +152,12 @@
      "max_10": 11,
      "max_8": 9,
      "max_6": 5,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
-     "box": "120 x 54 (4L x 2-1/8 as extracted) square",
+     "box": "120 x 54 (4-11/16 x 2-1/8) square",
      "volume_cm3": 689,
      "volume_in3": 42.0,
      "max_18": 28,
@@ -169,10 +167,9 @@
      "max_10": 16,
      "max_8": 14,
      "max_6": 8,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
      "box": "75 x 50 x 38 (3 x 2 x 1-1/2) device",
@@ -185,10 +182,9 @@
      "max_10": 3,
      "max_8": 2,
      "max_6": 1,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
      "box": "75 x 50 x 50 (3 x 2 x 2) device",
@@ -201,10 +197,9 @@
      "max_10": 4,
      "max_8": 3,
      "max_6": 2,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
      "box": "75 x 50 x 57 (3 x 2 x 2-1/4) device",
@@ -217,10 +212,9 @@
      "max_10": 4,
      "max_8": 3,
      "max_6": 2,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
      "box": "75 x 50 x 65 (3 x 2 x 2-1/2) device",
@@ -233,10 +227,9 @@
      "max_10": 5,
      "max_8": 4,
      "max_6": 2,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
      "box": "75 x 50 x 70 (3 x 2 x 2-3/4) device",
@@ -249,10 +242,9 @@
      "max_10": 5,
      "max_8": 4,
      "max_6": 2,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
      "box": "75 x 50 x 90 (3 x 2 x 3-1/2) device",
@@ -265,10 +257,9 @@
      "max_10": 7,
      "max_8": 6,
      "max_6": 3,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
      "box": "100 x 54 x 38 (4 x 2-1/8 x 1-1/2) device",
@@ -281,10 +272,9 @@
      "max_10": 4,
      "max_8": 3,
      "max_6": 2,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
      "box": "100 x 54 x 48 (4 x 2-1/8 x 1-7/8) device",
@@ -297,10 +287,9 @@
      "max_10": 5,
      "max_8": 4,
      "max_6": 2,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
      "box": "100 x 54 x 54 (4 x 2-1/8 x 2-1/8) device",
@@ -313,10 +302,9 @@
      "max_10": 5,
      "max_8": 4,
      "max_6": 2,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
      "box": "95 x 50 x 65 (3-3/4 x 2 x 2-1/2) masonry box/gang",
@@ -329,10 +317,9 @@
      "max_10": 5,
      "max_8": 4,
      "max_6": 2,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
      "box": "95 x 50 x 90 (3-3/4 x 2 x 3-1/2) masonry box/gang",
@@ -345,10 +332,9 @@
      "max_10": 8,
      "max_8": 7,
      "max_6": 4,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
      "box": "min. 44.5 depth FS - single cover/gang (1-3/4)",
@@ -361,10 +347,9 @@
      "max_10": 5,
      "max_8": 4,
      "max_6": 2,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
      "box": "min. 60.3 depth FD - single cover/gang (2-3/8)",
@@ -377,10 +362,9 @@
      "max_10": 7,
      "max_8": 6,
      "max_6": 3,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
      "box": "min. 44.5 depth FS - multiple cover/gang (1-3/4)",
@@ -393,10 +377,9 @@
      "max_10": 7,
      "max_8": 6,
      "max_6": 3,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     },
     {
      "box": "min. 60.3 depth FD - multiple cover/gang (2-3/8)",
@@ -409,10 +392,9 @@
      "max_10": 9,
      "max_8": 8,
      "max_6": 4,
-     "edition": "2011",
-     "status": "VERIFIED-other-edition",
-     "status_2023": "UNVERIFIED",
-     "source": "P1; P2-P4 agree"
+     "edition": "2023",
+     "status": "VERIFIED-2023",
+     "source": "PI 3972 (CMP-8 2026-cycle report, filed against NFPA 70-2023, no revision marks on the rows); FR-7727 (2023-cycle First Draft) prints the same values"
     }
    ],
    "status_round4": "rows 1-5 VERIFIED-2023 (carried A5, PI 3972 base text); rows 6-24 UNVERIFIED as 2023, VERIFIED-other-edition (2005, 2008, 2011; three publishers agree)",
@@ -444,7 +426,8 @@
      "match": "P13 equals data/verified/nec-314-16.json rows 2-24 in every in3 value and every count (script r4_3_scripts/compare_2005_2011.py: 0 differing rows)",
      "status_2023": "UNVERIFIED"
     }
-   ]
+   ],
+   "status_wsz032": "rows 1-24 and the footnote VERIFIED-2023 (WSZ-032): PI 3972 prints all 24 rows of the 2023 table; FR-7727 of the 2023-cycle First Draft prints the same 24 rows (row 1, 8 AWG: 5 struck, 4 inserted) and no Second Revision touched the table; PI 1291 (2020 text) matches rows 2-24"
   },
   "Table 314.16(B)": {
    "ref": "Table 314.16(B)(1)",
@@ -796,13 +779,58 @@
      "rejected": true
     }
    ]
+  },
+  "314.16(B)(1) (2023)": {
+   "ref": "NFPA 70 314.16(B)(1) Conductor Fill",
+   "edition": "2023",
+   "status": "verified-sd2023",
+   "status_basis": "2020 text from Public Input 1291 (NEMA, filed 2020-05-28 against NFPA 70-2020; reprints all of 314.16, its only change in (B)(5)); the 2023 cycle changed none of it: CMP-9 First Draft ballot report lists First Revisions on 314.16 [lead-in], (A)(2), (B) [lead-in], (B)(2) and (B)(5) only; the Second Revision statements list (B)(5) and (B)(6) only; the public comments (B)(5) and (B)(6) only; the correlating revisions (B)(6) only. The table it names reads Table 314.16(B)(1) in every 2023 text (FR-7731, SR-7528, SR-7529).",
+   "values": {
+    "text_2023": "Each conductor that originates outside the box and terminates or is spliced within the box shall be counted once, and each conductor that passes through the box without splice or termination shall be counted once. Each loop or coil of unbroken conductor not less than twice the minimum length required for free conductors in 300.14 shall be counted twice. The conductor fill shall be calculated using Table 314.16(B)(1). A conductor, no part of which leaves the box, shall not be counted.",
+    "exception_2023": "An equipment grounding conductor or conductors or not over four fixture wires smaller than 14 AWG, or both, shall be permitted to be omitted from the calculations where they enter a box from a domed luminaire or similar canopy and terminate within that box.",
+    "count_entering": 1,
+    "count_passing_through": 1,
+    "count_loop": 2,
+    "count_wholly_inside": 0,
+    "exception_fixture_wires_max": 4
+   }
+  },
+  "314.16(B)(2) (2023)": {
+   "ref": "NFPA 70 314.16(B)(2) Clamp Fill",
+   "edition": "2023",
+   "status": "verified-sd2023",
+   "status_basis": "First Revision 7731 (CMP-9, 2023-cycle First Draft ballot report, pdf p. 81): the 2020 first paragraph kept, the second paragraph (clamp assemblies with a cable termination) deleted; no Second Revision, public comment or correlating revision on (B)(2).",
+   "values": {
+    "text_2023": "Where one or more internal cable clamps, whether factory or field supplied, are present in the box, a single volume allowance in accordance with Table 314.16(B)(1) shall be made based on the largest conductor present in the box. No allowance shall be required for a cable connector with its clamping mechanism outside the box.",
+    "allowances": 1,
+    "based_on": "largest conductor present in the box"
+   }
+  },
+  "314.16(B)(3) (2023)": {
+   "ref": "NFPA 70 314.16(B)(3) Support Fittings Fill",
+   "edition": "2023",
+   "status": "verified-sd2023",
+   "status_basis": "2020 text from Public Input 1291 (NEMA, filed 2020-05-28 against NFPA 70-2020; reprints all of 314.16, its only change in (B)(5)); the 2023 cycle changed none of it: CMP-9 First Draft ballot report lists First Revisions on 314.16 [lead-in], (A)(2), (B) [lead-in], (B)(2) and (B)(5) only; the Second Revision statements list (B)(5) and (B)(6) only; the public comments (B)(5) and (B)(6) only; the correlating revisions (B)(6) only. The table it names reads Table 314.16(B)(1) in every 2023 text (FR-7731, SR-7528, SR-7529).",
+   "values": {
+    "text_2023": "Where one or more luminaire studs or hickeys are present in the box, a single volume allowance in accordance with Table 314.16(B)(1) shall be made for each type of fitting based on the largest conductor present in the box.",
+    "allowances_per_fitting_type": 1,
+    "based_on": "largest conductor present in the box"
+   }
+  },
+  "314.16 lead-in (2023)": {
+   "ref": "NFPA 70 314.16 (excluding sub-sections)",
+   "edition": "2023",
+   "status": "verified-sd2023",
+   "status_basis": "First Revision 7726 (2023-cycle First Draft, pdf p. 87): the first two sentences unmarked; no Second Revision on 314.16.",
+   "values": {
+    "text_2023": "Boxes and conduit bodies shall be of an approved size to provide free space for all enclosed conductors. In no case shall the volume of the box, as calculated in 314.16(A), be less than the fill calculation as calculated in 314.16(B)."
+   }
   }
  },
  "notes": [
-  "Table 314.16(A) rows 1–5 are 2023 (PI 3972); rows 6–24 and the footnote are 2005/2008/2011 reprints only (three publishers agree) — do not render them as 2023.",
-  "2023 counting rules verified: Table 314.16(B)(1) all 7 rows, 314.16(B) intro, (B)(4) and (B)(6) (VERIFIED-2023), (B)(5) (verified-sd2023: up to four EGCs entering = one allowance on the largest entering, ¼ for each additional; bonding jumpers that stay in the box are not counted), 314.27(E) (a WSCR counts as device fill).",
-  "Still unverified for 2023: the wording of (B)(1) conductor fill, (B)(2) clamp fill and (B)(3) support fittings fill. The box-fill tool stays withdrawn until they are verified.",
-  "The old '314.16(B)(1)-(5)' entry holds 2011/2020 wording, including the 2020 (B)(5) text that counted equipment bonding jumpers; the 2023 entries above replace it where they exist.",
+  "Table 314.16(A): all 24 rows and the footnote are 2023 (WSZ-032: PI 3972 and FR-7727; rows 1-5 also A5). Row 1, 8 AWG is 4 in 2023 (5 in 2020 and in the 2008 and 2011 reprints).",
+  "2023 counting rules: Table 314.16(B)(1) all 7 rows, 314.16(B) lead-in, (B)(4) and (B)(6) (VERIFIED-2023); (B)(1), (B)(2), (B)(3) and (B)(5) (verified-sd2023, D-09; (B)(1) and (B)(3) unchanged from 2020 through the 2023 cycle); 314.27(E): a WSCR counts as device fill (verified-sd2023).",
+  "The old 314.16(B)(1)-(5) entry holds 2011/2020 wording, including the 2020 (B)(5) text that counted equipment bonding jumpers; the 2023 entries replace it.",
   "Chapter 9 Tables 1, 4, 5, 8 and 9 (2023): only the Table 4 IMC block is verified (nec-ch9-table4.json); the conduit-fill tool stays withdrawn."
  ]
 }

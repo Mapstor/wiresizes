@@ -40,6 +40,8 @@ import { editionGroups, editionLabel, NEC_ADOPTION_DOMAIN, NOT_VERIFIED, stateNa
 import { GUIDE_100, SUBPANEL_DROP_LENGTHS, feederDrop } from '@/lib/subpanel-guide';
 import { EV_DROP_MAX_FT, EV_HIGH, EV_LOW, EV_ROWS } from '@/lib/ev-guide';
 import { GENERAL_COVERS } from '@/lib/garage-page';
+import { EXAMPLE_12, EXAMPLE_14, EXAMPLE_BOX } from '@/lib/box-fill-page';
+import type { BoxFillResult, FillRule } from '@/lib/calculations/box-fill';
 import type { EvRow } from '@/lib/ev-guide';
 import type { LadderRow } from '@/lib/subpanel-guide';
 
@@ -3535,6 +3537,122 @@ export function BurialDepthChart() {
     <div>
       <BurialPlot narrow={false} />
       <BurialPlot narrow />
+    </div>
+  );
+}
+
+// ── Box fill (WSZ-009d): what fills an 18.0 in³ device box, to scale, on 12 AWG and on 14 AWG ───────────────────────
+
+const BOX_SRC = 'nec-314-16-box-fill';
+const BOX_CALC = 'calc:box-fill';
+const FILL_COLORS: Record<FillRule, string> = {
+  '(B)(1)': COPPER,
+  '(B)(4)': '#57514c',
+  '(B)(5)': '#a39b93',
+  '(B)(2)': '#d9d2ca',
+  '(B)(3)': '#d9d2ca',
+};
+const FILL_ORDER: FillRule[] = ['(B)(1)', '(B)(4)', '(B)(5)', '(B)(2)', '(B)(3)'];
+
+function BoxFillPlot({ narrow }: { narrow: boolean }) {
+  const rows: { label: string; r: BoxFillResult }[] = [
+    { label: '12 AWG', r: EXAMPLE_12 },
+    { label: '14 AWG', r: EXAMPLE_14 },
+  ];
+  const W = narrow ? 288 : 560;
+  const barH = narrow ? 30 : 34;
+  const rowH = barH + (narrow ? 60 : 60);
+  const top = 4;
+  const scale = (W - 2) / EXAMPLE_BOX.in3;
+  const legendY = top + rows.length * rowH + 14;
+  const legend: { rule: FillRule; text: string }[] = [
+    { rule: '(B)(1)', text: 'Conductors' },
+    { rule: '(B)(4)', text: 'Receptacle ×2' },
+    { rule: '(B)(5)', text: 'Ground wires' },
+    { rule: '(B)(2)', text: 'Clamps' },
+  ];
+  const perRow = narrow ? 2 : 4;
+  const legendRowH = 24;
+  const H = legendY + Math.ceil(legend.length / perRow) * legendRowH + 4;
+  const id = narrow ? 'box-fill-narrow' : 'box-fill-wide';
+  const f = (v: number) => formatValue(v, { fixed: 2 });
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={BOX_CALC}
+    >
+      <title id={`${id}-title`}>
+        {`A ${formatValue(EXAMPLE_BOX.in3, { fixed: 1 })} in³ device box with one receptacle, four conductors, two ground wires and cable clamps: on 12 AWG they fill ${f(EXAMPLE_12.fillIn3)} in³, the whole box; on 14 AWG ${f(EXAMPLE_14.fillIn3)} in³, leaving ${f(EXAMPLE_14.spareIn3)} in³.`}
+      </title>
+      {rows.map(({ label, r }, k) => {
+        const y0 = top + k * rowH;
+        const by = y0 + 24;
+        let x = 1;
+        const blocks = FILL_ORDER.flatMap((rule) => r.lines.filter((l) => l.rule === rule));
+        return (
+          <g key={label}>
+            <text x={0} y={y0 + 14} fontSize={14} fontWeight={700} fill={INK}>
+              {label}
+            </text>
+            <text x={W} y={y0 + 14} textAnchor="end" fontSize={13} fill={MUTED}>
+              <Val v={r.fillIn3} unit="in³" src={BOX_CALC} format={{ fixed: 2 }} svg /> of <Val v={EXAMPLE_BOX.in3} unit="in³" src={BOX_SRC} format={{ fixed: 1 }} svg />
+            </text>
+            <rect x={0.75} y={by - 0.75} width={W - 1.5} height={barH + 1.5} fill="#ffffff" stroke={INK} strokeWidth={1.5} strokeDasharray={r.spareIn3 > 0 ? '4 3' : undefined} />
+            {blocks.map((l, j) => {
+              const w = l.in3 * scale;
+              const bx = x;
+              x += w;
+              const cells = Math.floor(l.allowances + 1e-9);
+              return (
+                <g key={`${l.rule}-${j}`} className="viz-grow">
+                  <rect x={bx + 1} y={by + 1} width={Math.max(0, w - 2)} height={barH - 2} fill={FILL_COLORS[l.rule]} />
+                  {Array.from({ length: Math.max(0, cells - 1) }, (_, c) => (
+                    <line key={c} x1={bx + (c + 1) * l.perIn3 * scale} x2={bx + (c + 1) * l.perIn3 * scale} y1={by + 1} y2={by + barH - 1} stroke="#ffffff" strokeWidth={2} />
+                  ))}
+                </g>
+              );
+            })}
+            {r.spareIn3 > 0 && (
+              <text x={W} y={by + barH + 18} textAnchor="end" fontSize={13} fill={INK}>
+                <Val v={r.spareIn3} unit="in³" src={BOX_CALC} format={{ fixed: 2 }} svg /> free
+              </text>
+            )}
+            <text x={0} y={by + barH + 18} fontSize={13} fill={MUTED}>
+              each cell <Val v={r.lines[0].perIn3} unit="in³" src={BOX_SRC} format={{ fixed: 2 }} svg />
+            </text>
+          </g>
+        );
+      })}
+      {legend.map((e, k) => {
+        const col = k % perRow;
+        const row = Math.floor(k / perRow);
+        const colW = W / perRow;
+        const lx = col * colW;
+        const ly = legendY + row * legendRowH;
+        return (
+          <g key={e.rule}>
+            <rect x={lx} y={ly - 11} width={14} height={14} fill={FILL_COLORS[e.rule]} />
+            <text x={lx + 20} y={ly} fontSize={13} fill={INK}>
+              {e.text}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/** The box fill page's worked example in one 18.0 in³ device box: every allowance to scale, on 12 AWG and on 14 AWG. */
+export function BoxFillBars() {
+  return (
+    <div>
+      <BoxFillPlot narrow={false} />
+      <BoxFillPlot narrow />
     </div>
   );
 }

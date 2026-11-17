@@ -69,7 +69,7 @@ export function formatValue(value: number, format?: ValueFormat): string {
  * The unit symbols a value may carry. <Val> keeps the number and its symbol on one line, so the symbol is all it
  * holds: words and context ("per 1000 ft at") stay outside as text that can wrap (WSZ-003c).
  */
-export const UNIT_SYMBOLS = ['A', 'V', 'W', 'kW', 'kVA', 'VA', 'kVAR', 'Ω', '%', '°C', '°F', 'ft', 'ft²', 'in', 'mm', 'mm²', 'cmil', 'kcmil', 'lb', 'hp', 'Btu/h', 'm', 'km'] as const;
+export const UNIT_SYMBOLS = ['A', 'V', 'W', 'kW', 'kVA', 'VA', 'kVAR', 'Ω', '%', '°C', '°F', 'ft', 'ft²', 'in', 'in³', 'cm³', 'mm', 'mm²', 'cmil', 'kcmil', 'lb', 'hp', 'Btu/h', 'm', 'km'] as const;
 export type UnitSymbol = (typeof UNIT_SYMBOLS)[number];
 const UNIT_SYMBOL_SET = new Set<string>(UNIT_SYMBOLS);
 

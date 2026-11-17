@@ -261,6 +261,7 @@ const TOC = [
   METHODOLOGY_EXTRA_SECTIONS.dryerMethod,
   METHODOLOGY_EXTRA_SECTIONS.hpMethod,
   METHODOLOGY_EXTRA_SECTIONS.garageMethod,
+  METHODOLOGY_EXTRA_SECTIONS.boxFillMethod,
   ...METHODOLOGY_SECTIONS.map(({ id, title }) => ({ id, title })),
   METHODOLOGY_EXTRA_SECTIONS.notCovered,
   METHODOLOGY_EXTRA_SECTIONS.errors,
@@ -284,7 +285,7 @@ const HP_EATON_LAST = (() => {
 })();
 
 export default function MethodologyPage() {
-  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, garageMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
+  const { method, breakerMethod, loadMethod, rangeMethod, dryerMethod, hpMethod, garageMethod, boxFillMethod, notCovered, errors } = METHODOLOGY_EXTRA_SECTIONS;
   return (
     <div className={LOOK_PAGE}>
     <div className="container pb-16">
@@ -297,8 +298,8 @@ export default function MethodologyPage() {
         <p>
           The calculators on wiresizes.com work from the published tables and definitions on this page. Each source
           has a section below: what it is and which edition was used, where it was read, how the calculators use it,
-          and where that use stops. The first seven sections show how the wire size, circuit breaker, residential load,
-          range, dryer, horsepower to amps and garage subpanel calculators put several of them together. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
+          and where that use stops. The first eight sections show how the wire size, circuit breaker, residential load,
+          range, dryer, horsepower to amps, garage subpanel and box fill calculators work from them. Every calculator page, the AWG wire size chart, the NEC Table 310.16 page, NEC edition by state, the
           homepage and the calculators and guides pages also list their sources under Sources, near the bottom of the
           page.
         </p>
@@ -699,6 +700,34 @@ export default function MethodologyPage() {
             <li>The calculator never picks the feeder&apos;s rating; a load calculation does.</li>
             <li>It sizes the hots; the neutral is sized for the 220.61 neutral load, at most the hots&apos; size.</li>
             <li>No conduit size, no electrode size and no depth for EMT.</li>
+          </Limits>
+        </section>
+
+        <section id={boxFillMethod.id} data-src="calc:box-fill" aria-labelledby={`${boxFillMethod.id}-title`} className="scroll-mt-24 space-y-4">
+          <h2 id={`${boxFillMethod.id}-title`} className={H2}>
+            {boxFillMethod.title}
+          </h2>
+          <p>
+            The{' '}
+            <Link href="/calculators/box-fill-calculator" className={LINK}>
+              box fill calculator
+            </Link>{' '}
+            adds the volume allowances of 314.16(B), each a Table 314.16(B)(1) volume (see{' '}
+            <SectionLink domain="nec-314-16-box-fill">Box fill</SectionLink>):
+          </p>
+          <ol className="list-decimal space-y-2 pl-6 marker:font-bold marker:text-cut-line">
+            <li>Each conductor the reader counts under 314.16(B)(1), at its own size.</li>
+            <li>One allowance for internal cable clamps and one for each type of support fitting, on the largest conductor in the box.</li>
+            <li>Two allowances for each device yoke and for each extra gang of a wide device, on the largest conductor connected to the devices.</li>
+            <li>One allowance for up to four ground wires and a quarter for each more, on the largest ground wire.</li>
+          </ol>
+          <p>
+            The box holds the fill when its volume, from Table 314.16(A) or as marked on it, plus marked rings and covers, is at least the
+            sum (314.16). The result also names the smallest box of each kind in Table 314.16(A) with room for the fill.
+          </p>
+          <Limits>
+            <li>The reader counts the conductors; the calculator does not trace cables or splices.</li>
+            <li>No terminal blocks (314.16(B)(6)) and no conduit bodies.</li>
           </Limits>
         </section>
 
@@ -1217,6 +1246,21 @@ export default function MethodologyPage() {
           </Limits>
         </SourceSection>
 
+        <SourceSection domain="nec-314-16-box-fill">
+          <p>
+            Section 314.16 of the NEC (2023) sets how much volume a box needs for what it holds: Table 314.16(B)(1) gives the
+            volume for each conductor by size, 314.16(B)(1) to (B)(6) say what counts and how often, and Table 314.16(A) lists
+            the volume of twenty-four standard metal boxes. The table rows and their footnote are read from public input 3972
+            of the 2026 cycle, which reprints the 2023 table, and match First Revision 7727 of the 2023 cycle. The counting
+            rules come from NFPA&apos;s revision records of the 2023 and 2026 cycles; the conductor and support fitting
+            rules, which the 2023 cycle did not revise, from public input 1291, which reprints the 2020 text.
+          </p>
+          <SourceFacts s={section('nec-314-16-box-fill')} />
+          <Limits>
+            <li>The 2026 edition&apos;s changes to 314.16 are not used.</li>
+          </Limits>
+        </SourceSection>
+
         <SourceSection domain="nec-cable-rules">
           <p>
             Section 334.80 of the NEC (2023) sets the ampacity of NM cable, and 310.15(E) says when a neutral counts as a
@@ -1716,7 +1760,6 @@ export default function MethodologyPage() {
             <li>The ampacity rule for UF cable, and whether ground wires count as current-carrying.</li>
             <li>Stranded conductor dimensions, and the AC resistance and reactance of conductors.</li>
             <li>Conduit fill: how many conductors fit in a conduit, with conduit and wire areas.</li>
-            <li>Box fill: how many conductors and devices fit in a box.</li>
             <li>
               Grounding electrode conductors to ground rods and concrete-encased electrodes, and how electrodes are
               installed.

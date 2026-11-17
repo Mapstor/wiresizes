@@ -45,6 +45,7 @@ const GUIDE_200 = '/guides/wire-size-for-200-amp';
 const GUIDE_100 = '/guides/wire-size-for-100-amp';
 const GUIDE_EV = '/guides/wire-size-for-ev-charger';
 const GARAGE = '/calculators/garage-subpanel-calculator';
+const BOX_FILL = '/calculators/box-fill-calculator';
 const AWG_CHART = '/guides/awg-wire-size-chart';
 const TABLE_310_16 = '/guides/nec-table-310-16';
 const EDITIONS = '/guides/nec-code-compliance';
@@ -132,6 +133,12 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     domain: 'nec-300-5-burial',
     title: 'Underground cover',
     citedOn: [GARAGE],
+  },
+  {
+    id: 'box-fill',
+    domain: 'nec-314-16-box-fill',
+    title: 'Box fill',
+    citedOn: [BOX_FILL],
   },
   {
     id: 'cable-ampacity',
@@ -275,6 +282,7 @@ export const METHODOLOGY_EXTRA_SECTIONS = {
   dryerMethod: { id: 'dryer-method', title: 'How the dryer calculator counts a dryer' },
   hpMethod: { id: 'hp-method', title: 'How the horsepower to amps calculator reads the tables' },
   garageMethod: { id: 'garage-method', title: 'How the garage subpanel calculator sizes a feeder' },
+  boxFillMethod: { id: 'box-fill-method', title: 'How the box fill calculator adds the fill' },
   notCovered: { id: 'not-covered', title: 'Not covered yet' },
   errors: { id: 'errors', title: 'Errors and corrections' },
 } as const;

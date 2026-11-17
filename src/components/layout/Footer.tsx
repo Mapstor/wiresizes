@@ -29,6 +29,7 @@ const footerLinks = {
     { name: 'Low Voltage Calculator', href: '/calculators/low-voltage-calculator' },
     { name: 'Service Entrance Calculator', href: '/calculators/service-entrance-calculator' },
     { name: 'Garage Subpanel Calculator', href: '/calculators/garage-subpanel-calculator' },
+    { name: 'Box Fill Calculator', href: '/calculators/box-fill-calculator' },
     { name: 'Residential Load Calculator', href: '/calculators/residential-load-calculator' },
     { name: 'Range Calculator', href: '/calculators/range-calculator' },
     { name: 'Dryer Calculator', href: '/calculators/dryer-calculator' },
