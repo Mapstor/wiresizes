@@ -284,7 +284,7 @@ export default function WireSizeFor125AmpPage() {
               A feeder carries an equipment grounding conductor sized by its breaker: a <A v={G.ratingA} /> breaker falls in the row of Table 250.122
               for breakers up to <A v={G.egc.rowA} src={GND} />, so <Pair cu={G.egc.cu} al={G.egc.al} />. A service has a grounding electrode
               conductor instead, sized by its largest service conductor in Table 250.66: <Pair cu={GEC.cu} al={GEC.alCca} /> for{' '}
-              <Size s={S.cu} /> copper service conductors. The{' '}
+              <Size s={S.cu} /> copper service conductors. The values are those of NFPA&apos;s 2020 grounding fact sheet. The{' '}
               <Link href="/calculators/ground-wire-calculator" className={LINK}>
                 ground wire calculator
               </Link>{' '}
