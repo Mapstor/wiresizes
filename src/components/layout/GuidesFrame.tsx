@@ -31,6 +31,13 @@ const LOOK_GUIDES = new Set([
   '/guides/wire-size-for-200-amp',
   '/guides/wire-size-for-100-amp',
   '/guides/wire-size-for-50-amp',
+  '/guides/wire-size-for-15-amp',
+  '/guides/wire-size-for-20-amp',
+  '/guides/wire-size-for-30-amp',
+  '/guides/wire-size-for-40-amp',
+  '/guides/wire-size-for-60-amp',
+  '/guides/wire-size-for-70-80-90-amp',
+  '/guides/wire-size-for-125-amp',
   '/guides/wire-size-for-ev-charger',
 ]);
 
