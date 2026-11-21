@@ -61,3 +61,8 @@ public/llms.txt | ALXS3N | Amana air conditioner model name, not a number and a 
 public/llms.txt | I1max | NEC 630.12's symbol for a welder's maximum rated supply current, not a number and a unit
 /calculators/conduit-fill-calculator | 5A | NEC Chapter 9 Table 5A, the compact-stranding conductor table (WSZ-039)
 /methodology | 5A | NEC Chapter 9 Table 5A, the compact-stranding conductor table (WSZ-039)
+/guides/wire-size-for-50-amp | 14-50R | NEMA 14-50 receptacle configuration name (nema-receptacle-configs.json), not a number and a unit (WSZ-041)
+/guides/wire-size-for-50-amp | 6-50R | NEMA 6-50 receptacle configuration name (nema-receptacle-configs.json), not a number and a unit (WSZ-041)
+/guides/wire-size-for-50-amp | 10-50R | NEMA 10-50 receptacle configuration name (nema-receptacle-configs.json), not a number and a unit (WSZ-041)
+/guides/wire-size-for-50-amp | AC-225C | Lincoln welder model name (mfr-welders.json), not a number and a unit (WSZ-041)
+public/llms.txt | 6-50R | NEMA 6-50 receptacle configuration name, not a number and a unit (WSZ-041)
