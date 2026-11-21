@@ -101,6 +101,8 @@ const TIGHT_TH = 'max-sm:!min-w-0 max-sm:!px-2';
 const TIGHT_TD = 'max-sm:!px-2';
 /** A row header that names a use in words: the body face, wrapping. */
 const USE_TH = '!whitespace-normal !font-display !font-normal';
+/** A cell of words: the body face, wrapping, left-aligned. */
+const WORDS_TD = '!whitespace-normal !font-display !text-left';
 
 const TOC: ([string, string] | [string, string, string])[] = [
   ['column', `${NM.cu.size} or ${C75.cu.size} AWG: the terminals decide`, TERM],
@@ -214,7 +216,13 @@ function LengthTable({ material }: { material: 'cu' | 'al' }) {
   );
 }
 
-const OUTLET_ROWS = [OUT_CFG.f1450, OUT_CFG.f650, OUT_CFG.f1050];
+/** What lands on a receptacle, from its NEMA ratings: a 125/250 V device has a neutral pole, the rest are hots. */
+const OUTLET_ROWS = [OUT_CFG.f1450, OUT_CFG.f650, OUT_CFG.f1050].map((o) => {
+  const neutral = o.volts.includes('/');
+  const hots = o.poles - (neutral ? 1 : 0);
+  if (hots !== 2 || o.wires !== o.poles + (o.grounding ? 1 : 0)) throw new Error(`50 A guide: ${o.config} no longer reads as two hots`);
+  return { ...o, neutral };
+});
 
 export default function WireSizeFor50AmpPage() {
   return (
@@ -339,11 +347,11 @@ export default function WireSizeFor50AmpPage() {
               </tbody>
             </DataTable>
             <p className={P}>
-              Hot attics, buried conduit and more than three current-carrying wires together lower these values. The{' '}
+              For a run through a hot attic, or more than three current-carrying wires in one conduit, the{' '}
               <Link href={wireSizeLink(G.ratingA)} className={LINK}>
                 wire size calculator
               </Link>{' '}
-              opens on this breaker and applies those corrections.
+              opens on this breaker and applies the corrections.
             </p>
           </section>
 
@@ -370,10 +378,9 @@ export default function WireSizeFor50AmpPage() {
               A <A v={G.ratingA} src={NEMA} /> outlet
             </h2>
             <p className={P} data-src={NEMA}>
-              Three NEMA receptacles carry a <A v={G.ratingA} src={NEMA} /> rating. They differ in voltage and in what lands on them: the{' '}
-              <Cfg c={OUT_CFG.f1450.config} /> takes two hots, a neutral and a ground, the <Cfg c={OUT_CFG.f650.config} /> two hots and a ground,
-              and the older <Cfg c={OUT_CFG.f1050.config} /> two hots and a neutral, with no ground. Behind any of them the wire is the
-              circuit&apos;s: <Size s={NM.cu.size} /> copper in NM cable.
+              Three NEMA receptacles carry a <A v={G.ratingA} src={NEMA} /> rating. They differ in voltage and in the wires that land on them,
+              and the older <Cfg c={OUT_CFG.f1050.config} /> has no ground. Behind any of them the wire is the circuit&apos;s:{' '}
+              <Size s={NM.cu.size} /> copper in NM cable.
             </p>
             <DataTable id="outlets-50" variant="ruled" src={NEMA} caption={`The ${G.ratingA} A receptacles`}>
               <thead>
@@ -385,10 +392,7 @@ export default function WireSizeFor50AmpPage() {
                     Volts
                   </th>
                   <th scope="col" className={clsx(RTH, TIGHT_TH)}>
-                    Poles, wires
-                  </th>
-                  <th scope="col" className={clsx(RTH, TIGHT_TH)}>
-                    Grounding
+                    Wires
                   </th>
                 </tr>
               </thead>
@@ -399,10 +403,10 @@ export default function WireSizeFor50AmpPage() {
                       {o.config}
                     </th>
                     <td className={clsx(RTD, TIGHT_TD)}>{o.volts} V</td>
-                    <td className={clsx(RTD, TIGHT_TD)}>
-                      {o.poles}-pole, {o.wires}-wire
+                    <td className={clsx(RTD, TIGHT_TD, WORDS_TD)}>
+                      {o.wires}: two hots{o.neutral ? ', a neutral' : ''}
+                      {o.grounding ? ' and a ground' : ', no ground'}
                     </td>
-                    <td className={clsx(RTD, TIGHT_TD)}>{o.grounding ? 'Yes' : 'No'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -457,8 +461,8 @@ export default function WireSizeFor50AmpPage() {
               A <A v={G.ratingA} /> feeder to a subpanel is sized the same way, from Table 310.16 at the column its terminations allow:{' '}
               <Picks p={NM} /> at <C v={G.low} />, <Picks p={C75} /> at <C v={G.high} />.{' '}
               <span data-src={SVC}>
-                Table 310.12, for a 120/240 V single-phase service, or a feeder, that carries the entire load of a one-family dwelling or of one
-                dwelling unit, starts at <A v={G.serviceFromA} src={SVC} />, so it has no <A v={G.ratingA} /> row.
+                Table 310.12, for a <span className="whitespace-nowrap">120/240 V</span> single-phase service, or a feeder, that carries the entire
+                load of a one-family dwelling or of one dwelling unit, starts at <A v={G.serviceFromA} src={SVC} />, so it has no <A v={G.ratingA} /> row.
               </span>
             </p>
             <p className={P} data-src={SEP}>
@@ -622,7 +626,7 @@ export default function WireSizeFor50AmpPage() {
                 Can <Size s={C75.cu.size} /> wire go on a <A v={G.ratingA} /> breaker?
               </h3>
               <p className={P} data-src={TERM}>
-                As single conductors, such as THHN in conduit, where the breaker and every other termination are listed and identified for{' '}
+                Yes, as single conductors, such as THHN in conduit, where the breaker and every other termination are listed and identified for{' '}
                 <C v={G.high} /> conductors: <Size s={C75.cu.size} /> copper carries <A v={C75.cu.ampacity} src={AMP} /> there. Not in NM cable,
                 which holds it to <A v={G.shortAt60} src={AMP} />.
               </p>

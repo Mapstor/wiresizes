@@ -3160,11 +3160,13 @@ function AmpDropPlot({ narrow, guide, lengths }: { narrow: boolean; guide: AmpGu
           </text>
         </g>
       ))}
-      {lengths.map((ft) => (
-        <text key={ft} x={x(ft)} y={top + ph + 20} textAnchor={ft === maxFt ? 'end' : ft === 0 ? 'start' : 'middle'} fontSize={13} fill={MUTED}>
-          <Num v={ft} src="calc:voltage-drop" svg />
-        </text>
-      ))}
+      {lengths
+        .filter((ft, k) => !narrow || k % 2 === 0)
+        .map((ft) => (
+          <text key={ft} x={x(ft)} y={top + ph + 20} textAnchor={ft === maxFt ? 'end' : ft === 0 ? 'start' : 'middle'} fontSize={13} fill={MUTED}>
+            <Num v={ft} src="calc:voltage-drop" svg />
+          </text>
+        ))}
       <text x={left + pw / 2} y={H - 6} textAnchor="middle" fontSize={13} fill={MUTED}>
         One-way length, ft (drop in % on the left)
       </text>
