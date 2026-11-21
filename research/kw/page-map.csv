@@ -1,0 +1,21 @@
+slug,hub,archetype,intent,wedge,data_source,tier,status,notes
+guides,root,structural,informational,guide index,site,T1,live,existing hub
+calculators,root,structural,tool,calculator index,site,T1,live,existing hub
+wire-size-for-15-amp,guides,article,informational,"240.4(D) caps 14 AWG copper at 15 A: the 14 vs 12 AWG answer with NM and THHN, and the distance before 3 % drop at 120 V",nec-310-16,T2,proposed,WSZ-041 amp-rating cluster; after the owner sees the 50 A page
+wire-size-for-20-amp,guides,article,informational,"240.4(D) caps 12 AWG copper at 20 A and 14 AWG at 15 A: why 14 AWG on a 20 A breaker fails, with 120 and 240 V distances",nec-310-16,T2,proposed,WSZ-041 amp-rating cluster; after the owner sees the 50 A page
+wire-size-for-30-amp,guides,article,informational,"240.4(D) caps 10 AWG copper at 30 A: 10 AWG copper, the aluminum option, 120 vs 240 V distances, and the 30 A appliances the site sizes",nec-310-16,T1,proposed,WSZ-041 amp-rating cluster; after the owner sees the 50 A page
+wire-size-for-40-amp,guides,article,informational,"60 vs 75 C: 8 AWG copper at 60 C vs 8 AWG at 75 C, NM cable vs THHN, distances at 240 V, and the 40 A appliances",nec-310-16,T1,proposed,WSZ-041 amp-rating cluster; after the owner sees the 50 A page
+wire-size-for-50-amp,guides,article,informational,"60 vs 75 C splits the answer (6 AWG copper in NM cable or at 60 C terminals, 8 AWG single conductors with 75 C terminations); 8 AWG NM at 40 A is a standard rating so 240.4(B) does not reach 50 A; the 14-50R, 6-50R and 10-50R; the 225.39 disconnect floor above a 50 A garage feeder; 3 % lengths at 240 V; loads anchored to their calculators",nec-310-16,T1,built,WSZ-041 amp-rating cluster; built on a preview for the owner (2026-11-21)
+wire-size-for-60-amp,guides,article,informational,"feeder vs branch: 6 AWG copper at 75 C vs 4 AWG at 60 C, aluminum, the 60 A subpanel feeder with its ground and distances",nec-310-16,T1,proposed,WSZ-041 amp-rating cluster; after the owner sees the 50 A page
+wire-size-for-70-80-90-amp,guides,article,informational,"one page for 70, 80 and 90 A (policy gate: three pages would differ only in the number): the three ratings side by side at 60 and 75 C, where 240.4(B) lets the next size down carry each rating, ground wires and 3 % lengths",nec-310-16,T2,proposed,WSZ-041 amp-rating cluster; after the owner sees the 50 A page
+wire-size-for-100-amp,guides,article,informational,100 A feeder and subpanel guide,nec-310-16,T1,live,existing guide; owns its tail of this export
+wire-size-for-125-amp,guides,article,informational,"125 A service (Table 310.12) vs 125 A feeder (Table 310.16): two answers on one rating, aluminum vs copper, ground and distances",nec-310-12,T2,proposed,WSZ-041 amp-rating cluster; after the owner sees the 50 A page
+low-voltage-calculator,calculators,tool,tool,existing live page,see research/page-map.csv,T1,live,existing; owns its matches in this export
+rv-hookup-calculator,calculators,tool,tool,existing live page,see research/page-map.csv,T1,live,existing; owns its matches in this export
+hot-tub-calculator,calculators,tool,tool,existing live page,see research/page-map.csv,T1,live,existing; owns its matches in this export
+range-calculator,calculators,tool,tool,existing live page,see research/page-map.csv,T1,live,existing; owns its matches in this export
+dryer-calculator,calculators,tool,tool,existing live page,see research/page-map.csv,T1,live,existing; owns its matches in this export
+welder-calculator,calculators,tool,tool,existing live page,see research/page-map.csv,T1,live,existing; owns its matches in this export
+air-conditioner-calculator,calculators,tool,tool,existing live page,see research/page-map.csv,T1,live,existing; owns its matches in this export
+wire-size-for-ev-charger,guides,article,informational,existing live page,see research/page-map.csv,T1,live,existing; owns its matches in this export
+awg-wire-size-chart,guides,article,informational,existing live page,see research/page-map.csv,T1,live,existing; owns its matches in this export
