@@ -138,6 +138,14 @@ export const GUIDE_100 = (() => {
       noteCu: smallestForNote('Cu', ratingA, lengthFt),
       noteAl: smallestForNote('Al', ratingA, lengthFt),
     },
+    /** The full rating over a short run (WSZ-044: "100 amp sub panel 50 feet away"), on the same picks. */
+    near: {
+      lengthFt: 50,
+      cu60: feederDrop(cu60.size, 'Cu', ratingA, 50),
+      al60: feederDrop(al60.size, 'Al', ratingA, 50),
+      cu75: feederDrop(cu75.size, 'Cu', ratingA, 50),
+      al75: feederDrop(al75.size, 'Al', ratingA, 50),
+    },
     noteFt: {
       cu60: noteLength(cu60.size, 'Cu', ratingA),
       al60: noteLength(al60.size, 'Al', ratingA),

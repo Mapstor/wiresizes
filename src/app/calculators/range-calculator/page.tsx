@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -107,11 +108,17 @@ const span = (pair: [number, number]) => (
     <Val v={pair[0]} unit="kW" src={MFR_DOMAIN} /> to <Val v={pair[1]} unit="kW" src={MFR_DOMAIN} />
   </>
 );
-const circuits = (list: number[]) =>
+const circuits = (list: number[], linked = false) =>
   list.map((a, k) => (
     <span key={a}>
       {k > 0 ? ' or ' : ''}
-      <Val v={a} unit="A" src={MFR_DOMAIN} />
+      {linked ? (
+        <AmpGuideLink a={a} className={LINK}>
+          <Val v={a} unit="A" src={MFR_DOMAIN} />
+        </AmpGuideLink>
+      ) : (
+        <Val v={a} unit="A" src={MFR_DOMAIN} />
+      )}
     </span>
   ));
 
@@ -143,7 +150,7 @@ export default function RangeCalculatorPage() {
               <Val v={N1.pctPerKw} unit="%" src={L} /> for each kW.
             </strong>{' '}
             <span data-src={MFR_DOMAIN}>
-              The circuit is the one the range&apos;s instructions give: Whirlpool&apos;s freestanding ranges call for {circuits(WROW1.circuitsA)} at{' '}
+              The circuit is the one the range&apos;s instructions give: Whirlpool&apos;s freestanding ranges call for {circuits(WROW1.circuitsA, true)} at{' '}
               {span(WROW1.kw240)} and <Val v={WROW2.circuitsA[0]} unit="A" src={MFR_DOMAIN} /> at {span(WROW2.kw240)} (120/240 V).
             </span>{' '}
             <span data-src={CALC}>

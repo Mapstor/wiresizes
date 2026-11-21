@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -396,7 +397,7 @@ export default function WelderCalculatorPage() {
               listed cord-and-plug connector, rated for the welder&apos;s overcurrent protection. A plug and receptacle can be it.
             </p>
             <p className={P} data-src={NEMA}>
-              Lincoln&apos;s {AC225.model} comes with a NEMA 6-50P plug for a NEMA 6-50R receptacle, a <Val v={R650.amps} unit="A" src={NEMA} />,{' '}
+              Lincoln&apos;s {AC225.model} comes with a NEMA 6-50P plug for a NEMA 6-50R receptacle, a <AmpGuideLink a={R650.amps} className={LINK}><Val v={R650.amps} unit="A" src={NEMA} /></AmpGuideLink>,{' '}
               <Val v={R650_V} unit="V" src={NEMA} /> configuration, and asks for <A v={manualOcpd(AC225)} /> super lag fuses on both hot lines.
             </p>
           </section>

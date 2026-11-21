@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { DatasetSchema } from '@/components/seo/DatasetSchema';
@@ -283,7 +284,7 @@ export default function NecTable31016Page() {
           <Val v={TABLE_AMBIENT.f} unit="°F" src={AMP} />). For example, <Size s="12" /> copper is rated{' '}
           <Val v={amp('12', 'cu_60')} unit="A" src={AMP} />, <Val v={amp('12', 'cu_75')} unit="A" src={AMP} /> and{' '}
           <Val v={amp('12', 'cu_90')} unit="A" src={AMP} /> in the 60, 75 and 90 °C columns, and 2023 NEC 240.4(D) limits its breaker or fuse
-          to <Val v={unconditional('12', 'Cu') as number} unit="A" src={OCPD} />.
+          to <AmpGuideLink a={unconditional('12', 'Cu') as number} className={LINK}><Val v={unconditional('12', 'Cu') as number} unit="A" src={OCPD} /></AmpGuideLink>.
         </p>
 
       <Figure
@@ -554,7 +555,7 @@ export default function NecTable31016Page() {
           For the smallest sizes, 2023 NEC 240.4(D) caps the breaker or fuse rating below what the ampacity columns would allow. The cap
           applies after the ambient and conductor-count corrections. <Size s="14" /> copper, for instance, has{' '}
           <Val v={amp('14', 'cu_75')} unit="A" src={AMP} /> in the 75 °C column but may not be protected above{' '}
-          <Val v={unconditional('14', 'Cu') as number} unit="A" src={OCPD} />. Three of the sizes come with conditions, shown in plain words
+          <AmpGuideLink a={unconditional('14', 'Cu') as number} className={LINK}><Val v={unconditional('14', 'Cu') as number} unit="A" src={OCPD} /></AmpGuideLink>. Three of the sizes come with conditions, shown in plain words
           below.
         </p>
         <DataTable variant="ruled" id="limits-table" src={OCPD} caption="2023 NEC 240.4(D), maximum overcurrent protection">
@@ -704,7 +705,7 @@ export default function NecTable31016Page() {
           <p className={P} data-src={AMP}>
             <Val v={amp('10', 'cu_60')} unit="A" src={AMP} />, <Val v={amp('10', 'cu_75')} unit="A" src={AMP} /> and{' '}
             <Val v={amp('10', 'cu_90')} unit="A" src={AMP} /> in the 60, 75 and 90 °C columns. 240.4(D) limits its overcurrent protection to{' '}
-            <Val v={unconditional('10', 'Cu') as number} unit="A" src={OCPD} />.
+            <AmpGuideLink a={unconditional('10', 'Cu') as number} className={LINK}><Val v={unconditional('10', 'Cu') as number} unit="A" src={OCPD} /></AmpGuideLink>.
           </p>
         </div>
         <div className="space-y-1">

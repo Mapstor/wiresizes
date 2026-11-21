@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -277,7 +278,7 @@ export default function ResidentialLoadCalculatorPage() {
               A <Val v={EXAMPLE_INPUT.ft2} unit="ft²" src="input" /> house with an electric range, dryer, water heater and heat comes to{' '}
               {vaOf(EXAMPLE.standard.totalVa)}, or {amps(EXAMPLE.standard.amps)}, by the standard method: a{' '}
               <Val v={STD.ratingA} unit="A" src={SVC} /> service. The optional method gives {vaOf(EXAMPLE.optional.totalVa)}, or{' '}
-              {amps(EXAMPLE.optional.amps)}, and a <Val v={OPT.ratingA} unit="A" src={SVC} /> service.
+              {amps(EXAMPLE.optional.amps)}, and a <AmpGuideLink a={OPT.ratingA} className={LINK}><Val v={OPT.ratingA} unit="A" src={SVC} /> service</AmpGuideLink>.
             </span>
           </p>
         </div>
@@ -395,7 +396,7 @@ export default function ResidentialLoadCalculatorPage() {
               Table 310.12 gives the conductors for each rating, for a 120/240 V single-phase service, or a feeder, that carries the entire load of a
               one-family dwelling or of one dwelling unit.{' '}
               <span data-src={CALC}>
-                A <Val v={ROW_200.ratingA} unit="A" src={SVC} /> service covers a calculated load of up to{' '}
+                A <AmpGuideLink a={ROW_200.ratingA} className={LINK}><Val v={ROW_200.ratingA} unit="A" src={SVC} /> service</AmpGuideLink> covers a calculated load of up to{' '}
                 <Val v={ROW_200.ratingA * DWELLING_VOLTS} unit="VA" src={CALC} />.
               </span>
             </p>

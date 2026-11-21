@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -186,9 +187,9 @@ export default function CircuitBreakerCalculatorPage() {
               continuous load (NEC 210.20(A)), rounded up to a standard rating in Table 240.6(A).
             </strong>{' '}
             <span data-src={CALC}>
-              A continuous load of <Val v={16} unit="A" src="input" /> takes a <Val v={C16.breakerA} unit="A" src={CALC} /> breaker,{' '}
-              <Val v={24} unit="A" src="input" /> takes <Val v={C24.breakerA} unit="A" src={CALC} />, <Val v={40} unit="A" src="input" /> takes{' '}
-              <Val v={C40.breakerA} unit="A" src={CALC} /> and <Val v={48} unit="A" src="input" /> takes <Val v={C48.breakerA} unit="A" src={CALC} />.
+              A continuous load of <Val v={16} unit="A" src="input" /> takes a <AmpGuideLink a={C16.breakerA} className={LINK}><Val v={C16.breakerA} unit="A" src={CALC} /> breaker</AmpGuideLink>,{' '}
+              <Val v={24} unit="A" src="input" /> takes <AmpGuideLink a={C24.breakerA} className={LINK}><Val v={C24.breakerA} unit="A" src={CALC} /></AmpGuideLink>, <Val v={40} unit="A" src="input" /> takes{' '}
+              <AmpGuideLink a={C40.breakerA} className={LINK}><Val v={C40.breakerA} unit="A" src={CALC} /></AmpGuideLink> and <Val v={48} unit="A" src="input" /> takes <AmpGuideLink a={C48.breakerA} className={LINK}><Val v={C48.breakerA} unit="A" src={CALC} /></AmpGuideLink>.
             </span>
           </p>
         </div>
@@ -242,7 +243,8 @@ export default function CircuitBreakerCalculatorPage() {
             </h2>
             <p className={P} data-src={SMALL}>
               The breaker protects the wire. 240.4(D) holds <Size s="14" />, <Size s="12" /> and <Size s="10" /> copper to{' '}
-              <Val v={W14.c60.ratingA} unit="A" src={SMALL} />, <Val v={W12.Cu.c60.ratingA} unit="A" src={SMALL} /> and{' '}
+              <AmpGuideLink a={W14.c60.ratingA} className={LINK}><Val v={W14.c60.ratingA} unit="A" src={SMALL} /></AmpGuideLink>,{' '}
+              <Val v={W12.Cu.c60.ratingA} unit="A" src={SMALL} /> and{' '}
               <Val v={W10.Cu.c60.ratingA} unit="A" src={SMALL} /> in either column, and <Size s="12" /> and <Size s="10" /> aluminum to{' '}
               <Val v={W12.Al.c60.ratingA} unit="A" src={SMALL} /> and <Val v={W10.Al.c60.ratingA} unit="A" src={SMALL} />.{' '}
               <span data-src={OCPD}>
@@ -365,7 +367,7 @@ export default function CircuitBreakerCalculatorPage() {
                 <Val v={W6.c75.ampacity} unit="A" src={AMP} /> at <Val v={WARM} unit="°C" src={AMP} />.{' '}
                 <span data-src={OCPD}>
                   Neither is a standard rating, so 240.4(B) allows <Val v={W6.c60.ratingA} unit="A" src={CALC} /> and{' '}
-                  <Val v={W6.c75.ratingA} unit="A" src={CALC} /> when the circuit does not supply more than one receptacle for cord-and-plug-connected
+                  <AmpGuideLink a={W6.c75.ratingA} className={LINK}><Val v={W6.c75.ratingA} unit="A" src={CALC} /></AmpGuideLink> when the circuit does not supply more than one receptacle for cord-and-plug-connected
                   portable loads; otherwise <Val v={below(W6.c60)} unit="A" src={CALC} /> and <Val v={below(W6.c75)} unit="A" src={CALC} />.
                 </span>
               </p>

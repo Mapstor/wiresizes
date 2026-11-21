@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -325,7 +326,7 @@ export default function AmpacityCalculatorPage() {
                   <Val v={ampacity(s, 'Cu', C75)} unit="A" src={AMP} /> at <Val v={C75} unit="°C" src={AMP} /> and{' '}
                   <Val v={ampacity(s, 'Cu', C90)} unit="A" src={AMP} /> at <Val v={C90} unit="°C" src={AMP} />.{' '}
                   <span data-src={SMALL}>
-                    240.4(D) limits its breaker to <Val v={limit(s, 'Cu')} unit="A" src={SMALL} />.
+                    240.4(D) limits its breaker to <AmpGuideLink a={limit(s, 'Cu')} className={LINK}><Val v={limit(s, 'Cu')} unit="A" src={SMALL} /></AmpGuideLink>.
                   </span>
                 </p>
               </div>

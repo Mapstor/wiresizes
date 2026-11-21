@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -267,9 +268,9 @@ export default function RvHookupCalculatorPage() {
         <div className="mt-14 max-w-[44rem] space-y-4">
           <p className={LOOK_LEAD} data-src={CALC}>
             <strong>
-              A <A v={R50.breakerA} src={NEMA} /> RV outlet (<Cfg c="14-50R" />) takes <Pair cu={R50.cu60.size} al={R50.al60.size} /> at <C v={RV_LOW} />{' '}
+              A <AmpGuideLink a={R50.breakerA} className={LINK}><A v={R50.breakerA} src={NEMA} /> RV outlet</AmpGuideLink> (<Cfg c="14-50R" />) takes <Pair cu={R50.cu60.size} al={R50.al60.size} /> at <C v={RV_LOW} />{' '}
               terminals, or <Pair cu={R50.cu75.size} al={R50.al75.size} /> where the breaker and receptacle are listed for <C v={RV_HIGH} />. A{' '}
-              <A v={R30.breakerA} src={NEMA} /> outlet (<Cfg c="TT-30R" />) takes <Pair cu={R30.cu60.size} al={R30.al60.size} />.
+              <AmpGuideLink a={R30.breakerA} className={LINK}><A v={R30.breakerA} src={NEMA} /> outlet</AmpGuideLink> (<Cfg c="TT-30R" />) takes <Pair cu={R30.cu60.size} al={R30.al60.size} />.
             </strong>{' '}
             <span data-src={GND}>
               Both take a <Size s={R50.egcCu} /> copper ground wire (Table 250.122).
@@ -388,18 +389,19 @@ export default function RvHookupCalculatorPage() {
               Questions
             </h2>
             <div className="space-y-1.5">
-              <h3 className={H3} data-src={NEMA}>What size wire for a 50 amp RV outlet?</h3>
+              <h3 className={H3} data-src={NEMA}>What size wire for a 50 amp RV outlet or plug?</h3>
               <p className={P} data-src={CALC}>
-                <Pair cu={R50.cu60.size} al={R50.al60.size} /> at <C v={RV_LOW} /> terminals; <Pair cu={R50.cu75.size} al={R50.al75.size} /> where
-                the breaker and the <Cfg c="14-50R" /> are listed for <C v={RV_HIGH} />. The ground wire is <Size s={R50.egcCu} /> copper or{' '}
+                The plug is on the RV&apos;s cord, so the wire to size is the circuit to the <Cfg c="14-50R" /> it plugs into:{' '}
+                <Pair cu={R50.cu60.size} al={R50.al60.size} /> at <C v={RV_LOW} /> terminals, or <Pair cu={R50.cu75.size} al={R50.al75.size} />{' '}
+                where the breaker and the receptacle are listed for <C v={RV_HIGH} />. The ground wire is <Size s={R50.egcCu} /> copper or{' '}
                 <Size s={R50.egcAl} /> aluminum, and the circuit runs four wires.
               </p>
             </div>
             <div className="space-y-1.5">
-              <h3 className={H3} data-src={NEMA}>What size wire for a 30 amp RV outlet?</h3>
+              <h3 className={H3} data-src={NEMA}>What size wire for a 30 amp RV outlet or plug?</h3>
               <p className={P} data-src={CALC}>
-                <Pair cu={R30.cu60.size} al={R30.al60.size} />, with a <Size s={R30.egcCu} /> copper or <Size s={R30.egcAl} /> aluminum ground wire;
-                the <Cfg c="TT-30R" /> circuit runs three wires.
+                <Pair cu={R30.cu60.size} al={R30.al60.size} /> for the circuit to the <Cfg c="TT-30R" /> the RV&apos;s plug goes into, with a{' '}
+                <Size s={R30.egcCu} /> copper or <Size s={R30.egcAl} /> aluminum ground wire; the circuit runs three wires.
               </p>
             </div>
             <div className="space-y-1.5">

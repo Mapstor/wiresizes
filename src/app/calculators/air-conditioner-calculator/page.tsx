@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -240,7 +241,7 @@ export default function AirConditionerCalculatorPage() {
           <p className={LOOK_LEAD} data-src={CALC}>
             <strong>
               Carrier&apos;s <Tons v={EXAMPLE.unit.tons} /> air conditioner, with an MCA of <A v={EXAMPLE.unit.mcaA} /> and an MOCP of{' '}
-              <A v={EXAMPLE.unit.mocpA} />, takes <Size s={ex.size} /> copper on a <A v={EXAMPLE.unit.mocpA} /> breaker, with a <Size s={ex.egc} />{' '}
+              <A v={EXAMPLE.unit.mocpA} />, takes <Size s={ex.size} /> copper on a <AmpGuideLink a={EXAMPLE.unit.mocpA} className={LINK}><A v={EXAMPLE.unit.mocpA} /> breaker</AmpGuideLink>, with a <Size s={ex.egc} />{' '}
               ground wire.
             </strong>{' '}
             <span data-src={NEC440}>
@@ -300,8 +301,8 @@ export default function AirConditionerCalculatorPage() {
               Why the breaker can be larger than the wire
             </h2>
             <p className={P} data-src={SMALL}>
-              On most circuits the breaker protects the wire, and 240.4(D) holds <Size s="14" /> copper to <A v={LIMIT_14} src={SMALL} />,{' '}
-              <Size s="12" /> to <A v={LIMIT_12} src={SMALL} /> and <Size s="10" /> to <A v={LIMIT_10} src={SMALL} />. Its opening words leave room
+              On most circuits the breaker protects the wire, and 240.4(D) holds <Size s="14" /> copper to <AmpGuideLink a={LIMIT_14} className={LINK}><A v={LIMIT_14} src={SMALL} /></AmpGuideLink>,{' '}
+              <Size s="12" /> to <AmpGuideLink a={LIMIT_12} className={LINK}><A v={LIMIT_12} src={SMALL} /></AmpGuideLink> and <Size s="10" /> to <A v={LIMIT_10} src={SMALL} />. Its opening words leave room
               for the conductors 240.4(G) lists, and Table 240.4(G) sends air-conditioning and refrigeration circuit conductors to Parts III, IV and
               VI of Article 440.
             </p>

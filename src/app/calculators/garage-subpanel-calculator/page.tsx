@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -290,7 +291,7 @@ export default function GarageSubpanelCalculatorPage() {
         <div className="mt-14 max-w-[44rem] space-y-4">
           <p className={LOOK_LEAD} data-src={CALC}>
             <strong>
-              A <A v={R60.ratingA} /> garage feeder takes <Pair cu={R60.cu60.size} al={R60.al60.size} /> at <C v={GARAGE_LOW} /> terminals, or{' '}
+              A <AmpGuideLink a={R60.ratingA} className={LINK}><A v={R60.ratingA} /> garage feeder</AmpGuideLink> takes <Pair cu={R60.cu60.size} al={R60.al60.size} /> at <C v={GARAGE_LOW} /> terminals, or{' '}
               <Pair cu={R60.cu75.size} al={R60.al75.size} /> where every termination is listed and identified for <C v={GARAGE_HIGH} /> conductors.
             </strong>{' '}
             <span data-src={GND}>
@@ -321,7 +322,7 @@ export default function GarageSubpanelCalculatorPage() {
               <SizeTable material="al" />
             </div>
             <p className="text-[15px] leading-[1.6] text-[#333333]" data-src={SMALL}>
-              240.4(D) holds <Size s="10" /> aluminum to <A v={AL10.max_ocpd_a} src={SMALL} />, so a <A v={R30.ratingA} /> feeder takes{' '}
+              240.4(D) holds <Size s="10" /> aluminum to <A v={AL10.max_ocpd_a} src={SMALL} />, so a <AmpGuideLink a={R30.ratingA} className={LINK}><A v={R30.ratingA} /> feeder</AmpGuideLink> takes{' '}
               <Size s={R30.al60.size} /> aluminum in both columns.
             </p>
             <h3 className={H3}>One size smaller under 240.4(B)</h3>

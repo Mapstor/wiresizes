@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -237,7 +238,7 @@ export default function HotTubCalculatorPage() {
         <div className="mt-14 max-w-[44rem] space-y-4">
           <p className={LOOK_LEAD} data-src={CALC}>
             <strong>
-              A <A v={HT_MAIN_A} src={SPAS} /> hot tub circuit takes <Size s={MAIN.cu60.size} /> copper at <C v={HT_LOW} /> terminals, or{' '}
+              A <AmpGuideLink a={HT_MAIN_A} className={LINK}><A v={HT_MAIN_A} src={SPAS} /> hot tub circuit</AmpGuideLink> takes <Size s={MAIN.cu60.size} /> copper at <C v={HT_LOW} /> terminals, or{' '}
               <Size s={MAIN.cu75.size} /> where the breaker, the disconnect and the hot tub are listed for <C v={HT_HIGH} />, with a{' '}
               <Size s={MAIN.egc} /> copper ground wire and four wires in all.
             </strong>{' '}
@@ -258,7 +259,7 @@ export default function HotTubCalculatorPage() {
               The circuit is sized by the breaker the hot tub&apos;s manual names, in Table 310.16. Under 110.14(C)(1)(a) a circuit of{' '}
               <A v={TERMINATION_RULES.limitA} src={TERM} /> or less is sized in the <C v={HT_LOW} /> column unless the breaker, the disconnect and
               the hot tub are all listed and identified for <C v={HT_HIGH} /> conductors; the site keeps NM and UF cable at <C v={HT_LOW} />. A{' '}
-              <A v={60} src="input" /> circuit takes <Size s={SIXTY.cu60.size} /> or <Size s={SIXTY.cu75.size} />.
+              <AmpGuideLink a={60} className={LINK}><A v={60} src="input" /> circuit</AmpGuideLink> takes <Size s={SIXTY.cu60.size} /> or <Size s={SIXTY.cu75.size} />.
             </p>
             <BreakerTable />
           </section>
@@ -323,8 +324,8 @@ export default function HotTubCalculatorPage() {
               120 V plug-in hot tubs
             </h2>
             <p className={P} data-src={SPAS}>
-              Plug-in hot tubs run on a dedicated <Val v={120} unit="V" src={SPAS} /> circuit: <A v={15} src={SPAS} /> for Bullfrog and Marquis, and{' '}
-              <A v={20} src={SPAS} /> with a GFCI breaker and <Size s="12" /> wire for Hot Spring&apos;s <Val v={115} unit="V" src={SPAS} /> model. The
+              Plug-in hot tubs run on a dedicated <Val v={120} unit="V" src={SPAS} /> circuit: <AmpGuideLink a={15} className={LINK}><A v={15} src={SPAS} /></AmpGuideLink> for Bullfrog and Marquis, and{' '}
+              <AmpGuideLink a={20} className={LINK}><A v={20} src={SPAS} /></AmpGuideLink> with a GFCI breaker and <Size s="12" /> wire for Hot Spring&apos;s <Val v={115} unit="V" src={SPAS} /> model. The
               cord&apos;s length is fixed; Marquis puts the receptacle at least <Val v={5} unit="ft" src={SPAS} /> from the hot tub and rules out
               extension cords.
             </p>
