@@ -391,7 +391,7 @@ export default function WireSizeFor50AmpPage() {
                   <th scope="col" className={clsx(RTH, TIGHT_TH)}>
                     Volts
                   </th>
-                  <th scope="col" className={clsx(RTH, TIGHT_TH)}>
+                  <th scope="col" className={clsx(RTH, TIGHT_TH, '!text-left')}>
                     Wires
                   </th>
                 </tr>
