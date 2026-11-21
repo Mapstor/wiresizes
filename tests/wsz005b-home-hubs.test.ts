@@ -23,7 +23,7 @@ describe('the route list', () => {
     const live = DATED.filter((route) => route.startsWith('/calculators/') || route.startsWith('/guides/')).sort();
     assert.deepEqual([...PATHS].sort(), live);
     assert.equal(sectionRoutes('calculators').length, 28);
-    assert.equal(sectionRoutes('guides').length, 10);
+    assert.equal(sectionRoutes('guides').length, 17);
   });
 
   it('holds no withdrawn route and no redirect source', () => {

@@ -229,16 +229,58 @@ export const ROUTES: readonly SiteRoute[] = [
     line: 'The National Electrical Code edition each state has adopted, with its start date, who it covers and any scheduled change, from state records.',
   },
   {
+    path: '/guides/wire-size-for-15-amp',
+    group: 'service-circuit',
+    name: 'Wire Size for 15 Amp Breaker',
+    line: 'Copper and aluminum wire for the breaker, why the small-conductor limit of NEC 240.4(D) and not Table 310.16 sets the answer, how far the circuit runs at both household voltages, and its receptacle.',
+  },
+  {
+    path: '/guides/wire-size-for-20-amp',
+    group: 'service-circuit',
+    name: 'Wire Size for 20 Amp Breaker',
+    line: 'Copper and aluminum wire for the breaker, why the next smaller size may not be used under NEC 240.4(D), the circuit at both household voltages with the long-run sizes, and its receptacles.',
+  },
+  {
+    path: '/guides/wire-size-for-30-amp',
+    group: 'service-circuit',
+    name: 'Wire Size for 30 Amp Breaker',
+    line: 'Copper and aluminum wire for the breaker at the limit of NEC 240.4(D), the circuit at both household voltages, the four receptacles of this rating with the dryers, RV outlets and chargers that use them, and a feeder to an outbuilding.',
+  },
+  {
+    path: '/guides/wire-size-for-40-amp',
+    group: 'service-circuit',
+    name: 'Wire Size for 40 Amp Breaker',
+    line: 'Copper wire that does not change with the terminals and aluminum that does, NM cable at its limit, ranges and EV chargers on the circuit, the voltage drop and a subpanel feeder.',
+  },
+  {
     path: '/guides/wire-size-for-50-amp',
     group: 'service-circuit',
     name: 'Wire Size for 50 Amp Breaker',
     line: 'Copper and aluminum wire for the breaker in NM cable or at each terminal temperature, with the receptacles it feeds, a subpanel feeder, the ground wire and the voltage drop.',
   },
   {
+    path: '/guides/wire-size-for-60-amp',
+    group: 'service-circuit',
+    name: 'Wire Size for 60 Amp Breaker',
+    line: 'Copper and aluminum wire by the terminal rating, the smaller size NEC 240.4(B) allows and the load it may carry, a subpanel or service, an EV charger, the ground wire and the voltage drop.',
+  },
+  {
+    path: '/guides/wire-size-for-70-80-90-amp',
+    group: 'service-circuit',
+    name: 'Wire Size for 70, 80 and 90 Amp Breakers',
+    line: 'The three ratings side by side at each terminal temperature, every smaller size NEC 240.4(B) allows with the load it carries, an EV charger on the lowest rating, feeders to a detached building and the run lengths.',
+  },
+  {
     path: '/guides/wire-size-for-100-amp',
     group: 'service-circuit',
     name: 'Wire Size for 100 Amp Subpanel or Service',
     line: 'A subpanel feeder by the rating of its terminals, a dwelling service from NEC Table 310.12, the ground wires, a feeder to a detached garage and the voltage drop.',
+  },
+  {
+    path: '/guides/wire-size-for-125-amp',
+    group: 'service-circuit',
+    name: 'Wire Size for 125 Amp Service or Subpanel',
+    line: 'A dwelling service from NEC Table 310.12 beside a subpanel feeder from Table 310.16, the service sizes on a lightly loaded feeder under 240.4(B), both ground wires, a detached building and the voltage drop.',
   },
   {
     path: '/guides/wire-size-for-200-amp',

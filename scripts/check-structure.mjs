@@ -337,7 +337,7 @@ function mainLinks(page) {
 //     homepage links every live guide too (all three read src/lib/routes.ts, D-26)
 {
   const failures = [];
-  if (LIVE_GUIDES.length !== 10) failures.push(`${LIVE_GUIDES.length} live guides, expected 10`);
+  if (LIVE_GUIDES.length !== 17) failures.push(`${LIVE_GUIDES.length} live guides, expected 17`);
   const expectLinks = (route, targets) => {
     const page = pageByRoute.get(route);
     if (!page) {
@@ -351,7 +351,7 @@ function mainLinks(page) {
   expectLinks('/calculators', LIVE_CALCULATORS);
   expectLinks('/guides', LIVE_GUIDES);
   for (const route of LIVE_GUIDES) expectLinks(route, LIVE_GUIDES);
-  check('inside <main>, / links to all 28 live calculators and all 10 live guides, /calculators to the calculators, /guides to the guides, and each guide to every other guide', failures, `${2 + 1 + LIVE_GUIDES.length} pages`);
+  check('inside <main>, / links to all 28 live calculators and all 17 live guides, /calculators to the calculators, /guides to the guides, and each guide to every other guide', failures, `${2 + 1 + LIVE_GUIDES.length} pages`);
 }
 
 // 13. Internal links on live pages and the 404 page reach a built page or route, and their #fragments exist
@@ -708,7 +708,7 @@ const usDate = (iso) => `${MONTHS[Number(iso.slice(5, 7)) - 1]} ${Number(iso.sli
     }
   }
   check(
-    'exactly the 28 live calculators, the 10 live guides and /methodology render one byline (name → /about, Updated = page-dates.json modified); "Sources below" only beside a rendered <Sources>',
+    'exactly the 28 live calculators, the 17 live guides and /methodology render one byline (name → /about, Updated = page-dates.json modified); "Sources below" only beside a rendered <Sources>',
     failures,
     `${bylines} bylines, ${withSources} with "Sources below"`,
   );

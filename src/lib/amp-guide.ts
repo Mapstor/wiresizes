@@ -40,7 +40,8 @@ export interface AmpPick {
   below: { size: SizeKey; ampacity: number } | null;
 }
 
-function pick(ratingA: number, material: Material, termination: Termination, wiringMethod: WiringMethod): AmpPick {
+/** The engine's size for a rating in one material, termination and wiring method. */
+export function pick(ratingA: number, material: Material, termination: Termination, wiringMethod: WiringMethod): AmpPick {
   const m = minimumConductor({ ocpdA: ratingA, material, termination, wiringMethod });
   if (!m || m.egc === null) throw new Error(`amp guide: no ${material} size for ${ratingA} A`);
   const ampacity = table31016(m.size, columnKey(material, m.columnC));
@@ -48,11 +49,13 @@ function pick(ratingA: number, material: Material, termination: Termination, wir
   return { size: m.size, ampacity, egc: m.egc, below: m.below };
 }
 
-function ladder(material: Material, from: SizeKey, to: SizeKey, low: AmpacityColumn, high: AmpacityColumn): LadderRow[] {
+/** Table 310.16 at the two columns, from one size below `from` to one size above `to`. */
+export function ladder(material: Material, from: SizeKey, to: SizeKey, low: AmpacityColumn, high: AmpacityColumn): LadderRow[] {
   const sizes = TABLE_310_16_ROWS.filter((r) => r[columnKey(material, low)] !== null).map((r) => r.size);
-  const i = sizes.indexOf(from) - 1;
+  // one size either side, or from the column's first size when `from` is already the smallest
+  const i = Math.max(0, sizes.indexOf(from) - 1);
   const j = sizes.indexOf(to) + 1;
-  if (i < 0 || j >= sizes.length) throw new Error('amp guide: the ladder runs off Table 310.16');
+  if (sizes.indexOf(from) < 0 || j >= sizes.length) throw new Error('amp guide: the ladder runs off Table 310.16');
   return sizes.slice(i, j + 1).map((size) => {
     const a60 = table31016(size, columnKey(material, low));
     const a75 = table31016(size, columnKey(material, high));
@@ -61,16 +64,16 @@ function ladder(material: Material, from: SizeKey, to: SizeKey, low: AmpacityCol
   });
 }
 
-/** The full rating over a one-way run, single-phase at AMP_VOLTS, conductors at the engine's 75 °C. */
-export function ampDrop(size: SizeKey, material: Material, amps: number, lengthFt: number): DropRun {
-  const r = dropRun({ size, material, amps, lengthFt, volts: AMP_VOLTS, circuit: 'single', sets: 1, tempC: RESISTANCE_TEMP_C });
+/** The full rating over a one-way run, single-phase at AMP_VOLTS (or `volts`), conductors at the engine's 75 °C. */
+export function ampDrop(size: SizeKey, material: Material, amps: number, lengthFt: number, volts: number = AMP_VOLTS): DropRun {
+  const r = dropRun({ size, material, amps, lengthFt, volts, circuit: 'single', sets: 1, tempC: RESISTANCE_TEMP_C });
   if (!r) throw new Error(`amp guide: no drop for ${size} ${material}`);
   return r;
 }
 
-/** The one-way length at which the full rating reaches the 215.2(A) note's 3 %, ft. */
-export function noteFt(size: SizeKey, material: Material, amps: number): number {
-  const ft = lengthForDrop({ size, material, amps, volts: AMP_VOLTS, circuit: 'single', sets: 1, tempC: RESISTANCE_TEMP_C }, VOLTAGE_DROP_NOTE.feederPct);
+/** The one-way length at which the full rating reaches the 215.2(A) note's 3 %, single-phase at AMP_VOLTS (or `volts`), ft. */
+export function noteFt(size: SizeKey, material: Material, amps: number, volts: number = AMP_VOLTS): number {
+  const ft = lengthForDrop({ size, material, amps, volts, circuit: 'single', sets: 1, tempC: RESISTANCE_TEMP_C }, VOLTAGE_DROP_NOTE.feederPct);
   if (ft === null) throw new Error(`amp guide: no note length for ${size} ${material}`);
   return ft;
 }

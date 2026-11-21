@@ -19,7 +19,7 @@ import { ADJUSTMENT_ROWS } from '@/lib/verified/nec-310-15-C-1';
 import { VOLTAGE_DROP_NOTE } from '@/lib/verified/nec-continuous-load-2023';
 import { TABLE_310_16_ROWS, table31016 } from '@/lib/verified/nec-310-16';
 import { decimalsAtSig, formatValue } from '@/lib/calculations/format';
-import { dropRun, lengthForDrop } from '@/lib/calculations/voltage-drop';
+import { RESISTANCE_TEMP_C, dropRun, lengthForDrop } from '@/lib/calculations/voltage-drop';
 import { lowVoltageSize, lvLengthForDrop } from '@/lib/calculations/dc-sizing';
 import { SQRT3, TP_WYE_SYSTEMS } from '@/lib/calculations/power';
 import type { TpResult } from '@/lib/calculations/power';
@@ -53,6 +53,8 @@ import type { EvRow } from '@/lib/ev-guide';
 import type { LadderRow } from '@/lib/subpanel-guide';
 import { AMP_VOLTS, ampDrop } from '@/lib/amp-guide';
 import type { AmpGuide } from '@/lib/amp-guide';
+import { LOW_VOLTS } from '@/lib/amp-guides';
+import type { LengthRow, LimitRow } from '@/lib/amp-guides';
 
 export const COPPER = '#a95a26';
 export const ALUMINUM = '#2f6aa3';
@@ -2983,8 +2985,24 @@ export function SubpanelDropChart() {
 
 // the amp-rating guides (WSZ-041): one rating's sizes as dots at 60 and 75 °C, and its drop by length ─────────────
 
-function AmpLadderPlot({ narrow, guide }: { narrow: boolean; guide: AmpGuide }) {
+interface LadderOptions {
+  /** Breaker ratings to draw as lines; default the guide's own. */
+  ratings?: number[];
+  /** A shaded band from `fromA` to the first rating (the 125 A guide's dwelling service); the caption names it. */
+  band?: { fromA: number };
+  /** Bold size labels: default the guide's 60 and 75 °C picks. */
+  picks?: { cu: string[]; al: string[] };
+  /** Legend lines in place of the column and terminal pair. */
+  legend?: [ReactNode, ReactNode];
+  /** The ids' and title's name for the chart, default the rating. */
+  name?: string;
+  /** The title's last sentence, default the guide's answer. */
+  answer?: string;
+}
+
+function AmpLadderPlot({ narrow, guide, opts = {} }: { narrow: boolean; guide: AmpGuide; opts?: LadderOptions }) {
   const g = guide;
+  const ratings = opts.ratings ?? [g.ratingA];
   const W = narrow ? 288 : 560;
   const left = narrow ? 64 : 88;
   const right = narrow ? 16 : 56;
@@ -2993,22 +3011,23 @@ function AmpLadderPlot({ narrow, guide }: { narrow: boolean; guide: AmpGuide }) 
   const headH = narrow ? 24 : 26;
   const gap = 10;
   const groups: { rows: LadderRow[]; name: string; color: string; picks: string[] }[] = [
-    { rows: g.ladder.cu, name: 'Copper', color: COPPER, picks: [g.c75.cu.size, g.nm.cu.size] },
-    { rows: g.ladder.al, name: 'Aluminum', color: ALUMINUM, picks: [g.c75.al.size, g.nm.al.size] },
+    { rows: g.ladder.cu, name: 'Copper', color: COPPER, picks: opts.picks?.cu ?? [g.c75.cu.size, g.nm.cu.size] },
+    { rows: g.ladder.al, name: 'Aluminum', color: ALUMINUM, picks: opts.picks?.al ?? [g.c75.al.size, g.nm.al.size] },
   ];
   const all = groups.flatMap((grp) => grp.rows);
-  const aMin = Math.floor((Math.min(...all.map((r) => r.a60)) - 5) / 10) * 10;
-  const aMax = Math.ceil((Math.max(...all.map((r) => r.a75)) + 5) / 10) * 10;
+  const aMin = Math.floor((Math.min(...all.map((r) => r.a60), ...(opts.band ? [opts.band.fromA] : [])) - 5) / 10) * 10;
+  const aMax = Math.ceil((Math.max(...all.map((r) => r.a75), ...ratings) + 5) / 10) * 10;
   const bodyH = groups.reduce((h, grp) => h + headH + grp.rows.length * rowH, 0) + gap;
   const H = top + bodyH + 44;
   const pw = W - left - right;
   const x = (a: number) => left + ((a - aMin) / (aMax - aMin)) * pw;
-  const step = narrow ? 20 : 10;
+  const span = aMax - aMin;
+  const step = (narrow ? 20 : 10) * (span > 100 ? 2 : 1);
   const ticks: number[] = [];
-  for (let t = aMin + (narrow ? 10 : 0); t <= aMax; t += step) ticks.push(t);
+  for (let t = aMin + (narrow ? step / 2 : 0); t <= aMax; t += step) ticks.push(t);
   const plotTop = top - 6;
   const plotBottom = top + bodyH;
-  const id = `amp-ladder-${g.ratingA}-${narrow ? 'narrow' : 'wide'}`;
+  const id = `amp-ladder-${opts.name ?? g.ratingA}-${narrow ? 'narrow' : 'wide'}`;
   let yAt = top;
   const rows = groups.map((grp, gi) => {
     const head = yAt + (gi === 0 ? 0 : gap);
@@ -3032,21 +3051,42 @@ function AmpLadderPlot({ narrow, guide }: { narrow: boolean; guide: AmpGuide }) 
       data-src={AMP}
     >
       <title id={`${id}-title`}>
-        {`Allowable ampacity, NEC Table 310.16, of the sizes around ${g.ratingA} A in the ${g.low} °C and ${g.high} °C columns: ${words(g.ladder.cu, 'copper')}; ${words(g.ladder.al, 'aluminum')}. A ${g.ratingA} A breaker needs a size that reaches ${g.ratingA} A in the column its terminations allow: ${formatSize(g.nm.cu.size)} copper or ${formatSize(g.nm.al.size)} aluminum at ${g.low} °C, ${formatSize(g.c75.cu.size)} copper or ${formatSize(g.c75.al.size)} aluminum at ${g.high} °C.`}
+        {`Allowable ampacity, NEC Table 310.16, of the sizes around ${ratings.join(', ')} A in the ${g.low} °C and ${g.high} °C columns: ${words(g.ladder.cu, 'copper')}; ${words(g.ladder.al, 'aluminum')}. ${opts.answer ?? `A ${g.ratingA} A breaker needs a size that reaches ${g.ratingA} A in the column its terminations allow: ${formatSize(g.nm.cu.size)} copper or ${formatSize(g.nm.al.size)} aluminum at ${g.low} °C, ${formatSize(g.c75.cu.size)} copper or ${formatSize(g.c75.al.size)} aluminum at ${g.high} °C.`}`}
       </title>
       <g>
         <circle cx={6} cy={15} r={5.5} fill="#ffffff" stroke={INK} strokeWidth={2} />
         <text x={18} y={20} fontSize={14} fill={INK}>
-          <Val v={g.low} unit="°C" src={AMP} svg />: NM cable, <Val v={g.low} unit="°C" src="nec-110-14c" svg /> terminals
+          {opts.legend ? (
+            opts.legend[0]
+          ) : (
+            <>
+              <Val v={g.low} unit="°C" src={AMP} svg />: NM cable, <Val v={g.low} unit="°C" src="nec-110-14c" svg /> terminals
+            </>
+          )}
         </text>
         <circle cx={6} cy={39} r={5.5} fill={INK} />
         <text x={18} y={44} fontSize={14} fill={INK}>
-          <Val v={g.high} unit="°C" src={AMP} svg />: <Val v={g.high} unit="°C" src="nec-110-14c" svg /> terminations
+          {opts.legend ? (
+            opts.legend[1]
+          ) : (
+            <>
+              <Val v={g.high} unit="°C" src={AMP} svg />: <Val v={g.high} unit="°C" src="nec-110-14c" svg /> terminations
+            </>
+          )}
         </text>
       </g>
-      <text x={x(g.ratingA)} y={plotTop - 10} textAnchor="middle" fontSize={13} fontWeight={600} fill={INK}>
-        <Val v={g.ratingA} unit="A" src={OCPD_SRC} svg /> breaker
-      </text>
+      {opts.band && (
+        <g data-src="nec-310-12">
+          <rect x={x(opts.band.fromA)} y={plotTop} width={x(ratings[0]) - x(opts.band.fromA)} height={plotBottom - plotTop} fill="#f5f2ee" />
+          <line x1={x(opts.band.fromA)} x2={x(opts.band.fromA)} y1={plotTop} y2={plotBottom} stroke={INK} strokeWidth={1.5} strokeDasharray="5 4" />
+        </g>
+      )}
+      {ratings.map((a, k) => (
+        <text key={a} x={x(a)} y={plotTop - 10} textAnchor={ratings.length > 1 ? (k === 0 ? 'end' : k === ratings.length - 1 ? 'start' : 'middle') : 'middle'} fontSize={13} fontWeight={600} fill={INK}>
+          <Val v={a} unit="A" src={OCPD_SRC} svg />
+          {ratings.length === 1 && ' breaker'}
+        </text>
+      ))}
       {ticks.map((t) => (
         <g key={t}>
           <line x1={x(t)} x2={x(t)} y1={plotTop} y2={plotBottom} stroke={GRID} strokeWidth={1} />
@@ -3055,7 +3095,9 @@ function AmpLadderPlot({ narrow, guide }: { narrow: boolean; guide: AmpGuide }) 
           </text>
         </g>
       ))}
-      <line x1={x(g.ratingA)} x2={x(g.ratingA)} y1={plotTop} y2={plotBottom} stroke={INK} strokeWidth={1.5} />
+      {ratings.map((a) => (
+        <line key={a} x1={x(a)} x2={x(a)} y1={plotTop} y2={plotBottom} stroke={INK} strokeWidth={1.5} />
+      ))}
       <text x={left + pw / 2} y={H - 4} textAnchor="middle" fontSize={13} fill={MUTED}>
         Ampacity (size on the left)
       </text>
@@ -3095,23 +3137,56 @@ function AmpLadderPlot({ narrow, guide }: { narrow: boolean; guide: AmpGuide }) 
 }
 
 /** An amp guide's answer as a picture: each size's 60 °C (open) and 75 °C (filled) ampacity against the breaker rating. */
-export function AmpLadder({ guide }: { guide: AmpGuide }) {
+export function AmpLadder({ guide, opts }: { guide: AmpGuide; opts?: LadderOptions }) {
   return (
     <div>
-      <AmpLadderPlot narrow={false} guide={guide} />
-      <AmpLadderPlot narrow guide={guide} />
+      <AmpLadderPlot narrow={false} guide={guide} opts={opts} />
+      <AmpLadderPlot narrow guide={guide} opts={opts} />
     </div>
   );
 }
 
-function AmpDropPlot({ narrow, guide, lengths }: { narrow: boolean; guide: AmpGuide; lengths: number[] }) {
-  const g = guide;
-  const lines = [
-    { key: 'cu-low', material: 'Cu' as const, size: g.nm.cu.size, column: g.low, color: COPPER, dash: undefined },
-    { key: 'al-low', material: 'Al' as const, size: g.nm.al.size, column: g.low, color: ALUMINUM, dash: undefined },
-    { key: 'cu-high', material: 'Cu' as const, size: g.c75.cu.size, column: g.high, color: COPPER, dash: '6 4' },
-    { key: 'al-high', material: 'Al' as const, size: g.c75.al.size, column: g.high, color: ALUMINUM, dash: '6 4' },
+/** One line of an amp guide's drop chart: a size in one metal; `label` replaces "<size> <metal>, <column>". */
+export interface AmpDropLine {
+  key: string;
+  material: 'Cu' | 'Al';
+  size: string;
+  column: number;
+  dashed: boolean;
+  label?: ReactNode;
+  /** Words for the chart's title, with `label`. */
+  words?: string;
+}
+
+/** The guide's four sizes; where the 60 and 75 °C sizes are the same, one line for both columns. */
+function defaultDropLines(g: AmpGuide): AmpDropLine[] {
+  const lines: AmpDropLine[] = [
+    { key: 'cu-low', material: 'Cu', size: g.nm.cu.size, column: g.low, dashed: false },
+    { key: 'al-low', material: 'Al', size: g.nm.al.size, column: g.low, dashed: false },
+    { key: 'cu-high', material: 'Cu', size: g.c75.cu.size, column: g.high, dashed: true },
+    { key: 'al-high', material: 'Al', size: g.c75.al.size, column: g.high, dashed: true },
   ];
+  return lines
+    .filter((l) => !(l.dashed && lines.some((o) => !o.dashed && o.material === l.material && o.size === l.size)))
+    .map((l) =>
+      !l.dashed && lines.some((o) => o.dashed && o.material === l.material && o.size === l.size)
+        ? {
+            ...l,
+            label: (
+              <>
+                <Size s={l.size} svg /> {l.material === 'Cu' ? 'copper' : 'aluminum'}, <Val v={g.low} unit="°C" src="nec-110-14c" svg /> and{' '}
+                <Val v={g.high} unit="°C" src="nec-110-14c" svg />
+              </>
+            ),
+            words: `${formatSize(l.size)} ${l.material === 'Cu' ? 'copper' : 'aluminum'} at ${g.low} and ${g.high} °C`,
+          }
+        : l,
+    );
+}
+
+function AmpDropPlot({ narrow, guide, lengths, custom }: { narrow: boolean; guide: AmpGuide; lengths: number[]; custom?: AmpDropLine[] }) {
+  const g = guide;
+  const lines = (custom ?? defaultDropLines(g)).map((l) => ({ ...l, color: l.material === 'Cu' ? COPPER : ALUMINUM, dash: l.dashed ? '6 4' : undefined }));
   const W = narrow ? 288 : 560;
   const left = narrow ? 40 : 48;
   const right = narrow ? 16 : 24;
@@ -3126,7 +3201,7 @@ function AmpDropPlot({ narrow, guide, lengths }: { narrow: boolean; guide: AmpGu
   const y = (p: number) => top + ph - (Math.min(p, maxPct) / maxPct) * ph;
   const notePct = VOLTAGE_DROP_NOTE.feederPct;
   const id = `amp-drop-${g.ratingA}-${narrow ? 'narrow' : 'wide'}`;
-  const ends = lines.map((l) => `${formatSize(l.size)} ${l.material === 'Cu' ? 'copper' : 'aluminum'} ${pct(l.material, l.size, maxFt).toFixed(2)} %`).join(', ');
+  const ends = lines.map((l) => `${l.words ?? `${formatSize(l.size)} ${l.material === 'Cu' ? 'copper' : 'aluminum'}`} ${pct(l.material, l.size, maxFt).toFixed(2)} %`).join(', ');
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
@@ -3138,7 +3213,7 @@ function AmpDropPlot({ narrow, guide, lengths }: { narrow: boolean; guide: AmpGu
       data-src="calc:voltage-drop"
     >
       <title id={`${id}-title`}>
-        {`Voltage drop of a ${g.ratingA} A circuit at full load, single-phase at ${AMP_VOLTS} V, against one-way length, on the ${g.low} °C sizes (solid) and the ${g.high} °C sizes (dashed): at ${maxFt} ft, ${ends}`}
+        {`Voltage drop of a ${g.ratingA} A circuit at full load, single-phase at ${AMP_VOLTS} V, against one-way length, ${custom ? 'on the sizes in the key' : `on the ${g.low} °C sizes (solid) and the ${g.high} °C sizes (dashed)`}: at ${maxFt} ft, ${ends}`}
       </title>
       {lines.map((l, k) => {
         const kx = narrow ? 0 : k % 2 === 0 ? 0 : 270;
@@ -3147,7 +3222,11 @@ function AmpDropPlot({ narrow, guide, lengths }: { narrow: boolean; guide: AmpGu
           <g key={l.key}>
             <line x1={kx} x2={kx + 18} y1={ky - 5} y2={ky - 5} stroke={l.color} strokeWidth={3} strokeDasharray={l.dash} />
             <text x={kx + 25} y={ky} fontSize={14} fill={INK}>
-              <Size s={l.size} svg /> {l.material === 'Cu' ? 'copper' : 'aluminum'}, <Val v={l.column} unit="°C" src="nec-110-14c" svg />
+              {l.label ?? (
+                <>
+                  <Size s={l.size} svg /> {l.material === 'Cu' ? 'copper' : 'aluminum'}, <Val v={l.column} unit="°C" src="nec-110-14c" svg />
+                </>
+              )}
             </text>
           </g>
         );
@@ -3193,11 +3272,206 @@ function AmpDropPlot({ narrow, guide, lengths }: { narrow: boolean; guide: AmpGu
 }
 
 /** An amp guide's circuit at full load: voltage drop by one-way length on the 60 °C and 75 °C sizes, with the 215.2(A) note. */
-export function AmpDropChart({ guide, lengths }: { guide: AmpGuide; lengths: number[] }) {
+export function AmpDropChart({ guide, lengths, lines }: { guide: AmpGuide; lengths: number[]; lines?: AmpDropLine[] }) {
   return (
     <div>
-      <AmpDropPlot narrow={false} guide={guide} lengths={lengths} />
-      <AmpDropPlot narrow guide={guide} lengths={lengths} />
+      <AmpDropPlot narrow={false} guide={guide} lengths={lengths} custom={lines} />
+      <AmpDropPlot narrow guide={guide} lengths={lengths} custom={lines} />
+    </div>
+  );
+}
+
+// the 15, 20 and 30 A guides: Table 310.16 against the 240.4(D) limits, and how far the rating runs at 120 and 240 V ──
+
+const LIMIT_SRC = 'nec-240-4-d';
+const LIMIT_BAR = '#57514c';
+
+function LimitPlot({ narrow, rows, highlight, ratingA, low, high }: { narrow: boolean; rows: LimitRow[]; highlight: string[]; ratingA: number; low: number; high: number }) {
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 64 : 92;
+  const right = narrow ? 14 : 40;
+  const top = narrow ? 92 : 70;
+  const rowH = narrow ? 40 : 42;
+  const headH = 26;
+  const gap = 10;
+  const groups = (['Cu', 'Al'] as const).map((m) => ({ m, name: m === 'Cu' ? 'Copper' : 'Aluminum', color: m === 'Cu' ? COPPER : ALUMINUM, rows: rows.filter((r) => r.material === m) }));
+  const bodyH = groups.reduce((h, grp) => h + headH + grp.rows.length * rowH, 0) + gap;
+  const H = top + bodyH + 44;
+  const pw = W - left - right;
+  const aMax = Math.ceil((Math.max(...rows.map((r) => r.a90)) + 3) / 10) * 10;
+  const x = (a: number) => left + (a / aMax) * pw;
+  const ticks: number[] = [];
+  for (let t = 0; t <= aMax; t += narrow ? 20 : 10) ticks.push(t);
+  const plotTop = top - 6;
+  const plotBottom = top + bodyH;
+  const id = `limit-${ratingA}-${narrow ? 'narrow' : 'wide'}`;
+  let yAt = top;
+  const placed = groups.map((grp, gi) => {
+    const head = yAt + (gi === 0 ? 0 : gap);
+    yAt = head + headH;
+    const items = grp.rows.map((r) => {
+      const cy = yAt + rowH / 2;
+      yAt += rowH;
+      return { ...r, cy };
+    });
+    return { ...grp, head, items };
+  });
+  const words = rows
+    .map((r) => `${formatSize(r.size)} ${r.material === 'Cu' ? 'copper' : 'aluminum'}: ${r.a60} A at ${low} °C and ${r.a75} A at ${high} °C, breaker at most ${r.maxA} A`)
+    .join('; ');
+  const key = (r: LimitRow) => `${r.size}-${r.material}`;
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src={AMP}
+    >
+      <title id={`${id}-title`}>{`Allowable ampacity in NEC Table 310.16 of the small conductors that 240.4(D) limits, against the largest breaker 240.4(D) allows on each: ${words}.`}</title>
+      <g>
+        <path d={barPath(0, 9, 18, 10)} fill={LIMIT_BAR} />
+        <text x={25} y={19} fontSize={14} fill={INK}>
+          Largest breaker, 240.4(D)
+        </text>
+        <circle cx={narrow ? 6 : 230} cy={narrow ? 37 : 14} r={5.5} fill="#ffffff" stroke={INK} strokeWidth={2} />
+        <circle cx={narrow ? 26 : 250} cy={narrow ? 37 : 14} r={5.5} fill={INK} />
+        <text x={narrow ? 38 : 262} y={narrow ? 42 : 19} fontSize={14} fill={INK}>
+          Table 310.16 at <Val v={low} unit="°C" src={AMP} svg /> and <Val v={high} unit="°C" src={AMP} svg />
+        </text>
+      </g>
+      {ticks.map((t) => (
+        <g key={t}>
+          <line x1={x(t)} x2={x(t)} y1={plotTop} y2={plotBottom} stroke={GRID} strokeWidth={1} />
+          <text x={x(t)} y={plotBottom + 20} textAnchor="middle" fontSize={13} fill={MUTED}>
+            <Val v={t} unit="A" src={AMP} svg />
+          </text>
+        </g>
+      ))}
+      <line x1={x(ratingA)} x2={x(ratingA)} y1={plotTop} y2={plotBottom} stroke={INK} strokeWidth={1.5} strokeDasharray="5 4" />
+      <text x={x(ratingA)} y={plotTop - 8} textAnchor="middle" fontSize={13} fontWeight={600} fill={INK} data-src={OCPD_SRC}>
+        <Val v={ratingA} unit="A" src={OCPD_SRC} svg /> breaker
+      </text>
+      <text x={left + pw / 2} y={H - 4} textAnchor="middle" fontSize={13} fill={MUTED}>
+        Amperes (size on the left)
+      </text>
+      {placed.map((grp) => (
+        <g key={grp.m}>
+          <text x={0} y={grp.head + headH - 8} fontSize={13} fontWeight={600} fill={INK}>
+            {grp.name}
+          </text>
+          {grp.items.map((r) => {
+            const on = highlight.includes(key(r));
+            return (
+              <g key={key(r)} className="viz-mark">
+                <text x={left - 12} y={r.cy + 4.5} textAnchor="end" fontSize={13} fill={INK} fontWeight={on ? 600 : 400}>
+                  <Size s={r.size} svg />
+                </text>
+                <path d={barPath(left, r.cy - 13, x(r.maxA) - left, 9)} fill={LIMIT_BAR} opacity={on ? 1 : 0.55} className="viz-grow" data-src={LIMIT_SRC} />
+                {!narrow && (
+                  <text x={x(r.maxA) + 6} y={r.cy - 5} fontSize={13} fill={INK} fontWeight={on ? 600 : 400} data-src={LIMIT_SRC}>
+                    <Val v={r.maxA} unit="A" src={LIMIT_SRC} svg />
+                  </text>
+                )}
+                <line x1={x(r.a60)} x2={x(r.a75)} y1={r.cy + 9} y2={r.cy + 9} stroke={CONNECT} strokeWidth={3} />
+                <circle cx={x(r.a60)} cy={r.cy + 9} r={5.5} fill="#ffffff" stroke={grp.color} strokeWidth={2.5} className="viz-pop" />
+                <circle cx={x(r.a75)} cy={r.cy + 9} r={6} fill={grp.color} stroke="#ffffff" strokeWidth={2} className="viz-pop" />
+              </g>
+            );
+          })}
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+/** Table 310.16 at 60 and 75 °C for the 240.4(D) sizes, under the largest breaker 240.4(D) allows on each. */
+export function LimitChart({ rows, highlight, ratingA, low, high }: { rows: LimitRow[]; highlight: string[]; ratingA: number; low: number; high: number }) {
+  return (
+    <div>
+      <LimitPlot narrow={false} rows={rows} highlight={highlight} ratingA={ratingA} low={low} high={high} />
+      <LimitPlot narrow rows={rows} highlight={highlight} ratingA={ratingA} low={low} high={high} />
+    </div>
+  );
+}
+
+const LOW_V_BAR = '#a39b93';
+
+function LengthPlot({ narrow, rows, ratingA, highlight }: { narrow: boolean; rows: LengthRow[]; ratingA: number; highlight: string }) {
+  const W = narrow ? 288 : 560;
+  const left = narrow ? 64 : 76;
+  const right = narrow ? 44 : 64;
+  const top = narrow ? 56 : 40;
+  const rowH = 46;
+  const barH = 13;
+  const H = top + rows.length * rowH + 40;
+  const pw = W - left - right;
+  const maxFt = Math.ceil(Math.max(...rows.map((r) => r.ft240)) / 50) * 50;
+  const x = (ft: number) => left + (ft / maxFt) * pw;
+  const step = maxFt > 300 ? 100 : 50;
+  const ticks: number[] = [];
+  for (let t = 0; t <= maxFt; t += narrow ? step * 2 : step) ticks.push(t);
+  const id = `lengths-${ratingA}-${narrow ? 'narrow' : 'wide'}`;
+  const words = rows.map((r) => `${formatSize(r.size)} ${Math.round(r.ft120)} ft at ${LOW_VOLTS} V and ${Math.round(r.ft240)} ft at ${AMP_VOLTS} V`).join('; ');
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      role="img"
+      aria-labelledby={`${id}-title`}
+      className={clsx('h-auto font-display', narrow ? 'swap-md-narrow max-w-[420px]' : 'swap-md-wide w-full max-w-[560px]')}
+      data-src="calc:voltage-drop"
+    >
+      <title id={`${id}-title`}>{`One-way length at which ${ratingA} A drops ${VOLTAGE_DROP_NOTE.feederPct} % on copper conductors at ${RESISTANCE_TEMP_C} °C, single-phase: ${words}.`}</title>
+      <Key x={0} y={18} color={LOW_V_BAR}>
+        <Val v={LOW_VOLTS} unit="V" src="calc:voltage-drop" svg />
+      </Key>
+      <Key x={narrow ? 90 : 110} y={18} color={COPPER}>
+        <Val v={AMP_VOLTS} unit="V" src="calc:voltage-drop" svg />
+      </Key>
+      {ticks.map((t) => (
+        <g key={t}>
+          <line x1={x(t)} x2={x(t)} y1={top - 4} y2={top + rows.length * rowH} stroke={GRID} strokeWidth={1} />
+          <text x={x(t)} y={top + rows.length * rowH + 18} textAnchor="middle" fontSize={13} fill={MUTED}>
+            <Num v={t} src="calc:voltage-drop" svg />
+          </text>
+        </g>
+      ))}
+      <text x={left + pw / 2} y={H - 4} textAnchor="middle" fontSize={13} fill={MUTED}>
+        One-way length to a <Val v={VOLTAGE_DROP_NOTE.feederPct} unit="%" src="nec-continuous-load" svg /> drop, ft (copper)
+      </text>
+      {rows.map((r, i) => {
+        const y0 = top + i * rowH + 6;
+        const on = r.size === highlight;
+        return (
+          <g key={r.size} className="viz-mark">
+            <text x={left - 12} y={y0 + barH + 4} textAnchor="end" fontSize={13} fill={INK} fontWeight={on ? 600 : 400}>
+              <Size s={r.size} svg />
+            </text>
+            <path d={barPath(left, y0, x(r.ft120) - left, barH)} fill={LOW_V_BAR} className="viz-grow" />
+            <path d={barPath(left, y0 + barH + 3, x(r.ft240) - left, barH)} fill={COPPER} className="viz-grow" />
+            <text x={x(r.ft120) + 6} y={y0 + 11} fontSize={13} fill={INK}>
+              <Val v={r.ft120} unit="ft" src="calc:voltage-drop" format={{ fixed: 0 }} svg />
+            </text>
+            <text x={x(r.ft240) + 6} y={y0 + barH + 14} fontSize={13} fill={INK}>
+              <Val v={r.ft240} unit="ft" src="calc:voltage-drop" format={{ fixed: 0 }} svg />
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/** How far a rating runs on each copper size before the drop reaches 3 %, at 120 and 240 V. */
+export function LengthBars({ rows, ratingA, highlight }: { rows: LengthRow[]; ratingA: number; highlight: string }) {
+  return (
+    <div>
+      <LengthPlot narrow={false} rows={rows} ratingA={ratingA} highlight={highlight} />
+      <LengthPlot narrow rows={rows} ratingA={ratingA} highlight={highlight} />
     </div>
   );
 }

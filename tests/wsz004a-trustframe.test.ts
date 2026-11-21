@@ -42,10 +42,17 @@ describe('page dates', () => {
     '/calculators/welder-calculator': '2026-11-17',
     '/calculators/conduit-fill-calculator': '2026-11-17',
     '/guides/wire-size-for-50-amp': '2026-11-21',
+    '/guides/wire-size-for-15-amp': '2026-11-21',
+    '/guides/wire-size-for-20-amp': '2026-11-21',
+    '/guides/wire-size-for-30-amp': '2026-11-21',
+    '/guides/wire-size-for-40-amp': '2026-11-21',
+    '/guides/wire-size-for-60-amp': '2026-11-21',
+    '/guides/wire-size-for-70-80-90-amp': '2026-11-21',
+    '/guides/wire-size-for-125-amp': '2026-11-21',
   };
 
   it('every route was published on 2026-02-22, or on the day it was added, and modified on or after it', () => {
-    assert.equal(Object.keys(DATES).length, 47);
+    assert.equal(Object.keys(DATES).length, 54);
     for (const [route, { published, modified }] of Object.entries(DATES)) {
       assert.equal(published, ADDED_LATER[route] ?? '2026-02-22', route);
       assert.match(modified, /^\d{4}-\d{2}-\d{2}$/, route);

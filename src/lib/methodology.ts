@@ -44,6 +44,13 @@ const HP_TO_AMPS = '/calculators/horsepower-to-amps-calculator';
 const GUIDE_200 = '/guides/wire-size-for-200-amp';
 const GUIDE_100 = '/guides/wire-size-for-100-amp';
 const GUIDE_50 = '/guides/wire-size-for-50-amp';
+const GUIDE_15 = '/guides/wire-size-for-15-amp';
+const GUIDE_20 = '/guides/wire-size-for-20-amp';
+const GUIDE_30 = '/guides/wire-size-for-30-amp';
+const GUIDE_40 = '/guides/wire-size-for-40-amp';
+const GUIDE_60 = '/guides/wire-size-for-60-amp';
+const GUIDE_7090 = '/guides/wire-size-for-70-80-90-amp';
+const GUIDE_125 = '/guides/wire-size-for-125-amp';
 const GUIDE_EV = '/guides/wire-size-for-ev-charger';
 const GARAGE = '/calculators/garage-subpanel-calculator';
 const BOX_FILL = '/calculators/box-fill-calculator';
@@ -73,13 +80,13 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'resistance',
     domain: 'conductor-resistance-20c',
     title: 'Conductor resistance and voltage drop',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER, GUIDE_50],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER, GUIDE_50, GUIDE_15, GUIDE_20, GUIDE_30, GUIDE_40, GUIDE_60, GUIDE_7090, GUIDE_125],
   },
   {
     id: 'ampacity',
     domain: 'nec-310-16',
     title: 'Ampacity',
-    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, GUIDE_100, HOME, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER, GUIDE_50],
+    citedOn: [WIRE_SIZE, VOLTAGE_DROP, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, WIRE_RESISTANCE, LOW_VOLTAGE, AWG_CHART, TABLE_310_16, GUIDE_200, GUIDE_100, HOME, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER, GUIDE_50, GUIDE_15, GUIDE_20, GUIDE_30, GUIDE_40, GUIDE_60, GUIDE_7090, GUIDE_125],
   },
   {
     id: 'corrections',
@@ -91,49 +98,49 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'terminals',
     domain: 'nec-110-14c',
     title: 'Terminal temperatures',
-    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER, GUIDE_50],
+    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER, GUIDE_50, GUIDE_15, GUIDE_20, GUIDE_30, GUIDE_40, GUIDE_60, GUIDE_7090, GUIDE_125],
   },
   {
     id: 'small-conductors',
     domain: 'nec-240-4-d',
     title: 'Small-conductor limits',
-    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, AWG_CHART, TABLE_310_16, HOME, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER, GUIDE_50],
+    citedOn: [WIRE_SIZE, AMPACITY, CIRCUIT_BREAKER, RANGE, DRYER, AWG_CHART, TABLE_310_16, HOME, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER, GUIDE_50, GUIDE_15, GUIDE_20, GUIDE_30, GUIDE_40],
   },
   {
     id: 'breaker-ratings',
     domain: 'nec-240-ocpd',
     title: 'Standard breaker and fuse ratings',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER, GUIDE_50],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER, GUIDE_50, GUIDE_15, GUIDE_20, GUIDE_30, GUIDE_40, GUIDE_60, GUIDE_7090, GUIDE_125],
   },
   {
     id: 'continuous-loads',
     domain: 'nec-continuous-load',
     title: 'Continuous loads and the voltage-drop note',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, VOLTAGE_DROP, LOW_VOLTAGE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, GUIDE_50],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, VOLTAGE_DROP, LOW_VOLTAGE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, GUIDE_50, GUIDE_15, GUIDE_20, GUIDE_30, GUIDE_40, GUIDE_60, GUIDE_7090, GUIDE_125],
   },
   {
     id: 'grounding',
     domain: 'nec-250-grounding',
     title: 'Ground wires and grounding electrode conductors',
-    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER, GUIDE_50],
+    citedOn: [WIRE_SIZE, CIRCUIT_BREAKER, RANGE, DRYER, GROUND_WIRE, SERVICE_ENTRANCE, GUIDE_200, GUIDE_100, GUIDE_EV, GARAGE, RV_HOOKUP, HOT_TUB, AIR_CONDITIONER, WELDER, GUIDE_50, GUIDE_15, GUIDE_20, GUIDE_30, GUIDE_40, GUIDE_60, GUIDE_7090, GUIDE_125],
   },
   {
     id: 'service-conductors',
     domain: 'nec-310-12',
     title: 'Dwelling services and feeders',
-    citedOn: [WIRE_SIZE, SERVICE_ENTRANCE, RESIDENTIAL_LOAD, GROUND_WIRE, TABLE_310_16, SINGLE_VS_THREE, GUIDE_200, GUIDE_100, GUIDE_50],
+    citedOn: [WIRE_SIZE, SERVICE_ENTRANCE, RESIDENTIAL_LOAD, GROUND_WIRE, TABLE_310_16, SINGLE_VS_THREE, GUIDE_200, GUIDE_100, GUIDE_50, GUIDE_60, GUIDE_125],
   },
   {
     id: 'separate-buildings',
     domain: 'nec-feeders-outbuildings',
     title: 'Feeders to a separate building',
-    citedOn: [GUIDE_100, GARAGE, GUIDE_50],
+    citedOn: [GUIDE_100, GARAGE, GUIDE_50, GUIDE_30, GUIDE_40, GUIDE_60, GUIDE_7090, GUIDE_125],
   },
   {
     id: 'separate-building-grounding',
     domain: 'nec-250-32',
     title: 'Grounding at a separate building',
-    citedOn: [GUIDE_100, GARAGE, GUIDE_50],
+    citedOn: [GUIDE_100, GARAGE, GUIDE_50, GUIDE_40, GUIDE_60, GUIDE_7090, GUIDE_125],
   },
   {
     id: 'burial-depth',
@@ -169,13 +176,13 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'spa-makers',
     domain: 'mfr-spas',
     title: 'Hot tub makers’ instructions',
-    citedOn: [HOT_TUB, GUIDE_50],
+    citedOn: [HOT_TUB, GUIDE_50, GUIDE_15, GUIDE_20, GUIDE_60],
   },
   {
     id: 'air-conditioning',
     domain: 'nec-440-hvac',
     title: 'Air conditioner circuits, NEC Article 440',
-    citedOn: [AIR_CONDITIONER, WELDER, GUIDE_50],
+    citedOn: [AIR_CONDITIONER, WELDER, GUIDE_50, GUIDE_30, GUIDE_40],
   },
   {
     id: 'ac-makers',
@@ -199,19 +206,19 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'cable-ampacity',
     domain: 'nec-cable-rules',
     title: 'NM cable and neutral counting',
-    citedOn: [GUIDE_100, GUIDE_EV, GUIDE_50],
+    citedOn: [GUIDE_100, GUIDE_EV, GUIDE_50, GUIDE_15, GUIDE_20, GUIDE_40, GUIDE_60],
   },
   {
     id: 'ev-charging',
     domain: 'nec-625-ev',
     title: 'EV charger circuits, NEC Article 625',
-    citedOn: [GUIDE_EV, GUIDE_50],
+    citedOn: [GUIDE_EV, GUIDE_50, GUIDE_20, GUIDE_30, GUIDE_40, GUIDE_60, GUIDE_7090],
   },
   {
     id: 'ev-makers',
     domain: 'mfr-evse',
     title: 'EV charger makers’ instructions',
-    citedOn: [GUIDE_EV],
+    citedOn: [GUIDE_EV, GUIDE_7090],
   },
   {
     id: 'ev-credit',
@@ -229,13 +236,13 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: 'maker-instructions',
     domain: 'mfr-dryer-range',
     title: 'Range and dryer makers’ instructions',
-    citedOn: [RANGE, DRYER, GUIDE_50],
+    citedOn: [RANGE, DRYER, GUIDE_50, GUIDE_30, GUIDE_40],
   },
   {
     id: 'nema-configs',
     domain: 'nema-receptacle-configs',
     title: 'NEMA receptacle configurations',
-    citedOn: [RANGE, DRYER, GUIDE_EV, RV_HOOKUP, WELDER, GUIDE_50],
+    citedOn: [RANGE, DRYER, GUIDE_EV, RV_HOOKUP, WELDER, GUIDE_50, GUIDE_15, GUIDE_20, GUIDE_30],
   },
   {
     id: 'rule-excerpts',
