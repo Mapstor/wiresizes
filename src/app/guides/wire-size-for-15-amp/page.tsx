@@ -277,7 +277,7 @@ export default function WireSizeFor15AmpPage() {
               Aluminum and copper-clad aluminum
             </h2>
             <p className={P} data-src={SMALL}>
-              240.4(D) treats <Size s={G.al} /> aluminum like <Size s={G.cu} /> copper: a <A v={G.alRow.maxA} src={SMALL} /> breaker at most, though
+              Under 240.4(D), <Size s={G.al} /> aluminum is held like <Size s={G.cu} /> copper: a <A v={G.alRow.maxA} src={SMALL} /> breaker at most, though
               Table 310.16 lists it at <A v={G.alRow.a75} src={AMP} /> at <C v={G.high} />. <Size s={G.cu} /> copper-clad aluminum is held to{' '}
               <A v={G.cca.maxA} src={SMALL} />, and only where continuous loads stay at <A v={G.cca.continuousMaxA} src={SMALL} /> or less, so it
               does not reach a <A v={G.ratingA} /> circuit.

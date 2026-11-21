@@ -3015,11 +3015,14 @@ function AmpLadderPlot({ narrow, guide, opts = {} }: { narrow: boolean; guide: A
     { rows: g.ladder.al, name: 'Aluminum', color: ALUMINUM, picks: opts.picks?.al ?? [g.c75.al.size, g.nm.al.size] },
   ];
   const all = groups.flatMap((grp) => grp.rows);
-  const aMin = Math.floor((Math.min(...all.map((r) => r.a60), ...(opts.band ? [opts.band.fromA] : [])) - 5) / 10) * 10;
+  const lowest = Math.min(...all.map((r) => r.a60), ...(opts.band ? [opts.band.fromA] : []));
   const aMax = Math.ceil((Math.max(...all.map((r) => r.a75), ...ratings) + 5) / 10) * 10;
   const bodyH = groups.reduce((h, grp) => h + headH + grp.rows.length * rowH, 0) + gap;
   const H = top + bodyH + 44;
   const pw = W - left - right;
+  // the wide chart writes each 60 °C value left of its dot: leave room for it after the size labels
+  let aMin = Math.floor((lowest - 5) / 10) * 10;
+  if (!narrow && ((lowest - aMin) / (aMax - aMin)) * pw < 44) aMin -= 10;
   const x = (a: number) => left + ((a - aMin) / (aMax - aMin)) * pw;
   const span = aMax - aMin;
   const step = (narrow ? 20 : 10) * (span > 100 ? 2 : 1);
@@ -3298,7 +3301,7 @@ function LimitPlot({ narrow, rows, highlight, ratingA, low, high }: { narrow: bo
   const bodyH = groups.reduce((h, grp) => h + headH + grp.rows.length * rowH, 0) + gap;
   const H = top + bodyH + 44;
   const pw = W - left - right;
-  const aMax = Math.ceil((Math.max(...rows.map((r) => r.a90)) + 3) / 10) * 10;
+  const aMax = Math.ceil((Math.max(...rows.map((r) => r.a75)) + 5) / 10) * 10;
   const x = (a: number) => left + (a / aMax) * pw;
   const ticks: number[] = [];
   for (let t = 0; t <= aMax; t += narrow ? 20 : 10) ticks.push(t);

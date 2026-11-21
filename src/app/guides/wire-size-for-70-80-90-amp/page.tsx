@@ -10,7 +10,7 @@ import { SourceLine } from '@/components/content/SourceLine';
 import { Sources } from '@/components/content/Sources';
 import { Val } from '@/components/content/Val';
 import { LookGuideBody } from '@/components/layout/LookGuideBody';
-import { Ft, LadderTable, Pair } from '@/components/look/AmpParts';
+import { Ft, LadderTable, Pair, an } from '@/components/look/AmpParts';
 import { AmpDropChart, AmpLadder } from '@/components/look/Charts';
 import { OnThisPage } from '@/components/look/OnThisPage';
 import { PageTitle } from '@/components/look/PageTitle';
@@ -121,8 +121,9 @@ export default function WireSizeFor708090AmpPage() {
           <div className="space-y-4">
             <p className={LOOK_LEAD} data-src={AMP}>
               <strong>
-                At <C v={G.low} /> terminals or in NM cable, a <A v={R70.ratingA} /> breaker takes <Size s={R70.nm.cu.size} /> copper, a{' '}
-                <A v={R80.ratingA} /> breaker <Size s={R80.nm.cu.size} /> and a <A v={R90.ratingA} /> breaker <Size s={R90.nm.cu.size} />.
+                At <C v={G.low} /> terminals or in NM cable, {an(R70.ratingA)} <A v={R70.ratingA} /> breaker takes <Size s={R70.nm.cu.size} /> copper,{' '}
+                {an(R80.ratingA)} <A v={R80.ratingA} /> breaker <Size s={R80.nm.cu.size} /> and {an(R90.ratingA)} <A v={R90.ratingA} /> breaker{' '}
+                <Size s={R90.nm.cu.size} />.
               </strong>{' '}
               <span data-src={TERM}>
                 Where every termination is listed and identified for <C v={G.high} /> conductors, the three take <Size s={R70.c75.cu.size} />,{' '}

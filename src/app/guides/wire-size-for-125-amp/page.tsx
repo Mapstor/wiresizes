@@ -10,7 +10,7 @@ import { SourceLine } from '@/components/content/SourceLine';
 import { Sources } from '@/components/content/Sources';
 import { Val } from '@/components/content/Val';
 import { LookGuideBody } from '@/components/layout/LookGuideBody';
-import { DropText, LadderTable, LengthTable, Pair, Pct } from '@/components/look/AmpParts';
+import { DropText, LadderTable, LengthTable, Pair, Pct, an } from '@/components/look/AmpParts';
 import { AmpDropChart, AmpLadder } from '@/components/look/Charts';
 import type { AmpDropLine } from '@/components/look/Charts';
 import { OnThisPage } from '@/components/look/OnThisPage';
@@ -137,7 +137,7 @@ export default function WireSizeFor125AmpPage() {
               </span>
             </p>
             <p className={P} data-src={GND}>
-              The feeder&apos;s ground wire is <Pair cu={G.egc.cu} al={G.egc.al} /> (Table 250.122); a service with <Size s={S.cu} /> copper takes a{' '}
+              The feeder&apos;s ground wire is <Pair cu={G.egc.cu} al={G.egc.al} /> (Table 250.122); a service with <Size s={S.cu} /> copper takes {an(GEC.cu)}{' '}
               <Size s={GEC.cu} /> copper grounding electrode conductor (Table 250.66).
             </p>
           </div>
@@ -380,7 +380,7 @@ export default function WireSizeFor125AmpPage() {
                 What size wire for a <A v={G.ratingA} /> service?
               </h3>
               <p className={P} data-src={SVC}>
-                <Pair cu={S.cu} al={S.alCca} /> for a <span className="whitespace-nowrap">120/240 V</span> dwelling service (Table 310.12), with a{' '}
+                <Pair cu={S.cu} al={S.alCca} /> for a <span className="whitespace-nowrap">120/240 V</span> dwelling service (Table 310.12), with {an(GEC.cu)}{' '}
                 <Pair cu={GEC.cu} al={GEC.alCca} /> grounding electrode conductor (Table 250.66).
               </p>
             </div>
@@ -389,7 +389,7 @@ export default function WireSizeFor125AmpPage() {
                 What size wire for a <A v={G.ratingA} /> subpanel?
               </h3>
               <p className={P} data-src={AMP}>
-                <Pair cu={F.cu.size} al={F.al.size} /> at <C v={G.high} />, with a <Pair cu={G.egc.cu} al={G.egc.al} /> ground wire;{' '}
+                <Pair cu={F.cu.size} al={F.al.size} /> at <C v={G.high} />, with {an(G.egc.cu)} <Pair cu={G.egc.cu} al={G.egc.al} /> ground wire;{' '}
                 <span data-src={OCPD}>
                   <Pair cu={FB.size} al={FBA.size} /> where the subpanel&apos;s calculated load fits them (240.4(B)).
                 </span>
@@ -409,7 +409,7 @@ export default function WireSizeFor125AmpPage() {
                 What size ground wire for <A v={G.ratingA} />?
               </h3>
               <p className={P} data-src={GND}>
-                <Pair cu={G.egc.cu} al={G.egc.al} /> with a feeder (Table 250.122); a <Size s={GEC.cu} /> copper grounding electrode conductor for a
+                <Pair cu={G.egc.cu} al={G.egc.al} /> with a feeder (Table 250.122); {an(GEC.cu)} <Size s={GEC.cu} /> copper grounding electrode conductor for a
                 service with <Size s={S.cu} /> copper (Table 250.66).
               </p>
             </div>

@@ -21,6 +21,11 @@ const TIGHT_TH = 'max-sm:!min-w-0 max-sm:!px-2';
 const TIGHT_TD = 'max-sm:!px-2';
 const WORDS_TD = '!whitespace-normal !font-display !text-left';
 
+/** "a" or "an" before a number read aloud: "an 8 AWG", "an 80 A", "an 11", "an 18". */
+export function an(n: string | number): string {
+  return /^(8|11|18)/.test(String(n)) ? 'an' : 'a';
+}
+
 export function Pair({ cu, al }: { cu: SizeKey; al: SizeKey }) {
   return (
     <>
