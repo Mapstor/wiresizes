@@ -42,6 +42,7 @@ const footerLinks = {
     { name: 'View All Advanced', href: '/calculators', isViewAll: true },
   ],
   guides: [
+    { name: 'Wire Size for 50 Amp', href: '/guides/wire-size-for-50-amp' },
     { name: 'Wire Size for 100 Amp', href: '/guides/wire-size-for-100-amp' },
     { name: 'Wire Size for 200 Amp', href: '/guides/wire-size-for-200-amp' },
     { name: 'EV Charger Wire Guide', href: '/guides/wire-size-for-ev-charger' },
