@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -160,7 +161,7 @@ export default function ServiceEntrancePage() {
               For a 120/240 V dwelling service, NEC Table 310.12 lists the service conductors by rating, and Table 250.66 gives the electrode
               conductor for them.
             </strong>{' '}
-            <Val v={S200.ratingA} unit="A" src={SVC} /> takes <Wires s={S200} />, with a <Gec s={S200} /> electrode conductor.
+            <AmpGuideLink a={S200.ratingA} className={LINK}><Val v={S200.ratingA} unit="A" src={SVC} /></AmpGuideLink> takes <Wires s={S200} />, with a <Gec s={S200} /> electrode conductor.
           </p>
         </div>
 

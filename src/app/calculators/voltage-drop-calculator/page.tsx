@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -186,7 +187,7 @@ export default function VoltageDropCalculatorPage() {
         <div className="mt-14 grid gap-10 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:gap-12">
           <p className={LOOK_LEAD} data-src={CALC}>
             <strong>Voltage drop is the current times the resistance of the wire, out and back on a single-phase circuit.</strong> On a{' '}
-            <Val v={120} unit="V" src={VOLTS} /> circuit, <Size s="12" /> copper carrying <Val v={TWELVE_120.amps} unit="A" src={AMP} /> loses{' '}
+            <Val v={120} unit="V" src={VOLTS} /> circuit, <Size s="12" /> copper carrying <AmpGuideLink a={TWELVE_120.amps} className={LINK}><Val v={TWELVE_120.amps} unit="A" src={AMP} /></AmpGuideLink> loses{' '}
             <Val v={DROP_CHART.targetPct} unit="%" src={NOTE} /> of the supply, <Val v={(DROP_CHART.targetPct / 100) * 120} unit="V" src={CALC} format={{ upTo: 2 }} />,
             at <Val v={TWELVE_120.ft} unit="ft" src={CALC} /> one way; on <Val v={240} unit="V" src={VOLTS} /> it goes{' '}
             <Val v={TWELVE_240.ft} unit="ft" src={CALC} />. Thicker wire goes further: carrying the current its{' '}

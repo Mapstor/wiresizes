@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Fragment } from 'react';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { DatasetSchema } from '@/components/seo/DatasetSchema';
@@ -72,6 +73,8 @@ const IEC = 'iec-60228-metric-sizes';
 const AMP = 'nec-310-16';
 const OCPD = 'nec-240-4-d';
 const CALC = 'calc:awg-geometry';
+/** The drop of a low-voltage run, VD = 2 × I × L × R, the low voltage calculator's formula. */
+const DC = 'calc:dc-sizing';
 const SOURCE_DOMAINS = [GEO, RES, IEC, AMP, OCPD];
 
 
@@ -296,6 +299,9 @@ export default function AwgWireSizeChartPage() {
   const r6 = row('6');
   const r24 = row('24');
   const r20 = row('20');
+  // 20 AWG on a low-voltage run: an example load, length and supply, and its drop from the NIST 20 °C resistance.
+  const LV20 = { amps: 2, ft: 10, volts: 12 };
+  const lv20Drop = (2 * LV20.amps * LV20.ft * r20.r20_cu_ohm_per_1000ft) / 1000;
   const limit12 = ocpdLimit('12', 'Cu');
   const limit10 = ocpdLimit('10', 'Cu');
   const limit14 = ocpdLimit('14', 'Cu');
@@ -676,8 +682,9 @@ export default function AwgWireSizeChartPage() {
               <SourceLine domains={[AMP, OCPD]} />
               <p className={clsx(P, 'pt-2')}>
                 Under 2023 NEC 240.4(D), the overcurrent protection for <Size s="14" />, <Size s="12" /> and <Size s="10" /> copper may not
-                exceed <Val v={limit14 as number} unit="A" src={OCPD} />, <Val v={limit12 as number} unit="A" src={OCPD} /> and{' '}
-                <Val v={limit10 as number} unit="A" src={OCPD} />, even where a temperature column lists more. This limit applies to the breaker
+                exceed <AmpGuideLink a={limit14 as number} className={LINK}><Val v={limit14 as number} unit="A" src={OCPD} /></AmpGuideLink>,{' '}
+                <AmpGuideLink a={limit12 as number} className={LINK}><Val v={limit12 as number} unit="A" src={OCPD} /></AmpGuideLink> and{' '}
+                <AmpGuideLink a={limit10 as number} className={LINK}><Val v={limit10 as number} unit="A" src={OCPD} /></AmpGuideLink>, even where a temperature column lists more. This limit applies to the breaker
                 or fuse, not to the wire&apos;s ampacity.
               </p>
               <p className={P} data-src={AMP}>
@@ -845,6 +852,31 @@ export default function AwgWireSizeChartPage() {
                 <p className={P}>
                   <Val v={r20.diameter_mm} unit="mm" src={GEO} format={MM} /> (<Val v={r20.diameter_in} unit="in" src={GEO} format={INCH} />) for
                   a solid conductor. Stranded and insulated wire is larger overall.
+                </p>
+              </div>
+              <div className="space-y-1.5">
+                <h3 className={H3}>
+                  How many amps can <Size s="20" /> wire carry?
+                </h3>
+                <p className={P} data-src={AMP}>
+                  Table 310.16, the NEC&apos;s ampacity table for building wire, has no row for <Size s="20" />. Its smallest sizes,{' '}
+                  <Size s="18" /> and <Size s="16" />, appear only in the 90 °C column, at <Val v={amp('18', 'cu_90') as number} unit="A" src={AMP} />{' '}
+                  and <Val v={amp('16', 'cu_90') as number} unit="A" src={AMP} />. Where <Size s="20" /> is part of a cord or a device, that
+                  product&apos;s rating applies.{' '}
+                  <span data-src={RES}>
+                    On a low-voltage run, its resistance decides how far a current can go: <Val v={r20.r20_cu_ohm_per_1000ft} unit="Ω" src={RES} /> per
+                    1,000 ft of solid copper at 20 °C.
+                  </span>{' '}
+                  <span data-src={DC}>
+                    So <Val v={LV20.amps} unit="A" src="input" /> over a <Val v={LV20.ft} unit="ft" src="input" /> run, out and back, loses{' '}
+                    <Val v={lv20Drop} unit="V" src={DC} format={{ fixed: 2 }} />, <Val v={(lv20Drop / LV20.volts) * 100} unit="%" src={DC} format={{ fixed: 1 }} />{' '}
+                    of <Val v={LV20.volts} unit="V" src="input" />.
+                  </span>{' '}
+                  The{' '}
+                  <Link href="/calculators/low-voltage-calculator" className={LINK}>
+                    low voltage calculator
+                  </Link>{' '}
+                  sizes the wire for your load and length.
                 </p>
               </div>
               <div className="space-y-1.5">

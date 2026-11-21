@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -114,7 +115,7 @@ export default function DryerCalculatorPage() {
           <p className={LOOK_LEAD} data-src={MFR_DOMAIN}>
             <strong>
               An electric dryer&apos;s own circuit is the one its instructions give: Whirlpool and GE call for{' '}
-              <Val v={C30} unit="A" src={MFR_DOMAIN} />, with <Size s={WHIRLPOOL_DRYER.directWireCu} /> copper.
+              <AmpGuideLink a={C30} className={LINK}><Val v={C30} unit="A" src={MFR_DOMAIN} /></AmpGuideLink>, with <Size s={WHIRLPOOL_DRYER.directWireCu} /> copper.
             </strong>{' '}
             <span data-src={L}>
               A service or feeder calculation counts the same dryer at <Val v={S.dryerMinW} unit="W" src={L} /> or its nameplate, whichever is larger

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -220,10 +221,11 @@ export default function WireSizeCalculatorPage() {
         <div className="mt-14 max-w-[44rem] space-y-4">
           <p className={LOOK_LEAD} data-src={CALC}>
             <strong>
-              In NM cable, a <Val v={ANSWER_RATINGS[0]} unit="A" src={OCPD} /> breaker takes <Size s={answer[0]} /> copper,{' '}
-              <Val v={ANSWER_RATINGS[1]} unit="A" src={OCPD} /> takes <Size s={answer[1]} />, <Val v={ANSWER_RATINGS[2]} unit="A" src={OCPD} /> takes{' '}
-              <Size s={answer[2]} />, <Val v={ANSWER_RATINGS[3]} unit="A" src={OCPD} /> takes <Size s={answer[3]} /> and{' '}
-              <Val v={ANSWER_RATINGS[4]} unit="A" src={OCPD} /> takes <Size s={answer[4]} />, from the <Val v={COLD} unit="°C" src={AMP} /> column of NEC
+              In NM cable, a <AmpGuideLink a={ANSWER_RATINGS[0]} className={LINK}><Val v={ANSWER_RATINGS[0]} unit="A" src={OCPD} /> breaker</AmpGuideLink> takes <Size s={answer[0]} /> copper,{' '}
+              <AmpGuideLink a={ANSWER_RATINGS[1]} className={LINK}><Val v={ANSWER_RATINGS[1]} unit="A" src={OCPD} /></AmpGuideLink> takes <Size s={answer[1]} />,{' '}
+              <AmpGuideLink a={ANSWER_RATINGS[2]} className={LINK}><Val v={ANSWER_RATINGS[2]} unit="A" src={OCPD} /></AmpGuideLink> takes <Size s={answer[2]} />,{' '}
+              <AmpGuideLink a={ANSWER_RATINGS[3]} className={LINK}><Val v={ANSWER_RATINGS[3]} unit="A" src={OCPD} /></AmpGuideLink> takes <Size s={answer[3]} /> and{' '}
+              <AmpGuideLink a={ANSWER_RATINGS[4]} className={LINK}><Val v={ANSWER_RATINGS[4]} unit="A" src={OCPD} /></AmpGuideLink> takes <Size s={answer[4]} />, from the <Val v={COLD} unit="°C" src={AMP} /> column of NEC
               Table 310.16.
             </strong>{' '}
             A long run needs more: at <Val v={100} unit="ft" src="input" />, a <Val v={20} unit="A" src="input" /> circuit at{' '}
@@ -260,9 +262,9 @@ export default function WireSizeCalculatorPage() {
             <p className={P} data-src={OCPD}>
               240.4(B) lets a breaker or fuse of up to <Val v={NEXT_SIZE_UP_MAX_A} unit="A" src={OCPD} /> protect a conductor whose ampacity falls
               between two standard ratings, at the next rating up, when the circuit does not supply more than one receptacle for
-              cord-and-plug-connected portable loads. So a <Val v={R60.Cu.ratingA} unit="A" src={OCPD} /> breaker may protect{' '}
+              cord-and-plug-connected portable loads. So a <AmpGuideLink a={R60.Cu.ratingA} className={LINK}><Val v={R60.Cu.ratingA} unit="A" src={OCPD} /> breaker</AmpGuideLink> may protect{' '}
               <SizeAmps s={B60} column={COLD} metal="copper" /> instead of <Size s={R60.Cu.c60.size} />, and a{' '}
-              <Val v={R100.Cu.ratingA} unit="A" src={OCPD} /> breaker <SizeAmps s={B100} column={COLD} metal="copper" /> instead of{' '}
+              <AmpGuideLink a={R100.Cu.ratingA} className={LINK}><Val v={R100.Cu.ratingA} unit="A" src={OCPD} /> breaker</AmpGuideLink> <SizeAmps s={B100} column={COLD} metal="copper" /> instead of{' '}
               <Size s={R100.Cu.c60.size} />, as long as the load fits the smaller size. The calculator notes these cases under its result.
             </p>
             <p className={P} data-src={SVC}>

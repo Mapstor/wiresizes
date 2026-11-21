@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { CombinedSchema } from '@/components/seo/CombinedSchema';
@@ -168,10 +169,10 @@ export default function GroundWirePage() {
               fuse ahead of the circuit; Table 250.66 sizes the grounding electrode conductor by the largest service-entrance conductor.
             </strong>{' '}
             <span data-src={CALC}>
-              A <Val v={EGC_20.ocpdA} unit="A" src={GND} /> circuit takes <Size s={EGC_20.egc ?? EGC_20.tableEgc} /> copper;
+              A <AmpGuideLink a={EGC_20.ocpdA} className={LINK}><Val v={EGC_20.ocpdA} unit="A" src={GND} /> circuit</AmpGuideLink> takes <Size s={EGC_20.egc ?? EGC_20.tableEgc} /> copper;
             </span>{' '}
             <span data-src={LOOKUP}>
-              a <Val v={S200.ratingA} unit="A" src={SVC} /> dwelling service on <Size s={S200.cu} /> copper takes a{' '}
+              a <AmpGuideLink a={S200.ratingA} className={LINK}><Val v={S200.ratingA} unit="A" src={SVC} /> dwelling service</AmpGuideLink> on <Size s={S200.cu} /> copper takes a{' '}
               <Size s={S200.gecForCuService.cu} /> copper electrode conductor.
             </span>
           </p>
@@ -217,7 +218,7 @@ export default function GroundWirePage() {
             </h2>
             <p className={P} data-src={GND}>
               The rating is the breaker&apos;s or fuse&apos;s, not the load&apos;s, and a rating between two rows reads the higher one. A{' '}
-              <Val v={EGC_30.ocpdA} unit="A" src={GND} /> breaker falls in the <Val v={EGC_30.rowA} unit="A" src={GND} /> row, so its ground
+              <AmpGuideLink a={EGC_30.ocpdA} className={LINK}><Val v={EGC_30.ocpdA} unit="A" src={GND} /> breaker</AmpGuideLink> falls in the <Val v={EGC_30.rowA} unit="A" src={GND} /> row, so its ground
               wire is <Size s={EGC_30.table.cu} /> copper, the same as a <Val v={EGC_30.rowA} unit="A" src={GND} /> breaker&apos;s; at{' '}
               <Val v={EGC_50.ocpdA} unit="A" src={GND} /> it is <Size s={EGC_50.table.cu} /> copper or <Size s={EGC_50.table.alCca} />{' '}
               aluminum.
@@ -440,7 +441,7 @@ export default function GroundWirePage() {
               <p className={P} data-src={LOOKUP}>
                 On <ServiceWires s={S100} /> service conductors, the electrode conductor is <ServiceGec s={S100} />.{' '}
                 <span data-src={GND}>
-                  A <Val v={S100.ratingA} unit="A" src={SVC} /> feeder&apos;s equipment ground wire is <Size s={egc(100, 'Cu').tableEgc} /> copper
+                  A <AmpGuideLink a={S100.ratingA} className={LINK}><Val v={S100.ratingA} unit="A" src={SVC} /> feeder&apos;s</AmpGuideLink> equipment ground wire is <Size s={egc(100, 'Cu').tableEgc} /> copper
                   or <Size s={egc(100, 'Al').tableEgc} /> aluminum.
                 </span>
               </p>

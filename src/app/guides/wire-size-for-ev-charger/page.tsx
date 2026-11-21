@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AmpGuideLink } from '@/components/content/AmpGuideLink';
 import { clsx } from 'clsx';
 import { ArticleSchema } from '@/components/seo/ArticleSchema';
 import { Byline } from '@/components/content/Byline';
@@ -385,10 +386,10 @@ export default function WireSizeForEvChargerPage() {
           <div className="space-y-4">
             <p className={LOOK_LEAD} data-src={SIZING}>
               <strong>
-                A <Out r={TOP} /> charger takes a <A v={TOP.breakerA} /> breaker and <Size s={TOP.c75.size} /> copper where the breaker and
+                A <Out r={TOP} /> charger takes a <AmpGuideLink a={TOP.breakerA} className={LINK}><A v={TOP.breakerA} /> breaker</AmpGuideLink> and <Size s={TOP.c75.size} /> copper where the breaker and
                 every termination are rated <C v={EV_HIGH} />, or <Size s={TOP.nm.size} /> in NM cable.
               </strong>{' '}
-              A <Out r={SECOND} /> charger takes a <A v={SECOND.breakerA} /> breaker and <Size s={SECOND.c75.size} /> copper at{' '}
+              A <Out r={SECOND} /> charger takes a <AmpGuideLink a={SECOND.breakerA} className={LINK}><A v={SECOND.breakerA} /> breaker</AmpGuideLink> and <Size s={SECOND.c75.size} /> copper at{' '}
               <C v={EV_HIGH} />, or <Size s={SECOND.nm.size} /> in NM cable.
             </p>
             <p className={P} data-src={EV}>
@@ -456,7 +457,7 @@ export default function WireSizeForEvChargerPage() {
             </p>
             <p className={P} data-src={MFR}>
               The makers agree. Tesla&apos;s table puts <Out r={TOP} /> on a <A v={TOP.breakerA} src={MFR} /> breaker and{' '}
-              <Out r={EV_ROWS[0]} /> on <A v={EV_ROWS[0].breakerA} src={MFR} />, and ChargePoint&apos;s guide calls its charger a continuous
+              <Out r={EV_ROWS[0]} /> on <AmpGuideLink a={EV_ROWS[0].breakerA} className={LINK}><A v={EV_ROWS[0].breakerA} src={MFR} /></AmpGuideLink>, and ChargePoint&apos;s guide calls its charger a continuous
               load whose circuit must be rated for <Val v={CHARGEPOINT_CIRCUIT_PCT} unit="%" src={MFR} /> of the maximum load.
             </p>
             <p className={P} data-src={EV}>
@@ -638,7 +639,7 @@ export default function WireSizeForEvChargerPage() {
                 Is <Size s="8" /> wire enough for an EV charger?
               </h3>
               <p className={P} data-src={AMP}>
-                For a <Out r={THIRTY_TWO} /> charger on a <A v={THIRTY_TWO.breakerA} /> breaker, yes, in NM cable or single conductors. For a{' '}
+                For a <Out r={THIRTY_TWO} /> charger on a <AmpGuideLink a={THIRTY_TWO.breakerA} className={LINK}><A v={THIRTY_TWO.breakerA} /> breaker</AmpGuideLink>, yes, in NM cable or single conductors. For a{' '}
                 <Out r={SECOND} /> charger on a <A v={SECOND.breakerA} /> breaker, only as single conductors with a breaker and terminations
                 rated <C v={EV_HIGH} />, where <Size s="8" /> copper carries <A v={EIGHT_A75} src={AMP} />; in NM cable it carries{' '}
                 <A v={EIGHT_A60} src={AMP} />.

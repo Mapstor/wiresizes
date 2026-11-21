@@ -85,10 +85,12 @@ const SVC_CALC = 'calc:service-lookup';
 const VD = 'calc:voltage-drop';
 
 const G = GUIDE_100;
-const { service: S, egc: EGC, at60: A60, at75: A75, nextSizeUp: NEXT, run: RUN, noteFt: NOTE_FT } = G;
+const { service: S, egc: EGC, at60: A60, at75: A75, nextSizeUp: NEXT, run: RUN, near: NEAR, noteFt: NOTE_FT } = G;
 const GEC = S.gecForCuService;
 if (!NEXT.protection.nextSizeUp || NEXT.protection.ratingA !== G.ratingA) throw new Error('100 A guide: the 240.4(B) paragraph no longer fits the data');
 if (RUN.noteCu.size !== A60.cu.size) throw new Error('100 A guide: the voltage drop answer no longer fits the data');
+if ([NEAR.cu60, NEAR.al60, NEAR.cu75, NEAR.al75].some((r) => r.vdPct > VOLTAGE_DROP_NOTE.feederPct))
+  throw new Error('100 A guide: the short-run answer no longer fits the data');
 if (NM_CABLE.maxColumnC !== G.low) throw new Error('100 A guide: 334.80 no longer holds NM cable to the 110.14(C)(1)(a) column');
 
 // phones: the comparison table's header widths and padding give way so its three columns fit 390 px
@@ -515,6 +517,19 @@ export default function WireSizeFor100AmpPage() {
                 On a feeder whose calculated load is <Val v={NEXT.amps} unit="A" src={AMP} /> or less, yes: it carries{' '}
                 <Val v={NEXT.amps} unit="A" src={AMP} /> at <C v={G.low} />, and 240.4(B) allows the next standard rating,{' '}
                 <Val v={NEXT.protection.ratingA} unit="A" src={OCPD} />.
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <h3 className={H3} data-src={VD}>
+                What size wire for a <Val v={G.ratingA} unit="A" src={OCPD} /> subpanel <Val v={NEAR.lengthFt} unit="ft" src={VD} /> away?
+              </h3>
+              <p className={P} data-src={VD}>
+                The same size as next to the panel: at the full <Val v={G.ratingA} unit="A" src={OCPD} />, <Size s={A60.cu.size} /> copper drops{' '}
+                <Drop run={NEAR.cu60} /> over <Val v={NEAR.lengthFt} unit="ft" src={VD} /> and <Size s={A75.cu.size} /> copper, for terminations
+                listed for <C v={G.high} />, <Drop run={NEAR.cu75} />. In aluminum, <Size s={A60.al.size} /> drops <Drop run={NEAR.al60} /> and{' '}
+                <Size s={A75.al.size} /> <Drop run={NEAR.al75} />. All four stay inside the{' '}
+                <Val v={VOLTAGE_DROP_NOTE.feederPct} unit="%" src={LOAD} /> of the 215.2(A) note, which <Size s={A60.cu.size} /> copper reaches at{' '}
+                <Val v={NOTE_FT.cu60} unit="ft" src={VD} format={{ sig: 3 }} />.
               </p>
             </div>
             <div className="space-y-1.5">
