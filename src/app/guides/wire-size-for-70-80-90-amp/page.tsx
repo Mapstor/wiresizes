@@ -52,8 +52,11 @@ if (R70.ratingA !== RATINGS_7090[0] || R90.ratingA !== RATINGS_7090[2]) throw ne
 const NAMES = `${R70.ratingA}, ${R80.ratingA} and ${R90.ratingA}`;
 // the page: two columns repeat a size across neighbouring ratings, and 70 A at 75 °C has a 240.4(B) size below it
 if (R70.c75.cu.size !== R80.c75.cu.size || R80.c75.al.size !== R90.c75.al.size) throw new Error('70 to 90 A guide: the shared sizes changed');
-const B70 = R70.c75.cu.below;
-if (!B70) throw new Error('70 to 90 A guide: no 240.4(B) size below the 70 A copper answer at 75 °C');
+const B70 = (() => {
+  const b = R70.c75.cu.below;
+  if (!b) throw new Error('70 to 90 A guide: no 240.4(B) size below the 70 A copper answer at 75 °C');
+  return b;
+})();
 
 const TITLE = `Wire Size for ${NAMES} Amp Breakers: ${R70.nm.cu.size} to ${R90.nm.cu.size} AWG Copper`;
 const DESCRIPTION =

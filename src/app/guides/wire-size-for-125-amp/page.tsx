@@ -51,9 +51,12 @@ const URL = `https://wiresizes.com${ROUTE}`;
 
 const G = GUIDE_125;
 const { service: S, feeder: F, run: RUN } = G;
-const FB = F.cu.below;
-const FBA = F.al.below;
-if (!FB || !FBA) throw new Error('125 A guide: the 240.4(B) sizes are gone');
+function must<T>(v: T | null, what: string): T {
+  if (v === null) throw new Error(`125 A guide: ${what} is gone`);
+  return v;
+}
+const FB = must(F.cu.below, 'the copper 240.4(B) size');
+const FBA = must(F.al.below, 'the aluminum 240.4(B) size');
 const GEC = S.gecForCuService;
 
 /** The chart's guide: the feeder sizes in both columns' places, and the service-to-feeder ladder. */
